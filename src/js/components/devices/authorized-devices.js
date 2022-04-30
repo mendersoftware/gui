@@ -337,7 +337,6 @@ export const Authorized = props => {
         advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION);
       }
     }
-    setExpandedDeviceId(id);
   };
 
   let onboardingComponent;
