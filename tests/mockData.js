@@ -181,6 +181,7 @@ export const defaultState = {
     },
     deviceList: {
       deviceIds: [],
+      isLoading: false,
       page: 1,
       perPage: 20,
       selectedAttributes: [],

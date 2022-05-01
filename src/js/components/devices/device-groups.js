@@ -150,17 +150,18 @@ export const DeviceGroups = ({
   useEffect(() => {
     const { filters: filterQuery = '', status = '' } = match.params;
     maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
+    let request;
     if (status && selectedState !== status) {
       setIsReconciling(true);
-      setDeviceListState({ state: status }).then(() => setIsReconciling(false));
+      request = setDeviceListState({ state: status }).then(() => setIsReconciling(false));
     }
     const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, history.location, true);
     if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
       history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
     }
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
-
     setYesterday();
+    request ? null : setDeviceListState({ refreshTrigger: !refreshTrigger });
     return () => {
       clearInterval(deviceTimer.current);
     };

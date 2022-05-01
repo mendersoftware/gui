@@ -171,8 +171,8 @@ export const Authorized = props => {
   }, [columnSelection, selectedState, idAttribute.attribute]);
 
   useEffect(() => {
-    setIsInitialized(settingsInitialized && devicesInitialized);
-  }, [settingsInitialized, devicesInitialized]);
+    setIsInitialized(isInitialized => isInitialized || (settingsInitialized && devicesInitialized && pageLoading === false));
+  }, [settingsInitialized, devicesInitialized, pageLoading]);
 
   useEffect(() => {
     // only set state after all devices id data retrieved
@@ -199,7 +199,7 @@ export const Authorized = props => {
         !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
       }, 400);
     }
-  }, [acceptedCount, pendingCount, onboardingState.complete]);
+  }, [acceptedCount, allCount, pendingCount, onboardingState.complete]);
 
   useEffect(() => {
     setShowFilters(false);

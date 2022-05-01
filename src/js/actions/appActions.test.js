@@ -239,6 +239,7 @@ describe('app actions', () => {
         state: {
           ...DeviceConstants.DEVICE_LIST_DEFAULTS,
           deviceIds: [],
+          isLoading: false,
           selectedAttributes: [],
           selectedIssues: [],
           selection: [],
