@@ -47,7 +47,7 @@ exports[`ReleaseRepository Component renders correctly 1`] = `
     >
       <div
         class="dropzone"
-        role="button"
+        role="presentation"
         tabindex="0"
       >
         <input

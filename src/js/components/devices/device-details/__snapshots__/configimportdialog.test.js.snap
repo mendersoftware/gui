@@ -698,7 +698,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
               <div>
                 <div
                   class="dropzone onboard dashboard-placeholder flexbox centered"
-                  role="button"
+                  role="presentation"
                   style="padding: 15px;"
                   tabindex="0"
                 >
