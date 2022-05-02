@@ -51,16 +51,17 @@ export const TroubleshootDialog = ({
   deviceId,
   deviceFileUpload,
   getDeviceFileDownloadLink,
-  isEnterprise,
+  hasAuditlogs,
   onCancel,
   onSocketClose,
   open,
   setSnackbar,
   setSocketClosed,
   type = tabs.terminal.value,
-  userRoles
+  userCapabilities
 }) => {
   const timer = useRef();
+  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
 
   const [currentTab, setCurrentTab] = useState(type);
   const [availableTabs, setAvailableTabs] = useState(Object.values(tabs));
@@ -85,14 +86,14 @@ export const TroubleshootDialog = ({
 
   useEffect(() => {
     const allowedTabs = Object.values(tabs).reduce((accu, tab) => {
-      if ((tab.needsWriteAccess && !userRoles.hasWriteAccess) || (tab.needsTroubleshoot && !userRoles.canTroubleshoot)) {
+      if ((tab.needsWriteAccess && !hasWriteAccess) || (tab.needsTroubleshoot && !canTroubleshoot)) {
         return accu;
       }
       accu.push(tab);
       return accu;
     }, []);
     setAvailableTabs(allowedTabs);
-  }, [userRoles]);
+  }, [canTroubleshoot, hasWriteAccess]);
 
   useEffect(() => {
     if (socket && !socketInitialized) {
@@ -114,7 +115,7 @@ export const TroubleshootDialog = ({
     if (!(open || socketInitialized) || socketInitialized) {
       return;
     }
-    socket = userRoles.canTroubleshoot ? new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`) : undefined;
+    socket = canTroubleshoot ? new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`) : undefined;
 
     return () => {
       onSendMessage({ typ: MessageTypes.Stop });
@@ -248,7 +249,7 @@ export const TroubleshootDialog = ({
           ) : (
             <div style={{ width: 280 }} />
           )}
-          {isEnterprise && (
+          {canAuditlog && hasAuditlogs && (
             <Button component={Link} to={`auditlog?object_id=${deviceId}&start_date=${BEGINNING_OF_TIME}`}>
               View {tabs[currentTab].link} for this device
             </Button>

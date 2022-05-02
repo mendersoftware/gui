@@ -25,7 +25,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
-import { getDocsVersion, getTenantCapabilities, getUserRoles } from '../../selectors';
+import { getDocsVersion, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
@@ -111,7 +111,7 @@ export const ExpandedDevice = ({
   setSnackbar,
   showHelptips,
   tenantCapabilities,
-  userRoles
+  userCapabilities
 }) => {
   const theme = useTheme();
   const { attributes = {}, isOffline, status = DEVICE_STATES.accepted } = device;
@@ -174,6 +174,7 @@ export const ExpandedDevice = ({
     onCreateDeployment: onCreateDeploymentClick
   };
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
+
   return (
     <Drawer anchor="right" className="expandedDevice" open={Boolean(device.id)} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
@@ -246,7 +247,7 @@ export const ExpandedDevice = ({
           socketClosed={socketClosed}
           startTroubleshoot={launchTroubleshoot}
           style={{ marginRight: theme.spacing(2) }}
-          userRoles={userRoles}
+          userCapabilities={userCapabilities}
         />
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
@@ -257,6 +258,7 @@ export const ExpandedDevice = ({
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
+        userCapabilities={userCapabilities}
       />
       {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
       <DeviceQuickActions actionCallbacks={actionCallbacks} devices={[device]} isSingleDevice selectedGroup={selectedStaticGroup} selectedRows={[0]} />
@@ -306,7 +308,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedGroup,
     showHelptips: state.users.showHelptips,
     tenantCapabilities: getTenantCapabilities(state),
-    userRoles: getUserRoles(state)
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

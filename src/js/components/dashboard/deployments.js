@@ -9,7 +9,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState } from '../../selectors';
+import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -32,7 +32,7 @@ const headerStyle = {
   justifyContent: 'flex-end'
 };
 
-export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboardingState, pendingCount, setSnackbar, styles }) => {
+export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressCount, onboardingState, pendingCount, setSnackbar, styles }) => {
   const [lastDeploymentCheck, setLastDeploymentCheck] = useState();
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
@@ -125,13 +125,15 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
               onClick={() => clickHandle({ route: '/deployments/active' })}
             />
             <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
-            <RedirectionWidget
-              target="/deployments/active?open=true"
-              content="Create a new deployment to update a group of devices"
-              buttonContent="Create a deployment"
-              onClick={() => clickHandle({ route: '/deployments/active?open=true' })}
-              isActive={false}
-            />
+            {canDeploy && (
+              <RedirectionWidget
+                target="/deployments/active?open=true"
+                content="Create a new deployment to update a group of devices"
+                buttonContent="Create a deployment"
+                onClick={() => clickHandle({ route: '/deployments/active?open=true' })}
+                isActive={false}
+              />
+            )}
           </div>
         )}
         {onboardingComponent}
@@ -143,7 +145,9 @@ export const Deployments = ({ clickHandle, finishedCount, inprogressCount, onboa
 const actionCreators = { getDeploymentsByStatus, setSnackbar };
 
 const mapStateToProps = state => {
+  const { canDeploy } = getUserCapabilities(state);
   return {
+    canDeploy,
     finishedCount: state.deployments.byStatus.finished.total,
     inprogressCount: state.deployments.byStatus.inprogress.total,
     onboardingState: getOnboardingState(state),

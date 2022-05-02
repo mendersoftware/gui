@@ -1,8 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
-import { roles } from '../../../tests/__mocks__/userHandlers';
-import { defaultState } from '../../../tests/mockData';
+import { defaultState, receivedPermissionSets, receivedRoles } from '../../../tests/mockData';
 
 import { commonErrorHandler, getLatestReleaseInfo, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday, setVersionInfo } from './appActions';
 import AppConstants from '../constants/appConstants';
@@ -180,17 +179,8 @@ describe('app actions', () => {
         value: { ...defaultState.releases.releasesList, searchAttribute: 'name', page: 42 }
       },
       { type: DeviceConstants.SET_DEVICE_LIMIT, limit: 500 },
-      {
-        type: UserConstants.RECEIVED_ROLES,
-        rolesById: Object.entries(defaultState.users.rolesById).reduce((accu, [key, item]) => {
-          accu[key] = {
-            ...item,
-            allowUserManagement: item.allowUserManagement || false,
-            permissions: roles.find(role => role.name === key).permissions
-          };
-          return accu;
-        }, {})
-      },
+      { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+      { type: UserConstants.RECEIVED_ROLES, value: receivedRoles },
       { type: OrganizationConstants.SET_ORGANIZATION, organization: defaultState.organization.organization },
       {
         type: DeploymentConstants.RECEIVE_DEPLOYMENTS,

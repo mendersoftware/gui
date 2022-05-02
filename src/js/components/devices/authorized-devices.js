@@ -24,6 +24,7 @@ import {
   getMappedDevicesList,
   getOnboardingState,
   getTenantCapabilities,
+  getUserCapabilities,
   getUserSettings
 } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -96,6 +97,7 @@ export const Authorized = props => {
     allCount,
     attributes,
     availableIssueOptions,
+    canManageDevices,
     columnSelection,
     customColumnSizes,
     deleteAuthset,
@@ -408,7 +410,7 @@ export const Authorized = props => {
             )}
           </div>
           <div className="flexbox centered">
-            {selectedGroup && !isUngroupedGroup && (
+            {canManageDevices && selectedGroup && !isUngroupedGroup && (
               <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
                 Remove group
               </Button>
@@ -443,7 +445,14 @@ export const Authorized = props => {
             {devicePendingTip && !showsDialog ? (
               devicePendingTip
             ) : (
-              <EmptyState allCount={allCount} filters={filters} highlightHelp={highlightHelp} limitMaxed={limitMaxed} onClick={onPreauthClick} />
+              <EmptyState
+                allCount={allCount}
+                canManageDevices={canManageDevices}
+                filters={filters}
+                highlightHelp={highlightHelp}
+                limitMaxed={limitMaxed}
+                onClick={onPreauthClick}
+              />
             )}
           </>
         )
@@ -461,7 +470,7 @@ export const Authorized = props => {
         refreshDevices={refreshDevices}
       />
       {!expandedDeviceId && onboardingComponent ? onboardingComponent : null}
-      {!!selectedRows.length && (
+      {canManageDevices && !!selectedRows.length && (
         <DeviceQuickActions
           actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}
           devices={devices}
@@ -510,11 +519,13 @@ const mapStateToProps = state => {
     deviceCount = 1;
   }
   const { columnSelection = [] } = getUserSettings(state);
+  const { canManageDevices } = getUserCapabilities(state);
   return {
     attributes: getFilterAttributes(state),
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
     availableIssueOptions: getAvailableIssueOptionsByType(state),
+    canManageDevices,
     columnSelection,
     customColumnSizes: state.users.customColumns,
     devices,
