@@ -40,7 +40,7 @@ const DeviceListItem = ({ columnHeaders, device, idAttribute, index, onClick, on
       <div>
         <Checkbox checked={selected} onChange={handleRowSelect} />
       </div>
-      <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isHovered={isHovering} style={columnHeaders[0].style} />
+      <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isHovered={isHovering} />
       {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
       {columnHeaders.slice(1).map((column, index) => {
         let Component = column.component ? column.component : DefaultAttributeRenderer;

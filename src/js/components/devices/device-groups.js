@@ -33,118 +33,12 @@ import CreateGroupExplainer from './group-management/create-group-explainer';
 import { emptyFilter } from './widgets/filters';
 import MakeGatewayDialog from './dialogs/make-gateway-dialog';
 import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
-import {
-  AcceptedEmptyState,
-  defaultTextRender,
-  DeviceCreationTime,
-  DeviceSoftware,
-  DeviceStatusRenderer,
-  DeviceTypes,
-  getDeviceSoftwareText,
-  getDeviceTypeText,
-  PendingEmptyState,
-  PreauthorizedEmptyState,
-  RejectedEmptyState,
-  RelativeDeviceTime
-} from './base-devices';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
 import QuickFilter from './widgets/quickfilter';
 import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 import { versionCompare } from '../../helpers';
-
-export const defaultHeaders = {
-  currentSoftware: {
-    title: 'Current software',
-    attribute: { name: 'rootfs-image.version', scope: 'inventory', alternative: 'artifact_name' },
-    component: DeviceSoftware,
-    sortable: true,
-    textRender: getDeviceSoftwareText
-  },
-  deviceCreationTime: {
-    title: 'First request',
-    attribute: { name: 'created_ts', scope: 'system' },
-    component: DeviceCreationTime,
-    sortable: true
-  },
-  deviceId: {
-    title: 'Device ID',
-    attribute: { name: 'id', scope: 'identity' },
-    sortable: true,
-    textRender: ({ id }) => id
-  },
-  deviceStatus: {
-    title: 'Status',
-    attribute: { name: 'status', scope: 'identity' },
-    component: DeviceStatusRenderer,
-    sortable: true,
-    textRender: defaultTextRender
-  },
-  deviceType: {
-    title: 'Device type',
-    attribute: { name: 'device_type', scope: 'inventory' },
-    component: DeviceTypes,
-    sortable: true,
-    textRender: getDeviceTypeText
-  },
-  lastCheckIn: {
-    title: 'Last check-in',
-    attribute: { name: 'updated_ts', scope: 'system' },
-    component: RelativeDeviceTime,
-    sortable: true
-  }
-};
-
-const baseDevicesRoute = '/devices';
-
-const acceptedDevicesRoute = {
-  key: DEVICE_STATES.accepted,
-  groupRestricted: false,
-  route: `${baseDevicesRoute}/${DEVICE_STATES.accepted}`,
-  title: () => DEVICE_STATES.accepted,
-  emptyState: AcceptedEmptyState,
-  defaultHeaders: [defaultHeaders.deviceType, defaultHeaders.currentSoftware, defaultHeaders.lastCheckIn]
-};
-
-export const routes = {
-  allDevices: {
-    ...acceptedDevicesRoute,
-    route: baseDevicesRoute,
-    key: 'any',
-    title: () => 'any'
-  },
-  devices: acceptedDevicesRoute,
-  [DEVICE_STATES.accepted]: acceptedDevicesRoute,
-  [DEVICE_STATES.pending]: {
-    key: DEVICE_STATES.pending,
-    groupRestricted: true,
-    route: `${baseDevicesRoute}/${DEVICE_STATES.pending}`,
-    title: count => `${DEVICE_STATES.pending}${count ? ` (${count})` : ''}`,
-    emptyState: PendingEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
-  },
-  [DEVICE_STATES.preauth]: {
-    key: DEVICE_STATES.preauth,
-    groupRestricted: true,
-    route: `${baseDevicesRoute}/${DEVICE_STATES.preauth}`,
-    title: () => DEVICE_STATES.preauth,
-    emptyState: PreauthorizedEmptyState,
-    defaultHeaders: [
-      {
-        ...defaultHeaders.deviceCreationTime,
-        title: 'Date added'
-      }
-    ]
-  },
-  [DEVICE_STATES.rejected]: {
-    key: DEVICE_STATES.rejected,
-    groupRestricted: true,
-    route: `${baseDevicesRoute}/${DEVICE_STATES.rejected}`,
-    title: () => DEVICE_STATES.rejected,
-    emptyState: RejectedEmptyState,
-    defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
-  }
-};
+import { routes } from './base-devices';
 
 export const convertQueryToFilterAndGroup = (query, filteringAttributes, currentFilters) => {
   const queryParams = new URLSearchParams(query);
@@ -241,7 +135,6 @@ export const DeviceGroups = ({
   updateDynamicGroup
 }) => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
-  const [deviceRefreshTrigger, setDeviceRefreshTrigger] = useState();
   const [fromFilters, setFromFilters] = useState(false);
   const [modifyGroupDialog, setModifyGroupDialog] = useState(false);
   const [openIdDialog, setOpenIdDialog] = useState(false);
@@ -252,23 +145,23 @@ export const DeviceGroups = ({
   const [isReconciling, setIsReconciling] = useState(false);
   const deviceTimer = useRef();
 
-  const { state: selectedState } = deviceListState;
+  const { refreshTrigger, state: selectedState } = deviceListState;
 
   useEffect(() => {
     const { filters: filterQuery = '', status = '' } = match.params;
     maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
+    let request;
     if (status && selectedState !== status) {
       setIsReconciling(true);
-      setDeviceListState({ state: status }).then(() => setIsReconciling(false));
+      request = setDeviceListState({ state: status }).then(() => setIsReconciling(false));
     }
     const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, history.location, true);
     if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
       history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
     }
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
-
     setYesterday();
-    setDeviceRefreshTrigger(!deviceRefreshTrigger);
+    request ? null : setDeviceListState({ refreshTrigger: !refreshTrigger });
     return () => {
       clearInterval(deviceTimer.current);
     };
@@ -384,26 +277,26 @@ export const DeviceGroups = ({
 
   const onPreauthSaved = addMore => {
     setOpenPreauth(!addMore);
-    setDeviceRefreshTrigger(!deviceRefreshTrigger);
+    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger });
   };
 
   const onFilterDevices = (value, key, scope = 'identity') => {
-    setDeviceListState({ state: routes.allDevices.key });
     if (key) {
       selectGroup(undefined, [{ scope, key, operator: '$eq', value }]);
     } else {
       setDeviceFilters([]);
     }
+    setDeviceListState({ state: routes.allDevices.key });
   };
 
   const onShowDeviceStateClick = state => {
-    setDeviceListState({ state });
     selectGroup();
+    setDeviceListState({ state });
   };
 
   const onGroupSelect = groupName => {
-    setDeviceListState({ page: 1 });
     selectGroup(groupName);
+    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger });
   };
 
   const onShowAuthRequestDevicesClick = () => {
@@ -412,8 +305,6 @@ export const DeviceGroups = ({
   };
 
   const toggleGroupRemoval = () => setRemoveGroup(!removeGroup);
-
-  const refreshDevices = () => setDeviceRefreshTrigger(!deviceRefreshTrigger);
 
   const toggleMakeGatewayClick = () => setShowMakeGateway(!showMakeGateway);
 
@@ -457,13 +348,11 @@ export const DeviceGroups = ({
           )}
           <AuthorizedDevices
             addDevicesToGroup={addDevicesToGroup}
-            deviceRefreshTrigger={deviceRefreshTrigger}
             onGroupClick={onGroupClick}
             onGroupRemoval={toggleGroupRemoval}
             onMakeGatewayClick={toggleMakeGatewayClick}
             onPreauthClick={setOpenPreauth}
             openSettingsDialog={openSettingsDialog}
-            refreshDevices={refreshDevices}
             removeDevicesFromGroup={onRemoveDevicesFromGroup}
             showsDialog={showDeviceConnectionDialog || removeGroup || modifyGroupDialog || createGroupExplanation || openIdDialog || openPreauth}
           />

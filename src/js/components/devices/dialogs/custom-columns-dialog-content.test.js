@@ -2,9 +2,9 @@ import React from 'react';
 
 import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import ColumnCustomizationDialog from './custom-columns-dialog';
+import ColumnCustomizationDialogContent from './custom-columns-dialog-content';
 
-describe('ColumnCustomizationDialog Component', () => {
+describe('ColumnCustomizationDialogContent Component', () => {
   it('renders correctly', async () => {
     const attributes = [
       { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 },
@@ -48,16 +48,17 @@ describe('ColumnCustomizationDialog Component', () => {
     ];
 
     const { baseElement } = render(
-      <ColumnCustomizationDialog
+      <ColumnCustomizationDialogContent
         attributes={attributes}
         columnHeaders={headers}
         idAttribute={{ attribute: 'mac', scope: 'identity' }}
         onCancel={jest.fn}
         onSubmit={jest.fn}
-        open
+        selectedAttributes={[attributes[0], attributes[1]]}
+        setSelectedAttributes={jest.fn}
       />
     );
-    const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
+    const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

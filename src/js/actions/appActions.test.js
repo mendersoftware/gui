@@ -239,6 +239,7 @@ describe('app actions', () => {
         state: {
           ...DeviceConstants.DEVICE_LIST_DEFAULTS,
           deviceIds: [],
+          isLoading: false,
           selectedAttributes: [],
           selectedIssues: [],
           selection: [],
@@ -255,6 +256,8 @@ describe('app actions', () => {
           id_attribute: { attribute: 'mac', scope: 'identity' },
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
+            onboarding: {},
             showHelptips: true
           }
         }

@@ -25,7 +25,6 @@ exports[`ArtifactUpload Component renders correctly 1`] = `
   tabindex="0"
 >
   <input
-    autocomplete="off"
     style="display: none;"
     tabindex="-1"
     type="file"

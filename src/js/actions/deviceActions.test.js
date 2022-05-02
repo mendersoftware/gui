@@ -645,10 +645,33 @@ describe('device retrieval ', () => {
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
-      { type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: [defaultState.devices.byId.a1.id] } },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } }
     ];
     await store.dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, { perPage: 1, shouldSelectDevices: true }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow retrieving devices based on devicelist state', async () => {
+    const store = mockStore({ ...defaultState });
+    // eslint-disable-next-line no-unused-vars
+    const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
+    const expectedActions = [
+      { type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { ...defaultState.devices.deviceList, perPage: 2, deviceIds: [], isLoading: true } },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.total
+      },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
+      {
+        type: DeviceConstants.SET_DEVICE_LIST_STATE,
+        state: { ...defaultState.devices.deviceList, perPage: 2, deviceIds: ['a1', 'a1'], isLoading: false, total: 2 }
+      }
+    ];
+    await store.dispatch(setDeviceListState({ page: 1, perPage: 2, refreshTrigger: true }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

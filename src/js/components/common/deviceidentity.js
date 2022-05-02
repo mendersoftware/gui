@@ -3,7 +3,7 @@ import { getDeviceIdentityText } from '../devices/base-devices';
 
 import DeviceNameInput from './devicenameinput';
 
-const DeviceIdComponent = ({ style, value }) => <div style={style}>{value}</div>;
+const DeviceIdComponent = ({ style = {}, value }) => <div style={style}>{value}</div>;
 
 const attributeComponentMap = {
   default: DeviceIdComponent,

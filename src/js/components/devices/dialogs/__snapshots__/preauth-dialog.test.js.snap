@@ -804,7 +804,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             tabindex="0"
           >
             <input
-              autocomplete="off"
               style="display: none;"
               tabindex="-1"
               type="file"

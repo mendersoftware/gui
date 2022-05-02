@@ -119,6 +119,12 @@ export const calculateResizeChange = ({ columnElements, columnHeaders, e, index,
 export const minCellWidth = 150;
 const getTemplateColumns = columns => `52px minmax(250px, 1fr) ${columns} minmax(${minCellWidth}px, max-content)`;
 
+const getColumnsStyle = (columns, defaultSize) => {
+  const template = columns.map(({ size }) => `minmax(${minCellWidth}px, ${defaultSize ? defaultSize : `${size}px`})`);
+  // applying styles via state changes would lead to less smooth changes, so we set the style directly on the components
+  return getTemplateColumns(template.join(' '));
+};
+
 export const DeviceList = props => {
   const {
     className = '',
@@ -126,6 +132,7 @@ export const DeviceList = props => {
     customColumnSizes,
     devices,
     deviceListState,
+    headerKeys,
     idAttribute,
     onChangeRowsPerPage,
     onExpandClick,
@@ -162,16 +169,14 @@ export const DeviceList = props => {
     }
     const children = [...deviceListRef.current.querySelector('.deviceListRow').children];
     const relevantColumns = children.slice(2, children.length - 1);
-    const columns = relevantColumns.map(() => `minmax(${minCellWidth}px, 1.5fr)`);
-    deviceListRef.current.style.gridTemplateColumns = getTemplateColumns(columns.join(' '));
-  }, [deviceListRef.current, size.width]);
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(relevantColumns, '1.5fr');
+  }, [deviceListRef.current, size.width, headerKeys]);
 
   useEffect(() => {
     if (!deviceListRef.current || !customColumnSizes.length) {
       return;
     }
-    const columns = customColumnSizes.map(({ size }) => `minmax(${minCellWidth}px, ${size}px)`);
-    deviceListRef.current.style.gridTemplateColumns = getTemplateColumns(columns.join(' '));
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes);
   }, [deviceListRef.current, customColumnSizes]);
 
   const expandRow = (event, rowNumber) => {
@@ -203,9 +208,8 @@ export const DeviceList = props => {
 
   const handleResizeChange = (e, { index, prev, ref }) => {
     const changedColumns = calculateResizeChange({ columnElements: [...ref.current.parentElement.children], columnHeaders, e, index, prev });
-    const template = changedColumns.map(({ size }) => `minmax(${minCellWidth}px, ${size}px)`).join(' ');
     // applying styles via state changes would lead to less smooth changes, so we set the style directly on the components
-    deviceListRef.current.style.gridTemplateColumns = getTemplateColumns(template);
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(changedColumns);
   };
 
   const handleResizeFinish = (e, { index, prev, ref }) => {

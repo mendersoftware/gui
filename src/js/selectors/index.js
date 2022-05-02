@@ -22,7 +22,7 @@ const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
-export const getUserSettings = state => state.users.globalSettings[state.users.currentUser] || {};
+export const getUserSettings = state => ({ columnSelection: [], onboarding: {}, ...state.users.globalSettings[state.users.currentUser] });
 
 export const getHas2FA = createSelector(
   [getCurrentUser],
