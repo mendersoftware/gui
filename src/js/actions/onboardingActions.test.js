@@ -34,6 +34,7 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
             onboarding: {
               complete: true,
               demoArtifactPort: 85,
@@ -62,6 +63,7 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
             onboarding: { approach: 'test' }
           }
         }
@@ -85,6 +87,7 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
             onboarding: { deviceType: 'testtype' }
           }
         }
@@ -131,6 +134,7 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
             onboarding: { showTips: true }
           }
         }
@@ -142,6 +146,8 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
+            onboarding: {},
             showHelptips: true
           }
         }
@@ -163,6 +169,7 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.globalSettings,
           [defaultState.users.byId.a1.id]: {
+            columnSelection: [],
             onboarding: {
               complete: false,
               demoArtifactPort: 85,
@@ -189,6 +196,7 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
             onboarding: { showTips: false }
           }
         }
@@ -200,6 +208,8 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
+            onboarding: {},
             showHelptips: true
           }
         }
@@ -214,6 +224,7 @@ describe('onboarding actions', () => {
           ...defaultState.users.globalSettings,
           [defaultState.users.currentUser]: {
             ...defaultState.users.globalSettings[defaultState.users.currentUser],
+            columnSelection: [],
             onboarding: { complete: true, demoArtifactPort: 85, progress: 'onboarding-canceled', showConnectDeviceDialog: false }
           }
         }
@@ -240,6 +251,7 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.globalSettings,
           [defaultState.users.byId.a1.id]: {
+            columnSelection: [],
             onboarding: {
               address: 'http://192.168.10.141:85',
               approach: 'physical',

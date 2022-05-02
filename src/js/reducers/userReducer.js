@@ -118,6 +118,7 @@ const userReducer = (state = initialState, action) => {
     case UserConstants.SET_GLOBAL_SETTINGS:
       return {
         ...state,
+        settingsInitialized: true,
         globalSettings: {
           ...state.globalSettings,
           ...action.settings
