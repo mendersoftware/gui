@@ -381,216 +381,310 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   font-size: 1.25rem;
 }
 
-<div>
-  <h2
-    class="margin-top-small"
-  >
-    Integrations
-  </h2>
-  <h3
-    class="margin-bottom-none"
-  >
-    Azure IoT Hub
-  </h3>
-  <div
-    class="flexbox space-between relative"
-    style="align-items: flex-end; max-width: 750px;"
-  >
-    <div
-      class="MuiFormControl-root MuiTextField-root emotion-0"
-      style="min-width: 500px; word-break: break-all;"
+.emotion-24 {
+  margin: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-width: 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.12);
+  border-bottom-width: thin;
+}
+
+<div
+  style="min-height: 95%; display: flex; flex-direction: column;"
+>
+  <div>
+    <h2
+      class="margin-top-small"
     >
-      <label
-        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-1"
-        data-shrink="true"
-        for="mui-2"
-        id="mui-2-label"
-      >
-        Azure IoT Hub connection string
-      </label>
+      Integrations
+    </h2>
+    <h3
+      class="margin-bottom-none"
+    >
+      Azure IoT Hub
+    </h3>
+    <div
+      class="flexbox space-between relative"
+      style="align-items: flex-end; max-width: 750px;"
+    >
       <div
-        class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-2"
+        class="MuiFormControl-root MuiTextField-root emotion-0"
+        style="min-width: 500px; word-break: break-all;"
       >
-        <textarea
-          aria-invalid="false"
-          class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
-          disabled=""
-          id="mui-2"
-          style="height: 0px; overflow: hidden;"
+        <label
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-1"
+          data-shrink="true"
+          for="mui-2"
+          id="mui-2-label"
         >
-          something
-        </textarea>
-        <textarea
-          aria-hidden="true"
-          class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
-          readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
-          tabindex="-1"
-        />
-        <fieldset
-          aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline emotion-5"
+          Azure IoT Hub connection string
+        </label>
+        <div
+          class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-2"
         >
-          <legend
-            class="emotion-6"
+          <textarea
+            aria-invalid="false"
+            class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
+            disabled=""
+            id="mui-2"
+            style="height: 0px; overflow: hidden;"
           >
-            <span>
-              Azure IoT Hub connection string
-            </span>
-          </legend>
-        </fieldset>
+            something
+          </textarea>
+          <textarea
+            aria-hidden="true"
+            class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
+            readonly=""
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+            tabindex="-1"
+          />
+          <fieldset
+            aria-hidden="true"
+            class="MuiOutlinedInput-notchedOutline emotion-5"
+          >
+            <legend
+              class="emotion-6"
+            >
+              <span>
+                Azure IoT Hub connection string
+              </span>
+            </legend>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        class="flexbox"
+      >
+        <button
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
+          style="margin-right: 10px;"
+          tabindex="0"
+          type="button"
+        >
+          Edit
+          <span
+            class="MuiTouchRipple-root emotion-8"
+          />
+        </button>
+        <button
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
+          tabindex="0"
+          type="button"
+        >
+          Delete
+          <span
+            class="MuiTouchRipple-root emotion-8"
+          />
+        </button>
       </div>
     </div>
-    <div
-      class="flexbox"
+    <p
+      class="info icon "
+      style="max-width: 750px;"
     >
-      <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
-        style="margin-right: 10px;"
-        tabindex="0"
-        type="button"
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
+        data-testid="InfoOutlinedIcon"
+        focusable="false"
+        style="vertical-align: middle; margin: 0px 6px 4px 0px;"
+        viewBox="0 0 24 24"
       >
-        Edit
-        <span
-          class="MuiTouchRipple-root emotion-8"
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
-      </button>
-      <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
-        tabindex="0"
-        type="button"
+      </svg>
+      For help finding your Azure IoT Hub connection string, look under 'Shared access policies' in the Microsoft Azure UI as described
+       
+      <a
+        href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubconn"
+        rel="noopener noreferrer"
+        target="_blank"
       >
-        Delete
-        <span
-          class="MuiTouchRipple-root emotion-8"
-        />
-      </button>
-    </div>
-  </div>
-  <p
-    class="info icon "
-    style="max-width: 750px;"
-  >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
-      data-testid="InfoOutlinedIcon"
-      focusable="false"
-      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
-      viewBox="0 0 24 24"
+        here
+      </a>
+      .
+    </p>
+    <h3
+      class="margin-bottom-none"
     >
-      <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-      />
-    </svg>
-    For help finding your Azure IoT Hub connection string, look under 'Shared access policies' in the Microsoft Azure UI as described
-     
-    <a
-      href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubconn"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      here
-    </a>
-    .
-  </p>
-  <h3
-    class="margin-bottom-none"
-  >
-    AWS IoT core
-  </h3>
-  <div
-    class="flexbox space-between relative"
-    style="align-items: flex-end; max-width: 750px;"
-  >
+      AWS IoT core
+    </h3>
     <div
-      class="MuiFormControl-root MuiTextField-root emotion-0"
-      style="min-width: 500px; word-break: break-all;"
+      class="flexbox space-between relative"
+      style="align-items: flex-end; max-width: 750px;"
     >
-      <label
-        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-1"
-        data-shrink="true"
-        for="mui-3"
-        id="mui-3-label"
-      >
-        AWS IoT core connection string
-      </label>
       <div
-        class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-2"
+        class="MuiFormControl-root MuiTextField-root emotion-0"
+        style="min-width: 500px; word-break: break-all;"
       >
-        <textarea
-          aria-invalid="false"
-          class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
-          disabled=""
-          id="mui-3"
-          style="height: 0px; overflow: hidden;"
+        <label
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-1"
+          data-shrink="true"
+          for="mui-3"
+          id="mui-3-label"
         >
-          something else
-        </textarea>
-        <textarea
-          aria-hidden="true"
-          class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
-          readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
-          tabindex="-1"
-        />
-        <fieldset
-          aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline emotion-5"
+          AWS IoT core connection string
+        </label>
+        <div
+          class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-2"
         >
-          <legend
-            class="emotion-6"
+          <textarea
+            aria-invalid="false"
+            class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
+            disabled=""
+            id="mui-3"
+            style="height: 0px; overflow: hidden;"
           >
-            <span>
-              AWS IoT core connection string
-            </span>
-          </legend>
-        </fieldset>
+            something else
+          </textarea>
+          <textarea
+            aria-hidden="true"
+            class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-3"
+            readonly=""
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+            tabindex="-1"
+          />
+          <fieldset
+            aria-hidden="true"
+            class="MuiOutlinedInput-notchedOutline emotion-5"
+          >
+            <legend
+              class="emotion-6"
+            >
+              <span>
+                AWS IoT core connection string
+              </span>
+            </legend>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        class="flexbox"
+      >
+        <button
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
+          style="margin-right: 10px;"
+          tabindex="0"
+          type="button"
+        >
+          Edit
+          <span
+            class="MuiTouchRipple-root emotion-8"
+          />
+        </button>
+        <button
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
+          tabindex="0"
+          type="button"
+        >
+          Delete
+          <span
+            class="MuiTouchRipple-root emotion-8"
+          />
+        </button>
       </div>
     </div>
-    <div
-      class="flexbox"
+    <p
+      class="info icon "
+      style="max-width: 750px;"
     >
-      <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
-        style="margin-right: 10px;"
-        tabindex="0"
-        type="button"
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
+        data-testid="InfoOutlinedIcon"
+        focusable="false"
+        style="vertical-align: middle; margin: 0px 6px 4px 0px;"
+        viewBox="0 0 24 24"
       >
-        Edit
-        <span
-          class="MuiTouchRipple-root emotion-8"
+        <path
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
-      </button>
-      <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
-        tabindex="0"
-        type="button"
+      </svg>
+      For help finding your AWS IoT core connection string, check the AWS IoT documentation.
+    </p>
+  </div>
+  <div
+    style="margin-top: auto;"
+  >
+    <hr
+      class="MuiDivider-root MuiDivider-fullWidth emotion-24"
+    />
+    <div
+      class="margin-top-small margin-bottom-small"
+    >
+      <img
+        src="azure-iot-hub.png"
+      />
+      <div
+        class="flexbox margin-top-small"
+        style="gap: 20px;"
       >
-        Delete
-        <span
-          class="MuiTouchRipple-root emotion-8"
-        />
-      </button>
+        <div
+          class="infoPanel active"
+        >
+          <h4>
+            Tutorial
+          </h4>
+          <p>
+            Follow the Microsoft Azure IoT Hub
+             
+            <a
+              href="https://hub.mender.io/t/automatic-device-provisioning-with-azure-iot-hub-using-mender/4534"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              integration tutorial on Mender Hub 
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
+                data-testid="LaunchIcon"
+                focusable="false"
+                style="vertical-align: text-bottom;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                />
+              </svg>
+            </a>
+          </p>
+        </div>
+        <div
+          class="infoPanel active"
+        >
+          <h4>
+            Video
+          </h4>
+          <p>
+            <a
+              href="https://youtu.be/pX9dhjzSX7s"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Watch a video 
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
+                data-testid="LaunchIcon"
+                focusable="false"
+                style="vertical-align: text-bottom;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+                />
+              </svg>
+            </a>
+             
+            on how to connect your Mender devices to Microsoft Azure IoT Hub
+          </p>
+        </div>
+      </div>
     </div>
   </div>
-  <p
-    class="info icon "
-    style="max-width: 750px;"
-  >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
-      data-testid="InfoOutlinedIcon"
-      focusable="false"
-      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-      />
-    </svg>
-    For help finding your AWS IoT core connection string, check the AWS IoT documentation.
-  </p>
 </div>
 `;

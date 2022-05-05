@@ -381,11 +381,12 @@ exports[`AddArtifact Component renders correctly 1`] = `
       >
         <div
           class="dashboard-placeholder fadeIn onboard dropzone"
-          role="presentation"
+          role="button"
           style="top: 0px;"
           tabindex="0"
         >
           <input
+            autocomplete="off"
             style="display: none;"
             tabindex="-1"
             type="file"

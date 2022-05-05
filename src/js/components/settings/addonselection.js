@@ -54,7 +54,7 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
                 </div>
               )}
               <span className="info">{addOn.description}</span>
-              <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener noreferrer">
+              <a className="margin-left-small" href={addOn.link} target="_blank" rel="noopener noreferrer">
                 Learn more
               </a>
             </div>

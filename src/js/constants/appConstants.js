@@ -56,6 +56,7 @@ module.exports = {
     configure: {
       title: 'Configure',
       description: 'Expand your plan with device configuration features',
+      link: 'https://mender.io/plans/features',
       needs: ['hasDeviceConfig'],
       os: {
         price: '$10/month',
@@ -69,6 +70,7 @@ module.exports = {
     troubleshoot: {
       title: 'Troubleshoot',
       description: 'Expand your plan with device troubleshooting features',
+      link: 'https://mender.io/plans/features',
       needs: ['hasDeviceConnect'],
       os: {
         price: '$24/month',
@@ -82,6 +84,7 @@ module.exports = {
     monitor: {
       title: 'Monitor',
       description: 'Expand your plan with device monitoring features',
+      link: 'https://mender.io/plans/features/monitoring',
       needs: ['hasMonitor'],
       os: {
         price: '$24/month',

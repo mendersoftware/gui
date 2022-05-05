@@ -1141,14 +1141,22 @@ div:focus {
 
 /* Upgrade */
 
-.planPanel {
+.infoPanel, .planPanel {
   padding: 10px 20px;
   border-radius: 5px;
   border: 1px solid @lightergrey;
   vertical-align: top;
-  width: 32%;
+}
+
+.infoPanel {
+  max-width: 400px;
+  background-color: @lightestgrey;
+}
+
+.planPanel {
   .transition(all 0.2s ease);
   cursor: pointer;
+  width: 32%;
 
   &.active,
   &:hover {

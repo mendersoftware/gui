@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Button, MenuItem, Select, TextField } from '@mui/material';
+import { Button, Divider, MenuItem, Select, TextField } from '@mui/material';
+import { Launch as LaunchIcon } from '@mui/icons-material';
 
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations } from '../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import Confirm from '../common/confirm';
 import InfoHint from '../common/info-hint';
 
+import azureIoT from '../../../assets/img/azure-iot-hub.png';
+
+const InlineLaunchIcon = () => <LaunchIcon style={{ 'verticalAlign': 'text-bottom' }} fontSize="small" />;
 const maxWidth = 750;
 
 export const IntegrationConfiguration = ({ integration, onCancel, onDelete, onSave }) => {
@@ -139,21 +143,51 @@ export const Integrations = ({ integrations = [], changeIntegration, createInteg
   };
 
   return (
-    <div>
-      <h2 className="margin-top-small">Integrations</h2>
-      {!isCreating && !!availableIntegrations.length && (
-        <Select displayEmpty onChange={onConfigureIntegration} value={currentValue} style={{ minWidth: 300 }}>
-          <MenuItem value="">Add new integration</MenuItem>
-          {availableIntegrations.map(item => (
-            <MenuItem key={item.provider} value={item.provider}>
-              {item.title}
-            </MenuItem>
+    <div style={{ minHeight: '95%', display: 'flex', flexDirection: 'column' }}>
+      <div>
+        <h2 className="margin-top-small">Integrations</h2>
+        {!isCreating && !!availableIntegrations.length && (
+          <Select displayEmpty onChange={onConfigureIntegration} value={currentValue} style={{ minWidth: 300 }}>
+            <MenuItem value="">Add new integration</MenuItem>
+            {availableIntegrations.map(item => (
+              <MenuItem key={item.provider} value={item.provider}>
+                {item.title}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+        {configuredIntegrations.map(integration => (
+          <IntegrationConfiguration key={integration.id} integration={integration} onCancel={onCancelClick} onDelete={deleteIntegration} onSave={onSaveClick} />
+        ))}
+      </div>
+      <div style={{ marginTop: 'auto' }}>
+        <Divider />
+        <div className="margin-top-small margin-bottom-small">
+          {[azureIoT].map((tile, index) => (
+            <img key={`tile-${index}`} src={tile} />
           ))}
-        </Select>
-      )}
-      {configuredIntegrations.map(integration => (
-        <IntegrationConfiguration key={integration.id} integration={integration} onCancel={onCancelClick} onDelete={deleteIntegration} onSave={onSaveClick} />
-      ))}
+          <div className="flexbox margin-top-small" style={{ gap: '20px' }}>
+            <div className="infoPanel active" style={{ dropShadow: '0' }}>
+              <h4>Tutorial</h4>
+              <p>
+                Follow the Microsoft Azure IoT Hub{' '}
+                <a href="https://hub.mender.io/t/automatic-device-provisioning-with-azure-iot-hub-using-mender/4534" target="_blank" rel="noopener noreferrer">
+                  integration tutorial on Mender Hub <InlineLaunchIcon />
+                </a>
+              </p>
+            </div>
+            <div className="infoPanel active" style={{ dropShadow: '' }}>
+              <h4>Video</h4>
+              <p>
+                <a href="https://youtu.be/pX9dhjzSX7s" target="_blank" rel="noopener noreferrer">
+                  Watch a video <InlineLaunchIcon />
+                </a>{' '}
+                on how to connect your Mender devices to Microsoft Azure IoT Hub
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
