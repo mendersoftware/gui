@@ -1,6 +1,7 @@
+import * as fs from 'fs';
 import { expect } from '@playwright/test';
 
-import { baseUrlToDomain, login, startDockerClient, tenantTokenRetrieval } from '../utils/commands';
+import { baseUrlToDomain, login, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
 import test from '../fixtures/fixtures';
 
 test.describe('Test setup', () => {
@@ -10,6 +11,10 @@ test.describe('Test setup', () => {
       await page.goto(`${baseUrl}ui/`);
       const theWindow = await page.evaluate(() => window.innerWidth);
       expect(theWindow).toBeDefined();
+      try {
+        fs.unlinkSync('loginInfo.json');
+        await stopDockerClient();
+      } catch (error) {}
     });
     test('get the document object', async ({ page }) => {
       const documentCharset = await page.evaluate(() => document.charset);
