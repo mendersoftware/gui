@@ -98,7 +98,7 @@ test.describe('Settings', () => {
       await page.fill('[name=password]', password);
       await page.click(`button:text('Log in')`);
       await page.waitForTimeout(1000);
-      await page.fill('[name=token2fa]', '123456');
+      await page.fill('#token2fa', '123456');
       await page.click(`button:text('Log in')`);
       // still on /login page plus an error is displayed
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
@@ -111,7 +111,7 @@ test.describe('Settings', () => {
       await page.fill('[name=password]', password);
       await page.click(`button:text('Log in')`);
       const newToken = await generateOtp();
-      await page.fill('[name=token2fa]', newToken);
+      await page.fill('#token2fa', newToken);
       await page.click(`button:text('Log in')`);
       await page.waitForSelector('text=License information');
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
@@ -147,12 +147,13 @@ test.describe('Settings', () => {
       await page.waitForSelector('css=button >> text=Create new user');
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
-      // test.use({ storageState: 'storage.json' });
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_email');
     });
-    test('allows changing the password', async ({ baseUrl, context, loggedInPage: page, username, password }) => {
-      // test.use({ storageState: 'storage.json' });
+    test('allows changing the password', async ({ baseUrl, browserName, context, loggedInPage: page, username, password }) => {
+      if (browserName === 'webkit') {
+        test.skip();
+      }
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_password');
 
@@ -179,7 +180,10 @@ test.describe('Settings', () => {
       expect(await page.isVisible('text=/Log in/i')).toBeTruthy();
     });
 
-    test('allows changing the password back', async ({ baseUrl, context, password, username }) => {
+    test('allows changing the password back', async ({ baseUrl, browserName, context, password, username }) => {
+      if (browserName === 'webkit') {
+        test.skip();
+      }
       const { token, userId } = await login(username, replacementPassword, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
       await context.addCookies([

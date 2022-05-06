@@ -1,6 +1,5 @@
 import base, { Page } from '@playwright/test';
-import { v4 as uuid } from 'uuid';
-import { baseUrlToDomain, login } from '../utils/commands';
+import { baseUrlToDomain, getPeristentLoginInfo, login } from '../utils/commands';
 
 type TestFixtures = {
   baseUrl: string;
@@ -11,9 +10,6 @@ type TestFixtures = {
   password: string;
   demoDeviceName: string;
 };
-
-process.env.STAGING_USER = process.env.STAGING_USER ?? `${uuid()}@example.com`;
-process.env.STAGING_PASSWORD = process.env.STAGING_PASSWORD ?? uuid();
 
 const urls = {
   localhost: 'https://docker.mender.io/',
@@ -29,10 +25,12 @@ const defaultConfig = {
 };
 
 const test = base.extend<TestFixtures>({
-  loggedInPage: async ({ baseUrl, context, password, username }, use) => {
+  loggedInPage: async ({ baseUrl, browserName, context, password, username }, use) => {
     // const storageState = JSON.parse(process.env.STORAGE || '{}');
     // let context: BrowserContext = await browser.newContext({ storageState });
-    await context.grantPermissions(['clipboard-read'], { origin: baseUrl });
+    if (!['firefox', 'webkit'].includes(browserName)) {
+      await context.grantPermissions(['clipboard-read'], { origin: baseUrl });
+    }
     const domain = baseUrlToDomain(baseUrl);
     const { token, userId } = await login(username, password, baseUrl);
     await context.addCookies([
@@ -54,14 +52,14 @@ const test = base.extend<TestFixtures>({
   username: async ({ environment }, use) => {
     let username = defaultConfig.username;
     if (environment === 'staging') {
-      username = process.env.STAGING_USER;
+      username = getPeristentLoginInfo().username;
     }
     await use(username);
   },
   password: async ({ environment }, use) => {
     let password = defaultConfig.password;
     if (environment === 'staging') {
-      password = process.env.STAGING_PASSWORD;
+      password = getPeristentLoginInfo().password;
     }
     await use(password);
   },
