@@ -147,12 +147,13 @@ test.describe('Settings', () => {
       await page.waitForSelector('css=button >> text=Create new user');
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
-      // test.use({ storageState: 'storage.json' });
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_email');
     });
-    test('allows changing the password', async ({ baseUrl, context, loggedInPage: page, username, password }) => {
-      // test.use({ storageState: 'storage.json' });
+    test('allows changing the password', async ({ baseUrl, browserName, context, loggedInPage: page, username, password }) => {
+      if (browserName === 'webkit') {
+        test.skip();
+      }
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
       await page.click('#change_password');
 
@@ -179,7 +180,10 @@ test.describe('Settings', () => {
       expect(await page.isVisible('text=/Log in/i')).toBeTruthy();
     });
 
-    test('allows changing the password back', async ({ baseUrl, context, password, username }) => {
+    test('allows changing the password back', async ({ baseUrl, browserName, context, password, username }) => {
+      if (browserName === 'webkit') {
+        test.skip();
+      }
       const { token, userId } = await login(username, replacementPassword, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
       await context.addCookies([

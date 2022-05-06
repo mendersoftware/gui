@@ -17,7 +17,7 @@ test.describe('Device details', () => {
     expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
   });
 
-  test('can open a terminal', async ({ loggedInPage: page }) => {
+  test('can open a terminal', async ({ browserName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem div:last-child`);
     // the deviceconnect connection might not be established right away
@@ -37,19 +37,22 @@ test.describe('Device details', () => {
     // as the resizing option on `allowSizeMismatch` only pads the screenshot with transparent pixels until
     // the larger size is met (when diffing screenshots of multiple sizes) and does not scale to fit!
     let elementHandle = await page.$('.terminal.xterm .xterm-text-layer');
-    const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalContent-actual.png');
-    await elementHandle.screenshot({ path: screenShotPath });
+    expect(elementHandle).toBeTruthy();
+    if (['chromium', 'webkit'].includes(browserName)) {
+      const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalContent-actual.png');
+      await elementHandle.screenshot({ path: screenShotPath });
 
-    const expectedPath = path.join(__dirname, '..', 'fixtures', 'terminalContent.png');
-    const { pass } = compareImages(expectedPath, screenShotPath);
-    expect(pass).toBeTruthy();
+      const expectedPath = path.join(__dirname, '..', 'fixtures', 'terminalContent.png');
+      const { pass } = compareImages(expectedPath, screenShotPath);
+      expect(pass).toBeTruthy();
 
-    await page.type('.terminal.xterm textarea', 'top');
-    await page.keyboard.press('Enter');
-    await page.waitForTimeout(3000);
+      await page.type('.terminal.xterm textarea', 'top');
+      await page.keyboard.press('Enter');
+      await page.waitForTimeout(3000);
 
-    await elementHandle.screenshot({ path: screenShotPath });
-    const { pass: pass2 } = compareImages(expectedPath, screenShotPath);
-    expect(pass2).not.toBeTruthy();
+      await elementHandle.screenshot({ path: screenShotPath });
+      const { pass: pass2 } = compareImages(expectedPath, screenShotPath);
+      expect(pass2).not.toBeTruthy();
+    }
   });
 });

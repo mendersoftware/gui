@@ -15,7 +15,7 @@ export const contextOptions = {
   // headless: false,
   launchOptions: {
     ...contextArgs,
-    args: ['--disable-dev-shm-usage', '--disable-web-security']
+    args: process.env.TEST_ENVIRONMENT === 'staging' ? [] : ['--disable-dev-shm-usage', '--disable-web-security']
     // to ease running the test locally and "headful" uncomment and modify the below option to match your preferred browser installation
     // this might also require adjusting the `runWith` call at the bottom of the file
     // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
@@ -24,8 +24,8 @@ export const contextOptions = {
 
 const options: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
-  // Two retries for each test.
   reporter: process.env.CI ? [['list'], ['junit', { outputFile: 'junit/results.xml' }]] : 'line',
+  // Two retries for each test.
   retries: 2,
   testDir: 'integration',
   timeout: 60000,
