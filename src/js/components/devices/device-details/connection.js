@@ -94,19 +94,21 @@ const troubleshootingTools = [
   { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
 ];
 
-export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, style, userRoles }) => {
+export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, style, userCapabilities }) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
+
+  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
 
   useEffect(() => {
     const allowedTabs = troubleshootingTools.reduce((accu, tab) => {
-      if ((tab.needsWriteAccess && !userRoles.hasWriteAccess) || (tab.needsTroubleshoot && !userRoles.canTroubleshoot)) {
+      if ((tab.needsWriteAccess && !hasWriteAccess) || (tab.needsTroubleshoot && !canTroubleshoot)) {
         return accu;
       }
       accu.push(tab);
       return accu;
     }, []);
     setAvailableTabs(allowedTabs);
-  }, [userRoles]);
+  }, [hasWriteAccess, canTroubleshoot]);
 
   const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
   return (
@@ -124,7 +126,7 @@ export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socke
               }
               return <Component key={item.key} docsVersion={docsVersion} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
             })}
-          {hasAuditlogs && userRoles.isAdmin && connect_status !== DEVICE_CONNECT_STATES.unknown && (
+          {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
             <Link className="flexbox center-aligned margin-left" to={`/auditlog?object_type=device&object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`}>
               List all log entries for this device
             </Link>

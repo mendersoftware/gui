@@ -1,3 +1,4 @@
+'use strict';
 import hashString from 'md5';
 import Cookies from 'universal-cookie';
 
@@ -6,14 +7,27 @@ import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
-import UserConstants, { OWN_USER_ID, twoFAStates } from '../constants/userConstants';
+import UserConstants from '../constants/userConstants';
 import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
 import { cleanUp, logout } from '../auth';
-import { extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
+import { ALL_DEVICES } from '../constants/deviceConstants';
 
 const cookies = new Cookies();
-const { emptyRole, rolesByName, useradmApiUrl } = UserConstants;
+const {
+  defaultPermissionSets,
+  emptyRole,
+  emptyUiPermissions,
+  OWN_USER_ID,
+  PermissionTypes,
+  rolesById: defaultRolesById,
+  twoFAStates,
+  uiPermissionsById,
+  uiPermissionsByArea,
+  useradmApiUrl,
+  useradmApiUrlv2
+} = UserConstants;
 
 const handleLoginError = (err, has2FA) => dispatch => {
   const errorText = extractErrorMessage(err);
@@ -209,81 +223,290 @@ export const disableUser2fa =
       .catch(err => commonErrorHandler(err, `There was an error disabling Two Factor authentication for the user.`, dispatch))
       .then(() => Promise.resolve(dispatch(getUser(userId))));
 
-export const getRoles = () => (dispatch, getState) =>
-  GeneralApi.get(`${useradmApiUrl}/roles`)
-    .then(({ data: roles }) => {
-      const rolesState = getState().users.rolesById;
-      const rolesById = roles.reduce((accu, role) => {
-        const { allowUserManagement, groups } = role.permissions.reduce(
-          (accu, permission) => {
-            if (permission.action === rolesByName.deploymentCreation.action && permission.object.type === rolesByName.deploymentCreation.object.type) {
-              accu.groups.push(permission.object.value);
-            }
-            if (
-              role.name === rolesByName.admin ||
-              (permission.action == rolesByName.userManagement.action &&
-                permission.object.type == rolesByName.userManagement.object.type &&
-                permission.object.value == rolesByName.userManagement.object.value)
-            ) {
-              accu.allowUserManagement = true;
-            }
+/* RBAC related things follow:  */
+
+const mapHttpPermission = permission =>
+  Object.entries(uiPermissionsByArea).reduce((accu, [area, definition]) => {
+    const endpointMatches = definition.endpoints.filter(
+      endpoint => endpoint.path.test(permission.value) && (endpoint.types.includes(permission.type) || permission.type === PermissionTypes.Any)
+    );
+    if (permission.value === PermissionTypes.Any || (permission.value.includes(AppConstants.apiRoot) && endpointMatches.length)) {
+      const collector = accu[area] || [];
+      const endpointUiPermission = endpointMatches.reduce((endpointAccu, endpoint) => [...endpointAccu, ...endpoint.uiPermissions], []);
+      accu[area] = (endpointUiPermission || definition.uiPermissions).reduce((permissionsAccu, uiPermission) => {
+        if (permission.type === PermissionTypes.Any || (!endpointMatches.length && uiPermission.verbs.some(verb => verb === permission.type))) {
+          permissionsAccu.push(uiPermission.value);
+        }
+        return permissionsAccu;
+      }, collector);
+    }
+    return accu;
+  }, {});
+
+const permissionActionTypes = {
+  any: mapHttpPermission,
+  CREATE_DEPLOYMENT: permission =>
+    permission.type === PermissionTypes.DeviceGroup
+      ? {
+          deployments: [uiPermissionsById.deploy.value],
+          groups: { [permission.value]: [uiPermissionsById.deploy.value] }
+        }
+      : {},
+  http: mapHttpPermission,
+  REMOTE_TERMINAL: permission =>
+    permission.type === PermissionTypes.DeviceGroup
+      ? {
+          groups: { [permission.value]: [uiPermissionsById.connect.value] }
+        }
+      : {},
+  VIEW_DEVICE: permission =>
+    permission.type === PermissionTypes.DeviceGroup
+      ? {
+          groups: { [permission.value]: [uiPermissionsById.read.value] }
+        }
+      : {}
+};
+
+const combineGroupPermissions = (existingGroupPermissions, additionalPermissions = {}) =>
+  Object.entries(additionalPermissions).reduce((groupsAccu, [name, permissions]) => {
+    let groupPermissions = groupsAccu[name] || [];
+    groupsAccu[name] = [...permissions, ...groupPermissions].filter(duplicateFilter);
+    return groupsAccu;
+  }, existingGroupPermissions);
+
+const mergePermissions = (existingPermissions = { ...emptyUiPermissions }, addedPermissions) =>
+  Object.entries(existingPermissions).reduce((accu, [key, value]) => {
+    let values;
+    if (!addedPermissions[key]) {
+      accu[key] = value;
+      return accu;
+    }
+    if (Array.isArray(value)) {
+      values = [...value, ...addedPermissions[key]].filter(duplicateFilter);
+    } else {
+      values = combineGroupPermissions({ ...value }, addedPermissions[key]);
+    }
+    accu[key] = values;
+    return accu;
+  }, {});
+
+const tryParseCustomPermission = permission => {
+  const uiPermissions = permissionActionTypes[permission.action](permission.object);
+  const result = mergePermissions({ ...emptyUiPermissions }, uiPermissions);
+  return { isCustom: true, permission, result };
+};
+
+const customPermissionHandler = (accu, permission) => {
+  let processor = tryParseCustomPermission(permission);
+  return {
+    ...accu,
+    isCustom: accu.isCustom || processor.isCustom,
+    uiPermissions: mergePermissions(accu.uiPermissions, processor.result)
+  };
+};
+
+const mapGroupPermissionSet = (permissionSetName, groupNames, existingGroupsPermissions = {}) => {
+  const groupPermission = Object.values(uiPermissionsById).find(permission => permission.permissionSets.groups === permissionSetName).value;
+  return groupNames.reduce((accu, groupName) => combineGroupPermissions(accu, { [groupName]: [groupPermission] }), existingGroupsPermissions);
+};
+
+const parseRolePermissions = ({ permission_sets_with_scope = [], permissions = [] }, permissionSets) => {
+  const preliminaryResult = permission_sets_with_scope.reduce(
+    (accu, permissionSet) => {
+      let processor = permissionSets[permissionSet.name];
+      if (!processor) {
+        return accu;
+      } else if (permissionSet.scope?.type === uiPermissionsByArea.groups.scope) {
+        const groups = mapGroupPermissionSet(permissionSet.name, permissionSet.scope.value, accu.uiPermissions.groups);
+        return { ...accu, uiPermissions: { ...accu.uiPermissions, groups } };
+      } else if (!processor.result) {
+        return processor.permissions.reduce(customPermissionHandler, accu);
+      }
+      return {
+        ...accu,
+        isCustom: accu.isCustom || processor.isCustom,
+        uiPermissions: mergePermissions(accu.uiPermissions, processor.result)
+      };
+    },
+    { isCustom: false, uiPermissions: { ...emptyUiPermissions, groups: {} } }
+  );
+  return permissions.reduce(customPermissionHandler, preliminaryResult);
+};
+
+export const normalizeRbacRoles = (roles, rolesById, permissionSets) =>
+  roles.reduce(
+    (accu, role) => {
+      let normalizedPermissions;
+      let isCustom = false;
+      if (rolesById[role.name]) {
+        normalizedPermissions = {
+          ...rolesById[role.name].uiPermissions,
+          groups: { ...rolesById[role.name].uiPermissions.groups }
+        };
+      } else {
+        const result = parseRolePermissions(role, permissionSets);
+        normalizedPermissions = result.uiPermissions;
+        isCustom = result.isCustom;
+      }
+
+      const roleState = accu[role.name] ?? { ...emptyRole };
+      accu[role.name] = {
+        ...roleState,
+        ...role,
+        description: roleState.description ? roleState.description : role.description,
+        editable: !defaultRolesById[role.name] && !isCustom && (typeof roleState.editable !== 'undefined' ? roleState.editable : true),
+        isCustom,
+        name: roleState.name ? roleState.name : role.name,
+        uiPermissions: normalizedPermissions
+      };
+      return accu;
+    },
+    { ...rolesById }
+  );
+
+export const mapUserRolesToUiPermissions = (userRoles, roles) =>
+  userRoles.reduce(
+    (accu, roleId) => {
+      if (!roleId) {
+        return accu;
+      }
+      return mergePermissions(accu, roles[roleId].uiPermissions);
+    },
+    { ...emptyUiPermissions }
+  );
+
+export const getPermissionSets = () => (dispatch, getState) =>
+  GeneralApi.get(`${useradmApiUrlv2}/permission_sets`).then(({ data }) => {
+    const permissionSets = data.reduce(
+      (accu, permissionSet) => {
+        const permissionSetState = accu[permissionSet.name] ?? {};
+        const permissionSetObject = { ...permissionSetState, ...permissionSet };
+        permissionSetObject.result = Object.values(uiPermissionsById).reduce(
+          (accu, item) => {
+            // eslint-disable-next-line no-unused-vars
+            const { groups, ...remainingAreas } = item.permissionSets;
+            accu = Object.entries(remainingAreas).reduce((collector, [area, permissionSet]) => {
+              if (permissionSet === permissionSetObject.name) {
+                collector[area] = [...collector[area], item.value];
+              }
+              return collector;
+            }, accu);
             return accu;
           },
-          { allowUserManagement: false, groups: [] }
+          { ...emptyUiPermissions }
         );
-        accu[role.name] = {
-          ...emptyRole,
-          ...rolesState[role.name],
-          groups,
-          description: rolesState[role.name] && rolesState[role.name].description ? rolesState[role.name].description : role.description,
-          editable: rolesState[role.name] && typeof rolesState[role.name].editable !== 'undefined' ? rolesState[role.name].editable : true,
-          title: rolesState[role.name] && rolesState[role.name].title ? rolesState[role.name].title : role.name,
-          permissions: role.permissions,
-          allowUserManagement: allowUserManagement
-        };
+        if (permissionSetObject.supported_scope_types?.includes(uiPermissionsByArea.groups.scope)) {
+          permissionSetObject.result.groups = mapGroupPermissionSet(permissionSetObject.name, [ALL_DEVICES]);
+        }
+        accu[permissionSet.name] = permissionSetObject;
         return accu;
-      }, {});
-      return dispatch({ type: UserConstants.RECEIVED_ROLES, rolesById });
-    })
-    .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'));
+      },
+      { ...getState().users.permissionSetsById }
+    );
+    return Promise.all([dispatch({ type: UserConstants.RECEIVED_PERMISSION_SETS, value: permissionSets }), permissionSets]);
+  });
 
-const transformRoleDataToRole = roleData => {
-  let permissions = roleData.groups.reduce(
-    (accu, group) => [
-      ...accu,
-      { ...rolesByName.deploymentCreation, object: { ...rolesByName.deploymentCreation.object, value: group } },
-      { ...rolesByName.groupAccess, object: { ...rolesByName.groupAccess.object, value: group } }
-    ],
-    []
+export const getRoles = () => (dispatch, getState) =>
+  Promise.all([GeneralApi.get(`${useradmApiUrlv2}/roles`), dispatch(getPermissionSets())])
+    .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'))
+    .then(([{ data: roles }, permissionSetTasks]) => {
+      const rolesById = normalizeRbacRoles(roles, getState().users.rolesById, permissionSetTasks[permissionSetTasks.length - 1]);
+      return Promise.resolve(dispatch({ type: UserConstants.RECEIVED_ROLES, value: rolesById }));
+    });
+
+/**
+ * transforms [{ group: "groupName",  uiPermissions: ["read", "manage", "connect"] }, ...] to
+ * [{ name: "ReadDevices", scope: { type: "DeviceGroups", value: ["groupName", ...] } }, ...]
+ */
+const transformGroupRoleDataToScopedPermissionsSets = areaPermissions => {
+  const permissionSetObject = areaPermissions.reduce((groupAccu, groupWithPermissions) => {
+    groupAccu = groupWithPermissions.uiPermissions.reduce((groupPermissionAccu, groupPermission) => {
+      const permissionSetState = groupAccu[uiPermissionsById[groupPermission].permissionSets.groups] ?? { type: uiPermissionsByArea.groups.scope, value: [] };
+      groupAccu[uiPermissionsById[groupPermission].permissionSets.groups] = {
+        ...permissionSetState,
+        value: [...permissionSetState.value, groupWithPermissions.group]
+      };
+      return groupPermissionAccu;
+    }, groupAccu);
+    return groupAccu;
+  }, {});
+  return Object.entries(permissionSetObject).map(([name, { value, ...scope }]) => {
+    if (value.includes(ALL_DEVICES)) {
+      return { name };
+    }
+    return { name, scope: { ...scope, value: value.filter(duplicateFilter) } };
+  });
+};
+
+const transformRoleDataToRole = (roleData, roleState = {}) => {
+  const role = { ...roleState, ...roleData };
+  // eslint-disable-next-line no-unused-vars
+  const { description = '', groups, name } = role;
+  // eslint-disable-next-line no-unused-vars
+  const { groups: emptyGroups, ...remainder } = emptyUiPermissions;
+
+  const sourceSets = roleData.source?.permission_sets_with_scope?.filter(permissionSet => permissionSet.scope?.type !== uiPermissionsByArea.groups.scope);
+  const { permissionSetsWithScope, roleUiPermissions } = Object.keys(remainder).reduce(
+    (accu, area) => {
+      const areaPermissions = role[area];
+      if (!Array.isArray(areaPermissions)) {
+        return accu;
+      }
+      accu.roleUiPermissions[area] = areaPermissions;
+      const mappedPermissions = areaPermissions.map(uiPermission => ({ name: uiPermissionsById[uiPermission].permissionSets[area] }));
+      accu.permissionSetsWithScope.push(...mappedPermissions);
+      return accu;
+    },
+    { permissionSetsWithScope: sourceSets || [{ name: defaultPermissionSets.Basic.value }], roleUiPermissions: {} }
   );
-  if (roleData.allowUserManagement) {
-    permissions.push(rolesByName.userManagement);
-  }
+  const groupPermissions = transformGroupRoleDataToScopedPermissionsSets(groups);
+  permissionSetsWithScope.push(...groupPermissions);
+  const groupsUiPermissions = groups.reduce((accu, { group, uiPermissions }) => {
+    if (group) {
+      accu[group] = uiPermissions;
+    }
+    return accu;
+  }, {});
   return {
-    name: roleData.name,
-    description: roleData.description,
-    permissions
+    permissionSetsWithScope,
+    role: {
+      ...emptyRole,
+      name,
+      description: description ? description : roleState.description,
+      uiPermissions: { ...emptyUiPermissions, ...roleUiPermissions, groups: groupsUiPermissions }
+    }
   };
 };
 
 export const createRole = roleData => dispatch => {
-  const role = transformRoleDataToRole(roleData);
-  return GeneralApi.post(`${useradmApiUrl}/roles`, role)
-    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role: { ...emptyRole, ...role }, roleId: role.name }), dispatch(getRoles())]))
+  const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData);
+  return GeneralApi.post(`${useradmApiUrlv2}/roles`, {
+    name: role.name,
+    description: role.description,
+    permission_sets_with_scope: permissionSetsWithScope
+  })
+    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
     .catch(err => commonErrorHandler(err, `There was an error creating the role:`, dispatch));
 };
 
-export const editRole = roleData => dispatch => {
-  const role = transformRoleDataToRole(roleData);
-  const roleId = role.name;
-  return GeneralApi.put(`${useradmApiUrl}/roles/${roleId}`, role)
-    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role: { ...emptyRole, ...role }, roleId }), dispatch(getRoles())]))
+export const editRole = roleData => (dispatch, getState) => {
+  const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData, getState().users.rolesById[roleData.name]);
+  return GeneralApi.put(`${useradmApiUrlv2}/roles/${role.name}`, {
+    description: role.description,
+    name: role.name,
+    permission_sets_with_scope: permissionSetsWithScope
+  })
+    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
     .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
 };
 
-export const removeRole = roleId => dispatch =>
-  GeneralApi.delete(`${useradmApiUrl}/roles/${roleId}`)
-    .then(() => Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, roleId }), dispatch(getRoles())]))
+export const removeRole = roleId => (dispatch, getState) =>
+  GeneralApi.delete(`${useradmApiUrlv2}/roles/${roleId}`)
+    .then(() => {
+      // eslint-disable-next-line no-unused-vars
+      const { [roleId]: toBeRemoved, ...rolesById } = getState().users.rolesById;
+      return Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, value: rolesById }), dispatch(getRoles())]);
+    })
     .catch(err => commonErrorHandler(err, `There was an error removing the role:`, dispatch));
 
 /*

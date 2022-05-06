@@ -6,7 +6,7 @@ import { setShowConnectingDialog } from '../../actions/userActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState, getTenantCapabilities } from '../../selectors';
+import { getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -26,6 +26,7 @@ export const Devices = props => {
     acceptedDevicesCount,
     activeDevicesCount,
     advanceOnboarding,
+    canManageDevices,
     clickHandle,
     deploymentDeviceLimit,
     getActiveDevices,
@@ -139,13 +140,15 @@ export const Devices = props => {
           delta={deltaActivity}
           onClick={clickHandle}
         />
-        <RedirectionWidget
-          target="/devices/accepted"
-          content="Learn how to connect a device"
-          buttonContent="Connect a device"
-          onClick={() => setShowConnectingDialog(true)}
-          isActive={noDevicesAvailable}
-        />
+        {canManageDevices && (
+          <RedirectionWidget
+            target="/devices/accepted"
+            content="Learn how to connect a device"
+            buttonContent="Connect a device"
+            onClick={() => setShowConnectingDialog(true)}
+            isActive={noDevicesAvailable}
+          />
+        )}
       </div>
       {onboardingComponent ? onboardingComponent : null}
     </div>
@@ -156,8 +159,10 @@ const actionCreators = { advanceOnboarding, getActiveDevices, getAllDevicesBySta
 
 const mapStateToProps = state => {
   const { hasFullFiltering } = getTenantCapabilities(state);
+  const { canManageDevices } = getUserCapabilities(state);
   return {
     activeDevicesCount: state.devices.byStatus.active.total,
+    canManageDevices,
     deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     hasFullFiltering,

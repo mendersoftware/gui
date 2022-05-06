@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
+import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 import Roles, { RoleManagement } from './roles';
 
 const mockStore = configureStore([thunk]);
@@ -33,7 +33,7 @@ describe('Roles Component', () => {
     const editRoleMock = jest.fn();
     const removeRoleMock = jest.fn();
     const groups = defaultState.devices.groups.byId;
-    const roles = Object.entries(defaultState.users.rolesById).map(([id, role]) => ({ id, ...role }));
+    const roles = Object.values(defaultState.users.rolesById);
 
     const ui = (
       <RoleManagement
@@ -49,24 +49,45 @@ describe('Roles Component', () => {
     );
     render(ui);
 
-    userEvent.click(screen.getByRole('button', { name: /remove/i }));
+    const role = screen.getByText(/test description/i).parentElement;
+    userEvent.click(within(role).getByText(/view details/i));
+    let collapse = screen.getByText(/edit role/i).parentElement.parentElement;
+    userEvent.click(screen.getByRole('button', { name: /delete/i }));
     expect(removeRoleMock).toHaveBeenCalled();
-    const collapse = screen.getByText(/Edit the role/i).parentElement;
-    expect(collapse).not.toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: /edit/i }));
-    expect(collapse).toBeVisible();
-    expect(screen.getByLabelText(/Role name/i)).toBeDisabled();
-    userEvent.type(within(collapse).getByLabelText(/Description/i), 'something');
+    // expect(screen.getByLabelText(/Role name/i)).toBeDisabled();
+    // userEvent.type(within(collapse).getByLabelText(/Name/i), 'test');
+    userEvent.click(within(role).getByText(/view details/i));
+    collapse = screen.getByText(/edit role/i).parentElement.parentElement;
+    const submitButton = within(collapse).getByRole('button', { name: /submit/i }, { hidden: true });
     expect(within(collapse).getByRole('button', { name: /submit/i })).toBeDisabled();
-    userEvent.click(within(collapse).getByLabelText(/manage other users/));
-    userEvent.click(within(collapse).getByLabelText(Object.keys(groups)[0]));
-    expect(within(collapse).getByRole('button', { name: /submit/i })).not.toBeDisabled();
-    await userEvent.click(within(collapse).getByRole('button', { name: /submit/i }));
+    userEvent.type(within(collapse).getByLabelText(/Description/i), 'something');
+    await selectMaterialUiSelectOption(within(collapse).getByText(/search groups/i), Object.keys(groups)[0]);
+
+    let selectButton = within(collapse)
+      .getByText(/select/i)
+      .parentNode.parentNode.children[1].querySelector('[role=button]');
+    // Open the select dropdown
+    userEvent.click(selectButton);
+    // Get the dropdown element. We don't use getByRole() because it includes <select>s too.
+    let listbox = document.body.querySelector('ul[role=listbox]');
+    // Click the list item
+    let listItem = within(listbox).getByText(/deploy/i);
+    userEvent.click(listItem);
+    expect(submitButton).not.toBeDisabled();
+    await userEvent.click(submitButton);
     expect(editRoleMock).toHaveBeenCalledWith({
-      allowUserManagement: true,
+      allowUserManagement: false,
+      auditlog: [],
       description: `${defaultState.users.rolesById.test.description}something`,
-      groups: [Object.keys(defaultState.devices.groups.byId)[0]],
-      name: 'test'
+      groups: [
+        { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['read'] },
+        { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['deploy'] },
+        { disableEdit: false, group: '', uiPermissions: [] }
+      ],
+      name: 'test',
+      releases: [],
+      source: defaultState.users.rolesById.test,
+      userManagement: []
     });
   });
 });

@@ -18,7 +18,7 @@ import { getOnboardingState } from '../../actions/onboardingActions';
 import { getUser, setHideAnnouncement, logoutUser, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { decodeSessionToken, extractErrorMessage, isEmpty } from '../../helpers';
-import { getDocsVersion, getIsEnterprise, getUserRoles, getUserSettings } from '../../selectors';
+import { getDocsVersion, getIsEnterprise, getUserCapabilities, getUserSettings } from '../../selectors';
 import Tracking from '../../tracking';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -261,7 +261,7 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   const organization = !isEmpty(state.organization.organization) ? state.organization.organization : { plan: 'os', id: null };
-  const { allowUserManagement } = getUserRoles(state);
+  const { canManageUsers: allowUserManagement } = getUserCapabilities(state);
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     allowUserManagement,

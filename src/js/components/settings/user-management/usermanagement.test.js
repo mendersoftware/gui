@@ -47,11 +47,12 @@ describe('UserManagement Component', () => {
     );
 
     expect(screen.queryByText(/remove the user with email/i)).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /remove/i }));
+    const list = screen.getAllByText(/view details/i);
+    userEvent.click(list[list.length - 1]);
+    userEvent.click(screen.getByRole('button', { name: /delete user/i }));
     expect(screen.queryByText(/remove the user with email/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));
-    const user = screen.getByText(defaultState.users.byId[userId].email).parentElement;
-    userEvent.click(within(user).getByRole('button', { name: /edit/i }));
+    userEvent.click(list[list.length - 1]);
     const input = screen.getByDisplayValue(defaultState.users.byId[userId].email);
     userEvent.clear(input);
     userEvent.type(input, 'test@test');
@@ -60,7 +61,7 @@ describe('UserManagement Component', () => {
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
     userEvent.click(screen.getByRole('checkbox', { name: /reset the password/i }));
     userEvent.click(screen.getByRole('checkbox', { name: /reset the password/i }));
-    userEvent.click(screen.getByRole('button', { name: /Save changes/i }));
+    userEvent.click(screen.getByRole('button', { name: /Save/i }));
   });
 
   it('allows role adjustments', async () => {
@@ -69,12 +70,8 @@ describe('UserManagement Component', () => {
         <UserManagement />
       </Provider>
     );
-    userEvent.click(
-      within(screen.getByText(defaultState.users.byId[userId].email).parentElement).getByRole('button', {
-        name: /edit/i,
-        hidden: true
-      })
-    );
+    const list = screen.getAllByText(/view details/i);
+    userEvent.click(list[list.length - 1]);
     const selectButton = screen.getByText(/roles/i).parentNode.querySelector('[role=button]');
     userEvent.click(selectButton);
     const listbox = document.body.querySelector('ul[role=listbox]');

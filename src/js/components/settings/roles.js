@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Button, Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Add as AddIcon, ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import RoleDefinition, { emptyRole } from './roledefinition';
+import { emptyRole } from '../../constants/userConstants';
+import RoleDefinition from './roledefinition';
 
 export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGroups, getRoles, groups, removeRole, roles }) => {
-  const theme = useTheme();
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [role, setRole] = useState(emptyRole);
+  const [role, setRole] = useState({ ...emptyRole });
 
   useEffect(() => {
     if (!Object.keys(groups).length) {
@@ -28,18 +27,13 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
   const addRole = () => {
     setAdding(true);
     setEditing(false);
-    setRole(emptyRole);
+    setRole({ ...emptyRole });
   };
 
   const onEditRole = editedRole => {
     setAdding(false);
     setEditing(true);
     setRole(editedRole);
-  };
-
-  const onRemoveRole = roleId => {
-    removeRole(roleId);
-    onCancel();
   };
 
   const onCancel = () => {
@@ -63,30 +57,34 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
         <TableHead>
           <TableRow>
             <TableCell>Role</TableCell>
-            <TableCell>Manage users</TableCell>
-            <TableCell>Device group permission</TableCell>
             <TableCell>Description</TableCell>
             <TableCell>Manage</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {roles.map((role, index) => (
-            <TableRow key={role.id || index} hover>
-              <TableCell>{role.title}</TableCell>
-              <TableCell>{role.allowUserManagement ? 'Yes' : 'No'}</TableCell>
-              <TableCell>{role.groups.length ? role.groups.join(', ') : 'All devices'}</TableCell>
+            <TableRow className="clickable" key={role.id || index} hover onClick={() => onEditRole(role)}>
+              <TableCell>{role.name}</TableCell>
               <TableCell>{role.description || '-'}</TableCell>
               <TableCell>
-                {role.editable && !role.groups.some(group => groups[group]?.filters.length) && <Button onClick={() => onEditRole(role)}>Edit</Button>}
-                {role.editable && <Button onClick={() => onRemoveRole(role.id)}>Remove</Button>}
+                <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>
+                  view details <ArrowRightAltIcon />
+                </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
-      {!adding && <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} style={{ marginBottom: theme.spacing(2) }} />}
-      <RoleDefinition adding={adding} editing={editing} onCancel={onCancel} onSubmit={onSubmit} selectedRole={role} stateGroups={groups} />
+      <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} />
+      <RoleDefinition
+        adding={adding}
+        editing={editing}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        removeRole={removeRole}
+        selectedRole={role}
+        stateGroups={groups}
+      />
     </div>
   );
 };
