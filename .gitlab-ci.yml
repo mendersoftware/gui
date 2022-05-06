@@ -110,7 +110,6 @@ test:unit:
       - coverage
       - logs
     reports:
-      cobertura: coverage/cobertura-coverage.xml
       junit: junit.xml
     when: always
   tags:
@@ -160,7 +159,7 @@ test:prep:
       - mender-stress-test-client
     expire_in: 30 days
 
-test:staging-deployment:
+.template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
   stage: .post
   services:
@@ -184,8 +183,8 @@ test:staging-deployment:
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
     - curl -o fixtures/mender-demo-artifact.mender "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
     - docker pull mendersoftware/mender-client-docker-addons:master
-  script:
     - npm ci --cache .npm --prefer-offline
+  script:
     - npm run test
   after_script:
     - cd $CI_PROJECT_DIR
@@ -199,7 +198,22 @@ test:staging-deployment:
     paths:
       - tests/e2e_tests/test-results
       - logs
-    when: on_failure
+    when: always
+
+test:staging-deployment:chrome:
+  extends: .template:test:staging-deployment
+  script:
+    - npm run test
+
+test:staging-deployment:firefox:
+  extends: .template:test:staging-deployment
+  script:
+    - npm run test -- --browser=firefox
+
+test:staging-deployment:webkit:
+  extends: .template:test:staging-deployment
+  script:
+    - npm run test -- --browser=webkit
 
 publish:tests:
   stage: publish

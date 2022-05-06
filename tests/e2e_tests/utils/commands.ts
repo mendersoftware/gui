@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as https from 'https';
 import * as path from 'path';
+import { v4 as uuid } from 'uuid';
 import jwtDecode from 'jwt-decode';
 import { spawn } from 'child_process';
 import { Page } from '@playwright/test';
@@ -9,6 +10,19 @@ import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 
 import { authenticator } from 'otplib';
+
+export const getPeristentLoginInfo = () => {
+  let loginInfo;
+  try {
+    const content = fs.readFileSync('loginInfo.json', 'utf8');
+    loginInfo = JSON.parse(content);
+    return loginInfo;
+  } catch (error) {
+    loginInfo = { username: process.env.STAGING_USER ?? `${uuid()}@example.com`, password: process.env.STAGING_PASSWORD ?? uuid() };
+  }
+  fs.writeFileSync('loginInfo.json', JSON.stringify(loginInfo));
+  return loginInfo;
+};
 
 const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io', token = '', projectRoot) => {
   const connectConfigFile = fs.readFileSync(`dockerClient/${fileName}.json`, 'utf8');
@@ -69,8 +83,7 @@ export const startDockerClient = async (baseUrl, token) => {
   updateConfigFileWithUrl('mender-connect', srippedBaseUrl, token, projectRoot);
   // NB! to run the tests against a running local Mender backend, uncomment & adjust the following
   // const localNetwork = ['--network', 'menderintegration_mender'];
-  const localNetwork = baseUrl.includes('docker.mender.io')
-    ? ['--network', 'gui-tests_mender'] : [];
+  const localNetwork = baseUrl.includes('docker.mender.io') ? ['--network', 'gui-tests_mender'] : [];
   let args = [
     'run',
     '--name',
@@ -101,6 +114,19 @@ export const startDockerClient = async (baseUrl, token) => {
   child.on('close', code => {
     console.log(`child process exited with code ${code}`);
   });
+  return Promise.resolve();
+};
+
+export const stopDockerClient = async () => {
+  console.log('stopping: docker');
+  let child = spawn('docker stop connect-client && docker rm connect-client', {
+    shell: true
+  });
+  child.on('error', err => console.error(`${err}`));
+  child.on('message', err => console.error(`${err}`));
+  child.on('spawn', err => console.error(`${err}`));
+  child.stderr.on('data', data => console.error(`stderr docker: ${data}`));
+  child.on('close', code => console.log(`child process exited with code ${code}`));
   return Promise.resolve();
 };
 
