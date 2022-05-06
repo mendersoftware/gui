@@ -110,7 +110,6 @@ test:unit:
       - coverage
       - logs
     reports:
-      cobertura: coverage/cobertura-coverage.xml
       junit: junit.xml
     when: always
   tags:
