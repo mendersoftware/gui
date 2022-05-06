@@ -98,7 +98,7 @@ test.describe('Settings', () => {
       await page.fill('[name=password]', password);
       await page.click(`button:text('Log in')`);
       await page.waitForTimeout(1000);
-      await page.fill('[name=token2fa]', '123456');
+      await page.fill('#token2fa', '123456');
       await page.click(`button:text('Log in')`);
       // still on /login page plus an error is displayed
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
@@ -111,7 +111,7 @@ test.describe('Settings', () => {
       await page.fill('[name=password]', password);
       await page.click(`button:text('Log in')`);
       const newToken = await generateOtp();
-      await page.fill('[name=token2fa]', newToken);
+      await page.fill('#token2fa', newToken);
       await page.click(`button:text('Log in')`);
       await page.waitForSelector('text=License information');
       await page.goto(`${baseUrl}ui/#/settings/my-account`);
