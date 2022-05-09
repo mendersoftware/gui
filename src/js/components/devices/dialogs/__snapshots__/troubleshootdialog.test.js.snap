@@ -406,7 +406,10 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
         class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-4"
         id="mui-1"
       >
-        Troubleshoot
+        Troubleshoot - 
+        <div>
+          dc:a6:32:12:ad:bf
+        </div>
       </h2>
       <div
         class="MuiDialogContent-root dialog-content flexbox column emotion-5"

@@ -25,7 +25,8 @@ import { apiUrl } from '../../../api/general-api';
 import { createDownload, versionCompare } from '../../../helpers';
 import ListOptions from '../widgets/listoptions';
 import { getCode } from './make-gateway-dialog';
-import { getFeatures, getIsEnterprise, getUserRoles } from '../../../selectors';
+import { getFeatures, getIdAttribute, getIsEnterprise, getUserRoles } from '../../../selectors';
+import DeviceIdentityDisplay from './../../common/deviceidentity';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
@@ -48,12 +49,13 @@ const tabs = {
 
 export const TroubleshootDialog = ({
   canPreview,
-  deviceId,
+  device,
   deviceFileUpload,
   getDeviceFileDownloadLink,
   hasAuditlogs,
   isEnterprise,
   isHosted,
+  idAttribute,
   onCancel,
   onSocketClose,
   open,
@@ -117,14 +119,14 @@ export const TroubleshootDialog = ({
     if (!(open || socketInitialized) || socketInitialized) {
       return;
     }
-    socket = canTroubleshoot ? new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`) : undefined;
+    socket = canTroubleshoot ? new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${device.id}/connect`) : undefined;
 
     return () => {
       onSendMessage({ typ: MessageTypes.Stop });
       setSessionId(null);
       setSocketInitialized(false);
     };
-  }, [deviceId, open]);
+  }, [device.id, open]);
 
   const onSendMessage = ({ typ, body, props }) => {
     if (!socket) {
@@ -140,7 +142,7 @@ export const TroubleshootDialog = ({
       onSendMessage({ typ: MessageTypes.Stop, body: {}, props: {} });
     } else {
       setSocketInitialized(false);
-      socket = new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`);
+      socket = new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${device.id}/connect`);
     }
   };
 
@@ -154,7 +156,7 @@ export const TroubleshootDialog = ({
 
   const onDownloadClick = path => {
     setDownloadPath(path);
-    getDeviceFileDownloadLink(deviceId, path).then(address => {
+    getDeviceFileDownloadLink(device.id, path).then(address => {
       const filename = path.substring(path.lastIndexOf('/') + 1) || 'file';
       createDownload(address, filename);
     });
@@ -176,7 +178,9 @@ export const TroubleshootDialog = ({
   const visibilityToggle = !socket ? { maxHeight: 0, overflow: 'hidden' } : {};
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg">
-      <DialogTitle>Troubleshoot</DialogTitle>
+      <DialogTitle>
+        Troubleshoot - <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
+      </DialogTitle>
       <DialogContent className="dialog-content flexbox column" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
           {availableTabs.map(tab => (
@@ -185,7 +189,7 @@ export const TroubleshootDialog = ({
         </Tabs>
         {currentTab === tabs.transfer.value && (
           <FileTransfer
-            deviceId={deviceId}
+            deviceId={device.id}
             downloadPath={downloadPath}
             file={file}
             onDownload={onDownloadClick}
@@ -252,7 +256,7 @@ export const TroubleshootDialog = ({
             <div style={{ width: 280 }} />
           )}
           {canAuditlog && hasAuditlogs && (
-            <Button component={Link} to={`auditlog?object_id=${deviceId}&start_date=${BEGINNING_OF_TIME}`}>
+            <Button component={Link} to={`auditlog?object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`}>
               View {tabs[currentTab].link} for this device
             </Button>
           )}
@@ -272,6 +276,7 @@ const mapStateToProps = state => {
   const { isHosted } = getFeatures(state);
   return {
     canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
+    idAttribute: getIdAttribute(state),
     isEnterprise: getIsEnterprise(state),
     isHosted,
     userRoles: getUserRoles(state)
