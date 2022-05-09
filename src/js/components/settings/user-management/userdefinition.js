@@ -78,6 +78,8 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
     }, things);
   }, [selectedRoles, roles]);
 
+  const isSubmitDisabled = !selectedRoles.length;
+
   const isOAuth2 = !!login;
   const provider = isOAuth2 ? OAuth2Providers.find(provider => !!login[provider.id]) : {};
   return (
@@ -134,7 +136,7 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
         <Button onClick={onCancel} style={{ marginRight: theme.spacing(2) }}>
           Cancel
         </Button>
-        <Button color="secondary" variant="contained" target="_blank" onClick={onSubmitClick}>
+        <Button color="secondary" variant="contained" disabled={isSubmitDisabled} target="_blank" onClick={onSubmitClick}>
           Save
         </Button>
       </div>
