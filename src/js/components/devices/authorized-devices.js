@@ -258,7 +258,7 @@ export const Authorized = props => {
       .then(() => {
         const deleteRequests = devices.reduce((accu, device) => {
           if (device.auth_sets?.length) {
-            accu.push(deleteAuthset(devices.id, devices.auth_sets[0].id));
+            accu.push(deleteAuthset(device.id, device.auth_sets[0].id));
           }
           return accu;
         }, []);
