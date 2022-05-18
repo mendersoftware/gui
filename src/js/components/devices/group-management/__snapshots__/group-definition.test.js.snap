@@ -199,7 +199,6 @@ exports[`GroupDefinition Component renders correctly 1`] = `
   width: 100%;
   position: relative;
   border-radius: 4px;
-  padding-right: 14px;
 }
 
 .emotion-3.Mui-disabled {
@@ -249,7 +248,6 @@ exports[`GroupDefinition Component renders correctly 1`] = `
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
   padding: 16.5px 14px;
-  padding-right: 0;
 }
 
 .emotion-4::-webkit-input-placeholder {
@@ -341,12 +339,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 }
 
 .emotion-5 {
-  position: absolute;
-  right: 0;
-  top: calc(50% - 14px);
-}
-
-.emotion-6 {
   text-align: left;
   position: absolute;
   bottom: 0;
@@ -364,7 +356,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   border-color: rgba(0, 0, 0, 0.23);
 }
 
-.emotion-7 {
+.emotion-6 {
   float: unset;
   overflow: hidden;
   display: block;
@@ -379,7 +371,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   white-space: nowrap;
 }
 
-.emotion-7>span {
+.emotion-6>span {
   padding-left: 5px;
   padding-right: 5px;
   display: inline-block;
@@ -387,7 +379,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   visibility: visible;
 }
 
-.emotion-8 {
+.emotion-7 {
   color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -401,11 +393,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   margin-left: 0;
 }
 
-.emotion-8.Mui-disabled {
+.emotion-7.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-8.Mui-error {
+.emotion-7.Mui-error {
   color: #d32f2f;
 }
 
@@ -425,7 +417,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         Select a group, or type to create new
       </label>
       <div
-        class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-3"
+        class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-3"
       >
         <input
           aria-autocomplete="list"
@@ -433,22 +425,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           aria-invalid="false"
           autocapitalize="none"
           autocomplete="off"
-          class="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
+          class="MuiOutlinedInput-input MuiInputBase-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
           id="group-creation-selection"
           role="combobox"
           spellcheck="false"
           type="text"
           value=""
         />
-        <div
-          class="MuiAutocomplete-endAdornment emotion-5"
-        />
         <fieldset
           aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline emotion-6"
+          class="MuiOutlinedInput-notchedOutline emotion-5"
         >
           <legend
-            class="emotion-7"
+            class="emotion-6"
           >
             <span>
               Select a group, or type to create new
@@ -459,7 +448,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
     </div>
   </div>
   <p
-    class="MuiFormHelperText-root emotion-8"
+    class="MuiFormHelperText-root emotion-7"
   />
   <p
     class="info"
