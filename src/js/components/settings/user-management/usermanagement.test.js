@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -61,6 +61,13 @@ describe('UserManagement Component', () => {
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
     userEvent.click(screen.getByRole('checkbox', { name: /reset the password/i }));
     userEvent.click(screen.getByRole('checkbox', { name: /reset the password/i }));
+    expect(screen.getByRole('button', { name: /Save/i })).toBeDisabled();
+    const selectButton = screen.getByText(/roles/i).parentNode.querySelector('[role=button]');
+    userEvent.click(selectButton);
+    const listbox = document.body.querySelector('ul[role=listbox]');
+    const listItem = within(listbox).getByText(/admin/i);
+    userEvent.click(listItem);
+    act(() => userEvent.type(listbox, '{esc}'));
     userEvent.click(screen.getByRole('button', { name: /Save/i }));
   });
 

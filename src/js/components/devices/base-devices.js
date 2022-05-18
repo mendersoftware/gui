@@ -130,7 +130,7 @@ export const defaultHeaders = {
     title: 'Device ID',
     attribute: { name: 'id', scope: 'identity' },
     sortable: true,
-    textRender: ({ id }) => id
+    textRender: ({ device }) => device.id
   },
   deviceStatus: {
     title: 'Status',
