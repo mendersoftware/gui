@@ -173,12 +173,12 @@ export const Authorized = props => {
   }, [columnSelection, selectedState, idAttribute.attribute]);
 
   useEffect(() => {
+    // only set state after all devices id data retrieved
     setIsInitialized(isInitialized => isInitialized || (settingsInitialized && devicesInitialized && pageLoading === false));
+    setDevicesInitialized(devicesInitialized => devicesInitialized || pageLoading === false);
   }, [settingsInitialized, devicesInitialized, pageLoading]);
 
   useEffect(() => {
-    // only set state after all devices id data retrieved
-    setDevicesInitialized(!!(pendingCount || acceptedCount));
     if (onboardingState.complete) {
       return;
     }
