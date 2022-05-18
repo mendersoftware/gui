@@ -453,7 +453,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
   transition: width 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
-.emotion-21 {
+.emotion-20 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -585,9 +585,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
               type="text"
               value=""
             />
-            <div
-              class="MuiAutocomplete-endAdornment emotion-6"
-            />
             <fieldset
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline emotion-10"
@@ -611,7 +608,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-21"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-20"
         data-testid="InfoOutlinedIcon"
         focusable="false"
         style="vertical-align: middle; margin: 0px 6px 4px 0px;"
