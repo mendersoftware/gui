@@ -279,7 +279,10 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         >
           Release
         </span>
-        <div>
+        <div
+          class="text-overflow "
+          title="r1"
+        >
           r1
         </div>
       </div>
@@ -289,7 +292,10 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         >
           Target device(s)
         </span>
-        <div>
+        <div
+          class="text-overflow "
+          title="test deployment"
+        >
           test deployment
         </div>
       </div>
@@ -446,7 +452,10 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         >
           Release
         </span>
-        <div>
+        <div
+          class="text-overflow "
+          title="r1"
+        >
           r1
         </div>
       </div>
@@ -456,7 +465,10 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         >
           Target device(s)
         </span>
-        <div>
+        <div
+          class="text-overflow "
+          title="test deployment 2"
+        >
           test deployment 2
         </div>
       </div>

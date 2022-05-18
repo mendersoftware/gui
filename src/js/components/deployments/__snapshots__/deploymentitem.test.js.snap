@@ -7,7 +7,10 @@ exports[`DeploymentItem Component renders correctly 1`] = `
   >
     Release
   </span>
-  <div>
+  <div
+    class="text-overflow "
+    title="test"
+  >
     test
   </div>
 </div>

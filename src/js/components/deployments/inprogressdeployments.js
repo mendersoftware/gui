@@ -126,7 +126,7 @@ export const Progress = props => {
             pageSize={progressPerPage}
             onChangeRowsPerPage={perPage => refreshDeployments(1, perPage, DEPLOYMENT_STATES.inprogress)}
             onChangePage={page => refreshDeployments(page, progressPerPage, DEPLOYMENT_STATES.inprogress)}
-            type="progress"
+            type={DEPLOYMENT_STATES.inprogress}
           />
           {/* </div> */}
         </div>
@@ -145,7 +145,7 @@ export const Progress = props => {
             pageSize={pendingPerPage}
             onChangeRowsPerPage={perPage => refreshDeployments(1, perPage, DEPLOYMENT_STATES.pending)}
             onChangePage={page => refreshDeployments(page, pendingPerPage, DEPLOYMENT_STATES.pending)}
-            type="pending"
+            type={DEPLOYMENT_STATES.pending}
           />
         </div>
       )}
