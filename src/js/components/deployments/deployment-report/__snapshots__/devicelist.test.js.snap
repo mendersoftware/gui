@@ -76,7 +76,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
         >
           <a
             href=\\"/devices?id=a1\\"
-            style=\\"font-weight: 500;\\"
+            style=\\"font-weight: initial; opacity: 1;\\"
           >
             <div>
               a1

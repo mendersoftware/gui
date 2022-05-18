@@ -3,18 +3,28 @@ import { connect } from 'react-redux';
 
 // material ui
 import { IconButton, Input, InputAdornment } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { Clear as ClearIcon, Check as CheckIcon, Edit as EditIcon } from '@mui/icons-material';
+
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
 import { setDeviceTags } from '../../actions/deviceActions';
 
-const iconStyle = { fontSize: '1.25rem' };
+const useStyles = makeStyles()(theme => ({
+  icon: {
+    fontSize: '1.25rem'
+  },
+  input: {
+    color: theme.palette.text.primary,
+    fontSize: '0.8125rem'
+  }
+}));
 
-export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags, style = {} }) => {
-  const theme = useTheme();
+export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
+  const { classes } = useStyles();
+
   const { id = '', tags = {} } = device;
   const { name = '' } = tags;
 
@@ -47,17 +57,17 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
 
   const editButton = (
     <IconButton onClick={onStartEdit} size="small">
-      <EditIcon style={iconStyle} />
+      <EditIcon className={classes.icon} />
     </IconButton>
   );
 
   const buttonArea = isEditing ? (
     <>
       <IconButton onClick={onSubmit} size="small">
-        <CheckIcon style={iconStyle} />
+        <CheckIcon className={classes.icon} />
       </IconButton>
       <IconButton onClick={onCancel} size="small">
-        <ClearIcon style={iconStyle} />
+        <ClearIcon className={classes.icon} />
       </IconButton>
     </>
   ) : (
@@ -69,12 +79,12 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags,
   return (
     <Input
       id={`${device.id}-id-input`}
+      className={classes.input}
       disabled={!isEditing}
       value={value}
       placeholder={`${id.substring(0, 6)}...`}
       onClick={onInputClick}
       onChange={({ target: { value } }) => setValue(value)}
-      style={{ ...style, color: theme.palette.text.primary, fontSize: '0.8125rem' }}
       type="text"
       endAdornment={(isHovered || isEditing) && <InputAdornment position="end">{buttonArea}</InputAdornment>}
     />
