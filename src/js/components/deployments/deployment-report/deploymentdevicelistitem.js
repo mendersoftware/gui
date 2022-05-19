@@ -31,7 +31,7 @@ const DeploymentDeviceListItem = ({ device, idAttribute, viewLog }) => {
   const softwareName = rootfsImageVersion || artifact_name;
   const encodedArtifactName = encodeURIComponent(softwareName);
   const currentArtifactLink = softwareName ? (
-    <Link style={{ fontWeight: '500' }} to={`/releases/${encodedArtifactName}`}>
+    <Link style={{ fontWeight: 'initial' }} to={`/releases/${encodedArtifactName}`}>
       {softwareName}
     </Link>
   ) : (
@@ -47,7 +47,7 @@ const DeploymentDeviceListItem = ({ device, idAttribute, viewLog }) => {
   return (
     <TableRow>
       <TableCell>
-        <Link style={{ fontWeight: '500' }} to={`/devices?id=${id}`}>
+        <Link style={{ fontWeight: 'initial', opacity: idAttribute === 'name' ? 0.6 : 1 }} to={`/devices?id=${id}`}>
           <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
         </Link>
       </TableCell>
