@@ -599,10 +599,10 @@ const convertIssueOptionsToFilters = issuesSelection =>
     return DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule;
   });
 
-export const convertDeviceListStateToFilters = ({ filters = [], group, selectedIssues = [], status }) => {
+export const convertDeviceListStateToFilters = ({ filters = [], group, groups = { byId: {} }, selectedIssues = [], status }) => {
   let applicableFilters = [...filters];
-  if (typeof group === 'string' && !applicableFilters.length) {
-    applicableFilters = [{ key: 'group', value: group, operator: '$eq', scope: 'system' }];
+  if (typeof group === 'string' && !(groups.byId[group]?.filters || applicableFilters).length) {
+    applicableFilters.push({ key: 'group', value: group, operator: '$eq', scope: 'system' });
   }
   const nonMonitorFilters = applicableFilters.filter(
     filter => !Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
@@ -618,13 +618,10 @@ export const getDevicesByStatus =
   (status, options = {}) =>
   (dispatch, getState) => {
     const { filterSelection, selectedIssues = [], page = defaultPage, perPage = defaultPerPage, sortOptions = [], selectedAttributes = [] } = options;
-    let group = undefined;
-    if (options) {
-      group = options.filters?.length ? undefined : options.group ?? getState().devices.groups.selectedGroup;
-    }
     const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({
       filters: filterSelection ?? getState().devices.filters,
-      group,
+      group: options ? options.group ?? getState().devices.groups.selectedGroup : undefined,
+      groups: getState().devices.groups,
       selectedIssues,
       status
     });
