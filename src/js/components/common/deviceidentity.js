@@ -13,7 +13,7 @@ const attributeComponentMap = {
 export const DeviceIdentityDisplay = props => {
   const { device, idAttribute, isEditable = true } = props;
   const idValue = getDeviceIdentityText({ device, idAttribute });
-  const Component = isEditable ? attributeComponentMap[idAttribute] ?? attributeComponentMap.default : attributeComponentMap.default;
+  const Component = !isEditable ? attributeComponentMap.default : attributeComponentMap[idAttribute] ?? attributeComponentMap.default;
   return <Component {...props} value={idValue} />;
 };
 
