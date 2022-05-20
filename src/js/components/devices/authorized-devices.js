@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 // material ui
 import { useTheme } from '@mui/material/styles';
 import { Button, MenuItem, Select } from '@mui/material';
-
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -89,7 +88,6 @@ const calculateColumnSelectionSize = (changedColumns, customColumnSizes) =>
   );
 
 export const Authorized = props => {
-  const theme = useTheme();
   const {
     acceptedCount,
     addDevicesToGroup,
@@ -379,46 +377,48 @@ export const Authorized = props => {
   return (
     <>
       <div className="margin-left-small">
-        <h3 className="margin-right">{isUngroupedGroup ? UNGROUPED_GROUP.name : groupLabel}</h3>
-        <div className="flexbox space-between filter-header">
-          <div className="flexbox">
-            <DeviceStateSelection onStateChange={onDeviceStateSelectionChange} selectedState={selectedState} states={states} />
-            {!isUngroupedGroup && (
-              <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
-                <Button
-                  color="secondary"
-                  disableRipple
-                  onClick={() => setShowFilters(!showFilters)}
-                  startIcon={<FilterListIcon />}
-                  style={{ backgroundColor: 'transparent' }}
-                >
-                  {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
-                </Button>
-              </div>
-            )}
-            {hasMonitor && (
-              <DeviceIssuesSelection
-                onChange={onDeviceIssuesSelectionChange}
-                onSelectAll={onSelectAllIssues}
-                options={Object.values(availableIssueOptions)}
-                selection={selectedIssues}
-              />
-            )}
-            {selectedGroup && !isUngroupedGroup && (
-              <p className="info flexbox centered" style={{ marginLeft: theme.spacing(2) }}>
-                {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
-                <span>{!groupFilters.length ? 'Static' : 'Dynamic'}</span>
-              </p>
-            )}
-          </div>
-          <div className="flexbox centered">
+        <div className="flexbox">
+          <h3 className="margin-right">{isUngroupedGroup ? UNGROUPED_GROUP.name : groupLabel}</h3>
+          <div className="flexbox space-between center-aligned" style={{ flexGrow: 1 }}>
+            <div className="flexbox">
+              <DeviceStateSelection onStateChange={onDeviceStateSelectionChange} selectedState={selectedState} states={states} />
+              {hasMonitor && (
+                <DeviceIssuesSelection
+                  onChange={onDeviceIssuesSelectionChange}
+                  onSelectAll={onSelectAllIssues}
+                  options={Object.values(availableIssueOptions)}
+                  selection={selectedIssues}
+                />
+              )}
+              {selectedGroup && !isUngroupedGroup && (
+                <div className="margin-left muted flexbox centered">
+                  {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
+                  <span>{!groupFilters.length ? 'Static' : 'Dynamic'}</span>
+                </div>
+              )}
+            </div>
             {canManageDevices && selectedGroup && !isUngroupedGroup && (
               <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
                 Remove group
               </Button>
             )}
-            <ListOptions options={listOptionHandlers} title="Table options" />
           </div>
+        </div>
+        <div className="flexbox space-between filter-header">
+          {!isUngroupedGroup && (
+            <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
+              <Button
+                color="secondary"
+                disableRipple
+                onClick={() => setShowFilters(!showFilters)}
+                startIcon={<FilterListIcon />}
+                style={{ backgroundColor: 'transparent' }}
+              >
+                {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
+              </Button>
+            </div>
+          )}
+          <ListOptions options={listOptionHandlers} title="Table options" />
         </div>
         <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} open={showFilters} />
       </div>
@@ -556,11 +556,10 @@ const DeviceStateSelection = ({ onStateChange, selectedState = '', states }) => 
     <div className="flexbox centered">
       Status:
       <Select
-        className="margin-right"
         disableUnderline
         onChange={e => onStateChange(e.target.value)}
         value={selectedState}
-        style={{ fontSize: 13, marginLeft: theme.spacing() }}
+        style={{ fontSize: 13, marginLeft: theme.spacing(), marginTop: 2 }}
       >
         {availableStates.map(state => (
           <MenuItem key={state.key} value={state.key}>

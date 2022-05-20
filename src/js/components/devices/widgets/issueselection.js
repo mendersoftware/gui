@@ -77,7 +77,6 @@ const DeviceIssuesSelection = ({ onChange, onSelectAll, options, selection }) =>
       }}
       value={selection}
       SelectDisplayProps={{ style: { padding: 0 } }}
-      style={{ fontSize: 13, marginLeft: theme.spacing() }}
     >
       {options.map(({ count, key, title }) => (
         <MenuItem key={key} value={key}>
