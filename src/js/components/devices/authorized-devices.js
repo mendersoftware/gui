@@ -173,12 +173,12 @@ export const Authorized = props => {
   }, [columnSelection, selectedState, idAttribute.attribute]);
 
   useEffect(() => {
+    // only set state after all devices id data retrieved
     setIsInitialized(isInitialized => isInitialized || (settingsInitialized && devicesInitialized && pageLoading === false));
+    setDevicesInitialized(devicesInitialized => devicesInitialized || pageLoading === false);
   }, [settingsInitialized, devicesInitialized, pageLoading]);
 
   useEffect(() => {
-    // only set state after all devices id data retrieved
-    setDevicesInitialized(!!(pendingCount || acceptedCount));
     if (onboardingState.complete) {
       return;
     }
@@ -258,7 +258,7 @@ export const Authorized = props => {
       .then(() => {
         const deleteRequests = devices.reduce((accu, device) => {
           if (device.auth_sets?.length) {
-            accu.push(deleteAuthset(devices.id, devices.auth_sets[0].id));
+            accu.push(deleteAuthset(device.id, device.auth_sets[0].id));
           }
           return accu;
         }, []);

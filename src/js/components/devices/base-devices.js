@@ -24,11 +24,17 @@ export const defaultTextRender = ({ column, device }) => {
 };
 
 export const getDeviceIdentityText = ({ device = {}, idAttribute }) => {
-  const { id, identity_data = {} } = device;
+  const { id, identity_data = {}, tags = {} } = device;
   // eslint-disable-next-line no-unused-vars
   const { status, ...remainingIds } = identity_data;
   const nonIdKey = Object.keys(remainingIds)[0];
-  return !idAttribute || idAttribute === 'id' || idAttribute === 'Device ID' ? id : identity_data[idAttribute] ?? identity_data[nonIdKey];
+  let text = id;
+  if (!idAttribute || idAttribute === 'id' || idAttribute === 'Device ID') {
+    return text;
+  } else if (idAttribute === 'name') {
+    return tags[idAttribute] ?? `${id.substring(0, 6)}...`;
+  }
+  return identity_data[idAttribute] ?? identity_data[nonIdKey];
 };
 
 const AttributeRenderer = ({ content, textContent }) => (
@@ -130,7 +136,7 @@ export const defaultHeaders = {
     title: 'Device ID',
     attribute: { name: 'id', scope: 'identity' },
     sortable: true,
-    textRender: ({ id }) => id
+    textRender: ({ device }) => device.id
   },
   deviceStatus: {
     title: 'Status',

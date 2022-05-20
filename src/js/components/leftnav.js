@@ -10,7 +10,7 @@ import { makeStyles } from 'tss-react/mui';
 import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
 
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getFeatures, getOnboardingState, getUserCapabilities } from '../selectors';
+import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 const listItems = [
@@ -18,7 +18,11 @@ const listItems = [
   { route: '/devices', text: 'Devices', canAccess: () => true },
   { route: '/releases', text: 'Releases', canAccess: () => true },
   { route: '/deployments', text: 'Deployments', canAccess: () => true },
-  { route: '/auditlog', text: 'Audit log', canAccess: ({ userCapabilities: { canAuditlog } }) => canAuditlog }
+  {
+    route: '/auditlog',
+    text: 'Audit log',
+    canAccess: ({ tenantCapabilities: { hasAuditlogs }, userCapabilities: { canAuditlog } }) => hasAuditlogs && canAuditlog
+  }
 ];
 
 const useStyles = makeStyles()(theme => ({
@@ -88,7 +92,7 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
   );
 };
 
-export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, setVersionInfo, userCapabilities, versionInformation }) => {
+export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, setVersionInfo, tenantCapabilities, userCapabilities, versionInformation }) => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
@@ -117,7 +121,7 @@ export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, s
     <div className={`leftFixed leftNav ${classes.list}`}>
       <List style={{ padding: 0 }}>
         {listItems.reduce((accu, item, index) => {
-          if (!item.canAccess({ userCapabilities })) {
+          if (!item.canAccess({ tenantCapabilities, userCapabilities })) {
             return accu;
           }
           accu.push(
@@ -169,6 +173,7 @@ const mapStateToProps = state => {
     isHosted,
     onboardingState: getOnboardingState(state),
     userCapabilities: getUserCapabilities(state),
+    tenantCapabilities: getTenantCapabilities(state),
     versionInformation: state.app.versionInformation
   };
 };
