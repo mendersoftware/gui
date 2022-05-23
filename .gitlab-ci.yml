@@ -221,10 +221,10 @@ test:staging-deployment:webkit:
   before_script:
     - export CI_BUILD_REF=${CI_COMMIT_SHA}
     - export CI_BUILD_REF_NAME=${CI_COMMIT_REF_NAME}
-    - export CI_BUILD_NAME=${CI_JOB_NAME}
-    - export CI_BUILD_ID=${CI_JOB_ID}
     - export CI_MERGE_REQUEST_IID=${CI_COMMIT_BRANCH#pr_}
+    - export COVERALLS_PARALLEL=true
     - export COVERALLS_SERVICE_JOB_ID=${CI_JOB_ID}
+    - export COVERALLS_SERVICE_NUMBER=${CI_PIPELINE_ID}
     - apk add --no-cache git
     - npm i -g coveralls
 
@@ -235,6 +235,7 @@ publish:tests:
   needs:
     - test:unit
   script:
+    - export COVERALLS_SERVICE_JOB_NUMBER=unittests
     - export COVERALLS_FLAG_NAME=unittests
     - coveralls < coverage/lcov.info
 
@@ -245,6 +246,7 @@ publish:e2e-tests:
   needs:
     - test:acceptance:enterprise
   script:
+    - export COVERALLS_SERVICE_JOB_NUMBER=e2etests
     - export COVERALLS_FLAG_NAME=e2etests
     - sed -i -re 's/(^[SF:]+[../]+)(.*)$/SF:\2/' coverage/lcov.info
     - coveralls < coverage/lcov.info
@@ -264,3 +266,9 @@ publish:disclaimer:
       - disclaimer.txt
   only:
     - /^(master|staging|[0-9]+\.[0-9]+\.x)$/
+
+coveralls:done:
+  image: curlimages/curl
+  stage: .post
+  script:
+    - curl "https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN" -d "payload[build_num]=$CI_PIPELINE_ID&payload[status]=done"
