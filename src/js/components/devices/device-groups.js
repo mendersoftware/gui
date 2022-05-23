@@ -34,7 +34,6 @@ import { emptyFilter } from './widgets/filters';
 import MakeGatewayDialog from './dialogs/make-gateway-dialog';
 import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
-import QuickFilter from './widgets/quickfilter';
 import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 import { versionCompare } from '../../helpers';
@@ -114,7 +113,6 @@ export const DeviceGroups = ({
   groupsById,
   hasReporting,
   history,
-  identityAttributes,
   isEnterprise,
   limitMaxed,
   match,
@@ -123,7 +121,6 @@ export const DeviceGroups = ({
   removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
-  selectedAttribute,
   selectedGroup,
   selectGroup,
   setDeviceFilters,
@@ -281,15 +278,6 @@ export const DeviceGroups = ({
     setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger });
   };
 
-  const onFilterDevices = (value, key, scope = 'identity') => {
-    if (key) {
-      selectGroup(undefined, [{ scope, key, operator: '$eq', value }]);
-    } else {
-      setDeviceFilters([]);
-    }
-    setDeviceListState({ state: routes.allDevices.key });
-  };
-
   const onShowDeviceStateClick = state => {
     selectGroup();
     setDeviceListState({ state });
@@ -311,17 +299,19 @@ export const DeviceGroups = ({
 
   return (
     <>
-      <div className="flexbox space-between margin-right">
-        <div className="flexbox padding-top-small">
-          <h3 style={{ minWidth: 300, marginTop: 0 }}>Devices</h3>
-          <QuickFilter attributes={identityAttributes} attributeSetting={selectedAttribute} filters={filters} onChange={onFilterDevices} />
-        </div>
-        <div className="flexbox" style={{ alignItems: 'baseline' }}>
+      <div className="tab-container with-sub-panels margin-bottom-small" style={{ padding: 0, minHeight: 'initial' }}>
+        <h3 style={{ marginBottom: 0 }}>Devices</h3>
+        <div className="flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small">
           {hasReporting && !!authRequestCount && (
-            <a className="flexbox center-aligned margin-right-small" onClick={onShowAuthRequestDevicesClick}>
+            <a className="flexbox center-aligned margin-right-large" onClick={onShowAuthRequestDevicesClick}>
               <AddIcon fontSize="small" style={{ marginRight: 6 }} />
               {authRequestCount} new device authentication {pluralize('request', authRequestCount)}
             </a>
+          )}
+          {!!pendingCount && !selectedGroup && selectedState !== DEVICE_STATES.pending ? (
+            <DeviceStatusNotification deviceCount={pendingCount} state={DEVICE_STATES.pending} onClick={onShowDeviceStateClick} />
+          ) : (
+            <div />
           )}
           {canManageDevices && (
             <DeviceAdditionWidget
@@ -334,21 +324,17 @@ export const DeviceGroups = ({
         </div>
       </div>
       <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>
-        <div className="leftFixed">
-          <Groups
-            acceptedCount={acceptedCount}
-            changeGroup={onGroupSelect}
-            groups={groupsById}
-            openGroupDialog={setCreateGroupExplanation}
-            selectedGroup={selectedGroup}
-            showHelptips={showHelptips}
-          />
-        </div>
+        <Groups
+          className="leftFixed"
+          acceptedCount={acceptedCount}
+          changeGroup={onGroupSelect}
+          groups={groupsById}
+          openGroupDialog={setCreateGroupExplanation}
+          selectedGroup={selectedGroup}
+          showHelptips={showHelptips}
+        />
         <div className="rightFluid relative" style={{ paddingTop: 0 }}>
           {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedCount} deviceLimit={deviceLimit} />}
-          {!!pendingCount && !selectedGroup && selectedState !== DEVICE_STATES.pending && (
-            <DeviceStatusNotification deviceCount={pendingCount} state={DEVICE_STATES.pending} onClick={onShowDeviceStateClick} />
-          )}
           <AuthorizedDevices
             addDevicesToGroup={addDevicesToGroup}
             onGroupClick={onGroupClick}
@@ -425,11 +411,6 @@ const mapStateToProps = state => {
     groupCount = state.devices.groups.byId[selectedGroup].total;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   }
-  const identityAttributes = [
-    { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 },
-    { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 },
-    ...state.devices.filteringAttributes.identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 }))
-  ];
   const filteringAttributes = { ...state.devices.filteringAttributes, identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id'] };
   const { canManageDevices } = getUserCapabilities(state);
   return {
@@ -447,11 +428,9 @@ const mapStateToProps = state => {
     groupCount,
     groupFilters,
     hasReporting: state.app.features.hasReporting,
-    identityAttributes,
     isEnterprise: getIsEnterprise(state),
     limitMaxed: getLimitMaxed(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
-    selectedAttribute: state.users.globalSettings.id_attribute,
     selectedGroup,
     showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
     showHelptips: state.users.showHelptips

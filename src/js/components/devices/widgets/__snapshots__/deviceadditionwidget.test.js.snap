@@ -217,65 +217,40 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
 }
 
 <div
-  class="flexbox column center-aligned padding-small device-addition-widget"
+  class="MuiButtonGroup-root MuiButtonGroup-outlined muted device-addition-widget emotion-0"
+  role="group"
 >
-  <div
-    class="MuiButtonGroup-root MuiButtonGroup-outlined muted emotion-0"
-    role="group"
+  <button
+    class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-1"
+    style="text-transform: none;"
+    tabindex="0"
+    type="button"
   >
-    <button
-      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-1"
-      style="text-transform: none;"
-      tabindex="0"
-      type="button"
-    >
-      Connect a new device
-      <span
-        class="MuiTouchRipple-root emotion-2"
-      />
-    </button>
-    <button
-      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-3"
-      style="text-transform: none;"
-      tabindex="0"
-      type="button"
-    >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-        data-testid="ArrowDropDownIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="m7 10 5 5 5-5z"
-        />
-      </svg>
-      <span
-        class="MuiTouchRipple-root emotion-2"
-      />
-    </button>
-  </div>
-  <a
-    class="flexbox centered"
-    href="https://docs.mender.io/client-installation/overview"
-    rel="noopener noreferrer"
-    style="margin-top: 8px;"
-    target="_blank"
+    Connect a new device
+    <span
+      class="MuiTouchRipple-root emotion-2"
+    />
+  </button>
+  <button
+    class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary emotion-3"
+    style="text-transform: none;"
+    tabindex="0"
+    type="button"
   >
-    Learn how to connect devices
     <svg
       aria-hidden="true"
       class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-      data-testid="LaunchIcon"
+      data-testid="ArrowDropDownIcon"
       focusable="false"
-      style="font-size: 10pt; margin-left: 8px; margin-bottom: -2px;"
       viewBox="0 0 24 24"
     >
       <path
-        d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        d="m7 10 5 5 5-5z"
       />
     </svg>
-  </a>
+    <span
+      class="MuiTouchRipple-root emotion-2"
+    />
+  </button>
 </div>
 `;

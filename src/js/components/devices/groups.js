@@ -37,7 +37,7 @@ export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
   </ListItem>
 );
 
-export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, selectedGroup, showHelptips }) => {
+export const Groups = ({ acceptedCount, changeGroup, className, groups, openGroupDialog, selectedGroup, showHelptips }) => {
   const {
     dynamic: dynamicGroups,
     static: staticGroups,
@@ -63,7 +63,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
     );
 
   return (
-    <>
+    <div className={className}>
       <div className="muted margin-bottom-small">Groups</div>
       <List>
         <ListItem classes={{ root: 'grouplist' }} button key="All" selected={!selectedGroup} onClick={() => changeGroup()}>
@@ -83,7 +83,7 @@ export const Groups = ({ acceptedCount, changeGroup, groups, openGroupDialog, se
       </List>
 
       {showHelptips && acceptedCount && groups.length <= 1 ? <AddGroup /> : null}
-    </>
+    </div>
   );
 };
 

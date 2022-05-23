@@ -16,7 +16,11 @@ export const DeviceStatusNotification = ({ deviceCount, onClick, state }) => {
   const theme = useTheme();
   const pluralized = pluralize('device', deviceCount);
   return (
-    <div className="clickable margin-top-small onboard" onClick={() => onClick(state)} style={{ background: colors.accent2Color, padding: theme.spacing(1.5) }}>
+    <div
+      className="clickable margin-right onboard"
+      onClick={() => onClick(state)}
+      style={{ background: colors.accent2Color, flexGrow: 1, padding: theme.spacing(1.5) }}
+    >
       <span className="info">
         {deviceCount} {pluralized} {pluralize('is', deviceCount)} {stateActionMap[state]}
       </span>

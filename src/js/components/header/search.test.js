@@ -2,11 +2,11 @@ import React from 'react';
 
 import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import DeviceListItem from './devicelistitem';
+import Search from './search';
 
-describe('DeviceListItem Component', () => {
+describe('Search Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<DeviceListItem device={{ id: 1 }} columnHeaders={[{ render: item => item }]} idAttribute="id" selectable />);
+    const { baseElement } = render(<Search isSearching searchTerm="something" setSearchState={jest.fn} />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

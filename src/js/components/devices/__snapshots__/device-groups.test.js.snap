@@ -3,164 +3,54 @@
 exports[`DeviceGroups Component renders correctly 1`] = `
 "<div>
   <div
-    class=\\"flexbox space-between margin-right\\"
+    class=\\"tab-container with-sub-panels margin-bottom-small\\"
+    style=\\"padding: 0px; min-height: initial;\\"
   >
-    <div
-      class=\\"flexbox padding-top-small\\"
+    <h3
+      style=\\"margin-bottom: 0px;\\"
     >
-      <h3
-        style=\\"min-width: 300px; margin-top: 0px;\\"
+      Devices
+    </h3>
+    <div
+      class=\\"flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small\\"
+    >
+      <div />
+      <div
+        class=\\"MuiButtonGroup-root MuiButtonGroup-outlined muted device-addition-widget css-iajp3t-MuiButtonGroup-root\\"
+        role=\\"group\\"
       >
-        Devices
-      </h3>
-      <div>
-        Quick find Device
-        <div
-          class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-left-small css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root\\"
-          style=\\"font-size: 13px;\\"
+        <button
+          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
+          style=\\"text-transform: none;\\"
+          tabindex=\\"0\\"
+          type=\\"button\\"
         >
-          <div
-            aria-expanded=\\"false\\"
-            aria-haspopup=\\"listbox\\"
-            class=\\"MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input\\"
-            role=\\"button\\"
-            tabindex=\\"0\\"
-          >
-            Name
-          </div>
-          <input
-            aria-hidden=\\"true\\"
-            class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
-            tabindex=\\"-1\\"
-            underline=\\"false\\"
-            value=\\"name\\"
+          Connect a new device
+          <span
+            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
           />
+        </button>
+        <button
+          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1knaqv7-MuiButtonBase-root-MuiButton-root\\"
+          style=\\"text-transform: none;\\"
+          tabindex=\\"0\\"
+          type=\\"button\\"
+        >
           <svg
             aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-hfutr2-MuiSvgIcon-root-MuiSelect-icon\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
             data-testid=\\"ArrowDropDownIcon\\"
             focusable=\\"false\\"
             viewBox=\\"0 0 24 24\\"
           >
             <path
-              d=\\"M7 10l5 5 5-5z\\"
+              d=\\"m7 10 5 5 5-5z\\"
             />
           </svg>
-          <fieldset
-            aria-hidden=\\"true\\"
-            class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-          >
-            <legend
-              class=\\"css-hdw1oc\\"
-            >
-              <span
-                class=\\"notranslate\\"
-              >
-                ​
-              </span>
-            </legend>
-          </fieldset>
-        </div>
-        <div
-          aria-label=\\"This will only apply to devices that have a device name configured\\"
-          class=\\"MuiFormControl-root MuiTextField-root search css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
-          data-mui-internal-clone-element=\\"true\\"
-          style=\\"margin-left: 30px; margin-top: 0px;\\"
-        >
-          <div
-            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
-          >
-            <input
-              aria-invalid=\\"false\\"
-              class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
-              
-              placeholder=\\"Filter\\"
-              type=\\"text\\"
-              value=\\"\\"
-            />
-            <fieldset
-              aria-hidden=\\"true\\"
-              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-            >
-              <legend
-                class=\\"css-hdw1oc\\"
-              >
-                <span
-                  class=\\"notranslate\\"
-                >
-                  ​
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class=\\"flexbox\\"
-      style=\\"align-items: baseline;\\"
-    >
-      <div
-        class=\\"flexbox column center-aligned padding-small device-addition-widget\\"
-      >
-        <div
-          class=\\"MuiButtonGroup-root MuiButtonGroup-outlined muted css-iajp3t-MuiButtonGroup-root\\"
-          role=\\"group\\"
-        >
-          <button
-            class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
-            style=\\"text-transform: none;\\"
-            tabindex=\\"0\\"
-            type=\\"button\\"
-          >
-            Connect a new device
-            <span
-              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
-            />
-          </button>
-          <button
-            class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1knaqv7-MuiButtonBase-root-MuiButton-root\\"
-            style=\\"text-transform: none;\\"
-            tabindex=\\"0\\"
-            type=\\"button\\"
-          >
-            <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-              data-testid=\\"ArrowDropDownIcon\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
-            >
-              <path
-                d=\\"m7 10 5 5 5-5z\\"
-              />
-            </svg>
-            <span
-              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
-            />
-          </button>
-        </div>
-        <a
-          class=\\"flexbox centered\\"
-          href=\\"https://docs.mender.io/development/client-installation/overview\\"
-          rel=\\"noopener noreferrer\\"
-          style=\\"margin-top: 8px;\\"
-          target=\\"_blank\\"
-        >
-          Learn how to connect devices
-          <svg
-            aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-            data-testid=\\"LaunchIcon\\"
-            focusable=\\"false\\"
-            style=\\"font-size: 10pt; margin-left: 8px; margin-bottom: -2px;\\"
-            viewBox=\\"0 0 24 24\\"
-          >
-            <path
-              d=\\"M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z\\"
-            />
-          </svg>
-        </a>
+          <span
+            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+          />
+        </button>
       </div>
     </div>
   </div>
@@ -300,118 +190,90 @@ exports[`DeviceGroups Component renders correctly 1`] = `
       <div
         class=\\"margin-left-small\\"
       >
-        <h3
-          class=\\"margin-right\\"
-        >
-          testGroup
-        </h3>
         <div
-          class=\\"flexbox space-between filter-header\\"
+          class=\\"flexbox\\"
         >
+          <h3
+            class=\\"margin-right\\"
+          >
+            testGroup
+          </h3>
           <div
-            class=\\"flexbox\\"
+            class=\\"flexbox space-between center-aligned\\"
+            style=\\"flex-grow: 1;\\"
           >
             <div
-              class=\\"flexbox centered\\"
+              class=\\"flexbox\\"
             >
-              Status:
               <div
-                class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-right css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root\\"
-                style=\\"font-size: 13px; margin-left: 8px;\\"
+                class=\\"flexbox centered\\"
               >
+                Status:
                 <div
-                  aria-expanded=\\"false\\"
-                  aria-haspopup=\\"listbox\\"
-                  class=\\"MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input\\"
-                  role=\\"button\\"
-                  tabindex=\\"0\\"
+                  class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary  css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root\\"
+                  style=\\"font-size: 13px; margin-left: 8px; margin-top: 2px;\\"
                 >
-                  accepted
-                </div>
-                <input
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
-                  tabindex=\\"-1\\"
-                  value=\\"accepted\\"
-                />
-                <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-hfutr2-MuiSvgIcon-root-MuiSelect-icon\\"
-                  data-testid=\\"ArrowDropDownIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
-                >
-                  <path
-                    d=\\"M7 10l5 5 5-5z\\"
-                  />
-                </svg>
-                <fieldset
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-                >
-                  <legend
-                    class=\\"css-hdw1oc\\"
+                  <div
+                    aria-expanded=\\"false\\"
+                    aria-haspopup=\\"listbox\\"
+                    class=\\"MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input\\"
+                    role=\\"button\\"
+                    tabindex=\\"0\\"
                   >
-                    <span
-                      class=\\"notranslate\\"
-                    >
-                      ​
-                    </span>
-                  </legend>
-                </fieldset>
-              </div>
-            </div>
-            <div
-              class=\\"flexbox centered \\"
-              style=\\"margin-bottom: -1px;\\"
-            >
-              <button
-                class=\\"MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1d3f8j8-MuiButtonBase-root-MuiButton-root\\"
-                style=\\"background-color: transparent;\\"
-                tabindex=\\"0\\"
-                type=\\"button\\"
-              >
-                <span
-                  class=\\"MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon\\"
-                >
+                    accepted
+                  </div>
+                  <input
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
+                    tabindex=\\"-1\\"
+                    value=\\"accepted\\"
+                  />
                   <svg
                     aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                    data-testid=\\"FilterListIcon\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-hfutr2-MuiSvgIcon-root-MuiSelect-icon\\"
+                    data-testid=\\"ArrowDropDownIcon\\"
                     focusable=\\"false\\"
                     viewBox=\\"0 0 24 24\\"
                   >
                     <path
-                      d=\\"M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z\\"
+                      d=\\"M7 10l5 5 5-5z\\"
                     />
                   </svg>
-                </span>
-                Filters
-              </button>
-            </div>
-            <p
-              class=\\"info flexbox centered\\"
-              style=\\"margin-left: 16px;\\"
-            >
-              <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root\\"
-                data-testid=\\"LockOutlinedIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
+                  <fieldset
+                    aria-hidden=\\"true\\"
+                    class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
+                  >
+                    <legend
+                      class=\\"css-hdw1oc\\"
+                    >
+                      <span
+                        class=\\"notranslate\\"
+                      >
+                        ​
+                      </span>
+                    </legend>
+                  </fieldset>
+                </div>
+              </div>
+              <div
+                class=\\"margin-left muted flexbox centered\\"
               >
-                <path
-                  d=\\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z\\"
-                />
-              </svg>
-              <span>
-                Static
-              </span>
-            </p>
-          </div>
-          <div
-            class=\\"flexbox centered\\"
-          >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root\\"
+                  data-testid=\\"LockOutlinedIcon\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z\\"
+                  />
+                </svg>
+                <span>
+                  Static
+                </span>
+              </div>
+            </div>
             <button
               class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
               tabindex=\\"0\\"
@@ -437,33 +299,65 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
               />
             </button>
+          </div>
+        </div>
+        <div
+          class=\\"flexbox space-between filter-header\\"
+        >
+          <div
+            class=\\"flexbox centered \\"
+            style=\\"margin-bottom: -1px;\\"
+          >
             <button
-              class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
-              style=\\"text-transform: none;\\"
+              class=\\"MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1d3f8j8-MuiButtonBase-root-MuiButton-root\\"
+              style=\\"background-color: transparent;\\"
               tabindex=\\"0\\"
               type=\\"button\\"
             >
-              Table options
               <span
-                class=\\"MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon\\"
+                class=\\"MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon\\"
               >
                 <svg
                   aria-hidden=\\"true\\"
                   class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
-                  data-testid=\\"ArrowDropDownIcon\\"
+                  data-testid=\\"FilterListIcon\\"
                   focusable=\\"false\\"
                   viewBox=\\"0 0 24 24\\"
                 >
                   <path
-                    d=\\"m7 10 5 5 5-5z\\"
+                    d=\\"M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z\\"
                   />
                 </svg>
               </span>
-              <span
-                class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
-              />
+              Filters
             </button>
           </div>
+          <button
+            class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
+            style=\\"text-transform: none;\\"
+            tabindex=\\"0\\"
+            type=\\"button\\"
+          >
+            Table options
+            <span
+              class=\\"MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon\\"
+            >
+              <svg
+                aria-hidden=\\"true\\"
+                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                data-testid=\\"ArrowDropDownIcon\\"
+                focusable=\\"false\\"
+                viewBox=\\"0 0 24 24\\"
+              >
+                <path
+                  d=\\"m7 10 5 5 5-5z\\"
+                />
+              </svg>
+            </span>
+            <span
+              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            />
+          </button>
         </div>
       </div>
       <div
@@ -490,7 +384,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         class=\\"padding-bottom\\"
       >
         <div
-          class=\\"deviceList \\"
+          class=\\"deviceList selectable\\"
           style=\\"grid-template-columns: 52px minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
         >
           <div
@@ -530,9 +424,10 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 <div
                   class=\\"flexbox center-aligned\\"
                 >
+                  Device ID
                   <svg
                     aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected true css-i4bv87-MuiSvgIcon-root\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-i4bv87-MuiSvgIcon-root\\"
                     data-testid=\\"SortIcon\\"
                     focusable=\\"false\\"
                     style=\\"font-size: 16px;\\"

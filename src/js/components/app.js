@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -25,6 +25,7 @@ import Header from './header/header';
 import LeftNav from './leftnav';
 import { WrappedBaseline } from '../main';
 import { colors, light as lightTheme, dark as darkTheme } from '../themes/Mender';
+import SearchResult from './search-result';
 
 const activationPath = '/activate';
 const timeout = 900000; // 15 minutes idle time
@@ -46,6 +47,8 @@ export const AppRoot = ({
   trackingCode,
   uploadProgress
 }) => {
+  const [showSearchResult, setShowSearchResult] = useState(false);
+
   useEffect(() => {
     if (trackingCode) {
       if (!cookies.get('_ga')) {
@@ -87,6 +90,8 @@ export const AppRoot = ({
 
   useIdleTimer({ crossTab: true, onAction: updateMaxAge, onActive: updateMaxAge, onIdle, syncTimers: 400, timeout, timers: workerTimers });
 
+  const onToggleSearchResult = () => setShowSearchResult(!showSearchResult);
+
   const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
   const containerProps = getToken() ? { id: 'app' } : { className: 'flexbox centered', style: { minHeight: '100vh' } };
   const theme = createTheme(mode === 'dark' ? darkTheme : lightTheme);
@@ -99,7 +104,10 @@ export const AppRoot = ({
             <Header history={history} />
             <LeftNav />
             <div className="rightFluid container">
-              <ErrorBoundary>{privateRoutes}</ErrorBoundary>
+              <ErrorBoundary>
+                <SearchResult onToggleSearchResult={onToggleSearchResult} open={showSearchResult} />
+                {privateRoutes}
+              </ErrorBoundary>
             </div>
             {onboardingComponent ? onboardingComponent : null}
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}

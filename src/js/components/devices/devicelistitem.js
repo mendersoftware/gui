@@ -16,7 +16,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const DeviceListItem = ({ columnHeaders, device, idAttribute, index, onClick, onRowSelect, selected }) => {
+const DeviceListItem = ({ columnHeaders, device, idAttribute, index, onClick, onRowSelect, selectable, selected }) => {
   const [isHovering, setIsHovering] = useState(false);
   const { classes } = useStyles();
 
@@ -37,9 +37,11 @@ const DeviceListItem = ({ columnHeaders, device, idAttribute, index, onClick, on
         we need to wrap the checkbox into a div here to ensure the bottom border etc. works as intended since the outer div will
         not create an own box due to "display: contents" being needed until subgrid support lands in browsers
       */}
-      <div>
-        <Checkbox checked={selected} onChange={handleRowSelect} />
-      </div>
+      {selectable && (
+        <div>
+          <Checkbox checked={selected} onChange={handleRowSelect} />
+        </div>
+      )}
       <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isHovered={isHovering} />
       {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
       {columnHeaders.slice(1).map((column, index) => {
