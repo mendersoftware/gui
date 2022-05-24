@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { PlaywrightTestConfig } from '@playwright/test';
 
 const contextArgs = {
@@ -24,7 +25,32 @@ export const contextOptions = {
 
 const options: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
-  reporter: process.env.CI ? [['list'], ['junit', { outputFile: 'junit/results.xml' }]] : 'line',
+  reporter: process.env.CI
+    ? [
+        ['line'],
+        [
+          '@bgotink/playwright-coverage',
+          {
+            sourceRoot: __dirname,
+            exclude: ['**/webpack/**', '**/src/less/**'],
+            resultDir: path.join(__dirname, 'coverage'),
+            // Configure the reports to generate.
+            // The value is an array of istanbul reports, with optional configuration attached.
+            reports: [['lcov'], ['text-summary', { file: null }]],
+            rewritePath: ({ absolutePath, relativePath }) => {
+              let sourcePath = absolutePath;
+              if (process.env.GUI_REPOSITORY) {
+                sourcePath = path.join(process.env.GUI_REPOSITORY, relativePath.substring(relativePath.indexOf('/')));
+              } else {
+                sourcePath = path.join(__dirname, '..', '..', relativePath.substring(relativePath.indexOf('/')));
+              }
+              return sourcePath;
+            }
+          }
+        ],
+        ['junit', { outputFile: 'junit/results.xml' }]
+      ]
+    : 'line',
   // Two retries for each test.
   retries: 2,
   testDir: 'integration',

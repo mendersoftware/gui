@@ -1,9 +1,8 @@
-import { expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
 
-import test from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
 
 test.describe('Auditlogs', () => {

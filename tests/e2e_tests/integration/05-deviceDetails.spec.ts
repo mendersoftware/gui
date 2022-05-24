@@ -1,7 +1,6 @@
-import { expect } from '@playwright/test';
 import * as path from 'path';
 
-import test from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
 
 test.describe('Device details', () => {
