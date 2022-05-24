@@ -2,9 +2,9 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
-import { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH } from '../constants/deviceConstants';
+import { ATTRIBUTE_SCOPES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
-import { getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
+import { attributeDuplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
 export const getFeatures = state => state.app.features;
@@ -50,7 +50,8 @@ export const getMappedDevicesList = createSelector([getDevicesById, (state, list
   }, []);
 });
 
-export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = {} }) => id_attribute);
+const defaultIdAttribute = Object.freeze({ attribute: 'id', scope: ATTRIBUTE_SCOPES.identity });
+export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = { ...defaultIdAttribute } }) => id_attribute);
 
 export const getLimitMaxed = createSelector([getAcceptedDevices, getDeviceLimit], ({ total: acceptedDevices = 0 }, deviceLimit) =>
   Boolean(deviceLimit && deviceLimit <= acceptedDevices)
@@ -59,8 +60,8 @@ export const getLimitMaxed = createSelector([getAcceptedDevices, getDeviceLimit]
 export const getFilterAttributes = createSelector(
   [getGlobalSettings, getFilteringAttributes],
   ({ previousFilters }, { identityAttributes, inventoryAttributes, tagAttributes }) => {
-    const deviceNameAttribute = { key: 'name', value: 'Name', scope: 'tags', category: 'tags', priority: 1 };
-    const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: 'identity', category: 'identity', priority: 1 };
+    const deviceNameAttribute = { key: 'name', value: 'Name', scope: ATTRIBUTE_SCOPES.tags, category: ATTRIBUTE_SCOPES.tags, priority: 1 };
+    const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: ATTRIBUTE_SCOPES.identity, category: ATTRIBUTE_SCOPES.identity, priority: 1 };
     const attributes = [
       ...previousFilters.map(item => ({
         ...item,
@@ -70,11 +71,11 @@ export const getFilterAttributes = createSelector(
       })),
       deviceNameAttribute,
       deviceIdAttribute,
-      ...identityAttributes.map(item => ({ key: item, value: item, scope: 'identity', category: 'identity', priority: 1 })),
-      ...inventoryAttributes.map(item => ({ key: item, value: item, scope: 'inventory', category: 'inventory', priority: 2 })),
-      ...tagAttributes.map(item => ({ key: item, value: item, scope: 'tags', category: 'tags', priority: 3 }))
+      ...identityAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.identity, category: ATTRIBUTE_SCOPES.identity, priority: 1 })),
+      ...inventoryAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.inventory, category: ATTRIBUTE_SCOPES.inventory, priority: 2 })),
+      ...tagAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.tags, category: ATTRIBUTE_SCOPES.tags, priority: 3 }))
     ];
-    return attributes.filter((item, index, array) => array.findIndex(filter => filter.key === item.key && filter.scope === item.scope) == index);
+    return attributeDuplicateFilter(attributes, 'key');
   }
 );
 

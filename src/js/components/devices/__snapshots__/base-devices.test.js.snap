@@ -23,11 +23,13 @@ exports[`smaller components renders DefaultAttributeRenderer correctly 1`] = `
 `;
 
 exports[`smaller components renders DeviceCreationTime correctly 1`] = `
-<time
-  datetime="2019-01-01T06:25:00+00:00"
->
-  2019-01-01 06:25
-</time>
+<div>
+  <time
+    datetime="2019-01-01T06:25:00+00:00"
+  >
+    2019-01-01 06:25
+  </time>
+</div>
 `;
 
 exports[`smaller components renders DeviceSoftware correctly 1`] = `

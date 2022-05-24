@@ -28,6 +28,7 @@ describe('DeviceList Component', () => {
           devices={[]}
           deviceListState={defaultState.devices.deviceList}
           selectedRows={[]}
+          onPageChange={jest.fn}
           pageTotal={50}
         />
       </Provider>
@@ -53,21 +54,24 @@ describe('DeviceList Component', () => {
     ];
     let result = calculateResizeChange({ columnElements, columnHeaders, e: { clientX: 80 }, index: 2, prev: 90 });
     expect(result).toEqual([
-      { attribute: { name: 'other', scope: 'thing' }, size: 240 },
-      { attribute: { name: 'more', scope: 'thing' }, size: 110 },
-      { attribute: { name: 'yet', scope: 'thing' }, size: 160 }
+      { attribute: { name: 'other', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'more', scope: 'thing' }, size: 230 },
+      { attribute: { name: 'yet', scope: 'thing' }, size: 130 },
+      { attribute: { name: 'different', scope: 'thing' }, size: 150 }
     ]);
     result = calculateResizeChange({ columnElements, columnHeaders, e: { clientX: 90 }, index: 2, prev: 80 });
     expect(result).toEqual([
-      { attribute: { name: 'other', scope: 'thing' }, size: 240 },
-      { attribute: { name: 'more', scope: 'thing' }, size: 130 },
-      { attribute: { name: 'yet', scope: 'thing' }, size: 140 }
+      { attribute: { name: 'other', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'more', scope: 'thing' }, size: 250 },
+      { attribute: { name: 'yet', scope: 'thing' }, size: 110 },
+      { attribute: { name: 'different', scope: 'thing' }, size: 150 }
     ]);
     result = calculateResizeChange({ columnElements, columnHeaders, e: { clientX: 90 }, index: columnElements.length - 1, prev: 80 });
     expect(result).toEqual([
-      { attribute: { name: 'other', scope: 'thing' }, size: 240 },
-      { attribute: { name: 'more', scope: 'thing' }, size: 120 },
-      { attribute: { name: 'yet', scope: 'thing' }, size: 150 }
+      { attribute: { name: 'other', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'more', scope: 'thing' }, size: 240 },
+      { attribute: { name: 'yet', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'different', scope: 'thing' }, size: 150 }
     ]);
   });
 

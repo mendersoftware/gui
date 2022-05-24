@@ -2,8 +2,8 @@
 
 exports[`DeviceStatusNotification Component renders correctly 1`] = `
 <div
-  class="clickable margin-top-small onboard"
-  style="background: rgb(245, 245, 245); padding: 12px;"
+  class="clickable margin-right onboard"
+  style="background: rgb(245, 245, 245); flex-grow: 1; padding: 12px;"
 >
   <span
     class="info"
