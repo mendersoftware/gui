@@ -755,7 +755,7 @@ export const searchDevices =
       attributes
     })
       .then(response => {
-        const deviceAccu = reduceReceivedDevices(response.data, [], getState(), 'any');
+        const deviceAccu = reduceReceivedDevices(response.data, [], getState());
         return Promise.all([
           dispatch({ type: DeviceConstants.RECEIVE_DEVICES, devicesById: deviceAccu.devicesById }),
           Promise.resolve({ deviceIds: deviceAccu.ids, searchTotal: Number(response.headers[headerNames.total]) })

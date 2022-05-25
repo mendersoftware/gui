@@ -139,6 +139,7 @@ export const DeviceList = props => {
     headerKeys,
     idAttribute,
     onChangeRowsPerPage,
+    PaginationProps = {},
     onExpandClick,
     onResizeColumns,
     onPageChange,
@@ -269,6 +270,7 @@ export const DeviceList = props => {
           onChangeRowsPerPage={onChangeRowsPerPage}
           page={pageNo}
           onChangePage={onPageChange}
+          {...PaginationProps}
         />
         {pageLoading && <Loader show small />}
       </div>
