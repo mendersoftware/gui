@@ -7,7 +7,7 @@ import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../constants/deviceConstant
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { customSort, extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import {
@@ -225,7 +225,11 @@ export const setSearchState = searchState => (dispatch, getState) => {
     }
   };
   let tasks = [];
-  if (searchState.searchTerm && currentState.searchTerm !== searchState.searchTerm) {
+  // eslint-disable-next-line no-unused-vars
+  const { isSearching: currentSearching, deviceIds: currentDevices, searchTotal: currentTotal, ...currentRequestState } = currentState;
+  // eslint-disable-next-line no-unused-vars
+  const { isSearching: nextSearching, deviceIds: nextDevices, searchTotal: nextTotal, ...nextRequestState } = nextState;
+  if (nextRequestState.searchTerm && !deepCompare(currentRequestState, nextRequestState)) {
     nextState.isSearching = true;
     tasks.push(
       dispatch(searchDevices(nextState))

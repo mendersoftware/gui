@@ -62,7 +62,6 @@ export const SearchResult = ({
   setSearchState,
   setSnackbar
 }) => {
-  const [triggerNavigation, setTriggerNavigation] = useState();
   const history = useHistory();
 
   const { classes } = useStyles();
@@ -95,7 +94,9 @@ export const SearchResult = ({
   }, [open, searchTerm]);
 
   const onDeviceSelect = device => {
-    setTriggerNavigation(device);
+    setDeviceListState({ expandedDeviceId: device.id });
+    onToggleSearchResult();
+    setTimeout(() => history.push(`/devices/${device.status}?id=${device.id}`), 300);
   };
 
   const handlePageChange = page => {
@@ -115,13 +116,6 @@ export const SearchResult = ({
     setSearchState({ searchTerm: '' });
     onToggleSearchResult();
   };
-
-  if (triggerNavigation) {
-    history.push(`/devices?id=${triggerNavigation}`);
-    setDeviceListState({ expandedDeviceId: triggerNavigation });
-    setTriggerNavigation(null);
-    onToggleSearchResult();
-  }
 
   return (
     <Drawer
@@ -153,7 +147,7 @@ export const SearchResult = ({
           pageTotal={searchTotal}
           onPageChange={handlePageChange}
           pageLoading={isSearching}
-          setExpandedDeviceId={onDeviceSelect}
+          onExpandClick={onDeviceSelect}
           setSnackbar={setSnackbar}
         />
       )}
