@@ -102,11 +102,10 @@ export const Authorized = props => {
     deviceCount,
     deviceListState,
     devices,
+    features,
     filters,
     getIssueCountsByType,
     groupFilters,
-    hasMonitor,
-    hasReporting,
     highlightHelp,
     idAttribute,
     limitMaxed,
@@ -125,6 +124,7 @@ export const Authorized = props => {
     settingsInitialized,
     showHelptips,
     showsDialog,
+    tenantCapabilities,
     updateDevicesAuth,
     updateUserColumnSettings
   } = props;
@@ -137,6 +137,8 @@ export const Authorized = props => {
     sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] },
     state: selectedState
   } = deviceListState;
+  const { hasReporting } = features;
+  const { hasMonitor } = tenantCapabilities;
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState([]);
   const [headerKeys, setHeaderKeys] = useState('');
@@ -476,9 +478,11 @@ export const Authorized = props => {
         <DeviceQuickActions
           actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}
           devices={devices}
+          features={features}
           selectedGroup={selectedStaticGroup}
           selectedRows={selectedRows}
           ref={authorizeRef}
+          tenantCapabilities={tenantCapabilities}
         />
       )}
       <ColumnCustomizationDialog
@@ -507,8 +511,6 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { hasMonitor } = getTenantCapabilities(state);
-  const { hasReporting } = getFeatures(state);
   let devices = getMappedDevicesList(state, 'deviceList');
   let deviceCount = state.devices.deviceList.total;
   let selectedGroup;
@@ -533,16 +535,16 @@ const mapStateToProps = state => {
     devices,
     deviceListState: state.devices.deviceList,
     deviceCount,
+    features: getFeatures(state),
     filters: state.devices.filters || [],
     groupFilters,
-    hasMonitor,
-    hasReporting,
     idAttribute: getIdAttribute(state),
     onboardingState: getOnboardingState(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,
     settingsInitialized: state.users.settingsInitialized,
-    showHelptips: state.users.showHelptips
+    showHelptips: state.users.showHelptips,
+    tenantCapabilities: getTenantCapabilities(state)
   };
 };
 
