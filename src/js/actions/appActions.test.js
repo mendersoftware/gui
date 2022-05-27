@@ -163,7 +163,11 @@ describe('app actions', () => {
         groups: {
           testGroupDynamic: {
             deviceIds: [],
-            filters: [{ key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] }],
+            filters: [
+              { key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] },
+              { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
+              { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
+            ],
             id: 'filter1',
             total: 0
           }

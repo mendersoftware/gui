@@ -507,7 +507,11 @@ describe('dynamic grouping related actions', () => {
         groups: {
           testGroupDynamic: {
             deviceIds: [],
-            filters: [{ key: 'id', operator: '$in', scope: 'identity', value: ['a1'] }],
+            filters: [
+              { key: 'id', operator: '$in', scope: 'identity', value: ['a1'] },
+              { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
+              { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
+            ],
             id: 'filter1',
             total: 0
           }
