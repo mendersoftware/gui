@@ -25,7 +25,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
-import { getDocsVersion, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
@@ -87,6 +87,7 @@ export const ExpandedDevice = ({
   device,
   deviceConfigDeployment,
   docsVersion,
+  features,
   getDeviceAlerts,
   getDeviceInfo,
   getDeviceLog,
@@ -261,7 +262,15 @@ export const ExpandedDevice = ({
         userCapabilities={userCapabilities}
       />
       {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
-      <DeviceQuickActions actionCallbacks={actionCallbacks} devices={[device]} isSingleDevice selectedGroup={selectedStaticGroup} selectedRows={[0]} />
+      <DeviceQuickActions
+        actionCallbacks={actionCallbacks}
+        devices={[device]}
+        features={features}
+        isSingleDevice
+        selectedGroup={selectedStaticGroup}
+        selectedRows={[0]}
+        tenantCapabilities={tenantCapabilities}
+      />
     </Drawer>
   );
 };
@@ -301,6 +310,7 @@ const mapStateToProps = (state, ownProps) => {
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     docsVersion: getDocsVersion(state),
+    features: getFeatures(state),
     groupFilters,
     integrations: state.organization.externalDeviceIntegrations.filter(integration => integration.id),
     latestAlerts: latest,
