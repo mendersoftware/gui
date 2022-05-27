@@ -20,8 +20,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         role=\\"group\\"
       >
         <button
-          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
-          style=\\"text-transform: none;\\"
+          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e6y48t-MuiButtonBase-root-MuiButton-root\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >
@@ -31,8 +30,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </button>
         <button
-          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1knaqv7-MuiButtonBase-root-MuiButton-root\\"
-          style=\\"text-transform: none;\\"
+          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1knaqv7-MuiButtonBase-root-MuiButton-root\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >

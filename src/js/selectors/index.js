@@ -149,7 +149,7 @@ export const getTenantCapabilities = createSelector(
     const hasDeviceConnect = isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled)));
     const hasMonitor = isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled)));
     const hasFullFiltering = isEnterprise || plan === PLANS.professional.value;
-    return { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasFullFiltering, hasMonitor };
+    return { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasFullFiltering, hasMonitor, isEnterprise };
   }
 );
 
