@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
 import { Chip, Divider, Drawer, IconButton } from '@mui/material';
@@ -122,7 +122,7 @@ export const ExpandedDevice = ({
   const [monitorDetails, setMonitorDetails] = useState();
   const monitoring = useRef();
   const timer = useRef();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
 
@@ -162,7 +162,7 @@ export const ExpandedDevice = ({
 
   const scrollToMonitor = () => monitoring.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const onCreateDeploymentClick = () => history.push(`/deployments?open=true&deviceId=${device.id}`);
+  const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${device.id}`);
 
   const deviceIdentifier = attributes.name ?? device.id ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;

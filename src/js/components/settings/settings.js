@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 // material ui
 import { ListItemIcon } from '@mui/material';
@@ -57,19 +57,9 @@ const UpgradeIcon = () => (
   </ListItemIcon>
 );
 
-export const Settings = ({
-  currentUser,
-  hasMultitenancy,
-  isEnterprise,
-  isTrial,
-  match,
-  stripeAPIKey,
-  tenantCapabilities,
-  userCapabilities,
-  userRoles,
-  version
-}) => {
+export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, stripeAPIKey, tenantCapabilities, userCapabilities, userRoles, version }) => {
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
+  const { section: sectionParam } = useParams();
 
   useEffect(() => {
     // Make sure to call `loadStripe` outside of a component’s render to avoid recreating
@@ -92,7 +82,7 @@ export const Settings = ({
   const checkDenyAccess = item =>
     !item.canAccess({ currentUser, hasMultitenancy, isEnterprise, isTrial, tenantCapabilities, userCapabilities, userRoles, version });
 
-  const getCurrentSection = (sections, section = match.params.section) => {
+  const getCurrentSection = (sections, section = sectionParam) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
       return;
     }
@@ -110,9 +100,9 @@ export const Settings = ({
     return accu;
   }, []);
 
-  const section = getCurrentSection(sectionMap, match.params.section);
+  const section = getCurrentSection(sectionMap, sectionParam);
   if (!section) {
-    return <Redirect to="/settings/my-profile" />;
+    return <Navigate to="/settings/my-profile" replace />;
   }
   return (
     <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
@@ -137,4 +127,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(Settings));
+export default connect(mapStateToProps)(Settings);

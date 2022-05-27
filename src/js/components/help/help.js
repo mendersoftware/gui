@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { matchPath } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 
 import { useTheme, ListItemIcon } from '@mui/material';
 import { Launch as LaunchIcon } from '@mui/icons-material';
@@ -62,9 +62,11 @@ const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
     return bag;
   }, accu);
 
-export const Help = ({ docsVersion, getUserOrganization, hasMultitenancy, isEnterprise, isHosted, location, menderVersion }) => {
+export const Help = ({ docsVersion, getUserOrganization, hasMultitenancy, isEnterprise, isHosted, menderVersion }) => {
   const theme = useTheme();
   const [links, setLinks] = useState([]);
+  const { pathname } = useLocation();
+  const { section } = useParams();
 
   useEffect(() => {
     if (hasMultitenancy || isEnterprise || isHosted) {
@@ -74,11 +76,16 @@ export const Help = ({ docsVersion, getUserOrganization, hasMultitenancy, isEnte
     setLinks(eachRecursive(components, '/help', 1, [], isHosted, theme.spacing(2)));
   }, []);
 
+  if (!section) {
+    return <Navigate replace to="/help/get-started" />;
+  }
+
   let ComponentToShow = GetStarted;
   let breadcrumbs = '';
-  let routeParams = matchPath(location.pathname, { path: '/help/**' });
-  if (routeParams && routeParams.params[0]) {
-    let splitsplat = routeParams.params[0].split('/');
+  const helpPath = 'help/';
+  let routeParams = pathname.includes(helpPath) ? pathname.substring(pathname.indexOf(helpPath) + helpPath.length) : '';
+  if (routeParams) {
+    let splitsplat = routeParams.split('/');
     let copyOfComponents = components;
 
     for (let i = 0; i < splitsplat.length; i++) {

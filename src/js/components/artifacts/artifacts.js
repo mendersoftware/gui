@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@mui/material';
 import { CloudUpload, InfoOutlined as InfoIcon } from '@mui/icons-material';
@@ -23,8 +23,6 @@ export const Artifacts = props => {
   const {
     canUpload,
     getReleases,
-    history,
-    match,
     onboardingState,
     releases,
     releasesListState,
@@ -39,6 +37,8 @@ export const Artifacts = props => {
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
   const uploadButtonRef = useRef();
   const artifactTimer = useRef();
+  const navigate = useNavigate();
+  const { artifactVersion } = useParams();
 
   const { searchTerm, sort = {}, visibleSection = {} } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, 700);
@@ -57,14 +57,13 @@ export const Artifacts = props => {
       return;
     }
     if (selectedRelease) {
-      history.replace(`/releases/${encodeURIComponent(selectedRelease.Name)}`);
+      navigate(`/releases/${encodeURIComponent(selectedRelease.Name)}`, { replace: true });
       return;
     }
     selectRelease(releases[0]);
   }, [releases.length, selectedRelease]);
 
   useEffect(() => {
-    const { artifactVersion } = match.params;
     setReleasesListState({ visibleSection: { ...defaultVisibleSection } });
     if (artifactVersion) {
       selectRelease(decodeURIComponent(artifactVersion));
@@ -198,4 +197,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Artifacts));
+export default connect(mapStateToProps, actionCreators)(Artifacts);

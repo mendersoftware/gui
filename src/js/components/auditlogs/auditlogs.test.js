@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { prettyDOM } from '@testing-library/dom';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, render as testingLibRender, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -45,10 +45,10 @@ describe('Auditlogs Component', () => {
         </Provider>
       </LocalizationProvider>
     );
-    userEvent.click(screen.getByText(/last 7 days/i));
-    userEvent.click(screen.getByText(/clear filter/i));
-    userEvent.click(screen.getByRole('button', { name: /Download results as csv/i }));
-    userEvent.click(screen.getByText(/open_terminal/i));
+    act(() => userEvent.click(screen.getByText(/last 7 days/i)));
+    act(() => userEvent.click(screen.getByText(/clear filter/i)));
+    act(() => userEvent.click(screen.getByRole('button', { name: /Download results as csv/i })));
+    act(() => userEvent.click(screen.getByText(/open_terminal/i)));
   });
 
   it('allows navigating by url as expected', async () => {
@@ -61,8 +61,8 @@ describe('Auditlogs Component', () => {
         </MemoryRouter>
       </LocalizationProvider>
     );
-    const { rerender } = render(ui);
+    const { rerender } = testingLibRender(ui);
     await waitFor(() => rerender(ui));
-    userEvent.click(screen.getByText(/clear filter/i));
+    act(() => userEvent.click(screen.getByText(/clear filter/i)));
   });
 });

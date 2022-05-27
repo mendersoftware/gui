@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
@@ -92,6 +92,8 @@ export const generateBrowserLocation = (selectedState, filters, selectedGroup, l
 
 const refreshLength = 10000;
 
+const alignUrlDeviceStatus = status => (status && Object.values(DEVICE_STATES).some(state => state === status) ? status : '');
+
 export const DeviceGroups = ({
   acceptedCount,
   addDynamicGroup,
@@ -113,9 +115,7 @@ export const DeviceGroups = ({
   groups,
   groupsById,
   hasReporting,
-  history,
   limitMaxed,
-  match,
   pendingCount,
   preauthDevice,
   removeDevicesFromGroup,
@@ -144,21 +144,25 @@ export const DeviceGroups = ({
   const [isReconciling, setIsReconciling] = useState(false);
   const deviceTimer = useRef();
   const { isEnterprise } = tenantCapabilities;
+  const { status: statusParam } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { refreshTrigger, state: selectedState } = deviceListState;
 
   useEffect(() => {
-    const { filters: filterQuery = '', status = '' } = match.params;
-    maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
+    const status = alignUrlDeviceStatus(statusParam);
+    maybeSetGroupAndFilters(location.search, filteringAttributes, filters);
     let request;
     if (status && selectedState !== status) {
       setIsReconciling(true);
       request = setDeviceListState({ state: status }).then(() => setIsReconciling(false));
     }
-    const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, history.location, true);
-    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
-      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
+    const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, location, true);
+    if (pathname !== location.pathname || location.search !== `?${search}`) {
+      navigate({ pathname, search }, { replace: true }); // lgtm [js/client-side-unvalidated-url-redirection]
     }
+    clearInterval(deviceTimer.current);
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
     setYesterday();
     request ? null : setDeviceListState({ refreshTrigger: !refreshTrigger });
@@ -175,9 +179,9 @@ export const DeviceGroups = ({
     if (!deviceTimer.current) {
       return;
     }
-    const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup, history.location);
-    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
-      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
+    const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup, location);
+    if (pathname !== location.pathname || location.search !== `?${search}`) {
+      navigate({ pathname, search }, { replace: true }); // lgtm [js/client-side-unvalidated-url-redirection]
     }
   }, [selectedState, filters, selectedGroup]);
 
@@ -185,19 +189,13 @@ export const DeviceGroups = ({
     if (!deviceTimer.current) {
       return;
     }
-    const { filters: filterQuery = '', status = '' } = match.params;
-    maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
-    if (
-      selectedState !== status &&
-      selectedState !== routes.allDevices.key &&
-      (status || filterQuery) &&
-      history.location.pathname.includes(status) &&
-      !isReconciling
-    ) {
+    const status = alignUrlDeviceStatus(statusParam);
+    maybeSetGroupAndFilters(location.search, filteringAttributes, filters);
+    if (selectedState !== status && selectedState !== routes.allDevices.key && status && location.pathname.includes(status) && !isReconciling) {
       setIsReconciling(true);
       setDeviceListState({ state: status ? status : routes.allDevices.key }).then(() => setIsReconciling(false));
     }
-  }, [filters, match.params, history.location.search]);
+  }, [filters, statusParam, location.search]);
 
   const maybeSetGroupAndFilters = (filterQuery, search, attributes, currentFilters) => {
     const query = filterQuery || search;
@@ -443,4 +441,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, actionCreators)(DeviceGroups));
+export default connect(mapStateToProps, actionCreators)(DeviceGroups);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 // material ui
@@ -62,7 +62,7 @@ export const SearchResult = ({
   setSearchState,
   setSnackbar
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { classes } = useStyles();
 
@@ -96,7 +96,7 @@ export const SearchResult = ({
   const onDeviceSelect = device => {
     setDeviceListState({ expandedDeviceId: device.id });
     onToggleSearchResult();
-    setTimeout(() => history.push(`/devices/${device.status}?id=${device.id}`), 300);
+    setTimeout(() => navigate(`/devices/${device.status}?id=${device.id}`), 300);
   };
 
   const handlePageChange = page => {

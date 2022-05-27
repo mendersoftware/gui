@@ -9,9 +9,9 @@ test.describe('Deployments', () => {
   test.use({ storageState: 'storage.json' });
 
   test.beforeEach(async ({ baseUrl, loggedInPage: page }) => {
-    await page.goto(`${baseUrl}ui/#/devices`);
+    await page.goto(`${baseUrl}ui/devices`);
     await page.waitForTimeout(2000);
-    await page.goto(`${baseUrl}ui/#/releases`);
+    await page.goto(`${baseUrl}ui/releases`);
     await page.waitForTimeout(2000);
   });
 

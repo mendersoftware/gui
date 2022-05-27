@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import moment from 'moment';
 import { Button, TextField, Autocomplete } from '@mui/material';
 
@@ -37,7 +37,8 @@ const autoSelectProps = {
 };
 
 export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [csvLoading, setCsvLoading] = useState(false);
   const [locationChange, setLocationChange] = useState(true);
   const [filterReset, setFilterReset] = useState(false);
@@ -63,15 +64,17 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
       getUserList();
     }
     setAuditlogsState({ reset: !resetList });
-    trackLocationChange(history.location);
-    history.listen(trackLocationChange);
+    trackLocationChange(searchParams);
   }, []);
 
-  const trackLocationChange = location => {
-    if (!location.search) {
+  useEffect(() => {
+    trackLocationChange(searchParams);
+  }, [searchParams]);
+
+  const trackLocationChange = params => {
+    if (![...params].length) {
       return;
     }
-    const params = new URLSearchParams(location.search);
     const { title: type = '' } = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('object_type')) || {};
     let state = {
       page: params.get('page') || 1,
@@ -98,7 +101,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
       user: ''
     });
     setFilterReset(!filterReset);
-    history.push('/auditlog');
+    navigate('/auditlog');
   };
 
   const createCsvDownload = () => {

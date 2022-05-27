@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@mui/material';
 
@@ -50,10 +50,7 @@ export const Deployments = ({
   getDynamicGroups,
   getGroups,
   groupsById,
-  history,
   isEnterprise,
-  location,
-  match,
   onboardingState,
   pastCount,
   releases,
@@ -66,6 +63,8 @@ export const Deployments = ({
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const tabsRef = useRef();
+  const navigate = useNavigate();
+  const { tab: tabParam } = useParams();
 
   useEffect(() => {
     getGroups();
@@ -76,10 +75,10 @@ export const Deployments = ({
     let finishedState = {};
     const params = new URLSearchParams(location.search);
     let deploymentObject = {};
-    if (match) {
+    if (tabParam) {
       if (params.get('open')) {
         if (params.get('id')) {
-          showReport(match.params.tab, params.get('id'));
+          showReport(tabParam, params.get('id'));
         } else if (params.get('release')) {
           deploymentObject.release = { ...releases[params.get('release')] };
         } else if (params.get('deviceId')) {
@@ -96,10 +95,10 @@ export const Deployments = ({
     setDeploymentObject(deploymentObject);
     const dialogOpen = Boolean(params.get('open')) && !params.get('id');
     let state = selectionState.state;
-    if (match?.params.tab) {
-      state = updateActive(match.params.tab);
+    if (tabParam) {
+      state = updateActive(tabParam);
     } else {
-      history.replace(state);
+      navigate(state, { replace: true });
     }
     setDeploymentsState({ general: { state, showCreationDialog: dialogOpen }, [DEPLOYMENT_STATES.finished]: finishedState });
   }, []);
@@ -137,14 +136,14 @@ export const Deployments = ({
       return Promise.resolve();
     });
 
-  const updateActive = (tab = match.params.tab) => {
+  const updateActive = (tab = tabParam) => {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].route;
     }
     return routes.active.route;
   };
 
-  const getCurrentRoute = (tab = match.params.tab) => {
+  const getCurrentRoute = (tab = tabParam) => {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab];
     }
@@ -248,4 +247,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Deployments));
+export default connect(mapStateToProps, actionCreators)(Deployments);

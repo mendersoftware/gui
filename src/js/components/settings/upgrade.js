@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 
 import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '@mui/icons-material';
@@ -62,7 +62,6 @@ export const Upgrade = ({
   features,
   getDeviceLimit,
   getUserOrganization,
-  history,
   org,
   requestPlanChange,
   setSnackbar,
@@ -73,6 +72,7 @@ export const Upgrade = ({
   const [addOns, setAddOns] = useState([]);
   const [updatedPlan, setUpdatedPlan] = useState('os');
   const [upgraded, setUpgraded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUserOrganization();
@@ -100,7 +100,7 @@ export const Upgrade = ({
       setUpgraded(true);
       setTimeout(() => {
         getDeviceLimit();
-        history.push('/settings/organization-and-billing');
+        navigate('/settings/organization-and-billing');
       }, 3000);
     });
 
@@ -190,4 +190,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, actionCreators)(Upgrade));
+export default connect(mapStateToProps, actionCreators)(Upgrade);

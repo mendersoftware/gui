@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -22,11 +22,9 @@ describe('RedirectionWidget Component', () => {
     render(
       <>
         <RedirectionWidget target="testlocation" buttonContent={buttonContent} content={content} isActive={true} onClick={submitCheck} />
-        <Switch>
-          <Route path="/testlocation">
-            <div>redirected</div>
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/testlocation" element={<div>redirected</div>} />
+        </Routes>
       </>
     );
 

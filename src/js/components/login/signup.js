@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 import { Button } from '@mui/material';
@@ -18,7 +18,7 @@ import { EntryLink } from './login';
 
 const cookies = new Cookies();
 
-export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setFirstLoginAfterSignup, recaptchaSiteKey, setSnackbar, match }) => {
+export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setFirstLoginAfterSignup, recaptchaSiteKey, setSnackbar }) => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
@@ -30,7 +30,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   const [organization, setOrganization] = useState('');
   const [tos, setTos] = useState(false);
   const [redirectOnLogin, setRedirectOnLogin] = useState(false);
-  const campaign = match.params.campaign;
+  const { campaign = '' } = useParams();
 
   useEffect(() => {
     cookies.remove('noExpiry', { path: '/' });
@@ -71,7 +71,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
       tos: formData.tos,
       marketing: formData.marketing == 'true',
       'g-recaptcha-response': recaptcha || 'empty',
-      campaign: campaign || ''
+      campaign
     };
     return createOrganizationTrial(signup)
       .catch(() => {
@@ -100,7 +100,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   };
 
   if (redirectOnLogin) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" replace />;
   }
   const provider = OAuth2Providers.find(item => item.id === oauthProvider) || { id: '' };
   const steps = {

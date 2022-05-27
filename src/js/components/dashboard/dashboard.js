@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../selectors';
@@ -23,7 +23,7 @@ const rowStyles = { ...rowBaseStyles.container, ...styles.rowStyle };
 var timeoutID = null;
 
 export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit, onboardingState, setSnackbar }) => {
-  const [redirect, setRedirect] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser || !onboardingState.showTips) {
@@ -47,12 +47,9 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
     } else {
       redirect = params.route;
     }
-    setRedirect(redirect);
+    navigate(redirect, { replace: true });
   };
 
-  if (redirect) {
-    return <Redirect to={redirect} />;
-  }
   return currentUser ? (
     <div className="dashboard">
       <Devices styles={rowStyles} clickHandle={handleClick} />

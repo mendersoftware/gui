@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import Artifacts from '../components/artifacts/artifacts';
 import Dashboard from '../components/dashboard/dashboard';
@@ -12,29 +12,37 @@ import Password from '../components/login/password';
 import PasswordReset from '../components/login/passwordreset';
 import Signup from '../components/login/signup';
 import AuditLogs from '../components/auditlogs/auditlogs';
-import { DEVICE_STATES } from '../constants/deviceConstants';
 
-const { accepted, pending, preauth, rejected } = DEVICE_STATES;
-
-export const privateRoutes = (
-  <Switch>
-    <Route exact path="/" component={Dashboard} />
-    <Route path="/auditlog/:filters?" component={AuditLogs} />
-    <Route path={`/devices/:status(${accepted}|${pending}|${preauth}|${rejected})?/:filters?`} component={Devices} />
-    <Route path="/releases/:artifactVersion?" component={Artifacts} />
-    <Route path="/deployments/:tab(active|scheduled|finished)?" component={Deployments} />
-    <Route path="/settings/:section?" component={Settings} />
-    <Route path="/help" component={Help} />
-    <Route component={Dashboard} />
-  </Switch>
+export const PrivateRoutes = () => (
+  <Routes>
+    <Route path="auditlog" element={<AuditLogs />} />
+    <Route path="devices" element={<Devices />}>
+      <Route path=":status" element={null} />
+    </Route>
+    <Route path="releases" element={<Artifacts />}>
+      <Route path=":artifactVersion" element={null} />
+    </Route>
+    <Route path="deployments" element={<Deployments />}>
+      <Route path=":tab" element={null} />
+    </Route>
+    <Route path="settings" element={<Settings />}>
+      <Route path=":section" element={null} />
+    </Route>
+    <Route path="help" element={<Help />}>
+      <Route path=":section" element={null} />
+    </Route>
+    <Route path="*" element={<Dashboard />} />
+  </Routes>
 );
 
-export const publicRoutes = (
-  <Switch>
-    <Route path="/login" component={Login} />
-    <Route exact path="/password" component={Password} />
-    <Route exact path="/password/:secretHash" component={PasswordReset} />
-    <Route path="/signup/:campaign?" component={Signup} />
-    <Route component={Login} />
-  </Switch>
+export const PublicRoutes = () => (
+  <Routes>
+    <Route path="password" element={<Password />}>
+      <Route path=":secretHash" element={<PasswordReset />} />
+    </Route>
+    <Route path="signup" element={<Signup />}>
+      <Route path=":campaign" element={null} />
+    </Route>
+    <Route path="*" element={<Login />} />
+  </Routes>
 );

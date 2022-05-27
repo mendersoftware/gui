@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { act, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -33,11 +33,9 @@ describe('Signup Component', () => {
     const ui = (
       <Provider store={store}>
         <Signup location={{ state: { from: '' } }} match={{ params: {} }} />
-        <Switch>
-          <Route path="/">
-            <div>signed up</div>
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<div>signed up</div>} />
+        </Routes>
       </Provider>
     );
     const { container, rerender } = render(ui);
