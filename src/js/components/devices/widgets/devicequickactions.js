@@ -66,7 +66,8 @@ const defaultActions = {
     key: 'promote-to-gateway',
     title: () => 'Promote to gateway',
     action: ({ onPromoteGateway, selection }) => onPromoteGateway(selection),
-    checkRelevance: ({ device }) => !stringToBoolean(device.attributes.mender_is_gateway) && device.status === DEVICE_STATES.accepted
+    checkRelevance: ({ device, features, tenantCapabilities }) =>
+      features.isHosted && tenantCapabilities.isEnterprise && !stringToBoolean(device.attributes.mender_is_gateway) && device.status === DEVICE_STATES.accepted
   },
   createDeployment: {
     icon: <ReplayIcon />,
@@ -77,13 +78,13 @@ const defaultActions = {
   }
 };
 
-export const DeviceQuickActions = ({ actionCallbacks, devices, isSingleDevice = false, selectedGroup, selectedRows }, ref) => {
+export const DeviceQuickActions = ({ actionCallbacks, devices, features, isSingleDevice = false, selectedGroup, selectedRows, tenantCapabilities }, ref) => {
   const [showActions, setShowActions] = useState(false);
 
   const { actions, selectedDevices } = useMemo(() => {
     const selectedDevices = selectedRows.map(row => devices[row]);
     const actions = Object.values(defaultActions).reduce((accu, action) => {
-      if (selectedDevices.every(device => action.checkRelevance({ device, isSingleDevice, selectedGroup }))) {
+      if (selectedDevices.every(device => action.checkRelevance({ device, features, isSingleDevice, selectedGroup, tenantCapabilities }))) {
         accu.push(action);
       }
       return accu;

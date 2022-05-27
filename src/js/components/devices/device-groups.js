@@ -24,7 +24,7 @@ import {
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { getDocsVersion, getIsEnterprise, getLimitMaxed, getUserCapabilities } from '../../selectors';
+import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './group-management/create-group';
@@ -102,6 +102,7 @@ export const DeviceGroups = ({
   deviceLimit,
   deviceListState,
   docsVersion,
+  features,
   filteringAttributes,
   filters,
   getAllDeviceCounts,
@@ -113,7 +114,6 @@ export const DeviceGroups = ({
   groupsById,
   hasReporting,
   history,
-  isEnterprise,
   limitMaxed,
   match,
   pendingCount,
@@ -130,6 +130,7 @@ export const DeviceGroups = ({
   setYesterday,
   showDeviceConnectionDialog,
   showHelptips,
+  tenantCapabilities,
   updateDynamicGroup
 }) => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
@@ -142,6 +143,7 @@ export const DeviceGroups = ({
   const [tmpDevices, setTmpDevices] = useState([]);
   const [isReconciling, setIsReconciling] = useState(false);
   const deviceTimer = useRef();
+  const { isEnterprise } = tenantCapabilities;
 
   const { refreshTrigger, state: selectedState } = deviceListState;
 
@@ -316,9 +318,11 @@ export const DeviceGroups = ({
           {canManageDevices && (
             <DeviceAdditionWidget
               docsVersion={docsVersion}
+              features={features}
               onConnectClick={setShowConnectingDialog}
               onMakeGatewayClick={toggleMakeGatewayClick}
               onPreauthClick={setOpenPreauth}
+              tenantCapabilities={tenantCapabilities}
             />
           )}
         </div>
@@ -413,6 +417,7 @@ const mapStateToProps = state => {
   }
   const filteringAttributes = { ...state.devices.filteringAttributes, identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id'] };
   const { canManageDevices } = getUserCapabilities(state);
+  const tenantCapabilities = getTenantCapabilities(state);
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     authRequestCount: state.monitor.issueCounts.byType[DEVICE_ISSUE_OPTIONS.authRequests.key].total,
@@ -421,6 +426,7 @@ const mapStateToProps = state => {
     deviceLimit: state.devices.limit,
     deviceListState: state.devices.deviceList,
     docsVersion: getDocsVersion(state),
+    features: getFeatures(state),
     filteringAttributes,
     filters: state.devices.filters || [],
     groups: Object.keys(state.devices.groups.byId).sort(),
@@ -428,12 +434,12 @@ const mapStateToProps = state => {
     groupCount,
     groupFilters,
     hasReporting: state.app.features.hasReporting,
-    isEnterprise: getIsEnterprise(state),
     limitMaxed: getLimitMaxed(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,
     showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
-    showHelptips: state.users.showHelptips
+    showHelptips: state.users.showHelptips,
+    tenantCapabilities
   };
 };
 

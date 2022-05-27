@@ -25,7 +25,7 @@ import { apiUrl } from '../../../api/general-api';
 import { createDownload, versionCompare } from '../../../helpers';
 import ListOptions from '../widgets/listoptions';
 import { getCode } from './make-gateway-dialog';
-import { getIsEnterprise, getUserRoles } from '../../../selectors';
+import { getFeatures, getIsEnterprise, getUserRoles } from '../../../selectors';
 
 momentDurationFormatSetup(moment);
 const MessagePack = msgpack5();
@@ -52,6 +52,8 @@ export const TroubleshootDialog = ({
   deviceFileUpload,
   getDeviceFileDownloadLink,
   hasAuditlogs,
+  isEnterprise,
+  isHosted,
   onCancel,
   onSocketClose,
   open,
@@ -168,7 +170,7 @@ export const TroubleshootDialog = ({
     setTerminalInput(code);
   };
 
-  const commandHandlers = [{ key: 'thing', onClick: onMakeGatewayClick, title: 'Promote to Mender gateway' }];
+  const commandHandlers = isHosted && isEnterprise ? [{ key: 'thing', onClick: onMakeGatewayClick, title: 'Promote to Mender gateway' }] : [];
 
   const duration = moment.duration(elapsed.diff(moment(startTime)));
   const visibilityToggle = !socket ? { maxHeight: 0, overflow: 'hidden' } : {};
@@ -256,7 +258,7 @@ export const TroubleshootDialog = ({
           )}
         </div>
         <div>
-          {currentTab === tabs.terminal.value && sessionId && <ListOptions options={commandHandlers} title="Quick commands" />}
+          {currentTab === tabs.terminal.value && sessionId && !!commandHandlers.length && <ListOptions options={commandHandlers} title="Quick commands" />}
           <Button onClick={onCancel}>Close</Button>
         </div>
       </DialogActions>
@@ -267,9 +269,11 @@ export const TroubleshootDialog = ({
 const actionCreators = { getDeviceFileDownloadLink, deviceFileUpload, setSnackbar };
 
 const mapStateToProps = state => {
+  const { isHosted } = getFeatures(state);
   return {
     canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     isEnterprise: getIsEnterprise(state),
+    isHosted,
     userRoles: getUserRoles(state)
   };
 };
