@@ -140,7 +140,11 @@ export const deviceHandlers = [
         {
           id: 'filter1',
           name: 'testGroupDynamic',
-          terms: [{ scope: 'identity', attribute: 'id', type: '$in', value: ['a1'] }]
+          terms: [
+            { scope: 'identity', attribute: 'id', type: '$in', value: ['a1'] },
+            { scope: 'identity', attribute: 'mac', type: '$exists', value: false },
+            { scope: 'identity', attribute: 'kernel', type: '$exists', value: true }
+          ]
         }
       ])
     )
