@@ -33,9 +33,11 @@ exports[`Main Component renders correctly 1`] = `
   }
 }
 
-@media (min-width:0px) and (orientation: landscape) {
-  .emotion-1 {
-    min-height: 48px;
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-1 {
+      min-height: 48px;
+    }
   }
 }
 

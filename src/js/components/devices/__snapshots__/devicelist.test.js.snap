@@ -68,7 +68,7 @@ exports[`DeviceList Component renders correctly 1`] = `
         class=\\"MuiTablePagination-root flexbox margin-top margin-top-none css-jtlhu6-MuiTablePagination-root\\"
       >
         <div
-          class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-11bfvty-MuiToolbar-root-MuiTablePagination-toolbar\\"
+          class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
         >
           <div
             class=\\"flexbox no-basis MuiTablePagination-spacer css-1psng7p-MuiTablePagination-spacer\\"
