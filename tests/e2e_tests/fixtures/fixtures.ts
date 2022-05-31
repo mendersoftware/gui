@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, test as nonCoveredTest } from '@playwright/test';
 import { baseUrlToDomain, getPeristentLoginInfo, login } from '../utils/commands';
 import { expect, test as coveredTest } from '@bgotink/playwright-coverage';
 
@@ -25,7 +25,7 @@ const defaultConfig = {
   demoDeviceName: 'release-v1'
 };
 
-const test = coveredTest.extend<TestFixtures>({
+const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : coveredTest).extend<TestFixtures>({
   loggedInPage: async ({ baseUrl, browserName, context, password, username }, use) => {
     // const storageState = JSON.parse(process.env.STORAGE || '{}');
     // let context: BrowserContext = await browser.newContext({ storageState });
