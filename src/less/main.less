@@ -875,8 +875,6 @@ table thead.clickable tr > th:first-child {
     font-size: 13px;
     font-family: Lato, sans-serif;
     color: rgba(0, 0, 0, 0.8);
-
-    .placeholder({color: rgba(0, 0, 0, 0.3) ; content: 'Search' ;});
   }
 }
 
@@ -1222,7 +1220,10 @@ div:focus {
   min-width: 1000px;
   padding-left: 5px;
   display: grid;
-  grid-template-columns: 52px minmax(250px, max-content) minmax(90px, 1fr) minmax(350px, 1.5fr) minmax(105px, 1fr) minmax(110px, max-content);
+  grid-template-columns: minmax(250px, max-content) minmax(90px, 1fr) minmax(350px, 1.5fr) minmax(105px, 1fr) minmax(110px, max-content);
+  &.selectable {
+    grid-template-columns: 52px minmax(250px, max-content) minmax(90px, 1fr) minmax(350px, 1.5fr) minmax(105px, 1fr) minmax(110px, max-content);
+  }
   .footer {
     grid-column-start: 1;
     grid-column-end: 4;
@@ -1234,6 +1235,9 @@ div:focus {
       display: contents;
       & > * {
         align-items: center;
+        height: 3 * @defaultGutterWidth;
+        min-height: 3 * @defaultGutterWidth;
+        max-height: 3 * @defaultGutterWidth;
         border-bottom: 1px solid @bordercolor;
         display: flex;
         padding-left: 1.5 * @defaultGutterWidth;
@@ -1276,12 +1280,6 @@ div:focus {
 .device-addition-widget {
   border-radius: 5px;
   border: 1px solid @bordercolor;
-  color: @darkgrey;
-  padding-top: 0.5 * @defaultGutterWidth;
-  a {
-    color: @darkgrey;
-    font-weight: normal;
-  }
 }
 
 .expandedDevice {

@@ -475,126 +475,131 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
   <div
     class="margin-left-small"
   >
-    <h3
-      class="margin-right"
-    >
-      All devices
-    </h3>
     <div
-      class="flexbox space-between filter-header"
+      class="flexbox"
     >
+      <h3
+        class="margin-right"
+      >
+        All devices
+      </h3>
       <div
-        class="flexbox"
+        class="flexbox space-between center-aligned"
+        style="flex-grow: 1;"
       >
         <div
-          class="flexbox centered"
+          class="flexbox"
         >
-          Status:
           <div
-            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-right emotion-0"
-            style="font-size: 13px; margin-left: 8px;"
+            class="flexbox centered"
           >
+            Status:
             <div
-              aria-expanded="false"
-              aria-haspopup="listbox"
-              class="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input emotion-1"
-              role="button"
-              tabindex="0"
+              class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary  emotion-0"
+              style="font-size: 13px; margin-left: 8px; margin-top: 2px;"
             >
-              accepted
-            </div>
-            <input
-              aria-hidden="true"
-              class="MuiSelect-nativeInput emotion-2"
-              tabindex="-1"
-              value="accepted"
-            />
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-3"
-              data-testid="ArrowDropDownIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline emotion-4"
-            >
-              <legend
-                class="emotion-5"
+              <div
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                class="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input emotion-1"
+                role="button"
+                tabindex="0"
               >
-                <span
-                  class="notranslate"
-                >
-                  ​
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
-        <div
-          class="flexbox centered "
-          style="margin-bottom: -1px;"
-        >
-          <button
-            class="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-6"
-            style="background-color: transparent;"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-7"
-            >
+                accepted
+              </div>
+              <input
+                aria-hidden="true"
+                class="MuiSelect-nativeInput emotion-2"
+                tabindex="-1"
+                value="accepted"
+              />
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
-                data-testid="FilterListIcon"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined emotion-3"
+                data-testid="ArrowDropDownIcon"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
                 <path
-                  d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                  d="M7 10l5 5 5-5z"
                 />
               </svg>
-            </span>
-            Filters
-          </button>
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline emotion-4"
+              >
+                <legend
+                  class="emotion-5"
+                >
+                  <span
+                    class="notranslate"
+                  >
+                    ​
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+    <div
+      class="flexbox space-between filter-header"
+    >
       <div
-        class="flexbox centered"
+        class="flexbox centered "
+        style="margin-bottom: -1px;"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-9"
-          style="text-transform: none;"
+          class="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-6"
+          style="background-color: transparent;"
           tabindex="0"
           type="button"
         >
-          Table options
           <span
-            class="MuiButton-endIcon MuiButton-iconSizeMedium emotion-10"
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-7"
           >
             <svg
               aria-hidden="true"
               class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
-              data-testid="ArrowDropDownIcon"
+              data-testid="FilterListIcon"
               focusable="false"
               viewBox="0 0 24 24"
             >
               <path
-                d="m7 10 5 5 5-5z"
+                d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
               />
             </svg>
           </span>
-          <span
-            class="MuiTouchRipple-root emotion-12"
-          />
+          Filters
         </button>
       </div>
+      <button
+        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-9"
+        style="text-transform: none;"
+        tabindex="0"
+        type="button"
+      >
+        Table options
+        <span
+          class="MuiButton-endIcon MuiButton-iconSizeMedium emotion-10"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+            data-testid="ArrowDropDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="m7 10 5 5 5-5z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root emotion-12"
+        />
+      </button>
     </div>
   </div>
   <div

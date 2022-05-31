@@ -10,8 +10,8 @@ import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-a
 import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
 
-import { deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
-import { getIdAttribute, getTenantCapabilities } from '../selectors';
+import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
+import { getIdAttribute, getTenantCapabilities, getUserSettings } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 import { Link } from 'react-router-dom';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
@@ -165,16 +165,23 @@ const filterProcessors = {
   $nexists: () => false
 };
 const filterAliases = {
-  $nexists: '$exists'
+  $nexists: { alias: '$exists', value: false }
 };
 const mapFiltersToTerms = filters =>
   filters.map(filter => ({
     scope: filter.scope,
     attribute: filter.key,
-    type: filterAliases[filter.operator] || filter.operator,
+    type: filterAliases[filter.operator]?.alias || filter.operator,
     value: filterProcessors.hasOwnProperty(filter.operator) ? filterProcessors[filter.operator](filter.value) : filter.value
   }));
-const mapTermsToFilters = terms => terms.map(term => ({ scope: term.scope, key: term.attribute, operator: term.type, value: term.value }));
+const mapTermsToFilters = terms =>
+  terms.map(term => {
+    const aliasedFilter = Object.entries(filterAliases).find(
+      aliasDefinition => aliasDefinition[1].alias === term.type && aliasDefinition[1].value === term.value
+    );
+    const operator = aliasedFilter ? aliasedFilter[0] : term.type;
+    return { scope: term.scope, key: term.attribute, operator, value: term.value };
+  });
 
 export const getDynamicGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`)
@@ -733,6 +740,36 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
     });
   return getAllDevices();
 };
+
+export const searchDevices =
+  (passedOptions = {}) =>
+  (dispatch, getState) => {
+    const state = getState();
+    let options = { ...state.app.searchState, ...passedOptions };
+    const { page = defaultPage, searchTerm, sortOptions = [] } = options;
+    const { columnSelection = [] } = getUserSettings(state);
+    const selectedAttributes = columnSelection.map(column => ({ attribute: column.key, scope: column.scope }));
+    const attributes = attributeDuplicateFilter(
+      [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute || 'id' }, ...selectedAttributes],
+      'attribute'
+    );
+    return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+      page,
+      per_page: 10,
+      filters: [],
+      sort: sortOptions,
+      text: searchTerm,
+      attributes
+    })
+      .then(response => {
+        const deviceAccu = reduceReceivedDevices(response.data, [], getState());
+        return Promise.all([
+          dispatch({ type: DeviceConstants.RECEIVE_DEVICES, devicesById: deviceAccu.devicesById }),
+          Promise.resolve({ deviceIds: deviceAccu.ids, searchTotal: Number(response.headers[headerNames.total]) })
+        ]);
+      })
+      .catch(err => commonErrorHandler(err, `devices couldn't be searched.`, dispatch, commonErrorFallback));
+  };
 
 const ATTRIBUTE_LIST_CUTOFF = 100;
 export const getDeviceAttributes = () => (dispatch, getState) =>

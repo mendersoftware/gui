@@ -1,20 +1,35 @@
 import React, { useState } from 'react';
 
 import { Button, ButtonGroup, Menu, MenuItem } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { ArrowDropDown as ArrowDropDownIcon, Launch as LaunchIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
-const buttonStyle = { textTransform: 'none' };
+const useStyles = makeStyles()(() => ({
+  buttonStyle: { textTransform: 'none' }
+}));
 
-export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onMakeGatewayClick, onPreauthClick }) => {
-  const theme = useTheme();
+export const DeviceAdditionWidget = ({ docsVersion, features, onConnectClick, onMakeGatewayClick, onPreauthClick, tenantCapabilities }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { classes } = useStyles();
 
   const options = [
-    { action: onConnectClick, title: 'Connect a new device', value: 'connect' },
-    { action: onPreauthClick, title: 'Preauthorize a device', value: 'preauth' },
-    { action: onMakeGatewayClick, title: 'Promote a device to gateway', value: 'makegateway' }
+    { action: onConnectClick, title: 'Connect a new device', value: 'connect', canAccess: () => true },
+    { action: onPreauthClick, title: 'Preauthorize a device', value: 'preauth', canAccess: () => true },
+    {
+      action: onMakeGatewayClick,
+      title: 'Promote a device to gateway',
+      value: 'makegateway',
+      canAccess: ({ features, tenantCapabilities }) => features.isHosted && tenantCapabilities.isEnterprise
+    },
+    {
+      href: `https://docs.mender.io/${docsVersion}client-installation/overview`,
+      rel: 'noopener noreferrer',
+      target: '_blank',
+      title: 'Learn how to connect devices',
+      value: 'learntoconnect',
+      canAccess: () => true
+    }
   ];
 
   const handleToggle = event => {
@@ -29,33 +44,37 @@ export const DeviceAdditionWidget = ({ docsVersion, onConnectClick, onMakeGatewa
   };
 
   return (
-    <div className="flexbox column center-aligned padding-small device-addition-widget">
-      <ButtonGroup className="muted">
-        <Button onClick={options[selectedIndex].action} variant="text" style={buttonStyle}>
+    <>
+      <ButtonGroup className="muted device-addition-widget">
+        <Button className={classes.buttonStyle} onClick={options[selectedIndex].action} variant="text">
           {options[selectedIndex].title}
         </Button>
-        <Button size="small" onClick={handleToggle} variant="text" style={buttonStyle}>
+        <Button className={classes.buttonStyle} size="small" onClick={handleToggle} variant="text">
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
       <Menu id="device-connection-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleToggle} variant="menu">
-        {options.map((option, index) => (
-          <MenuItem key={`connection-option-${option.value}`} onClick={() => handleSelection(index)} style={buttonStyle}>
-            {option.title}
-          </MenuItem>
-        ))}
+        {options.reduce((accu, option, index) => {
+          if (!option.canAccess({ features, tenantCapabilities })) {
+            return accu;
+          }
+          // eslint-disable-next-line no-unused-vars
+          const { canAccess, href, title, value, ...optionProps } = option;
+          const item = href ? (
+            <MenuItem {...optionProps} key={value} LinkComponent="a">
+              {title}
+              <LaunchIcon style={{ fontSize: '10pt' }} />
+            </MenuItem>
+          ) : (
+            <MenuItem className={classes.buttonStyle} key={value} onClick={() => handleSelection(index)}>
+              {title}
+            </MenuItem>
+          );
+          accu.push(item);
+          return accu;
+        }, [])}
       </Menu>
-      <a
-        className="flexbox centered"
-        href={`https://docs.mender.io/${docsVersion}client-installation/overview`}
-        rel="noopener noreferrer"
-        style={{ marginTop: theme.spacing() }}
-        target="_blank"
-      >
-        Learn how to connect devices
-        <LaunchIcon style={{ fontSize: '10pt', marginLeft: theme.spacing(), marginBottom: -2 }} />
-      </a>
-    </div>
+    </>
   );
 };
 

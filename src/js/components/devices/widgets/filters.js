@@ -62,8 +62,8 @@ export const Filters = ({
   const updateFilter = newFilter => {
     setNewFilter(newFilter);
     saveUpdatedFilter(newFilter);
-    let changedFilters = [...filters];
-    if (editedIndex == filters.length) {
+    let changedFilters = [...currentFilters];
+    if (editedIndex == currentFilters.length) {
       changedFilters.push(newFilter);
       return handleFilterChange(changedFilters);
     }
@@ -80,22 +80,18 @@ export const Filters = ({
   };
 
   const removeFilter = removedFilter => {
-    let changedFilters = filters.filter(filter => !deepCompare(filter, removedFilter));
     if (removedFilter.key === 'id') {
       resetIdFilter();
     }
+    let changedFilters = filters.filter(filter => !deepCompare(filter, removedFilter));
     handleFilterChange(changedFilters);
     if (deepCompare(newFilter, removedFilter)) {
       setNewFilter(emptyFilter);
-    } else {
-      changedFilters =
-        changedFilters.length && deepCompare(changedFilters[changedFilters.length - 1], newFilter)
-          ? changedFilters.slice(0, changedFilters.length - 1)
-          : changedFilters;
-      setEditedIndex(changedFilters.length);
     }
-    setCurrentFilters(changedFilters);
-    if (!changedFilters.length) {
+    const currentFilters = changedFilters.filter(filter => !deepCompare(filter, newFilter));
+    setCurrentFilters(currentFilters);
+    setEditedIndex(currentFilters.length);
+    if (!currentFilters.length) {
       setAdding(true);
     }
   };

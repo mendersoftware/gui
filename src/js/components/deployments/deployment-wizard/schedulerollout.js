@@ -126,7 +126,7 @@ export const ScheduleRollout = props => {
                 label={canSchedule ? 'Set the start time' : 'Starting at'}
                 value={startTime}
                 style={styles.textField}
-                minDate={moment()}
+                minDateTime={moment()}
                 disabled={!canSchedule}
                 onChange={date => handleStartTimeChange(date.toISOString())}
                 renderInput={renderInput}

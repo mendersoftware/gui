@@ -20,8 +20,10 @@ describe('DeviceQuickActions Component', () => {
           }
         ]}
         actionCallbacks={{ onAddDevicesToGroup: jest.fn, onAuthorizationChange: jest.fn, onDeviceDismiss: jest.fn, onRemoveDevicesFromGroup: jest.fn }}
+        features={{ isHosted: true }}
         selectedGroup=""
         selectedRows={[3]}
+        tenantCapabilities={{ isEnterprise: true }}
       />
     );
     const view = baseElement.firstChild.firstChild;

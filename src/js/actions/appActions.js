@@ -7,10 +7,19 @@ import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../constants/deviceConstant
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { customSort, extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getUserSettings } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import { getDeviceAttributes, getDeviceById, getDevicesByStatus, getDeviceLimit, getDynamicGroups, getGroups, setDeviceListState } from './deviceActions';
+import {
+  getDeviceAttributes,
+  getDeviceById,
+  getDevicesByStatus,
+  getDeviceLimit,
+  getDynamicGroups,
+  getGroups,
+  setDeviceListState,
+  searchDevices
+} from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
 import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings } from './userActions';
@@ -203,4 +212,34 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
       })
     );
   });
+};
+
+export const setSearchState = searchState => (dispatch, getState) => {
+  const currentState = getState().app.searchState;
+  let nextState = {
+    ...currentState,
+    ...searchState,
+    sort: {
+      ...currentState.sort,
+      ...searchState.sort
+    }
+  };
+  let tasks = [];
+  // eslint-disable-next-line no-unused-vars
+  const { isSearching: currentSearching, deviceIds: currentDevices, searchTotal: currentTotal, ...currentRequestState } = currentState;
+  // eslint-disable-next-line no-unused-vars
+  const { isSearching: nextSearching, deviceIds: nextDevices, searchTotal: nextTotal, ...nextRequestState } = nextState;
+  if (nextRequestState.searchTerm && !deepCompare(currentRequestState, nextRequestState)) {
+    nextState.isSearching = true;
+    tasks.push(
+      dispatch(searchDevices(nextState))
+        .then(results => {
+          const searchResult = results[results.length - 1];
+          return dispatch(setSearchState({ ...searchResult, isSearching: false }));
+        })
+        .catch(() => dispatch(setSearchState({ isSearching: false, searchTotal: 0 })))
+    );
+  }
+  tasks.push(dispatch({ type: AppConstants.SET_SEARCH_STATE, state: nextState }));
+  return Promise.all(tasks);
 };

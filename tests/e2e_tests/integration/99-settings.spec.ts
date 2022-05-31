@@ -1,9 +1,8 @@
 import * as fs from 'fs';
 import { Decoder } from '@nuintun/qrcode';
-import { expect } from '@playwright/test';
 import { PNG } from 'pngjs';
 
-import test from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 import { baseUrlToDomain, generateOtp, login, startClient, tenantTokenRetrieval } from '../utils/commands';
 
 test.describe('Settings', () => {

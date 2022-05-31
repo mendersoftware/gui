@@ -3,7 +3,16 @@ import thunk from 'redux-thunk';
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState, receivedPermissionSets, receivedRoles } from '../../../tests/mockData';
 
-import { commonErrorHandler, getLatestReleaseInfo, initializeAppData, setSnackbar, setFirstLoginAfterSignup, setYesterday, setVersionInfo } from './appActions';
+import {
+  commonErrorHandler,
+  getLatestReleaseInfo,
+  initializeAppData,
+  setSearchState,
+  setSnackbar,
+  setFirstLoginAfterSignup,
+  setYesterday,
+  setVersionInfo
+} from './appActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants, { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
@@ -154,7 +163,11 @@ describe('app actions', () => {
         groups: {
           testGroupDynamic: {
             deviceIds: [],
-            filters: [{ key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] }],
+            filters: [
+              { key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] },
+              { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
+              { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
+            ],
             id: 'filter1',
             total: 0
           }
@@ -334,6 +347,18 @@ describe('app actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [{ type: AppConstants.SET_YESTERDAY, value: '2018-12-31T13:00:00.900Z' }];
     await store.dispatch(setYesterday());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should handle searching', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      { type: AppConstants.SET_SEARCH_STATE, state: { ...defaultState.app.searchState, isSearching: true, searchTerm: 'next!' } },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
+      { type: AppConstants.SET_SEARCH_STATE, state: { ...defaultState.app.searchState, isSearching: false, searchTerm: '' } }
+    ];
+    await store.dispatch(setSearchState({ searchTerm: 'next!' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

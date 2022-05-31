@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 // material ui
 import { useTheme } from '@mui/material/styles';
 import { Button, MenuItem, Select } from '@mui/material';
-
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -89,7 +88,6 @@ const calculateColumnSelectionSize = (changedColumns, customColumnSizes) =>
   );
 
 export const Authorized = props => {
-  const theme = useTheme();
   const {
     acceptedCount,
     addDevicesToGroup,
@@ -104,11 +102,10 @@ export const Authorized = props => {
     deviceCount,
     deviceListState,
     devices,
+    features,
     filters,
     getIssueCountsByType,
     groupFilters,
-    hasMonitor,
-    hasReporting,
     highlightHelp,
     idAttribute,
     limitMaxed,
@@ -127,21 +124,24 @@ export const Authorized = props => {
     settingsInitialized,
     showHelptips,
     showsDialog,
+    tenantCapabilities,
     updateDevicesAuth,
     updateUserColumnSettings
   } = props;
   const {
     refreshTrigger,
+    expandedDeviceId,
     selectedIssues = [],
     isLoading: pageLoading,
     selection: selectedRows,
     sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] },
     state: selectedState
   } = deviceListState;
+  const { hasReporting } = features;
+  const { hasMonitor } = tenantCapabilities;
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState([]);
   const [headerKeys, setHeaderKeys] = useState('');
-  const [expandedDeviceId, setExpandedDeviceId] = useState();
   const [isInitialized, setIsInitialized] = useState(false);
   const [devicesInitialized, setDevicesInitialized] = useState(!!devices.length);
   const [showFilters, setShowFilters] = useState(false);
@@ -332,7 +332,7 @@ export const Authorized = props => {
 
   const onExpandClick = (device = {}) => {
     let { attributes = {}, id, status } = device;
-    setExpandedDeviceId(expandedId => (expandedId === id ? undefined : id));
+    setExpandedDeviceId(expandedDeviceId === id ? undefined : id);
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
       if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
@@ -340,6 +340,8 @@ export const Authorized = props => {
       }
     }
   };
+
+  const setExpandedDeviceId = expandedDeviceId => setDeviceListState({ expandedDeviceId });
 
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
@@ -377,46 +379,48 @@ export const Authorized = props => {
   return (
     <>
       <div className="margin-left-small">
-        <h3 className="margin-right">{isUngroupedGroup ? UNGROUPED_GROUP.name : groupLabel}</h3>
-        <div className="flexbox space-between filter-header">
-          <div className="flexbox">
-            <DeviceStateSelection onStateChange={onDeviceStateSelectionChange} selectedState={selectedState} states={states} />
-            {!isUngroupedGroup && (
-              <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
-                <Button
-                  color="secondary"
-                  disableRipple
-                  onClick={() => setShowFilters(!showFilters)}
-                  startIcon={<FilterListIcon />}
-                  style={{ backgroundColor: 'transparent' }}
-                >
-                  {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
-                </Button>
-              </div>
-            )}
-            {hasMonitor && (
-              <DeviceIssuesSelection
-                onChange={onDeviceIssuesSelectionChange}
-                onSelectAll={onSelectAllIssues}
-                options={Object.values(availableIssueOptions)}
-                selection={selectedIssues}
-              />
-            )}
-            {selectedGroup && !isUngroupedGroup && (
-              <p className="info flexbox centered" style={{ marginLeft: theme.spacing(2) }}>
-                {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
-                <span>{!groupFilters.length ? 'Static' : 'Dynamic'}</span>
-              </p>
-            )}
-          </div>
-          <div className="flexbox centered">
+        <div className="flexbox">
+          <h3 className="margin-right">{isUngroupedGroup ? UNGROUPED_GROUP.name : groupLabel}</h3>
+          <div className="flexbox space-between center-aligned" style={{ flexGrow: 1 }}>
+            <div className="flexbox">
+              <DeviceStateSelection onStateChange={onDeviceStateSelectionChange} selectedState={selectedState} states={states} />
+              {hasMonitor && (
+                <DeviceIssuesSelection
+                  onChange={onDeviceIssuesSelectionChange}
+                  onSelectAll={onSelectAllIssues}
+                  options={Object.values(availableIssueOptions)}
+                  selection={selectedIssues}
+                />
+              )}
+              {selectedGroup && !isUngroupedGroup && (
+                <div className="margin-left muted flexbox centered">
+                  {!groupFilters.length ? <LockOutlined fontSize="small" /> : <AutorenewIcon fontSize="small" />}
+                  <span>{!groupFilters.length ? 'Static' : 'Dynamic'}</span>
+                </div>
+              )}
+            </div>
             {canManageDevices && selectedGroup && !isUngroupedGroup && (
               <Button onClick={onGroupRemoval} startIcon={<DeleteIcon />}>
                 Remove group
               </Button>
             )}
-            <ListOptions options={listOptionHandlers} title="Table options" />
           </div>
+        </div>
+        <div className="flexbox space-between filter-header">
+          {!isUngroupedGroup && (
+            <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
+              <Button
+                color="secondary"
+                disableRipple
+                onClick={() => setShowFilters(!showFilters)}
+                startIcon={<FilterListIcon />}
+                style={{ backgroundColor: 'transparent' }}
+              >
+                {filters.length > 0 ? `Filters (${filters.length})` : 'Filters'}
+              </Button>
+            </div>
+          )}
+          <ListOptions options={listOptionHandlers} title="Table options" />
         </div>
         <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} open={showFilters} />
       </div>
@@ -474,9 +478,11 @@ export const Authorized = props => {
         <DeviceQuickActions
           actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}
           devices={devices}
+          features={features}
           selectedGroup={selectedStaticGroup}
           selectedRows={selectedRows}
           ref={authorizeRef}
+          tenantCapabilities={tenantCapabilities}
         />
       )}
       <ColumnCustomizationDialog
@@ -505,8 +511,6 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { hasMonitor } = getTenantCapabilities(state);
-  const { hasReporting } = getFeatures(state);
   let devices = getMappedDevicesList(state, 'deviceList');
   let deviceCount = state.devices.deviceList.total;
   let selectedGroup;
@@ -531,16 +535,16 @@ const mapStateToProps = state => {
     devices,
     deviceListState: state.devices.deviceList,
     deviceCount,
+    features: getFeatures(state),
     filters: state.devices.filters || [],
     groupFilters,
-    hasMonitor,
-    hasReporting,
     idAttribute: getIdAttribute(state),
     onboardingState: getOnboardingState(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,
     settingsInitialized: state.users.settingsInitialized,
-    showHelptips: state.users.showHelptips
+    showHelptips: state.users.showHelptips,
+    tenantCapabilities: getTenantCapabilities(state)
   };
 };
 
@@ -554,11 +558,10 @@ const DeviceStateSelection = ({ onStateChange, selectedState = '', states }) => 
     <div className="flexbox centered">
       Status:
       <Select
-        className="margin-right"
         disableUnderline
         onChange={e => onStateChange(e.target.value)}
         value={selectedState}
-        style={{ fontSize: 13, marginLeft: theme.spacing() }}
+        style={{ fontSize: 13, marginLeft: theme.spacing(), marginTop: 2 }}
       >
         {availableStates.map(state => (
           <MenuItem key={state.key} value={state.key}>

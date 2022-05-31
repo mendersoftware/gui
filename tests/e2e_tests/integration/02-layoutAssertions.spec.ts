@@ -1,5 +1,4 @@
-import { expect } from '@playwright/test';
-import test from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 
 test.describe('Layout assertions', () => {
   const navbar = '.leftFixed.leftNav';
@@ -38,7 +37,7 @@ test.describe('Layout assertions', () => {
       await page.hover('#device-actions-actions');
       await page.click('[aria-label="accept"]');
     }
-    await page.click(`.MuiInput-root:left-of(:text("Filters"))`);
+    await page.locator(`input:near(:text("Status:"))`).first().click({ force: true });
     await page.click(`css=.MuiPaper-root >> text=/Accepted/i`);
     await page.waitForSelector(`css=.deviceListItem >> text=/release/`, { timeout: 60000 });
     const element = await page.textContent('.deviceListItem');

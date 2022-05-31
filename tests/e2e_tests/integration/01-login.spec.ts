@@ -1,9 +1,8 @@
 import axios from 'axios';
 import * as https from 'https';
 import jwtDecode from 'jwt-decode';
-import { expect } from '@playwright/test';
 
-import test from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {
