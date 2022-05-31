@@ -5,16 +5,16 @@ updates:
     directory: /
     package-ecosystem: npm
     schedule:
-      interval: weekly
+      interval: monthly
   - commit-message:
       prefix: 'chore'
     directory: /
     package-ecosystem: docker
     schedule:
-      interval: weekly
+      interval: monthly
   - commit-message:
       prefix: 'chore'
     directory: /tests/e2e_tests
     package-ecosystem: npm
     schedule:
-      interval: weekly
+      interval: monthly
