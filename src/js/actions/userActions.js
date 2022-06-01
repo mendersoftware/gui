@@ -367,7 +367,7 @@ export const normalizeRbacRoles = (roles, rolesById, permissionSets) =>
 export const mapUserRolesToUiPermissions = (userRoles, roles) =>
   userRoles.reduce(
     (accu, roleId) => {
-      if (!roleId) {
+      if (!(roleId && roles[roleId])) {
         return accu;
       }
       return mergePermissions(accu, roles[roleId].uiPermissions);
