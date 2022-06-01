@@ -441,14 +441,17 @@ const transformGroupRoleDataToScopedPermissionsSets = areaPermissions => {
 const transformRoleDataToRole = (roleData, roleState = {}) => {
   const role = { ...roleState, ...roleData };
   // eslint-disable-next-line no-unused-vars
-  const { description = '', groups, name } = role;
+  const {
+    description = '',
+    name,
+    uiPermissions: { groups }
+  } = role;
   // eslint-disable-next-line no-unused-vars
   const { groups: emptyGroups, ...remainder } = emptyUiPermissions;
 
-  const sourceSets = roleData.source?.permission_sets_with_scope?.filter(permissionSet => permissionSet.scope?.type !== uiPermissionsByArea.groups.scope);
   const { permissionSetsWithScope, roleUiPermissions } = Object.keys(remainder).reduce(
     (accu, area) => {
-      const areaPermissions = role[area];
+      const areaPermissions = role.uiPermissions[area];
       if (!Array.isArray(areaPermissions)) {
         return accu;
       }
@@ -457,7 +460,7 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
       accu.permissionSetsWithScope.push(...mappedPermissions);
       return accu;
     },
-    { permissionSetsWithScope: sourceSets || [{ name: defaultPermissionSets.Basic.value }], roleUiPermissions: {} }
+    { permissionSetsWithScope: [{ name: defaultPermissionSets.Basic.value }], roleUiPermissions: {} }
   );
   const groupPermissions = transformGroupRoleDataToScopedPermissionsSets(groups);
   permissionSetsWithScope.push(...groupPermissions);
