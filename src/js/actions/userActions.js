@@ -595,3 +595,25 @@ export const setHideAnnouncement = (shouldHide, userId) => (dispatch, getState) 
   }
   return Promise.resolve();
 };
+
+export const getTokens = () => (dispatch, getState) =>
+  GeneralApi.get(`${useradmApiUrl}/settings/tokens`).then(({ data: tokens }) => {
+    const user = getCurrentUser(getState());
+    const updatedUser = {
+      ...user,
+      tokens
+    };
+    return Promise.resolve(dispatch({ type: UserConstants.UPDATED_USER, user: updatedUser, userId: user.id }));
+  });
+
+const ONE_YEAR = 31536000;
+
+export const generateToken =
+  ({ expiresIn = ONE_YEAR, name }) =>
+  dispatch =>
+    GeneralApi.post(`${useradmApiUrl}/settings/tokens`, { name, expires_in: expiresIn })
+      .then(({ data: token }) => Promise.all([dispatch(getTokens()), token]))
+      .catch(err => commonErrorHandler(err, 'There was an error creating the token:', dispatch));
+
+export const revokeToken = token => dispatch =>
+  GeneralApi.delete(`${useradmApiUrl}/settings/tokens/${token.id}`).then(() => Promise.resolve(dispatch(getTokens())));

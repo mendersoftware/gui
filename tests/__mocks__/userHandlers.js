@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { defaultState, permissionSets, token, userId as defaultUserId } from '../mockData';
+import { accessTokens, defaultState, permissionSets, token, userId as defaultUserId } from '../mockData';
 import { defaultPermissionSets, useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
 
 export const roles = [
@@ -160,6 +160,14 @@ export const userHandlers = [
   }),
   rest.get(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.json(defaultState.users.globalSettings))),
   rest.post(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.status(200))),
+  rest.get(`${useradmApiUrl}/settings/tokens`, (req, res, ctx) => res(ctx.json(accessTokens))),
+  rest.post(`${useradmApiUrl}/settings/tokens`, (req, res, ctx) => res(ctx.status(200), ctx.json(token))),
+  rest.delete(`${useradmApiUrl}/settings/tokens/:tokenId`, ({ params: { tokenId } }, res, ctx) => {
+    if (tokenId === 'some-id-1') {
+      return res(ctx.status(200));
+    }
+    return res(ctx.status(577));
+  }),
   rest.get(`${useradmApiUrl}/2faqr`, (req, res, ctx) => res(ctx.json({ qr: btoa('test') }))),
   rest.post(`${useradmApiUrl}/users/:userId/2fa/enable`, ({ params: { userId } }, res, ctx) => {
     if (defaultState.users.byId[userId] || 'me') {

@@ -1238,6 +1238,25 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-33:focus::-ms-input-
         </a>
         .
       </p>
+      <div
+        class="flexbox space-between margin-top "
+      >
+        <p
+          class="help-content"
+        >
+          Personal access token management
+        </p>
+        <button
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-36"
+          tabindex="0"
+          type="button"
+        >
+          Generate a token
+          <span
+            class="MuiTouchRipple-root emotion-37"
+          />
+        </button>
+      </div>
     </div>
   </div>
 </div>
