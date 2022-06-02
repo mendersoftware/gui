@@ -376,40 +376,46 @@ export const mapUserRolesToUiPermissions = (userRoles, roles) =>
   );
 
 export const getPermissionSets = () => (dispatch, getState) =>
-  GeneralApi.get(`${useradmApiUrlv2}/permission_sets`).then(({ data }) => {
-    const permissionSets = data.reduce(
-      (accu, permissionSet) => {
-        const permissionSetState = accu[permissionSet.name] ?? {};
-        const permissionSetObject = { ...permissionSetState, ...permissionSet };
-        permissionSetObject.result = Object.values(uiPermissionsById).reduce(
-          (accu, item) => {
-            // eslint-disable-next-line no-unused-vars
-            const { groups, ...remainingAreas } = item.permissionSets;
-            accu = Object.entries(remainingAreas).reduce((collector, [area, permissionSet]) => {
-              if (permissionSet === permissionSetObject.name) {
-                collector[area] = [...collector[area], item.value];
-              }
-              return collector;
-            }, accu);
-            return accu;
-          },
-          { ...emptyUiPermissions }
-        );
-        if (permissionSetObject.supported_scope_types?.includes(uiPermissionsByArea.groups.scope)) {
-          permissionSetObject.result.groups = mapGroupPermissionSet(permissionSetObject.name, [ALL_DEVICES]);
-        }
-        accu[permissionSet.name] = permissionSetObject;
-        return accu;
-      },
-      { ...getState().users.permissionSetsById }
-    );
-    return Promise.all([dispatch({ type: UserConstants.RECEIVED_PERMISSION_SETS, value: permissionSets }), permissionSets]);
-  });
+  GeneralApi.get(`${useradmApiUrlv2}/permission_sets`)
+    .catch(() => console.log('Permission set retrieval failed - likely accessing a non-RBAC backend'))
+    .then(({ data }) => {
+      const permissionSets = data.reduce(
+        (accu, permissionSet) => {
+          const permissionSetState = accu[permissionSet.name] ?? {};
+          const permissionSetObject = { ...permissionSetState, ...permissionSet };
+          permissionSetObject.result = Object.values(uiPermissionsById).reduce(
+            (accu, item) => {
+              // eslint-disable-next-line no-unused-vars
+              const { groups, ...remainingAreas } = item.permissionSets;
+              accu = Object.entries(remainingAreas).reduce((collector, [area, permissionSet]) => {
+                if (permissionSet === permissionSetObject.name) {
+                  collector[area] = [...collector[area], item.value];
+                }
+                return collector;
+              }, accu);
+              return accu;
+            },
+            { ...emptyUiPermissions }
+          );
+          if (permissionSetObject.supported_scope_types?.includes(uiPermissionsByArea.groups.scope)) {
+            permissionSetObject.result.groups = mapGroupPermissionSet(permissionSetObject.name, [ALL_DEVICES]);
+          }
+          accu[permissionSet.name] = permissionSetObject;
+          return accu;
+        },
+        { ...getState().users.permissionSetsById }
+      );
+      return Promise.all([dispatch({ type: UserConstants.RECEIVED_PERMISSION_SETS, value: permissionSets }), permissionSets]);
+    });
 
 export const getRoles = () => (dispatch, getState) =>
   Promise.all([GeneralApi.get(`${useradmApiUrlv2}/roles`), dispatch(getPermissionSets())])
     .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'))
-    .then(([{ data: roles }, permissionSetTasks]) => {
+    .then(results => {
+      if (!results) {
+        return Promise.resolve();
+      }
+      const [{ data: roles }, permissionSetTasks] = results;
       const rolesById = normalizeRbacRoles(roles, getState().users.rolesById, permissionSetTasks[permissionSetTasks.length - 1]);
       return Promise.resolve(dispatch({ type: UserConstants.RECEIVED_ROLES, value: rolesById }));
     });
