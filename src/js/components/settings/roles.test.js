@@ -77,17 +77,19 @@ describe('Roles Component', () => {
     await userEvent.click(submitButton);
     expect(editRoleMock).toHaveBeenCalledWith({
       allowUserManagement: false,
-      auditlog: [],
       description: `${defaultState.users.rolesById.test.description}something`,
-      groups: [
-        { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['read'] },
-        { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['deploy'] },
-        { disableEdit: false, group: '', uiPermissions: [] }
-      ],
       name: 'test',
-      releases: [],
-      source: defaultState.users.rolesById.test,
-      userManagement: []
+      uiPermissions: {
+        auditlog: [],
+        groups: [
+          { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['read'] },
+          { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['deploy'] },
+          { disableEdit: false, group: '', uiPermissions: [] }
+        ],
+        releases: [],
+        userManagement: []
+      },
+      source: defaultState.users.rolesById.test
     });
   });
 });

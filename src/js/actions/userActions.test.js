@@ -308,7 +308,7 @@ describe('user actions', () => {
       { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(createRole({ ...defaultRole, groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] }));
+    await store.dispatch(createRole({ ...defaultRole, uiPermissions: { groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] } }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -331,7 +331,9 @@ describe('user actions', () => {
       { type: UserConstants.RECEIVED_ROLES, value: receivedRoles }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(editRole({ name: defaultRole.name, groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] }));
+    await store.dispatch(
+      editRole({ name: defaultRole.name, uiPermissions: { groups: [{ group: 'testGroup', uiPermissions: [uiPermissionsById.manage.value] }] } })
+    );
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
