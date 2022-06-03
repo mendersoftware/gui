@@ -216,10 +216,12 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
       allowUserManagement,
       description,
       name,
-      auditlog: auditlogPermissions,
-      groups: groupSelections,
-      releases: releasesPermissions,
-      userManagement: userManagementPermissions
+      uiPermissions: {
+        auditlog: auditlogPermissions,
+        groups: groupSelections,
+        releases: releasesPermissions,
+        userManagement: userManagementPermissions
+      }
     };
     onSubmit(role);
   };
