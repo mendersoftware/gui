@@ -23,19 +23,31 @@ const menuProps = {
 
 const PermissionsSelect = ({ disabled, label, onChange, options, values }) => {
   const theme = useTheme();
+
+  const permissionEnabledDisabled = (uiPermission, values) => {
+    const { permissionLevel, value: permissionValue } = uiPermission;
+    const disabled = values.some(permission => uiPermissionsById[permission].permissionLevel > permissionLevel);
+    const enabled = values.some(permission => permission === permissionValue) || disabled;
+    return { enabled, disabled };
+  };
+
   const onInputChange = ({ target: { value } }) => {
     if (value.includes('')) {
       return onChange([]);
     }
-    return onChange(value);
+    var newValues = options
+      .filter(uiPermission => {
+        const { enabled } = permissionEnabledDisabled(uiPermission, value);
+        return enabled;
+      })
+      .map(uiPermission => uiPermission.value);
+    return onChange(newValues);
   };
 
   const editablePermissions = useMemo(
     () =>
       options.map(uiPermission => {
-        const { permissionLevel, value } = uiPermission;
-        const disabled = values.some(permission => uiPermissionsById[permission].permissionLevel > permissionLevel);
-        const enabled = values.some(permission => permission === value) || disabled;
+        const { enabled, disabled } = permissionEnabledDisabled(uiPermission, values);
         return { enabled, disabled, ...uiPermission };
       }),
     [options, values]
