@@ -83,7 +83,7 @@ describe('Roles Component', () => {
         auditlog: [],
         groups: [
           { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['read'] },
-          { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['deploy'] },
+          { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['read', 'deploy'] },
           { disableEdit: false, group: '', uiPermissions: [] }
         ],
         releases: [],
