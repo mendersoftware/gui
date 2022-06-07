@@ -1,20 +1,23 @@
 version: 2
 updates:
   - commit-message:
-      prefix: 'chore'
+      prefix: chore
     directory: /
     package-ecosystem: npm
     schedule:
       interval: monthly
+      day: sunday
   - commit-message:
-      prefix: 'chore'
+      prefix: chore
     directory: /
     package-ecosystem: docker
     schedule:
       interval: monthly
+      day: sunday
   - commit-message:
-      prefix: 'chore'
+      prefix: chore
     directory: /tests/e2e_tests
     package-ecosystem: npm
     schedule:
       interval: monthly
+      day: sunday
