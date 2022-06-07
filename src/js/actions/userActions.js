@@ -461,8 +461,18 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
       if (!Array.isArray(areaPermissions)) {
         return accu;
       }
-      accu.roleUiPermissions[area] = areaPermissions;
-      const mappedPermissions = areaPermissions.map(uiPermission => ({ name: uiPermissionsById[uiPermission].permissionSets[area] }));
+      const highestAreaPermissionLevelSelected = areaPermissions.reduce(
+        (highest, current) => (uiPermissionsById[current].permissionLevel > highest ? uiPermissionsById[current].permissionLevel : highest),
+        1
+      );
+      const impliedPermissions = uiPermissionsByArea[area].uiPermissions.reduce((permissions, current) => {
+        if (current.permissionLevel < highestAreaPermissionLevelSelected || areaPermissions.includes(current.value)) {
+          permissions.push(current.value);
+        }
+        return permissions;
+      }, []);
+      accu.roleUiPermissions[area] = impliedPermissions;
+      const mappedPermissions = impliedPermissions.map(uiPermission => ({ name: uiPermissionsById[uiPermission].permissionSets[area] }));
       accu.permissionSetsWithScope.push(...mappedPermissions);
       return accu;
     },
