@@ -124,7 +124,9 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
   const canTroubleshoot = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.connect.value));
   const canManageDevices = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.manage.value));
 
-  const canDeploy = uiPermissions.deployments.includes(uiPermissionsById.deploy.value);
+  const canDeploy =
+    uiPermissions.deployments.includes(uiPermissionsById.deploy.value) ||
+    Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.deploy.value));
 
   return {
     canAuditlog,
