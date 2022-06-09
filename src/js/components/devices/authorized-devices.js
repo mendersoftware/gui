@@ -26,6 +26,7 @@ import {
   getUserCapabilities,
   getUserSettings
 } from '../../selectors';
+import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -266,10 +267,7 @@ export const Authorized = props => {
       })
       .then(() => onSelectionChange([]));
 
-  const handlePageChange = page => {
-    setDeviceListState({ page, refreshTrigger: !refreshTrigger });
-    setExpandedDeviceId(undefined);
-  };
+  const handlePageChange = page => setDeviceListState({ expandedDeviceId: undefined, page, refreshTrigger: !refreshTrigger });
 
   const onPageLengthChange = perPage => {
     setDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger });
@@ -331,8 +329,9 @@ export const Authorized = props => {
   };
 
   const onExpandClick = (device = {}) => {
+    setSnackbar('');
     let { attributes = {}, id, status } = device;
-    setExpandedDeviceId(expandedDeviceId === id ? undefined : id);
+    setDeviceListState({ expandedDeviceId: deviceListState.expandedDeviceId === id ? undefined : id });
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
       if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
@@ -340,8 +339,6 @@ export const Authorized = props => {
       }
     }
   };
-
-  const setExpandedDeviceId = expandedDeviceId => setDeviceListState({ expandedDeviceId });
 
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
@@ -376,6 +373,8 @@ export const Authorized = props => {
   const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : ALL_DEVICES;
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
+
+  const openedDevice = useDebounce(expandedDeviceId, 300);
   return (
     <>
       <div className="margin-left-small">
@@ -464,10 +463,10 @@ export const Authorized = props => {
         <div />
       )}
       <ExpandedDevice
-        deviceId={expandedDeviceId}
+        deviceId={openedDevice}
         onAddDevicesToGroup={onAddDevicesToGroup}
         onAuthorizationChange={onAuthorizationChange}
-        onClose={() => setExpandedDeviceId(undefined)}
+        onClose={() => setDeviceListState({ expandedDeviceId: undefined })}
         onDeviceDismiss={onDeviceDismiss}
         onMakeGatewayClick={onMakeGatewayClick}
         onRemoveDevicesFromGroup={onRemoveDevicesFromGroup}

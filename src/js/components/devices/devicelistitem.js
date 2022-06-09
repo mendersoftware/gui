@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 
 // material ui
 import { Checkbox } from '@mui/material';
@@ -16,14 +16,23 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const DeviceListItem = ({ columnHeaders, device, idAttribute, index, onClick, onRowSelect, selectable, selected }) => {
+const DeviceListItem = ({ columnHeaders, device, deviceListState, idAttribute, index, onClick, onRowSelect, selectable, selected }) => {
   const [isHovering, setIsHovering] = useState(false);
   const { classes } = useStyles();
 
   const onMouseOut = () => setIsHovering(false);
   const onMouseOver = () => setIsHovering(true);
 
-  const handleOnClick = e => onClick(e, index);
+  const handleOnClick = useCallback(
+    event => {
+      if (event && event.target.closest('input')?.hasOwnProperty('checked')) {
+        return;
+      }
+      onClick(device);
+    },
+    [device.id, onClick, deviceListState.expandedDeviceId]
+  );
+
   const handleRowSelect = () => onRowSelect(index);
 
   return (
