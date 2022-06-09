@@ -6,6 +6,42 @@ import test, { expect } from '../fixtures/fixtures';
 import { baseUrlToDomain, generateOtp, login, startClient, tenantTokenRetrieval } from '../utils/commands';
 
 test.describe('Settings', () => {
+  test.describe('access token feature', () => {
+    test.use({ storageState: 'storage.json' });
+    test('allows access to access tokens', async ({ baseUrl, loggedInPage: page }) => {
+      await page.goto(`${baseUrl}ui/#/settings`);
+      const isVisible = await page.isVisible(`text=/generate a token/i`);
+      if (!isVisible) {
+        console.log('settings may not be loaded - move around');
+        await page.goto(`${baseUrl}ui/#/help`);
+        await page.goto(`${baseUrl}ui/#/settings`);
+      }
+      await page.waitForSelector('css=button >> text=Generate a token');
+    });
+    test('allows generating & revoking tokens', async ({ baseUrl, browserName, context, loggedInPage: page, username, password }) => {
+      await page.goto(`${baseUrl}ui/#/settings`);
+      await page.click('text=/generate a token/i');
+      await page.waitForSelector('text=/Create new token/i');
+      await page.fill('[placeholder=Name]', 'aNewToken');
+      await page.click('div[role="button"]:has-text("a year")');
+      await page.click('li[role="option"]:has-text("7 days")');
+      await page.click('text=/Create token/i');
+      await page.click('text=/Close/i');
+      await page.waitForSelector('text=/in 7 days/i');
+      await page.click('button:has-text("Revoke")');
+      await page.waitForSelector('text=/revoke token/i');
+      await page.click('button:has-text("Revoke token")');
+      await page.click('text=/generate a token/i');
+      await page.fill('[placeholder=Name]', 'aNewToken');
+      await page.click('text=/Create token/i');
+      await page.click('.code .MuiSvgIcon-root');
+      await page.waitForSelector('text=/copied to clipboard/i');
+      const token = await page.evaluate(() => navigator.clipboard.readText());
+      expect(token).toBeTruthy();
+      await page.click('text=/Close/i');
+      await page.waitForSelector('text=/in a year/i');
+    });
+  });
   test.describe('account upgrades', () => {
     test.use({ storageState: 'storage.json' });
     test('allows upgrading to Professional', async ({ environment, loggedInPage: page }) => {
