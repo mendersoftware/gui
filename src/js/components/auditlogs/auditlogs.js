@@ -17,6 +17,7 @@ import TimerangePicker from '../common/timerange-picker';
 import AuditLogsList, { defaultRowsPerPage } from './auditlogslist';
 import { createDownload } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
+import { getUserCapabilities } from '../../selectors';
 
 const detailsMap = {
   Deployment: 'to device group',
@@ -35,7 +36,7 @@ const autoSelectProps = {
   renderOption
 };
 
-export const AuditLogs = ({ events, getAuditLogsCsvLink, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
+export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
   const history = useHistory();
   const [csvLoading, setCsvLoading] = useState(false);
   const [locationChange, setLocationChange] = useState(true);
@@ -58,7 +59,9 @@ export const AuditLogs = ({ events, getAuditLogsCsvLink, getUserList, groups, se
   const { detail, isLoading, perPage, endDate, user, reset: resetList, sort, startDate, total, type } = selectionState;
 
   useEffect(() => {
-    getUserList();
+    if (canReadUsers) {
+      getUserList();
+    }
     setAuditlogsState({ reset: !resetList });
     trackLocationChange(history.location);
     history.listen(trackLocationChange);
@@ -237,10 +240,12 @@ const actionCreators = { getAuditLogsCsvLink, getUserList, setAuditlogsState };
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+  const { canReadUsers } = getUserCapabilities(state);
   return {
+    canReadUsers,
     events: state.organization.auditlog.events,
-    selectionState: state.organization.auditlog.selectionState,
     groups: [ALL_DEVICES, ...Object.keys(groups).sort()],
+    selectionState: state.organization.auditlog.selectionState,
     users: state.users.byId
   };
 };
