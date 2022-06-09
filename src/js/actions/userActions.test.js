@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
-import { defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
+import { accessTokens, defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
 import {
   createRole,
   createUser,
@@ -10,8 +10,10 @@ import {
   editRole,
   editUser,
   enableUser2fa,
+  generateToken,
   get2FAQRCode,
   getRoles,
+  getTokens,
   getUser,
   getUserList,
   loginUser,
@@ -20,6 +22,7 @@ import {
   passwordResetStart,
   removeRole,
   removeUser,
+  revokeToken,
   saveGlobalSettings,
   saveUserSettings,
   setAccountActivationCode,
@@ -423,5 +426,35 @@ describe('user actions', () => {
     await store.dispatch(updateUserColumnSettings());
     expect(localStorage.getItem).toHaveBeenCalledTimes(1);
     expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+  });
+
+  it('should allow token list retrieval', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [{ type: UserConstants.UPDATED_USER, userId: 'a1', user: { tokens: accessTokens } }];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(getTokens());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow token generation', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [{ type: UserConstants.UPDATED_USER, userId: 'a1', user: { tokens: accessTokens } }];
+    const store = mockStore({ ...defaultState });
+    const result = await store.dispatch(generateToken({ name: 'name' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expect(result[result.length - 1]).toEqual(token);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow token removal', async () => {
+    jest.clearAllMocks();
+    // eslint-disable-next-line no-unused-vars
+    const expectedActions = [{ type: UserConstants.UPDATED_USER, userId: 'a1', user: { tokens: accessTokens } }];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(revokeToken({ id: 'some-id-1' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });

@@ -146,8 +146,7 @@ export const DeviceList = props => {
     onSelect,
     onSort,
     pageLoading,
-    pageTotal,
-    setSnackbar
+    pageTotal
   } = props;
 
   const {
@@ -182,14 +181,6 @@ export const DeviceList = props => {
     }
     deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes, undefined, selectable);
   }, [deviceListRef.current, customColumnSizes, selectable]);
-
-  const expandRow = (event, rowNumber) => {
-    if (event && event.target.closest('input')?.hasOwnProperty('checked')) {
-      return;
-    }
-    setSnackbar('');
-    onExpandClick(devices[rowNumber]);
-  };
 
   const onRowSelection = selectedRow => {
     let updatedSelection = [...selectedRowsRef.current];
@@ -252,10 +243,11 @@ export const DeviceList = props => {
           <DeviceListItem
             columnHeaders={columnHeaders}
             device={device}
+            deviceListState={deviceListState}
             idAttribute={idAttribute.attribute}
             index={index}
             key={device.id}
-            onClick={expandRow}
+            onClick={onExpandClick}
             onRowSelect={onRowSelection}
             selectable={selectable}
             selected={selectedRows.indexOf(index) !== -1}

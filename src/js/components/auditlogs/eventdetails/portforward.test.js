@@ -11,6 +11,7 @@ describe('PortForward Component', () => {
     detailsMock.mockResolvedValue({ start: defaultState.organization.auditlog.events[2].time, end: defaultState.organization.auditlog.events[1].time });
     const ui = (
       <PortForward
+        canReadDevices
         item={defaultState.organization.auditlog.events[2]}
         device={defaultState.devices.byId.a1}
         idAttribute="Device ID"

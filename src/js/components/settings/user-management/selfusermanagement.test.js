@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -49,8 +49,9 @@ describe('SelfUserManagement Component', () => {
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
-    userEvent.click(screen.getByRole('button', { name: /change password/i }));
-    const passwordGeneration = screen.getByRole('button', { name: /generate/i });
+    act(() => userEvent.click(screen.getByRole('button', { name: /change password/i })));
+    const form = screen.getByLabelText('Password *').parentElement.parentElement.parentElement;
+    const passwordGeneration = within(form).getByRole('button', { name: /generate/i });
     userEvent.click(passwordGeneration);
     expect(copyCheck).toHaveBeenCalled();
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));

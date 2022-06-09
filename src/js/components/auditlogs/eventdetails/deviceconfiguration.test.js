@@ -8,6 +8,7 @@ describe('DeviceConfiguration Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <DeviceConfiguration
+        canReadDevices
         device={defaultState.devices.byId.a1}
         item={{ ...defaultState.organization.auditlog.events[2], change: '{"something":"here"}' }}
         onClose={jest.fn}

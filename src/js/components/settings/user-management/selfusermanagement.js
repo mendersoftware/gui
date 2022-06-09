@@ -14,6 +14,7 @@ import EnterpriseNotification from '../../common/enterpriseNotification';
 import { OAuth2Providers } from '../../login/oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 import { versionCompare } from '../../../helpers';
+import AccessTokenManagement from '../accesstokenmanagement';
 
 export const SelfUserManagement = ({
   canHave2FA,
@@ -143,6 +144,7 @@ export const SelfUserManagement = ({
           </div>
         </div>
       )}
+      <AccessTokenManagement />
       {isEnterprise && hasTracking && (
         <div className="margin-top">
           <div className="clickable flexbox space-between" onClick={() => saveUserSettings({ trackingConsentGiven: !hasTrackingConsent })}>
