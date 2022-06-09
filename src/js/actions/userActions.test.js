@@ -60,16 +60,6 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.SET_SHOW_HELP, show: true },
-      {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
-        settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            showHelptips: true
-          }
-        }
-      },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
     ];
     const store = mockStore({ ...defaultState });
@@ -82,16 +72,6 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: UserConstants.SET_SHOW_HELP, show: false },
-      {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
-        settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            showHelptips: false
-          }
-        }
-      },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false }
     ];
     const store = mockStore({
@@ -384,7 +364,10 @@ describe('user actions', () => {
   });
   it('should allow storing user scoped settings', async () => {
     jest.clearAllMocks();
+    // eslint-disable-next-line no-unused-vars
+    const { id_attribute, ...globalSettings } = defaultState.users.globalSettings;
     const expectedActions = [
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...globalSettings } },
       {
         type: UserConstants.SET_GLOBAL_SETTINGS,
         settings: { ...defaultState.users.globalSettings, [`${defaultState.users.byId.a1.id}`]: { ...settings } }

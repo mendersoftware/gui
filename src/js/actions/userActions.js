@@ -560,14 +560,16 @@ export const saveUserSettings = settings => (dispatch, getState) => {
   if (!getState().users.currentUser) {
     return Promise.resolve();
   }
-  const userSettings = getUserSettings(getState());
-  const updatedSettings = {
-    [getState().users.currentUser]: {
-      ...userSettings,
-      ...settings
-    }
-  };
-  return dispatch(saveGlobalSettings(updatedSettings));
+  return Promise.resolve(dispatch(getGlobalSettings())).then(() => {
+    const userSettings = getUserSettings(getState());
+    const updatedSettings = {
+      [getState().users.currentUser]: {
+        ...userSettings,
+        ...settings
+      }
+    };
+    return Promise.resolve(dispatch(saveGlobalSettings(updatedSettings)));
+  });
 };
 
 export const get2FAQRCode = () => dispatch =>
@@ -586,7 +588,7 @@ export const setShowHelptips = show => (dispatch, getState) => {
 
 export const toggleHelptips = () => (dispatch, getState) => {
   const showHelptips = getUserSettings(getState()).showHelptips;
-  return dispatch(setShowHelptips(!showHelptips));
+  return Promise.resolve(dispatch(setShowHelptips(!showHelptips)));
 };
 
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: Boolean(show) });

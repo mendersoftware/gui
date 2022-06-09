@@ -1,13 +1,14 @@
 import Cookies from 'universal-cookie';
 
-import OnboardingConstants, { onboardingSteps as onboardingStepNames } from '../constants/onboardingConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
+import OnboardingConstants, { onboardingSteps as onboardingStepNames } from '../constants/onboardingConstants';
+import { SET_SHOW_HELP } from '../constants/userConstants';
 
 import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingmanager';
 import { getDemoDeviceAddress } from '../helpers';
 import { getUserSettings } from '../selectors';
 import Tracking from '../tracking';
-import { saveUserSettings, toggleHelptips } from './userActions';
+import { saveUserSettings } from './userActions';
 
 const cookies = new Cookies();
 
@@ -72,8 +73,8 @@ export const setShowOnboardingHelp =
     let tasks = [dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })];
     if (update) {
       const { onboarding = {} } = getUserSettings(getState());
-      tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, showTips: show } })));
-      tasks.push(dispatch(toggleHelptips()));
+      tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, showTips: show }, showHelptips: show })));
+      tasks.push(dispatch({ type: SET_SHOW_HELP, show }));
     }
     return Promise.all(tasks);
   };
@@ -132,7 +133,7 @@ export const setOnboardingCanceled = () => dispatch =>
     .then(() => Tracking.event({ category: 'onboarding', action: onboardingSteps.ONBOARDING_CANCELED }));
 
 const setOnboardingState = state => dispatch =>
-  Promise.resolve([
+  Promise.all([
     dispatch(setOnboardingComplete(state.complete)),
     dispatch(setOnboardingDeviceType(state.deviceType, false)),
     dispatch(setOnboardingApproach(state.approach, false)),
@@ -153,11 +154,10 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
     return;
   }
   const madeProgress = steps[stepIndex + 1];
-  dispatch(setOnboardingProgress(madeProgress));
   const state = { ...getCurrentOnboardingState(getState()), progress: madeProgress };
   state.complete = stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ONBOARDING_FINISHED) ? true : state.complete;
-  dispatch(saveUserSettings({ onboarding: state }));
   Tracking.event({ category: 'onboarding', action: stepId });
+  return Promise.all([dispatch(setOnboardingProgress(madeProgress)), dispatch(saveUserSettings({ onboarding: state }))]);
 };
 
 const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeployments) => {
