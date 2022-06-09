@@ -4,7 +4,7 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
-import { getIdAttribute } from '../../../selectors';
+import { getIdAttribute, getUserCapabilities } from '../../../selectors';
 import { useTheme } from '@mui/material/styles';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
@@ -12,13 +12,13 @@ import DeviceDetails, { DetailInformation } from './devicedetails';
 
 momentDurationFormatSetup(moment);
 
-export const PortForward = ({ device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
+export const PortForward = ({ canReadDevices, device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
   const theme = useTheme();
   const [sessionDetails, setSessionDetails] = useState();
 
   useEffect(() => {
     const { action, actor, meta, object, time } = item;
-    if (!device) {
+    if (canReadDevices && !device) {
       getDeviceById(object.id);
     }
     getSessionDetails(
@@ -30,7 +30,7 @@ export const PortForward = ({ device, idAttribute, item, getDeviceById, getSessi
     ).then(setSessionDetails);
   }, []);
 
-  if (!(sessionDetails && device)) {
+  if (!sessionDetails || (canReadDevices && !device)) {
     return <Loader show={true} />;
   }
 
@@ -44,7 +44,7 @@ export const PortForward = ({ device, idAttribute, item, getDeviceById, getSessi
 
   return (
     <div className="flexbox column" style={{ margin: theme.spacing(3), minWidth: 'min-content' }}>
-      <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />
+      {canReadDevices && <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />}
       <DetailInformation title="port forwarding" details={sessionMeta} />
     </div>
   );
@@ -55,7 +55,9 @@ const actionCreators = { getDeviceById, getSessionDetails };
 const mapStateToProps = (state, ownProps) => {
   const { item = {} } = ownProps;
   const deviceId = item.object.id;
+  const { canReadDevices } = getUserCapabilities(state);
   return {
+    canReadDevices,
     device: state.devices.byId[deviceId],
     idAttribute: getIdAttribute(state).attribute
   };

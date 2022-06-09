@@ -116,8 +116,10 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
 
   const canAuditlog = uiPermissions.auditlog.includes(uiPermissionsById.read.value);
 
+  const canReadUsers = uiPermissions.userManagement.includes(uiPermissionsById.read.value);
   const canManageUsers = uiPermissions.userManagement.includes(uiPermissionsById.manage.value);
 
+  const canReadDevices = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.read.value));
   const canWriteDevices = Object.values(uiPermissions.groups).some(
     groupPermissions => groupPermissions.includes(uiPermissionsById.read.value) && groupPermissions.length > 1
   );
@@ -134,6 +136,8 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
     canManageDevices,
     canManageReleases,
     canManageUsers,
+    canReadDevices,
+    canReadUsers,
     canTroubleshoot,
     canUploadReleases,
     canWriteDevices

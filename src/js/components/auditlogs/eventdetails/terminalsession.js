@@ -4,7 +4,7 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
-import { getIdAttribute } from '../../../selectors';
+import { getIdAttribute, getUserCapabilities } from '../../../selectors';
 import { useTheme } from '@mui/material/styles';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
@@ -13,13 +13,13 @@ import TerminalPlayer from './terminalplayer';
 
 momentDurationFormatSetup(moment);
 
-export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
+export const TerminalSession = ({ canReadDevices, device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
   const theme = useTheme();
   const [sessionDetails, setSessionDetails] = useState();
 
   useEffect(() => {
     const { action, actor, meta, object, time } = item;
-    if (!device) {
+    if (canReadDevices && !device) {
       getDeviceById(object.id);
     }
     getSessionDetails(
@@ -31,7 +31,7 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
     ).then(setSessionDetails);
   }, []);
 
-  if (!(sessionDetails && device)) {
+  if (!sessionDetails || (canReadDevices && !device)) {
     return <Loader show={true} />;
   }
 
@@ -47,7 +47,7 @@ export const TerminalSession = ({ device, idAttribute, item, getDeviceById, getS
     <div className="flexbox" style={{ flexWrap: 'wrap' }}>
       <TerminalPlayer className="flexbox column margin-top" item={item} sessionInitialized={!!sessionDetails} />
       <div className="flexbox column" style={{ margin: theme.spacing(3), minWidth: 'min-content' }}>
-        <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />
+        {canReadDevices && <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />}
         <DetailInformation title="session" details={sessionMeta} />
       </div>
     </div>
@@ -59,7 +59,9 @@ const actionCreators = { getDeviceById, getSessionDetails };
 const mapStateToProps = (state, ownProps) => {
   const { item = {} } = ownProps;
   const deviceId = item.object.id;
+  const { canReadDevices } = getUserCapabilities(state);
   return {
+    canReadDevices,
     device: state.devices.byId[deviceId],
     idAttribute: getIdAttribute(state).attribute
   };
