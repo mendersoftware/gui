@@ -35,21 +35,22 @@ const PermissionsSelect = ({ disabled, label, onChange, options, values }) => {
     if (value.includes('')) {
       return onChange([]);
     }
-    var newValues = options
-      .filter(uiPermission => {
-        const { enabled } = permissionEnabledDisabled(uiPermission, value);
-        return enabled;
-      })
-      .map(uiPermission => uiPermission.value);
-    return onChange(newValues);
+    return onChange(value);
   };
 
-  const editablePermissions = useMemo(
+  const { editablePermissions, selectedValues } = useMemo(
     () =>
-      options.map(uiPermission => {
-        const { enabled, disabled } = permissionEnabledDisabled(uiPermission, values);
-        return { enabled, disabled, ...uiPermission };
-      }),
+      options.reduce(
+        (accu, uiPermission) => {
+          const { enabled, disabled } = permissionEnabledDisabled(uiPermission, values);
+          accu.editablePermissions.push({ enabled, disabled, ...uiPermission });
+          if (enabled) {
+            accu.selectedValues.push(uiPermission.value);
+          }
+          return accu;
+        },
+        { editablePermissions: [], selectedValues: [] }
+      ),
     [options, values]
   );
 
@@ -64,7 +65,7 @@ const PermissionsSelect = ({ disabled, label, onChange, options, values }) => {
         MenuProps={menuProps}
         multiple
         onChange={onInputChange}
-        renderValue={selectedValues => (selectedValues.length ? selectedValues.map(value => uiPermissionsById[value].title).join(', ') : 'None')}
+        renderValue={() => (selectedValues.length ? selectedValues.map(value => uiPermissionsById[value].title).join(', ') : 'None')}
         value={values}
       >
         {editablePermissions.map(uiPermission => (
