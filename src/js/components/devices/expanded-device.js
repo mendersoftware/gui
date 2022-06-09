@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
 import { Chip, Divider, Drawer, IconButton } from '@mui/material';
@@ -27,6 +28,7 @@ import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import { getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
+import { useDebounce } from '../../utils/debouncehook';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
 import DeviceConfiguration from './device-details/configuration';
@@ -40,7 +42,6 @@ import MonitorDetailsDialog from './device-details/monitordetailsdialog';
 import DeviceNotifications from './device-details/notifications';
 import DeviceTwin from './device-details/devicetwin';
 import DeviceQuickActions from './widgets/devicequickactions';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles()(theme => ({
   gatewayChip: {
@@ -176,8 +177,15 @@ export const ExpandedDevice = ({
   };
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
 
+  const hasEntered = useDebounce(!!device.id, 300);
+  const onCloseClick = useCallback(() => {
+    if (hasEntered) {
+      onClose();
+    }
+  }, [hasEntered, onClose]);
+
   return (
-    <Drawer anchor="right" className="expandedDevice" open={Boolean(device.id)} onClose={onClose} PaperProps={{ style: { minWidth: '67vw' } }}>
+    <Drawer anchor="right" className="expandedDevice" open={!!device.id} onClose={onCloseClick} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
         <h3>Device information for {deviceIdentifier}</h3>
         <IconButton onClick={copyLinkToClipboard} size="large">
@@ -187,7 +195,7 @@ export const ExpandedDevice = ({
           Last check-in: <RelativeTime updateTime={device.updated_ts} />
         </div>
         {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} />}
-        <IconButton style={{ marginLeft: 'auto' }} onClick={onClose} aria-label="close" size="large">
+        <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">
           <CloseIcon />
         </IconButton>
       </div>
