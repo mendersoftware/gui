@@ -61,8 +61,9 @@ export const initializeAppData = () => (dispatch, getState) => {
     const state = getState();
     const user = getCurrentUser(state);
     const userCookie = cookies.get(user.id);
+    let tasks = [];
     let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettings(state);
-    dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) }));
+    tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
     // checks if user id is set and if cookie for helptips exists for that user
     if (userCookie && userCookie.help !== 'undefined') {
       const { help, ...crumbles } = userCookie;
@@ -83,34 +84,37 @@ export const initializeAppData = () => (dispatch, getState) => {
         showTips: state.onboarding.showTips
       });
       if (welcomeTip) {
-        dispatch(setSnackbar('open', 10000, '', welcomeTip, () => {}, true));
+        tasks.push(dispatch(setSnackbar('open', 10000, '', welcomeTip, () => {}, true)));
       }
       // try to retrieve full device details for onboarding devices to ensure ips etc. are available
       // we only load the first few/ 20 devices, as it is possible the onboarding is left dangling
       // and a lot of devices are present and we don't want to flood the backend for this
-      state.devices.byStatus[DEVICE_STATES.accepted].deviceIds.map(id => dispatch(getDeviceById(id)));
+      tasks = state.devices.byStatus[DEVICE_STATES.accepted].deviceIds.reduce((accu, id) => {
+        accu.push(dispatch(getDeviceById(id)));
+        return accu;
+      }, tasks);
     }
-    dispatch({ type: SET_SHOW_HELP, show: showHelptips });
+    tasks.push(dispatch({ type: SET_SHOW_HELP, show: showHelptips }));
     let settings = { showHelptips };
     if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
       settings.trackingConsentGiven = true;
     }
-    dispatch(saveUserSettings(settings));
+    tasks.push(dispatch(saveUserSettings(settings)));
     // the following is used as a migration and initialization of the stored identity attribute
     // changing the default device attribute to the first non-deviceId attribute, unless a stored
     // id attribute setting exists
     const identityOptions = state.devices.filteringAttributes.identityAttributes.filter(attribute => !['id', 'Device ID', 'status'].includes(attribute));
     const { id_attribute } = state.users.globalSettings;
     if (!id_attribute && identityOptions.length) {
-      dispatch(saveGlobalSettings({ id_attribute: { attribute: identityOptions[0], scope: 'identity' } }));
+      tasks.push(dispatch(saveGlobalSettings({ id_attribute: { attribute: identityOptions[0], scope: 'identity' } })));
     } else if (typeof id_attribute === 'string') {
       let attribute = id_attribute;
       if (attribute === 'Device ID') {
         attribute = 'id';
       }
-      dispatch(saveGlobalSettings({ id_attribute: { attribute, scope: 'identity' } }));
+      tasks.push(dispatch(saveGlobalSettings({ id_attribute: { attribute, scope: 'identity' } })));
     }
-    return Promise.resolve();
+    return Promise.all(tasks);
   });
 };
 

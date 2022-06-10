@@ -252,6 +252,7 @@ describe('app actions', () => {
         }
       },
       { type: UserConstants.SET_SHOW_HELP, show: true },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
       {
         type: UserConstants.SET_GLOBAL_SETTINGS,
         settings: {
