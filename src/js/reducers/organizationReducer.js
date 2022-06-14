@@ -20,7 +20,7 @@ export const initialState = {
       endDate: undefined,
       reset: false,
       selectedIssue: undefined,
-      sorting: SORTING_OPTIONS.desc,
+      sort: { direction: SORTING_OPTIONS.desc },
       startDate: undefined,
       total: 0,
       type: '',

@@ -26,10 +26,9 @@ export const initialState = {
     selectedIssues: [],
     selection: [],
     sort: {
-      direction: SORTING_OPTIONS.desc,
-      columns: [
-        // { column: null, scope: null }
-      ]
+      direction: SORTING_OPTIONS.desc
+      // key: null,
+      // scope: null
     },
     state: DeviceConstants.DEVICE_STATES.accepted,
     total: 0

@@ -6,7 +6,7 @@ import ReleasesList from './releaseslist';
 
 describe('ReleasesList Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<ReleasesList releases={[]} releasesListState={{ sort: { attribute: 'Name' } }} setReleasesListState={jest.fn} />);
+    const { baseElement } = render(<ReleasesList releases={[]} releasesListState={{ sort: { key: 'Name' } }} setReleasesListState={jest.fn} />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

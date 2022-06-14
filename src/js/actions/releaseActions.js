@@ -208,7 +208,7 @@ function* generateReleaseSearchQuery(search, searchAttribute) {
 
 const releaseListRetrieval = (config, queryGenerator) => {
   const { page, perPage, sort = {} } = config;
-  const { attribute, direction } = sort;
+  const { key: attribute, direction } = sort;
 
   const perPageQuery = perPage ? `&per_page=${perPage}` : '';
   const sorting = attribute ? `&sort=${attribute}:${direction}`.toLowerCase() : '';
@@ -233,7 +233,7 @@ export const getReleases =
     if (passedConfig.visibleSection?.start && searchAttribute) {
       return Promise.resolve(dispatch(refreshReleases(passedConfig)));
     }
-    config = searchOnly ? { ...config, sort: { attribute: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
+    config = searchOnly ? { ...config, sort: { key: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
     const queryGenerator = generateReleaseSearchQuery(searchTerm, passedConfig.searchAttribute);
 
     const releaseListProcessing = props => {
@@ -245,9 +245,7 @@ export const getReleases =
       const total = Number(headers[headerNames.total]);
       const flatReleases = reduceReceivedReleases(releases, state.byId);
       const combinedReleases = { ...state.byId, ...flatReleases };
-      const flattenedReleases = Object.values(flatReleases).sort(
-        customSort(config.sort.direction === AppConstants.SORTING_OPTIONS.desc, config.sort.attribute)
-      );
+      const flattenedReleases = Object.values(flatReleases).sort(customSort(config.sort.direction === AppConstants.SORTING_OPTIONS.desc, config.sort.key));
       let tasks = [dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases })];
       if (searchOnly) {
         tasks.push(dispatch(setReleasesListState({ searchedIds: flattenedReleases.map(item => item.Name) })));

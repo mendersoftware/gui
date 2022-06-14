@@ -252,14 +252,14 @@ describe('organization actions', () => {
   });
   it('should allow deployment state tracking', async () => {
     const store = mockStore({ ...defaultState });
-    await store.dispatch(setAuditlogsState({ page: 1, sorting: 'something' }));
+    await store.dispatch(setAuditlogsState({ page: 1, sort: { direction: 'something' } }));
     const expectedActions = [
       {
         type: OrganizationConstants.SET_AUDITLOG_STATE,
         state: {
           ...defaultState.organization.auditlog.selectionState,
           isLoading: true,
-          sorting: 'something'
+          sort: { direction: 'something' }
         }
       },
       {

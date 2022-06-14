@@ -208,10 +208,9 @@ export const defaultState = {
       selectedIssues: [],
       selection: [],
       sort: {
-        direction: SORTING_OPTIONS.desc,
-        columns: [
-          // { column: null, scope: null }
-        ]
+        direction: SORTING_OPTIONS.desc
+        // key: null,
+        // scope: null
       },
       state: DeviceConstants.DEVICE_STATES.accepted,
       total: 0
@@ -345,6 +344,7 @@ export const defaultState = {
       ],
       selectionState: {
         ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+        sort: {},
         total: 3
       }
     },
@@ -391,7 +391,7 @@ export const defaultState = {
       releaseIds: ['r1'],
       sort: {
         direction: SORTING_OPTIONS.desc,
-        attribute: 'Name'
+        key: 'Name'
       },
       searchTerm: '',
       searchTotal: 0,

@@ -135,9 +135,11 @@ export const Authorized = props => {
     selectedIssues = [],
     isLoading: pageLoading,
     selection: selectedRows,
-    sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] },
+    sort = {},
     state: selectedState
   } = deviceListState;
+  const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
+
   const { hasReporting } = features;
   const { hasMonitor } = tenantCapabilities;
   const currentSelectedState = states[selectedState] ?? states.devices;
@@ -153,8 +155,6 @@ export const Authorized = props => {
 
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
-
-  const { column: sortCol } = columns.length ? columns[0] : {};
 
   useEffect(() => {
     clearAllRetryTimers(setSnackbar);
@@ -282,7 +282,7 @@ export const Authorized = props => {
       changedSortDown = SORTING_OPTIONS.desc;
     }
     setDeviceListState({
-      sort: { direction: changedSortDown, columns: [{ column: changedSortCol, scope: attribute.scope }] },
+      sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope },
       refreshTrigger: !refreshTrigger
     });
   };

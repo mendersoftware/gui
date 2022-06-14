@@ -116,8 +116,8 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
   };
 
   const onChangeSorting = () => {
-    const currentSorting = sort === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
-    setAuditlogsState({ page: 1, sort: currentSorting });
+    const currentSorting = sort.direction === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
+    setAuditlogsState({ page: 1, sort: { direction: currentSorting } });
   };
 
   const onUserFilterChange = (e, value, reason) => {

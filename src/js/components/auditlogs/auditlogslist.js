@@ -100,7 +100,7 @@ const auditLogColumns = [
 ];
 
 export const AuditLogsList = ({ items, loading, locationChange, onChangePage, onChangeRowsPerPage, onChangeSorting, selectionState, setAuditlogsState }) => {
-  const { page, perPage, selectedIssue: selectedItem, sorting: sortDirection, total: count } = selectionState;
+  const { page, perPage, selectedIssue: selectedItem, sort = {}, total: count } = selectionState;
 
   useEffect(() => {
     setAuditlogsState({ selectedIssue: undefined });
@@ -120,7 +120,7 @@ export const AuditLogsList = ({ items, loading, locationChange, onChangePage, on
               style={column.sortable ? {} : { cursor: 'initial' }}
             >
               {column.title}
-              {column.sortable ? <SortIcon className={`sortIcon selected ${(sortDirection === SORTING_OPTIONS.desc).toString()}`} /> : null}
+              {column.sortable ? <SortIcon className={`sortIcon selected ${(sort.direction === SORTING_OPTIONS.desc).toString()}`} /> : null}
             </div>
           ))}
           <div />
