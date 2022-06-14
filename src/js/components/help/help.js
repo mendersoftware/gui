@@ -5,8 +5,7 @@ import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { useTheme, ListItemIcon } from '@mui/material';
 import { Launch as LaunchIcon } from '@mui/icons-material';
 
-import { getUserOrganization } from '../../actions/organizationActions';
-import { getDocsVersion, getIsEnterprise } from '../../selectors';
+import { getDocsVersion } from '../../selectors';
 import LeftNav from '../common/left-nav';
 import Support from './support';
 import GetStarted from './getting-started';
@@ -62,16 +61,14 @@ const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
     return bag;
   }, accu);
 
-export const Help = ({ docsVersion, getUserOrganization, hasMultitenancy, isEnterprise, isHosted, menderVersion }) => {
+const helpPath = 'help/';
+export const Help = ({ docsVersion, isHosted }) => {
   const theme = useTheme();
   const [links, setLinks] = useState([]);
   const { pathname } = useLocation();
   const { section } = useParams();
 
   useEffect(() => {
-    if (hasMultitenancy || isEnterprise || isHosted) {
-      getUserOrganization();
-    }
     // generate sidebar links
     setLinks(eachRecursive(components, '/help', 1, [], isHosted, theme.spacing(2)));
   }, []);
@@ -82,7 +79,6 @@ export const Help = ({ docsVersion, getUserOrganization, hasMultitenancy, isEnte
 
   let ComponentToShow = GetStarted;
   let breadcrumbs = '';
-  const helpPath = 'help/';
   let routeParams = pathname.includes(helpPath) ? pathname.substring(pathname.indexOf(helpPath) + helpPath.length) : '';
   if (routeParams) {
     let splitsplat = routeParams.split('/');
@@ -106,22 +102,18 @@ export const Help = ({ docsVersion, getUserOrganization, hasMultitenancy, isEnte
       <div style={{ maxWidth: contentWidth }}>
         <p className="muted">Help & support {breadcrumbs}</p>
         <div className="help-content relative margin-top-small">
-          <ComponentToShow docsVersion={docsVersion} isHosted={isHosted} menderVersion={menderVersion} />
+          <ComponentToShow docsVersion={docsVersion} />
         </div>
       </div>
     </div>
   );
 };
 
-const actionCreators = { getUserOrganization };
-
 const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
-    isHosted: state.app.features.isHosted,
-    isEnterprise: getIsEnterprise(state),
-    menderVersion: state.app.versionInformation['Mender-Client']
+    isHosted: state.app.features.isHosted
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Help);
+export default connect(mapStateToProps)(Help);
