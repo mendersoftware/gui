@@ -23,14 +23,13 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './group-management/create-group';
 import RemoveGroup from './group-management/remove-group';
 import CreateGroupExplainer from './group-management/create-group-explainer';
-import { emptyFilter } from './widgets/filters';
 import MakeGatewayDialog from './dialogs/make-gateway-dialog';
 import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
@@ -38,57 +37,7 @@ import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 import { versionCompare } from '../../helpers';
 import { routes } from './base-devices';
-
-export const convertQueryToFilterAndGroup = (query, filteringAttributes, currentFilters) => {
-  const queryParams = new URLSearchParams(query);
-  let groupName = '';
-  if (queryParams.has('group')) {
-    groupName = queryParams.get('group');
-    queryParams.delete('group');
-  }
-  const filters = [...queryParams.entries()].reduce((accu, filterPair) => {
-    const scope = Object.entries(filteringAttributes).reduce(
-      (accu, [attributesType, attributes]) => {
-        if (currentFilters.some(filter => filter.key === filterPair[0])) {
-          const existingFilter = currentFilters.find(filter => filter.key === filterPair[0]);
-          accu.scope = existingFilter.scope;
-          accu.operator = existingFilter.operator;
-        } else if (attributes.includes(filterPair[0])) {
-          accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
-        }
-        return accu;
-      },
-      { operator: emptyFilter.operator, scope: emptyFilter.scope }
-    );
-    accu.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
-    return accu;
-  }, []);
-  return { filters, groupName };
-};
-
-export const generateBrowserLocation = (selectedState, filters, selectedGroup, location, isInitialization) => {
-  const activeFilters = filters.filter(item => item.value !== '');
-  let searchParams = new URLSearchParams(isInitialization ? location.search : undefined);
-  searchParams = activeFilters.reduce((accu, item) => {
-    if (!accu.getAll(item.key).includes(item.value)) {
-      accu.append(item.key, item.value);
-    }
-    return accu;
-  }, searchParams);
-  if (selectedGroup) {
-    searchParams.set('group', selectedGroup);
-    if (selectedGroup === UNGROUPED_GROUP.id) {
-      searchParams = new URLSearchParams();
-    }
-  }
-  const search = searchParams.toString();
-  const path = [location.pathname.substring(0, '/devices'.length)];
-  if (![routes.allDevices.key, ''].includes(selectedState)) {
-    path.push(selectedState);
-  }
-  let pathname = path.join('/');
-  return { pathname, search };
-};
+import { convertQuery, generateBrowserLocation } from '../../utils/locationutils';
 
 const refreshLength = 10000;
 
@@ -158,10 +107,14 @@ export const DeviceGroups = ({
       setIsReconciling(true);
       request = setDeviceListState({ state: status }).then(() => setIsReconciling(false));
     }
-    const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, location, true);
-    if (pathname !== location.pathname || location.search !== `?${search}`) {
-      navigate({ pathname, search }, { replace: true }); // lgtm [js/client-side-unvalidated-url-redirection]
-    }
+    maybeSetLocation({
+      pageState: deviceListState,
+      filters,
+      selectedGroup,
+      selectedId: selectedDeviceId,
+      location,
+      isInitialization: true
+    });
     clearInterval(deviceTimer.current);
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
     setYesterday();
@@ -179,10 +132,13 @@ export const DeviceGroups = ({
     if (!deviceTimer.current) {
       return;
     }
-    const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup, location);
-    if (pathname !== location.pathname || location.search !== `?${search}`) {
-      navigate({ pathname, search }, { replace: true }); // lgtm [js/client-side-unvalidated-url-redirection]
-    }
+    maybeSetLocation({
+      pageState: deviceListState,
+      filters,
+      selectedGroup,
+      selectedId: selectedDeviceId,
+      location
+    });
   }, [selectedState, filters, selectedGroup]);
 
   useEffect(() => {
@@ -197,15 +153,22 @@ export const DeviceGroups = ({
     }
   }, [filters, statusParam, location.search]);
 
-  const maybeSetGroupAndFilters = (filterQuery, search, attributes, currentFilters) => {
-    const query = filterQuery || search;
+  const maybeSetGroupAndFilters = (query, attributes, currentFilters) => {
     if (query) {
-      const { filters: queryFilters, groupName } = convertQueryToFilterAndGroup(query, attributes, currentFilters);
+      const { filters: queryFilters, groupName } = convertQuery(query, attributes, currentFilters);
       if (groupName) {
         selectGroup(groupName, queryFilters);
       } else if (queryFilters) {
         setDeviceFilters(queryFilters);
       }
+    }
+  };
+
+  const maybeSetLocation = props => {
+    const { location } = props;
+    const { pathname, search } = generateBrowserLocation(props);
+    if (pathname !== undefined && (pathname !== location.pathname || location.search !== `?${search}`)) {
+      navigate({ pathname, search }, { replace: true });
     }
   };
 
