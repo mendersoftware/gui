@@ -129,15 +129,7 @@ export const Authorized = props => {
     updateDevicesAuth,
     updateUserColumnSettings
   } = props;
-  const {
-    refreshTrigger,
-    expandedDeviceId,
-    selectedIssues = [],
-    isLoading: pageLoading,
-    selection: selectedRows,
-    sort = {},
-    state: selectedState
-  } = deviceListState;
+  const { refreshTrigger, selectedId, selectedIssues = [], isLoading: pageLoading, selection: selectedRows, sort = {}, state: selectedState } = deviceListState;
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
 
   const { hasReporting } = features;
@@ -267,7 +259,7 @@ export const Authorized = props => {
       })
       .then(() => onSelectionChange([]));
 
-  const handlePageChange = page => setDeviceListState({ expandedDeviceId: undefined, page, refreshTrigger: !refreshTrigger });
+  const handlePageChange = page => setDeviceListState({ selectedId: undefined, page, refreshTrigger: !refreshTrigger });
 
   const onPageLengthChange = perPage => {
     setDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger });
@@ -331,7 +323,7 @@ export const Authorized = props => {
   const onExpandClick = (device = {}) => {
     setSnackbar('');
     let { attributes = {}, id, status } = device;
-    setDeviceListState({ expandedDeviceId: deviceListState.expandedDeviceId === id ? undefined : id });
+    setDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id });
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
       if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
@@ -374,7 +366,7 @@ export const Authorized = props => {
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
 
-  const openedDevice = useDebounce(expandedDeviceId, 300);
+  const openedDevice = useDebounce(selectedId, 300);
   return (
     <>
       <div className="margin-left-small">
@@ -466,13 +458,13 @@ export const Authorized = props => {
         deviceId={openedDevice}
         onAddDevicesToGroup={onAddDevicesToGroup}
         onAuthorizationChange={onAuthorizationChange}
-        onClose={() => setDeviceListState({ expandedDeviceId: undefined })}
+        onClose={() => setDeviceListState({ selectedId: undefined })}
         onDeviceDismiss={onDeviceDismiss}
         onMakeGatewayClick={onMakeGatewayClick}
         onRemoveDevicesFromGroup={onRemoveDevicesFromGroup}
         refreshDevices={refreshDevices}
       />
-      {!expandedDeviceId && onboardingComponent ? onboardingComponent : null}
+      {!selectedId && onboardingComponent ? onboardingComponent : null}
       {canManageDevices && !!selectedRows.length && (
         <DeviceQuickActions
           actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}

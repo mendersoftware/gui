@@ -89,7 +89,7 @@ export const SearchResult = ({
   }, [open, searchTerm]);
 
   const onDeviceSelect = device => {
-    setDeviceListState({ expandedDeviceId: device.id });
+    setDeviceListState({ selectedId: device.id });
     onToggleSearchResult();
     setTimeout(() => navigate(`/devices/${device.status}?id=${device.id}`), 300);
   };
