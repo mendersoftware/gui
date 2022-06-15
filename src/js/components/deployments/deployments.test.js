@@ -308,7 +308,7 @@ describe('Deployments Component', () => {
       group: undefined,
       name: ALL_DEVICES,
       phases: [
-        { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: mockDate.toISOString() },
+        { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: undefined },
         { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: secondBatchDate.toISOString() },
         { batch_size: 25, start_ts: thirdBatchDate.toISOString() }
       ],
