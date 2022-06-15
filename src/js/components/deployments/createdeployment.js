@@ -33,7 +33,7 @@ const deploymentSteps = [
 
 export const getPhaseStartTime = (phases, index, startDate) => {
   if (index < 1) {
-    return startDate.toISOString ? startDate.toISOString() : startDate;
+    return startDate?.toISOString ? startDate.toISOString() : startDate;
   }
   // since we don't want to get stale phase start times when the creation dialog is open for a long time
   // we have to ensure start times are based on delay from previous phases
@@ -120,7 +120,7 @@ export const CreateDialog = props => {
   const onScheduleSubmitClick = settings => {
     isCreating.current = true;
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
-    const startTime = phases?.length ? phases[0].start_ts || new Date() : new Date();
+    const startTime = phases?.length ? phases[0].start_ts : undefined;
     const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
