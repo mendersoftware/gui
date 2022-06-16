@@ -1,4 +1,5 @@
 import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP } from '../constants/deviceConstants';
+import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import { routes } from '../components/devices/base-devices';
 import { emptyFilter } from '../components/devices/widgets/filters';
 import { deepCompare } from '../helpers';
@@ -198,4 +199,60 @@ export const generateDevicePath = ({ pageState }) => {
     path.push(selectedState);
   }
   return path.join('/');
+};
+
+const formatDates = ({ endDate, params, startDate, today, tonight }) => {
+  if (endDate && endDate !== tonight) {
+    params.set('endDate', new Date(endDate).toISOString().split('T')[0]);
+  }
+  if (startDate && startDate !== today) {
+    params.set('startDate', new Date(startDate).toISOString().split('T')[0]);
+  }
+  return params;
+};
+
+const paramReducer = (accu, [key, value]) => {
+  if (value) {
+    accu.set(key, value);
+  }
+  return accu;
+};
+
+export const formatAuditlogs = ({ pageState }, { today, tonight }) => {
+  const { detail, endDate, startDate, type, user = {} } = pageState;
+  let params = new URLSearchParams();
+  params = Object.entries({ objectId: detail, userId: user.id }).reduce(paramReducer, params);
+  if (type) {
+    params.set('objectType', type.value);
+  }
+  params = formatDates({ endDate, params, startDate, today, tonight });
+  return params.toString();
+};
+
+const parseDateParams = (params, today, tonight) => {
+  let endDate = tonight;
+  if (params.get('endDate')) {
+    const date = new Date(params.get('endDate'));
+    date.setHours(23, 59, 59, 999);
+    endDate = date.toISOString();
+  }
+  let startDate = today;
+  if (params.get('startDate')) {
+    const date = new Date(params.get('startDate'));
+    date.setHours(0, 0, 0, 0);
+    startDate = date.toISOString();
+  }
+  return { endDate, startDate };
+};
+
+export const parseAuditlogsQuery = (params, { today, tonight }) => {
+  const type = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('objectType')) || '';
+  const { endDate, startDate } = parseDateParams(params, today, tonight);
+  return {
+    detail: params.get('objectId') || '',
+    endDate,
+    startDate,
+    type,
+    user: params.get('userId') || ''
+  };
 };

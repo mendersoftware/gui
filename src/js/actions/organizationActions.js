@@ -92,10 +92,9 @@ const prepareAuditlogQuery = ({ startDate, endDate, user: userFilter, type, deta
   const detail = detailFilter?.id || detailFilter;
   const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
   const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
-  const typeSearch = type ? `&object_type=${type}`.toLowerCase() : '';
+  const typeSearch = type ? `&object_type=${type.value}`.toLowerCase() : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
-  const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';
-  const objectSearch = detail ? `&${queryParameter}=${encodeURIComponent(detail)}` : '';
+  const objectSearch = type && detail ? `&${type.queryParameter}=${encodeURIComponent(detail)}` : '';
   const { direction = SORTING_OPTIONS.desc } = sort;
   return `${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${direction}`;
 };

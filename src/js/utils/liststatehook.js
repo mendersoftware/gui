@@ -1,8 +1,21 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { commonProcessor, formatDeviceSearch, formatPageState, generateDevicePath, parseDeviceQuery } from './locationutils';
+import {
+  commonProcessor,
+  formatAuditlogs,
+  formatDeviceSearch,
+  formatPageState,
+  generateDevicePath,
+  parseAuditlogsQuery,
+  parseDeviceQuery
+} from './locationutils';
 
 const processors = {
+  auditlogs: {
+    format: formatAuditlogs,
+    locate: () => undefined,
+    parse: parseAuditlogsQuery
+  },
   common: {
     format: formatPageState,
     locate: () => undefined,

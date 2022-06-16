@@ -54,7 +54,7 @@ describe('Auditlogs Component', () => {
   it('allows navigating by url as expected', async () => {
     const ui = (
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <MemoryRouter initialEntries={['/auditlog?start_date=2020-01-01T00:00:00.000Z']}>
+        <MemoryRouter initialEntries={['/auditlog?startDate=2020-01-01']}>
           <Provider store={store}>
             <AuditLogs />
           </Provider>
