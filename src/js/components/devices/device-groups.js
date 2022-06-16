@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
@@ -36,12 +36,10 @@ import DeviceAdditionWidget from './widgets/deviceadditionwidget';
 import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 import { versionCompare } from '../../helpers';
-import { routes } from './base-devices';
-import { convertQuery, generateBrowserLocation } from '../../utils/locationutils';
+import { useLocationParams } from '../../utils/liststatehook';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
 
 const refreshLength = 10000;
-
-const alignUrlDeviceStatus = status => (status && Object.values(DEVICE_STATES).some(state => state === status) ? status : '');
 
 export const DeviceGroups = ({
   acceptedCount,
@@ -90,35 +88,29 @@ export const DeviceGroups = ({
   const [showMakeGateway, setShowMakeGateway] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
-  const [isReconciling, setIsReconciling] = useState(false);
   const deviceTimer = useRef();
   const { isEnterprise } = tenantCapabilities;
   const { status: statusParam } = useParams();
-  const location = useLocation();
-  const navigate = useNavigate();
 
-  const { refreshTrigger, state: selectedState } = deviceListState;
+  const [locationParams, setLocationParams] = useLocationParams('devices', {
+    filteringAttributes,
+    filters,
+    defaults: { sort: { direction: SORTING_OPTIONS.desc } }
+  });
+
+  const { refreshTrigger, selectedId, state: selectedState } = deviceListState;
 
   useEffect(() => {
-    const status = alignUrlDeviceStatus(statusParam);
-    maybeSetGroupAndFilters(location.search, filteringAttributes, filters);
-    let request;
-    if (status && selectedState !== status) {
-      setIsReconciling(true);
-      request = setDeviceListState({ state: status }).then(() => setIsReconciling(false));
-    }
-    maybeSetLocation({
-      pageState: deviceListState,
-      filters,
-      selectedGroup,
-      selectedId: selectedDeviceId,
-      location,
-      isInitialization: true
-    });
+    maybeSetGroupAndFilters(locationParams);
     clearInterval(deviceTimer.current);
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
     setYesterday();
-    request ? null : setDeviceListState({ refreshTrigger: !refreshTrigger });
+    const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
+    let listState = { state, refreshTrigger: !refreshTrigger };
+    if (locationParams.id && Boolean(locationParams.open)) {
+      listState.selectedId = locationParams.id;
+    }
+    setDeviceListState(listState);
     return () => {
       clearInterval(deviceTimer.current);
     };
@@ -132,43 +124,23 @@ export const DeviceGroups = ({
     if (!deviceTimer.current) {
       return;
     }
-    maybeSetLocation({
-      pageState: deviceListState,
-      filters,
-      selectedGroup,
-      selectedId: selectedDeviceId,
-      location
-    });
-  }, [selectedState, filters, selectedGroup]);
+    setLocationParams({ pageState: deviceListState, filters, selectedGroup });
+  }, [
+    deviceListState.page,
+    deviceListState.perPage,
+    deviceListState.selectedIssues,
+    JSON.stringify(deviceListState.sort),
+    selectedId,
+    filters,
+    selectedGroup,
+    selectedState
+  ]);
 
-  useEffect(() => {
-    if (!deviceTimer.current) {
-      return;
-    }
-    const status = alignUrlDeviceStatus(statusParam);
-    maybeSetGroupAndFilters(location.search, filteringAttributes, filters);
-    if (selectedState !== status && selectedState !== routes.allDevices.key && status && location.pathname.includes(status) && !isReconciling) {
-      setIsReconciling(true);
-      setDeviceListState({ state: status ? status : routes.allDevices.key }).then(() => setIsReconciling(false));
-    }
-  }, [filters, statusParam, location.search]);
-
-  const maybeSetGroupAndFilters = (query, attributes, currentFilters) => {
-    if (query) {
-      const { filters: queryFilters, groupName } = convertQuery(query, attributes, currentFilters);
-      if (groupName) {
-        selectGroup(groupName, queryFilters);
-      } else if (queryFilters) {
-        setDeviceFilters(queryFilters);
-      }
-    }
-  };
-
-  const maybeSetLocation = props => {
-    const { location } = props;
-    const { pathname, search } = generateBrowserLocation(props);
-    if (pathname !== undefined && (pathname !== location.pathname || location.search !== `?${search}`)) {
-      navigate({ pathname, search }, { replace: true });
+  const maybeSetGroupAndFilters = ({ filters, groupName }) => {
+    if (groupName) {
+      selectGroup(groupName, filters);
+    } else if (filters?.length) {
+      setDeviceFilters(filters);
     }
   };
 
