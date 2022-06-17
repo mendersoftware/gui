@@ -84,7 +84,7 @@ export const Settings = ({
         }
       });
     } else {
-      const notStripePromise = {};
+      const notStripePromise = new Promise(resolve => setTimeout(resolve, 700));
       Promise.race([stripePromise, notStripePromise]).then(result => setLoadingFinished(result !== notStripePromise));
     }
   }, []);

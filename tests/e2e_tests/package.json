@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "npx playwright test --workers 1 --config=config.ts",
-    "test-ci": "npx playwright test --workers 1 --config=config.ts",
+    "test-ci": "mv mender-demo-artifact.mender fixtures/ && npx playwright test --workers 1 --config=config.ts",
     "test-visual": "PWDEBUG=1 npx playwright test --workers 1 --config=config.ts"
   },
   "author": {
