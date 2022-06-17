@@ -14,10 +14,10 @@ import { getDeploymentState } from '../../helpers';
 import { makeStyles } from 'tss-react/mui';
 
 export const deploymentTypeClasses = {
-  finished: 'past-item',
-  pending: 'pending-item',
-  progress: 'progress-item',
-  scheduled: 'scheduled-item'
+  [DEPLOYMENT_STATES.finished]: 'past-item',
+  [DEPLOYMENT_STATES.pending]: 'pending-item',
+  [DEPLOYMENT_STATES.inprogress]: 'progress-item',
+  [DEPLOYMENT_STATES.scheduled]: 'scheduled-item'
 };
 
 export const DeploymentDeviceCount = ({ className, deployment }) => (
@@ -25,12 +25,13 @@ export const DeploymentDeviceCount = ({ className, deployment }) => (
     {Math.max(deployment.device_count || 0, deployment.max_devices || 0)}
   </div>
 );
-export const DeploymentDeviceGroup = props => {
-  const {
-    deployment: { name, type = DEPLOYMENT_TYPES.software, devices = {} }
-  } = props;
-  const deploymentName = type === DEPLOYMENT_TYPES.configuration ? Object.keys(devices).join(', ') : name;
-  return <div key="DeploymentDeviceGroup">{deploymentName || name}</div>;
+export const DeploymentDeviceGroup = ({ deployment: { name, type = DEPLOYMENT_TYPES.software, devices = {} }, wrappingClass }) => {
+  const deploymentName = (type === DEPLOYMENT_TYPES.configuration ? Object.keys(devices).join(', ') : name) || name;
+  return (
+    <div className={wrappingClass} key="DeploymentDeviceGroup" title={deploymentName}>
+      {deploymentName}
+    </div>
+  );
 };
 export const DeploymentEndTime = ({ deployment }) => <RelativeTime key="DeploymentEndTime" updateTime={deployment.finished} shouldCount="none" />;
 export const DeploymentPhases = ({ deployment }) => <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>;
@@ -44,12 +45,13 @@ export const DeploymentProgress = ({ deployment }) => {
   }
   return <PhaseProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} />;
 };
-export const DeploymentRelease = props => {
-  const {
-    deployment: { artifact_name, type = DEPLOYMENT_TYPES.software }
-  } = props;
+export const DeploymentRelease = ({ deployment: { artifact_name, type = DEPLOYMENT_TYPES.software }, wrappingClass }) => {
   const deploymentRelease = type === DEPLOYMENT_TYPES.configuration ? type : artifact_name;
-  return <div key="DeploymentRelease">{deploymentRelease}</div>;
+  return (
+    <div className={wrappingClass} key="DeploymentRelease" title={deploymentRelease}>
+      {deploymentRelease}
+    </div>
+  );
 };
 export const DeploymentStartTime = ({ direction = 'both', started }) => <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />;
 
@@ -65,7 +67,8 @@ const useStyles = makeStyles()(theme => ({
       backgroundColor: 'transparent',
       color: theme.palette.text.primary
     }
-  }
+  },
+  textWrapping: { whiteSpace: 'initial' }
 }));
 
 export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type }) => {
@@ -81,7 +84,8 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
   if (abort === id) {
     confirmation = <Confirm classes="flexbox centered confirmation-overlay" cancel={() => toggleConfirm(id)} action={() => abortDeployment(id)} type="abort" />;
   }
-  const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
+  const started = isEnterprise && phases?.length >= 1 ? phases[0].start_ts || created : created;
+  const wrappingClass = `text-overflow ${type === DEPLOYMENT_STATES.inprogress ? classes.textWrapping : ''}`;
   return (
     <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
       {!!confirmation && confirmation}
@@ -90,7 +94,7 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
         return (
           <div className={column.class} key={`deploy-item-${i}`}>
             {column.title && <span className="deployment-item-title muted">{column.title}</span>}
-            <ColumnComponent {...self.props} className={column.class || ''} deployment={deployment} started={started} {...column.props} />
+            <ColumnComponent className={column.class || ''} deployment={deployment} started={started} wrappingClass={wrappingClass} {...column.props} />
           </div>
         );
       })}
