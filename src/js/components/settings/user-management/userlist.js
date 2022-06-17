@@ -1,10 +1,11 @@
 import React from 'react';
 
 // material ui
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
+import { Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { ArrowRightAlt as ArrowRightAltIcon, Check as CheckIcon } from '@mui/icons-material';
 
 import Time, { RelativeTime } from '../../common/time';
+import { twoFAStates } from '../../../constants/userConstants';
 
 const columnData = [
   { id: 'email', disablePadding: false, label: 'Email', enterpriseOnly: false },
@@ -34,7 +35,22 @@ const UserList = ({ editUser, isEnterprise, roles, users }) => (
     <TableBody>
       {users.map((user, index) => (
         <TableRow className="clickable" key={user.id || index} hover onClick={() => editUser(user)}>
-          <TableCell>{user.email}</TableCell>
+          <TableCell>
+            {
+              <>
+                <span>{user.email}</span>
+                {user.tfa_status === twoFAStates.enabled && (
+                  <Chip
+                    className="margin-left-small"
+                    icon={<CheckIcon titleAccess={`2FA ${twoFAStates.enabled}`} />}
+                    label="2FA"
+                    size="small"
+                    variant="outlined"
+                  />
+                )}
+              </>
+            }
+          </TableCell>
           <TableCell>
             <Time value={user.created_ts} />
           </TableCell>

@@ -1,4 +1,12 @@
-import { defaultPermissionSets, emptyRole, emptyUiPermissions, rolesById, rolesByName, uiPermissionsById } from '../src/js/constants/userConstants';
+import {
+  defaultPermissionSets,
+  emptyRole,
+  emptyUiPermissions,
+  rolesById,
+  rolesByName,
+  twoFAStates,
+  uiPermissionsById
+} from '../src/js/constants/userConstants';
 import DeviceConstants from '../src/js/constants/deviceConstants';
 import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
 import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
@@ -397,7 +405,7 @@ export const defaultState = {
   users: {
     byId: {
       a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin], verified: true },
-      [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z' }
+      [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z', tfa_status: twoFAStates.enabled }
     },
     currentUser: 'a1',
     customColumns: [],
