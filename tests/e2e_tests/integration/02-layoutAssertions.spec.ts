@@ -56,5 +56,9 @@ test.describe('Layout assertions', () => {
     await page.click('.MuiDialogTitle-root');
     await page.click(`:is(:text-matches('create group', 'i'), :text-matches('add to group', 'i'))`);
     expect(await page.isVisible(`.grouplist:has-text('testgroup')`)).toBeTruthy();
+    await page.click(`.grouplist:has-text('All devices')`);
+    await page.click('.deviceListItem input');
+    await page.click(`.grouplist:has-text('testgroup')`);
+    expect(await page.locator(`css=.deviceListItem >> text=/release/`)).toBeVisible();
   });
 });

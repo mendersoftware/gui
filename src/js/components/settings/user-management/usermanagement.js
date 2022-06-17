@@ -5,7 +5,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 
 import { setSnackbar } from '../../../actions/appActions';
 import { createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
-import { getCurrentUser, getIsEnterprise, getUserCapabilities } from '../../../selectors';
+import { getCurrentUser, getFeatures, getIsEnterprise, getUserCapabilities } from '../../../selectors';
 import UserList from './userlist';
 import UserForm from './userform';
 import { UserDefinition } from './userdefinition';
@@ -116,10 +116,12 @@ const actionCreators = { createUser, editUser, getUserList, passwordResetStart, 
 
 const mapStateToProps = state => {
   const { canManageUsers } = getUserCapabilities(state);
+  const { isHosted } = getFeatures(state);
   return {
     currentUser: getCurrentUser(state),
     canManageUsers,
     isEnterprise: getIsEnterprise(state),
+    isHosted,
     roles: state.users.rolesById,
     users: Object.values(state.users.byId)
   };

@@ -10,18 +10,22 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
 }
 
 .emotion-1 {
+  white-space: initial;
+}
+
+.emotion-3 {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.87);
   justify-self: center;
   text-transform: none;
 }
 
-.emotion-1:hover {
+.emotion-3:hover {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-2 {
+.emotion-4 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -70,23 +74,23 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-2::-moz-focus-inner {
+.emotion-4::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-2.Mui-disabled {
+.emotion-4.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-2 {
+  .emotion-4 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-2:hover {
+.emotion-4:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #1565c0;
@@ -94,26 +98,26 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-2:hover {
+  .emotion-4:hover {
     background-color: #1976d2;
   }
 }
 
-.emotion-2:active {
+.emotion-4:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-2.Mui-focusVisible {
+.emotion-4.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-2.Mui-disabled {
+.emotion-4.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-3 {
+.emotion-5 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -125,7 +129,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-4 {
+.emotion-6 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -173,38 +177,38 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
   font-size: 1.75rem;
 }
 
-.emotion-4::-moz-focus-inner {
+.emotion-6::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-4.Mui-disabled {
+.emotion-6.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-4 {
+  .emotion-6 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-4:hover {
+.emotion-6:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-4:hover {
+  .emotion-6:hover {
     background-color: transparent;
   }
 }
 
-.emotion-4.Mui-disabled {
+.emotion-6.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-5 {
+.emotion-7 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -221,7 +225,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
   font-size: 1.5rem;
 }
 
-.emotion-8 {
+.emotion-10 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -300,7 +304,10 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             >
               Release
             </span>
-            <div>
+            <div
+              class="text-overflow emotion-1"
+              title="r1"
+            >
               r1
             </div>
           </div>
@@ -310,7 +317,10 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             >
               Target device(s)
             </span>
-            <div>
+            <div
+              class="text-overflow emotion-1"
+              title="test deployment"
+            >
               test deployment
             </div>
           </div>
@@ -426,25 +436,25 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             </div>
           </div>
           <button
-            class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root emotion-1 emotion-2"
+            class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root emotion-3 emotion-4"
             tabindex="0"
             type="button"
           >
             View details
             <span
-              class="MuiTouchRipple-root emotion-3"
+              class="MuiTouchRipple-root emotion-5"
             />
           </button>
           <button
             aria-label="Abort"
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-4"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-6"
             data-mui-internal-clone-element="true"
             tabindex="0"
             type="button"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-5"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-7"
               data-testid="CancelOutlinedIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -454,7 +464,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiTouchRipple-root emotion-3"
+              class="MuiTouchRipple-root emotion-5"
             />
           </button>
         </div>
@@ -520,7 +530,10 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             >
               Release
             </span>
-            <div>
+            <div
+              class="text-overflow "
+              title="r1"
+            >
               r1
             </div>
           </div>
@@ -530,7 +543,10 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             >
               Target device(s)
             </span>
-            <div>
+            <div
+              class="text-overflow "
+              title="test deployment 2"
+            >
               test deployment 2
             </div>
           </div>
@@ -593,7 +609,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-8"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-10"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -609,25 +625,25 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
             </div>
           </div>
           <button
-            class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root emotion-1 emotion-2"
+            class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root emotion-3 emotion-4"
             tabindex="0"
             type="button"
           >
             View details
             <span
-              class="MuiTouchRipple-root emotion-3"
+              class="MuiTouchRipple-root emotion-5"
             />
           </button>
           <button
             aria-label="Abort"
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-4"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-6"
             data-mui-internal-clone-element="true"
             tabindex="0"
             type="button"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-5"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-7"
               data-testid="CancelOutlinedIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -637,7 +653,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiTouchRipple-root emotion-3"
+              class="MuiTouchRipple-root emotion-5"
             />
           </button>
         </div>
