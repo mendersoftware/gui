@@ -49,7 +49,7 @@ describe('TroubleshootDialog Component', () => {
     const userCapabilities = { canTroubleshoot: true, canWriteDevices: true };
     const { baseElement } = render(
       <Provider store={store}>
-        <TroubleshootDialog onCancel={jest.fn} onSocketClose={jest.fn} open={true} userCapabilities={userCapabilities} />
+        <TroubleshootDialog device={defaultState.devices.byId.a1} onCancel={jest.fn} onSocketClose={jest.fn} open={true} userCapabilities={userCapabilities} />
       </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];

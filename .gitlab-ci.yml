@@ -47,7 +47,6 @@ test:lint:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
     - apk add --no-cache bash git jq wget
-    - wget -qP tests/e2e_tests/fixtures "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
   artifacts:
     expire_in: 2w
     paths:
@@ -181,8 +180,8 @@ test:prep:
     TEST_ENVIRONMENT: staging
   before_script:
     - curl -fsSL https://get.docker.com | sh
+    - mv mender-demo-artifact.mender tests/e2e_tests/
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
-    - curl -o fixtures/mender-demo-artifact.mender "https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender"
     - docker pull mendersoftware/mender-client-docker-addons:master
     - npm ci --cache .npm --prefer-offline
   script:
@@ -204,17 +203,17 @@ test:prep:
 test:staging-deployment:chrome:
   extends: .template:test:staging-deployment
   script:
-    - npm run test
+    - npm run test-ci
 
 test:staging-deployment:firefox:
   extends: .template:test:staging-deployment
   script:
-    - npm run test -- --browser=firefox
+    - npm run test-ci -- --browser=firefox
 
 test:staging-deployment:webkit:
   extends: .template:test:staging-deployment
   script:
-    - npm run test -- --browser=webkit
+    - npm run test-ci -- --browser=webkit
 
 .template:publish:tests:
   stage: publish

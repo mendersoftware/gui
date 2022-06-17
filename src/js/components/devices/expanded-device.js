@@ -261,7 +261,7 @@ export const ExpandedDevice = ({
       )}
       <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
       <TroubleshootDialog
-        deviceId={device.id}
+        device={device}
         open={Boolean(troubleshootType)}
         onCancel={() => setTroubleshootType()}
         onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
