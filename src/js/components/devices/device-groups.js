@@ -287,7 +287,7 @@ export const DeviceGroups = ({
 
   const onGroupSelect = groupName => {
     selectGroup(groupName);
-    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger });
+    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger, selection: [] });
   };
 
   const onShowAuthRequestDevicesClick = () => {
