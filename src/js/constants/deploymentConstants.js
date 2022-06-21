@@ -1,3 +1,6 @@
+const { SORTING_OPTIONS } = require('./appConstants');
+const { DEVICE_LIST_DEFAULTS } = require('./deviceConstants');
+
 const alreadyInstalled = 'already-installed';
 
 const deploymentSubstates = {
@@ -59,6 +62,21 @@ const installationSubstatesMap = {
   }
 };
 
+const DEPLOYMENT_STATES = {
+  finished: 'finished',
+  inprogress: 'inprogress',
+  pending: 'pending',
+  scheduled: 'scheduled'
+};
+
+const listDefaultsByState = {
+  [DEPLOYMENT_STATES.inprogress]: { page: 1, perPage: 10 },
+  [DEPLOYMENT_STATES.pending]: { page: 1, perPage: 10 },
+  [DEPLOYMENT_STATES.scheduled]: { ...DEVICE_LIST_DEFAULTS },
+  [DEPLOYMENT_STATES.finished]: { ...DEVICE_LIST_DEFAULTS },
+  sort: { direction: SORTING_OPTIONS.desc }
+};
+
 module.exports = {
   CREATE_DEPLOYMENT: 'CREATE_DEPLOYMENT',
   REMOVE_DEPLOYMENT: 'REMOVE_DEPLOYMENT',
@@ -94,12 +112,7 @@ module.exports = {
       title: 'Scheduled'
     }
   },
-  DEPLOYMENT_STATES: {
-    finished: 'finished',
-    inprogress: 'inprogress',
-    pending: 'pending',
-    scheduled: 'scheduled'
-  },
+  DEPLOYMENT_STATES,
   DEPLOYMENT_TYPES: {
     software: 'software',
     configuration: 'configuration'
@@ -147,6 +160,7 @@ module.exports = {
     stats: {}
   },
   installationSubstatesMap,
+  listDefaultsByState,
   pauseMap: {
     [deploymentSubstates.pause_before_installing]: {
       title: installationSubstatesMap.download.done,

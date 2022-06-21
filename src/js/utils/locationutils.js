@@ -3,6 +3,7 @@ import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import { routes } from '../components/devices/base-devices';
 import { emptyFilter } from '../components/devices/widgets/filters';
 import { deepCompare } from '../helpers';
+import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../constants/deploymentConstants';
 
 const SEPARATOR = ':';
 
@@ -255,4 +256,105 @@ export const parseAuditlogsQuery = (params, { today, tonight }) => {
     type,
     user: params.get('userId') || ''
   };
+};
+
+const formatActiveDeployments = (pageState, { defaults }) =>
+  [DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.pending]
+    .reduce((accu, state) => {
+      const { page, perPage } = pageState[state] ?? {};
+      const stateDefaults = defaults[state] ?? {};
+      const items = Object.entries({ page, perPage })
+        .reverse()
+        .reduce((keyAccu, [key, value]) => {
+          if ((value && value !== stateDefaults[key]) || keyAccu.length) {
+            keyAccu.unshift(value || stateDefaults[key]);
+          }
+          return keyAccu;
+        }, []);
+      if (items.length) {
+        accu.push(`${state}=${items.join(SEPARATOR)}`);
+      }
+      return accu;
+    }, [])
+    .filter(i => i)
+    .join('&');
+
+export const formatDeployments = ({ deploymentObject, pageState }, { defaults, today, tonight }) => {
+  const { state: selectedState, showCreationDialog } = pageState.general;
+  let params = new URLSearchParams();
+  if (showCreationDialog) {
+    params.set('open', true);
+    if (deploymentObject.release) {
+      params.set('release', deploymentObject.release.Name);
+    }
+    if (deploymentObject.device) {
+      params.set('device', deploymentObject.device.id);
+    }
+  }
+  let pageStateQuery;
+  if (selectedState === DEPLOYMENT_ROUTES.finished.key) {
+    const { endDate, search, startDate, type } = pageState[selectedState];
+    params = formatDates({ endDate, params, startDate, today, tonight });
+    params = Object.entries({ search, type }).reduce(paramReducer, params);
+    pageStateQuery = formatPageState(pageState[selectedState], { defaults });
+  } else if (selectedState === DEPLOYMENT_ROUTES.scheduled.key) {
+    pageStateQuery = formatPageState(pageState[selectedState], { defaults });
+  } else {
+    pageStateQuery = formatActiveDeployments(pageState, { defaults });
+  }
+  return [pageStateQuery, params.toString()].filter(i => i).join('&');
+};
+
+const deploymentsPath = 'deployments/';
+const parseDeploymentsPath = path => {
+  const parts = path.split(deploymentsPath);
+  if (parts.length > 1 && Object.keys(DEPLOYMENT_ROUTES).includes(parts[1])) {
+    return parts[1];
+  }
+  return '';
+};
+
+const parseActiveDeployments = params =>
+  [DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.pending].reduce((accu, state) => {
+    if (!params.has(state)) {
+      return accu;
+    }
+    const items = params.get(state).split(SEPARATOR);
+    accu[state] = ['page', 'perPage'].reduce((stateAccu, key, index) => (items[index] ? { ...stateAccu, [key]: Number(items[index]) } : stateAccu), {});
+    return accu;
+  }, {});
+
+export const parseDeploymentsQuery = (params, { pageState, location, today, tonight }) => {
+  const { endDate, startDate } = parseDateParams(params, today, tonight);
+  const deploymentObject = ['device', 'release'].reduce((accu, key) => (params.has(key) ? { ...accu, [key]: params.get(key) } : accu), {});
+  const { state: selectedState, id, open, ...remainingPageState } = pageState;
+  const tab = parseDeploymentsPath(location.pathname);
+  const deploymentsTab = tab || selectedState || DEPLOYMENT_ROUTES.active.key;
+
+  let state = {
+    deploymentObject,
+    general: {
+      showCreationDialog: Boolean(open && !id),
+      showReportDialog: Boolean(open && id),
+      state: deploymentsTab
+    }
+  };
+  if (deploymentsTab === DEPLOYMENT_ROUTES.finished.key) {
+    const type = DEPLOYMENT_TYPES[params.get('type')] || '';
+    const search = params.get('search') || '';
+    state[deploymentsTab] = { ...remainingPageState, endDate, search, startDate, type };
+  } else if (deploymentsTab === DEPLOYMENT_ROUTES.scheduled.key) {
+    state[deploymentsTab] = { ...remainingPageState };
+  } else {
+    state = {
+      ...state,
+      ...parseActiveDeployments(params)
+    };
+  }
+  return state;
+};
+
+export const generateDeploymentsPath = ({ pageState }) => {
+  const { state: selectedState = DEPLOYMENT_ROUTES.active.key } = pageState.general;
+  return `/deployments/${selectedState}`;
 };
