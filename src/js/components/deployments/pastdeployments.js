@@ -23,6 +23,7 @@ import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import { tryMapDeployments } from '../../helpers';
+import { useDebounce } from '../../utils/debouncehook';
 
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
@@ -48,7 +49,12 @@ export const Past = props => {
   const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
   const timer = useRef();
-  const inputDelayTimer = useRef();
+  const [searchValue, setSearchValue] = useState('');
+  const [typeValue, setTypeValue] = useState('');
+
+  const debouncedSearch = useDebounce(searchValue, 700);
+  const debouncedType = useDebounce(typeValue, 700);
+
   const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
 
   useEffect(() => {
@@ -74,6 +80,7 @@ export const Past = props => {
   useEffect(() => {
     clearInterval(timer.current);
     timer.current = setInterval(refreshPast, refreshDeploymentsLength);
+    refreshPast();
     return () => {
       clearInterval(timer.current);
     };
@@ -102,6 +109,10 @@ export const Past = props => {
     }, 400);
   }, [past.length, onboardingState.complete]);
 
+  useEffect(() => {
+    setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, search: debouncedSearch, type: debouncedType } });
+  }, [debouncedSearch, debouncedType]);
+
   /*
   / refresh only finished deployments
   /
@@ -114,16 +125,6 @@ export const Past = props => {
     currentDeviceGroup = deviceGroup,
     currentType = deploymentType
   ) => {
-    setDeploymentsState({
-      [DEPLOYMENT_STATES.finished]: {
-        startDate: currentStartDate,
-        endDate: currentEndDate,
-        page: currentPage,
-        perPage: currentPerPage,
-        search: currentDeviceGroup,
-        type: currentType
-      }
-    });
     const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
     const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
     return getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType)
@@ -154,28 +155,21 @@ export const Past = props => {
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
   }
 
-  const onFilterUpdate = (...args) => {
-    clearTimeout(inputDelayTimer.current);
-    inputDelayTimer.current = setTimeout(() => refreshPast(...args), 700);
-  };
-
   const onGroupFilterChange = (e, value) => {
     if (!e) {
       return;
     }
-    setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { search: value } });
-    onFilterUpdate(1, perPage, startDate, endDate, value);
+    setSearchValue(value);
   };
 
   const onTypeFilterChange = (e, value) => {
     if (!e) {
       return;
     }
-    setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { type: value } });
-    onFilterUpdate(1, perPage, startDate, endDate, deviceGroup, value);
+    setTypeValue(value);
   };
 
-  const onTimeFilterChange = (start, end) => refreshPast(1, perPage, start, end);
+  const onTimeFilterChange = (startDate, endDate) => setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, startDate, endDate } });
 
   return (
     <div className="fadeIn margin-left margin-top-large">
@@ -223,8 +217,8 @@ export const Past = props => {
             headers={headers}
             items={past}
             page={page}
-            onChangeRowsPerPage={newPerPage => refreshPast(1, newPerPage)}
-            onChangePage={refreshPast}
+            onChangeRowsPerPage={perPage => setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, perPage } })}
+            onChangePage={page => setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page } })}
             pageSize={perPage}
             rootRef={deploymentsRef}
             showPagination

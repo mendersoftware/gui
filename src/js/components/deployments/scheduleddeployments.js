@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -50,7 +50,7 @@ export const Scheduled = props => {
   const timer = useRef();
 
   const { abort, canDeploy, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, scheduledState, setDeploymentsState, setSnackbar } = props;
-  const { page, perPage, total: count } = scheduledState;
+  const { page, perPage } = scheduledState;
 
   useEffect(() => {
     if (!isEnterprise) {
@@ -97,18 +97,17 @@ export const Scheduled = props => {
     setCalendarEvents(calendarEvents);
   }, [tabIndex]);
 
-  const refreshDeployments = (changedPage = page, changedPerPage = perPage) => {
-    setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page: changedPage, perPage: changedPerPage } });
-    return getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, changedPage, changedPerPage)
+  const refreshDeployments = useCallback(() => {
+    return getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, page, perPage)
       .then(deploymentsAction => {
         clearRetryTimer(type, setSnackbar);
         const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
         if (total && !deploymentIds.length) {
-          return refreshDeployments(changedPage, changedPerPage);
+          return refreshDeployments();
         }
       })
       .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar));
-  };
+  }, [page, perPage]);
 
   const abortDeployment = id => abort(id).then(refreshDeployments);
 
@@ -129,7 +128,16 @@ export const Scheduled = props => {
               </Button>
             ))}
           </div>
-          {tabIndex === tabs.list.index && <DeploymentsList {...props} abort={abortDeployment} count={count} headers={headers} type={type} />}
+          {tabIndex === tabs.list.index && (
+            <DeploymentsList
+              {...props}
+              abort={abortDeployment}
+              headers={headers}
+              type={type}
+              onChangeRowsPerPage={perPage => setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page: 1, perPage } })}
+              onChangePage={page => setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page } })}
+            />
+          )}
           {tabIndex === tabs.calendar.index && (
             <Calendar
               localizer={localizer}
@@ -173,6 +181,7 @@ const mapStateToProps = state => {
   const { canDeploy } = getUserCapabilities(state);
   return {
     canDeploy,
+    count: state.deployments.byStatus.scheduled.total,
     // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
     isEnterprise: getIsEnterprise(state) || plan !== 'os',
     items: scheduled,
