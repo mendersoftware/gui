@@ -240,7 +240,9 @@ export const updateDeploymentControlMap = (deploymentId, update_control_map) => 
     .catch(err => commonErrorHandler(err, 'There was wan error while updating the deployment status:', dispatch))
     .then(() => Promise.resolve(dispatch(getSingleDeployment(deploymentId))));
 
-export const setDeploymentsState = selectionState => (dispatch, getState) => {
+export const setDeploymentsState = selection => (dispatch, getState) => {
+  // eslint-disable-next-line no-unused-vars
+  const { page, perPage, ...selectionState } = selection;
   const currentState = getState().deployments.selectionState;
   let nextState = {
     ...currentState,
