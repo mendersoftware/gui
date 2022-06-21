@@ -77,6 +77,23 @@ module.exports = {
   SELECT_DEPLOYMENT: 'SELECT_DEPLOYMENT',
   SET_DEPLOYMENTS_STATE: 'SET_DEPLOYMENTS_STATE',
   DEFAULT_PENDING_INPROGRESS_COUNT: 10,
+  DEPLOYMENT_ROUTES: {
+    active: {
+      key: 'active',
+      route: '/deployments/active',
+      title: 'Active'
+    },
+    finished: {
+      key: 'finished',
+      route: '/deployments/finished',
+      title: 'Finished'
+    },
+    scheduled: {
+      key: 'scheduled',
+      route: '/deployments/scheduled',
+      title: 'Scheduled'
+    }
+  },
   DEPLOYMENT_STATES: {
     finished: 'finished',
     inprogress: 'inprogress',

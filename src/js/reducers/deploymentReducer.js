@@ -20,7 +20,7 @@ export const initialState = {
     pending: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, perPage: DeploymentConstants.DEFAULT_PENDING_INPROGRESS_COUNT, selection: [], total: 0 },
     scheduled: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: [], total: 0 },
     general: {
-      state: '/deployments/active',
+      state: DeploymentConstants.DEPLOYMENT_ROUTES.active.key,
       showCreationDialog: false,
       showReportDialog: false,
       reportType: null // DeploymentConstants.DEPLOYMENT_TYPES.configuration|DeploymentConstants.DEPLOYMENT_TYPES.software

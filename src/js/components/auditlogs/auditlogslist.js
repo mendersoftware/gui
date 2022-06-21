@@ -8,11 +8,12 @@ import Pagination from '../common/pagination';
 import Time from '../common/time';
 import EventDetailsDrawer from './eventdetailsdrawer';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 
 export const defaultRowsPerPage = 20;
 
 const ArtifactLink = ({ item }) => <Link to={`/releases/${item.object.artifact.name}`}>View artifact</Link>;
-const DeploymentLink = ({ item }) => <Link to={`/deployments/finished?open=true&id=${item.object.id}`}>View deployment</Link>;
+const DeploymentLink = ({ item }) => <Link to={`${DEPLOYMENT_ROUTES.finished.route}?open=true&id=${item.object.id}`}>View deployment</Link>;
 const DeviceLink = ({ item }) => <Link to={`/devices?id=${item.object.id}`}>View device</Link>;
 const DeviceRejectedLink = ({ item }) => <Link to={`/devices/rejected?id=${item.object.id}`}>View device</Link>;
 const TerminalSessionLink = () => <a>View session log</a>;

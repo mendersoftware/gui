@@ -132,7 +132,7 @@ export const defaultState = {
       pending: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'], total: 1 },
       scheduled: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, selection: ['d2'], total: 1 },
       general: {
-        state: '/deployments/active',
+        state: 'active',
         showCreationDialog: false,
         showReportDialog: false,
         reportType: null

@@ -8,7 +8,7 @@ import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
-import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState, getUserCapabilities } from '../../selectors';
@@ -23,20 +23,17 @@ import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 
 const routes = {
-  active: {
-    component: Progress,
-    route: '/deployments/active',
-    title: 'Active'
+  [DEPLOYMENT_ROUTES.active.key]: {
+    ...DEPLOYMENT_ROUTES.active,
+    component: Progress
   },
-  scheduled: {
-    component: Scheduled,
-    route: '/deployments/scheduled',
-    title: 'Scheduled'
+  [DEPLOYMENT_ROUTES.scheduled.key]: {
+    ...DEPLOYMENT_ROUTES.scheduled,
+    component: Scheduled
   },
-  finished: {
-    component: Past,
-    route: '/deployments/finished',
-    title: 'Finished'
+  [DEPLOYMENT_ROUTES.finished.key]: {
+    ...DEPLOYMENT_ROUTES.finished,
+    component: Past
   }
 };
 
@@ -124,9 +121,9 @@ export const Deployments = ({
     setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } });
     setDeploymentObject({});
     // successfully retrieved new deployment
-    if (getCurrentRoute().title !== routes.active.title) {
+    if ([DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.pending].includes(state)) {
       history.push(routes.active.route);
-      changeTab(undefined, routes.active.route);
+      changeTab(undefined, routes.active.key);
     }
   };
 
@@ -135,20 +132,6 @@ export const Deployments = ({
       setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } });
       return Promise.resolve();
     });
-
-  const updateActive = (tab = tabParam) => {
-    if (routes.hasOwnProperty(tab)) {
-      return routes[tab].route;
-    }
-    return routes.active.route;
-  };
-
-  const getCurrentRoute = (tab = tabParam) => {
-    if (routes.hasOwnProperty(tab)) {
-      return routes[tab];
-    }
-    return routes.active;
-  };
 
   const changeTab = (_, tabIndex) => {
     setDeploymentsState({ general: { state: tabIndex } });
@@ -188,14 +171,14 @@ export const Deployments = ({
     });
   }
 
-  const ComponentToShow = Object.values(routes).find(route => route.route === state).component;
+  const ComponentToShow = routes[state].component;
   return (
     <>
       <div className="margin-left-small margin-top" style={{ maxWidth: '80vw' }}>
         <div className="flexbox space-between">
           <Tabs value={state} onChange={changeTab} ref={tabsRef}>
             {Object.values(routes).map(route => (
-              <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
+              <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.key} />
             ))}
           </Tabs>
           {canDeploy && (

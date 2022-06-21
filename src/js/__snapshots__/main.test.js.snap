@@ -625,7 +625,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         </div>
         <a
           class="header-section"
-          href="/deployments/"
+          href="/deployments/active"
         >
           <span>
             0

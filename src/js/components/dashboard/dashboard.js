@@ -11,6 +11,7 @@ import Deployments from './deployments';
 import Devices from './devices';
 import SoftwareDistribution from './software-distribution';
 import { styles } from './widgets/baseWidget';
+import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 
 const rowBaseStyles = {
   container: {
@@ -43,7 +44,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
     if (params.route === 'deployments') {
       let URIParams = params.open;
       URIParams = params.id ? `${URIParams}&id=${params.id}` : URIParams;
-      redirect = `/deployments/${params.tab || 'progress'}/open=${encodeURIComponent(URIParams)}`;
+      redirect = `/deployments/${params.tab || DEPLOYMENT_ROUTES.active.key}/open=${encodeURIComponent(URIParams)}`;
     } else {
       redirect = params.route;
     }
