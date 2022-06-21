@@ -225,10 +225,10 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { devices = {} } = state.deployments.byId[state.deployments.selectedDeployment] || {};
+  const { devices = {} } = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
   const selectedDevices = state.deployments.selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] }));
-  const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
-  const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
+  const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
+  const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectionState.selectedId) || {};
   const { hasAuditlogs } = getTenantCapabilities(state);
   const { canAuditlog } = getUserCapabilities(state);
   return {

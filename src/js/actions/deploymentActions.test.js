@@ -8,7 +8,6 @@ import {
   getDeploymentsByStatus,
   getDeploymentDevices,
   getDeviceLog,
-  selectDeployment,
   setDeploymentsState,
   updateDeploymentControlMap
 } from './deploymentActions';
@@ -232,19 +231,14 @@ describe('deployment actions', () => {
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
   });
-  it('should allow selecting a deployment', async () => {
-    const store = mockStore({ ...defaultState });
-    const expectedActions = [defaultResponseActions.select, defaultResponseActions.receive, defaultResponseActions.receiveMultiple];
-    return store.dispatch(selectDeployment(createdDeployment.id)).then(() => {
-      const storeActions = store.getActions();
-      expect(storeActions.length).toEqual(expectedActions.length);
-      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-    });
-  });
   it('should allow deployment state tracking', async () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(
-      setDeploymentsState({ general: { showCreationDialog: true }, [DeploymentConstants.DEPLOYMENT_STATES.finished]: { something: 'new' } })
+      setDeploymentsState({
+        general: { showCreationDialog: true },
+        [DeploymentConstants.DEPLOYMENT_STATES.finished]: { something: 'new' },
+        selectedId: createdDeployment.id
+      })
     );
     const expectedActions = [
       {
@@ -258,9 +252,12 @@ describe('deployment actions', () => {
           general: {
             ...defaultState.deployments.selectionState.general,
             showCreationDialog: true
-          }
+          },
+          selectedId: createdDeployment.id
         }
-      }
+      },
+      defaultResponseActions.receive,
+      defaultResponseActions.receiveMultiple
     ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

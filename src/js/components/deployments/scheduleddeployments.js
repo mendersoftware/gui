@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise, getUserCapabilities } from '../../selectors';
@@ -165,7 +165,7 @@ export const Scheduled = props => {
   );
 };
 
-const actionCreators = { getDeploymentsByStatus, setSnackbar, setDeploymentsState, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, setSnackbar, setDeploymentsState };
 
 const mapStateToProps = state => {
   const scheduled = state.deployments.selectionState.scheduled.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;

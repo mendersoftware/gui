@@ -7,7 +7,7 @@ import { Button, Tab, Tabs } from '@mui/material';
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
+import { abortDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -51,7 +51,6 @@ export const Deployments = ({
   onboardingState,
   pastCount,
   releases,
-  selectDeployment,
   selectionState,
   setDeploymentsState,
   setSnackbar
@@ -141,14 +140,14 @@ export const Deployments = ({
     }
   };
 
-  const showReport = (reportType, deploymentId) => {
+  const showReport = (reportType, selectedId) => {
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEPLOYMENTS_INPROGRESS);
     }
-    selectDeployment(deploymentId).then(() => setDeploymentsState({ general: { reportType, showCreationDialog: false, showReportDialog: true } }));
+    setDeploymentsState({ general: { reportType, showCreationDialog: false, showReportDialog: true }, selectedId });
   };
 
-  const closeReport = () => selectDeployment().then(() => setDeploymentsState({ general: { reportType: undefined, showReportDialog: false } }));
+  const closeReport = () => setDeploymentsState({ general: { reportType: undefined, showReportDialog: false }, selectedId: undefined });
 
   const onCreationDismiss = () => {
     setDeploymentsState({ general: { showCreationDialog: false } });
@@ -208,7 +207,6 @@ const actionCreators = {
   advanceOnboarding,
   getGroups,
   getDynamicGroups,
-  selectDeployment,
   setDeploymentsState,
   setSnackbar
 };

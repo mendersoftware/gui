@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
@@ -166,7 +166,7 @@ export const Progress = props => {
   );
 };
 
-const actionCreators = { getDeploymentsByStatus, setDeploymentsState, setSnackbar, selectDeployment };
+const actionCreators = { getDeploymentsByStatus, setDeploymentsState, setSnackbar };
 
 const mapStateToProps = state => {
   const progress = state.deployments.selectionState.inprogress.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;

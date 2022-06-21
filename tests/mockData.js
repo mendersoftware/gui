@@ -117,7 +117,6 @@ export const defaultState = {
       scheduled: { deploymentIds: ['d2'], total: 1 }
     },
     deploymentDeviceLimit: 500,
-    selectedDeployment: 'd1',
     selectedDeviceIds: [],
     selectionState: {
       finished: {
@@ -136,7 +135,8 @@ export const defaultState = {
         showCreationDialog: false,
         showReportDialog: false,
         reportType: null
-      }
+      },
+      selectedId: 'd1'
     }
   },
   devices: {

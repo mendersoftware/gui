@@ -6,7 +6,7 @@ import { Autocomplete, TextField } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, selectDeployment, setDeploymentsState } from '../../actions/deploymentActions';
+import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { BEGINNING_OF_TIME, SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
@@ -245,7 +245,7 @@ export const Past = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setDeploymentsState, setSnackbar, selectDeployment };
+const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setDeploymentsState, setSnackbar };
 
 const mapStateToProps = state => {
   const past = state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;

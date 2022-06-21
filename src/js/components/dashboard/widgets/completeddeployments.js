@@ -24,7 +24,7 @@ export const CompletedDeployments = props => {
     targetLabel: 'View reports'
   };
   const cutoffDay = cutoffDate.toISOString();
-  const route = `deployments/finished?from=${cutoffDay.slice(0, cutoffDay.indexOf('T'))}`;
+  const route = `deployments/finished?startDate=${cutoffDay.slice(0, cutoffDay.indexOf('T'))}`;
   return !!finishedCount && <BaseWidget {...props} isActive={true} main={widgetMain} onClick={() => onClick({ route })} />;
 };
 

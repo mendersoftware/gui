@@ -240,39 +240,26 @@ export const updateDeploymentControlMap = (deploymentId, update_control_map) => 
     .catch(err => commonErrorHandler(err, 'There was wan error while updating the deployment status:', dispatch))
     .then(() => Promise.resolve(dispatch(getSingleDeployment(deploymentId))));
 
-export const selectDeployment = deploymentId => dispatch => {
-  let tasks = [
-    dispatch({
-      type: DeploymentConstants.SELECT_DEPLOYMENT,
-      deploymentId
-    })
-  ];
-  if (deploymentId) {
-    tasks.push(dispatch(getSingleDeployment(deploymentId)));
+export const setDeploymentsState = selectionState => (dispatch, getState) => {
+  const currentState = getState().deployments.selectionState;
+  let nextState = {
+    ...currentState,
+    ...selectionState,
+    ...Object.keys(DeploymentConstants.DEPLOYMENT_STATES).reduce((accu, item) => {
+      accu[item] = {
+        ...currentState[item],
+        ...selectionState[item]
+      };
+      return accu;
+    }, {}),
+    general: {
+      ...currentState.general,
+      ...selectionState.general
+    }
+  };
+  let tasks = [dispatch({ type: DeploymentConstants.SET_DEPLOYMENTS_STATE, state: nextState })];
+  if (nextState.selectedId && currentState.selectedId !== nextState.selectedId) {
+    tasks.push(dispatch(getSingleDeployment(nextState.selectedId)));
   }
   return Promise.all(tasks);
-};
-
-export const setDeploymentsState = selectionState => (dispatch, getState) => {
-  const state = getState().deployments.selectionState;
-  return Promise.resolve(
-    dispatch({
-      type: DeploymentConstants.SET_DEPLOYMENTS_STATE,
-      state: {
-        ...state,
-        ...selectionState,
-        ...Object.keys(DeploymentConstants.DEPLOYMENT_STATES).reduce((accu, item) => {
-          accu[item] = {
-            ...state[item],
-            ...selectionState[item]
-          };
-          return accu;
-        }, {}),
-        general: {
-          ...state.general,
-          ...selectionState.general
-        }
-      }
-    })
-  );
 };

@@ -12,7 +12,6 @@ export const initialState = {
     scheduled: { deploymentIds: [], total: 0 }
   },
   deploymentDeviceLimit: 5000,
-  selectedDeployment: null,
   selectedDeviceIds: [],
   selectionState: {
     finished: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, endDate: undefined, search: '', selection: [], startDate: undefined, total: 0, type: '' },
@@ -24,7 +23,8 @@ export const initialState = {
       showCreationDialog: false,
       showReportDialog: false,
       reportType: null // DeploymentConstants.DEPLOYMENT_TYPES.configuration|DeploymentConstants.DEPLOYMENT_TYPES.software
-    }
+    },
+    selectedId: undefined
   }
 };
 
@@ -124,11 +124,6 @@ const deploymentReducer = (state = initialState, action) => {
             total: action.total
           }
         }
-      };
-    case DeploymentConstants.SELECT_DEPLOYMENT:
-      return {
-        ...state,
-        selectedDeployment: action.deploymentId
       };
     case DeploymentConstants.SET_DEPLOYMENTS_STATE:
       return {
