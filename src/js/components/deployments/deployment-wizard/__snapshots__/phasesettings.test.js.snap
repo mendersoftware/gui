@@ -70,7 +70,11 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   display: table-row-group;
 }
 
-.emotion-10 {
+.emotion-9 {
+  white-space: nowrap;
+}
+
+.emotion-11 {
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
   font-size: 0.875rem;
@@ -84,16 +88,16 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-10.MuiTableCell-paddingCheckbox {
+.emotion-11.MuiTableCell-paddingCheckbox {
   width: 24px;
   padding: 0 12px 0 16px;
 }
 
-.emotion-10.MuiTableCell-paddingCheckbox>* {
+.emotion-11.MuiTableCell-paddingCheckbox>* {
   padding: 0;
 }
 
-.emotion-11 {
+.emotion-12 {
   max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
@@ -126,12 +130,12 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-11.Mui-disabled {
+.emotion-12.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-11 .MuiChip-avatar {
+.emotion-12 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -140,17 +144,17 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-11 .MuiChip-avatarColorPrimary {
+.emotion-12 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: #1565c0;
 }
 
-.emotion-11 .MuiChip-avatarColorSecondary {
+.emotion-12 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: #7b1fa2;
 }
 
-.emotion-11 .MuiChip-avatarSmall {
+.emotion-12 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -158,14 +162,14 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-11 .MuiChip-icon {
+.emotion-12 .MuiChip-icon {
   color: #616161;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
 }
 
-.emotion-11 .MuiChip-deleteIcon {
+.emotion-12 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(0, 0, 0, 0.26);
   font-size: 16px;
@@ -175,11 +179,11 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   margin-left: -4px;
 }
 
-.emotion-11 .MuiChip-deleteIcon:hover {
+.emotion-12 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-12 {
+.emotion-13 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 8px;
@@ -187,7 +191,11 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   white-space: nowrap;
 }
 
-.emotion-17 {
+.emotion-18 {
+  margin-top: 16px;
+}
+
+.emotion-19 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -258,28 +266,28 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   cursor: pointer;
 }
 
-.emotion-17::-moz-focus-inner {
+.emotion-19::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-17.Mui-disabled {
+.emotion-19.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-17 {
+  .emotion-19 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-17.Mui-disabled {
+.emotion-19.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-17 .MuiChip-avatar {
+.emotion-19 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -288,17 +296,17 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-17 .MuiChip-avatarColorPrimary {
+.emotion-19 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: #1565c0;
 }
 
-.emotion-17 .MuiChip-avatarColorSecondary {
+.emotion-19 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: #7b1fa2;
 }
 
-.emotion-17 .MuiChip-avatarSmall {
+.emotion-19 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -306,13 +314,13 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-17 .MuiChip-icon {
+.emotion-19 .MuiChip-icon {
   color: inherit;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-17 .MuiChip-deleteIcon {
+.emotion-19 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -320,33 +328,33 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-17 .MuiChip-deleteIcon:hover {
+.emotion-19 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-17 .MuiChip-deleteIcon:hover,
-.emotion-17 .MuiChip-deleteIcon:active {
+.emotion-19 .MuiChip-deleteIcon:hover,
+.emotion-19 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-17:hover {
+.emotion-19:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-17.Mui-focusVisible {
+.emotion-19.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-17:active {
+.emotion-19:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-17:hover,
-.emotion-17.Mui-focusVisible {
+.emotion-19:hover,
+.emotion-19.Mui-focusVisible {
   background-color: #1565c0;
 }
 
-.emotion-18 {
+.emotion-20 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -363,7 +371,7 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   font-size: 1.5rem;
 }
 
-.emotion-19 {
+.emotion-21 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -371,7 +379,7 @@ exports[`PhaseSettings Component renders correctly 1`] = `
   white-space: nowrap;
 }
 
-.emotion-20 {
+.emotion-22 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -426,35 +434,39 @@ exports[`PhaseSettings Component renders correctly 1`] = `
         class="MuiTableBody-root emotion-8"
       >
         <tr
-          class="MuiTableRow-root emotion-2"
+          class="MuiTableRow-root emotion-9 emotion-2"
         >
           <th
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-10"
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-11"
             scope="row"
           >
             <div
-              class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault emotion-11"
+              class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault emotion-12"
             >
               <span
-                class="MuiChip-label MuiChip-labelSmall emotion-12"
+                class="MuiChip-label MuiChip-labelSmall emotion-13"
               >
                 Phase 1
               </span>
             </div>
           </th>
           <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-10"
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-11"
           >
-            100
-            <span
-              class="info"
-              style="margin-left: 5px;"
+            <div
+              class="flexbox center-aligned"
             >
-              (1 device)
-            </span>
+              100
+              <span
+                class="info"
+                style="margin-left: 5px;"
+              >
+                (1 device)
+              </span>
+            </div>
           </td>
           <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-10"
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-11"
           >
             <time
               datetime="2019-01-01T13:00:00+00:00"
@@ -463,25 +475,24 @@ exports[`PhaseSettings Component renders correctly 1`] = `
             </time>
           </td>
           <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-10"
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-11"
           >
             -
           </td>
           <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-10"
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall emotion-11"
           />
         </tr>
       </tbody>
     </table>
     <div
-      class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-17"
+      class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-18 emotion-19"
       role="button"
-      style="margin-top: 16px;"
       tabindex="0"
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-18"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-20"
         data-testid="AddIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -491,12 +502,12 @@ exports[`PhaseSettings Component renders correctly 1`] = `
         />
       </svg>
       <span
-        class="MuiChip-label MuiChip-labelMedium emotion-19"
+        class="MuiChip-label MuiChip-labelMedium emotion-21"
       >
         Add a phase
       </span>
       <span
-        class="MuiTouchRipple-root emotion-20"
+        class="MuiTouchRipple-root emotion-22"
       />
     </div>
   </div>

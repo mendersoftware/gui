@@ -3,14 +3,20 @@ import pluralize from 'pluralize';
 
 import { Add as AddIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
 
+const useStyles = makeStyles()(theme => ({
+  chip: { marginTop: theme.spacing(2) },
+  row: { whiteSpace: 'nowrap' }
+}));
+
 export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, numberDevices, setDeploymentSettings }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
+
   const { filterId, phases = [] } = deploymentObject;
   const updateDelay = (value, index) => {
     let newPhases = phases;
@@ -85,38 +91,39 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
     let max = index > 0 ? 100 - phases[index - 1].batch_size : 100;
     const deviceCount = getPhaseDeviceCount(numberDevices, phase.batch_size, remainder, index === phases.length - 1);
     return (
-      <TableRow key={index}>
+      <TableRow className={classes.row} key={index}>
         <TableCell component="th" scope="row">
           <Chip size="small" label={`Phase ${index + 1}`} />
         </TableCell>
         <TableCell>
-          {phase.batch_size && phase.batch_size < 100 ? (
-            <Input
-              value={phase.batch_size}
-              onChange={event => updateBatchSize(event.target.value, index)}
-              endAdornment={
-                <InputAdornment className={deviceCount < 1 ? 'warning' : ''} position="end">
-                  %
-                </InputAdornment>
-              }
-              disabled={disabled && deviceCount >= 1}
-              inputProps={{
-                step: 1,
-                min: 1,
-                max: max,
-                type: 'number'
-              }}
-            />
-          ) : (
-            phase.batch_size || remainder
-          )}
-          {!filterId && (
-            <span className={deviceCount < 1 ? 'warning info' : 'info'} style={{ marginLeft: '5px' }}>{`(${deviceCount} ${pluralize(
-              'device',
-              deviceCount
-            )})`}</span>
-          )}
-
+          <div className="flexbox center-aligned">
+            {phase.batch_size && phase.batch_size < 100 ? (
+              <Input
+                value={phase.batch_size}
+                onChange={event => updateBatchSize(event.target.value, index)}
+                endAdornment={
+                  <InputAdornment className={deviceCount < 1 ? 'warning' : ''} position="end">
+                    %
+                  </InputAdornment>
+                }
+                disabled={disabled && deviceCount >= 1}
+                inputProps={{
+                  step: 1,
+                  min: 1,
+                  max: max,
+                  type: 'number'
+                }}
+              />
+            ) : (
+              phase.batch_size || remainder
+            )}
+            {!filterId && (
+              <span className={deviceCount < 1 ? 'warning info' : 'info'} style={{ marginLeft: '5px' }}>{`(${deviceCount} ${pluralize(
+                'device',
+                deviceCount
+              )})`}</span>
+            )}
+          </div>
           {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
@@ -172,9 +179,7 @@ export const PhaseSettings = ({ classNames, deploymentObject = {}, disabled, num
         <TableBody>{mappedPhases}</TableBody>
       </Table>
 
-      {!disableAdd ? (
-        <Chip color="primary" clickable={!disableAdd} icon={<AddIcon />} label="Add a phase" onClick={addPhase} style={{ marginTop: theme.spacing(2) }} />
-      ) : null}
+      {!disableAdd ? <Chip className={classes.chip} color="primary" clickable={!disableAdd} icon={<AddIcon />} label="Add a phase" onClick={addPhase} /> : null}
     </div>
   );
 };
