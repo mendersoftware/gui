@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@mui/material';
 
@@ -60,6 +60,7 @@ export const Deployments = ({
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const tabsRef = useRef();
+  const navigate = useNavigate();
   const { reportType, showCreationDialog: createDialog, showReportDialog: reportDialog, state } = selectionState.general;
 
   const [date] = useState({
@@ -124,8 +125,8 @@ export const Deployments = ({
     setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } });
     setDeploymentObject({});
     // successfully retrieved new deployment
-    if ([DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.pending].includes(state)) {
-      history.push(routes.active.route);
+    if (routes.active.key !== state) {
+      navigate(routes.active.route);
       changeTab(undefined, routes.active.key);
     }
   };
