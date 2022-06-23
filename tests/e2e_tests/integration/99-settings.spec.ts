@@ -36,7 +36,12 @@ test.describe('Settings', () => {
       await page.click('text=/Create token/i');
       await page.click('.code .MuiSvgIcon-root');
       await page.waitForSelector('text=/copied to clipboard/i');
-      const token = await page.evaluate(() => navigator.clipboard.readText());
+      let token = '';
+      if (browserName === 'chromium') {
+        token = await page.evaluate(() => navigator.clipboard.readText());
+      } else {
+        token = await page.innerText('.code');
+      }
       expect(token).toBeTruthy();
       await page.click('text=/Close/i');
       await page.waitForSelector('text=/in a year/i');
