@@ -92,7 +92,17 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
   );
 };
 
-export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, setVersionInfo, tenantCapabilities, userCapabilities, versionInformation }) => {
+export const LeftNav = ({
+  docsVersion,
+  getLatestReleaseInfo,
+  isHosted,
+  onboardingState,
+  setSnackbar,
+  setVersionInfo,
+  tenantCapabilities,
+  userCapabilities,
+  versionInformation
+}) => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 

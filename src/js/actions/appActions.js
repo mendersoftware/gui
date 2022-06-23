@@ -178,8 +178,12 @@ export const setVersionInfo = info => (dispatch, getState) =>
     })
   );
 
+const versionRegex = new RegExp(/\d+\.\d+/);
 const getLatestRelease = thing => {
-  const latestKey = Object.keys(thing).sort().reverse()[0];
+  const latestKey = Object.keys(thing)
+    .filter(key => versionRegex.test(key))
+    .sort()
+    .reverse()[0];
   return thing[latestKey];
 };
 
