@@ -16,10 +16,17 @@ test.describe('Settings', () => {
         await page.goto(`${baseUrl}ui/#/help`);
         await page.goto(`${baseUrl}ui/#/settings`);
       }
-      await page.waitForSelector('css=button >> text=Generate a token');
+      await page.waitForSelector('css=button >> text=/Generate a token/i');
     });
-    test('allows generating & revoking tokens', async ({ baseUrl, browserName, context, loggedInPage: page, username, password }) => {
+    test('allows generating & revoking tokens', async ({ baseUrl, browserName, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/#/settings`);
+      await page.waitForSelector('css=button >> text=/Generate a token/i');
+      const isRetry = await page.isVisible(`text=/revoke/i`);
+      if (isRetry) {
+        await page.click('text=/revoke/i');
+        await page.waitForSelector('text=/revoke token/i');
+        await page.click('button:has-text("Revoke token")');
+      }
       await page.click('text=/generate a token/i');
       await page.waitForSelector('text=/Create new token/i');
       await page.fill('[placeholder=Name]', 'aNewToken');
@@ -36,7 +43,12 @@ test.describe('Settings', () => {
       await page.click('text=/Create token/i');
       await page.click('.code .MuiSvgIcon-root');
       await page.waitForSelector('text=/copied to clipboard/i');
-      const token = await page.evaluate(() => navigator.clipboard.readText());
+      let token = '';
+      if (browserName === 'chromium') {
+        token = await page.evaluate(() => navigator.clipboard.readText());
+      } else {
+        token = await page.innerText('.code');
+      }
       expect(token).toBeTruthy();
       await page.click('text=/Close/i');
       await page.waitForSelector('text=/in a year/i');
