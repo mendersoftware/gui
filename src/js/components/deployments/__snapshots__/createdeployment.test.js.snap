@@ -995,9 +995,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-28:focus::-ms-input-
                   />
                   <text
                     class="MuiStepIcon-text emotion-11"
+                    dominant-baseline="central"
                     text-anchor="middle"
                     x="12"
-                    y="16"
+                    y="12"
                   >
                     1
                   </text>
@@ -1043,9 +1044,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-28:focus::-ms-input-
                   />
                   <text
                     class="MuiStepIcon-text emotion-11"
+                    dominant-baseline="central"
                     text-anchor="middle"
                     x="12"
-                    y="16"
+                    y="12"
                   >
                     2
                   </text>
