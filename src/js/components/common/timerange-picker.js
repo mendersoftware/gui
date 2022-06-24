@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { getISOStringBoundaries } from '../../helpers';
 
 const timeranges = {
   today: { start: 0, end: 0, title: 'Today' },
@@ -18,11 +19,11 @@ export const TimerangePicker = ({ classNames = '', endDate, onChange, startDate 
     const currentRange = Object.entries(timeranges).reduce((accu, [key, range]) => {
       let rangeEndDate = new Date();
       rangeEndDate.setDate(rangeEndDate.getDate() - (range.end || 0));
-      rangeEndDate.setHours(23, 59, 59, 999);
+      const { end } = getISOStringBoundaries(rangeEndDate);
       let rangeStartDate = new Date();
       rangeStartDate.setDate(rangeStartDate.getDate() - (range.start || 0));
-      rangeStartDate.setHours(0, 0, 0, 0);
-      if (startDate == rangeStartDate.toISOString() && endDate == rangeEndDate.toISOString()) {
+      const { start } = getISOStringBoundaries(rangeStartDate);
+      if (startDate == start && endDate == end) {
         return key;
       }
       return accu;
@@ -39,11 +40,11 @@ export const TimerangePicker = ({ classNames = '', endDate, onChange, startDate 
   const setRange = (after, before) => {
     let newStartDate = new Date();
     newStartDate.setDate(newStartDate.getDate() - (after || 0));
-    newStartDate.setHours(0, 0, 0, 0);
+    const { start } = getISOStringBoundaries(newStartDate);
     let newEndDate = new Date();
     newEndDate.setDate(newEndDate.getDate() - (before || 0));
-    newEndDate.setHours(23, 59, 59, 999);
-    onChange(newStartDate.toISOString(), newEndDate.toISOString());
+    const { end } = getISOStringBoundaries(newEndDate);
+    onChange(start, end);
   };
 
   return (

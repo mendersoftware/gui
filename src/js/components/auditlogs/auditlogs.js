@@ -15,7 +15,7 @@ import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
 import AuditLogsList from './auditlogslist';
-import { createDownload } from '../../helpers';
+import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 import { getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
@@ -41,11 +41,9 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
   const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
   const [filterReset, setFilterReset] = useState(false);
-  const [date] = useState({
-    today: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
-    tonight: new Date(new Date().setHours(23, 59, 59, 999)).toISOString()
-  });
-  const { today, tonight } = date;
+
+  const [date] = useState(getISOStringBoundaries(new Date()));
+  const { start: today, end: tonight } = date;
 
   const [detailValue, setDetailValue] = useState('');
   const [userValue, setUserValue] = useState('');
@@ -71,12 +69,9 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
       state.selectedId = locationParams.id;
       const [eventAction, eventTime] = atob(state.selectedId).split('|');
       if (eventTime && !events.some(item => item.time === eventTime && item.action === eventAction)) {
-        let newStartDate = new Date(eventTime);
-        newStartDate.setHours(0, 0, 0, 0);
-        let newEndDate = new Date(eventTime);
-        newEndDate.setHours(23, 59, 59, 999);
-        state.endDate = newEndDate.toISOString();
-        state.startDate = newStartDate.toISOString();
+        const { start, end } = getISOStringBoundaries(new Date(eventTime));
+        state.endDate = end;
+        state.startDate = start;
       }
     }
     setAuditlogsState(state);

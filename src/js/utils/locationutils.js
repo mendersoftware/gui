@@ -2,7 +2,7 @@ import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGRO
 import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import { routes } from '../components/devices/base-devices';
 import { emptyFilter } from '../components/devices/widgets/filters';
-import { deepCompare } from '../helpers';
+import { deepCompare, getISOStringBoundaries } from '../helpers';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../constants/deploymentConstants';
 
 const SEPARATOR = ':';
@@ -233,15 +233,11 @@ export const formatAuditlogs = ({ pageState }, { today, tonight }) => {
 const parseDateParams = (params, today, tonight) => {
   let endDate = tonight;
   if (params.get('endDate')) {
-    const date = new Date(params.get('endDate'));
-    date.setHours(23, 59, 59, 999);
-    endDate = date.toISOString();
+    endDate = getISOStringBoundaries(new Date(params.get('endDate'))).end;
   }
   let startDate = today;
   if (params.get('startDate')) {
-    const date = new Date(params.get('startDate'));
-    date.setHours(0, 0, 0, 0);
-    startDate = date.toISOString();
+    startDate = getISOStringBoundaries(new Date(params.get('startDate'))).start;
   }
   return { endDate, startDate };
 };

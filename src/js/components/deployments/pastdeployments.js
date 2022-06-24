@@ -22,7 +22,7 @@ import useWindowSize from '../../utils/resizehook';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
-import { tryMapDeployments } from '../../helpers';
+import { getISOStringBoundaries, tryMapDeployments } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
@@ -45,7 +45,7 @@ export const Past = props => {
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const [timeRangeToggle, setTimeRangeToggle] = useState(false);
-  const [tonight] = useState(new Date(new Date().setHours(23, 59, 59)).toISOString());
+  const [tonight] = useState(getISOStringBoundaries(new Date()).end);
   const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
   const timer = useRef();
@@ -66,8 +66,8 @@ export const Past = props => {
         const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
         if (deploymentsList.length) {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
-          newStartDate.setHours(0, 0, 0, 0);
-          setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate: newStartDate.toISOString() } });
+          const { start: startDate } = getISOStringBoundaries(newStartDate);
+          setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate } });
           setTimeRangeToggle(!timeRangeToggle);
         }
       })

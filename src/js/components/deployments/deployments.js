@@ -22,6 +22,7 @@ import Scheduled from './scheduleddeployments';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { useLocationParams } from '../../utils/liststatehook';
+import { getISOStringBoundaries } from '../../helpers';
 
 const routes = {
   [DEPLOYMENT_ROUTES.active.key]: {
@@ -63,11 +64,8 @@ export const Deployments = ({
   const navigate = useNavigate();
   const { reportType, showCreationDialog: createDialog, showReportDialog: reportDialog, state } = selectionState.general;
 
-  const [date] = useState({
-    today: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
-    tonight: new Date(new Date().setHours(23, 59, 59, 999)).toISOString()
-  });
-  const { today, tonight } = date;
+  const [date] = useState(getISOStringBoundaries(new Date()));
+  const { start: today, end: tonight } = date;
 
   const [locationParams, setLocationParams] = useLocationParams('deployments', { today, tonight, defaults: listDefaultsByState });
 
