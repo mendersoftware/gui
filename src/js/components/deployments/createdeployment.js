@@ -101,8 +101,9 @@ export const CreateDialog = props => {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
       return;
     }
-    const request = selectedGroup.total ? Promise.resolve({ group: selectedGroup }) : getGroupDevices(deploymentObject.group, { perPage: 1 });
-    request.then(({ group: { total: deploymentDeviceCount } }) => setDeploymentObject({ ...deploymentObject, deploymentDeviceCount }));
+    getGroupDevices(deploymentObject.group, { perPage: 1 }).then(({ group: { total: deploymentDeviceCount } }) =>
+      setDeploymentObject(deploymentObject => ({ ...deploymentObject, deploymentDeviceCount }))
+    );
   }, [deploymentObject.group]);
 
   const cleanUpDeploymentsStatus = () => {
