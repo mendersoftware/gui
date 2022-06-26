@@ -330,7 +330,10 @@ export const getGroupDevices =
   (group, options = {}) =>
   (dispatch, getState) => {
     const { shouldIncludeAllStates, ...remainder } = options;
-    return Promise.resolve(dispatch(getDevicesByStatus(shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted, { ...remainder, group }))).then(results => {
+    const { cleanedFilters: filterSelection } = getGroupFilters(group, getState().devices.groups);
+    return Promise.resolve(
+      dispatch(getDevicesByStatus(shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted, { ...remainder, filterSelection, group }))
+    ).then(results => {
       if (!group) {
         return Promise.resolve();
       }
