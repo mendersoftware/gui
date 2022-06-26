@@ -143,10 +143,17 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
 export const getTenantCapabilities = createSelector(
   [getFeatures, getOrganization, getIsEnterprise],
   (
-    { hasAuditlogs, hasDeviceConfig: isDeviceConfigEnabled, hasDeviceConnect: isDeviceConnectEnabled, hasMonitor: isMonitorEnabled, isHosted },
+    {
+      hasAuditlogs: isAuditlogEnabled,
+      hasDeviceConfig: isDeviceConfigEnabled,
+      hasDeviceConnect: isDeviceConnectEnabled,
+      hasMonitor: isMonitorEnabled,
+      isHosted
+    },
     { addons = [], plan },
     isEnterprise
   ) => {
+    const hasAuditlogs = isAuditlogEnabled && (!isHosted || isEnterprise || plan === PLANS.professional.value);
     const hasDeviceConfig = isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled)));
     const hasDeviceConnect = isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled)));
     const hasMonitor = isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled)));
