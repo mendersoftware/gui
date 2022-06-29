@@ -7,6 +7,60 @@ const credentialTypes = {
   x509: 'x509'
 };
 
+const DEVICE_FILTERING_OPTIONS = {
+  $eq: { key: '$eq', title: 'equals', shortform: '=' },
+  $ne: { title: 'not equal', shortform: '!=' },
+  $gt: {
+    key: '$gt',
+    title: '>',
+    shortform: '>',
+    help: 'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+  },
+  $gte: {
+    title: '>=',
+    shortform: '>=',
+    help: 'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+  },
+  $lt: {
+    title: '<',
+    shortform: '<',
+    help: 'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+  },
+  $lte: {
+    title: '<=',
+    shortform: '<=',
+    help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+  },
+  $in: {
+    title: 'in',
+    shortform: 'in',
+    help: 'The "in" operator accepts a list of comma-separated values. It matches if the selected field is equal to one of the specified values.'
+  },
+  $nin: {
+    key: '$nin',
+    title: 'not in',
+    shortform: 'not in',
+    help: `The "not in" operator accepts a list of comma-separated values. It matches if the selected field's value is not equal to any of the specified options.`
+  },
+  $exists: {
+    title: 'exists',
+    shortform: 'exists',
+    value: true,
+    help: `The "exists" operator matches if the selected field's value has a value. No value needs to be provided for this operator.`
+  },
+  $nexists: {
+    title: `doesn't exist`,
+    shortform: `doesn't exist`,
+    value: true,
+    help: `The "doesn't exist" operator matches if the selected field's value has no value. No value needs to be provided for this operator.`
+  },
+  $regex: {
+    title: `matches regular expression`,
+    shortform: `matches`,
+    help: `The "regular expression" operator matches the selected field's value with a Perl compatible regular expression (PCRE), automatically anchored by ^. If the regular expression is not valid, the filter will produce no results. If you need to specify options and flags, you can provide the full regex in the format of /regex/flags, for example.`
+  }
+};
+
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   SELECT_DEVICE: 'SELECT_DEVICE',
@@ -109,57 +163,7 @@ module.exports = {
     perPage: 20
   },
   DEVICE_LIST_MAXIMUM_LENGTH: 50,
-  DEVICE_FILTERING_OPTIONS: {
-    $eq: { title: 'equals', shortform: '=' },
-    $ne: { title: 'not equal', shortform: '!=' },
-    $gt: {
-      title: '>',
-      shortform: '>',
-      help: 'The "greater than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
-    },
-    $gte: {
-      title: '>=',
-      shortform: '>=',
-      help: 'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
-    },
-    $lt: {
-      title: '<',
-      shortform: '<',
-      help: 'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
-    },
-    $lte: {
-      title: '<=',
-      shortform: '<=',
-      help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
-    },
-    $in: {
-      title: 'in',
-      shortform: 'in',
-      help: 'The "in" operator accepts a list of comma-separated values. It matches if the selected field is equal to one of the specified values.'
-    },
-    $nin: {
-      title: 'not in',
-      shortform: 'not in',
-      help: `The "not in" operator accepts a list of comma-separated values. It matches if the selected field's value is not equal to any of the specified options.`
-    },
-    $exists: {
-      title: 'exists',
-      shortform: 'exists',
-      value: true,
-      help: `The "exists" operator matches if the selected field's value has a value. No value needs to be provided for this operator.`
-    },
-    $nexists: {
-      title: `doesn't exist`,
-      shortform: `doesn't exist`,
-      value: true,
-      help: `The "doesn't exist" operator matches if the selected field's value has no value. No value needs to be provided for this operator.`
-    },
-    $regex: {
-      title: `matches regular expression`,
-      shortform: `matches`,
-      help: `The "regular expression" operator matches the selected field's value with a Perl compatible regular expression (PCRE), automatically anchored by ^. If the regular expression is not valid, the filter will produce no results. If you need to specify options and flags, you can provide the full regex in the format of /regex/flags, for example.`
-    }
-  },
+  DEVICE_FILTERING_OPTIONS,
   DEVICE_ISSUE_OPTIONS: {
     offline: {
       key: 'offline',
@@ -181,14 +185,14 @@ module.exports = {
       key: 'monitoring',
       needsFullFiltering: false,
       needsReporting: false,
-      filterRule: { scope: 'monitor', key: 'alerts', operator: '$eq', value: true },
+      filterRule: { scope: 'monitor', key: 'alerts', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: true },
       title: 'Devices reporting monitoring issues'
     },
     authRequests: {
       key: 'authRequests',
       needsFullFiltering: false,
       needsReporting: true,
-      filterRule: { scope: 'monitor', key: 'auth_requests', operator: '$gt', value: 1 },
+      filterRule: { scope: 'monitor', key: 'auth_requests', operator: DEVICE_FILTERING_OPTIONS.$gt.key, value: 1 },
       title: 'Devices with new authentication requests'
     }
   },

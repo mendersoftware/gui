@@ -39,7 +39,7 @@ describe('release actions', () => {
       { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, searchAttribute: 'name' } }
     ];
-    await store.dispatch(getReleases({ perPage: 1, sort: { direction: 'asc', attribute: 'Name' } }));
+    await store.dispatch(getReleases({ perPage: 1, sort: { direction: 'asc', key: 'Name' } }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -149,7 +149,7 @@ describe('release actions', () => {
       releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, visibleSection: { start: 4, end: 8 } } }
     });
     await store.dispatch(
-      refreshReleases({ visibleSection: { start: startIndex, end: startIndex + sectionLength }, sort: { attribute: 'modified', direction: 'asc' } })
+      refreshReleases({ visibleSection: { start: startIndex, end: startIndex + sectionLength }, sort: { key: 'modified', direction: 'asc' } })
     );
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

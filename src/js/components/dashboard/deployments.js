@@ -7,7 +7,7 @@ import UpdateIcon from '@mui/icons-material/Update';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -117,20 +117,20 @@ export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressC
             <BaseWidget
               className={inprogressCount ? 'current-widget active' : 'current-widget'}
               main={activeWidgetMain}
-              onClick={() => clickHandle({ route: '/deployments/active' })}
+              onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
             />
             <BaseWidget
               className={pendingCount ? 'current-widget pending' : 'current-widget'}
               main={pendingWidgetMain}
-              onClick={() => clickHandle({ route: '/deployments/active' })}
+              onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
             />
             <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
             {canDeploy && (
               <RedirectionWidget
-                target="/deployments/active?open=true"
+                target={`${DEPLOYMENT_ROUTES.active.route}?open=true`}
                 content="Create a new deployment to update a group of devices"
                 buttonContent="Create a deployment"
-                onClick={() => clickHandle({ route: '/deployments/active?open=true' })}
+                onClick={() => clickHandle({ route: `${DEPLOYMENT_ROUTES.active.route}?open=true` })}
                 isActive={false}
               />
             )}

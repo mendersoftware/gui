@@ -23,6 +23,7 @@ import Time from '../../common/time';
 import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
+import { DEPLOYMENT_ROUTES } from '../../../constants/deploymentConstants';
 
 const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };
@@ -300,7 +301,12 @@ export const DeviceConfiguration = ({
             <Button color="secondary" onClick={onAbortClick} startIcon={<BlockIcon fontSize="small" />} style={buttonStyle}>
               Abort update
             </Button>
-            <Button color="secondary" component={Link} to={`/deployments/${deployment.status || 'active'}?open=true&id=${deployment_id}`} style={buttonStyle}>
+            <Button
+              color="secondary"
+              component={Link}
+              to={`/deployments/${deployment.status || DEPLOYMENT_ROUTES.active.key}?open=true&id=${deployment_id}`}
+              style={buttonStyle}
+            >
               View deployment
             </Button>
           </>

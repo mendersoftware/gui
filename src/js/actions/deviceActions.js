@@ -565,10 +565,7 @@ export const setDeviceListState =
     let nextState = {
       ...currentState,
       ...selectionState,
-      sort: {
-        ...currentState.sort,
-        ...selectionState.sort
-      }
+      sort: { ...currentState.sort, ...selectionState.sort }
     };
     let tasks = [];
     // eslint-disable-next-line no-unused-vars
@@ -576,8 +573,7 @@ export const setDeviceListState =
     // eslint-disable-next-line no-unused-vars
     const { isLoading: nextLoading, deviceIds: nextDevices, selection: nextSelection, ...nextRequestState } = nextState;
     if (!deepCompare(currentRequestState, nextRequestState)) {
-      const { direction: sortDown = AppConstants.SORTING_OPTIONS.desc, columns = [] } = nextState.sort;
-      const { column: sortCol, scope: sortScope } = columns.length ? columns[0] : {};
+      const { direction: sortDown = AppConstants.SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = nextState.sort ?? {};
       const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
       if (sortCol && sortingAlternatives[sortCol]) {
         sortBy.push({ ...sortBy[0], attribute: sortingAlternatives[sortCol] });

@@ -30,7 +30,7 @@ const DeviceListItem = ({ columnHeaders, device, deviceListState, idAttribute, i
       }
       onClick(device);
     },
-    [device.id, onClick, deviceListState.expandedDeviceId]
+    [device.id, onClick, deviceListState.selectedId]
   );
 
   const handleRowSelect = () => onRowSelect(index);

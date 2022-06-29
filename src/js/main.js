@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -32,17 +32,19 @@ const cssVariables = ({ palette: p }) => ({
 export const WrappedBaseline = withStyles(cssVariables)(CssBaseline);
 
 export const AppProviders = () => (
-  <Provider store={store}>
-    <CacheProvider value={cache}>
-      <LocalizationProvider dateAdapter={AdapterMoment}>
-        <ErrorBoundary>
-          <Router basename="/ui/#">
-            <App />
-          </Router>
-        </ErrorBoundary>
-      </LocalizationProvider>
-    </CacheProvider>
-  </Provider>
+  <React.StrictMode>
+    <Provider store={store}>
+      <CacheProvider value={cache}>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <ErrorBoundary>
+            <BrowserRouter basename="ui">
+              <App />
+            </BrowserRouter>
+          </ErrorBoundary>
+        </LocalizationProvider>
+      </CacheProvider>
+    </Provider>
+  </React.StrictMode>
 );
 
 export const Main = () => {

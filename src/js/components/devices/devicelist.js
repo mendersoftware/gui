@@ -149,14 +149,9 @@ export const DeviceList = props => {
     pageTotal
   } = props;
 
-  const {
-    page: pageNo = defaultPage,
-    perPage: pageLength = defaultPerPage,
-    selection: selectedRows = [],
-    sort: { direction: sortDown = SORTING_OPTIONS.desc, columns = [] }
-  } = deviceListState;
+  const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, selection: selectedRows = [], sort = {} } = deviceListState;
 
-  const { column: sortCol } = columns.length ? columns[0] : {};
+  const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const deviceListRef = useRef();
   const selectedRowsRef = useRef(selectedRows);
 

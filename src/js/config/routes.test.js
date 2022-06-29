@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import { publicRoutes } from './routes';
+import { PublicRoutes } from './routes';
 import { defaultState } from '../../../tests/mockData';
 
 const mockStore = configureStore([thunk]);
@@ -27,7 +27,9 @@ describe('Router', () => {
   test('invalid path should redirect to Dashboard', async () => {
     render(
       <MemoryRouter initialEntries={['/random']}>
-        <Provider store={store}>{publicRoutes}</Provider>
+        <Provider store={store}>
+          <PublicRoutes />
+        </Provider>
       </MemoryRouter>
     );
     expect(screen.getAllByText('Log in')).toBeTruthy();
@@ -37,7 +39,9 @@ describe('Router', () => {
   test('valid path should not redirect to 404', async () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <Provider store={store}>{publicRoutes}</Provider>
+        <Provider store={store}>
+          <PublicRoutes />
+        </Provider>
       </MemoryRouter>
     );
     expect(screen.getAllByText('Log in')).toBeTruthy();

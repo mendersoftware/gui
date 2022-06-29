@@ -58,12 +58,8 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
 
   const size = useWindowSize();
 
-  const {
-    searchTerm,
-    sort: { attribute, direction },
-    searchTotal,
-    total
-  } = releasesListState;
+  const { searchTerm, sort = {}, searchTotal, total } = releasesListState;
+  const { key: attribute, direction } = sort;
 
   const debouncedVisibleSection = useDebounce(visibleSection, 300);
 
@@ -86,7 +82,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
   };
 
   const handleSortSelection = ({ target }) => {
-    onSetReleaseListState({ sort: { attribute: target.getAttribute('value') } });
+    onSetReleaseListState({ sort: { key: target.getAttribute('value') } });
     handleToggle();
   };
 

@@ -86,12 +86,12 @@ test.describe('Test setup', () => {
         { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
       ]);
       const page = await context.newPage();
-      await page.goto(`${baseUrl}ui/#/settings`);
+      await page.goto(`${baseUrl}ui/settings`);
       const isVisible = await page.isVisible(`text=/Change email/i`);
       if (!isVisible) {
         console.log('settings may not be loaded - move around');
-        await page.goto(`${baseUrl}ui/#/help`);
-        await page.goto(`${baseUrl}ui/#/settings`);
+        await page.goto(`${baseUrl}ui/help`);
+        await page.goto(`${baseUrl}ui/settings`);
       }
       const token = await tenantTokenRetrieval(baseUrl, page);
       if (environment === 'staging') {

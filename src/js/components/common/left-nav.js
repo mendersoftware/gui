@@ -38,7 +38,7 @@ export const LeftNav = ({ sections }) => {
           {items.map(({ exact, path, secondaryAction = null, style = {}, title = '', url }) => {
             const props = url
               ? { component: 'a', exact: `${exact}`, href: url, rel: 'noopener noreferrer', target: '_blank', to: url }
-              : { component: NavLink, exact, to: path };
+              : { component: NavLink, end: exact, to: path };
             return (
               <ListItem className={`navLink ${itemClass} ${classes.list}`} key={path} secondaryAction={secondaryAction} style={style} {...props}>
                 <ListItemText className={classes.listItem} primary={title} url={url} />

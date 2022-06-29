@@ -589,7 +589,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           <input
             aria-invalid="false"
             class="MuiInput-input MuiInputBase-input emotion-4"
-            id="mui-3"
+            id="mui-1"
             placeholder="Search devices"
             type="text"
             value=""
@@ -625,7 +625,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         </div>
         <a
           class="header-section"
-          href="/deployments/"
+          href="/deployments/active"
         >
           <span>
             0
@@ -694,8 +694,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       style="padding: 0px;"
     >
       <a
-        aria-current="page"
-        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-17 active"
+        class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-17"
         href="/"
         style="padding: 22px 16px 22px 42px;"
       >

@@ -7,13 +7,12 @@ import { DatePicker } from '@mui/lab';
 const renderInput = params => <TextField className="margin-top-none margin-left-small" {...params} />;
 
 export const TimeframePicker = ({ onChange, ...props }) => {
-  const [tonight, setTonight] = useState(moment(props.tonight));
-  const [endDate, setEndDate] = useState(moment(props.endDate));
+  const [tonight] = useState(moment().endOf('day'));
+  const [endDate, setEndDate] = useState(moment(props.endDate) > tonight ? tonight : moment(props.endDate));
   const [startDate, setStartDate] = useState(moment(props.startDate));
 
   useEffect(() => {
-    setTonight(moment(props.tonight));
-    setEndDate(moment(props.endDate));
+    setEndDate(moment(props.endDate) > tonight ? tonight : moment(props.endDate));
     setStartDate(moment(props.startDate));
   }, [props.tonight, props.endDate, props.startDate]);
 

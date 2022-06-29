@@ -62,10 +62,9 @@ export const initialState = {
     searchTerm: '',
     searchTotal: 0,
     sort: {
-      direction: AppConstants.SORTING_OPTIONS.desc,
-      columns: [
-        // { column: null, scope: null }
-      ]
+      direction: AppConstants.SORTING_OPTIONS.desc
+      // key: null,
+      // scope: null
     }
   },
   stripeAPIKey: menderEnvironment.stripeAPIKey,

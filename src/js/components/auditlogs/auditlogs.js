@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { Button, TextField, Autocomplete } from '@mui/material';
 
@@ -14,10 +14,11 @@ import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
-import AuditLogsList, { defaultRowsPerPage } from './auditlogslist';
-import { createDownload } from '../../helpers';
+import AuditLogsList from './auditlogslist';
+import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 import { getUserCapabilities } from '../../selectors';
+import { useLocationParams } from '../../utils/liststatehook';
 
 const detailsMap = {
   Deployment: 'to device group',
@@ -37,16 +38,17 @@ const autoSelectProps = {
 };
 
 export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
-  const [locationChange, setLocationChange] = useState(true);
   const [filterReset, setFilterReset] = useState(false);
-  const [date] = useState({ today: new Date(new Date().setHours(0, 0, 0)).toISOString(), tonight: new Date(new Date().setHours(23, 59, 59)).toISOString() });
-  const { today, tonight } = date;
+
+  const [date] = useState(getISOStringBoundaries(new Date()));
+  const { start: today, end: tonight } = date;
 
   const [detailValue, setDetailValue] = useState('');
   const [userValue, setUserValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
+  const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
 
   const debouncedDetail = useDebounce(detailValue, 700);
   const debouncedType = useDebounce(typeValue, 700);
@@ -62,30 +64,23 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
     if (canReadUsers) {
       getUserList();
     }
-    setAuditlogsState({ reset: !resetList });
-    trackLocationChange(history.location);
-    history.listen(trackLocationChange);
+    let state = { ...locationParams, reset: !resetList };
+    if (locationParams.id && Boolean(locationParams.open)) {
+      state.selectedId = locationParams.id;
+      const [eventAction, eventTime] = atob(state.selectedId).split('|');
+      if (eventTime && !events.some(item => item.time === eventTime && item.action === eventAction)) {
+        const { start, end } = getISOStringBoundaries(new Date(eventTime));
+        state.endDate = end;
+        state.startDate = start;
+      }
+    }
+    setAuditlogsState(state);
+    Object.entries({ detail: setDetailValue, user: setUserValue, type: setTypeValue }).map(([key, setter]) => (state[key] ? setter(state[key]) : undefined));
   }, []);
 
-  const trackLocationChange = location => {
-    if (!location.search) {
-      return;
-    }
-    const params = new URLSearchParams(location.search);
-    const { title: type = '' } = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('object_type')) || {};
-    let state = {
-      page: params.get('page') || 1,
-      perPage: params.get('per_page') || defaultRowsPerPage,
-      type,
-      detail: params.get('object_id') || '',
-      user: params.get('user_id') || '',
-      sort: params.get('sort') || SORTING_OPTIONS.desc,
-      startDate: params.get('start_date') ?? today,
-      endDate: params.get('end_date') ?? tonight
-    };
-    setAuditlogsState(state);
-    setLocationChange(!locationChange);
-  };
+  useEffect(() => {
+    setLocationParams({ pageState: selectionState });
+  }, [detail, endDate, JSON.stringify(sort), perPage, selectionState.page, selectionState.selectedId, startDate, type, user]);
 
   const reset = () => {
     setAuditlogsState({
@@ -98,7 +93,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
       user: ''
     });
     setFilterReset(!filterReset);
-    history.push('/auditlog');
+    navigate('/auditlog');
   };
 
   const createCsvDownload = () => {
@@ -113,8 +108,8 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
   };
 
   const onChangeSorting = () => {
-    const currentSorting = sort === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
-    setAuditlogsState({ page: 1, sort: currentSorting });
+    const currentSorting = sort.direction === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
+    setAuditlogsState({ page: 1, sort: { direction: currentSorting } });
   };
 
   const onUserFilterChange = (e, value, reason) => {
@@ -124,8 +119,8 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
     setUserValue(value);
   };
 
-  const onTypeFilterChange = (e, value) => {
-    if (!e) {
+  const onTypeFilterChange = (e, value, reason) => {
+    if (!e || reason === 'blur') {
       return;
     }
     setTypeValue(value);
@@ -148,7 +143,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
     User: Object.values(users),
     Device: []
   };
-  let detailOptions = typeOptionsMap[type] ?? [];
+  const detailOptions = typeOptionsMap[type?.title] ?? [];
 
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
@@ -176,13 +171,13 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
           {...autoSelectProps}
           id="audit-log-type-selection"
           key={`audit-log-type-selection-${filterReset}`}
-          inputValue={type}
-          onInputChange={onTypeFilterChange}
+          onChange={onTypeFilterChange}
           options={AUDIT_LOGS_TYPES}
           renderInput={params => (
             <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
           )}
           style={{ marginLeft: 7.5 }}
+          value={type}
         />
         <Autocomplete
           {...autoSelectProps}
@@ -216,7 +211,6 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
           {...props}
           items={events}
           loading={isLoading}
-          locationChange={locationChange}
           onChangePage={onChangePagination}
           onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
           onChangeSorting={onChangeSorting}

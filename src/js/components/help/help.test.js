@@ -1,10 +1,11 @@
 import React from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+import { render } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
 import Help from './help';
 
 const mockStore = configureStore([thunk]);
@@ -18,7 +19,13 @@ describe('Help Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <Help location={{ pathname: '/help/get-started' }} />
+        <MemoryRouter initialEntries={['/help/get-started']}>
+          <Routes>
+            <Route path="help" element={<Help />}>
+              <Route path=":section" element={null} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

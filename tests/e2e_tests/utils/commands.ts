@@ -153,7 +153,7 @@ export const login = async (username: string, password: string, baseUrl: string)
 };
 
 export const tenantTokenRetrieval = async (baseUrl: string, page: Page) => {
-  await page.goto(`${baseUrl}ui/#/settings/organization-and-billing`);
+  await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
   await page.waitForSelector('.tenant-token-text');
   const token = await page.$eval('.tenant-token-text', el => el.textContent);
   console.log(token);

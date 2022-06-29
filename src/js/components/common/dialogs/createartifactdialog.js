@@ -1,7 +1,6 @@
 import React from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
@@ -14,9 +13,11 @@ Hello World!
 EOF
 `;
 
-export const CreateArtifactDialog = ({ advanceOnboarding, history, setShowCreateArtifactDialog, showCreateArtifactDialog = true }) => {
+export const CreateArtifactDialog = ({ advanceOnboarding, setShowCreateArtifactDialog, showCreateArtifactDialog = true }) => {
+  const navigate = useNavigate();
+
   const onClose = () => {
-    history.push('/releases');
+    navigate('/releases');
     setShowCreateArtifactDialog(false);
     advanceOnboarding(onboardingSteps.ARTIFACT_CREATION_DIALOG);
   };
@@ -54,4 +55,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default compose(withRouter, connect(mapStateToProps, actionCreators))(CreateArtifactDialog);
+export default connect(mapStateToProps, actionCreators)(CreateArtifactDialog);
