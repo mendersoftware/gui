@@ -9,17 +9,17 @@ test.describe('Settings', () => {
   test.describe('access token feature', () => {
     test.use({ storageState: 'storage.json' });
     test('allows access to access tokens', async ({ baseUrl, loggedInPage: page }) => {
-      await page.goto(`${baseUrl}ui/#/settings`);
+      await page.goto(`${baseUrl}ui/settings`);
       const isVisible = await page.isVisible(`text=/generate a token/i`);
       if (!isVisible) {
         console.log('settings may not be loaded - move around');
-        await page.goto(`${baseUrl}ui/#/help`);
-        await page.goto(`${baseUrl}ui/#/settings`);
+        await page.goto(`${baseUrl}ui/help`);
+        await page.goto(`${baseUrl}ui/settings`);
       }
       await page.waitForSelector('css=button >> text=/Generate a token/i');
     });
     test('allows generating & revoking tokens', async ({ baseUrl, browserName, loggedInPage: page }) => {
-      await page.goto(`${baseUrl}ui/#/settings`);
+      await page.goto(`${baseUrl}ui/settings`);
       await page.waitForSelector('css=button >> text=/Generate a token/i');
       const isRetry = await page.isVisible(`text=/revoke/i`);
       if (isRetry) {
@@ -83,10 +83,10 @@ test.describe('Settings', () => {
       expect(await page.isVisible(`css=#limit >> text=250`)).toBeTruthy();
       const token = await tenantTokenRetrieval(baseUrl, page);
       await startClient(baseUrl, token, 50);
-      await page.goto(`${baseUrl}ui/#/devices`);
-      await page.waitForSelector('.header-section [href="/ui/#/devices/pending"]', { timeout: 120000 });
-      expect(await page.isVisible(`:is(.header-section [href="/ui/#/devices/pending"]:has-text('pending'))`)).toBeTruthy();
-      const pendingNotification = await page.$eval('.header-section [href="/ui/#/devices/pending"]', el => el.textContent);
+      await page.goto(`${baseUrl}ui/devices`);
+      await page.waitForSelector('.header-section [href="/ui/devices/pending"]', { timeout: 120000 });
+      expect(await page.isVisible(`:is(.header-section [href="/ui/devices/pending"]:has-text('pending'))`)).toBeTruthy();
+      const pendingNotification = await page.$eval('.header-section [href="/ui/devices/pending"]', el => el.textContent);
       expect(Number(pendingNotification.split(' ')[0])).toBeGreaterThan(10);
     });
   });
@@ -113,7 +113,7 @@ test.describe('Settings', () => {
       if (tfaSecret) {
         test.skip('looks like the account is already 2fa enabled, continue with the remaining tests');
       }
-      await page.goto(`${baseUrl}ui/#/settings/my-account`);
+      await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('text=/Enable Two Factor/');
       await page.waitForSelector('.margin-top img');
       const qrCode = await page.$eval('.margin-top img', (el: HTMLImageElement) => el.src);
@@ -153,7 +153,7 @@ test.describe('Settings', () => {
     });
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
-      await page.goto(`${baseUrl}ui/#/login`);
+      await page.goto(`${baseUrl}ui/login`);
       await page.fill('[name=email]', username);
       await page.fill('[name=password]', password);
       await page.click(`button:text('Log in')`);
@@ -161,17 +161,17 @@ test.describe('Settings', () => {
       await page.fill('#token2fa', newToken);
       await page.click(`button:text('Log in')`);
       await page.waitForSelector('text=License information');
-      await page.goto(`${baseUrl}ui/#/settings/my-account`);
+      await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('text=/Enable Two Factor/');
       await page.waitForTimeout(2000);
     });
     test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
-      await page.goto(`${baseUrl}ui/#/login`);
+      await page.goto(`${baseUrl}ui/login`);
       await page.fill('[name=email]', username);
       await page.fill('[name=password]', password);
       await page.click(`:is(button:has-text('Log in'))`);
-      await page.goto(`${baseUrl}ui/#/settings`);
+      await page.goto(`${baseUrl}ui/settings`);
       await page.waitForSelector('text=License information');
     });
   });
@@ -181,27 +181,27 @@ test.describe('Settings', () => {
 
     test('allows access to user management', async ({ baseUrl, loggedInPage: page }) => {
       // test.use({ storageState: 'storage.json' });
-      await page.goto(`${baseUrl}ui/#/settings`);
+      await page.goto(`${baseUrl}ui/settings`);
       await page.waitForSelector('text=/Global settings/i');
       await page.click('text=/user management/i');
-      await page.goto(`${baseUrl}ui/#/settings/user-management`);
+      await page.goto(`${baseUrl}ui/settings/user-management`);
       const isVisible = await page.isVisible(`text=/Create new user/i`);
       if (!isVisible) {
         console.log('settings may not be loaded - move around');
-        await page.goto(`${baseUrl}ui/#/help`);
-        await page.goto(`${baseUrl}ui/#/settings/user-management`);
+        await page.goto(`${baseUrl}ui/help`);
+        await page.goto(`${baseUrl}ui/settings/user-management`);
       }
       await page.waitForSelector('css=button >> text=Create new user');
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
-      await page.goto(`${baseUrl}ui/#/settings/my-account`);
+      await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('#change_email');
     });
     test('allows changing the password', async ({ baseUrl, browserName, context, loggedInPage: page, username, password }) => {
       if (browserName === 'webkit') {
         test.skip();
       }
-      await page.goto(`${baseUrl}ui/#/settings/my-account`);
+      await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('#change_password');
 
       expect(await page.$eval('[name=password]', (el: HTMLInputElement) => el.value)).toBeFalsy();
@@ -241,7 +241,7 @@ test.describe('Settings', () => {
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui`);
       await page.waitForSelector('text=/License information/i');
-      await page.goto(`${baseUrl}ui/#/settings/my-account`);
+      await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('#change_password');
 
       await page.fill('[name=password]', password);

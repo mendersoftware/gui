@@ -19,6 +19,7 @@ import ForwardingLink from '../common/forwardlink';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
+import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -224,7 +225,7 @@ export const ReleaseRepository = ({
                 variant="contained"
                 ref={creationRef}
                 component={ForwardingLink}
-                to={`/deployments/active?open=true&release=${encodeURIComponent(release.Name)}`}
+                to={`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(release.Name)}`}
                 style={{ marginLeft: 20 }}
                 onClick={() => onCreateDeploymentFrom(release)}
               >

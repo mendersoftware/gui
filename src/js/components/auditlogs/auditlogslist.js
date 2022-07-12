@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
@@ -8,11 +8,12 @@ import Pagination from '../common/pagination';
 import Time from '../common/time';
 import EventDetailsDrawer from './eventdetailsdrawer';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 
 export const defaultRowsPerPage = 20;
 
 const ArtifactLink = ({ item }) => <Link to={`/releases/${item.object.artifact.name}`}>View artifact</Link>;
-const DeploymentLink = ({ item }) => <Link to={`/deployments/finished?open=true&id=${item.object.id}`}>View deployment</Link>;
+const DeploymentLink = ({ item }) => <Link to={`${DEPLOYMENT_ROUTES.finished.route}?open=true&id=${item.object.id}`}>View deployment</Link>;
 const DeviceLink = ({ item }) => <Link to={`/devices?id=${item.object.id}`}>View device</Link>;
 const DeviceRejectedLink = ({ item }) => <Link to={`/devices/rejected?id=${item.object.id}`}>View device</Link>;
 const TerminalSessionLink = () => <a>View session log</a>;
@@ -99,14 +100,19 @@ const auditLogColumns = [
   { title: 'Time', sortable: true, render: TimeWrapper }
 ];
 
-export const AuditLogsList = ({ items, loading, locationChange, onChangePage, onChangeRowsPerPage, onChangeSorting, selectionState, setAuditlogsState }) => {
-  const { page, perPage, selectedIssue: selectedItem, sorting: sortDirection, total: count } = selectionState;
+export const AuditLogsList = ({ items, loading, onChangePage, onChangeRowsPerPage, onChangeSorting, selectionState, setAuditlogsState }) => {
+  const { page, perPage, selectedId, sort = {}, total: count } = selectionState;
 
-  useEffect(() => {
-    setAuditlogsState({ selectedIssue: undefined });
-  }, [locationChange]);
+  const onIssueSelection = selectedIssue =>
+    setAuditlogsState({ selectedId: selectedIssue ? btoa(`${selectedIssue.action}|${selectedIssue.time}`) : undefined });
 
-  const onIssueSelection = selectedIssue => setAuditlogsState({ selectedIssue });
+  const eventItem = useMemo(() => {
+    if (!selectedId) {
+      return;
+    }
+    const [eventAction, eventTime] = atob(selectedId).split('|');
+    return items.find(item => item.action === eventAction && item.time === eventTime);
+  }, [items, selectedId]);
 
   return (
     !!items.length && (
@@ -120,7 +126,7 @@ export const AuditLogsList = ({ items, loading, locationChange, onChangePage, on
               style={column.sortable ? {} : { cursor: 'initial' }}
             >
               {column.title}
-              {column.sortable ? <SortIcon className={`sortIcon selected ${(sortDirection === SORTING_OPTIONS.desc).toString()}`} /> : null}
+              {column.sortable ? <SortIcon className={`sortIcon selected ${(sort.direction === SORTING_OPTIONS.desc).toString()}`} /> : null}
             </div>
           ))}
           <div />
@@ -148,7 +154,7 @@ export const AuditLogsList = ({ items, loading, locationChange, onChangePage, on
         </div>
         <Loader show={loading} />
         <Pagination count={count} rowsPerPage={perPage} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
-        <EventDetailsDrawer mapChangeToContent={mapChangeToContent} eventItem={selectedItem} open={Boolean(selectedItem)} onClose={() => onIssueSelection()} />
+        <EventDetailsDrawer eventItem={eventItem} open={Boolean(eventItem)} onClose={() => onIssueSelection()} />
       </div>
     )
   );

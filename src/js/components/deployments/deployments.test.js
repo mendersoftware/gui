@@ -15,7 +15,7 @@ import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTes
 import { ALL_DEVICES } from '../../constants/deviceConstants';
 
 const mockStore = configureStore([thunk]);
-const defaultLocationProps = { location: { search: 'from=2019-01-01' }, match: {} };
+const defaultLocationProps = { location: { search: 'startDate=2019-01-01' }, match: {} };
 
 describe('Deployments Component', () => {
   let mockState = {
@@ -85,7 +85,6 @@ describe('Deployments Component', () => {
           inprogress: { deploymentIds: ['d1'], total: 1 },
           pending: { deploymentIds: ['d2'], total: 1 }
         },
-        selectedDeployment: defaultState.deployments.byId.d1.id,
         selectionState: {
           ...defaultState.deployments.selectionState,
           inprogress: { ...defaultState.deployments.selectionState.inprogress, selection: ['d1'] },

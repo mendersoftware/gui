@@ -1,11 +1,11 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+import { render as testingLibRender } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
 import Settings from './settings';
 
 const mockStore = configureStore([thunk]);
@@ -36,10 +36,14 @@ describe('Settings Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <MemoryRouter initialEntries={['/settings']}>
+    const { baseElement } = testingLibRender(
+      <MemoryRouter initialEntries={['/settings/my-profile']}>
         <Provider store={store}>
-          <Route path="/settings/:section?" component={Settings} />
+          <Routes>
+            <Route path="settings" element={<Settings />}>
+              <Route path=":section" element={null} />
+            </Route>
+          </Routes>
         </Provider>
       </MemoryRouter>
     );

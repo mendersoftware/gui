@@ -3,10 +3,9 @@ import { prettyDOM } from '@testing-library/dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import DeviceGroups, { convertQueryToFilterAndGroup, generateBrowserLocation } from './device-groups';
+import DeviceGroups from './device-groups';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 
 const mockStore = configureStore([thunk]);
 
@@ -42,57 +41,5 @@ describe('DeviceGroups Component', () => {
       .replace(/\\/g, '');
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
-  });
-
-  it('uses working utilties - convertQueryToFilterAndGroup', () => {
-    const { groupName, filters } = convertQueryToFilterAndGroup(
-      '?some=thing&group=testgroup&id=someId&mac=donalds&existing=filter',
-      { ...defaultState.devices.filteringAttributes, identityAttributes: [...defaultState.devices.filteringAttributes.identityAttributes, 'id'] },
-      [{ key: 'existing', operator: '$wat', scope: 'special', value: 'filter' }]
-    );
-    expect(groupName).toEqual('testgroup');
-    expect(filters).toEqual([
-      { key: 'some', operator: '$eq', scope: 'inventory', value: 'thing' },
-      { key: 'id', operator: '$eq', scope: 'identity', value: 'someId' },
-      { key: 'mac', operator: '$eq', scope: 'identity', value: 'donalds' },
-      { key: 'existing', operator: '$wat', scope: 'special', value: 'filter' }
-    ]);
-  });
-
-  const devicesPath = '/devices/asd';
-  const devicesSearch = '?some=thing&different=thing&entirely=different';
-  it('uses working utilties - generateBrowserLocation', () => {
-    const { pathname, search } = generateBrowserLocation(
-      DEVICE_STATES.pending,
-      [{ key: 'some', value: 'thing' }],
-      'testgroup',
-      { pathname: devicesPath, search: devicesSearch },
-      false
-    );
-    expect(pathname).toEqual('/devices/pending');
-    expect(search).toEqual('some=thing&group=testgroup');
-  });
-
-  it('uses working utilties - generateBrowserLocation - on init', () => {
-    const { pathname, search } = generateBrowserLocation(
-      DEVICE_STATES.pending,
-      [{ key: 'some', value: 'thing' }],
-      'testgroup',
-      { pathname: devicesPath, search: devicesSearch },
-      true
-    );
-    expect(pathname).toEqual('/devices/pending');
-    expect(search).toEqual('some=thing&different=thing&entirely=different&group=testgroup');
-  });
-
-  it('uses working utilties - generateBrowserLocation - with ungrouped selected', () => {
-    const { search } = generateBrowserLocation(
-      DEVICE_STATES.pending,
-      [{ key: 'some', value: 'thing' }],
-      UNGROUPED_GROUP.id,
-      { pathname: devicesPath, search: devicesSearch },
-      true
-    );
-    expect(search).toEqual('');
   });
 });

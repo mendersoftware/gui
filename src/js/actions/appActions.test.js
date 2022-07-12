@@ -246,7 +246,7 @@ describe('app actions', () => {
           selectedAttributes: [],
           selectedIssues: [],
           selection: [],
-          sort: { columns: [], direction: AppConstants.SORTING_OPTIONS.desc },
+          sort: { direction: AppConstants.SORTING_OPTIONS.desc },
           state: 'accepted',
           total: 0
         }

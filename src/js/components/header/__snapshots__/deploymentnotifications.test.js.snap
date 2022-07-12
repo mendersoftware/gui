@@ -20,7 +20,7 @@ exports[`DeploymentNotifications Component renders correctly 1`] = `
 
 <a
   class="header-section"
-  href="/deployments/"
+  href="/deployments/active"
 >
   <span />
   <svg

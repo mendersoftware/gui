@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useIdleTimer, workerTimers } from 'react-idle-timer';
 import Cookies from 'universal-cookie';
 
@@ -12,7 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getToken, updateMaxAge, expirySet } from '../auth';
 import { cancelFileUpload, setSnackbar } from '../actions/appActions';
 import { logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
-import { privateRoutes, publicRoutes } from '../config/routes';
+import { PrivateRoutes, PublicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import ErrorBoundary from '../errorboundary';
@@ -34,7 +33,6 @@ const cookies = new Cookies();
 export const AppRoot = ({
   cancelFileUpload,
   currentUser,
-  history,
   logoutUser,
   mode,
   onboardingState,
@@ -48,27 +46,37 @@ export const AppRoot = ({
   uploadProgress
 }) => {
   const [showSearchResult, setShowSearchResult] = useState(false);
+  const navigate = useNavigate();
+  const { pathname = '', hash } = useLocation();
 
   useEffect(() => {
-    if (trackingCode) {
-      if (!cookies.get('_ga')) {
-        Tracking.cookieconsent().then(({ trackingConsentGiven }) => {
-          if (trackingConsentGiven) {
-            Tracking.initialize(trackingCode);
-            Tracking.pageview();
-          }
-        });
-      } else {
-        Tracking.initialize(trackingCode);
-      }
+    if (!trackingCode) {
+      return;
     }
-    history.listen(trackLocationChange);
-    trackLocationChange(history.location);
+    if (!cookies.get('_ga')) {
+      Tracking.cookieconsent().then(({ trackingConsentGiven }) => {
+        if (trackingConsentGiven) {
+          Tracking.initialize(trackingCode);
+          Tracking.pageview();
+        }
+      });
+    } else {
+      Tracking.initialize(trackingCode);
+    }
+    trackLocationChange(pathname);
   }, []);
 
-  const trackLocationChange = location => {
+  useEffect(() => {
+    trackLocationChange(pathname);
+    // the following is added to ensure backwards capability for hash containing routes & links (e.g. /ui/#/devices => /ui/devices)
+    if (hash) {
+      navigate(hash.substring(1));
+    }
+  }, [hash, pathname]);
+
+  const trackLocationChange = pathname => {
+    let page = pathname;
     // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
-    let page = location.pathname || '';
     if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
       const splitter = page.lastIndexOf('/');
       const filters = page.slice(splitter + 1);
@@ -76,7 +84,7 @@ export const AppRoot = ({
       page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
     } else if (page.startsWith(activationPath)) {
       setAccountActivationCode(page.substring(activationPath.length + 1));
-      history.replace('/settings/my-profile');
+      navigate('/settings/my-profile', { replace: true });
     }
     Tracking.pageview(page);
   };
@@ -106,7 +114,7 @@ export const AppRoot = ({
             <div className="rightFluid container">
               <ErrorBoundary>
                 <SearchResult onToggleSearchResult={onToggleSearchResult} open={showSearchResult} />
-                {privateRoutes}
+                <PrivateRoutes />
               </ErrorBoundary>
             </div>
             {onboardingComponent ? onboardingComponent : null}
@@ -114,7 +122,7 @@ export const AppRoot = ({
             {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
           </>
         ) : (
-          publicRoutes
+          <PublicRoutes />
         )}
         <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
         {Boolean(uploadProgress) && (
@@ -148,4 +156,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default compose(withRouter, connect(mapStateToProps, actionCreators))(AppRoot);
+export default connect(mapStateToProps, actionCreators)(AppRoot);

@@ -544,3 +544,8 @@ export const createDownload = (target, filename) => {
 };
 
 export const createFileDownload = (content, filename) => createDownload('data:text/plain;charset=utf-8,' + encodeURIComponent(content), filename);
+
+export const getISOStringBoundaries = currentDate => {
+  const date = [currentDate.getUTCFullYear(), `0${currentDate.getUTCMonth() + 1}`.slice(-2), `0${currentDate.getUTCDate()}`.slice(-2)].join('-');
+  return { start: `${date}T00:00:00.000Z`, end: `${date}T23:59:59.999Z` };
+};

@@ -22,6 +22,7 @@ import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeployme
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
+import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import LogDialog from '../common/dialogs/log';
@@ -35,8 +36,6 @@ import DeploymentPhaseNotification from './deployment-report/deploymentphasenoti
 import LinedHeader from '../common/lined-header';
 
 momentDurationFormatSetup(moment);
-
-let timer;
 
 export const defaultColumnDataProps = {
   chipLikeKey: false,
@@ -82,24 +81,32 @@ export const DeploymentReport = props => {
   const theme = useTheme();
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
+  const timer = useRef();
 
   useEffect(() => {
     if (!open) {
       return;
     }
-    clearInterval(timer);
+    clearInterval(timer.current);
     if (!(deployment.finished || deployment.status === DEPLOYMENT_STATES.finished)) {
-      timer = past ? null : setInterval(refreshDeployment, 5000);
+      timer.current = past ? null : setInterval(refreshDeployment, 5000);
     }
     if ((deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) && deployment.artifact_name) {
       getRelease(deployment.artifact_name);
     }
     if (hasAuditlogs && canAuditlog) {
-      getAuditLogs({ page: 1, perPage: 100, startDate: undefined, endDate: undefined, user: undefined, type: 'deployment', detail: deployment.name });
+      getAuditLogs({
+        page: 1,
+        perPage: 100,
+        startDate: undefined,
+        endDate: undefined,
+        user: undefined,
+        type: AUDIT_LOGS_TYPES.find(item => item.value === 'deployment'),
+        detail: deployment.name
+      });
     }
-    refreshDeployment();
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
     };
   }, [deployment.id, open]);
 
@@ -111,11 +118,13 @@ export const DeploymentReport = props => {
       statCollector(deploymentStatesToSubstates.pending, stats) +
       statCollector(deploymentStatesToSubstates.inprogress, stats);
 
-    if (!!device_count && progressCount <= 0 && timer) {
+    if (!!device_count && progressCount <= 0 && timer.current) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
-      clearInterval(timer);
-      timer = undefined;
-      setTimeout(refreshDeployment, 1000);
+      clearInterval(timer.current);
+      timer.current = setTimeout(refreshDeployment, 1000);
+      return () => {
+        clearTimeout(timer.current);
+      };
     }
   }, [deployment.id, deployment.stats]);
 
@@ -225,10 +234,10 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { devices = {} } = state.deployments.byId[state.deployments.selectedDeployment] || {};
+  const { devices = {} } = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
   const selectedDevices = state.deployments.selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] }));
-  const deployment = state.deployments.byId[state.deployments.selectedDeployment] || {};
-  const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectedDeployment) || {};
+  const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
+  const { actor = {} } = state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectionState.selectedId) || {};
   const { hasAuditlogs } = getTenantCapabilities(state);
   const { canAuditlog } = getUserCapabilities(state);
   return {

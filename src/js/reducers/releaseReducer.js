@@ -45,7 +45,7 @@ export const initialState = {
     releaseIds: [],
     sort: {
       direction: SORTING_OPTIONS.desc,
-      attribute: 'modified'
+      key: 'modified'
     },
     searchTerm: '',
     searchTotal: 0,

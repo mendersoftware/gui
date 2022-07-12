@@ -78,10 +78,6 @@ describe('deployment reducer', () => {
       ).toEqual(['a1']);
     });
   });
-  it('should handle SELECT_DEPLOYMENT', async () => {
-    expect(reducer(undefined, { type: DeploymentConstants.SELECT_DEPLOYMENT, deploymentId: 'a1' }).selectedDeployment).toEqual('a1');
-    expect(reducer(initialState, { type: DeploymentConstants.SELECT_DEPLOYMENT, deploymentId: 'a1' }).selectedDeployment).toEqual('a1');
-  });
   it('should handle SET_DEPLOYMENTS_STATE', async () => {
     const newState = { something: 'new' };
     expect(reducer(undefined, { type: DeploymentConstants.SET_DEPLOYMENTS_STATE, state: newState }).selectionState).toEqual(newState);

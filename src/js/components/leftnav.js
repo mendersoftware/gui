@@ -138,7 +138,7 @@ export const LeftNav = ({
             <ListItem
               className="navLink leftNav"
               component={NavLink}
-              exact={item.route === '/'}
+              end={item.route === '/'}
               key={index}
               style={{ padding: '22px 16px 22px 42px' }}
               ref={item.route === '/releases' ? releasesRef : null}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
@@ -23,72 +23,21 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
 import CreateGroup from './group-management/create-group';
 import RemoveGroup from './group-management/remove-group';
 import CreateGroupExplainer from './group-management/create-group-explainer';
-import { emptyFilter } from './widgets/filters';
 import MakeGatewayDialog from './dialogs/make-gateway-dialog';
 import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
 import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 import { versionCompare } from '../../helpers';
-import { routes } from './base-devices';
-
-export const convertQueryToFilterAndGroup = (query, filteringAttributes, currentFilters) => {
-  const queryParams = new URLSearchParams(query);
-  let groupName = '';
-  if (queryParams.has('group')) {
-    groupName = queryParams.get('group');
-    queryParams.delete('group');
-  }
-  const filters = [...queryParams.entries()].reduce((accu, filterPair) => {
-    const scope = Object.entries(filteringAttributes).reduce(
-      (accu, [attributesType, attributes]) => {
-        if (currentFilters.some(filter => filter.key === filterPair[0])) {
-          const existingFilter = currentFilters.find(filter => filter.key === filterPair[0]);
-          accu.scope = existingFilter.scope;
-          accu.operator = existingFilter.operator;
-        } else if (attributes.includes(filterPair[0])) {
-          accu.scope = attributesType.substring(0, attributesType.indexOf('Attr'));
-        }
-        return accu;
-      },
-      { operator: emptyFilter.operator, scope: emptyFilter.scope }
-    );
-    accu.push({ ...emptyFilter, ...scope, key: filterPair[0], value: filterPair[1] });
-    return accu;
-  }, []);
-  return { filters, groupName };
-};
-
-export const generateBrowserLocation = (selectedState, filters, selectedGroup, location, isInitialization) => {
-  const activeFilters = filters.filter(item => item.value !== '');
-  let searchParams = new URLSearchParams(isInitialization ? location.search : undefined);
-  searchParams = activeFilters.reduce((accu, item) => {
-    if (!accu.getAll(item.key).includes(item.value)) {
-      accu.append(item.key, item.value);
-    }
-    return accu;
-  }, searchParams);
-  if (selectedGroup) {
-    searchParams.set('group', selectedGroup);
-    if (selectedGroup === UNGROUPED_GROUP.id) {
-      searchParams = new URLSearchParams();
-    }
-  }
-  const search = searchParams.toString();
-  const path = [location.pathname.substring(0, '/devices'.length)];
-  if (![routes.allDevices.key, ''].includes(selectedState)) {
-    path.push(selectedState);
-  }
-  let pathname = path.join('/');
-  return { pathname, search };
-};
+import { useLocationParams } from '../../utils/liststatehook';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
 
 const refreshLength = 10000;
 
@@ -113,9 +62,7 @@ export const DeviceGroups = ({
   groups,
   groupsById,
   hasReporting,
-  history,
   limitMaxed,
-  match,
   pendingCount,
   preauthDevice,
   removeDevicesFromGroup,
@@ -141,27 +88,29 @@ export const DeviceGroups = ({
   const [showMakeGateway, setShowMakeGateway] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
-  const [isReconciling, setIsReconciling] = useState(false);
   const deviceTimer = useRef();
   const { isEnterprise } = tenantCapabilities;
+  const { status: statusParam } = useParams();
 
-  const { refreshTrigger, state: selectedState } = deviceListState;
+  const [locationParams, setLocationParams] = useLocationParams('devices', {
+    filteringAttributes,
+    filters,
+    defaults: { sort: { direction: SORTING_OPTIONS.desc } }
+  });
+
+  const { refreshTrigger, selectedId, state: selectedState } = deviceListState;
 
   useEffect(() => {
-    const { filters: filterQuery = '', status = '' } = match.params;
-    maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
-    let request;
-    if (status && selectedState !== status) {
-      setIsReconciling(true);
-      request = setDeviceListState({ state: status }).then(() => setIsReconciling(false));
-    }
-    const { pathname, search } = generateBrowserLocation(status, filters, selectedGroup, history.location, true);
-    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
-      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
-    }
+    maybeSetGroupAndFilters(locationParams);
+    clearInterval(deviceTimer.current);
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
     setYesterday();
-    request ? null : setDeviceListState({ refreshTrigger: !refreshTrigger });
+    const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
+    let listState = { state, refreshTrigger: !refreshTrigger };
+    if (locationParams.id && Boolean(locationParams.open)) {
+      listState.selectedId = locationParams.id;
+    }
+    setDeviceListState(listState);
     return () => {
       clearInterval(deviceTimer.current);
     };
@@ -175,39 +124,23 @@ export const DeviceGroups = ({
     if (!deviceTimer.current) {
       return;
     }
-    const { pathname, search } = generateBrowserLocation(selectedState, filters, selectedGroup, history.location);
-    if (pathname !== history.location.pathname || history.location.search !== `?${search}`) {
-      history.replace({ pathname, search }); // lgtm [js/client-side-unvalidated-url-redirection]
-    }
-  }, [selectedState, filters, selectedGroup]);
+    setLocationParams({ pageState: deviceListState, filters, selectedGroup });
+  }, [
+    deviceListState.page,
+    deviceListState.perPage,
+    deviceListState.selectedIssues,
+    JSON.stringify(deviceListState.sort),
+    selectedId,
+    filters,
+    selectedGroup,
+    selectedState
+  ]);
 
-  useEffect(() => {
-    if (!deviceTimer.current) {
-      return;
-    }
-    const { filters: filterQuery = '', status = '' } = match.params;
-    maybeSetGroupAndFilters(filterQuery, history.location.search, filteringAttributes, filters);
-    if (
-      selectedState !== status &&
-      selectedState !== routes.allDevices.key &&
-      (status || filterQuery) &&
-      history.location.pathname.includes(status) &&
-      !isReconciling
-    ) {
-      setIsReconciling(true);
-      setDeviceListState({ state: status ? status : routes.allDevices.key }).then(() => setIsReconciling(false));
-    }
-  }, [filters, match.params, history.location.search]);
-
-  const maybeSetGroupAndFilters = (filterQuery, search, attributes, currentFilters) => {
-    const query = filterQuery || search;
-    if (query) {
-      const { filters: queryFilters, groupName } = convertQueryToFilterAndGroup(query, attributes, currentFilters);
-      if (groupName) {
-        selectGroup(groupName, queryFilters);
-      } else if (queryFilters) {
-        setDeviceFilters(queryFilters);
-      }
+  const maybeSetGroupAndFilters = ({ filters, groupName }) => {
+    if (groupName) {
+      selectGroup(groupName, filters);
+    } else if (filters?.length) {
+      setDeviceFilters(filters);
     }
   };
 
@@ -443,4 +376,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, actionCreators)(DeviceGroups));
+export default connect(mapStateToProps, actionCreators)(DeviceGroups);

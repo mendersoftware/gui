@@ -87,16 +87,16 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
     .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch))
     .then(() => Promise.resolve(dispatch(getUserOrganization())));
 
-const prepareAuditlogQuery = ({ startDate, endDate, user: userFilter, type, detail: detailFilter, sort = SORTING_OPTIONS.desc }) => {
+const prepareAuditlogQuery = ({ startDate, endDate, user: userFilter, type, detail: detailFilter, sort = {} }) => {
   const userId = userFilter?.id || userFilter;
   const detail = detailFilter?.id || detailFilter;
   const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
   const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
-  const typeSearch = type ? `&object_type=${type}`.toLowerCase() : '';
+  const typeSearch = type ? `&object_type=${type.value}`.toLowerCase() : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
-  const queryParameter = type && detail ? OrganizationConstants.AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === type).queryParameter : '';
-  const objectSearch = detail ? `&${queryParameter}=${encodeURIComponent(detail)}` : '';
-  return `${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${sort}`;
+  const objectSearch = type && detail ? `&${type.queryParameter}=${encodeURIComponent(detail)}` : '';
+  const { direction = SORTING_OPTIONS.desc } = sort;
+  return `${createdAfter}${createdBefore}${userSearch}${typeSearch}${objectSearch}&sort=${direction}`;
 };
 
 export const getAuditLogs = selectionState => (dispatch, getState) => {
@@ -119,7 +119,11 @@ export const getAuditLogsCsvLink = () => (dispatch, getState) =>
 
 export const setAuditlogsState = selectionState => (dispatch, getState) => {
   const currentState = getState().organization.auditlog.selectionState;
-  let nextState = { ...currentState, ...selectionState };
+  let nextState = {
+    ...currentState,
+    ...selectionState,
+    sort: { ...currentState.sort, ...selectionState.sort }
+  };
   let tasks = [];
   // eslint-disable-next-line no-unused-vars
   const { isLoading: currentLoading, selectedIssue: currentIssue, ...currentRequestState } = currentState;
