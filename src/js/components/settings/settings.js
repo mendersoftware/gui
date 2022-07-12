@@ -80,7 +80,7 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
   }, []);
 
   const checkDenyAccess = item =>
-    !item.canAccess({ currentUser, hasMultitenancy, isEnterprise, isTrial, tenantCapabilities, userCapabilities, userRoles, version });
+    currentUser.id && !item.canAccess({ currentUser, hasMultitenancy, isEnterprise, isTrial, tenantCapabilities, userCapabilities, userRoles, version });
 
   const getCurrentSection = (sections, section = sectionParam) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {

@@ -26,11 +26,6 @@ describe('Settings Component', () => {
       organization: {
         ...defaultState.organization,
         organization: {}
-      },
-      users: {
-        ...defaultState.users,
-        byId: {},
-        currentUser: null
       }
     });
   });
