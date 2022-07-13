@@ -1,6 +1,6 @@
 import React from 'react';
-import { LocalizationProvider } from '@mui/lab';
-import AdapterMoment from '@mui/lab/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';

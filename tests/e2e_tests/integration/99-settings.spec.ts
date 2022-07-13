@@ -171,8 +171,8 @@ test.describe('Settings', () => {
       await page.fill('[name=email]', username);
       await page.fill('[name=password]', password);
       await page.click(`:is(button:has-text('Log in'))`);
-      await page.goto(`${baseUrl}ui/settings`);
       await page.waitForSelector('text=License information');
+      await page.goto(`${baseUrl}ui/settings`);
     });
   });
 

@@ -5,8 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
-import { LocalizationProvider } from '@mui/lab';
-import AdapterMoment from '@mui/lab/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import CssBaseline from '@mui/material/CssBaseline';
 import withStyles from '@mui/styles/withStyles';
 
