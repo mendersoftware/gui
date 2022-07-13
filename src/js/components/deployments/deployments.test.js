@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import { LocalizationProvider } from '@mui/lab';
-import AdapterMoment from '@mui/lab/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import Deployments from './deployments';
 import GeneralApi from '../../api/general-api';
