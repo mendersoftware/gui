@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { FormControl, ListSubheader, MenuItem, Select, TextField, Tooltip } from '@mui/material';
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
-import { DateTimePicker } from '@mui/lab';
+import { DateTimePicker } from '@mui/x-date-pickers';
 
 import PhaseSettings from './phasesettings';
 import EnterpriseNotification from '../../common/enterpriseNotification';
