@@ -4,7 +4,7 @@
   "description": "Graphical user interface for Mender.",
   "dependencies": {
     "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.8.1",
+    "@emotion/styled": "^11.9.3",
     "@mdi/js": "^6.7.96",
     "@monaco-editor/react": "^4.4.5",
     "@mui/icons-material": "^5.8.4",
