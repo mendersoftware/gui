@@ -132,7 +132,7 @@ describe('locationutils', () => {
         });
       });
       it('works with device triggered dialogs', () => {
-        const result = parseDeploymentsQuery(new URLSearchParams('?device=someDevice'), {
+        const result = parseDeploymentsQuery(new URLSearchParams('?deviceId=someDevice'), {
           pageState: { state: DEPLOYMENT_ROUTES.active.key, id: 'testId' },
           ...defaultArgs
         });

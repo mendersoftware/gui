@@ -84,7 +84,7 @@ export const DeviceQuickActions = ({ actionCallbacks, devices, features, isSingl
   const { actions, selectedDevices } = useMemo(() => {
     const selectedDevices = selectedRows.map(row => devices[row]);
     const actions = Object.values(defaultActions).reduce((accu, action) => {
-      if (selectedDevices.every(device => action.checkRelevance({ device, features, isSingleDevice, selectedGroup, tenantCapabilities }))) {
+      if (selectedDevices.every(device => device && action.checkRelevance({ device, features, isSingleDevice, selectedGroup, tenantCapabilities }))) {
         accu.push(action);
       }
       return accu;
