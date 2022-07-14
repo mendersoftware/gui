@@ -27,7 +27,7 @@ export const ConvertedImageNote = ({ docsVersion }) => (
     <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-raspberry-pi-device`} target="_blank" rel="noopener noreferrer">
       Prepare a Raspberry Pi device
     </a>{' '}
-    documentation, which also contains instructions for initial device setup.Once you&apos;re done flashing you can go ahead and proceed to the next step.
+    documentation, which also contains instructions for initial device setup. Once you&apos;re done flashing you can go ahead and proceed to the next step.
   </p>
 );
 

@@ -420,13 +420,27 @@ export const getRoles = () => (dispatch, getState) =>
       return Promise.resolve(dispatch({ type: UserConstants.RECEIVED_ROLES, value: rolesById }));
     });
 
+const deriveImpliedAreaPermissions = (area, areaPermissions) => {
+  const highestAreaPermissionLevelSelected = areaPermissions.reduce(
+    (highest, current) => (uiPermissionsById[current].permissionLevel > highest ? uiPermissionsById[current].permissionLevel : highest),
+    1
+  );
+  return uiPermissionsByArea[area].uiPermissions.reduce((permissions, current) => {
+    if (current.permissionLevel < highestAreaPermissionLevelSelected || areaPermissions.includes(current.value)) {
+      permissions.push(current.value);
+    }
+    return permissions;
+  }, []);
+};
+
 /**
  * transforms [{ group: "groupName",  uiPermissions: ["read", "manage", "connect"] }, ...] to
  * [{ name: "ReadDevices", scope: { type: "DeviceGroups", value: ["groupName", ...] } }, ...]
  */
 const transformGroupRoleDataToScopedPermissionsSets = areaPermissions => {
   const permissionSetObject = areaPermissions.reduce((groupAccu, groupWithPermissions) => {
-    groupAccu = groupWithPermissions.uiPermissions.reduce((groupPermissionAccu, groupPermission) => {
+    const impliedPermissions = deriveImpliedAreaPermissions('groups', groupWithPermissions.uiPermissions);
+    groupAccu = impliedPermissions.reduce((groupPermissionAccu, groupPermission) => {
       const permissionSetState = groupAccu[uiPermissionsById[groupPermission].permissionSets.groups] ?? { type: uiPermissionsByArea.groups.scope, value: [] };
       groupAccu[uiPermissionsById[groupPermission].permissionSets.groups] = {
         ...permissionSetState,
@@ -461,16 +475,7 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
       if (!Array.isArray(areaPermissions)) {
         return accu;
       }
-      const highestAreaPermissionLevelSelected = areaPermissions.reduce(
-        (highest, current) => (uiPermissionsById[current].permissionLevel > highest ? uiPermissionsById[current].permissionLevel : highest),
-        1
-      );
-      const impliedPermissions = uiPermissionsByArea[area].uiPermissions.reduce((permissions, current) => {
-        if (current.permissionLevel < highestAreaPermissionLevelSelected || areaPermissions.includes(current.value)) {
-          permissions.push(current.value);
-        }
-        return permissions;
-      }, []);
+      const impliedPermissions = deriveImpliedAreaPermissions(area, areaPermissions);
       accu.roleUiPermissions[area] = impliedPermissions;
       const mappedPermissions = impliedPermissions.map(uiPermission => ({ name: uiPermissionsById[uiPermission].permissionSets[area] }));
       accu.permissionSetsWithScope.push(...mappedPermissions);

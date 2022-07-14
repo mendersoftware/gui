@@ -91,6 +91,7 @@ describe('app actions', () => {
             'os',
             'rootfs_type'
           ],
+          systemAttributes: ['created_ts', 'updated_ts', 'group'],
           tagAttributes: []
         }
       },

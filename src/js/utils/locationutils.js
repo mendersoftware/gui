@@ -322,7 +322,10 @@ const parseActiveDeployments = params =>
 
 export const parseDeploymentsQuery = (params, { pageState, location, today, tonight }) => {
   const { endDate, startDate } = parseDateParams(params, today, tonight);
-  const deploymentObject = ['device', 'release'].reduce((accu, key) => (params.has(key) ? { ...accu, [key]: params.get(key) } : accu), {});
+  const deploymentObject = Object.entries({ deviceId: 'device', release: 'release' }).reduce(
+    (accu, [key, attribute]) => (params.has(key) ? { ...accu, [attribute]: params.get(key) } : accu),
+    {}
+  );
   const { state: selectedState, id, open, ...remainingPageState } = pageState;
   const tab = parseDeploymentsPath(location.pathname);
   const deploymentsTab = tab || selectedState || DEPLOYMENT_ROUTES.active.key;

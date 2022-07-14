@@ -632,7 +632,7 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders Convert
       Prepare a Raspberry Pi device
     </a>
      
-    documentation, which also contains instructions for initial device setup.Once you're done flashing you can go ahead and proceed to the next step.
+    documentation, which also contains instructions for initial device setup. Once you're done flashing you can go ahead and proceed to the next step.
   </p>
 </div>
 `;
@@ -1289,7 +1289,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       Prepare a Raspberry Pi device
     </a>
      
-    documentation, which also contains instructions for initial device setup.Once you're done flashing you can go ahead and proceed to the next step.
+    documentation, which also contains instructions for initial device setup. Once you're done flashing you can go ahead and proceed to the next step.
   </p>
 </div>
 `;

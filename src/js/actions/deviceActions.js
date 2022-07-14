@@ -774,8 +774,9 @@ const ATTRIBUTE_LIST_CUTOFF = 100;
 export const getDeviceAttributes = () => (dispatch, getState) =>
   GeneralApi.get(getAttrsEndpoint(getState().app.features.hasReporting)).then(({ data }) => {
     const {
-      inventory: inventoryAttributes,
       identity: identityAttributes,
+      inventory: inventoryAttributes,
+      system: systemAttributes,
       tags: tagAttributes
     } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
       (accu, item) => {
@@ -785,11 +786,11 @@ export const getDeviceAttributes = () => (dispatch, getState) =>
         accu[item.scope].push(item.name);
         return accu;
       },
-      { inventory: [], identity: [], tags: [] }
+      { identity: [], inventory: [], system: [], tags: [] }
     );
     return dispatch({
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
-      attributes: { identityAttributes, inventoryAttributes, tagAttributes }
+      attributes: { identityAttributes, inventoryAttributes, systemAttributes, tagAttributes }
     });
   });
 

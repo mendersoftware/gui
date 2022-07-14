@@ -59,9 +59,11 @@ export const getLimitMaxed = createSelector([getAcceptedDevices, getDeviceLimit]
 
 export const getFilterAttributes = createSelector(
   [getGlobalSettings, getFilteringAttributes],
-  ({ previousFilters }, { identityAttributes, inventoryAttributes, tagAttributes }) => {
+  ({ previousFilters }, { identityAttributes, inventoryAttributes, systemAttributes, tagAttributes }) => {
     const deviceNameAttribute = { key: 'name', value: 'Name', scope: ATTRIBUTE_SCOPES.tags, category: ATTRIBUTE_SCOPES.tags, priority: 1 };
     const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: ATTRIBUTE_SCOPES.identity, category: ATTRIBUTE_SCOPES.identity, priority: 1 };
+    const checkInAttribute = { key: 'updated_ts', value: 'Last check-in', scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 };
+    const firstRequestAttribute = { key: 'created_ts', value: 'First request', scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 };
     const attributes = [
       ...previousFilters.map(item => ({
         ...item,
@@ -73,7 +75,10 @@ export const getFilterAttributes = createSelector(
       deviceIdAttribute,
       ...identityAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.identity, category: ATTRIBUTE_SCOPES.identity, priority: 1 })),
       ...inventoryAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.inventory, category: ATTRIBUTE_SCOPES.inventory, priority: 2 })),
-      ...tagAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.tags, category: ATTRIBUTE_SCOPES.tags, priority: 3 }))
+      ...tagAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.tags, category: ATTRIBUTE_SCOPES.tags, priority: 3 })),
+      checkInAttribute,
+      firstRequestAttribute,
+      ...systemAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 }))
     ];
     return attributeDuplicateFilter(attributes, 'key');
   }
