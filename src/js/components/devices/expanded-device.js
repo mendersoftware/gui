@@ -264,7 +264,6 @@ export const ExpandedDevice = ({
         device={device}
         open={Boolean(troubleshootType)}
         onCancel={() => setTroubleshootType()}
-        onSocketClose={() => setTimeout(() => setSocketClosed(true), 5000)}
         setSocketClosed={setSocketClosed}
         type={troubleshootType}
         userCapabilities={userCapabilities}

@@ -6,7 +6,7 @@ import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import msgpack5 from 'msgpack5';
 import { deviceConnect } from '../../../actions/deviceActions';
-import { blobToString, byteArrayToString } from '../../devices/troubleshoot/terminal';
+import { blobToString, byteArrayToString } from '../../../utils/sockethook';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
 import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
 import XTerm from '../../common/xterm';
@@ -148,7 +148,6 @@ const generateHtml = (versions, content) => {
 
 export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   const xtermRef = useRef(null);
-  const [term, setTerminal] = useState(null);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [bufferIndex, setBufferIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -160,7 +159,6 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     if (!sessionInitialized) {
       return;
     }
-    setTerminal(xtermRef.current.terminal);
     socket = new WebSocket(`wss://${window.location.host}${deviceConnect}/sessions/${item.meta.session_id[0]}/playback`);
 
     socket.onopen = () => {
@@ -198,10 +196,10 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   useEffect(() => {
     if (isPlaying && bufferIndex < buffer.length) {
       if (bufferIndex === 0) {
-        term.reset();
+        xtermRef.current.terminal.reset();
       }
       if (buffer[bufferIndex].content) {
-        term.write(byteArrayToString(buffer[bufferIndex].content));
+        xtermRef.current.terminal.write(byteArrayToString(buffer[bufferIndex].content));
         setTimeout(() => setBufferIndex(bufferIndex + 1), 20);
       }
       if (buffer[bufferIndex].delay) {
@@ -224,7 +222,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
       setWasStarted(true);
       return setTimeout(() => {
         fitAddon.fit();
-        term.focus();
+        xtermRef.current.terminal.focus();
         setIsPlaying(!isPlaying);
       }, 300);
     }
