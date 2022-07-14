@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -6,14 +6,13 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { getDeviceFileDownloadLink, deviceFileUpload } from '../../../actions/deviceActions';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 
-import { colors } from '../../../themes/Mender';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import Time from '../../common/time';
 import Terminal from '../troubleshoot/terminal';
@@ -27,11 +26,32 @@ import { useSession } from '../../../utils/sockethook';
 
 momentDurationFormatSetup(moment);
 
+const useStyles = makeStyles()(theme => ({
+  content: { padding: 0, margin: '0 24px', height: '75vh' },
+  title: { marginRight: theme.spacing(0.5) },
+  connectionButton: { background: theme.palette.text.primary },
+  connectedIcon: { color: theme.palette.success.main, marginLeft: theme.spacing() },
+  disconnectedIcon: { color: theme.palette.error.main, marginLeft: theme.spacing() },
+  sessionInfo: { maxWidth: 'max-content' },
+  terminalContent: {
+    display: 'grid',
+    gridTemplateRows: 'max-content 0',
+    flexGrow: 1,
+    overflow: 'hidden',
+    '&.device-connected': {
+      gridTemplateRows: 'max-content minmax(min-content, 1fr)'
+    }
+  },
+  terminalStatePlaceholder: {
+    width: 280
+  }
+}));
+
 const ConnectionIndicator = isConnected => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   return (
     <div className="flexbox center-aligned">
-      Remote terminal {<MaterialDesignIcon path={ConsoleIcon} style={{ color: isConnected ? colors.green : colors.red, marginLeft: theme.spacing() }} />}
+      Remote terminal {<MaterialDesignIcon className={isConnected ? classes.connectedIcon : classes.disconnectedIcon} path={ConsoleIcon} />}
     </div>
   );
 };
@@ -73,6 +93,7 @@ export const TroubleshootDialog = ({
   const snackTimer = useRef();
   const timer = useRef();
   const termRef = useRef();
+  const { classes } = useStyles();
 
   useEffect(() => {
     if (open) {
@@ -217,10 +238,11 @@ export const TroubleshootDialog = ({
   const visibilityToggle = !socketInitialized ? { maxHeight: 0, overflow: 'hidden' } : {};
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg">
-      <DialogTitle>
-        Troubleshoot - <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
+      <DialogTitle className="flexbox">
+        <div className={classes.title}>Troubleshoot -</div>
+        <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
       </DialogTitle>
-      <DialogContent className="dialog-content flexbox column" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
+      <DialogContent className={`dialog-content flexbox column ${classes.content}`}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
           {availableTabs.map(tab => (
             <Tab key={tab.value} label={tab.title(socketInitialized)} value={tab.value} />
@@ -240,25 +262,18 @@ export const TroubleshootDialog = ({
             uploadPath={uploadPath}
           />
         )}
-        <div
-          className={`${currentTab === tabs.terminal.value ? '' : 'hidden'}`}
-          style={{
-            display: 'grid',
-            gridTemplateRows: `max-content ${socketInitialized ? 'minmax(min-content, 1fr)' : '0'}`,
-            flexGrow: 1,
-            overflow: 'hidden'
-          }}
-        >
-          <div className="margin-top-small margin-bottom-small">
-            <div>
-              <b>Session status:</b> {socketInitialized ? 'connected' : 'disconnected'}
-            </div>
-            <div>
-              <b>Connection start:</b> {startTime ? <Time value={startTime} /> : '-'}
-            </div>
-            <div>
-              <b>Duration:</b> {`${duration.format('hh:mm:ss', { trim: false })}`}
-            </div>
+        <div className={`${classes.terminalContent} ${socketInitialized ? 'device-connected' : ''} ${currentTab === tabs.terminal.value ? '' : 'hidden'}`}>
+          <div className={`margin-top-small margin-bottom-small two-columns ${classes.sessionInfo}`}>
+            {Object.entries({
+              'Session status': socketInitialized ? 'connected' : 'disconnected',
+              'Connection start': startTime ? <Time value={startTime} /> : '-',
+              'Duration': `${duration.format('hh:mm:ss', { trim: false })}`
+            }).map(([key, value], index) => (
+              <Fragment key={index}>
+                <b>{key}</b>
+                <div>{value}</div>
+              </Fragment>
+            ))}
           </div>
           <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop} noClick>
             {({ getRootProps }) => (
@@ -277,7 +292,7 @@ export const TroubleshootDialog = ({
             )}
           </Dropzone>
           {!socketInitialized && (
-            <div className="flexbox centered" style={{ background: colors.textColor }}>
+            <div className={`flexbox centered ${classes.connectionButton}`}>
               <Button variant="contained" color="secondary" onClick={onConnectionToggle}>
                 Connect Terminal
               </Button>
@@ -290,7 +305,7 @@ export const TroubleshootDialog = ({
           {currentTab === tabs.terminal.value ? (
             <Button onClick={onConnectionToggle}>{socketInitialized ? 'Disconnect' : 'Connect'} Terminal</Button>
           ) : (
-            <div style={{ width: 280 }} />
+            <div className={classes.terminalStatePlaceholder} />
           )}
           {canAuditlog && hasAuditlogs && (
             <Button component={Link} to={`auditlog?object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`}>

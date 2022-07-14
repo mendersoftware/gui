@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
 import { Chip, Divider, Drawer, IconButton } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
@@ -52,6 +51,15 @@ const useStyles = makeStyles()(theme => ({
   },
   gatewayIcon: {
     width: 20
+  },
+  deviceConnection: { marginRight: theme.spacing(2) },
+  dividerTop: {
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(2)
+  },
+  dividerBottom: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2)
   }
 }));
 
@@ -115,7 +123,6 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userCapabilities
 }) => {
-  const theme = useTheme();
   const { attributes = {}, isOffline, status = DEVICE_STATES.accepted } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
@@ -123,6 +130,7 @@ export const ExpandedDevice = ({
   const monitoring = useRef();
   const timer = useRef();
   const navigate = useNavigate();
+  const { classes } = useStyles();
 
   const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
 
@@ -200,7 +208,7 @@ export const ExpandedDevice = ({
         </IconButton>
       </div>
       <DeviceNotifications alerts={latestAlerts} device={device} isOffline={isOffline} onClick={scrollToMonitor} />
-      <Divider style={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(2) }} />
+      <Divider className={classes.dividerTop} />
       <DeviceIdentity device={device} setSnackbar={setSnackbar} />
       <AuthStatus
         device={device}
@@ -250,16 +258,16 @@ export const ExpandedDevice = ({
       )}
       {isAcceptedDevice && hasDeviceConnect && (
         <DeviceConnection
+          className={classes.deviceConnection}
           device={device}
           docsVersion={docsVersion}
           hasAuditlogs={hasAuditlogs}
           socketClosed={socketClosed}
           startTroubleshoot={launchTroubleshoot}
-          style={{ marginRight: theme.spacing(2) }}
           userCapabilities={userCapabilities}
         />
       )}
-      <Divider style={{ marginTop: theme.spacing(3), marginBottom: theme.spacing(2) }} />
+      <Divider className={classes.dividerBottom} />
       <TroubleshootDialog
         device={device}
         open={Boolean(troubleshootType)}
