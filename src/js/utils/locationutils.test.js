@@ -208,6 +208,10 @@ describe('locationutils', () => {
         { key: 'some', operator: '$eq', scope: 'inventory', value: 'thing' }
       ]);
     });
+    it('uses working utilties - parseDeviceQuery converts new style', () => {
+      const { open } = parseDeviceQuery(new URLSearchParams(), { pageState: { id: 'something' } });
+      expect(open).toEqual(true);
+    });
 
     const devicesPath = '/devices/asd';
     const devicesSearch = '?some=thing&different=thing&entirely=different';
