@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -6,38 +6,52 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
-
-import msgpack5 from 'msgpack5';
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { getDeviceFileDownloadLink, deviceFileUpload } from '../../../actions/deviceActions';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
-import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
 
-import { colors } from '../../../themes/Mender';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import Time from '../../common/time';
 import Terminal from '../troubleshoot/terminal';
 import FileTransfer from '../troubleshoot/filetransfer';
-import { apiUrl } from '../../../api/general-api';
 import { createDownload, versionCompare } from '../../../helpers';
 import ListOptions from '../widgets/listoptions';
 import { getCode } from './make-gateway-dialog';
 import { getFeatures, getIdAttribute, getIsEnterprise, getUserRoles } from '../../../selectors';
 import DeviceIdentityDisplay from './../../common/deviceidentity';
+import { useSession } from '../../../utils/sockethook';
 
 momentDurationFormatSetup(moment);
-const MessagePack = msgpack5();
 
-let socket = null;
+const useStyles = makeStyles()(theme => ({
+  content: { padding: 0, margin: '0 24px', height: '75vh' },
+  title: { marginRight: theme.spacing(0.5) },
+  connectionButton: { background: theme.palette.text.primary },
+  connectedIcon: { color: theme.palette.success.main, marginLeft: theme.spacing() },
+  disconnectedIcon: { color: theme.palette.error.main, marginLeft: theme.spacing() },
+  sessionInfo: { maxWidth: 'max-content' },
+  terminalContent: {
+    display: 'grid',
+    gridTemplateRows: 'max-content 0',
+    flexGrow: 1,
+    overflow: 'hidden',
+    '&.device-connected': {
+      gridTemplateRows: 'max-content minmax(min-content, 1fr)'
+    }
+  },
+  terminalStatePlaceholder: {
+    width: 280
+  }
+}));
 
 const ConnectionIndicator = isConnected => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   return (
     <div className="flexbox center-aligned">
-      Remote terminal {<MaterialDesignIcon path={ConsoleIcon} style={{ color: isConnected ? colors.green : colors.red, marginLeft: theme.spacing() }} />}
+      Remote terminal {<MaterialDesignIcon className={isConnected ? classes.connectedIcon : classes.disconnectedIcon} path={ConsoleIcon} />}
     </div>
   );
 };
@@ -57,14 +71,12 @@ export const TroubleshootDialog = ({
   isHosted,
   idAttribute,
   onCancel,
-  onSocketClose,
   open,
   setSnackbar,
   setSocketClosed,
   type = tabs.terminal.value,
   userCapabilities
 }) => {
-  const timer = useRef();
   const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
 
   const [currentTab, setCurrentTab] = useState(type);
@@ -72,11 +84,16 @@ export const TroubleshootDialog = ({
   const [downloadPath, setDownloadPath] = useState('');
   const [elapsed, setElapsed] = useState(moment());
   const [file, setFile] = useState();
-  const [sessionId, setSessionId] = useState(null);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [startTime, setStartTime] = useState();
   const [uploadPath, setUploadPath] = useState('');
   const [terminalInput, setTerminalInput] = useState('');
+  const [snackbarAlreadySet, setSnackbarAlreadySet] = useState(false);
+  const closeTimer = useRef();
+  const snackTimer = useRef();
+  const timer = useRef();
+  const termRef = useRef();
+  const { classes } = useStyles();
 
   useEffect(() => {
     if (open) {
@@ -86,6 +103,10 @@ export const TroubleshootDialog = ({
     setDownloadPath('');
     setUploadPath('');
     setFile();
+    return () => {
+      clearTimeout(closeTimer.current);
+      clearTimeout(snackTimer.current);
+    };
   }, [open]);
 
   useEffect(() => {
@@ -100,15 +121,15 @@ export const TroubleshootDialog = ({
   }, [canTroubleshoot, hasWriteAccess]);
 
   useEffect(() => {
-    if (socket && !socketInitialized) {
-      onSocketClose();
+    if (socketInitialized === undefined) {
+      return;
     }
+    clearInterval(timer.current);
     if (socketInitialized) {
       setStartTime(new Date());
-      clearInterval(timer.current);
       timer.current = setInterval(() => setElapsed(moment()), 500);
     } else {
-      clearInterval(timer.current);
+      close();
     }
     return () => {
       clearInterval(timer.current);
@@ -119,30 +140,19 @@ export const TroubleshootDialog = ({
     if (!(open || socketInitialized) || socketInitialized) {
       return;
     }
-    socket = canTroubleshoot ? new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${device.id}/connect`) : undefined;
-
+    canTroubleshoot ? connect(device.id) : undefined;
     return () => {
-      onSendMessage({ typ: MessageTypes.Stop });
-      setSessionId(null);
-      setSocketInitialized(false);
+      close();
+      setTimeout(() => setSocketClosed(true), 5000);
     };
   }, [device.id, open]);
 
-  const onSendMessage = ({ typ, body, props }) => {
-    if (!socket) {
-      return;
-    }
-    const proto_header = { proto: MessageProtocols.Shell, typ, sid: sessionId, props };
-    const encodedData = MessagePack.encode({ hdr: proto_header, body });
-    socket.send(encodedData);
-  };
-
   const onConnectionToggle = () => {
     if (socketInitialized) {
-      onSendMessage({ typ: MessageTypes.Stop, body: {}, props: {} });
+      close();
     } else {
       setSocketInitialized(false);
-      socket = new WebSocket(`wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${device.id}/connect`);
+      connect(device.id);
     }
   };
 
@@ -162,10 +172,60 @@ export const TroubleshootDialog = ({
     });
   };
 
-  const onSetSocketClosed = () => {
-    socket = null;
-    setSocketClosed();
+  const onSocketOpen = () => {
+    setSnackbar('Connection with the device established.', 5000);
+    setSocketInitialized(true);
   };
+
+  const onNotify = content => {
+    setSnackbarAlreadySet(true);
+    setSnackbar(content, 5000);
+    snackTimer.current = setTimeout(() => setSnackbarAlreadySet(false), 5300);
+  };
+
+  const onHealthCheckFailed = () => {
+    if (snackbarAlreadySet) {
+      return;
+    }
+    onNotify('Health check failed: connection with the device lost.');
+  };
+
+  const onSocketClose = event => {
+    if (snackbarAlreadySet) {
+      return;
+    }
+    if (event.wasClean) {
+      onNotify(`Connection with the device closed.`);
+    } else if (event.code == 1006) {
+      // 1006: abnormal closure
+      onNotify('Connection to the remote terminal is forbidden.');
+    } else {
+      onNotify('Connection with the device died.');
+    }
+    closeTimer.current = setTimeout(() => setSocketClosed(true), 5000);
+  };
+
+  const onMessageReceived = useCallback(
+    message => {
+      if (!termRef.current.terminal) {
+        return;
+      }
+      termRef.current.terminal.write(new Uint8Array(message));
+    },
+    [termRef.current]
+  );
+
+  const [connect, sendMessage, close, sessionState, sessionId] = useSession({
+    onClose: onSocketClose,
+    onHealthCheckFailed,
+    onMessageReceived,
+    onNotify,
+    onOpen: onSocketOpen
+  });
+
+  useEffect(() => {
+    setSocketInitialized(sessionState === WebSocket.OPEN && sessionId);
+  }, [sessionId, sessionState]);
 
   const onMakeGatewayClick = () => {
     const code = getCode(canPreview);
@@ -175,16 +235,17 @@ export const TroubleshootDialog = ({
   const commandHandlers = isHosted && isEnterprise ? [{ key: 'thing', onClick: onMakeGatewayClick, title: 'Promote to Mender gateway' }] : [];
 
   const duration = moment.duration(elapsed.diff(moment(startTime)));
-  const visibilityToggle = !socket ? { maxHeight: 0, overflow: 'hidden' } : {};
+  const visibilityToggle = !socketInitialized ? { maxHeight: 0, overflow: 'hidden' } : {};
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg">
-      <DialogTitle>
-        Troubleshoot - <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
+      <DialogTitle className="flexbox">
+        <div className={classes.title}>Troubleshoot -</div>
+        <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
       </DialogTitle>
-      <DialogContent className="dialog-content flexbox column" style={{ padding: 0, margin: '0 24px', height: '75vh' }}>
+      <DialogContent className={`dialog-content flexbox column ${classes.content}`}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
           {availableTabs.map(tab => (
-            <Tab key={tab.value} label={tab.title(sessionId)} value={tab.value} />
+            <Tab key={tab.value} label={tab.title(socketInitialized)} value={tab.value} />
           ))}
         </Tabs>
         {currentTab === tabs.transfer.value && (
@@ -201,46 +262,37 @@ export const TroubleshootDialog = ({
             uploadPath={uploadPath}
           />
         )}
-        <div
-          className={`${currentTab === tabs.terminal.value ? '' : 'hidden'}`}
-          style={{
-            display: 'grid',
-            gridTemplateRows: `max-content ${socket ? 'minmax(min-content, 1fr)' : '0'}`,
-            flexGrow: 1,
-            overflow: 'hidden'
-          }}
-        >
-          <div className="margin-top-small margin-bottom-small">
-            <div>
-              <b>Session status:</b> {sessionId ? 'connected' : 'disconnected'}
-            </div>
-            <div>
-              <b>Connection start:</b> {startTime ? <Time value={startTime} /> : '-'}
-            </div>
-            <div>
-              <b>Duration:</b> {`${duration.format('hh:mm:ss', { trim: false })}`}
-            </div>
+        <div className={`${classes.terminalContent} ${socketInitialized ? 'device-connected' : ''} ${currentTab === tabs.terminal.value ? '' : 'hidden'}`}>
+          <div className={`margin-top-small margin-bottom-small two-columns ${classes.sessionInfo}`}>
+            {Object.entries({
+              'Session status': socketInitialized ? 'connected' : 'disconnected',
+              'Connection start': startTime ? <Time value={startTime} /> : '-',
+              'Duration': `${duration.format('hh:mm:ss', { trim: false })}`
+            }).map(([key, value], index) => (
+              <Fragment key={index}>
+                <b>{key}</b>
+                <div>{value}</div>
+              </Fragment>
+            ))}
           </div>
           <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop} noClick>
             {({ getRootProps }) => (
               <div {...getRootProps()} style={{ position: 'relative', ...visibilityToggle }}>
                 <Terminal
                   onDownloadClick={onDownloadClick}
-                  sendMessage={onSendMessage}
-                  setSessionId={setSessionId}
+                  sendMessage={sendMessage}
+                  sessionId={sessionId}
                   setSnackbar={setSnackbar}
-                  setSocketClosed={onSetSocketClosed}
-                  setSocketInitialized={setSocketInitialized}
-                  socket={socket}
                   socketInitialized={socketInitialized}
                   style={{ position: 'absolute', width: '100%', height: '100%', ...visibilityToggle }}
                   textInput={terminalInput}
+                  xtermRef={termRef}
                 />
               </div>
             )}
           </Dropzone>
-          {!socket && (
-            <div className="flexbox centered" style={{ background: colors.textColor }}>
+          {!socketInitialized && (
+            <div className={`flexbox centered ${classes.connectionButton}`}>
               <Button variant="contained" color="secondary" onClick={onConnectionToggle}>
                 Connect Terminal
               </Button>
@@ -251,9 +303,9 @@ export const TroubleshootDialog = ({
       <DialogActions className="flexbox space-between">
         <div>
           {currentTab === tabs.terminal.value ? (
-            <Button onClick={onConnectionToggle}>{sessionId ? 'Disconnect' : 'Connect'} Terminal</Button>
+            <Button onClick={onConnectionToggle}>{socketInitialized ? 'Disconnect' : 'Connect'} Terminal</Button>
           ) : (
-            <div style={{ width: 280 }} />
+            <div className={classes.terminalStatePlaceholder} />
           )}
           {canAuditlog && hasAuditlogs && (
             <Button component={Link} to={`auditlog?object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`}>
@@ -262,7 +314,9 @@ export const TroubleshootDialog = ({
           )}
         </div>
         <div>
-          {currentTab === tabs.terminal.value && sessionId && !!commandHandlers.length && <ListOptions options={commandHandlers} title="Quick commands" />}
+          {currentTab === tabs.terminal.value && socketInitialized && !!commandHandlers.length && (
+            <ListOptions options={commandHandlers} title="Quick commands" />
+          )}
           <Button onClick={onCancel}>Close</Button>
         </div>
       </DialogActions>

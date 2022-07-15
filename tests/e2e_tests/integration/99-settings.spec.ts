@@ -222,8 +222,6 @@ test.describe('Settings', () => {
       await page.click(`:is(.header-dropdown:has-text('${username}'))`);
 
       await page.click(`:is(span:has-text('Log out'))`);
-      await context.clearCookies();
-      await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible('text=/Log in/i')).toBeTruthy();
     });
 
