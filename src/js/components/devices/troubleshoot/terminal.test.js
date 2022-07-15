@@ -28,7 +28,7 @@ describe('Terminal Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(<Terminal />);
+    const { baseElement } = render(<Terminal xtermRef={{ current: null }} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

@@ -151,8 +151,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
     </div>
     <div>
       <div
-        class="flexbox"
-        style="flex-direction: row;"
+        class="flexbox "
       >
         <div
           class="flexbox muted"
@@ -468,8 +467,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
     </div>
     <div>
       <div
-        class="flexbox"
-        style="flex-direction: row;"
+        class="flexbox "
       >
         <button
           class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled  emotion-1"
@@ -705,8 +703,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
     </div>
     <div>
       <div
-        class="flexbox"
-        style="flex-direction: row;"
+        class="flexbox "
       >
         <div
           class="flexbox muted"

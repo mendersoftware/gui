@@ -12,19 +12,17 @@ const mockStore = configureStore([thunk]);
 describe('TroubleshootDialog Component', () => {
   let store;
   let socketSpyFactory;
-  let socketSpy;
   const oldMatchMedia = window.matchMedia;
 
   beforeEach(() => {
     store = mockStore({ ...defaultState });
     socketSpyFactory = jest.spyOn(window, 'WebSocket');
-    socketSpyFactory.mockImplementation(() => {
-      socketSpy = {
-        close: () => {},
-        send: () => {}
-      };
-      return socketSpy;
-    });
+    socketSpyFactory.mockImplementation(() => ({
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      close: () => {},
+      send: () => {}
+    }));
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation(query => ({
@@ -49,7 +47,7 @@ describe('TroubleshootDialog Component', () => {
     const userCapabilities = { canTroubleshoot: true, canWriteDevices: true };
     const { baseElement } = render(
       <Provider store={store}>
-        <TroubleshootDialog device={defaultState.devices.byId.a1} onCancel={jest.fn} onSocketClose={jest.fn} open={true} userCapabilities={userCapabilities} />
+        <TroubleshootDialog device={defaultState.devices.byId.a1} onCancel={jest.fn} open={true} userCapabilities={userCapabilities} />
       </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];

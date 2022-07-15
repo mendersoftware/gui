@@ -94,7 +94,7 @@ const troubleshootingTools = [
   { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
 ];
 
-export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, style, userCapabilities }) => {
+export const DeviceConnection = ({ className = '', device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
 
   const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
@@ -115,7 +115,7 @@ export const DeviceConnection = ({ device, docsVersion = '', hasAuditlogs, socke
     <DeviceDataCollapse
       disableBottomBorder
       header={
-        <div className="flexbox" style={{ flexDirection: 'row', ...style }}>
+        <div className={`flexbox ${className}`}>
           {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} />}
           {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} />}
           {connect_status === DEVICE_CONNECT_STATES.connected &&
