@@ -101,7 +101,8 @@ const scopedFilterParse = searchParams => {
 // filters, selectedGroup
 export const parseDeviceQuery = (searchParams, extraProps = {}) => {
   let queryParams = new URLSearchParams(searchParams);
-  const { filteringAttributes = {} } = extraProps;
+  const { filteringAttributes = {}, pageState = {} } = extraProps;
+  const pageStateExtension = pageState.id ? { open: true } : {};
 
   let scopedFilters;
   const refersOldStyleAttributes = Object.values(filteringAttributes).some(scopeValues => scopeValues.some(scopedValue => queryParams.get(scopedValue)));
@@ -121,7 +122,7 @@ export const parseDeviceQuery = (searchParams, extraProps = {}) => {
     groupName = scopedFilters.inventory[groupFilterIndex].value;
     scopedFilters.inventory.splice(groupFilterIndex, 1);
   }
-  return { filters: Object.values(scopedFilters).flat(), groupName };
+  return { filters: Object.values(scopedFilters).flat(), groupName, ...pageStateExtension };
 };
 
 const formatSorting = (sort, { sort: sortDefault }) => {
