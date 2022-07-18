@@ -19,6 +19,12 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
 }
 
 .emotion-2 {
+  opacity: 0.5;
+  font-size: 0.675rem;
+  height: 18px;
+}
+
+.emotion-3 {
   max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
@@ -51,12 +57,12 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-2.Mui-disabled {
+.emotion-3.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-2 .MuiChip-avatar {
+.emotion-3 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -65,17 +71,17 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-2 .MuiChip-avatarColorPrimary {
+.emotion-3 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: #1565c0;
 }
 
-.emotion-2 .MuiChip-avatarColorSecondary {
+.emotion-3 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: #7b1fa2;
 }
 
-.emotion-2 .MuiChip-avatarSmall {
+.emotion-3 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -83,14 +89,14 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-2 .MuiChip-icon {
+.emotion-3 .MuiChip-icon {
   color: #616161;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
 }
 
-.emotion-2 .MuiChip-deleteIcon {
+.emotion-3 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(0, 0, 0, 0.26);
   font-size: 16px;
@@ -100,16 +106,24 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   margin-left: -4px;
 }
 
-.emotion-2 .MuiChip-deleteIcon:hover {
+.emotion-3 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-3 {
+.emotion-4 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 8px;
   padding-right: 8px;
   white-space: nowrap;
+}
+
+.emotion-5 {
+  margin-left: 96px;
+}
+
+.emotion-5svg {
+  margin-left: 8px;
 }
 
 <div
@@ -180,11 +194,10 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
           />
         </svg>
         <div
-          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased emotion-2"
-          style="opacity: 0.5; font-size: 0.675rem; height: 18px;"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased emotion-2 emotion-3"
         >
           <span
-            class="MuiChip-label MuiChip-labelSmall emotion-3"
+            class="MuiChip-label MuiChip-labelSmall emotion-4"
           >
             static
           </span>
@@ -229,8 +242,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       </div>
     </div>
     <a
-      class="margin-top-small flexbox center-aligned"
-      style="margin-left: 96px;"
+      class="margin-top-small flexbox center-aligned emotion-5"
     >
       Schedule details 
       <svg
@@ -238,7 +250,6 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
         class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
         data-testid="ArrowDropDownCircleOutlinedIcon"
         focusable="false"
-        style="margin-left: 8px;"
         viewBox="0 0 24 24"
       >
         <path

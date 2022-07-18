@@ -4,8 +4,8 @@ import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
 import { Chip } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { ArrowDropDownCircleOutlined as ScrollDownIcon, Launch as LaunchIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
@@ -13,6 +13,21 @@ import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deployme
 import { TwoColumnData } from '../../common/configurationobject';
 import Time from '../../common/time';
 import { defaultColumnDataProps } from '../report';
+import DeviceIdentityDisplay from '../../common/deviceidentity';
+
+const useStyles = makeStyles()(theme => ({
+  chip: {
+    opacity: 0.5,
+    fontSize: '0.675rem',
+    height: 18
+  },
+  scheduleLink: {
+    marginLeft: theme.spacing(12),
+    '&svg': {
+      marginLeft: theme.spacing()
+    }
+  }
+}));
 
 const defaultLinkProps = {
   className: 'flexbox centered',
@@ -21,8 +36,8 @@ const defaultLinkProps = {
   rel: 'noopener noreferrer'
 };
 
-export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => {
-  const theme = useTheme();
+export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribute, onScheduleClick }) => {
+  const { classes } = useStyles();
   const { artifact_name, devices = {}, filter, stats = {}, status, totalDeviceCount } = deployment;
 
   const finished = deployment.finished || status === DEPLOYMENT_STATES.finished;
@@ -35,21 +50,13 @@ export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => 
       <LaunchIcon className="margin-left-small" fontSize="small" />
     </Link>
   );
-  const deviceQuery = isUUID(name) ? `id=${name}` : `group=${encodeURIComponent(name)}`;
+  const isDeviceDeployment = isUUID(name);
+  const deviceQuery = isDeviceDeployment ? `id=${name}` : `group=${encodeURIComponent(name)}`;
   let targetDevices = (
     <Link {...defaultLinkProps} to={`/devices?${deviceQuery}`}>
-      {name}
+      {isDeviceDeployment && devicesById[name] ? <DeviceIdentityDisplay device={devicesById[name]} idAttribute={idAttribute} isEditable={false} /> : name}
       <LaunchIcon className="margin-left-small" fontSize="small" />
-      <Chip
-        className="margin-left uppercased"
-        label={filter ? 'dynamic' : 'static'}
-        size="small"
-        style={{
-          opacity: 0.5,
-          fontSize: '0.675rem',
-          height: 18
-        }}
-      />
+      <Chip className={`margin-left uppercased ${classes.chip}`} label={filter ? 'dynamic' : 'static'} size="small" />
     </Link>
   );
 
@@ -74,8 +81,8 @@ export const DeploymentOverview = ({ creator, deployment, onScheduleClick }) => 
       <TwoColumnData config={deploymentInfo} {...defaultColumnDataProps} />
       <div className="flexbox column">
         <TwoColumnData config={deploymentInfo2} {...defaultColumnDataProps} />
-        <a className="margin-top-small flexbox center-aligned" onClick={onScheduleClick} style={{ ...defaultLinkProps, marginLeft: theme.spacing(12) }}>
-          Schedule details <ScrollDownIcon fontSize="small" style={{ marginLeft: theme.spacing() }} />
+        <a className={`margin-top-small flexbox center-aligned ${classes.scheduleLink}`} onClick={onScheduleClick}>
+          Schedule details <ScrollDownIcon fontSize="small" />
         </a>
       </div>
 
