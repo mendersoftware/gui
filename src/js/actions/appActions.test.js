@@ -69,6 +69,7 @@ describe('app actions', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
       {
         type: DeviceConstants.SET_FILTER_ATTRIBUTES,
@@ -253,20 +254,8 @@ describe('app actions', () => {
         }
       },
       { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
-      {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
-        settings: {
-          ...defaultState.users.globalSettings,
-          id_attribute: { attribute: 'mac', scope: 'identity' },
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            columnSelection: [],
-            onboarding: {},
-            showHelptips: true
-          }
-        }
-      }
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } }
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();

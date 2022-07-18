@@ -81,13 +81,7 @@ describe('user actions', () => {
       ...defaultState,
       users: {
         ...defaultState.users,
-        globalSettings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            showHelptips: true
-          }
-        }
+        userSettings: { ...defaultState.users.userSettings, showHelptips: true }
       }
     });
     store.dispatch(toggleHelptips());
@@ -368,16 +362,16 @@ describe('user actions', () => {
   it('should allow storing user scoped settings', async () => {
     jest.clearAllMocks();
     // eslint-disable-next-line no-unused-vars
-    const { id_attribute, ...globalSettings } = defaultState.users.globalSettings;
+    const { ...settings } = defaultState.users.userSettings;
     const expectedActions = [
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
-        settings: { ...defaultState.users.globalSettings, [`${defaultState.users.byId.a1.id}`]: { ...settings } }
+        type: UserConstants.SET_USER_SETTINGS,
+        settings: { ...settings, extra: 'this' }
       }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(saveUserSettings(settings));
+    await store.dispatch(saveUserSettings({ extra: 'this' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

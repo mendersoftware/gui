@@ -8,7 +8,7 @@ import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants from '../constants/userConstants';
-import { getCurrentUser, getOnboardingState, getUserSettings } from '../selectors';
+import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { cleanUp, logout } from '../auth';
 import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
@@ -571,21 +571,34 @@ export const saveGlobalSettings =
       });
   };
 
-export const saveUserSettings = settings => (dispatch, getState) => {
-  if (!getState().users.currentUser) {
-    return Promise.resolve();
-  }
-  return Promise.resolve(dispatch(getGlobalSettings())).then(() => {
-    const userSettings = getUserSettings(getState());
-    const updatedSettings = {
-      [getState().users.currentUser]: {
-        ...userSettings,
-        ...settings
-      }
-    };
-    return Promise.resolve(dispatch(saveGlobalSettings(updatedSettings)));
+export const getUserSettings = () => dispatch =>
+  GeneralApi.get(`${useradmApiUrl}/settings/me`).then(({ data: settings, headers: { etag } }) => {
+    window.sessionStorage.setItem(UserConstants.settingsKeys.initialized, true);
+    return Promise.all([dispatch({ type: UserConstants.SET_USER_SETTINGS, settings }), etag]);
   });
-};
+
+export const saveUserSettings =
+  (settings = { onboarding: {} }) =>
+  (dispatch, getState) => {
+    if (!getState().users.currentUser) {
+      return Promise.resolve();
+    }
+    return Promise.resolve(dispatch(getUserSettings())).then(result => {
+      const userSettings = getUserSettingsSelector(getState());
+      const updatedSettings = {
+        ...userSettings,
+        ...settings,
+        onboarding: {
+          ...userSettings.onboarding,
+          ...settings.onboarding
+        }
+      };
+      const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};
+      return GeneralApi.post(`${useradmApiUrl}/settings/me`, updatedSettings, { headers }).then(() =>
+        Promise.resolve(dispatch({ type: UserConstants.SET_USER_SETTINGS, settings: updatedSettings }))
+      );
+    });
+  };
 
 export const get2FAQRCode = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/2faqr`).then(res => dispatch({ type: UserConstants.RECEIVED_QR_CODE, value: res.data.qr }));
@@ -602,7 +615,7 @@ export const setShowHelptips = show => (dispatch, getState) => {
 };
 
 export const toggleHelptips = () => (dispatch, getState) => {
-  const showHelptips = getUserSettings(getState()).showHelptips;
+  const showHelptips = getUserSettingsSelector(getState()).showHelptips;
   return Promise.resolve(dispatch(setShowHelptips(!showHelptips)));
 };
 

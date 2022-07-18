@@ -8,7 +8,7 @@ import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID } from '../helpers';
-import { getCurrentUser, getUserSettings } from '../selectors';
+import { getCurrentUser, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import {
   getDeviceAttributes,
@@ -22,7 +22,7 @@ import {
 } from './deviceActions';
 import { getDeploymentsByStatus } from './deploymentActions';
 import { getReleases } from './releaseActions';
-import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings } from './userActions';
+import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings, getUserSettings } from './userActions';
 import { getIntegrations, getUserOrganization } from './organizationActions';
 
 const cookies = new Cookies();
@@ -38,6 +38,7 @@ export const commonErrorHandler = (err, errorContext, dispatch, fallback, mightB
 
 export const initializeAppData = () => (dispatch, getState) => {
   let tasks = [
+    dispatch(getUserSettings()),
     dispatch(getGlobalSettings()),
     dispatch(getDeviceAttributes()),
     dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, undefined, undefined, undefined, undefined, undefined, undefined, false)),
@@ -62,7 +63,7 @@ export const initializeAppData = () => (dispatch, getState) => {
     const user = getCurrentUser(state);
     const userCookie = cookies.get(user.id);
     let tasks = [];
-    let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettings(state);
+    let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettingsSelector(state);
     tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
     // checks if user id is set and if cookie for helptips exists for that user
     if (userCookie && userCookie.help !== 'undefined') {

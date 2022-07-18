@@ -427,7 +427,8 @@ export const defaultState = {
       }
     },
     settingsInitialized: true,
-    showHelptips: true
+    showHelptips: true,
+    userSettings: { columnSelection: [], onboarding: { something: 'here' } }
   }
 };
 
