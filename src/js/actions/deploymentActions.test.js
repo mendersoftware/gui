@@ -117,6 +117,8 @@ describe('deployment actions', () => {
         }
       }
     });
+    // eslint-disable-next-line no-unused-vars
+    const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
     const expectedActions = [
       defaultResponseActions.creation,
       {
@@ -126,8 +128,9 @@ describe('deployment actions', () => {
           autoHideDuration: 8000
         }
       },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } },
       defaultResponseActions.receive,
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } },
       defaultResponseActions.receiveMultiple
     ];
     return store.dispatch(createDeployment({ devices: [Object.keys(defaultState.devices.byId)[0]] })).then(() => {
