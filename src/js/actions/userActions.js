@@ -537,9 +537,9 @@ export const removeRole = roleId => (dispatch, getState) =>
   Global settings
 */
 export const getGlobalSettings = () => dispatch =>
-  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings }) => {
+  GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings, headers: { etag } }) => {
     window.sessionStorage.setItem(UserConstants.settingsKeys.initialized, true);
-    return Promise.resolve(dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }));
+    return Promise.all([dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }), etag]);
   });
 
 export const saveGlobalSettings =
@@ -548,27 +548,30 @@ export const saveGlobalSettings =
     if (!window.sessionStorage.getItem(UserConstants.settingsKeys.initialized) && !beOptimistic) {
       return;
     }
-    let updatedSettings = { ...getState().users.globalSettings, ...settings };
-    if (getCurrentUser(getState()).verified) {
-      updatedSettings['2fa'] = twoFAStates.enabled;
-    } else {
-      delete updatedSettings['2fa'];
-    }
-    let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
-    return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings)
-      .then(() => {
-        if (notify) {
-          tasks.push(dispatch(setSnackbar('Settings saved successfully')));
-        }
-        return Promise.all(tasks);
-      })
-      .catch(err => {
-        if (beOptimistic) {
-          return Promise.all([tasks]);
-        }
-        console.log(err);
-        return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
-      });
+    return Promise.resolve(dispatch(getGlobalSettings())).then(result => {
+      let updatedSettings = { ...getState().users.globalSettings, ...settings };
+      if (getCurrentUser(getState()).verified) {
+        updatedSettings['2fa'] = twoFAStates.enabled;
+      } else {
+        delete updatedSettings['2fa'];
+      }
+      let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
+      const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};
+      return GeneralApi.post(`${useradmApiUrl}/settings`, updatedSettings, { headers })
+        .then(() => {
+          if (notify) {
+            tasks.push(dispatch(setSnackbar('Settings saved successfully')));
+          }
+          return Promise.all(tasks);
+        })
+        .catch(err => {
+          if (beOptimistic) {
+            return Promise.all([tasks]);
+          }
+          console.log(err);
+          return commonErrorHandler(err, `The settings couldn't be saved.`, dispatch);
+        });
+    });
   };
 
 export const getUserSettings = () => dispatch =>

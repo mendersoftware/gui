@@ -340,7 +340,12 @@ describe('user actions', () => {
   });
   it('should allow storing global settings without deletion', async () => {
     jest.clearAllMocks();
-    const expectedActions = [{ type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, ...settings } }];
+    // eslint-disable-next-line no-unused-vars
+    const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
+    const expectedActions = [
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, ...settings } }
+    ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(saveGlobalSettings(settings));
     const storeActions = store.getActions();
@@ -349,7 +354,10 @@ describe('user actions', () => {
   });
   it('should allow storing global settings without deletion and with notification', async () => {
     jest.clearAllMocks();
+    // eslint-disable-next-line no-unused-vars
+    const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
     const expectedActions = [
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, ...settings } },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Settings saved successfully' } }
     ];

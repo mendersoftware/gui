@@ -299,22 +299,26 @@ describe('Deployments Component', () => {
       retries: 1,
       update_control_map: undefined
     });
-    expect(post).toHaveBeenCalledWith('/api/management/v1/useradm/settings', {
-      '2fa': 'enabled',
-      id_attribute: undefined,
-      previousFilters: [],
-      previousPhases: [
-        [
-          { batch_size: 30, delay: 5, delayUnit: 'days' },
-          { batch_size: 70, start_ts: 1 }
+    expect(post).toHaveBeenCalledWith(
+      '/api/management/v1/useradm/settings',
+      {
+        '2fa': 'enabled',
+        id_attribute: undefined,
+        previousFilters: [],
+        previousPhases: [
+          [
+            { batch_size: 30, delay: 5, delayUnit: 'days' },
+            { batch_size: 70, start_ts: 1 }
+          ],
+          [
+            { batch_size: 50, delay: 30, delayUnit: 'minutes' },
+            { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: 1 },
+            { batch_size: 25, start_ts: 2 }
+          ]
         ],
-        [
-          { batch_size: 50, delay: 30, delayUnit: 'minutes' },
-          { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: 1 },
-          { batch_size: 25, start_ts: 2 }
-        ]
-      ],
-      retries: 1
-    });
+        retries: 1
+      },
+      { headers: {} }
+    );
   }, 20000);
 });
