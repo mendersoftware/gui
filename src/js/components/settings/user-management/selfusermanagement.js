@@ -10,7 +10,6 @@ import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../../selec
 import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
 import PasswordInput from '../../common/forms/passwordinput';
-import EnterpriseNotification from '../../common/enterpriseNotification';
 import { OAuth2Providers } from '../../login/oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 import { versionCompare } from '../../../helpers';
@@ -129,11 +128,7 @@ export const SelfUserManagement = ({
         </div>
       )}
       {!isOAuth2 ? (
-        canHave2FA ? (
-          <TwoFactorAuthSetup />
-        ) : (
-          <EnterpriseNotification isEnterprise={isEnterprise} benefit="Two Factor Authentication to add an additional layer of security to accounts" />
-        )
+        canHave2FA && <TwoFactorAuthSetup />
       ) : (
         <div className="flexbox margin-top">
           <div style={{ fontSize: '36px', marginRight: 10 }}>{provider.icon}</div>
@@ -163,10 +158,9 @@ export const SelfUserManagement = ({
 const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnackbar };
 
 const mapStateToProps = state => {
-  const { plan = 'os' } = state.organization.organization;
   const isEnterprise = getIsEnterprise(state);
   return {
-    canHave2FA: isEnterprise || (state.app.features.isHosted && plan !== 'os'),
+    canHave2FA: isEnterprise || state.app.features.isHosted,
     canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     currentUser: getCurrentUser(state),
     hasTracking: !!state.app.trackerCode,

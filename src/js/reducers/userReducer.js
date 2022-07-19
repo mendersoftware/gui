@@ -15,6 +15,10 @@ export const initialState = {
   showHelptips: true,
   rolesById: {
     ...UserConstants.rolesById
+  },
+  userSettings: {
+    columnSelection: [],
+    onboarding: {}
   }
 };
 
@@ -116,6 +120,15 @@ const userReducer = (state = initialState, action) => {
         settingsInitialized: true,
         globalSettings: {
           ...state.globalSettings,
+          ...action.settings
+        }
+      };
+    case UserConstants.SET_USER_SETTINGS:
+      return {
+        ...state,
+        userSettingsInitialized: true,
+        userSettings: {
+          ...state.userSettings,
           ...action.settings
         }
       };

@@ -60,6 +60,14 @@ export const Progress = props => {
     };
   }, [pendingCount]);
 
+  useEffect(() => {
+    clearTimeout(dynamicTimer.current);
+    setupDeploymentsRefresh();
+    return () => {
+      clearInterval(dynamicTimer.current);
+    };
+  }, [progressPage, progressPerPage, pendingPage, pendingPerPage]);
+
   const setupDeploymentsRefresh = (refreshLength = currentRefreshDeploymentLength) => {
     let tasks = [refreshDeployments(DEPLOYMENT_STATES.inprogress), refreshDeployments(DEPLOYMENT_STATES.pending)];
     if (!onboardingState.complete && !pastDeploymentsCount) {

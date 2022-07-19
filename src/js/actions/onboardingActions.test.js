@@ -28,20 +28,17 @@ describe('onboarding actions', () => {
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-finished-notification' },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
+        type: UserConstants.SET_USER_SETTINGS,
         settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            columnSelection: [],
-            onboarding: {
-              complete: true,
-              demoArtifactPort: 85,
-              progress: 'onboarding-finished-notification',
-              showConnectDeviceDialog: false
-            }
+          ...defaultState.users.userSettings,
+          onboarding: {
+            complete: true,
+            demoArtifactPort: 85,
+            progress: 'onboarding-finished-notification',
+            showConnectDeviceDialog: false,
+            something: 'here'
           }
         }
       }
@@ -54,21 +51,11 @@ describe('onboarding actions', () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(setOnboardingApproach('test'));
     const expectedActions = [
+      { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'test' },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: OnboardingConstants.SET_ONBOARDING_APPROACH,
-        value: 'test'
-      },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
-      {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
-        settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            columnSelection: [],
-            onboarding: { approach: 'test' }
-          }
-        }
+        type: UserConstants.SET_USER_SETTINGS,
+        settings: { ...defaultState.users.userSettings, onboarding: { approach: 'test', something: 'here' } }
       }
     ];
     const storeActions = store.getActions();
@@ -83,16 +70,13 @@ describe('onboarding actions', () => {
         type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE,
         value: 'testtype'
       },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
+        type: UserConstants.SET_USER_SETTINGS,
         settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            columnSelection: [],
-            onboarding: { deviceType: 'testtype' }
-          }
+          ...defaultState.users.userSettings,
+          columnSelection: [],
+          onboarding: { deviceType: 'testtype', something: 'here' }
         }
       }
     ];
@@ -132,17 +116,14 @@ describe('onboarding actions', () => {
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
       { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
+        type: UserConstants.SET_USER_SETTINGS,
         settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            columnSelection: [],
-            onboarding: { showTips: true },
-            showHelptips: true
-          }
+          ...defaultState.users.userSettings,
+          columnSelection: [],
+          onboarding: { something: 'here', showTips: true },
+          showHelptips: true
         }
       }
     ];
@@ -156,19 +137,17 @@ describe('onboarding actions', () => {
     await store.dispatch(advanceOnboarding(stepNames[0]));
     const expectedActions = [
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: stepNames[1] },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
+        type: UserConstants.SET_USER_SETTINGS,
         settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.byId.a1.id]: {
-            columnSelection: [],
-            onboarding: {
-              complete: false,
-              demoArtifactPort: 85,
-              progress: stepNames[1],
-              showConnectDeviceDialog: false
-            }
+          columnSelection: [],
+          onboarding: {
+            complete: false,
+            demoArtifactPort: 85,
+            progress: stepNames[1],
+            showConnectDeviceDialog: false,
+            something: 'here'
           }
         }
       }
@@ -186,30 +165,24 @@ describe('onboarding actions', () => {
       { type: UserConstants.SET_SHOW_HELP, show: false },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show: false },
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
+        type: UserConstants.SET_USER_SETTINGS,
         settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            columnSelection: [],
-            onboarding: { showTips: false },
-            showHelptips: false
-          }
+          ...defaultState.users.userSettings,
+          columnSelection: [],
+          onboarding: { showTips: false, something: 'here' },
+          showHelptips: false
         }
       },
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-canceled' },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
+        type: UserConstants.SET_USER_SETTINGS,
         settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            columnSelection: [],
-            onboarding: { complete: true, demoArtifactPort: 85, progress: 'onboarding-canceled', showConnectDeviceDialog: false }
-          }
+          ...defaultState.users.userSettings,
+          columnSelection: [],
+          onboarding: { complete: true, demoArtifactPort: 85, progress: 'onboarding-canceled', showConnectDeviceDialog: false, something: 'here' }
         }
       }
     ];
@@ -229,23 +202,21 @@ describe('onboarding actions', () => {
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'application-update-reminder-tip' },
       { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
-        type: UserConstants.SET_GLOBAL_SETTINGS,
+        type: UserConstants.SET_USER_SETTINGS,
         settings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.byId.a1.id]: {
-            columnSelection: [],
-            onboarding: {
-              address: 'http://192.168.10.141:85',
-              approach: 'physical',
-              artifactIncluded: undefined,
-              complete: false,
-              deviceType: ['raspberrypi4'],
-              progress: 'application-update-reminder-tip',
-              showArtifactCreation: false,
-              showTips: true
-            }
+          ...defaultState.users.userSettings,
+          onboarding: {
+            address: 'http://192.168.10.141:85',
+            approach: 'physical',
+            artifactIncluded: undefined,
+            complete: false,
+            deviceType: ['raspberrypi4'],
+            progress: 'application-update-reminder-tip',
+            showArtifactCreation: false,
+            showTips: true,
+            something: 'here'
           }
         }
       }

@@ -160,6 +160,8 @@ export const userHandlers = [
   }),
   rest.get(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.json(defaultState.users.globalSettings))),
   rest.post(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.status(200))),
+  rest.get(`${useradmApiUrl}/settings/me`, (req, res, ctx) => res(ctx.json(defaultState.users.userSettings))),
+  rest.post(`${useradmApiUrl}/settings/me`, (req, res, ctx) => res(ctx.status(200))),
   rest.get(`${useradmApiUrl}/settings/tokens`, (req, res, ctx) => res(ctx.json(accessTokens))),
   rest.post(`${useradmApiUrl}/settings/tokens`, (req, res, ctx) => res(ctx.status(200), ctx.json(token))),
   rest.delete(`${useradmApiUrl}/settings/tokens/:tokenId`, ({ params: { tokenId } }, res, ctx) => {
