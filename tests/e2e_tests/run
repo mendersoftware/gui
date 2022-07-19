@@ -6,13 +6,8 @@ COMPOSE_CMD="docker-compose -p gui-tests \
              -f ${INTEGRATION_PATH}/docker-compose.yml \
              -f ${INTEGRATION_PATH}/docker-compose.client.yml \
              -f ${INTEGRATION_PATH}/docker-compose.demo.yml \
-             -f ${INTEGRATION_PATH}/docker-compose.storage.minio.yml \
-             -f ${INTEGRATION_PATH}/docker-compose.config.yml \
-             -f ${INTEGRATION_PATH}/docker-compose.connect.yml"
-ENTERPRISE_COMPOSE=" -f ${INTEGRATION_PATH}/docker-compose.enterprise.yml \
-                    -f ${INTEGRATION_PATH}/docker-compose.auditlogs.yml \
-                    -f ${INTEGRATION_PATH}/docker-compose.auditlogs.config.yml \
-                    -f ${INTEGRATION_PATH}/docker-compose.auditlogs.connect.yml"
+             -f ${INTEGRATION_PATH}/docker-compose.storage.minio.yml"
+ENTERPRISE_COMPOSE=" -f ${INTEGRATION_PATH}/docker-compose.enterprise.yml"
 TEST_COMPOSE=" -f ${GUI_REPOSITORY}/tests/e2e_tests/docker-compose.e2e-tests.yml"
 ENTERPRISE=0
 
