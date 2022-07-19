@@ -133,7 +133,6 @@ test.describe('Settings', () => {
       await page.waitForTimeout(1000);
       await context.clearCookies();
       await page.goto(`${baseUrl}ui/`);
-      await page.pause();
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
     });
     test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
@@ -222,7 +221,8 @@ test.describe('Settings', () => {
       await page.click(`:is(.header-dropdown:has-text('${username}'))`);
 
       await page.click(`:is(span:has-text('Log out'))`);
-      expect(await page.isVisible('text=/Log in/i')).toBeTruthy();
+      await page.waitForSelector(`button:text('Log in')`);
+      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
     });
 
     test('allows changing the password back', async ({ baseUrl, browserName, context, password, username }) => {
