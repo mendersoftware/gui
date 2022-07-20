@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 
 import { Button } from '@mui/material';
 import { Help as HelpIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';
@@ -25,6 +26,12 @@ import LinedHeader from '../common/lined-header';
 
 const cookies = new Cookies();
 
+const useStyles = makeStyles()(theme => ({
+  form: { maxWidth: 400 },
+  link: { marginLeft: theme.spacing(-0.5) },
+  tfaNote: { maxWidth: 300 }
+}));
+
 const entryText = {
   signup: { linkText: 'Sign up here', question: `Don't have an account?`, target: '/signup' },
   login: { linkText: 'Log in', question: `Already have an account?`, target: '/login' }
@@ -37,6 +44,23 @@ export const EntryLink = ({ target = 'signup' }) => (
       {entryText[target].linkText}
     </Link>
   </div>
+);
+
+export const OAuthHeader = ({ buttonProps, type }) => (
+  <>
+    <div className="flexbox centered margin-bottom">{type} with:</div>
+    <div className="flexbox centered">
+      {OAuth2Providers.map(provider => {
+        const props = buttonProps ? buttonProps : { href: `${useradmApiUrl}/oauth2/${provider.id}` };
+        return (
+          <Button className="oauth-provider" variant="contained" key={provider.id} startIcon={provider.icon} {...props}>
+            {provider.name}
+          </Button>
+        );
+      })}
+    </div>
+    <LinedHeader className="margin-top-large flexbox centered" heading="or your email address" innerStyle={{ padding: 15, top: -24 }} />
+  </>
 );
 
 export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackbar }) => {
@@ -95,36 +119,18 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
     };
   }
 
+  const { classes } = useStyles();
   return (
     <div className="flexbox column padding-bottom margin-bottom" id="login-box">
       <h3>Log in</h3>
       <LoginLogo alt="mender-logo" className="margin-bottom-small" />
-
-      {isHosted && (
-        <>
-          <div className="flexbox centered margin-bottom">Log in with:</div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {OAuth2Providers.map(provider => (
-              <Button className="oauth-provider" variant="contained" key={provider.id} onClick={onOAuthClick} startIcon={provider.icon}>
-                {provider.name}
-              </Button>
-            ))}
-          </div>
-          <LinedHeader
-            className="margin-top-large"
-            heading="or your email address"
-            innerStyle={{ padding: 15, top: -24 }}
-            style={{ display: 'flex', justifyContent: 'center' }}
-          />
-        </>
-      )}
-
-      <Form showButtons={true} buttonColor="primary" onSubmit={onLoginClick} submitLabel="Log in" submitButtonId="login_button" style={{ maxWidth: 400 }}>
+      {isHosted && <OAuthHeader type="Log in" buttonProps={{ onClick: onOAuthClick }} />}
+      <Form className={classes.form} showButtons={true} buttonColor="primary" onSubmit={onLoginClick} submitLabel="Log in" submitButtonId="login_button">
         <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
         <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
         {isHosted ? (
           <div className="flexbox">
-            <Link style={{ marginLeft: '4px' }} to="/password">
+            <Link className={classes.link} to="/password">
               Forgot your password?
             </Link>
           </div>
@@ -154,7 +160,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
               className="absolute"
               style={twoFAAnchor}
               title={
-                <div style={{ maxWidth: 300 }}>
+                <div className={classes.tfaNote}>
                   Two Factor Authentication is enabled for your account. If you haven&apos;t set up a 3rd party authentication app with a verification code,
                   please contact an administrator.
                 </div>

@@ -543,10 +543,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   <div
     class="flexbox centered margin-bottom"
   >
-    Sign up with:
+    Sign up
+     with:
   </div>
   <div
-    style="display: flex; justify-content: center;"
+    class="flexbox centered"
   >
     <a
       class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root oauth-provider emotion-0"
@@ -622,8 +623,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     </a>
   </div>
   <h4
-    class="dashboard-header emotion-12 margin-top-large"
-    style="display: flex; justify-content: center;"
+    class="dashboard-header emotion-12 margin-top-large flexbox centered"
   >
     <span
       style="padding: 15px; top: -24px;"
