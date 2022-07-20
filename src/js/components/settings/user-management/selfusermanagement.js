@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Switch, TextField } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../../actions/userActions';
@@ -14,6 +15,15 @@ import { OAuth2Providers } from '../../login/oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 import { versionCompare } from '../../../helpers';
 import AccessTokenManagement from '../accesstokenmanagement';
+import InfoText from '../../common/infotext';
+
+const useStyles = makeStyles()(() => ({
+  formField: { width: 400, maxWidth: '100%' },
+  changeButton: { margin: '30px 0 0 15px' },
+  infoText: { margin: 0, width: '75%' },
+  oauthIcon: { fontSize: '36px', marginRight: 10 },
+  widthLimit: { maxWidth: 750 }
+}));
 
 export const SelfUserManagement = ({
   canHave2FA,
@@ -30,6 +40,7 @@ export const SelfUserManagement = ({
   const [editEmail, setEditEmail] = useState(false);
   const [editPass, setEditPass] = useState(false);
   const [emailFormId, setEmailFormId] = useState(new Date());
+  const { classes } = useStyles();
 
   const editSubmit = userData => {
     if (userData.password != userData.password_confirmation) {
@@ -59,16 +70,16 @@ export const SelfUserManagement = ({
 
   const handlePass = () => setEditPass(!editPass);
   const email = currentUser.email;
-  const isOAuth2 = !!currentUser.login;
-  const provider = isOAuth2 ? OAuth2Providers.find(provider => !!currentUser.login[provider.id]) : null;
+  const isOAuth2 = !!currentUser.sso?.length;
+  const provider = isOAuth2 ? OAuth2Providers.find(provider => currentUser.sso.some(({ kind }) => kind === provider.id)) : null;
   return (
-    <div style={{ maxWidth: 750 }} className="margin-top-small">
+    <div className={`margin-top-small ${classes.widthLimit}`}>
       <h2 className="margin-top-small">My profile</h2>
       {!editEmail && currentUser.email ? (
         <div className="flexbox space-between">
-          <TextField label="Email" key={email} InputLabelProps={{ shrink: !!email }} disabled defaultValue={email} style={{ width: 400, maxWidth: '100%' }} />
+          <TextField className={classes.formField} label="Email" key={email} InputLabelProps={{ shrink: !!email }} disabled defaultValue={email} />
           {!isOAuth2 && (
-            <Button className="inline-block" color="primary" id="change_email" style={{ margin: '30px 0 0 15px' }} onClick={handleEmail}>
+            <Button className={`inline-block ${classes.changeButton}`} color="primary" id="change_email" onClick={handleEmail}>
               Change email
             </Button>
           )}
@@ -99,8 +110,8 @@ export const SelfUserManagement = ({
       {!isOAuth2 &&
         (!editPass ? (
           <form className="flexbox space-between">
-            <TextField label="Password" key="password-placeholder" disabled defaultValue="********" style={{ width: 400, maxWidth: '100%' }} type="password" />
-            <Button color="primary" id="change_password" style={{ margin: '30px 0 0 15px' }} onClick={handlePass}>
+            <TextField className={classes.formField} label="Password" key="password-placeholder" disabled defaultValue="********" type="password" />
+            <Button className={classes.changeButton} color="primary" id="change_password" onClick={handlePass}>
               Change password
             </Button>
           </form>
@@ -131,7 +142,7 @@ export const SelfUserManagement = ({
         canHave2FA && <TwoFactorAuthSetup />
       ) : (
         <div className="flexbox margin-top">
-          <div style={{ fontSize: '36px', marginRight: 10 }}>{provider.icon}</div>
+          <div className={classes.oauthIcon}>{provider.icon}</div>
           <div className="info">
             You are logging in using your <strong>{provider.name}</strong> account.
             <br />
@@ -139,16 +150,14 @@ export const SelfUserManagement = ({
           </div>
         </div>
       )}
-      <AccessTokenManagement />
+      {!isOAuth2 && <AccessTokenManagement />}
       {isEnterprise && hasTracking && (
         <div className="margin-top">
           <div className="clickable flexbox space-between" onClick={() => saveUserSettings({ trackingConsentGiven: !hasTrackingConsent })}>
             <p className="help-content">Help us improve Mender</p>
             <Switch checked={!!hasTrackingConsent} />
           </div>
-          <p className="info" style={{ width: '75%', margin: 0 }}>
-            Enable usage data and errors to be sent to help us improve our service.
-          </p>
+          <InfoText className={classes.infoText}>Enable usage data and errors to be sent to help us improve our service.</InfoText>
         </div>
       )}
     </div>
