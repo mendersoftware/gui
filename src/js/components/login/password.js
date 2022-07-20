@@ -34,13 +34,7 @@ export const Password = ({ passwordResetStart }) => {
             <br />
             Enter the email address you use to sign in to Mender, and we&#39;ll send you a reset link.
           </p>
-          <Form
-            showButtons={true}
-            buttonColor="primary"
-            onSubmit={formdata => _handleSubmit(formdata)}
-            submitLabel="Send the password reset link"
-            submitButtonId="password_button"
-          >
+          <Form showButtons={true} buttonColor="primary" onSubmit={_handleSubmit} submitLabel="Send the password reset link" submitButtonId="password_button">
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
           </Form>
         </>
