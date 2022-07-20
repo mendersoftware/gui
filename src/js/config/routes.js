@@ -37,9 +37,8 @@ export const PrivateRoutes = () => (
 
 export const PublicRoutes = () => (
   <Routes>
-    <Route path="password" element={<Password />}>
-      <Route path=":secretHash" element={<PasswordReset />} />
-    </Route>
+    <Route path="password" element={<Password />} />
+    <Route path="password/:secretHash" element={<PasswordReset />} />
     <Route path="signup" element={<Signup />}>
       <Route path=":campaign" element={null} />
     </Route>

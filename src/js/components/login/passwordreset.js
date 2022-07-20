@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import headerLogo from '../../../assets/img/headerlogo.png';
 import { passwordResetComplete } from '../../actions/userActions';
@@ -8,14 +8,9 @@ import { setSnackbar } from '../../actions/appActions';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 
-export const PasswordReset = ({
-  passwordResetComplete,
-  setSnackbar,
-  match: {
-    params: { secretHash }
-  }
-}) => {
+export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
   const [confirm, setConfirm] = useState(false);
+  const { secretHash } = useParams();
 
   const _handleSubmit = formData => {
     if (!formData.hasOwnProperty('password_new')) {
