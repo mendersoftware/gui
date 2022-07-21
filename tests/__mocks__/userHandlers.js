@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { accessTokens, defaultState, permissionSets, token, userId as defaultUserId } from '../mockData';
+import { accessTokens, defaultPassword, defaultState, permissionSets, token, userId as defaultUserId } from '../mockData';
 import { defaultPermissionSets, useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
 
 export const roles = [
@@ -65,7 +65,15 @@ export const roles = [
 ];
 
 export const userHandlers = [
-  rest.post(`${useradmApiUrl}/auth/login`, (req, res, ctx) => res(ctx.status(200), ctx.json(token))),
+  rest.post(`${useradmApiUrl}/auth/login`, ({ headers }, res, ctx) => {
+    const authHeader = headers.get('authorization');
+    const authInfo = atob(authHeader?.split(' ')[1]);
+    const password = authInfo.split(':')[1];
+    if (password !== defaultPassword) {
+      return res(ctx.status(401));
+    }
+    return res(ctx.status(200), ctx.json(token));
+  }),
   rest.post(`${useradmApiUrl}/auth/logout`, (req, res, ctx) => res(ctx.status(200))),
   rest.post(`${useradmApiUrl}/auth/password-reset/:status`, ({ params: { status }, body: { email, secret_hash, password } }, res, ctx) => {
     if (!['start', 'complete'].includes(status) && ![email, secret_hash, password].some(item => item)) {

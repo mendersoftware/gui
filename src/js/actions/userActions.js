@@ -199,15 +199,23 @@ export const removeUser = userId => dispatch =>
     )
     .catch(err => userActionErrorHandler(err, 'remove', dispatch));
 
-export const editUser = (userId, userData) => (dispatch, getState) =>
-  GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData)
+export const editUser = (userId, userData) => (dispatch, getState) => {
+  const currentUser = getCurrentUser(getState());
+  let sanityCheck = Promise.resolve();
+  if ((userId === UserConstants.OWN_USER_ID || userId === currentUser.id) && currentUser.email !== userData.email) {
+    sanityCheck = UsersApi.postLogin(`${useradmApiUrl}/auth/login`, { email: currentUser.email, password: userData.current_password });
+  }
+  return sanityCheck
     .then(() =>
-      Promise.all([
-        dispatch({ type: UserConstants.UPDATED_USER, userId: userId === UserConstants.OWN_USER_ID ? getState().users.currentUser : userId, user: userData }),
-        dispatch(setSnackbar(actions.edit.successMessage))
-      ])
+      GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData).then(() =>
+        Promise.all([
+          dispatch({ type: UserConstants.UPDATED_USER, userId: userId === UserConstants.OWN_USER_ID ? getState().users.currentUser : userId, user: userData }),
+          dispatch(setSnackbar(actions.edit.successMessage))
+        ])
+      )
     )
     .catch(err => userActionErrorHandler(err, 'edit', dispatch));
+};
 
 export const enableUser2fa =
   (userId = OWN_USER_ID) =>
