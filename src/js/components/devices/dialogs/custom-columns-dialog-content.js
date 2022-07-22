@@ -11,8 +11,8 @@ import { ATTRIBUTE_SCOPES } from '../../../constants/deviceConstants';
 
 const DraggableListItem = ({ item, index, onRemove }) => {
   const title = useMemo(() => {
-    const flump = Object.values(defaultHeaders).find(thing => thing.attribute === item.key);
-    return item.title || flump || item.key;
+    const header = Object.values(defaultHeaders).find(thing => thing.attribute === item.key);
+    return item.title || header?.title || item.key;
   }, [item]);
 
   const onClick = () => onRemove(item, index);
