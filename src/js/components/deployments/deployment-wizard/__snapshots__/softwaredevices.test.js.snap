@@ -471,7 +471,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
 }
 
 <div
-  style="overflow: visible; min-height: 300px; margin-top: 15px;"
+  class="margin-top"
+  style="overflow: visible; min-height: 300px;"
 >
   <form
     class="flexbox column margin margin-top-none"

@@ -190,8 +190,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                   />
                 </svg>
                 <div
-                  class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased css-1r1ekxc-MuiChip-root\\"
-                  style=\\"opacity: 0.5; font-size: 0.675rem; height: 18px;\\"
+                  class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased tss-7h6f8v-chip css-1r1ekxc-MuiChip-root\\"
                 >
                   <span
                     class=\\"MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label\\"
@@ -239,8 +238,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               </div>
             </div>
             <a
-              class=\\"margin-top-small flexbox center-aligned\\"
-              style=\\"margin-left: 96px;\\"
+              class=\\"margin-top-small flexbox center-aligned tss-1ds475v-scheduleLink\\"
             >
               Schedule details 
               <svg
@@ -248,7 +246,6 @@ Devices that are in the middle of the deployment at the time of abort will finis
                 class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-ptiqhd-MuiSvgIcon-root\\"
                 data-testid=\\"ArrowDropDownCircleOutlinedIcon\\"
                 focusable=\\"false\\"
-                style=\\"margin-left: 8px;\\"
                 viewBox=\\"0 0 24 24\\"
               >
                 <path
