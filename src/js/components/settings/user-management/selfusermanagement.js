@@ -86,7 +86,6 @@ export const SelfUserManagement = ({
         </div>
       ) : (
         <Form
-          className="flexbox space-between"
           onSubmit={editSubmit}
           handleCancel={handleEmail}
           submitLabel="Save"
@@ -105,6 +104,7 @@ export const SelfUserManagement = ({
             validations="isLength:1,isEmail"
             value={email}
           />
+          <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required={true} />
         </Form>
       )}
       {!isOAuth2 &&

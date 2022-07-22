@@ -58,7 +58,7 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
       return onSubmit(null, 'edit', id, shouldResetPassword ? email : null);
     }
     const changedRoles = hadRoleChanges ? { roles: selectedRoles } : {};
-    const submissionData = { ...selectedUser, ...changedRoles };
+    const submissionData = { ...selectedUser, ...changedRoles, email: currentEmail };
     return onSubmit(submissionData, 'edit', id, shouldResetPassword ? currentEmail : null);
   };
 
@@ -106,7 +106,6 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
         </div>
       </div>
       <Divider />
-
       <FormControl className={classes.widthLimit}>
         <TextField label="Email" id="email" value={currentEmail} disabled={isOAuth2 || currentUser.id === id} error={nameError} onChange={validateNameChange} />
         {nameError && <FormHelperText className="warning">Please enter a valid email address</FormHelperText>}
