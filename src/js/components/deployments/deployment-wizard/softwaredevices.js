@@ -13,6 +13,7 @@ import useWindowSize from '../../../utils/resizehook';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
+import { getDeviceIdentityText } from '../../devices/base-devices';
 
 const useStyles = makeStyles()(theme => ({
   infoStyle: {
@@ -52,6 +53,7 @@ export const SoftwareDevices = ({
   hasDevices,
   hasDynamicGroups,
   hasPending,
+  idAttribute,
   onboardingState,
   releases,
   releasesById,
@@ -160,7 +162,7 @@ export const SoftwareDevices = ({
   }
   const hasReleases = !!Object.keys(releasesById).length;
   return (
-    <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
+    <div className="margin-top" style={{ overflow: 'visible', minHeight: 300 }}>
       {!hasReleases ? (
         <ReleasesWarning />
       ) : (
@@ -168,7 +170,7 @@ export const SoftwareDevices = ({
           <h4 className={classes.selectionTitle}>Select a device group to target</h4>
           <div ref={groupRef} className={classes.selection}>
             {device ? (
-              <TextField value={device.id} label="Device" disabled={true} className={classes.infoStyle} />
+              <TextField value={getDeviceIdentityText({ device, idAttribute })} label="Device" disabled={true} className={classes.infoStyle} />
             ) : (
               <div>
                 <Autocomplete

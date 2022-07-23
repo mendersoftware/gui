@@ -65,11 +65,13 @@ export const DeploymentReport = props => {
     canAuditlog,
     creator,
     deployment,
+    devicesById,
     getAuditLogs,
     getDeviceLog,
     getRelease,
     getSingleDeployment,
     hasAuditlogs,
+    idAttribute,
     open,
     onClose,
     past,
@@ -203,7 +205,7 @@ export const DeploymentReport = props => {
       <Divider />
       <div>
         <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
-        <DeploymentOverview creator={creator} deployment={deployment} onScheduleClick={scrollToBottom} />
+        <DeploymentOverview creator={creator} deployment={deployment} devicesById={devicesById} idAttribute={idAttribute} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (
           <>
             <LinedHeader heading="Configuration" />
@@ -250,6 +252,7 @@ const mapStateToProps = state => {
     canAuditlog,
     creator: actor.email,
     deployment,
+    devicesById: state.devices.byId,
     hasAuditlogs,
     idAttribute: getIdAttribute(state).attribute,
     isHosted: state.app.features.isHosted,

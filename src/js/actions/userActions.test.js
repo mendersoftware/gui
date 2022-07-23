@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
-import { accessTokens, defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
+import { accessTokens, defaultPassword, defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
 import {
   createRole,
   createUser,
@@ -177,7 +177,7 @@ describe('user actions', () => {
       { type: UserConstants.SET_CUSTOM_COLUMNS, value: [] }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(loginUser({ email: 'test@example.com', password: 'mysecretpassword' }));
+    await store.dispatch(loginUser({ email: 'test@example.com', password: defaultPassword }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -228,7 +228,7 @@ describe('user actions', () => {
   });
   it('should allow single user creation', async () => {
     jest.clearAllMocks();
-    const createdUser = { email: 'a@b.com', password: 'mysecretpassword' };
+    const createdUser = { email: 'a@b.com', password: defaultPassword };
     const expectedActions = [
       { type: UserConstants.CREATED_USER, user: createdUser },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The user was created successfully.' } },
@@ -243,14 +243,20 @@ describe('user actions', () => {
   it('should allow single user edits', async () => {
     jest.clearAllMocks();
     const expectedActions = [
-      { type: UserConstants.UPDATED_USER, userId: 'a1', user: { password: 'mySecretPassword' } },
+      { type: UserConstants.UPDATED_USER, userId: 'a1', user: { password: defaultPassword } },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The user has been updated.' } }
     ];
     const store = mockStore({ ...defaultState });
-    await store.dispatch(editUser('a1', { password: 'mySecretPassword' }));
+    await store.dispatch(editUser('a1', { email: defaultState.users.byId.a1.email, password: defaultPassword }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should not allow current user edits without proper password', async () => {
+    jest.clearAllMocks();
+    const store = mockStore({ ...defaultState });
+    const result = store.dispatch(editUser('a1', { email: 'a@evil.com', password: 'mySecretPasswordNot' }));
+    expect(result).rejects.toBeTruthy();
   });
   it('should allow single user removal', async () => {
     jest.clearAllMocks();

@@ -4,7 +4,7 @@ import validator from 'validator';
 // material ui
 import { Button, Checkbox, Divider, Drawer, FormControl, FormControlLabel, FormHelperText, IconButton, InputLabel, TextField } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { UserRolesSelect } from './userform';
 import { uiPermissionsById, uiPermissionsByArea } from '../../../constants/userConstants';
@@ -12,10 +12,18 @@ import { TwoColumnData } from '../../common/configurationobject';
 import { OAuth2Providers } from '../../login/oauth2providers';
 import { mapUserRolesToUiPermissions } from '../../../actions/userActions';
 
+const useStyles = makeStyles()(theme => ({
+  actionButtons: { justifyContent: 'flex-end' },
+  divider: { marginTop: theme.spacing(4) },
+  leftButton: { marginRight: theme.spacing(2) },
+  oauthIcon: { fontSize: '36px', marginRight: 10 },
+  widthLimit: { maxWidth: 500 }
+}));
+
 export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
   const { email = '', id, login } = selectedUser;
 
-  const theme = useTheme();
+  const { classes } = useStyles();
 
   const [nameError, setNameError] = useState(false);
   const [hadRoleChanges, setHadRoleChanges] = useState(false);
@@ -50,7 +58,7 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
       return onSubmit(null, 'edit', id, shouldResetPassword ? email : null);
     }
     const changedRoles = hadRoleChanges ? { roles: selectedRoles } : {};
-    const submissionData = { ...selectedUser, ...changedRoles };
+    const submissionData = { ...selectedUser, ...changedRoles, email: currentEmail };
     return onSubmit(submissionData, 'edit', id, shouldResetPassword ? currentEmail : null);
   };
 
@@ -88,7 +96,7 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
         <h3>Edit user</h3>
         <div className="flexbox center-aligned">
           {currentUser.id !== id && canManageUsers && (
-            <Button className="flexbox center-aligned" color="secondary" onClick={onRemoveClick} style={{ marginRight: theme.spacing(2) }}>
+            <Button className={`flexbox center-aligned ${classes.leftButton}`} color="secondary" onClick={onRemoveClick}>
               delete user
             </Button>
           )}
@@ -98,14 +106,13 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
         </div>
       </div>
       <Divider />
-
-      <FormControl style={{ maxWidth: 500 }}>
-        <TextField label="Email" id="email" value={currentEmail} disabled={isOAuth2} error={nameError} onChange={validateNameChange} />
+      <FormControl className={classes.widthLimit}>
+        <TextField label="Email" id="email" value={currentEmail} disabled={isOAuth2 || currentUser.id === id} error={nameError} onChange={validateNameChange} />
         {nameError && <FormHelperText className="warning">Please enter a valid email address</FormHelperText>}
       </FormControl>
       {isOAuth2 ? (
         <div className="flexbox margin-top-small margin-bottom">
-          <div style={{ fontSize: '36px', marginRight: '10px' }}>{provider.icon}</div>
+          <div className={classes.oauthIcon}>{provider.icon}</div>
           <div className="info">
             This user logs in using his <strong>{provider.name}</strong> account.
             <br />
@@ -131,9 +138,9 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
           <TwoColumnData config={groups} />
         </>
       )}
-      <Divider light style={{ marginTop: theme.spacing(4) }} />
-      <div className="flexbox centered margin-top" style={{ justifyContent: 'flex-end' }}>
-        <Button onClick={onCancel} style={{ marginRight: theme.spacing(2) }}>
+      <Divider className={classes.divider} light />
+      <div className={`flexbox centered margin-top ${classes.actionButtons}`}>
+        <Button className={classes.leftButton} onClick={onCancel}>
           Cancel
         </Button>
         <Button color="secondary" variant="contained" disabled={isSubmitDisabled} target="_blank" onClick={onSubmitClick}>
