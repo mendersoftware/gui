@@ -108,7 +108,7 @@ const getGroupNotification = (newGroup, selectedGroup) => {
   }
   return [
     <>
-      {successMessage} - <Link to={`/devices?group=${newGroup}`}>click here</Link> to see it.
+      {successMessage} - <Link to={`/devices?inventory=group:eq:${newGroup}`}>click here</Link> to see it.
     </>,
     5000,
     undefined,

@@ -18,6 +18,7 @@ const scopes = {
   identity: { delimiter: 'identity', filters: [] },
   inventory: { delimiter: 'inventory', filters: [] },
   monitor: { delimiter: 'monitor', filters: [] },
+  system: { delimiter: 'system', filters: [] },
   tags: { delimiter: 'tags', filters: [] }
 };
 
@@ -58,6 +59,10 @@ export const commonProcessor = searchParams => {
 const legacyDeviceQueryParse = (searchParams, filteringAttributes) => {
   let params = new URLSearchParams(searchParams);
   const result = Object.keys(scopes).reduce((accu, scope) => ({ ...accu, [scope]: [] }), {});
+  if (params.get('group')) {
+    result.inventory.push({ ...emptyFilter, key: 'group', scope: 'inventory', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: params.get('group') });
+    params.delete('group');
+  }
   const filters = [...params.keys()].reduce(
     (accu, key) =>
       params.getAll(key).reduce((innerAccu, query) => {
@@ -106,7 +111,7 @@ export const parseDeviceQuery = (searchParams, extraProps = {}) => {
 
   let scopedFilters;
   const refersOldStyleAttributes = Object.values(filteringAttributes).some(scopeValues => scopeValues.some(scopedValue => queryParams.get(scopedValue)));
-  if (refersOldStyleAttributes && !Object.keys(scopes).some(scope => queryParams.get(scope))) {
+  if ((refersOldStyleAttributes && !Object.keys(scopes).some(scope => queryParams.get(scope))) || queryParams.get('group')) {
     const { filters, params } = legacyDeviceQueryParse(queryParams, filteringAttributes);
     scopedFilters = filters;
     queryParams = params;
