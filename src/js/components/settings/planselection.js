@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { PLANS } from '../../constants/appConstants';
+import InfoText from '../common/infotext';
 
 const priceStyle = { fontSize: '1rem' };
 
@@ -45,7 +46,7 @@ export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTa
             <ul className="unstyled">
               {item.features.map((feature, index) => (
                 <li key={`${item.value}-feature-${index}`}>
-                  <span className="info">{feature}</span>
+                  <InfoText variant="dense">{feature}</InfoText>
                 </li>
               ))}
             </ul>

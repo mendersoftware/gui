@@ -1,6 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PlanSelection component renders correctly 1`] = `
+.emotion-0 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div>
   <h3
     class="margin-top"
@@ -40,7 +45,7 @@ exports[`PlanSelection component renders correctly 1`] = `
       >
         <li>
           <span
-            class="info"
+            class="emotion-0 "
           >
             Basic OTA features
           </span>
@@ -76,14 +81,14 @@ exports[`PlanSelection component renders correctly 1`] = `
       >
         <li>
           <span
-            class="info"
+            class="emotion-0 "
           >
             + Advanced OTA features
           </span>
         </li>
         <li>
           <span
-            class="info"
+            class="emotion-0 "
           >
             + Standard support
           </span>
@@ -119,14 +124,14 @@ exports[`PlanSelection component renders correctly 1`] = `
       >
         <li>
           <span
-            class="info"
+            class="emotion-0 "
           >
             + Enterprise-grade OTA features
           </span>
         </li>
         <li>
           <span
-            class="info"
+            class="emotion-0 "
           >
             + Premium support
           </span>

@@ -2,6 +2,11 @@
 
 exports[`GlobalSettings Component renders correctly 1`] = `
 .emotion-0 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-1 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -50,23 +55,23 @@ exports[`GlobalSettings Component renders correctly 1`] = `
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-0::-moz-focus-inner {
+.emotion-1::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-0.Mui-disabled {
+.emotion-1.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-0 {
+  .emotion-1 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-0:hover {
+.emotion-1:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #7b1fa2;
@@ -74,20 +79,20 @@ exports[`GlobalSettings Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-0:hover {
+  .emotion-1:hover {
     background-color: #9c27b0;
   }
 }
 
-.emotion-0:active {
+.emotion-1:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-focusVisible {
+.emotion-1.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-disabled {
+.emotion-1.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
@@ -110,7 +115,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     />
   </div>
   <p
-    class="info"
+    class="emotion-0 "
   >
     Billing will be scheduled monthly, starting from today. You can cancel at any time.
   </p>
@@ -119,7 +124,7 @@ exports[`GlobalSettings Component renders correctly 1`] = `
     style="justify-content: flex-end;"
   >
     <button
-      class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-0"
+      class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-1"
       disabled=""
       tabindex="-1"
       type="submit"

@@ -3,16 +3,16 @@ import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
-  default: { margin: '15px 0', color: theme.palette.text.disabled }
+  default: { color: theme.palette.text.disabled, margin: '15px 0' }
 }));
 
-export const InfoText = ({ children, className = '', ...props }) => {
+export const InfoText = ({ children, className = '', variant = '', ...props }) => {
   const { classes } = useStyles();
-
+  const Component = variant === 'dense' ? 'span' : 'p';
   return (
-    <p className={`${classes.default} ${className}`} {...props}>
+    <Component className={`${classes.default} ${className}`} {...props}>
       {children}
-    </p>
+    </Component>
   );
 };
 export default InfoText;

@@ -116,6 +116,11 @@ exports[`AddOnSelection component renders correctly 1`] = `
   border-radius: inherit;
 }
 
+.emotion-4 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div>
   <h3
     class="margin-top-large"
@@ -176,7 +181,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
         </div>
       </div>
       <span
-        class="info"
+        class="emotion-4 "
       >
         Expand your plan with device configuration features
       </span>
@@ -237,7 +242,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
         </div>
       </div>
       <span
-        class="info"
+        class="emotion-4 "
       >
         Expand your plan with device troubleshooting features
       </span>

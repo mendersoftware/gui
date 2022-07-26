@@ -4,6 +4,7 @@ import { Autorenew, LockOutlined } from '@mui/icons-material';
 
 import staticImage from '../../../../assets/img/static-group-creation.gif';
 import dynamicImage from '../../../../assets/img/dynamic-group-creation.gif';
+import InfoText from '../../common/infotext';
 
 export const defaultStyles = {
   columns: 'two-columns',
@@ -36,9 +37,9 @@ export const CreateGroupExplainerContent = ({ styles = defaultStyles, isEnterpri
           <Autorenew fontSize="small" style={styles.icon} />
           <div className="bold margin-left-small margin-right">Dynamic group</div>
           {!isEnterprise && (
-            <span className="info uppercased" style={{ margin: 0 }}>
+            <InfoText className="uppercased" style={{ margin: 0 }} variant="dense">
               Enterprise
-            </span>
+            </InfoText>
           )}
         </div>
         <p className="help-content">
@@ -46,9 +47,9 @@ export const CreateGroupExplainerContent = ({ styles = defaultStyles, isEnterpri
           this group. This means that new devices will automatically join the group if they match the filters.
         </p>
         {!isEnterprise && (
-          <p className="info">
+          <InfoText>
             Dynamic grouping is only available to Enterprise users. <a href="mailto:contact@mender.io">Contact us</a> to ask about upgrading.
-          </p>
+          </InfoText>
         )}
       </div>
       <img src={dynamicImage} style={styles.image} />

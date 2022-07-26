@@ -1,12 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeviceStatusNotification Component renders correctly 1`] = `
+.emotion-0 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div
   class="clickable margin-right onboard"
   style="background: rgb(245, 245, 245); flex-grow: 1; padding: 12px;"
 >
   <span
-    class="info"
+    class="emotion-0 "
   >
     1
      

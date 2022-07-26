@@ -15,6 +15,7 @@ import { DeviceSupportTip } from '../../helptips/helptooltips';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
+import InfoText from '../../common/infotext';
 
 const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVirtualDevice }) => {
   const theme = useTheme();
@@ -47,10 +48,10 @@ const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVi
           <p className="margin-top-none">Don&apos;t have a Raspberry Pi?</p>
           <p>You can use our Docker-run virtual device to go through the same tutorial.</p>
           {hasMonitor && (
-            <p className="info slightly-smaller">
+            <InfoText className="slightly-smaller">
               If you want to evaluate our commercial components such as mender-monitor, please use a physical device instead as the virtual client does not
               support these components at this time.
-            </p>
+            </InfoText>
           )}
           <a onClick={() => setVirtualDevice(true)}>Try a virtual device</a>
         </div>

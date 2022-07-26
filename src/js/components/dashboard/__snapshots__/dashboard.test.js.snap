@@ -234,6 +234,15 @@ exports[`Dashboard Component renders correctly 1`] = `
 }
 
 .emotion-9 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-10 {
+  gap: 8px;
+}
+
+.emotion-11 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -443,14 +452,13 @@ exports[`Dashboard Component renders correctly 1`] = `
       class="flexbox centered"
     >
       <p
-        class="info icon "
+        class="emotion-9 icon flexbox center-aligned emotion-10 "
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-9"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
           data-testid="InfoOutlinedIcon"
           focusable="false"
-          style="vertical-align: middle; margin: 0px 6px 4px 0px;"
           viewBox="0 0 24 24"
         >
           <path

@@ -464,7 +464,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   font-size: 1.25rem;
 }
 
+.emotion-17 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 .emotion-18 {
+  gap: 8px;
+}
+
+.emotion-20 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -473,7 +482,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   letter-spacing: 0.00938em;
 }
 
-.emotion-19 {
+.emotion-21 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -633,7 +642,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
         />
       </button>
       <p
-        class="info flexbox center-aligned"
+        class="emotion-17 icon flexbox center-aligned emotion-18 "
       >
         <svg
           aria-hidden="true"
@@ -657,13 +666,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
         class="muted margin-bottom"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 emotion-18"
+          class="MuiTypography-root MuiTypography-body1 emotion-20"
           style="margin-bottom: 10px;"
         >
           Release:
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body2 emotion-19"
+          class="MuiTypography-root MuiTypography-body2 emotion-21"
         >
           No release selected
         </p>

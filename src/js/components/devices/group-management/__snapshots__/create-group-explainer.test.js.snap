@@ -141,6 +141,11 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
 }
 
 .emotion-8 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -159,11 +164,11 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-8>:not(:first-of-type) {
+.emotion-10>:not(:first-of-type) {
   margin-left: 8px;
 }
 
-.emotion-9 {
+.emotion-11 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -210,39 +215,39 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
   color: #1976d2;
 }
 
-.emotion-9::-moz-focus-inner {
+.emotion-11::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-9.Mui-disabled {
+.emotion-11.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-9 {
+  .emotion-11 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-9:hover {
+.emotion-11:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(25, 118, 210, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-9:hover {
+  .emotion-11:hover {
     background-color: transparent;
   }
 }
 
-.emotion-9.Mui-disabled {
+.emotion-11.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-10 {
+.emotion-12 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -358,7 +363,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
                   Dynamic group
                 </div>
                 <span
-                  class="info uppercased"
+                  class="emotion-8 uppercased"
                   style="margin: 0px;"
                 >
                   Enterprise
@@ -370,7 +375,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
                 You can set filters based on device attributes, and save them as a group. At any point in time, all devices that match the filters will be part of this group. This means that new devices will automatically join the group if they match the filters.
               </p>
               <p
-                class="info"
+                class="emotion-8 "
               >
                 Dynamic grouping is only available to Enterprise users. 
                 <a
@@ -389,16 +394,16 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiDialogActions-root MuiDialogActions-spacing emotion-8"
+        class="MuiDialogActions-root MuiDialogActions-spacing emotion-10"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-9"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-11"
           tabindex="0"
           type="button"
         >
           Close
           <span
-            class="MuiTouchRipple-root emotion-10"
+            class="MuiTouchRipple-root emotion-12"
           />
         </button>
       </div>

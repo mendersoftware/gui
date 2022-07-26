@@ -223,6 +223,15 @@ exports[`Review deployment Component renders correctly 1`] = `
   font-size: 1.25rem;
 }
 
+.emotion-36 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-37 {
+  gap: 8px;
+}
+
 <div
   class="margin-small"
 >
@@ -542,14 +551,13 @@ exports[`Review deployment Component renders correctly 1`] = `
       </div>
     </div>
     <p
-      class="info icon "
+      class="emotion-36 icon flexbox center-aligned emotion-37 "
     >
       <svg
         aria-hidden="true"
         class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
         data-testid="InfoOutlinedIcon"
         focusable="false"
-        style="vertical-align: middle; margin: 0px 6px 4px 0px;"
         viewBox="0 0 24 24"
       >
         <path
@@ -568,14 +576,13 @@ exports[`Review deployment Component renders correctly 1`] = `
     </p>
   </div>
   <p
-    class="info icon "
+    class="emotion-36 icon flexbox center-aligned emotion-37 "
   >
     <svg
       aria-hidden="true"
       class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
       data-testid="InfoOutlinedIcon"
       focusable="false"
-      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"
     >
       <path

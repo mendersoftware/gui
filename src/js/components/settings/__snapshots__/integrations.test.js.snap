@@ -385,7 +385,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   border-radius: inherit;
 }
 
+.emotion-15 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 .emotion-16 {
+  gap: 8px;
+}
+
+.emotion-18 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -402,7 +411,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   font-size: 1.25rem;
 }
 
-.emotion-18 {
+.emotion-20 {
   margin: 0;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -413,7 +422,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   border-bottom-width: thin;
 }
 
-.emotion-23 {
+.emotion-25 {
   color: rgba(0, 0, 0, 0.6);
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -441,19 +450,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   pointer-events: none;
 }
 
-.emotion-23.Mui-focused {
+.emotion-25.Mui-focused {
   color: #1976d2;
 }
 
-.emotion-23.Mui-disabled {
+.emotion-25.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-23.Mui-error {
+.emotion-25.Mui-error {
   color: #d32f2f;
 }
 
-.emotion-28 {
+.emotion-30 {
   float: unset;
   overflow: hidden;
   display: block;
@@ -468,7 +477,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   white-space: nowrap;
 }
 
-.emotion-28>span {
+.emotion-30>span {
   padding-left: 5px;
   padding-right: 5px;
   display: inline-block;
@@ -560,33 +569,34 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
     </div>
   </div>
   <p
-    class="info icon margin-bottom emotion-0"
+    class="emotion-15 icon flexbox center-aligned emotion-16 margin-bottom emotion-0"
   >
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-16"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-18"
       data-testid="InfoOutlinedIcon"
       focusable="false"
-      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"
     >
       <path
         d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
       />
     </svg>
-    For help finding your Azure IoT Hub connection string, look under 'Shared access policies' in the Microsoft Azure UI as described
-     
-    <a
-      href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubconn"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      here
-    </a>
-    .
+    <span>
+      For help finding your Azure IoT Hub connection string, look under 'Shared access policies' in the Microsoft Azure UI as described
+       
+      <a
+        href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubconn"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        here
+      </a>
+      .
+    </span>
   </p>
   <hr
-    class="MuiDivider-root MuiDivider-fullWidth margin-bottom emotion-0 emotion-18"
+    class="MuiDivider-root MuiDivider-fullWidth margin-bottom emotion-0 emotion-20"
   />
   <h3
     class="margin-bottom-none"
@@ -603,7 +613,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-25"
           data-shrink="false"
           for="mui-3"
           id="mui-3-label"
@@ -632,7 +642,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
             class="MuiOutlinedInput-notchedOutline emotion-8"
           >
             <legend
-              class="emotion-28"
+              class="emotion-30"
             >
               <span>
                 Key ID
@@ -645,7 +655,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-25"
           data-shrink="false"
           for="mui-4"
           id="mui-4-label"
@@ -674,7 +684,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
             class="MuiOutlinedInput-notchedOutline emotion-8"
           >
             <legend
-              class="emotion-28"
+              class="emotion-30"
             >
               <span>
                 Key Secret
@@ -687,7 +697,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-25"
           data-shrink="false"
           for="mui-5"
           id="mui-5-label"
@@ -716,7 +726,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
             class="MuiOutlinedInput-notchedOutline emotion-8"
           >
             <legend
-              class="emotion-28"
+              class="emotion-30"
             >
               <span>
                 Region
@@ -729,7 +739,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-25"
           data-shrink="false"
           for="mui-6"
           id="mui-6-label"
@@ -758,7 +768,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
             class="MuiOutlinedInput-notchedOutline emotion-8"
           >
             <legend
-              class="emotion-28"
+              class="emotion-30"
             >
               <span>
                 Device Policy Name
@@ -794,14 +804,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
     </div>
   </div>
   <p
-    class="info icon margin-bottom emotion-0"
+    class="emotion-15 icon flexbox center-aligned emotion-16 margin-bottom emotion-0"
   >
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-16"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-18"
       data-testid="InfoOutlinedIcon"
       focusable="false"
-      style="vertical-align: middle; margin: 0px 6px 4px 0px;"
       viewBox="0 0 24 24"
     >
       <path

@@ -935,6 +935,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
   border-radius: inherit;
 }
 
+.emotion-26 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-27 {
+  gap: 8px;
+}
+
 <div
   class="MuiCollapse-root MuiCollapse-vertical filter-wrapper MuiCollapse-entered emotion-0"
   style="min-height: 0px;"
@@ -1119,14 +1128,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
         style="align-items: flex-end;"
       >
         <p
-          class="info icon "
+          class="emotion-26 icon flexbox center-aligned emotion-27 "
         >
           <svg
             aria-hidden="true"
             class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-10"
             data-testid="InfoOutlinedIcon"
             focusable="false"
-            style="vertical-align: middle; margin: 0px 6px 4px 0px;"
             viewBox="0 0 24 24"
           >
             <path

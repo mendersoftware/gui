@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@mui/material';
-import { CloudUpload, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { CloudUpload } from '@mui/icons-material';
 
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
@@ -16,6 +16,7 @@ import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
 import { useDebounce } from '../../utils/debouncehook';
 import { defaultVisibleSection } from '../../constants/releaseConstants';
+import InfoHint from '../common/info-hint';
 
 const refreshArtifactsLength = 60000;
 
@@ -136,10 +137,7 @@ export const Artifacts = props => {
               >
                 Upload
               </Button>
-              <p className="info flexbox center-aligned">
-                <InfoIcon fontSize="small" />
-                Upload an Artifact to an existing or new Release
-              </p>
+              <InfoHint content="Upload an Artifact to an existing or new Release" />
               {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
             </>
           )}

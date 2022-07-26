@@ -454,6 +454,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
 }
 
 .emotion-20 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-21 {
+  gap: 8px;
+}
+
+.emotion-22 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -605,14 +614,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
       </div>
     </div>
     <p
-      class="info icon "
+      class="emotion-20 icon flexbox center-aligned emotion-21 "
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-20"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-22"
         data-testid="InfoOutlinedIcon"
         focusable="false"
-        style="vertical-align: middle; margin: 0px 6px 4px 0px;"
         viewBox="0 0 24 24"
       >
         <path

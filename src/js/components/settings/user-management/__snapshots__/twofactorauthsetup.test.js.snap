@@ -186,6 +186,11 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
   opacity: 0.38;
 }
 
+.emotion-6 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div
   class="margin-top"
 >
@@ -220,7 +225,7 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
     </span>
   </div>
   <p
-    class="info"
+    class="emotion-6 "
     style="width: 75%; margin: 0px;"
   >
     Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.

@@ -555,6 +555,15 @@ exports[`DeviceTwin Component renders sub component Title correctly 1`] = `
 
 exports[`DeviceTwin Component renders sub component TwinError correctly 1`] = `
 .emotion-0 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-1 {
+  gap: 8px;
+}
+
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -572,14 +581,13 @@ exports[`DeviceTwin Component renders sub component TwinError correctly 1`] = `
 }
 
 <p
-  class="info icon "
+  class="emotion-0 icon flexbox center-aligned emotion-1 "
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
     data-testid="InfoOutlinedIcon"
     focusable="false"
-    style="vertical-align: middle; margin: 0px 6px 4px 0px;"
     viewBox="0 0 24 24"
   >
     <path
@@ -707,6 +715,15 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 2`]
 
 exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 3`] = `
 .emotion-0 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-1 {
+  gap: 8px;
+}
+
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -724,14 +741,13 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 3`]
 }
 
 <p
-  class="info icon "
+  class="emotion-0 icon flexbox center-aligned emotion-1 "
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
     data-testid="InfoOutlinedIcon"
     focusable="false"
-    style="vertical-align: middle; margin: 0px 6px 4px 0px;"
     viewBox="0 0 24 24"
   >
     <path

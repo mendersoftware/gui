@@ -401,6 +401,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   color: #d32f2f;
 }
 
+.emotion-8 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div>
   <div
     class="MuiAutocomplete-root emotion-0"
@@ -451,7 +456,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
     class="MuiFormHelperText-root emotion-7"
   />
   <p
-    class="info"
+    class="emotion-8 "
   >
     Note: individual devices can't be added to dynamic groups.
     <br />

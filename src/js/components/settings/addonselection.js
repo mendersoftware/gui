@@ -3,6 +3,7 @@ import React from 'react';
 import { Checkbox } from '@mui/material';
 
 import { ADDONS, PLANS } from '../../constants/appConstants';
+import InfoText from '../common/infotext';
 
 const priceStyle = { fontSize: '1rem' };
 
@@ -53,7 +54,7 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
                   <div>{addOn[updatedPlan].deviceCount}</div>
                 </div>
               )}
-              <span className="info">{addOn.description}</span>
+              <InfoText variant="dense">{addOn.description}</InfoText>
               <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener noreferrer">
                 Learn more
               </a>

@@ -140,7 +140,16 @@ exports[`AddArtifact Component renders correctly 1`] = `
   font-size: 1.25rem;
 }
 
+.emotion-7 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 .emotion-8 {
+  gap: 8px;
+}
+
+.emotion-10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -159,11 +168,11 @@ exports[`AddArtifact Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-8>:not(:first-of-type) {
+.emotion-10>:not(:first-of-type) {
   margin-left: 8px;
 }
 
-.emotion-9 {
+.emotion-11 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -210,39 +219,39 @@ exports[`AddArtifact Component renders correctly 1`] = `
   color: #1976d2;
 }
 
-.emotion-9::-moz-focus-inner {
+.emotion-11::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-9.Mui-disabled {
+.emotion-11.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-9 {
+  .emotion-11 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-9:hover {
+.emotion-11:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(25, 118, 210, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-9:hover {
+  .emotion-11:hover {
     background-color: transparent;
   }
 }
 
-.emotion-9.Mui-disabled {
+.emotion-11.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-10 {
+.emotion-12 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -254,7 +263,7 @@ exports[`AddArtifact Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-11 {
+.emotion-13 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -303,23 +312,23 @@ exports[`AddArtifact Component renders correctly 1`] = `
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-11::-moz-focus-inner {
+.emotion-13::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-11.Mui-disabled {
+.emotion-13.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-11 {
+  .emotion-13 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-11:hover {
+.emotion-13:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #1565c0;
@@ -327,20 +336,20 @@ exports[`AddArtifact Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-11:hover {
+  .emotion-13:hover {
     background-color: #1976d2;
   }
 }
 
-.emotion-11:active {
+.emotion-13:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-11.Mui-focusVisible {
+.emotion-13.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-11.Mui-disabled {
+.emotion-13.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
@@ -415,7 +424,7 @@ exports[`AddArtifact Component renders correctly 1`] = `
           </span>
         </div>
         <p
-          class="info flexbox centered"
+          class="emotion-7 icon flexbox center-aligned emotion-8 "
           style="margin-top: 10px;"
         >
           <svg
@@ -433,23 +442,23 @@ exports[`AddArtifact Component renders correctly 1`] = `
         </p>
       </div>
       <div
-        class="MuiDialogActions-root MuiDialogActions-spacing emotion-8"
+        class="MuiDialogActions-root MuiDialogActions-spacing emotion-10"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-9"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-11"
           tabindex="0"
           type="button"
         >
           Cancel
           <span
-            class="MuiTouchRipple-root emotion-10"
+            class="MuiTouchRipple-root emotion-12"
           />
         </button>
         <div
           style="flex-grow: 1;"
         />
         <button
-          class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-11"
+          class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-13"
           disabled=""
           tabindex="-1"
           type="button"

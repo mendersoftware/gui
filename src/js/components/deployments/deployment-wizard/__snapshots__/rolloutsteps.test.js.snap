@@ -331,6 +331,11 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
+.emotion-23 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div>
   <div
     class=""
@@ -552,7 +557,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
         </div>
       </div>
       <p
-        class="info"
+        class="emotion-23 "
       >
         A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
          
@@ -900,6 +905,11 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   border-radius: inherit;
 }
 
+.emotion-23 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div>
   <div
     class=""
@@ -1121,7 +1131,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
         </div>
       </div>
       <p
-        class="info"
+        class="emotion-23 "
       >
         A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
          
@@ -1469,6 +1479,11 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   border-radius: inherit;
 }
 
+.emotion-23 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div>
   <div
     class=""
@@ -1690,7 +1705,7 @@ exports[`RolloutSteps Component renders correctly 3`] = `
         </div>
       </div>
       <p
-        class="info"
+        class="emotion-23 "
       >
         A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
          

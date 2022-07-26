@@ -8,6 +8,7 @@ import EnterpriseNotification from '../../common/enterpriseNotification';
 import InfoHint from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
 import { colors } from '../../../themes/Mender';
+import InfoText from '../../common/infotext';
 
 const stepActions = {
   continue: 'continue',
@@ -137,13 +138,13 @@ export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, i
     <div className={disabled ? 'muted' : ''}>
       <RolloutSteps disabled={disabled} onStepChange={onStepChange} release={release} steps={steps} />
       {onStepChange && !disabled && (
-        <p className="info">
+        <InfoText>
           A &apos;pause&apos; means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant
           approval by clicking &quot;continue&quot; in the deployment progress UI.{' '}
           <a href={`https://docs.mender.io/${docsVersion}`} target="_blank" rel="noopener noreferrer">
             Learn more
           </a>
-        </p>
+        </InfoText>
       )}
     </div>
     {isEnterprise ? (
