@@ -18,8 +18,7 @@ exports[`Deployments Component renders correctly 1`] = `
     </span>
   </h4>
   <div
-    class="deployments"
-    style="margin-bottom: 50px;"
+    class="deployments margin-bottom-large"
   >
     <div
       class="loaderContainer"

@@ -2,6 +2,13 @@
 
 exports[`DeploymentNotifications Component renders correctly 1`] = `
 .emotion-0 {
+  color: #9e9e9e;
+  margin: 0 7px 0 10px;
+  top: 5px;
+  font-size: 20px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -25,10 +32,9 @@ exports[`DeploymentNotifications Component renders correctly 1`] = `
   <span />
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium flip-horizontal emotion-0"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium flip-horizontal emotion-0 emotion-1"
     data-testid="RefreshIcon"
     focusable="false"
-    style="color: rgb(199, 199, 199); margin: 0px 7px 0px 10px; top: 5px; font-size: 20px;"
     viewBox="0 0 24 24"
   >
     <path

@@ -2,6 +2,16 @@
 
 exports[`PortForward Component renders correctly 1`] = `
 .emotion-0 {
+  grid-template-columns: minmax(max-content, 150px) max-content;
+  row-gap: 20px;
+}
+
+.emotion-1 {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: initial;
+}
+
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -32,8 +42,7 @@ exports[`PortForward Component renders correctly 1`] = `
        details
     </b>
     <div
-      class="muted two-columns"
-      style="grid-template-columns: minmax(max-content, 150px) max-content; row-gap: 20px;"
+      class="muted two-columns emotion-0"
     >
       <div
         class="align-right"
@@ -44,16 +53,15 @@ exports[`PortForward Component renders correctly 1`] = `
       </div>
       <div>
         <a
-          class="flexbox center-aligned"
+          class="flexbox center-aligned emotion-1"
           href="/devices?id=a1"
-          style="color: rgba(0, 0, 0, 0.54); font-weight: initial;"
         >
           <div>
             a1
           </div>
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-0"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-2"
             data-testid="LaunchIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -110,8 +118,7 @@ exports[`PortForward Component renders correctly 1`] = `
        details
     </b>
     <div
-      class="muted two-columns"
-      style="grid-template-columns: minmax(max-content, 150px) max-content; row-gap: 20px;"
+      class="muted two-columns emotion-0"
     >
       <div
         class="align-right"

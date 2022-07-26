@@ -1,17 +1,20 @@
 import React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import Time from '../../common/time';
 import { BaseWidget } from './baseWidget';
 
-const headerStyle = { justifyContent: 'flex-end' };
-const countStyle = { fontSize: 36, marginRight: '1vw' };
+const useStyles = makeStyles()(() => ({
+  count: { fontSize: 36, marginRight: '1vw' }
+}));
 
 export const CompletedDeployments = props => {
+  const { classes } = useStyles();
   const { cutoffDate, finishedCount, onClick } = props;
   const widgetMain = {
     header: (
-      <div className="flexbox center-aligned" style={headerStyle}>
-        <div style={countStyle}>{finishedCount}</div>
+      <div className="flexbox center-aligned">
+        <div className={classes.count}>{finishedCount}</div>
         <div>completed</div>
       </div>
     ),

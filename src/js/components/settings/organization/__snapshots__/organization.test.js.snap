@@ -566,13 +566,22 @@ exports[`MyOrganization Component renders correctly 1`] = `
   background-color: rgba(0, 0, 0, 0.12);
 }
 
+.emotion-44 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 .emotion-45 {
+  gap: 8px;
+}
+
+.emotion-47 {
   background-color: #bdbdbd;
   margin-top: 48px;
   padding: 16px;
 }
 
-.emotion-45>h5 {
+.emotion-47>h5 {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -828,14 +837,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <p
-          class="info icon "
+          class="emotion-44 icon flexbox center-aligned emotion-45 "
         >
           <svg
             aria-hidden="true"
             class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-38"
             data-testid="InfoOutlinedIcon"
             focusable="false"
-            style="vertical-align: middle; margin: 0px 6px 4px 0px;"
             viewBox="0 0 24 24"
           >
             <path
@@ -848,7 +856,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="emotion-45"
+    class="emotion-47"
   >
     <h5>
       Billing

@@ -10,21 +10,18 @@ import Loader from '../common/loader';
 import Deployments from './deployments';
 import Devices from './devices';
 import SoftwareDistribution from './software-distribution';
-import { styles } from './widgets/baseWidget';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
+import { makeStyles } from 'tss-react/mui';
 
-const rowBaseStyles = {
-  container: {
-    flexWrap: 'wrap',
-    maxWidth: '85vw'
-  }
-};
-const rowStyles = { ...rowBaseStyles.container, ...styles.rowStyle };
+const useStyles = makeStyles()(() => ({
+  row: { flexWrap: 'wrap', maxWidth: '85vw' }
+}));
 
 var timeoutID = null;
 
 export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit, onboardingState, setSnackbar }) => {
   const navigate = useNavigate();
+  const { classes } = useStyles();
 
   useEffect(() => {
     if (!currentUser || !onboardingState.showTips) {
@@ -52,10 +49,10 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
   };
 
   return currentUser ? (
-    <div className="dashboard">
-      <Devices styles={rowStyles} clickHandle={handleClick} />
+    <div className="dashboard flexbox column">
+      <Devices className={`flexbox ${classes.row}`} clickHandle={handleClick} />
       <div className="two-columns" style={{ gridTemplateColumns: '4fr 5fr' }}>
-        <Deployments styles={rowStyles} clickHandle={handleClick} />
+        <Deployments itemsClassName={`flexbox ${classes.row}`} clickHandle={handleClick} />
         {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
       </div>
     </div>

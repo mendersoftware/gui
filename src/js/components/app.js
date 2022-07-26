@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie';
 import { LinearProgress, IconButton, Tooltip } from '@mui/material';
 import { Cancel as CancelIcon } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { getToken, updateMaxAge, expirySet } from '../auth';
 import { cancelFileUpload, setSnackbar } from '../actions/appActions';
@@ -23,12 +24,37 @@ import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import Header from './header/header';
 import LeftNav from './leftnav';
 import { WrappedBaseline } from '../main';
-import { colors, light as lightTheme, dark as darkTheme } from '../themes/Mender';
+import { light as lightTheme, dark as darkTheme } from '../themes/Mender';
 import SearchResult from './search-result';
 
 const activationPath = '/activate';
 const timeout = 900000; // 15 minutes idle time
 const cookies = new Cookies();
+
+const useStyles = makeStyles()(theme => ({
+  progress: {
+    backgroundColor: theme.palette.grey[600],
+    gridColumn: 1,
+    margin: '15px 0'
+  }
+}));
+
+const UploadProgressBar = ({ cancelFileUpload, uploadProgress }) => {
+  const { classes } = useStyles();
+  return (
+    Boolean(uploadProgress) && (
+      <div id="progressBarContainer">
+        <p className="align-center">Upload in progress ({Math.round(uploadProgress)}%)</p>
+        <LinearProgress className={classes.progress} variant="determinate" value={uploadProgress} />
+        <Tooltip title="Abort" placement="top">
+          <IconButton onClick={cancelFileUpload} size="large">
+            <CancelIcon />
+          </IconButton>
+        </Tooltip>
+      </div>
+    )
+  );
+};
 
 export const AppRoot = ({
   cancelFileUpload,
@@ -125,17 +151,7 @@ export const AppRoot = ({
           <PublicRoutes />
         )}
         <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
-        {Boolean(uploadProgress) && (
-          <div id="progressBarContainer">
-            <p className="align-center">Upload in progress ({Math.round(uploadProgress)}%)</p>
-            <LinearProgress variant="determinate" style={{ backgroundColor: colors.grey, gridColumn: 1, margin: '15px 0' }} value={uploadProgress} />
-            <Tooltip title="Abort" placement="top">
-              <IconButton onClick={cancelFileUpload} size="large">
-                <CancelIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-        )}
+        <UploadProgressBar cancelFileUpload={cancelFileUpload} uploadProgress={uploadProgress} />
       </div>
     </ThemeProvider>
   );

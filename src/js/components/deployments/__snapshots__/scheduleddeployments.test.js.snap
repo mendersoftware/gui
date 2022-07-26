@@ -2,6 +2,12 @@
 
 exports[`ScheduledDeployments Component renders correctly 1`] = `
 .emotion-0 {
+  fill: #bdbdbd;
+  width: 111px;
+  height: 111px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -35,10 +41,9 @@ exports[`ScheduledDeployments Component renders correctly 1`] = `
     </p>
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium flip-horizontal emotion-0 emotion-1"
       data-testid="RefreshIcon"
       focusable="false"
-      style="transform: rotateY(-180deg); fill: #e3e3e3; width: 111px; height: 111px;"
       viewBox="0 0 24 24"
     >
       <path

@@ -1,15 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AcceptedDevices Component renders correctly 1`] = `
+.emotion-0 {
+  background: #bdbdbd;
+}
+
+.emotion-1 {
+  height: 100%;
+  width: 100%;
+}
+
+.emotion-2 {
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+}
+
 <div
-  class="notActive widget "
+  class="widget emotion-0 "
 >
   <div
-    style="height: 100%; width: 100%; display: flex; flex-direction: column;"
+    class="flexbox column emotion-1"
   >
     <div
-      class="widgetMainContent align-right"
-      style="display: flex; flex-direction: column; align-items: flex-end;"
+      class="flexbox column widgetMainContent align-right emotion-2"
     >
       <div
         class="header"

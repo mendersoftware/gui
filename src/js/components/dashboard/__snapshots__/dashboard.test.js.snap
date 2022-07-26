@@ -154,7 +154,33 @@ exports[`Dashboard Component renders correctly 1`] = `
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
 }
 
+.emotion-5 {
+  height: 100%;
+  width: 100%;
+}
+
 .emotion-6 {
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+}
+
+.emotion-7 {
+  background: #bdbdbd;
+}
+
+.emotion-9 {
+  margin-right: 10px;
+  height: 14px;
+  width: 14px;
+}
+
+.emotion-10 {
+  color: #2e7d32;
+}
+
+.emotion-13 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -201,48 +227,48 @@ exports[`Dashboard Component renders correctly 1`] = `
   color: #1976d2;
 }
 
-.emotion-6::-moz-focus-inner {
+.emotion-13::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-6.Mui-disabled {
+.emotion-13.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-6 {
+  .emotion-13 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-6:hover {
+.emotion-13:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(25, 118, 210, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-6:hover {
+  .emotion-13:hover {
     background-color: transparent;
   }
 }
 
-.emotion-6.Mui-disabled {
+.emotion-13.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-9 {
+.emotion-16 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
 
-.emotion-10 {
+.emotion-17 {
   gap: 8px;
 }
 
-.emotion-11 {
+.emotion-18 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -260,7 +286,7 @@ exports[`Dashboard Component renders correctly 1`] = `
 }
 
 <div
-  class="dashboard"
+  class="dashboard flexbox column"
 >
   <div>
     <h4
@@ -271,7 +297,7 @@ exports[`Dashboard Component renders correctly 1`] = `
       </span>
     </h4>
     <div
-      style="margin-bottom: 30px; flex-wrap: wrap; max-width: 85vw; display: flex; flex-direction: row;"
+      class="margin-bottom undefined"
     >
       <div
         style="position: relative;"
@@ -301,11 +327,10 @@ exports[`Dashboard Component renders correctly 1`] = `
           class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation2 widget  emotion-4"
         >
           <div
-            style="height: 100%; width: 100%; display: flex; flex-direction: column;"
+            class="flexbox column emotion-5"
           >
             <div
-              class="widgetMainContent align-right"
-              style="display: flex; flex-direction: column; align-items: flex-end;"
+              class="flexbox column widgetMainContent align-right emotion-6"
             >
               <div
                 class="header"
@@ -327,49 +352,43 @@ exports[`Dashboard Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="notActive widget "
+        class="widget emotion-7 "
       >
         <div
-          style="height: 100%; width: 100%; display: flex; flex-direction: column;"
+          class="flexbox column emotion-5"
         >
           <div
-            class="widgetHeader"
-            style="border-bottom-style: solid; display: flex; flex-direction: row;"
+            class="flexbox widgetHeader"
+            style="border-bottom-style: solid;"
           >
-            <div
-              style="display: flex; flex-direction: row;"
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-9 emotion-10 emotion-2"
+              data-testid="CheckCircleIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-2"
-                data-testid="CheckCircleIcon"
-                focusable="false"
-                style="margin-right: 10px; height: 14px; width: 14px; color: rgb(0, 158, 115);"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                />
-              </svg>
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <div
+              class="flexbox column"
+            >
               <div
-                style="display: flex; flex-direction: column;"
+                class="hint"
               >
-                <div
-                  class="hint"
-                >
-                  All devices online
-                </div>
-                <div
-                  class="tiny"
-                >
-                  Active in past 24h
-                </div>
+                All devices online
+              </div>
+              <div
+                class="tiny"
+              >
+                Active in past 24h
               </div>
             </div>
           </div>
           <div
-            class="widgetMainContent align-right"
-            style="display: flex; flex-direction: column; align-items: flex-end;"
+            class="flexbox column widgetMainContent align-right emotion-6"
           >
             <div
               class="header"
@@ -398,7 +417,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           </p>
         </div>
         <a
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-6"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-13"
           href="/devices/accepted"
           tabindex="0"
         >
@@ -423,8 +442,7 @@ exports[`Dashboard Component renders correctly 1`] = `
         </span>
       </h4>
       <div
-        class="deployments"
-        style="margin-bottom: 50px;"
+        class="deployments margin-bottom-large"
       >
         <div
           class="loaderContainer"
@@ -452,11 +470,11 @@ exports[`Dashboard Component renders correctly 1`] = `
       class="flexbox centered"
     >
       <p
-        class="emotion-9 icon flexbox center-aligned emotion-10 "
+        class="emotion-16 icon flexbox center-aligned emotion-17 "
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-11"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-18"
           data-testid="InfoOutlinedIcon"
           focusable="false"
           viewBox="0 0 24 24"

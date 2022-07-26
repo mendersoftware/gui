@@ -1,14 +1,11 @@
 import React from 'react';
-import Paper from '@mui/material/Paper';
+import { Paper } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
-export const styles = {
+export const useStyles = makeStyles()(theme => ({
   rowStyle: {
     display: 'flex',
     flexDirection: 'row'
-  },
-  columnStyle: {
-    display: 'flex',
-    flexDirection: 'column'
   },
   rightAlign: {
     alignItems: 'flex-end'
@@ -16,28 +13,32 @@ export const styles = {
   leftAlign: {
     alignItems: 'flex-start'
   },
-  contentStyle: {
+  contentWrapper: {
     height: '100%',
     width: '100%'
+  },
+  notActive: {
+    background: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
   }
-};
+}));
 
 export const BaseWidget = ({ className = '', footer, header, innerRef, isActive, main, onClick, showHelptips }) => {
+  const { classes } = useStyles();
   const content = (
-    <div style={{ ...styles.contentStyle, ...styles.columnStyle }} ref={ref => (innerRef ? (innerRef.current = ref) : null)}>
+    <div className={`flexbox column ${classes.contentWrapper}`} ref={ref => (innerRef ? (innerRef.current = ref) : null)}>
       {showHelptips ? main.prepend : null}
       {header ? (
-        <div style={Object.assign({ borderBottomStyle: 'solid' }, styles.rowStyle)} className="widgetHeader">
+        <div className="flexbox widgetHeader" style={{ borderBottomStyle: 'solid' }}>
           {header}
         </div>
       ) : null}
-      <div style={Object.assign({}, styles.columnStyle, styles.rightAlign)} className="widgetMainContent align-right">
+      <div className={`flexbox column widgetMainContent align-right ${classes.rightAlign}`}>
         <div className="header">{main.header}</div>
         <div className="counter">{main.counter}</div>
       </div>
       <span className="link">{main.targetLabel}</span>
       {footer ? (
-        <div className="widgetFooter" style={Object.assign({ borderTopStyle: 'solid' }, styles.rowStyle)}>
+        <div className="flexbox widgetFooter" style={{ borderTopStyle: 'solid' }}>
           {footer}
         </div>
       ) : null}
@@ -51,7 +52,7 @@ export const BaseWidget = ({ className = '', footer, header, innerRef, isActive,
     );
   }
   return (
-    <div className={`notActive widget ${className}`} onClick={onClick}>
+    <div className={`widget ${classes.notActive} ${className}`} onClick={onClick}>
       {content}
     </div>
   );

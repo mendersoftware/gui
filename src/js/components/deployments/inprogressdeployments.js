@@ -158,7 +158,7 @@ export const Progress = props => {
               <a onClick={createClick}>Create a deployment</a> to get started
             </p>
           )}
-          <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
+          <RefreshIcon className="flip-horizontal" style={{ fill: '#e3e3e3', width: 111, height: 111 }} />
         </div>
       )}
     </div>

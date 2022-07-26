@@ -2,6 +2,16 @@
 
 exports[`PhaseProgress Component renders correctly 1`] = `
 .emotion-0 {
+  border-left-width: 1px;
+  height: 100%;
+  z-index: 1;
+}
+
+.emotion-1 {
+  border-left-color: #9e9e9e;
+}
+
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -64,11 +74,12 @@ exports[`PhaseProgress Component renders correctly 1`] = `
           style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 45px 1.25rem min-content; left: 12.5%; width: 25%;"
         >
           <div
-            style="border-left: 1px solid #e0e0e0; height: 100%; z-index: 1;"
+            class="emotion-0 emotion-1"
+            style="border-left-style: solid;"
           />
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
             data-testid="CheckCircleIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -107,7 +118,8 @@ exports[`PhaseProgress Component renders correctly 1`] = `
           style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 45px 1.25rem min-content; left: 37.5%; width: 25%;"
         >
           <div
-            style="border-left: 1px solid #e0e0e0; height: 100%; z-index: 1;"
+            class="emotion-0 emotion-1"
+            style="border-left-style: solid;"
           />
           <div />
           <div />
@@ -140,7 +152,8 @@ exports[`PhaseProgress Component renders correctly 1`] = `
           style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 45px 1.25rem min-content; left: 62.5%; width: 25%;"
         >
           <div
-            style="border-left: 1px solid #e0e0e0; height: 100%; z-index: 1;"
+            class="emotion-0 emotion-1"
+            style="border-left-style: solid;"
           />
           <div />
           <div />
@@ -200,6 +213,10 @@ exports[`PhaseProgress Component renders correctly 1`] = `
 
 exports[`PhaseProgress Component renders correctly for list usage 1`] = `
 .emotion-0 {
+  margin-bottom: 8px;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -216,7 +233,21 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
   font-size: inherit;
 }
 
-.emotion-1 {
+.emotion-2 {
+  margin: 4px;
+}
+
+.emotion-3 {
+  border-left-width: 1px;
+  height: 100%;
+  z-index: 1;
+}
+
+.emotion-4 {
+  border-left-color: #9e9e9e;
+}
+
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -238,12 +269,11 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
     class="flexbox column progress-chart-container stepped-progress "
   >
     <div
-      class="flexbox space-between"
-      style="margin-bottom: 8px;"
+      class="flexbox space-between emotion-0"
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-0"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-1"
         data-testid="PlayArrowIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -259,8 +289,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
       </div>
     </div>
     <div
-      class="muted slightly-smaller"
-      style="margin: 4px;"
+      class="muted slightly-smaller emotion-2"
     >
       Phase 1 of 1
     </div>
@@ -290,11 +319,12 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 20px 1.25rem min-content; left: 12.5%; width: 25%;"
       >
         <div
-          style="border-left: 1px solid #e0e0e0; height: 100%; z-index: 1;"
+          class="emotion-3 emotion-4"
+          style="border-left-style: solid;"
         />
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-1"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
           data-testid="CheckCircleIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -331,7 +361,8 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 20px 1.25rem min-content; left: 37.5%; width: 25%;"
       >
         <div
-          style="border-left: 1px solid #e0e0e0; height: 100%; z-index: 1;"
+          class="emotion-3 emotion-4"
+          style="border-left-style: solid;"
         />
         <div />
         <div
@@ -362,7 +393,8 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 20px 1.25rem min-content; left: 62.5%; width: 25%;"
       >
         <div
-          style="border-left: 1px solid #e0e0e0; height: 100%; z-index: 1;"
+          class="emotion-3 emotion-4"
+          style="border-left-style: solid;"
         />
         <div />
         <div

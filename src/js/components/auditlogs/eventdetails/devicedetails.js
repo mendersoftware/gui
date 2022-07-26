@@ -2,17 +2,21 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Launch as LaunchIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
-import { colors } from '../../../themes/Mender';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
+import { makeStyles } from 'tss-react/mui';
+
+const useStyles = makeStyles()(theme => ({
+  eventDetails: { gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) },
+  deviceLink: { color: theme.palette.text.secondary, fontWeight: 'initial' }
+}));
 
 export const DetailInformation = ({ title, details }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   return (
     <div key={`${title}-details`} className="flexbox column margin-top-small">
       <b className="margin-bottom-small capitalized-start">{title} details</b>
-      <div className="muted two-columns" style={{ gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) }}>
+      <div className={`muted two-columns ${classes.eventDetails}`}>
         {Object.entries(details).map(([key, value]) => (
           <Fragment key={key}>
             <div className="align-right">
@@ -27,13 +31,14 @@ export const DetailInformation = ({ title, details }) => {
 };
 
 export const DeviceDetails = ({ device, idAttribute, onClose }) => {
+  const { classes } = useStyles();
   const { name, device_type: deviceTypes, artifact_name } = device.attributes;
   const usesId = !idAttribute || idAttribute === 'id' || idAttribute === 'Device ID';
   const nameContainer = name ? { Name: name } : {};
   const deviceDetails = {
     ...nameContainer,
     [usesId ? 'Device ID' : idAttribute]: (
-      <Link className="flexbox center-aligned" style={{ color: colors.disabledColor, fontWeight: 'initial' }} to={`/devices?id=${device.id}`}>
+      <Link className={`flexbox center-aligned ${classes.deviceLink}`} to={`/devices?id=${device.id}`}>
         <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
       </Link>

@@ -137,6 +137,22 @@ exports[`PendingDevices Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
+.emotion-3 {
+  background: #bdbdbd;
+}
+
+.emotion-4 {
+  height: 100%;
+  width: 100%;
+}
+
+.emotion-5 {
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+}
+
 <body>
   <div>
     <div
@@ -164,14 +180,13 @@ exports[`PendingDevices Component renders correctly 1`] = `
         />
       </a>
       <div
-        class="notActive widget "
+        class="widget emotion-3 "
       >
         <div
-          style="height: 100%; width: 100%; display: flex; flex-direction: column;"
+          class="flexbox column emotion-4"
         >
           <div
-            class="widgetMainContent align-right"
-            style="display: flex; flex-direction: column; align-items: flex-end;"
+            class="flexbox column widgetMainContent align-right emotion-5"
           >
             <div
               class="header"

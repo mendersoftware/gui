@@ -4,11 +4,10 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { Chip } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { ArrowForward } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentStats } from '../../../helpers';
-import { colors } from '../../../themes/Mender';
 import { TwoColumnData } from '../../common/configurationobject';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
@@ -18,12 +17,19 @@ import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import PhaseProgress from './phaseprogress';
 import LinedHeader from '../../common/lined-header';
 
+const useStyles = makeStyles()(theme => ({
+  currentPhaseInfo: { backgroundColor: theme.palette.grey[400] },
+  phaseInfo: { maxWidth: maxPhaseWidth, borderRadius: 5, paddingTop: theme.spacing(), paddingBottom: theme.spacing(3) },
+  phaseIndex: { alignSelf: 'flex-start', margin: theme.spacing(2), marginLeft: theme.spacing(2.5) },
+  phasesOverviewArrow: { marginLeft: theme.spacing(4), marginRight: theme.spacing(4) }
+}));
+
 momentDurationFormatSetup(moment);
 
 const maxPhaseWidth = 270;
 
 export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControlChange }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const now = moment();
   const {
     created: creationTime = now.toISOString(),
@@ -65,7 +71,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
                 'Current phase': currentPhaseTime
               }}
             />
-            <ArrowForward style={{ marginLeft: theme.spacing(4), marginRight: theme.spacing(4) }} />
+            <ArrowForward className={classes.phasesOverviewArrow} />
             <TwoColumnData {...defaultColumnDataProps} config={{ 'End time': endTime }} />
           </div>
           <div className="progress-chart-container margin-top" style={{ background: 'initial' }}>
@@ -99,22 +105,18 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
             'Batch size': <div className="muted">{`${phase.batch_size}%${deviceCountText}`}</div>
           };
           let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="muted">Complete</div> : null;
-          let backgroundColor = 'initial';
+          let isCurrentPhase = false;
           if (now.isBefore(startTime)) {
             const duration = moment.duration(moment(startTime).diff(now));
             phaseTitle = <div>{`Begins in ${duration.format('d [days] hh [h] mm [m]')}`}</div>;
           } else if (status === DEPLOYMENT_STATES.inprogress && phase.id === currentPhase.id) {
             phaseTitle = <div className="muted">Current phase</div>;
-            backgroundColor = colors.expansionBackground;
+            isCurrentPhase = true;
           }
           return (
-            <div
-              className="flexbox column centered"
-              key={startTime}
-              style={{ maxWidth: maxPhaseWidth, backgroundColor, borderRadius: 5, paddingTop: theme.spacing(), paddingBottom: theme.spacing(3) }}
-            >
+            <div className={`flexbox column centered ${classes.phaseInfo} ${isCurrentPhase ? classes.currentPhaseInfo : ''}`} key={startTime}>
               {phaseTitle}
-              <Chip size="small" label={`Phase ${index + 1}`} style={{ alignSelf: 'flex-start', margin: theme.spacing(2), marginLeft: theme.spacing(2.5) }} />
+              <Chip className={classes.phaseIndex} size="small" label={`Phase ${index + 1}`} />
               <TwoColumnData {...defaultColumnDataProps} style={{ ...defaultColumnDataProps.style, alignSelf: 'initial' }} config={phaseObject} />
             </div>
           );

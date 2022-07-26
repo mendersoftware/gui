@@ -82,6 +82,10 @@ exports[`Review deployment Component renders correctly 1`] = `
 }
 
 .emotion-25 {
+  min-width: 88px;
+}
+
+.emotion-26 {
   max-width: 100%;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 0.8125rem;
@@ -116,12 +120,12 @@ exports[`Review deployment Component renders correctly 1`] = `
   border: 1px solid #bdbdbd;
 }
 
-.emotion-25.Mui-disabled {
+.emotion-26.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-25 .MuiChip-avatar {
+.emotion-26 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -130,17 +134,17 @@ exports[`Review deployment Component renders correctly 1`] = `
   font-size: 0.75rem;
 }
 
-.emotion-25 .MuiChip-avatarColorPrimary {
+.emotion-26 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: #1565c0;
 }
 
-.emotion-25 .MuiChip-avatarColorSecondary {
+.emotion-26 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: #7b1fa2;
 }
 
-.emotion-25 .MuiChip-avatarSmall {
+.emotion-26 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -148,13 +152,13 @@ exports[`Review deployment Component renders correctly 1`] = `
   font-size: 0.625rem;
 }
 
-.emotion-25 .MuiChip-icon {
+.emotion-26 .MuiChip-icon {
   color: #616161;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-25 .MuiChip-deleteIcon {
+.emotion-26 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(0, 0, 0, 0.26);
   font-size: 22px;
@@ -162,43 +166,43 @@ exports[`Review deployment Component renders correctly 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-25 .MuiChip-deleteIcon:hover {
+.emotion-26 .MuiChip-deleteIcon:hover {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.emotion-25.MuiChip-clickable:hover {
+.emotion-26.MuiChip-clickable:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-.emotion-25.Mui-focusVisible {
+.emotion-26.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-25 .MuiChip-avatar {
+.emotion-26 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-25 .MuiChip-avatarSmall {
+.emotion-26 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-25 .MuiChip-icon {
+.emotion-26 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-25 .MuiChip-iconSmall {
+.emotion-26 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-25 .MuiChip-deleteIcon {
+.emotion-26 .MuiChip-deleteIcon {
   margin-right: 5px;
 }
 
-.emotion-25 .MuiChip-deleteIconSmall {
+.emotion-26 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-26 {
+.emotion-27 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -206,7 +210,23 @@ exports[`Review deployment Component renders correctly 1`] = `
   white-space: nowrap;
 }
 
-.emotion-27 {
+.emotion-28 {
+  min-width: 80px;
+}
+
+.emotion-29 {
+  height: 32px;
+  padding-left: 8px;
+  width: 100%;
+}
+
+.emotion-30 {
+  height: 3px;
+  width: 100%;
+  margin-right: -8px;
+}
+
+.emotion-31 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -223,12 +243,12 @@ exports[`Review deployment Component renders correctly 1`] = `
   font-size: 1.25rem;
 }
 
-.emotion-36 {
+.emotion-49 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
 
-.emotion-37 {
+.emotion-50 {
   gap: 8px;
 }
 
@@ -428,33 +448,29 @@ exports[`Review deployment Component renders correctly 1`] = `
       >
         <div
           aria-label="The Artifact is downloaded (streamed) to the inactive partition."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25 emotion-26"
           data-mui-internal-clone-element="true"
-          style="min-width: 88px;"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-26"
+            class="MuiChip-label MuiChip-labelMedium emotion-27"
           >
             Download
           </span>
         </div>
         <div
-          class="flexbox column center-aligned"
-          style="min-width: 80px;"
+          class="flexbox column center-aligned emotion-28"
         >
           <div
-            class="flexbox centered"
-            style="height: 32px; padding-left: 8px; width: 100%;"
+            class="flexbox centered emotion-29"
           >
             <div
-              style="background-color: rgba(0, 0, 0, 0.54); height: 3px; width: 100%; margin-right: -8px;"
+              class="emotion-30"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-31"
               data-testid="ArrowRightIcon"
               focusable="false"
-              style="color: rgba(0, 0, 0, 0.54);"
               viewBox="0 0 24 24"
             >
               <path
@@ -464,33 +480,29 @@ exports[`Review deployment Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25 emotion-26"
           data-mui-internal-clone-element="true"
-          style="min-width: 88px;"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-26"
+            class="MuiChip-label MuiChip-labelMedium emotion-27"
           >
             Install
           </span>
         </div>
         <div
-          class="flexbox column center-aligned"
-          style="min-width: 80px;"
+          class="flexbox column center-aligned emotion-28"
         >
           <div
-            class="flexbox centered"
-            style="height: 32px; padding-left: 8px; width: 100%;"
+            class="flexbox centered emotion-29"
           >
             <div
-              style="background-color: rgba(0, 0, 0, 0.54); height: 3px; width: 100%; margin-right: -8px;"
+              class="emotion-30"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-31"
               data-testid="ArrowRightIcon"
               focusable="false"
-              style="color: rgba(0, 0, 0, 0.54);"
               viewBox="0 0 24 24"
             >
               <path
@@ -501,33 +513,29 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
         <div
           aria-label="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25 emotion-26"
           data-mui-internal-clone-element="true"
-          style="min-width: 88px;"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-26"
+            class="MuiChip-label MuiChip-labelMedium emotion-27"
           >
             Reboot
           </span>
         </div>
         <div
-          class="flexbox column center-aligned"
-          style="min-width: 80px;"
+          class="flexbox column center-aligned emotion-28"
         >
           <div
-            class="flexbox centered"
-            style="height: 32px; padding-left: 8px; width: 100%;"
+            class="flexbox centered emotion-29"
           >
             <div
-              style="background-color: rgba(0, 0, 0, 0.54); height: 3px; width: 100%; margin-right: -8px;"
+              class="emotion-30"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-31"
               data-testid="ArrowRightIcon"
               focusable="false"
-              style="color: rgba(0, 0, 0, 0.54);"
               viewBox="0 0 24 24"
             >
               <path
@@ -538,12 +546,11 @@ exports[`Review deployment Component renders correctly 1`] = `
         </div>
         <div
           aria-label="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-25 emotion-26"
           data-mui-internal-clone-element="true"
-          style="min-width: 88px;"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-26"
+            class="MuiChip-label MuiChip-labelMedium emotion-27"
           >
             Commit
           </span>
@@ -551,11 +558,11 @@ exports[`Review deployment Component renders correctly 1`] = `
       </div>
     </div>
     <p
-      class="emotion-36 icon flexbox center-aligned emotion-37 "
+      class="emotion-49 icon flexbox center-aligned emotion-50 "
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-31"
         data-testid="InfoOutlinedIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -576,11 +583,11 @@ exports[`Review deployment Component renders correctly 1`] = `
     </p>
   </div>
   <p
-    class="emotion-36 icon flexbox center-aligned emotion-37 "
+    class="emotion-49 icon flexbox center-aligned emotion-50 "
   >
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-31"
       data-testid="InfoOutlinedIcon"
       focusable="false"
       viewBox="0 0 24 24"

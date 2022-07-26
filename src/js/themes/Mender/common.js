@@ -221,10 +221,10 @@ export const overrides = {
           borderBottom: '1px solid rgb(224, 224, 224)'
         },
         '&:hover:not($disabled):before': {
-          borderBottom: `2px solid ${colors.linkgreen} !important`
+          borderBottom: `2px solid ${palette.primary.main} !important`
         },
         '&:after': {
-          borderBottom: `2px solid ${colors.linkgreen}`
+          borderBottom: `2px solid ${palette.primary.main}`
         }
       }
     }
@@ -234,7 +234,7 @@ export const overrides = {
       root: {
         color: palette.text.hint,
         [`&.${formLabelClasses.focused}`]: {
-          color: colors.linkgreen
+          color: palette.primary.main
         }
       }
     }

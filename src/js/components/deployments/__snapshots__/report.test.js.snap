@@ -707,10 +707,9 @@ Devices that are in the middle of the deployment at the time of abort will finis
           </div>
           <svg
             aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium tss-9o8jgx-phasesOverviewArrow css-i4bv87-MuiSvgIcon-root\\"
             data-testid=\\"ArrowForwardIcon\\"
             focusable=\\"false\\"
-            style=\\"margin-left: 32px; margin-right: 32px;\\"
             viewBox=\\"0 0 24 24\\"
           >
             <path
@@ -777,8 +776,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           style=\\"grid-template-columns: repeat(auto-fit, 270px);\\"
         >
           <div
-            class=\\"flexbox column centered\\"
-            style=\\"max-width: 270px; border-radius: 5px; padding-top: 8px; padding-bottom: 24px;\\"
+            class=\\"flexbox column centered tss-1r3tzyq-phaseInfo \\"
           >
             <div
               class=\\"muted\\"
@@ -786,8 +784,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               Complete
             </div>
             <div
-              class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault css-1r1ekxc-MuiChip-root\\"
-              style=\\"align-self: flex-start; margin: 16px 16px 16px 20px;\\"
+              class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault tss-1huds4t-phaseIndex css-1r1ekxc-MuiChip-root\\"
             >
               <span
                 class=\\"MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label\\"

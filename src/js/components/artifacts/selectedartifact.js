@@ -17,25 +17,26 @@ import { makeStyles } from 'tss-react/mui';
 
 import { getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftwareInformation } from '../../helpers';
-import { colors } from '../../themes/Mender';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
 import { getUserCapabilities } from '../../selectors';
-
-const listItemStyle = {
-  color: '#404041',
-  fontSize: 13,
-  marginRight: '2vw',
-  minMidth: 200,
-  padding: 0
-};
 
 const useStyles = makeStyles()(theme => ({
   editButton: {
     color: 'rgba(0, 0, 0, 0.54)',
     marginBottom: 10
   },
-  listItemStyle,
+  listItemStyle: {
+    color: '#404041',
+    fontSize: 13,
+    marginRight: '2vw',
+    minMidth: 200,
+    padding: 0,
+    bordered: {
+      borderBottom: '1px solid',
+      borderBottomColor: theme.palette.grey[500]
+    }
+  },
   accordPanel1: {
     background: theme.palette.grey[500],
     borderTop: 'none',
@@ -158,10 +159,7 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
             secondaryTypographyProps={{ component: 'div' }}
           />
         </ListItem>
-        <ListItem
-          classes={{ root: 'attributes', disabled: 'opaque' }}
-          style={{ ...listItemStyle, borderBottom: '1px solid', borderBottomColor: colors.borderColor }}
-        >
+        <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} className={`${classes.listItemStyle} ${classes.listItemStyle.bordered}`}>
           <ListItemText primary="Signed" secondary={artifact.signed ? <CheckCircleOutlineIcon className="green" /> : <CancelOutlinedIcon className="red" />} />
         </ListItem>
       </List>

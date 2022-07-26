@@ -8,7 +8,6 @@ import { Error as ErrorIcon, OpenInNew as OpenInNewIcon } from '@mui/icons-mater
 
 import { cancelRequest } from '../../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../../constants/appConstants';
-import { colors } from '../../../themes/Mender';
 import Alert from '../../common/alert';
 import CancelRequestDialog from '../dialogs/cancelrequest';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
@@ -18,6 +17,7 @@ import { getIsEnterprise } from '../../../selectors';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
+  deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
   wrapper: {
     backgroundColor: theme.palette.grey[400],
     marginTop: theme.spacing(6),
@@ -122,9 +122,7 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
           <OrganizationSettingsItem
             title={`Device limit: ${acceptedDevices}/${deviceLimit}`}
             content={{}}
-            secondary={
-              <LinearProgress variant="determinate" style={{ backgroundColor: colors.grey, margin: '15px 0' }} value={(acceptedDevices * 100) / deviceLimit} />
-            }
+            secondary={<LinearProgress className={classes.deviceLimitBar} variant="determinate" value={(acceptedDevices * 100) / deviceLimit} />}
             notification={<DeviceLimitExpansionNotification isTrial={organization.trial} />}
           />
         )}
