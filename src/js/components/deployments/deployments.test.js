@@ -269,7 +269,11 @@ describe('Deployments Component', () => {
     act(() => userEvent.click(screen.getAllByText('Next')[0]));
 
     act(() => userEvent.click(screen.getByRole('checkbox', { name: /save as default/i })));
-    await selectMaterialUiSelectOption(screen.getByText(/don't retry/i), 1);
+    const retrySelect = screen.getByPlaceholderText(/don't retry/i);
+    act(() => userEvent.click(retrySelect));
+    fireEvent.keyDown(retrySelect, { key: 'Enter' });
+    jest.advanceTimersByTime(1000);
+    expect(retrySelect).toHaveValue(1);
     act(() => userEvent.click(screen.getAllByText('Next')[0]));
 
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
