@@ -3,6 +3,7 @@ const React = require('react');
 const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
 
 const credentialTypes = {
+  aws: 'aws',
   sas: 'sas',
   x509: 'x509'
 };
@@ -97,14 +98,14 @@ module.exports = {
   SET_DEVICE_LIMIT: 'SET_DEVICE_LIMIT',
 
   EXTERNAL_PROVIDER: {
-    amazon: {
+    'iot-core': {
       article: 'an',
-      credentialsType: credentialTypes.x509,
-      credentialsAttribute: 'connection_string',
+      credentialsType: credentialTypes.aws,
+      credentialsAttribute: 'value',
       icon: AWS,
       title: 'AWS IoT core',
-      provider: 'amazon',
-      enabled: false,
+      provider: 'iot-core',
+      enabled: true,
       configHint: <>For help finding your AWS IoT core connection string, check the AWS IoT documentation.</>
     },
     'iot-hub': {
