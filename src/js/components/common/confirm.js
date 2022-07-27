@@ -35,7 +35,7 @@ const confirmationType = {
   }
 };
 
-export const Confirm = ({ action, cancel, classes = '', style, type }) => {
+export const Confirm = ({ action, cancel, classes = '', style = {}, type }) => {
   const [className, setClassName] = useState('fadeIn');
   const [loading, setLoading] = useState(false);
 
