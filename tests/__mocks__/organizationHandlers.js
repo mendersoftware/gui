@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { defaultState } from '../mockData';
 import { PLANS } from '../../src/js/constants/appConstants';
 import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
-import { auditLogsApiUrl, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
+import { auditLogsApiUrl, samlSpApiUrlv1, samlIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { headerNames } from '../../src/js/api/general-api';
 import { EXTERNAL_PROVIDER } from '../../src/js/constants/deviceConstants';
 
@@ -152,6 +152,35 @@ export const organizationHandlers = [
   rest.delete(`${iotManagerBaseURL}/integrations/:integrationId`, ({ params: { integrationId } }, res, ctx) => {
     if (!integrationId) {
       return res(ctx.status(549));
+    }
+    return res(ctx.status(200));
+  }),
+  rest.get(samlIdpApiUrlv1, (req, res, ctx) => {
+    return res(
+      ctx.json([
+        { id: '1', issuer: 'https://samltest.id/saml/idp', valid_until: '2038-08-24T21:14:09Z' },
+        { id: '2', issuer: 'https://samltest2.id/saml/idp', valid_until: '2030-10-24T21:14:09Z' }
+      ])
+    );
+  }),
+  rest.post(samlIdpApiUrlv1, (req, res, ctx) => {
+    return res(ctx.status(200));
+  }),
+  rest.get(`${samlSpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+    if (!configId) {
+      return res(ctx.status(550));
+    }
+    return res(ctx.json({ email: 'user@acme.com', password: 'mypass1234', login: { google: 'bob@gmail.com' } }));
+  }),
+  rest.put(`${samlIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+    if (!configId) {
+      return res(ctx.status(551));
+    }
+    return res(ctx.status(200));
+  }),
+  rest.delete(`${samlIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+    if (!configId) {
+      return res(ctx.status(552));
     }
     return res(ctx.status(200));
   })

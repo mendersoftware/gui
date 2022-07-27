@@ -29,7 +29,8 @@ export const initialState = {
   },
   externalDeviceIntegrations: [
     // { <connection_string|x509|...>, id, provider }
-  ]
+  ],
+  samlConfigs: []
 };
 
 const organizationReducer = (state = initialState, action) => {
@@ -75,6 +76,11 @@ const organizationReducer = (state = initialState, action) => {
       return {
         ...state,
         externalDeviceIntegrations: action.value
+      };
+    case OrganizationConstants.RECEIVE_SAML_CONFIGS:
+      return {
+        ...state,
+        samlConfigs: action.value
       };
     default:
       return state;

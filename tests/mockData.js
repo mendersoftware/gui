@@ -358,7 +358,8 @@ export const defaultState = {
       name: 'test',
       plan: 'os',
       trial: false
-    }
+    },
+    samlConfigs: []
   },
   releases: {
     artifactProgress: 0,
