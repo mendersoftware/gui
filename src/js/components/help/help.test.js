@@ -7,6 +7,10 @@ import { render } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import Help from './help';
+import { helpProps } from './mockData';
+import GettingStarted from './getting-started';
+import MenderHub from './mender-hub';
+import Support from './support';
 
 const mockStore = configureStore([thunk]);
 
@@ -31,5 +35,16 @@ describe('Help Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+  });
+
+  describe('static components', () => {
+    [GettingStarted, MenderHub, Support].forEach(Component => {
+      it(`renders ${Component.displayName || Component.name} correctly`, () => {
+        const { baseElement } = render(<Component {...helpProps} />);
+        const view = baseElement.firstChild.firstChild;
+        expect(view).toMatchSnapshot();
+        expect(view).toEqual(expect.not.stringMatching(undefineds));
+      });
+    });
   });
 });

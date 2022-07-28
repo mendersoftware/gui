@@ -102,91 +102,7 @@ exports[`Help Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 48px;
-}
-
-.emotion-18>.MuiListItemButton-root {
-  padding-right: 48px;
-}
-
-.emotion-18.Mui-focusVisible {
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-18.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.08);
-}
-
-.emotion-18.Mui-selected.Mui-focusVisible {
-  background-color: rgba(25, 118, 210, 0.2);
-}
-
-.emotion-18.Mui-disabled {
-  opacity: 0.38;
-}
-
-.emotion-22 {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
-.emotion-23 {
-  min-width: 56px;
-  color: rgba(0, 0, 0, 0.54);
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-}
-
-.emotion-24 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  fill: currentColor;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
-}
-
-.emotion-25 {
+.emotion-27 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -232,6 +148,21 @@ exports[`Help Component renders correctly 1`] = `
     </a>
     <a
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
+      href="/help/downloads"
+    >
+      <div
+        class="MuiListItemText-root emotion-4 emotion-5"
+        url=""
+      >
+        <span
+          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+        >
+          Downloads
+        </span>
+      </div>
+    </a>
+    <a
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
       href="/help/support"
     >
       <div
@@ -261,7 +192,7 @@ exports[`Help Component renders correctly 1`] = `
       </div>
     </a>
     <a
-      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-18"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
       exact="true"
       href="https://docs.mender.io/"
       rel="noopener noreferrer"
@@ -277,27 +208,6 @@ exports[`Help Component renders correctly 1`] = `
         >
           Documentation
         </span>
-      </div>
-      <div
-        class="MuiListItemSecondaryAction-root emotion-22"
-      >
-        <div
-          class="MuiListItemIcon-root emotion-23"
-          style="vertical-align: middle;"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-24"
-            data-testid="LaunchIcon"
-            focusable="false"
-            style="font-size: 1rem;"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
-            />
-          </svg>
-        </div>
       </div>
     </a>
   </ul>
@@ -331,7 +241,7 @@ exports[`Help Component renders correctly 1`] = `
             Get Started chapter in our documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -358,7 +268,7 @@ exports[`Help Component renders correctly 1`] = `
             Client Installation documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -382,7 +292,7 @@ exports[`Help Component renders correctly 1`] = `
             Mender Hub 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -408,7 +318,7 @@ exports[`Help Component renders correctly 1`] = `
             Artifact Creation documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-25"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-27"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -423,6 +333,330 @@ exports[`Help Component renders correctly 1`] = `
         </p>
       </div>
     </div>
+  </div>
+</div>
+`;
+
+exports[`Help Component static components renders GettingStarted correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.25rem;
+}
+
+<div>
+  <h2>
+    Getting started
+  </h2>
+  <h3>
+    Get Started guide
+  </h3>
+  <p>
+    To quickly get started with the common use cases of Mender, follow the
+     
+    <a
+      href="https://docs.mender.io/get-started"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Get Started chapter in our documentation 
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="LaunchIcon"
+        focusable="false"
+        style="vertical-align: text-bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        />
+      </svg>
+    </a>
+    .
+  </p>
+  <h3>
+    Installing Mender on your devices
+  </h3>
+  <p>
+    We support several ways of integrating your devices with Mender. For a detailed introduction read the
+     
+    <a
+      href="https://docs.mender.io/client-installation"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Client Installation documentation 
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="LaunchIcon"
+        focusable="false"
+        style="vertical-align: text-bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        />
+      </svg>
+    </a>
+    .
+  </p>
+  <p>
+    Integrations for different boards and operating systems can be found on
+     
+    <a
+      href="https://hub.mender.io/c/board-integrations/6"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Mender Hub 
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="LaunchIcon"
+        focusable="false"
+        style="vertical-align: text-bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        />
+      </svg>
+    </a>
+  </p>
+  <h3>
+    Creating Artifacts
+  </h3>
+  <p>
+    Everything you need to package your software for deployment with Mender can be found here:
+     
+    <a
+      href="https://docs.mender.io/artifact-creation"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Artifact Creation documentation 
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="LaunchIcon"
+        focusable="false"
+        style="vertical-align: text-bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        />
+      </svg>
+    </a>
+    .
+  </p>
+</div>
+`;
+
+exports[`Help Component static components renders MenderHub correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.25rem;
+}
+
+<div>
+  <h3>
+    Find technical help at Mender Hub
+  </h3>
+  <a
+    href="https://hub.mender.io"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    <span>
+      <img
+        src="mender-hub-logo.png"
+        style="width: 50%;"
+      />
+    </span>
+  </a>
+  <p>
+    <a
+      href="https://hub.mender.io"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Mender Hub
+    </a>
+     
+    is a forum where you can ask technical questions and get help from our active and knowledgeable community.
+  </p>
+  <h4>
+    Board integrations
+  </h4>
+  <p>
+    Get help and instructions for integrating Mender with different boards and operating systems.
+  </p>
+  <h4>
+    Community-supported resources
+  </h4>
+  <p>
+    Find out-of-the-box and community-supported Update Modules and Configuration Scripts, and contribute your own.
+  </p>
+  <h4>
+    Tutorials
+  </h4>
+  <p>
+    Tutorials and how-to guides for various Mender use-cases including Yocto Project features and practices.
+  </p>
+  <h4>
+    Feature requests
+  </h4>
+  <p>
+    Submit your feature requests and feedback. Mender is an open source project and we encourage community contributions.
+  </p>
+  <p>
+    <a
+      href="https://hub.mender.io"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Visit Mender Hub 
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="LaunchIcon"
+        focusable="false"
+        style="vertical-align: text-bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        />
+      </svg>
+    </a>
+  </p>
+</div>
+`;
+
+exports[`Help Component static components renders Support correctly 1`] = `
+.emotion-0 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.25rem;
+}
+
+<div>
+  <h2>
+    Contact support
+  </h2>
+  <p>
+    Do you have a paid plan and need to contact support?
+  </p>
+  <p>
+    Send an email to
+     
+    <a
+      href="mailto:support@mender.io"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      support@mender.io
+    </a>
+    , including your organization name and how we can help you.
+  </p>
+  <h4>
+    Reporting bugs
+  </h4>
+  <p>
+    To help us best respond to bug reports, please include:
+  </p>
+  <ul>
+    <li>
+      Which software versions you are using
+    </li>
+    <li>
+      If the issue can be reproduced, what are the steps to reproduce it?
+    </li>
+    <li>
+      In case of a UI issue, any screenshots or screen recordings
+    </li>
+  </ul>
+  <h3>
+    Trial or open source users
+  </h3>
+  <div>
+    <p>
+      Find technical help at
+    </p>
+    <a
+      href="https://hub.mender.io"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span>
+        <img
+          src="mender-hub-logo.png"
+          style="width: 50%;"
+        />
+      </span>
+    </a>
+    <p>
+      Mender Hub is a forum where you can find help, ask technical questions and start discussions with our active and knowledgeable community.
+    </p>
+    <a
+      href="https://hub.mender.io"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span>
+        Ask a question at Mender Hub
+      </span>
+       
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        data-testid="LaunchIcon"
+        focusable="false"
+        style="vertical-align: text-bottom;"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
+        />
+      </svg>
+    </a>
   </div>
 </div>
 `;
