@@ -1,4 +1,4 @@
-FROM --platform=amd64 node:18.4.0-alpine AS build
+FROM --platform=amd64 node:18.7.0-alpine AS build
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
 RUN npm ci
