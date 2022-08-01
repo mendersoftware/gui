@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 
 // material ui
-import { ListItemIcon } from '@mui/material';
-import PaymentIcon from '@mui/icons-material/Payment';
+import { Payment as PaymentIcon } from '@mui/icons-material';
 
 import { Elements } from '@stripe/react-stripe-js';
 
@@ -46,16 +45,11 @@ const sectionMap = {
   },
   upgrade: {
     component: <Upgrade />,
+    icon: <PaymentIcon />,
     text: ({ isTrial }) => (isTrial ? 'Upgrade to a plan' : 'Upgrades and add-ons'),
     canAccess: ({ hasMultitenancy }) => hasMultitenancy
   }
 };
-
-const UpgradeIcon = () => (
-  <ListItemIcon>
-    <PaymentIcon />
-  </ListItemIcon>
-);
 
 export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, stripeAPIKey, tenantCapabilities, userCapabilities, userRoles, version }) => {
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
@@ -67,10 +61,9 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
     if (!stripePromise) {
       import(/* webpackChunkName: "stripe" */ '@stripe/stripe-js').then(({ loadStripe }) => {
         if (stripeAPIKey) {
-          stripePromise = loadStripe(stripeAPIKey).then(args => {
-            setLoadingFinished(true);
-            return Promise.resolve(args);
-          });
+          stripePromise = loadStripe(stripeAPIKey)
+            .then(Promise.resolve)
+            .finally(() => setLoadingFinished(true));
         }
       });
     } else {
@@ -93,7 +86,7 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
     if (!checkDenyAccess(item)) {
       accu.push({
         path: `/settings/${key}`,
-        secondaryAction: key === 'upgrade' ? <UpgradeIcon /> : null,
+        icon: item.icon,
         title: item.text({ isTrial })
       });
     }
