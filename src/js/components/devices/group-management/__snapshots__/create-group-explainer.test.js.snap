@@ -255,7 +255,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
 }
 
 <div
-  class="MuiModal-root MuiDialog-root dialog emotion-0"
+  class="MuiDialog-root dialog MuiModal-root emotion-0"
   role="presentation"
 >
   <div

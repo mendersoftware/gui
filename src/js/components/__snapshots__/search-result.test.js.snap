@@ -197,7 +197,7 @@ exports[`SearchResult Component renders correctly 1`] = `
     aria-hidden="true"
   />
   <div
-    class="MuiModal-root emotion-0 emotion-1"
+    class="emotion-0 MuiModal-root emotion-1"
     role="presentation"
   >
     <div
