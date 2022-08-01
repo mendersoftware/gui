@@ -94,7 +94,9 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
     class="MuiList-root MuiList-padding list-horizontal-flex emotion-0"
     style="padding-top: 0px;"
   >
-    <div>
+    <div
+      class=""
+    >
       <li
         class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-1"
       >
