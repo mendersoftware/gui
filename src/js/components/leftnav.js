@@ -106,6 +106,9 @@ export const LeftNav = ({
   const releasesRef = useRef();
   const { classes } = useStyles();
 
+  // eslint-disable-next-line no-unused-vars
+  const { latestRelease, ...versionInfo } = versionInformation;
+
   const licenseLink = (
     <a
       className={classes.licenseLink}
@@ -163,7 +166,7 @@ export const LeftNav = ({
                 isHosted={isHosted}
                 setSnackbar={setSnackbar}
                 setVersionInfo={setVersionInfo}
-                versionInformation={versionInformation}
+                versionInformation={versionInfo}
               />
             }
             secondary={licenseLink}
