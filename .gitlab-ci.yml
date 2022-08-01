@@ -1,4 +1,4 @@
-image: node:17-alpine
+image: node:18-alpine
 
 stages:
   - pre-test
