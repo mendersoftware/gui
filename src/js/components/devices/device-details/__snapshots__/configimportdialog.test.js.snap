@@ -557,7 +557,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
 }
 
 <div
-  class="MuiModal-root MuiDialog-root emotion-0"
+  class="MuiDialog-root MuiModal-root emotion-0"
   role="presentation"
 >
   <div

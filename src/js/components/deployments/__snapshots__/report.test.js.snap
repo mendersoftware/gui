@@ -8,7 +8,7 @@ exports[`DeploymentReport Component renders correctly 1`] = `
     aria-hidden=\\"true\\"
   />
   <div
-    class=\\"MuiModal-root MuiDrawer-root MuiDrawer-modal fadeIn css-1u2w381-MuiModal-root-MuiDrawer-root\\"
+    class=\\"MuiDrawer-root MuiDrawer-modal fadeIn MuiModal-root css-1u2w381-MuiModal-root-MuiDrawer-root\\"
     role=\\"presentation\\"
   >
     <div

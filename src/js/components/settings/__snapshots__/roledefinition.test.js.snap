@@ -1172,7 +1172,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
 }
 
 <div
-  class="MuiModal-root MuiDrawer-root MuiDrawer-modal emotion-0"
+  class="MuiDrawer-root MuiDrawer-modal MuiModal-root emotion-0"
   role="presentation"
 >
   <div
