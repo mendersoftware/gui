@@ -136,6 +136,12 @@ export const DeviceGroups = ({
     selectedState
   ]);
 
+  useEffect(() => {
+    if (locationParams.groupName) {
+      selectGroup(locationParams.groupName);
+    }
+  }, [locationParams.groupName]);
+
   const maybeSetGroupAndFilters = ({ filters, groupName }) => {
     if (groupName) {
       selectGroup(groupName, filters);

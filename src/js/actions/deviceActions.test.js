@@ -54,7 +54,7 @@ const mockStore = configureMockStore(middlewares);
 const groupUpdateSuccessMessage = 'The group was updated successfully';
 const getGroupSuccessNotification = groupName => (
   <>
-    {groupUpdateSuccessMessage} - <Link to={`/devices?group=${groupName}`}>click here</Link> to see it.
+    {groupUpdateSuccessMessage} - <Link to={`/devices?inventory=group:eq:${groupName}`}>click here</Link> to see it.
   </>
 );
 
