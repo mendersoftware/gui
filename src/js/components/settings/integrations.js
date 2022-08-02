@@ -23,17 +23,17 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConfig }) => {
-  const { access_key_id = '', secret_access_key = '', endpoint_url = '', device_policy_arn = '' } = connectionConfig;
+  const { access_key_id = '', secret_access_key = '', endpoint_url = '', device_policy_document = '' } = connectionConfig;
   const [keyId, setKeyId] = useState(access_key_id);
   const [keySecret, setKeySecret] = useState(secret_access_key);
   const [endpoint, setEndpoint] = useState(endpoint_url);
   const [endpointError, setEndpointError] = useState('');
-  const [policyARN, setPolicyARN] = useState(device_policy_arn);
+  const [policy, setPolicy] = useState(device_policy_document);
 
   const debouncedId = useDebounce(keyId, 700);
   const debouncedSecret = useDebounce(keySecret, 700);
   const debouncedEndpoint = useDebounce(endpoint, 700);
-  const debouncedARN = useDebounce(policyARN, 700);
+  const debounced = useDebounce(policy, 700);
 
   const { classes } = useStyles();
 
@@ -42,16 +42,16 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
       access_key_id: debouncedId,
       secret_access_key: debouncedSecret,
       endpoint_url: debouncedEndpoint,
-      device_policy_arn: debouncedARN
+      device_policy_document: debounced
     });
-  }, [debouncedARN, debouncedEndpoint, debouncedId, debouncedSecret]);
+  }, [debounced, debouncedEndpoint, debouncedId, debouncedSecret]);
 
   useEffect(() => {
     setKeyId(access_key_id);
     setKeySecret(secret_access_key);
     setEndpoint(endpoint_url);
-    setPolicyARN(device_policy_arn);
-  }, [access_key_id, secret_access_key, endpoint_url, device_policy_arn]);
+    setPolicy(device_policy_document);
+  }, [access_key_id, secret_access_key, endpoint_url, device_policy_document]);
 
   const onKeyChange = ({ target: { value = '' } }) => setKeyId(value);
   const onSecretChange = ({ target: { value = '' } }) => setKeySecret(value);
@@ -63,7 +63,7 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
     }
     setEndpoint(value);
   };
-  const onARNChange = ({ target: { value = '' } }) => setPolicyARN(value);
+  const onPolicyChange = ({ target: { value = '' } }) => setPolicy(value);
 
   const commonProps = { className: classes.textInput, disabled: !isEditing, multiline: true };
   return (
@@ -71,7 +71,7 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
       <TextField {...commonProps} label="Key ID" onChange={onKeyChange} value={keyId} />
       <TextField {...commonProps} label="Key Secret" onChange={onSecretChange} value={keySecret} />
       <TextField {...commonProps} label="Endpoint" onChange={onEndpointChange} value={endpoint} error={!!endpointError} helperText={endpointError} />
-      <TextField {...commonProps} label="Policy ARN" onChange={onARNChange} value={policyARN} />
+      <TextField {...commonProps} label="Device Policy Document" onChange={onPolicyChange} value={policy} />
     </div>
   );
 };

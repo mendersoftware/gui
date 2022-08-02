@@ -905,7 +905,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     aria-hidden="true"
   />
   <div
-    class="MuiModal-root MuiDrawer-root MuiDrawer-modal expandedDevice emotion-0"
+    class="MuiDrawer-root MuiDrawer-modal expandedDevice MuiModal-root emotion-0"
     role="presentation"
   >
     <div

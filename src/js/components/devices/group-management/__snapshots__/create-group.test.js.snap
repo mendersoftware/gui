@@ -730,7 +730,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
 }
 
 <div
-  class="MuiModal-root MuiDialog-root emotion-0"
+  class="MuiDialog-root MuiModal-root emotion-0"
   role="presentation"
 >
   <div
