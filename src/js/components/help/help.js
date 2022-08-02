@@ -7,6 +7,7 @@ import { Launch as LaunchIcon } from '@mui/icons-material';
 
 import { getDocsVersion } from '../../selectors';
 import LeftNav from '../common/left-nav';
+import Downloads from './downloads';
 import GetStarted from './getting-started';
 import MenderHub from './mender-hub';
 import Support from './support';
@@ -15,6 +16,11 @@ const components = {
   'get-started': {
     title: 'Getting started',
     component: GetStarted
+  },
+  downloads: {
+    title: 'Downloads',
+    component: Downloads,
+    hosted: true
   },
   support: {
     title: 'Contact support',

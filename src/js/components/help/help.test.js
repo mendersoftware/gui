@@ -8,6 +8,7 @@ import { render } from '@testing-library/react';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import Help from './help';
 import { helpProps } from './mockData';
+import { Downloads } from './downloads';
 import GettingStarted from './getting-started';
 import MenderHub from './mender-hub';
 import Support from './support';
@@ -38,7 +39,7 @@ describe('Help Component', () => {
   });
 
   describe('static components', () => {
-    [GettingStarted, MenderHub, Support].forEach(Component => {
+    [Downloads, GettingStarted, MenderHub, Support].forEach(Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
         const { baseElement } = render(<Component {...helpProps} />);
         const view = baseElement.firstChild.firstChild;
