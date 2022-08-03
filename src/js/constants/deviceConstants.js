@@ -105,7 +105,7 @@ module.exports = {
       icon: AWS,
       title: 'AWS IoT core',
       provider: 'iot-core',
-      enabled: true,
+      enabled: false,
       configHint: <>For help finding your AWS IoT core connection string, check the AWS IoT documentation.</>
     },
     'iot-hub': {
