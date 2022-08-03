@@ -18,6 +18,19 @@ describe('SelfUserManagement Component', () => {
   });
 
   it('renders correctly', async () => {
+    store = mockStore({
+      ...defaultState,
+      users: {
+        ...defaultState.users,
+        byId: {
+          ...defaultState.users.byId,
+          [defaultState.users.currentUser]: {
+            ...defaultState.users.byId[defaultState.users.currentUser],
+            sso: [{ kind: 'oauth2/google' }]
+          }
+        }
+      }
+    });
     const { baseElement } = render(
       <Provider store={store}>
         <SelfUserManagement />
