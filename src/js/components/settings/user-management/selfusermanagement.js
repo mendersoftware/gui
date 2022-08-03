@@ -71,7 +71,7 @@ export const SelfUserManagement = ({
   const handlePass = () => setEditPass(!editPass);
   const email = currentUser.email;
   const isOAuth2 = !!currentUser.sso?.length;
-  const provider = isOAuth2 ? OAuth2Providers.find(provider => currentUser.sso.some(({ kind }) => kind === provider.id)) : null;
+  const provider = isOAuth2 ? OAuth2Providers.find(provider => currentUser.sso.some(({ kind }) => kind.includes(provider.id))) : null;
   return (
     <div className={`margin-top-small ${classes.widthLimit}`}>
       <h2 className="margin-top-small">My profile</h2>
