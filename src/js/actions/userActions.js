@@ -3,7 +3,7 @@ import hashString from 'md5';
 import Cookies from 'universal-cookie';
 
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
-import GeneralApi from '../api/general-api';
+import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
@@ -238,7 +238,7 @@ const mapHttpPermission = permission =>
     const endpointMatches = definition.endpoints.filter(
       endpoint => endpoint.path.test(permission.value) && (endpoint.types.includes(permission.type) || permission.type === PermissionTypes.Any)
     );
-    if (permission.value === PermissionTypes.Any || (permission.value.includes(AppConstants.apiRoot) && endpointMatches.length)) {
+    if (permission.value === PermissionTypes.Any || (permission.value.includes(apiRoot) && endpointMatches.length)) {
       const collector = accu[area] || [];
       const endpointUiPermission = endpointMatches.reduce((endpointAccu, endpoint) => [...endpointAccu, ...endpoint.uiPermissions], []);
       accu[area] = (endpointUiPermission || definition.uiPermissions).reduce((permissionsAccu, uiPermission) => {
