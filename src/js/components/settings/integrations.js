@@ -10,7 +10,7 @@ import Confirm from '../common/confirm';
 import InfoHint from '../common/info-hint';
 import { useDebounce } from '../../utils/debouncehook';
 import { makeStyles } from 'tss-react/mui';
-import { customSort } from '../../helpers';
+import { customSort, versionCompare } from '../../helpers';
 
 const maxWidth = 750;
 
@@ -105,6 +105,7 @@ const ConnectionStringInput = ({ connectionConfig, isEditing, setConnectionConfi
 };
 
 const providerConfigMap = {
+  google: ConnectionDetailsInput,
   'iot-core': ConnectionDetailsInput,
   'iot-hub': ConnectionStringInput
 };
@@ -178,26 +179,26 @@ export const IntegrationConfiguration = ({ integration, isLast, onCancel, onDele
   );
 };
 
-export const Integrations = ({ integrations = [], changeIntegration, createIntegration, deleteIntegration, getIntegrations }) => {
+export const Integrations = ({ changeIntegration, createIntegration, deleteIntegration, getIntegrations, integrations = [], isPreRelease }) => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
 
   const { classes } = useStyles();
 
-  const determineAvailableIntegrations = integrations =>
+  const determineAvailableIntegrations = (integrations, isPreRelease) =>
     Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
       const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
-      if (provider.enabled && !hasIntegrationConfigured) {
+      if ((provider.enabled || isPreRelease) && !hasIntegrationConfigured) {
         accu.push(provider);
       }
       return accu;
     }, []);
 
   useEffect(() => {
-    const available = determineAvailableIntegrations(integrations);
+    const available = determineAvailableIntegrations(integrations, isPreRelease);
     setAvailableIntegrations(available);
     setConfiguredIntegrations(integrations);
-  }, [integrations]);
+  }, [integrations, isPreRelease]);
 
   useEffect(() => {
     getIntegrations();
@@ -253,7 +254,8 @@ const actionCreators = { changeIntegration, createIntegration, deleteIntegration
 
 const mapStateToProps = state => {
   return {
-    integrations: state.organization.externalDeviceIntegrations
+    integrations: state.organization.externalDeviceIntegrations,
+    isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1
   };
 };
 
