@@ -12,6 +12,8 @@ const cookies = new Cookies();
 export const auditLogsApiUrl = `${apiUrl.v1}/auditlogs`;
 export const tenantadmApiUrlv1 = `${apiUrl.v1}/tenantadm`;
 export const tenantadmApiUrlv2 = `${apiUrl.v2}/tenantadm`;
+export const samlIdpApiUrlv1 = `${apiUrl.v1}/useradm/sso/idp/metadata`;
+export const samlSpApiUrlv1 = `${apiUrl.v1}/useradm/sso/sp/metadata`;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
@@ -187,3 +189,54 @@ export const getIntegrations = () => (dispatch, getState) =>
       }, []);
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
     });
+
+const samlConfigActions = {
+  create: { success: 'stored', error: 'storing' },
+  edit: { success: 'updated', error: 'updating' },
+  read: { success: '', error: 'retrieving' },
+  remove: { success: 'removed', error: 'removing' }
+};
+
+const samlConfigActionErrorHandler = (err, type) => dispatch =>
+  commonErrorHandler(err, `There was an error ${samlConfigActions[type].error} the SAML configuration.`, dispatch, commonErrorFallback);
+
+const samlConfigActionSuccessHandler = type => dispatch => dispatch(setSnackbar(`The SAML configuration was ${samlConfigActions[type].success} successfully`));
+
+export const storeSamlConfig = config => dispatch =>
+  Api.post(samlIdpApiUrlv1, config, { headers: { 'Content-Type': 'application/samlmetadata+xml', Accept: 'application/json' } })
+    .catch(err => dispatch(samlConfigActionErrorHandler(err, 'create')))
+    .then(() => Promise.all([dispatch(samlConfigActionSuccessHandler('create')), dispatch(getSamlConfigs())]));
+
+export const changeSamlConfig =
+  ({ id, config }) =>
+  dispatch =>
+    Api.put(`${samlIdpApiUrlv1}/${id}`, config, { headers: { 'Content-Type': 'application/samlmetadata+xml', Accept: 'application/json' } })
+      .catch(err => dispatch(samlConfigActionErrorHandler(err, 'edit')))
+      .then(() => Promise.all([dispatch(samlConfigActionSuccessHandler('edit')), dispatch(getSamlConfigs())]));
+
+export const deleteSamlConfig =
+  ({ id }) =>
+  (dispatch, getState) =>
+    Api.delete(`${samlIdpApiUrlv1}/${id}`)
+      .catch(err => dispatch(samlConfigActionErrorHandler(err, 'remove')))
+      .then(() => {
+        const configs = getState().organization.samlConfigs.filter(item => id !== item.id);
+        return Promise.all([
+          dispatch(samlConfigActionSuccessHandler('remove')),
+          dispatch({ type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: configs })
+        ]);
+      });
+
+const getSamlConfigById = config => dispatch =>
+  Api.get(`${samlSpApiUrlv1}/${config.id}`)
+    .catch(err => dispatch(samlConfigActionErrorHandler(err, 'read')))
+    .then(({ data }) => Promise.resolve({ ...config, config: data }));
+
+export const getSamlConfigs = () => dispatch =>
+  Api.get(samlIdpApiUrlv1)
+    .catch(err => commonErrorHandler(err, 'There was an error retrieving SAML configurations', dispatch, commonErrorFallback))
+    .then(({ data }) =>
+      Promise.all(data.map(config => Promise.resolve(dispatch(getSamlConfigById(config))))).then(configs => {
+        return dispatch({ type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: configs });
+      })
+    );

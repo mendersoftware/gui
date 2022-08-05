@@ -65,7 +65,9 @@ exports[`ExpandableAttribute Component renders correctly 1`] = `
   display: block;
 }
 
-<div>
+<div
+  class=""
+>
   <li
     class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-0"
   >

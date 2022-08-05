@@ -23,7 +23,11 @@ import {
   sendSupportMessage,
   startCardUpdate,
   startUpgrade,
-  setAuditlogsState
+  setAuditlogsState,
+  changeSamlConfig,
+  deleteSamlConfig,
+  getSamlConfigs,
+  storeSamlConfig
 } from './organizationActions';
 
 const middlewares = [thunk];
@@ -32,6 +36,11 @@ const mockStore = configureMockStore(middlewares);
 const expectedDeviceProviders = [
   { id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider, something: 'something', connection_string: 'something_else' },
   { id: 2, provider: 'aws', something: 'new' }
+];
+
+const expectedSamlConfigs = [
+  { id: '1', issuer: 'https://samltest.id/saml/idp', valid_until: '2038-08-24T21:14:09Z' },
+  { id: '2', issuer: 'https://samltest2.id/saml/idp', valid_until: '2030-10-24T21:14:09Z' }
 ];
 
 /* eslint-disable sonarjs/no-identical-functions */
@@ -373,6 +382,87 @@ describe('organization actions', () => {
       { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }
     ];
     const request = store.dispatch(deleteIntegration({ id: 1 }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow configuring external identity providers', async () => {
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        samlConfigs: [{ id: 1, something: 'something' }]
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The SAML configuration was stored successfully' } },
+      { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }
+    ];
+    const request = store.dispatch(storeSamlConfig({ connection_string: 'testString', provider: 'iot-hub' }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow updating external identity providers', async () => {
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        samlConfigs: [
+          { id: 1, something: 'something' },
+          { id: 2, provider: 'aws', something: 'new' }
+        ]
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The SAML configuration was updated successfully' } },
+      { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }
+    ];
+    const request = store.dispatch(changeSamlConfig({ connection_string: 'testString2', id: 1, provider: 'iot-hub' }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow retrieving external identity providers', async () => {
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        samlConfigs: [
+          { id: 1, something: 'something' },
+          { id: 2, provider: 'aws', something: 'new' }
+        ]
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [{ type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }];
+    const request = store.dispatch(getSamlConfigs());
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow deleting external identity providers', async () => {
+    const store = mockStore({ ...defaultState, organization: { ...defaultState.organization, samlConfigs: [...expectedSamlConfigs] } });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The SAML configuration was removed successfully' } },
+      { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: [expectedSamlConfigs[1]] }
+    ];
+    const request = store.dispatch(deleteSamlConfig({ id: '1' }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();
