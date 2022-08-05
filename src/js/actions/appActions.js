@@ -201,12 +201,16 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
   return GeneralApi.get('/versions.json').then(({ data }) => {
     const { releases, saas } = data;
     const latestRelease = getLatestRelease(getLatestRelease(releases));
-    const latestVersions = latestRelease.repos.reduce((accu, item) => {
-      if (repoKeyMap[item.name]) {
-        accu[repoKeyMap[item.name]] = item.version;
-      }
-      return accu;
-    }, {});
+    const { latestRepos, latestVersions } = latestRelease.repos.reduce(
+      (accu, item) => {
+        if (repoKeyMap[item.name]) {
+          accu.latestVersions[repoKeyMap[item.name]] = item.version;
+        }
+        accu.latestRepos[item.name] = item.version;
+        return accu;
+      },
+      { latestVersions: {}, latestRepos: {} }
+    );
     const latestSaasRelease = saas.sort(customSort(true, 'date'))[0];
     const info = latestSaasRelease.date > latestRelease.release_date ? latestSaasRelease.tag : latestRelease.release;
     return Promise.resolve(
@@ -216,7 +220,11 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
           ...getState().app.versionInformation,
           ...latestVersions,
           backend: info,
-          GUI: info
+          GUI: info,
+          latestRelease: {
+            releaseDate: latestRelease.release_date,
+            repos: latestRepos
+          }
         }
       })
     );
