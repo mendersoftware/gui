@@ -12,7 +12,7 @@ describe('LeftNav Component', () => {
           {
             itemClass: 'test-list',
             items: [
-              { exact: true, path: '/far/away', secondaryAction: <div>HEYA!</div>, style: { background: 'red' }, title: 'test1' },
+              { exact: true, path: '/far/away', icon: <div>HEYA!</div>, style: { background: 'red' }, title: 'test1' },
               { path: '/far/away', title: 'test1' }
             ],
             title: 'test'

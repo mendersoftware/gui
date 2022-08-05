@@ -1,0 +1,352 @@
+import React, { useCallback, useMemo, useState } from 'react';
+import { connect } from 'react-redux';
+import copy from 'copy-to-clipboard';
+import Cookies from 'universal-cookie';
+
+import { Accordion, AccordionDetails, AccordionSummary, Chip, Menu, MenuItem, Typography } from '@mui/material';
+import { ArrowDropDown, ExpandMore, FileDownloadOutlined as FileDownloadIcon, Launch } from '@mui/icons-material';
+
+import { setSnackbar } from '../../actions/appActions';
+import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
+import Time from '../common/time';
+import { getToken } from '../../auth';
+import { detectOsIdentifier } from '../../helpers';
+import Tracking from '../../tracking';
+
+const cookies = new Cookies();
+
+const osMap = {
+  MacOs: 'darwin',
+  Unix: 'linux',
+  Linux: 'linux'
+};
+
+const defaultArchitectures = ['armhf', 'arm64', 'amd64'];
+const defaultOSVersions = ['debian+buster', 'debian+bullseye', 'ubuntu+bionic', 'ubuntu+focal'];
+
+const getVersion = (versions, id) => versions[id] || 'master';
+
+const downloadLocations = {
+  public: 'https://downloads.mender.io',
+  private: 'https://downloads.customer.mender.io/content/hosted'
+};
+
+const defaultLocationFormatter = ({ os, tool, versionInfo }) => {
+  const { id, location = downloadLocations.public, osList = [], title } = tool;
+  let locations = [{ location: `${location}/${id}/${getVersion(versionInfo, id)}/linux/${id}`, title }];
+  if (osList.length) {
+    locations = osList.reduce((accu, supportedOs) => {
+      const title = Object.entries(osMap).find(entry => entry[1] === supportedOs)[0];
+      accu.push({
+        location: `${location}/${id}/${getVersion(versionInfo, id)}/${supportedOs}/${id}`,
+        title,
+        isUserOs: osMap[os] === supportedOs
+      });
+      return accu;
+    }, []);
+  }
+  return { locations };
+};
+
+const osArchLocationReducer = ({ archList, location = downloadLocations.public, packageId, id, osList, versionInfo }) =>
+  osList.reduce((accu, os) => {
+    const osArchitectureLocations = archList.map(arch => ({
+      location: `${location}/repos/debian/pool/main/${id[0]}/${id}/${encodeURIComponent(`${packageId}_${getVersion(versionInfo, id)}-1+${os}_${arch}.deb`)}`,
+      title: `${os} - ${arch}`
+    }));
+    accu.push(...osArchitectureLocations);
+    return accu;
+  }, []);
+
+const multiArchLocationFormatter = ({ tool, versionInfo }) => {
+  const { id, packageId, packageExtras = [] } = tool;
+  const locations = osArchLocationReducer({ ...tool, packageId: packageId || id, versionInfo });
+  const flump = packageExtras.reduce((accu, extra) => {
+    const extraPackageId = `${packageId || id}-${extra}`;
+    accu[extraPackageId] = osArchLocationReducer({ ...tool, packageId: extraPackageId, versionInfo });
+    return accu;
+  }, {});
+  return { locations, ...flump };
+};
+
+const nonOsLocationFormatter = ({ tool, versionInfo }) => {
+  const { id, location = downloadLocations.public, title } = tool;
+  return {
+    locations: [
+      {
+        location: `${location}/${id}/${getVersion(versionInfo, id)}/${id}-${getVersion(versionInfo, id)}.tar.xz`,
+        title
+      }
+    ]
+  };
+};
+
+const getAuthHeader = (headerFlag, tokens) => {
+  let header = `${headerFlag} "Cookie: JWT=${getToken()}"`;
+  if (tokens.length) {
+    header = `${headerFlag} "Authorization: Bearer ${tokens[0]}"`;
+  }
+  return header;
+};
+
+const defaultCurlDownload = ({ location, tokens }) => `curl ${getAuthHeader('-H', tokens)} -LO ${location}`;
+
+const defaultWgetDownload = ({ location, tokens }) => `wget ${getAuthHeader('--header', tokens)} ${location}`;
+
+const defaultGitlabJob = ({ location, tokens }) => {
+  const filename = location.substring(location.lastIndexOf('/') + 1);
+  return `
+download:mender-tools:
+  image: curlimages/curl
+  stage: download
+  variables:
+    ${tokens.length ? `MENDER_TOKEN: ${tokens}` : `MENDER_JWT: ${getToken()}`}
+  script:
+    - if [ -n "$MENDER_TOKEN" ]; then
+    - curl -H "Authorization: Bearer $MENDER_TOKEN" -LO ${location}
+    - else
+    - ${defaultCurlDownload({ location, tokens })}
+    - fi
+  artifacts:
+    expire_in: 1w
+    paths:
+      - ${filename}
+`;
+};
+
+const tools = [
+  {
+    id: 'mender',
+    packageId: 'mender-client',
+    packageExtras: ['dev'],
+    title: 'Mender Client Debian package',
+    getLocations: multiArchLocationFormatter,
+    canAccess: () => true,
+    osList: defaultOSVersions,
+    archList: defaultArchitectures
+  },
+  {
+    id: 'mender-artifact',
+    title: 'Mender Artifact',
+    getLocations: defaultLocationFormatter,
+    canAccess: () => true,
+    osList: ['darwin', 'linux']
+  },
+  {
+    id: 'mender-binary-delta',
+    title: 'Mender Binary Delta generator and Update Module',
+    getLocations: nonOsLocationFormatter,
+    location: downloadLocations.private,
+    canAccess: ({ isEnterprise, tenantCapabilities }) => isEnterprise || tenantCapabilities.canDelta
+  },
+  {
+    id: 'mender-cli',
+    title: 'Mender CLI',
+    getLocations: defaultLocationFormatter,
+    canAccess: () => true,
+    osList: ['darwin', 'linux']
+  },
+  {
+    id: 'mender-configure-module',
+    packageId: 'mender-configure',
+    packageExtras: ['demo', 'timezone'],
+    title: 'Mender Configure',
+    getLocations: multiArchLocationFormatter,
+    canAccess: ({ tenantCapabilities }) => tenantCapabilities.hasDeviceConfig,
+    osList: defaultOSVersions,
+    archList: ['all']
+  },
+  {
+    id: 'mender-connect',
+    title: 'Mender Connect',
+    getLocations: multiArchLocationFormatter,
+    canAccess: () => true,
+    osList: defaultOSVersions,
+    archList: defaultArchitectures
+  },
+  {
+    id: 'mender-convert',
+    title: 'Mender Convert',
+    getLocations: ({ versionInfo }) => ({
+      locations: [
+        {
+          location: `https://github.com/mendersoftware/mender-convert/archive/refs/tags/${getVersion(versionInfo, 'mender-convert')}.zip`,
+          title: 'Mender Convert'
+        }
+      ]
+    }),
+    canAccess: ({ tenantCapabilities }) => tenantCapabilities.hasDeviceConnect
+  },
+  {
+    id: 'mender-gateway',
+    title: 'Mender Gateway',
+    getLocations: multiArchLocationFormatter,
+    location: downloadLocations.private,
+    canAccess: ({ isEnterprise }) => isEnterprise,
+    osList: defaultOSVersions,
+    archList: defaultArchitectures
+  },
+  {
+    id: 'monitor-client',
+    packageId: 'mender-monitor',
+    title: 'Mender Monitor',
+    getLocations: multiArchLocationFormatter,
+    location: downloadLocations.private,
+    canAccess: ({ tenantCapabilities }) => tenantCapabilities.hasMonitor,
+    osList: defaultOSVersions,
+    archList: ['all']
+  }
+];
+
+const copyOptions = [
+  { id: 'curl', title: 'Curl command', format: defaultCurlDownload },
+  { id: 'wget', title: 'Wget command', format: defaultWgetDownload },
+  { id: 'gitlab', title: 'Gitlab Job definition', format: defaultGitlabJob }
+];
+
+const DocsLink = ({ className = '', docsVersion, path, title }) => (
+  <a className={className} href={`https://docs.mender.io/${docsVersion}${path}`} target="_blank" rel="noopener noreferrer">
+    {title} <Launch style={{ verticalAlign: 'text-bottom' }} fontSize="small" />
+  </a>
+);
+
+const DownloadableComponents = ({ locations, onMenuClick }) => {
+  const onLocationClick = (location, title) => {
+    console.log(location);
+    Tracking.event({ category: 'download', action: title });
+    cookies.set('JWT', getToken(), { path: '/', maxAge: 60, domain: '.mender.io', sameSite: false });
+    const link = document.createElement('a');
+    link.href = location;
+    link.rel = 'noopener noreferrer';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
+  return locations.map(({ isUserOs, location, title }) => (
+    <React.Fragment key={location}>
+      <Chip
+        avatar={<FileDownloadIcon />}
+        className="margin-bottom-small margin-right-small"
+        clickable
+        onClick={() => onLocationClick(location, title)}
+        variant={isUserOs ? 'filled' : 'outlined'}
+        onDelete={onMenuClick}
+        deleteIcon={<ArrowDropDown value={location} />}
+        label={title}
+      />
+    </React.Fragment>
+  ));
+};
+
+const DownloadSection = ({ docsVersion, item, isEnterprise, onMenuClick, os, versionInformation }) => {
+  const [open, setOpen] = useState(false);
+  const { id, getLocations, packageId, title } = item;
+  const { locations, ...extraLocations } = getLocations({ isEnterprise, tool: item, versionInfo: versionInformation.repos, os });
+
+  return (
+    <Accordion className="margin-bottom-small" square expanded={open} onChange={() => setOpen(!open)}>
+      <AccordionSummary expandIcon={<ExpandMore />}>
+        <div>
+          <Typography variant="subtitle2">{title}</Typography>
+          <Typography variant="caption" className="muted">
+            Updated: {<Time format="YYYY-MM-DD" value={versionInformation.releaseDate} />}
+          </Typography>
+        </div>
+      </AccordionSummary>
+      <AccordionDetails>
+        <div>
+          <DownloadableComponents locations={locations} onMenuClick={onMenuClick} />
+          {Object.entries(extraLocations).map(([key, locations]) => (
+            <React.Fragment key={key}>
+              <h5 className="margin-bottom-none muted">{key}</h5>
+              <DownloadableComponents locations={locations} onMenuClick={onMenuClick} />
+            </React.Fragment>
+          ))}
+        </div>
+        <DocsLink docsVersion={docsVersion} path={`release-information/release-notes-changelog/${packageId || id}`} title="Changelog" />
+      </AccordionDetails>
+    </Accordion>
+  );
+};
+
+export const Downloads = ({ docsVersion = '', isEnterprise, setSnackbar, tenantCapabilities, tokens = [], versions = { repos: {}, releaseDate: '' } }) => {
+  const [anchorEl, setAnchorEl] = useState();
+  const [currentLocation, setCurrentLocation] = useState('');
+  const [os] = useState(detectOsIdentifier());
+
+  const availableTools = useMemo(
+    () =>
+      tools.reduce((accu, tool) => {
+        if (!tool.canAccess({ isEnterprise, tenantCapabilities })) {
+          return accu;
+        }
+        accu.push(tool);
+        return accu;
+      }, []),
+    [isEnterprise, tenantCapabilities]
+  );
+
+  const handleToggle = event => {
+    setAnchorEl(current => (current ? null : event?.currentTarget.parentElement));
+    const location = event?.target.getAttribute('value') || '';
+    console.log(location);
+    setCurrentLocation(location);
+  };
+
+  const handleSelection = useCallback(
+    event => {
+      const value = event?.target.getAttribute('value') || 'curl';
+      const option = copyOptions.find(item => item.id === value);
+      copy(option.format({ location: currentLocation, tokens }));
+      setSnackbar('Copied to clipboard');
+    },
+    [currentLocation, tokens]
+  );
+
+  return (
+    <div>
+      <h2>Downloads</h2>
+      <p>To get the most out of Mender, download the tools listed below.</p>
+      {availableTools.map(tool => (
+        <DownloadSection
+          docsVersion={docsVersion}
+          key={tool.id}
+          item={tool}
+          isEnterprise={isEnterprise}
+          onMenuClick={handleToggle}
+          os={os}
+          versionInformation={versions}
+        />
+      ))}
+      <Menu id="download-options-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleToggle} variant="menu">
+        {copyOptions.map(option => (
+          <MenuItem key={option.id} value={option.id} onClick={handleSelection}>
+            Copy {option.title}
+          </MenuItem>
+        ))}
+      </Menu>
+      <p>
+        To learn more about the tools availabe for Mender, read the{' '}
+        <DocsLink docsVersion={docsVersion} path="downloads" title="Downloads section in our documentation" />.
+      </p>
+    </div>
+  );
+};
+
+const actionCreators = { setSnackbar };
+
+const mapStateToProps = state => {
+  const { tokens } = getCurrentUser(state);
+  return {
+    docsVersion: getDocsVersion(state),
+    isEnterprise: getIsEnterprise(state),
+    isHosted: state.app.features.isHosted,
+    tenantCapabilities: getTenantCapabilities(state),
+    tokens,
+    versions: state.app.versionInformation.latestRelease
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(Downloads);

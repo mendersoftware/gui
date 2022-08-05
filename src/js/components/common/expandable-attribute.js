@@ -10,6 +10,7 @@ import copy from 'copy-to-clipboard';
 const defaultClasses = { root: 'attributes' };
 
 export const ExpandableAttribute = ({
+  className = '',
   component = 'li',
   copyToClipboard,
   disableGutters,
@@ -62,7 +63,7 @@ export const ExpandableAttribute = ({
   const cssClasses = { ...defaultClasses, root: `${defaultClasses.root} ${copyToClipboard ? 'copy-to-clipboard' : ''}`.trim() };
 
   return (
-    <div onClick={onClick} onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)} style={style}>
+    <div className={className} onClick={onClick} onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)} style={style}>
       <ListItem classes={cssClasses} disableGutters={disableGutters} divider={!dividerDisabled} component={component}>
         <ListItemText
           primary={primary}

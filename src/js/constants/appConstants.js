@@ -3,12 +3,6 @@ const startingDeviceCount = {
   professional: 'for first 250 devices'
 };
 
-const apiRoot = '/api/management';
-const apiUrl = {
-  v1: `${apiRoot}/v1`,
-  v2: `${apiRoot}/v2`
-};
-
 module.exports = {
   RECEIVED_HOSTED_LINKS: 'RECEIVED_HOSTED_LINKS',
   SET_ANNOUNCEMENT: 'SET_ANNOUNCEMENT',
@@ -93,7 +87,5 @@ module.exports = {
         deviceCount: startingDeviceCount.professional
       }
     }
-  },
-  apiRoot,
-  apiUrl
+  }
 };
