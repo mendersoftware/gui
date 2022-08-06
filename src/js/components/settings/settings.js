@@ -61,9 +61,7 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
     if (!stripePromise) {
       import(/* webpackChunkName: "stripe" */ '@stripe/stripe-js').then(({ loadStripe }) => {
         if (stripeAPIKey) {
-          stripePromise = loadStripe(stripeAPIKey)
-            .then(Promise.resolve)
-            .finally(() => setLoadingFinished(true));
+          stripePromise = loadStripe(stripeAPIKey).finally(() => setLoadingFinished(true));
         }
       });
     } else {
