@@ -18,7 +18,7 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.m?js[x]?$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /\.test\./, /__snapshots__/],
           loader: 'esbuild-loader',
           options: {
             loader: 'jsx',
@@ -48,10 +48,12 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2)$/i,
+          exclude: [/node_modules/, /\.test\./, /__snapshots__/],
           type: 'asset'
         },
         {
           test: /\.svg$/i,
+          exclude: [/node_modules/, /\.test\./, /__snapshots__/],
           issuer: /\.[jt]sx?$/,
           use: ['@svgr/webpack']
         }
