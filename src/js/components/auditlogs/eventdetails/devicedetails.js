@@ -1,10 +1,11 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Launch as LaunchIcon } from '@mui/icons-material';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { makeStyles } from 'tss-react/mui';
+import { TwoColumns } from '../../common/configurationobject';
 
 const useStyles = makeStyles()(theme => ({
   eventDetails: { gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) },
@@ -16,16 +17,7 @@ export const DetailInformation = ({ title, details }) => {
   return (
     <div key={`${title}-details`} className="flexbox column margin-top-small">
       <b className="margin-bottom-small capitalized-start">{title} details</b>
-      <div className={`muted two-columns ${classes.eventDetails}`}>
-        {Object.entries(details).map(([key, value]) => (
-          <Fragment key={key}>
-            <div className="align-right">
-              <b>{key}</b>
-            </div>
-            <div>{value}</div>
-          </Fragment>
-        ))}
-      </div>
+      <TwoColumns className={classes.eventDetails} items={details} />
     </div>
   );
 };
