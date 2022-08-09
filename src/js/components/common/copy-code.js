@@ -11,8 +11,8 @@ const buttonStyle = { float: 'right', margin: '-20px 0 0 10px' };
 const useStyles = makeStyles()(theme => ({
   code: {
     border: '1px solid',
-    borderColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400],
-    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+    borderColor: theme.palette.background.lightgrey,
+    backgroundColor: theme.palette.background.lightgrey
   }
 }));
 

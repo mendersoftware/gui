@@ -28,10 +28,10 @@ const useStyles = makeStyles()(theme => ({
     }
   },
   statusWrapper: {
-    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400],
+    backgroundColor: theme.palette.background.lightgrey,
     ['&:after']: {
       borderRight: '20px solid',
-      borderRightColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+      borderRightColor: theme.palette.background.lightgrey
     }
   }
 }));

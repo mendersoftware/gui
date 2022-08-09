@@ -18,7 +18,7 @@ export const useStyles = makeStyles()(theme => ({
     width: '100%'
   },
   notActive: {
-    background: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+    background: theme.palette.background.lightgrey
   }
 }));
 

@@ -32,7 +32,7 @@ const type = DEPLOYMENT_STATES.finished;
 
 const useStyles = makeStyles()(theme => ({
   datepickerContainer: {
-    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+    backgroundColor: theme.palette.background.lightgrey
   }
 }));
 

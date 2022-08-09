@@ -19,7 +19,7 @@ import { makeStyles } from 'tss-react/mui';
 const useStyles = makeStyles()(theme => ({
   deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
   wrapper: {
-    backgroundColor: theme.palette.grey[400],
+    backgroundColor: theme.palette.background.lightgrey,
     marginTop: theme.spacing(6),
     padding: theme.spacing(2),
     '&>h5': { marginTop: 0, marginBottom: 0 }

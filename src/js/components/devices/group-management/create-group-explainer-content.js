@@ -12,7 +12,7 @@ const useStyles = makeStyles()(theme => ({
     flexGrow: 1,
     padding: 25,
     ['&.non-enterprise']: {
-      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+      backgroundColor: theme.palette.background.lightgrey
     }
   },
 

@@ -5,23 +5,26 @@ import { listItemTextClasses } from '@mui/material/ListItemText';
 
 import { palette as commonPalette, typography, overrides } from './common';
 
+const grey = {
+  '900': '#969696',
+  '800': '#a9a9a9',
+  '700': '#bcbcbc',
+  '600': '#cfcfcf',
+  '500': '#e9e9e9',
+  '400': '#f7f7f7',
+  '300': '#e6f2f1',
+  '200': '#ddedec',
+  '100': '#d8ebe9',
+  '50': '#d4e9e7'
+};
+
 const palette = {
   ...commonPalette,
   mode: 'light',
-  grey: {
-    '900': '#969696',
-    '800': '#a9a9a9',
-    '700': '#bcbcbc',
-    '600': '#cfcfcf',
-    '500': '#e9e9e9',
-    '400': '#f7f7f7',
-    '300': '#e6f2f1',
-    '200': '#ddedec',
-    '100': '#d8ebe9',
-    '50': '#d4e9e7'
-  },
+  grey,
   background: {
     light: '#fdfdfd',
+    lightgrey: grey[400],
     default: '#fff',
     dark: 'rgb(50, 50, 50)'
   }
