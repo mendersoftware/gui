@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 import { Button, MenuItem, Select } from '@mui/material';
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
 import { deleteAuthset, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
@@ -54,6 +55,34 @@ const headersReducer = (accu, header) => {
   }
   return accu;
 };
+
+const useStyles = makeStyles()(theme => ({
+  filterCommon: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: theme.palette.grey[100],
+    background: theme.palette.background.default,
+    [`.filter-list > .MuiChip-root`]: {
+      marginBottom: theme.spacing()
+    },
+    ['&.filter-header']: {
+      overflow: 'hidden',
+      zIndex: 2
+    },
+    ['&.filter-toggle']: {
+      background: 'transparent',
+      borderBottomRightRadius: 0,
+      borderBottomLeftRadius: 0,
+      borderBottomColor: theme.palette.background.default,
+      marginBottom: -1
+    },
+    ['&.filter-wrapper']: {
+      padding: 20,
+      borderTopLeftRadius: 0
+    }
+  }
+}));
 
 export const getHeaders = (columnSelection = [], currentStateHeaders, idAttribute, openSettingsDialog) => {
   const headers = columnSelection.length
@@ -147,6 +176,8 @@ export const Authorized = props => {
 
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
+
+  const { classes } = useStyles();
 
   useEffect(() => {
     clearAllRetryTimers(setSnackbar);
@@ -397,9 +428,9 @@ export const Authorized = props => {
             )}
           </div>
         </div>
-        <div className="flexbox space-between filter-header">
+        <div className="flexbox space-between">
           {!isUngroupedGroup && (
-            <div className={`flexbox centered ${showFilters ? 'filter-toggle' : ''}`} style={{ marginBottom: -1 }}>
+            <div className={`flexbox centered filter-header ${showFilters ? `${classes.filterCommon} filter-toggle` : ''}`}>
               <Button
                 color="secondary"
                 disableRipple
@@ -413,7 +444,13 @@ export const Authorized = props => {
           )}
           <ListOptions options={listOptionHandlers} title="Table options" />
         </div>
-        <Filters onFilterChange={onFilterChange} onGroupClick={onGroupClick} isModification={!!groupFilters.length} open={showFilters} />
+        <Filters
+          className={classes.filterCommon}
+          onFilterChange={onFilterChange}
+          onGroupClick={onGroupClick}
+          isModification={!!groupFilters.length}
+          open={showFilters}
+        />
       </div>
       <Loader show={!isInitialized} />
       {isInitialized ? (

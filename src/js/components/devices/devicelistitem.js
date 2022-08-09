@@ -2,16 +2,17 @@ import React, { memo, useCallback, useState } from 'react';
 
 // material ui
 import { Checkbox } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
 import DeviceIdentityDisplay from '../common/deviceidentity';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { deepCompare } from '../../helpers';
 import { DefaultAttributeRenderer } from './base-devices';
-import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
   active: {
     [`> *`]: {
-      backgroundColor: theme.palette.grey[400]
+      backgroundColor: theme.palette.background.light
     }
   }
 }));

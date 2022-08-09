@@ -27,6 +27,7 @@ const MAX_PREVIOUS_FILTERS_COUNT = 3;
 export const Filters = ({
   attributes,
   canFilterMultiple,
+  className = '',
   filters,
   getDeviceAttributes,
   groupFilters,
@@ -126,7 +127,7 @@ export const Filters = ({
   const isFilterDefined = filter && Object.values(filter).every(thing => !!thing);
   const addButton = <Chip icon={<AddIcon />} label="Add a rule" color="primary" onClick={onAddClick} />;
   return (
-    <Collapse in={open} timeout="auto" className="filter-wrapper" unmountOnExit>
+    <Collapse in={open} timeout="auto" className={`${className} filter-wrapper`} unmountOnExit>
       <>
         <div className="flexbox">
           <div className="margin-right" style={{ marginTop: currentFilters.length ? 8 : 25 }}>
