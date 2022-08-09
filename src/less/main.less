@@ -584,7 +584,6 @@ ul.link-list {
   display: flex;
   flex-direction: column;
   .rpi-quickstart {
-    background-color: @lightergrey;
     border-radius: 5px;
   }
   .two-columns > div {
@@ -594,7 +593,6 @@ ul.link-list {
   .os-list img {
     height: 80px;
     margin: @defaultGutterWidth;
-    mix-blend-mode: darken;
   }
 }
 
@@ -1102,24 +1100,16 @@ div:focus {
 .planPanel {
   padding: 10px 20px;
   border-radius: 5px;
-  border: 1px solid @lightergrey;
+  border-width: 1px;
+  border-style: solid;
   vertical-align: top;
   width: 32%;
   .transition(all 0.2s ease);
   cursor: pointer;
-
-  &.active,
-  &:hover {
-    border-color: @lightgrey;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
-  }
   &.muted,
   &.muted:hover {
     cursor: default;
     box-shadow: none;
-  }
-  &.active {
-    background-color: @lightestgrey;
   }
 }
 

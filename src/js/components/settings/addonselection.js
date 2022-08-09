@@ -4,10 +4,10 @@ import { Checkbox } from '@mui/material';
 
 import { ADDONS, PLANS } from '../../constants/appConstants';
 import InfoText from '../common/infotext';
-
-const priceStyle = { fontSize: '1rem' };
+import { useStyles } from './planselection';
 
 export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 'os' }) => {
+  const { classes } = useStyles();
   const onAddOnClick = (e, name, enabled) => {
     if (e.target.tagName === 'A') {
       return;
@@ -38,7 +38,7 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
           accu.push(
             <div
               key={addOnName}
-              className={`planPanel flexbox center-aligned ${isEnabled ? 'active' : ''}`}
+              className={`planPanel ${classes.planPanel} flexbox center-aligned ${isEnabled ? 'active' : ''}`}
               style={{ height: 'initial', marginTop: 10, width: 'initial' }}
               onClick={e => onAddOnClick(e, addOnName, !isEnabled)}
             >
@@ -48,9 +48,7 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
               </div>
               {isUpgrade && (
                 <div className="flexbox column" style={noteStyle}>
-                  <div className="link-color bold" style={priceStyle}>
-                    {addOn[updatedPlan].price}
-                  </div>
+                  <div className={`link-color bold ${classes.price}`}>{addOn[updatedPlan].price}</div>
                   <div>{addOn[updatedPlan].deviceCount}</div>
                 </div>
               )}

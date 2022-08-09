@@ -36,6 +36,11 @@ const useStyles = makeStyles()(theme => ({
     backgroundColor: theme.palette.grey[600],
     gridColumn: 1,
     margin: '15px 0'
+  },
+  progressContainer: {
+    backgroundColor: theme.palette.background.default,
+    borderColor: theme.palette.grey[300],
+    color: theme.palette.grey[600]
   }
 }));
 
@@ -43,7 +48,7 @@ const UploadProgressBar = ({ cancelFileUpload, uploadProgress }) => {
   const { classes } = useStyles();
   return (
     Boolean(uploadProgress) && (
-      <div id="progressBarContainer">
+      <div id="progressBarContainer" className={classes.progressContainer}>
         <p className="align-center">Upload in progress ({Math.round(uploadProgress)}%)</p>
         <LinearProgress className={classes.progress} variant="determinate" value={uploadProgress} />
         <Tooltip title="Abort" placement="top">

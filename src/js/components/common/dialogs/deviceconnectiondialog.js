@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import docker from '../../../../assets/img/docker.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';
-import raspberryPi4 from '../../../../assets/img/raspberrypi4.jpg';
+import raspberryPi4 from '../../../../assets/img/raspberrypi4.png';
 
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
@@ -17,15 +17,22 @@ import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 import InfoText from '../../common/infotext';
 
+const useStyles = makeStyles()(theme => ({
+  rpiQuickstart: {
+    backgroundColor: theme.palette.background.lightgrey
+  },
+  virtualLogo: { height: 40, marginLeft: theme.spacing(2) }
+}));
+
 const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVirtualDevice }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   return (
     <>
       <p>
         You can connect almost any device and Linux OS with Mender, but to make things simple during evaluation we recommend you use a Raspberry Pi as a test
         device.
       </p>
-      <div className="padding-small padding-top-none rpi-quickstart">
+      <div className={`padding-small padding-top-none rpi-quickstart ${classes.rpiQuickstart}`}>
         <h3>Raspberry Pi quick start</h3>
         <p>We&apos;ll walk you through the steps to connect a Raspberry Pi and deploy your first update with Mender.</p>
         <div className="flexbox column centered">
@@ -43,7 +50,7 @@ const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVi
         <div className="padding-small padding-top-none">
           <div className="flexbox center-aligned">
             <h3>Use a virtual device</h3>
-            <img src={docker} style={{ height: 40, marginLeft: theme.spacing(2) }} />
+            <img src={docker} className={classes.virtualLogo} />
           </div>
           <p className="margin-top-none">Don&apos;t have a Raspberry Pi?</p>
           <p>You can use our Docker-run virtual device to go through the same tutorial.</p>

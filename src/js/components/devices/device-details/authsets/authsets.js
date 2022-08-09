@@ -4,7 +4,7 @@ import pluralize from 'pluralize';
 
 // material ui
 import { Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
@@ -12,6 +12,19 @@ import { getLimitMaxed } from '../../../../selectors';
 import Confirm from './../../../common/confirm';
 import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
 import Authsetlist from './authsetlist';
+
+const useStyles = makeStyles()(theme => ({
+  decommission: { justifyContent: 'flex-end', marginTop: theme.spacing(2) },
+  wrapper: {
+    backgroundColor: theme.palette.grey[50],
+    borderColor: theme.palette.grey[500],
+    borderStyle: 'solid',
+    borderWidth: 1,
+    marginBottom: theme.spacing(2),
+    minWidth: 700,
+    padding: theme.spacing(2)
+  }
+}));
 
 export const Authsets = ({
   acceptedDevices,
@@ -24,7 +37,6 @@ export const Authsets = ({
   showHelptips,
   updateDeviceAuth
 }) => {
-  const theme = useTheme();
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
@@ -52,8 +64,9 @@ export const Authsets = ({
     }
   };
 
+  const { classes } = useStyles();
   return (
-    <div style={{ minWidth: 700, marginBottom: theme.spacing(2), backgroundColor: '#f7f7f7', border: '1px solid rgb(224, 224, 224)', padding: '16px' }}>
+    <div className={classes.wrapper}>
       <div className="margin-bottom-small">
         {status === DEVICE_STATES.pending ? `Authorization ${pluralize('request', auth_sets.length)}` : 'Authorization sets'}
       </div>
@@ -67,7 +80,7 @@ export const Authsets = ({
       />
       {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedDevices} deviceLimit={deviceLimit} hasContactInfo />}
       {![DEVICE_STATES.preauth, DEVICE_STATES.pending].includes(device.status) && (
-        <div className="flexbox" style={{ justifyContent: 'flex-end', marginTop: theme.spacing(2) }}>
+        <div className={`flexbox ${classes.decommission}`}>
           {confirmDecommission ? (
             <Confirm action={() => decommission(device.id)} cancel={() => setConfirmDecomission(false)} type="decommissioning" />
           ) : (

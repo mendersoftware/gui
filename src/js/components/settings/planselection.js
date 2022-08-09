@@ -1,11 +1,26 @@
 import React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { PLANS } from '../../constants/appConstants';
 import InfoText from '../common/infotext';
 
-const priceStyle = { fontSize: '1rem' };
+export const useStyles = makeStyles()(theme => ({
+  planNote: { marginBottom: -11, fontSize: 'smaller' },
+  planPanel: {
+    borderColor: theme.palette.background.lightgrey,
+    ['&.active,&:hover']: {
+      borderColor: theme.palette.grey[50],
+      boxShadow: '0 1px 6px rgba(0, 0, 0, 0.15)'
+    },
+    ['&.active']: {
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.grey[400]
+    }
+  },
+  price: { fontSize: '1rem' }
+}));
 
 export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTag, setUpdatedPlan, updatedPlan }) => {
+  const { classes } = useStyles();
   const canUpgrade = plan => Object.keys(PLANS).indexOf(plan) >= Object.keys(PLANS).indexOf(currentPlan);
   const onPlanSelect = plan => (isTrial || canUpgrade(plan) ? setUpdatedPlan(plan) : undefined);
   return (
@@ -15,13 +30,11 @@ export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTa
         {Object.values(PLANS).map(item => (
           <div
             key={item.value}
-            className={`planPanel ${updatedPlan === item.value ? 'active' : ''} ${isTrial || canUpgrade(item.value) ? '' : 'muted'}`}
+            className={`planPanel ${classes.planPanel} ${updatedPlan === item.value ? 'active' : ''} ${isTrial || canUpgrade(item.value) ? '' : 'muted'}`}
             onClick={() => onPlanSelect(item.value)}
           >
             {!isTrial && canUpgrade(item.value) && (
-              <div className="uppercased align-center muted" style={{ marginBottom: -11, fontSize: 'smaller' }}>
-                {item.value === currentPlan ? 'current plan' : 'upgrade'}
-              </div>
+              <div className={`uppercased align-center muted ${classes.planNote}`}>{item.value === currentPlan ? 'current plan' : 'upgrade'}</div>
             )}
             <h4>
               {item.name} {item.offer && isTrial && offerValid ? offerTag : null}
@@ -29,16 +42,12 @@ export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTa
             <div>
               {item.offer && isTrial && offerValid ? (
                 <>
-                  <div className="link-color bold" style={priceStyle}>
-                    {item.offerprice}
-                  </div>
+                  <div className={`link-color bold ${classes.price}`}>{item.offerprice}</div>
                   <div className="pre-line">{item.price2}</div>
                 </>
               ) : (
                 <>
-                  <div className="link-color bold" style={priceStyle}>
-                    {item.price}
-                  </div>
+                  <div className={`link-color bold ${classes.price}`}>{item.price}</div>
                   <div>{item.deviceCount}</div>
                 </>
               )}

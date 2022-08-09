@@ -1,5 +1,4 @@
 import { listItemClasses } from '@mui/material/ListItem';
-import { formLabelClasses } from '@mui/material/FormLabel';
 import { accordionClasses } from '@mui/material/Accordion';
 import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
 
@@ -149,13 +148,6 @@ const componentProps = {
 
 export const overrides = {
   ...componentProps,
-  MuiCheckbox: {
-    styleOverrides: {
-      root: {
-        color: palette.text.primary
-      }
-    }
-  },
   MuiSnackbarContent: {
     styleOverrides: {
       action: {
@@ -180,7 +172,6 @@ export const overrides = {
         },
         padding: 0,
         [`&.${accordionClasses.expanded}`]: {
-          backgroundColor: colors.expansionBackground,
           margin: 'auto'
         }
       }
@@ -229,16 +220,6 @@ export const overrides = {
       }
     }
   },
-  MuiFormLabel: {
-    styleOverrides: {
-      root: {
-        color: palette.text.hint,
-        [`&.${formLabelClasses.focused}`]: {
-          color: palette.primary.main
-        }
-      }
-    }
-  },
   MuiFormControl: {
     ...componentProps.MuiFormControl,
     styleOverrides: {
@@ -258,7 +239,6 @@ export const overrides = {
   MuiIconButton: {
     styleOverrides: {
       root: {
-        color: palette.text.hint,
         fontSize: '1.2rem'
       }
     }

@@ -29,7 +29,7 @@ const useStyles = makeStyles()(theme => ({
   licenseLink: { fontSize: '13px', position: 'relative', top: '6px', color: theme.palette.primary.main },
   infoList: { padding: 0, position: 'absolute', bottom: 30, left: 0, right: 0 },
   list: {
-    backgroundColor: theme.palette.grey[400],
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400],
     borderRight: `1px solid ${theme.palette.grey[300]}`
   },
   listItem: { padding: '16px 16px 16px 42px' }

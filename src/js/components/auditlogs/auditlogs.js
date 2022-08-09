@@ -19,11 +19,18 @@ import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 import { getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
+import { makeStyles } from 'tss-react/mui';
 
 const detailsMap = {
   Deployment: 'to device group',
   User: 'email'
 };
+
+const useStyles = makeStyles()(theme => ({
+  filters: {
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+  }
+}));
 
 const getOptionLabel = option => option.title || option.email || option;
 
@@ -49,6 +56,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
   const [userValue, setUserValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
+  const { classes } = useStyles();
 
   const debouncedDetail = useDebounce(detailValue, 700);
   const debouncedType = useDebounce(typeValue, 700);
@@ -148,7 +156,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
       <h3>Audit log</h3>
-      <div className="auditlogs-filters margin-bottom margin-top-small">
+      <div className={`auditlogs-filters margin-bottom margin-top-small ${classes.filters}`}>
         <Autocomplete
           {...autoSelectProps}
           id="audit-log-user-selection"
