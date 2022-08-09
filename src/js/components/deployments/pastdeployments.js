@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 // material ui
 import { Autocomplete, TextField } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
@@ -29,6 +30,12 @@ const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title:
 
 const type = DEPLOYMENT_STATES.finished;
 
+const useStyles = makeStyles()(theme => ({
+  datepickerContainer: {
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+  }
+}));
+
 export const Past = props => {
   const {
     advanceOnboarding,
@@ -51,6 +58,7 @@ export const Past = props => {
   const timer = useRef();
   const [searchValue, setSearchValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
+  const { classes } = useStyles();
 
   const debouncedSearch = useDebounce(searchValue, 700);
   const debouncedType = useDebounce(typeValue, 700);
@@ -173,7 +181,7 @@ export const Past = props => {
 
   return (
     <div className="fadeIn margin-left margin-top-large">
-      <div className="datepicker-container">
+      <div className={`datepicker-container ${classes.datepickerContainer}`}>
         <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
         <TimeframePicker onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
         <Autocomplete

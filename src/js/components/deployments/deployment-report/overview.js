@@ -26,6 +26,13 @@ const useStyles = makeStyles()(theme => ({
     '&svg': {
       marginLeft: theme.spacing()
     }
+  },
+  statusWrapper: {
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400],
+    ['&:after']: {
+      borderRight: '20px solid',
+      borderRightColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.grey[400]
+    }
   }
 }));
 
@@ -89,7 +96,7 @@ export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribu
       {finished && !!(stats.failure || stats.aborted || stats.success || (stats.failure == 0 && stats.aborted == 0)) && (
         <div className="statusLarge flexbox centered">
           <img src={stats.success ? successImage : failImage} />
-          <div className="statusWrapper flexbox centered">
+          <div className={`statusWrapper flexbox centered ${classes.statusWrapper}`}>
             <div className="statusWrapperMessage">
               {!!stats.success && (
                 <div>

@@ -11,7 +11,7 @@ import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentSt
 import { TwoColumnData } from '../../common/configurationobject';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
-import { ProgressChart } from '../progressChart';
+import { ProgressChart, ProgressChartContainer } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
 import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import PhaseProgress from './phaseprogress';
@@ -28,7 +28,7 @@ momentDurationFormatSetup(moment);
 
 const maxPhaseWidth = 270;
 
-export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControlChange }) => {
+export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, onUpdateControlChange }) => {
   const { classes } = useStyles();
   const now = moment();
   const {
@@ -60,7 +60,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
   const endTime = finished ? <Time value={formatTime(finished)} /> : filterId ? 'N/A' : '-';
   return (
     <>
-      <LinedHeader className="margin-top-large" heading="Schedule details" innerRef={innerRef} />
+      <LinedHeader className={`margin-top-large ${headerClass}`} heading="Schedule details" innerRef={innerRef} />
       {phases.length > 1 || !update_control_map ? (
         <>
           <div className="flexbox">
@@ -74,7 +74,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
             <ArrowForward className={classes.phasesOverviewArrow} />
             <TwoColumnData {...defaultColumnDataProps} config={{ 'End time': endTime }} />
           </div>
-          <div className="progress-chart-container margin-top" style={{ background: 'initial' }}>
+          <ProgressChartContainer className="margin-top" style={{ background: 'initial' }}>
             <ProgressChart
               currentPhase={currentPhase}
               currentProgressCount={currentProgressCount}
@@ -84,7 +84,7 @@ export const RolloutSchedule = ({ deployment, innerRef, onAbort, onUpdateControl
               totalFailureCount={totalFailureCount}
               totalSuccessCount={totalSuccessCount}
             />
-          </div>
+          </ProgressChartContainer>
         </>
       ) : (
         <PhaseProgress deployment={deployment} onAbort={onAbort} onUpdateControlChange={onUpdateControlChange} />

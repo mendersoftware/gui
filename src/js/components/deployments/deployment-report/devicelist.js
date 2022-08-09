@@ -8,7 +8,6 @@ import Loader from '../../common/loader';
 import Pagination from '../../common/pagination';
 import DeploymentDeviceListItem from './deploymentdevicelistitem';
 
-const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1 };
 const { page: defaultPage } = DEVICE_LIST_DEFAULTS;
 
 export const DeploymentDeviceList = ({
@@ -64,12 +63,10 @@ export const DeploymentDeviceList = ({
           <Table style={{ minHeight: '10vh', maxHeight: '40vh', overflowX: 'auto' }}>
             <TableHead>
               <TableRow>
-                <TableCell style={headerStyle} tooltip={idAttribute}>
-                  {idAttribute}
-                </TableCell>
+                <TableCell tooltip={idAttribute}>{idAttribute}</TableCell>
                 {['Device type', 'Current software', 'Started', 'Finished', 'Attempts', 'Deployment status', ''].map((content, index) =>
                   content != 'Attempts' || retries ? (
-                    <TableCell key={`device-list-header-${index + 1}`} style={headerStyle} tooltip={content}>
+                    <TableCell key={`device-list-header-${index + 1}`} tooltip={content}>
                       {content}
                     </TableCell>
                   ) : null
