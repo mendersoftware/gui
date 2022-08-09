@@ -9,7 +9,7 @@ import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getDeviceTypes, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import AddArtifactDialog from './dialogs/addartifact';
 import ReleaseRepository from './releaserepository';
@@ -171,23 +171,13 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const deviceTypes = state.devices.byStatus.accepted.deviceIds.slice(0, 200).reduce((accu, item) => {
-    const { device_type: deviceTypes = [] } = state.devices.byId[item] ? state.devices.byId[item].attributes : {};
-    accu = deviceTypes.reduce((deviceTypeAccu, deviceType) => {
-      if (deviceType.length > 1) {
-        deviceTypeAccu[deviceType] = deviceTypeAccu[deviceType] ? deviceTypeAccu[deviceType] + 1 : 1;
-      }
-      return deviceTypeAccu;
-    }, accu);
-    return accu;
-  }, {});
   const { canUploadReleases: canUpload } = getUserCapabilities(state);
   return {
     canUpload,
-    deviceTypes: Object.keys(deviceTypes),
+    deviceTypes: getDeviceTypes(state),
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
-    releases: state.releases.releasesList.releaseIds.map(id => state.releases.byId[id]),
+    releases: getReleasesList(state),
     selectedArtifact: state.releases.selectedArtifact,
     selectedRelease: state.releases.byId[state.releases.selectedRelease],
     releasesListState: state.releases.releasesList,

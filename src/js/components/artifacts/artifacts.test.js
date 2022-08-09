@@ -76,6 +76,7 @@ describe('Artifacts Component', () => {
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
     act(() => userEvent.type(screen.getByPlaceholderText(/Filter/i), 'b1'));
+    await act(async () => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
   });

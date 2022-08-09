@@ -30,7 +30,7 @@ import OfferHeader from './offerheader';
 import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import UserConstants from '../../constants/userConstants';
-import Search from './search';
+import Search from '../common/search';
 
 // Change this when a new feature/offer is introduced
 const currentOffer = {
@@ -159,6 +159,8 @@ export const Header = ({
     logoutUser();
   };
 
+  const onSearch = searchTerm => setSearchState({ searchTerm, page: 1 });
+
   const setHideOffer = () => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
     setHasOfferCookie(true);
@@ -192,7 +194,7 @@ export const Header = ({
             />
           )}
         </div>
-        <Search isSearching={isSearching} searchTerm={searchTerm} setSearchState={setSearchState} />
+        <Search isSearching={isSearching} searchTerm={searchTerm} onSearch={onSearch} />
         <div className="flexbox center-aligned">
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
