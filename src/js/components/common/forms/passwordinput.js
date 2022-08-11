@@ -67,20 +67,36 @@ export default class PasswordInput extends React.Component {
     this.setState({ copied: false });
   }
   generatePass() {
-    this.setState({ visible: true });
+    const self = this;
+    self.setState({ visible: true });
     var password = generator.generate({
       length: 16,
       numbers: true
     });
-    this.setValue({ currentTarget: { value: password } });
+    self.setValue({ currentTarget: { value: password } });
     copy(password);
-    this.setState({ copied: true });
+    self.setState({ copied: true });
+    setTimeout(() => self.setState({ copied: false }), 2000);
   }
   render() {
-    var { generate = true } = this.props;
-    var feedback = (
+    const {
+      className,
+      create,
+      defaultValue,
+      disabled,
+      edit,
+      generate = true,
+      handleKeyPress,
+      id,
+      InputLabelProps = {},
+      label,
+      placeholder,
+      required
+    } = this.props;
+    const { copied, errortext, feedback, score, visible, value } = this.state;
+    const feedbackMessages = (
       <p>
-        {this.state.feedback.map((message, index) => (
+        {feedback.map((message, index) => (
           <React.Fragment key={`feedback-${index}`}>
             <span>{message}</span>
             <br />
@@ -90,48 +106,53 @@ export default class PasswordInput extends React.Component {
     );
 
     return (
-      <div id={`${this.props.id}-holder`} className={this.props.className}>
-        <FormControl error={Boolean(this.state.errortext)} className={this.props.required ? 'required' : ''}>
-          <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
-          <Input
-            id={this.props.id}
-            name={this.props.id}
-            type={this.state.visible ? 'text' : 'password'}
-            defaultValue={this.props.defaultValue}
-            value={this.state.value}
-            disabled={this.props.disabled}
-            style={{ width: 400 }}
-            required={this.props.required}
-            onChange={e => this.setValue(e)}
-            onKeyPress={this.props.handleKeyPress}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton onClick={() => this.setState({ visible: !this.state.visible })} size="large">
-                  {this.state.visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-          <FormHelperText id="component-error-text">{this.state.errortext}</FormHelperText>
-        </FormControl>
-        {this.state.copied ? <div className="green fadeIn margin-bottom-small">Copied to clipboard</div> : null}
-        {this.props.create ? (
+      <div id={`${id}-holder`} className={className}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'max-content max-content', columnGap: 8, alignItems: 'baseline' }}>
+          <FormControl error={Boolean(errortext)} className={required ? 'required' : ''}>
+            <InputLabel htmlFor={id} {...InputLabelProps}>
+              {label}
+            </InputLabel>
+            <Input
+              id={id}
+              name={id}
+              type={visible ? 'text' : 'password'}
+              defaultValue={defaultValue}
+              placeholder={placeholder}
+              value={value}
+              disabled={disabled}
+              style={{ width: 400 }}
+              required={required}
+              onChange={e => this.setValue(e)}
+              onKeyPress={handleKeyPress}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={() => this.setState({ visible: !visible })} size="large">
+                    {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            <FormHelperText id="component-error-text">{errortext}</FormHelperText>
+          </FormControl>
+          {generate ? (
+            <div className="pass-buttons">
+              <Button color="primary" onClick={() => this.generatePass()}>
+                Generate
+              </Button>
+              {edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
+            </div>
+          ) : null}
+        </div>
+        {copied ? <div className="green fadeIn margin-bottom-small">Copied to clipboard</div> : null}
+        {create ? (
           <div>
             <div className="help-text" id="pass-strength">
-              Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5} />
-              {this.state.score > 3 ? (
+              Strength: <meter max={4} min={0} value={score} high={3.9} optimum={4} low={2.5} />
+              {score > 3 ? (
                 <CheckIcon className="fadeIn" style={{ color: colors.successStyleColor, height: '18px', marginTop: '-3px', marginBottom: '-3px' }} />
               ) : null}
             </div>
-            {feedback}
-            {generate ? (
-              <div className="pass-buttons">
-                <Button color="primary" onClick={() => this.generatePass()}>
-                  Generate
-                </Button>
-                {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
-              </div>
-            ) : null}
+            {feedbackMessages}
           </div>
         ) : null}
       </div>
