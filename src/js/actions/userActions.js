@@ -384,7 +384,7 @@ export const mapUserRolesToUiPermissions = (userRoles, roles) =>
   );
 
 export const getPermissionSets = () => (dispatch, getState) =>
-  GeneralApi.get(`${useradmApiUrlv2}/permission_sets`)
+  GeneralApi.get(`${useradmApiUrlv2}/permission_sets?per_page=500`)
     .catch(() => console.log('Permission set retrieval failed - likely accessing a non-RBAC backend'))
     .then(({ data }) => {
       const permissionSets = data.reduce(
@@ -417,7 +417,7 @@ export const getPermissionSets = () => (dispatch, getState) =>
     });
 
 export const getRoles = () => (dispatch, getState) =>
-  Promise.all([GeneralApi.get(`${useradmApiUrlv2}/roles`), dispatch(getPermissionSets())])
+  Promise.all([GeneralApi.get(`${useradmApiUrlv2}/roles?per_page=500`), dispatch(getPermissionSets())])
     .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'))
     .then(results => {
       if (!results) {
