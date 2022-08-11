@@ -83,29 +83,30 @@ export default class Form extends React.Component {
   }
 
   validate(component, value) {
-    if (!component.props.validations) {
+    const { file, id, required, validations } = component.props;
+    if (!validations) {
       return;
     }
 
     var isValid = true;
     var errortext = '';
 
-    if (component.props.file) {
-      if (component.props.required && !value) {
+    if (file) {
+      if (required && !value) {
         isValid = false;
         errortext = 'You must choose a file to upload';
       }
-    } else if (component.props.id && component.props.id.substr(0, 8) === 'password') {
-      if (component.props.required && !value) {
+    } else if (id && id.substr(0, 8) === 'password') {
+      if (required && !value) {
         isValid = false;
         errortext = 'Password is required';
-      } else {
-        isValid = this.tryApplyValidations(value, component.props.validations, { isValid, errortext }).isValid;
+      } else if (required || value) {
+        isValid = this.tryApplyValidations(value, validations, { isValid, errortext }).isValid;
         errortext = !isValid ? 'Password too weak' : errortext;
       }
     } else {
-      if (value || component.props.required) {
-        const { isValid: appliedValid, errortext: appliedError } = this.tryApplyValidations(value, component.props.validations, { isValid, errortext });
+      if (value || required) {
+        const { isValid: appliedValid, errortext: appliedError } = this.tryApplyValidations(value, validations, { isValid, errortext });
         isValid = appliedValid;
         errortext = appliedError;
       }

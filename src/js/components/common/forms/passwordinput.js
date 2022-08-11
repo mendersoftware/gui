@@ -7,6 +7,15 @@ import { CheckCircle as CheckIcon, Visibility as VisibilityIcon, VisibilityOff a
 
 import { colors } from '../../../themes/Mender';
 
+const PasswordGenerateButtons = ({ clearPass, edit, generatePass }) => (
+  <div className="pass-buttons">
+    <Button color="primary" onClick={generatePass}>
+      Generate
+    </Button>
+    {edit ? <Button onClick={clearPass}>Cancel</Button> : null}
+  </div>
+);
+
 export default class PasswordInput extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -43,12 +52,7 @@ export default class PasswordInput extends React.Component {
         var strength = zxcvbn(value);
         var score = strength.score;
         var feedback = strength.feedback.suggestions || [];
-
-        this.setState({
-          score: score,
-          feedback: feedback,
-          value: value
-        });
+        this.setState({ score, feedback, value });
         if (score > 3) {
           this.props.validate(this, value);
         } else {
@@ -57,7 +61,7 @@ export default class PasswordInput extends React.Component {
         }
       });
     } else {
-      this.setState({ value: value });
+      this.setState({ value });
       this.props.validate(this, value);
     }
   }
@@ -68,33 +72,16 @@ export default class PasswordInput extends React.Component {
   }
   generatePass() {
     const self = this;
-    self.setState({ visible: true });
-    var password = generator.generate({
-      length: 16,
-      numbers: true
-    });
+    const password = generator.generate({ length: 16, numbers: true });
     self.setValue({ currentTarget: { value: password } });
     copy(password);
-    self.setState({ copied: true });
-    setTimeout(() => self.setState({ copied: false }), 2000);
+    self.setState({ copied: true, visible: true });
+    setTimeout(() => self.setState({ copied: false }), 5000);
   }
   render() {
-    const {
-      className,
-      create,
-      defaultValue,
-      disabled,
-      edit,
-      generate = true,
-      handleKeyPress,
-      id,
-      InputLabelProps = {},
-      label,
-      placeholder,
-      required
-    } = this.props;
+    const { className, create, defaultValue, disabled, edit, generate, handleKeyPress, id, InputLabelProps = {}, label, placeholder, required } = this.props;
     const { copied, errortext, feedback, score, visible, value } = this.state;
-    const feedbackMessages = (
+    const feedbackMessages = Boolean(errortext) && (
       <p>
         {feedback.map((message, index) => (
           <React.Fragment key={`feedback-${index}`}>
@@ -107,7 +94,7 @@ export default class PasswordInput extends React.Component {
 
     return (
       <div id={`${id}-holder`} className={className}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'max-content max-content', columnGap: 8, alignItems: 'baseline' }}>
+        <div className="password-wrapper">
           <FormControl error={Boolean(errortext)} className={required ? 'required' : ''}>
             <InputLabel htmlFor={id} {...InputLabelProps}>
               {label}
@@ -134,14 +121,7 @@ export default class PasswordInput extends React.Component {
             />
             <FormHelperText id="component-error-text">{errortext}</FormHelperText>
           </FormControl>
-          {generate ? (
-            <div className="pass-buttons">
-              <Button color="primary" onClick={() => this.generatePass()}>
-                Generate
-              </Button>
-              {edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
-            </div>
-          ) : null}
+          {generate && !required && <PasswordGenerateButtons clearPass={() => this.clearPass()} edit={edit} generatePass={() => this.generatePass()} />}
         </div>
         {copied ? <div className="green fadeIn margin-bottom-small">Copied to clipboard</div> : null}
         {create ? (
@@ -153,6 +133,7 @@ export default class PasswordInput extends React.Component {
               ) : null}
             </div>
             {feedbackMessages}
+            {generate && required && <PasswordGenerateButtons clearPass={() => this.clearPass()} edit={edit} generatePass={() => this.generatePass()} />}
           </div>
         ) : null}
       </div>
