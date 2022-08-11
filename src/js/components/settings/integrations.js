@@ -23,17 +23,17 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConfig }) => {
-  const { access_key_id = '', secret_access_key = '', endpoint_url = '', device_policy_document = '' } = connectionConfig;
+  const { access_key_id = '', secret_access_key = '', region = '', device_policy_name = '' } = connectionConfig;
   const [keyId, setKeyId] = useState(access_key_id);
   const [keySecret, setKeySecret] = useState(secret_access_key);
-  const [endpoint, setEndpoint] = useState(endpoint_url);
+  const [endpoint, setEndpoint] = useState(region);
   const [endpointError, setEndpointError] = useState('');
-  const [policy, setPolicy] = useState(device_policy_document);
+  const [policy, setPolicy] = useState(device_policy_name);
 
   const debouncedId = useDebounce(keyId, 700);
   const debouncedSecret = useDebounce(keySecret, 700);
   const debouncedEndpoint = useDebounce(endpoint, 700);
-  const debounced = useDebounce(policy, 700);
+  const debouncedPolicy = useDebounce(policy, 700);
 
   const { classes } = useStyles();
 
@@ -41,17 +41,17 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
     setConnectionConfig({
       access_key_id: debouncedId,
       secret_access_key: debouncedSecret,
-      endpoint_url: debouncedEndpoint,
-      device_policy_document: debounced
+      region: debouncedEndpoint,
+      device_policy_name: debouncedPolicy
     });
-  }, [debounced, debouncedEndpoint, debouncedId, debouncedSecret]);
+  }, [debouncedPolicy, debouncedEndpoint, debouncedId, debouncedSecret]);
 
   useEffect(() => {
     setKeyId(access_key_id);
     setKeySecret(secret_access_key);
-    setEndpoint(endpoint_url);
-    setPolicy(device_policy_document);
-  }, [access_key_id, secret_access_key, endpoint_url, device_policy_document]);
+    setEndpoint(region);
+    setPolicy(device_policy_name);
+  }, [access_key_id, secret_access_key, region, device_policy_name]);
 
   const onKeyChange = ({ target: { value = '' } }) => setKeyId(value);
   const onSecretChange = ({ target: { value = '' } }) => setKeySecret(value);
@@ -70,8 +70,8 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
     <div className="flexbox column">
       <TextField {...commonProps} label="Key ID" onChange={onKeyChange} value={keyId} />
       <TextField {...commonProps} label="Key Secret" onChange={onSecretChange} value={keySecret} />
-      <TextField {...commonProps} label="Endpoint" onChange={onEndpointChange} value={endpoint} error={!!endpointError} helperText={endpointError} />
-      <TextField {...commonProps} label="Device Policy Document" onChange={onPolicyChange} value={policy} />
+      <TextField {...commonProps} label="Region" onChange={onEndpointChange} value={endpoint} error={!!endpointError} helperText={endpointError} />
+      <TextField {...commonProps} label="Device Policy Name" onChange={onPolicyChange} value={policy} />
     </div>
   );
 };
