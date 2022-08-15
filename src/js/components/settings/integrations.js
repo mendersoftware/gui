@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import validator from 'validator';
 
 import { Button, Divider, MenuItem, Select, TextField } from '@mui/material';
 
@@ -23,46 +22,40 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConfig }) => {
-  const { access_key_id = '', secret_access_key = '', endpoint_url = '', device_policy_document = '' } = connectionConfig;
+  const { access_key_id = '', secret_access_key = '', region = '', device_policy_name = '' } = connectionConfig.aws || {};
   const [keyId, setKeyId] = useState(access_key_id);
   const [keySecret, setKeySecret] = useState(secret_access_key);
-  const [endpoint, setEndpoint] = useState(endpoint_url);
-  const [endpointError, setEndpointError] = useState('');
-  const [policy, setPolicy] = useState(device_policy_document);
+  const [awsRegion, setRegion] = useState(region);
+  const [policy, setPolicy] = useState(device_policy_name);
 
   const debouncedId = useDebounce(keyId, 700);
   const debouncedSecret = useDebounce(keySecret, 700);
-  const debouncedEndpoint = useDebounce(endpoint, 700);
+  const debouncedRegion = useDebounce(awsRegion, 700);
   const debounced = useDebounce(policy, 700);
 
   const { classes } = useStyles();
 
   useEffect(() => {
     setConnectionConfig({
-      access_key_id: debouncedId,
-      secret_access_key: debouncedSecret,
-      endpoint_url: debouncedEndpoint,
-      device_policy_document: debounced
+      aws: {
+        access_key_id: debouncedId,
+        secret_access_key: debouncedSecret,
+        region: debouncedRegion,
+        device_policy_name: debounced
+      }
     });
-  }, [debounced, debouncedEndpoint, debouncedId, debouncedSecret]);
+  }, [debounced, debouncedRegion, debouncedId, debouncedSecret]);
 
   useEffect(() => {
     setKeyId(access_key_id);
     setKeySecret(secret_access_key);
-    setEndpoint(endpoint_url);
-    setPolicy(device_policy_document);
-  }, [access_key_id, secret_access_key, endpoint_url, device_policy_document]);
+    setRegion(region);
+    setPolicy(device_policy_name);
+  }, [access_key_id, secret_access_key, region, device_policy_name]);
 
   const onKeyChange = ({ target: { value = '' } }) => setKeyId(value);
   const onSecretChange = ({ target: { value = '' } }) => setKeySecret(value);
-  const onEndpointChange = ({ target: { value = '' } }) => {
-    if (value?.length > 4 && !validator.isURL(value)) {
-      setEndpointError('Incorrect endpoint URL format, please enter a valid URL.');
-    } else {
-      setEndpointError('');
-    }
-    setEndpoint(value);
-  };
+  const onRegionChange = ({ target: { value = '' } }) => setRegion(value);
   const onPolicyChange = ({ target: { value = '' } }) => setPolicy(value);
 
   const commonProps = { className: classes.textInput, disabled: !isEditing, multiline: true };
@@ -70,8 +63,8 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
     <div className="flexbox column">
       <TextField {...commonProps} label="Key ID" onChange={onKeyChange} value={keyId} />
       <TextField {...commonProps} label="Key Secret" onChange={onSecretChange} value={keySecret} />
-      <TextField {...commonProps} label="Endpoint" onChange={onEndpointChange} value={endpoint} error={!!endpointError} helperText={endpointError} />
-      <TextField {...commonProps} label="Device Policy Document" onChange={onPolicyChange} value={policy} />
+      <TextField {...commonProps} label="Region" onChange={onRegionChange} value={awsRegion} />
+      <TextField {...commonProps} label="Device Policy Name" onChange={onPolicyChange} value={policy} />
     </div>
   );
 };
