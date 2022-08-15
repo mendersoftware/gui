@@ -692,7 +692,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           for="mui-5"
           id="mui-5-label"
         >
-          Endpoint
+          Region
         </label>
         <div
           class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
@@ -719,12 +719,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
               class="emotion-28"
             >
               <span>
-                Endpoint
+                Region
               </span>
             </legend>
           </fieldset>
         </div>
-        
       </div>
       <div
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
@@ -735,7 +734,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           for="mui-6"
           id="mui-6-label"
         >
-          Device Policy Document
+          Device Policy Name
         </label>
         <div
           class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
@@ -762,7 +761,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
               class="emotion-28"
             >
               <span>
-                Device Policy Document
+                Device Policy Name
               </span>
             </legend>
           </fieldset>
