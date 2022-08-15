@@ -23,10 +23,24 @@ const palette = {
   mode: 'light',
   grey,
   background: {
+    ...commonPalette.background,
     light: '#fdfdfd',
     lightgrey: grey[400],
     default: '#fff',
     dark: 'rgb(50, 50, 50)'
+  },
+  secondary: {
+    ...commonPalette.secondary,
+    lighter: '#8e577b',
+    main: '#5d0f43'
+  },
+  tooltip: {
+    ...commonPalette.tooltip,
+    text: grey[50]
+  },
+  text: {
+    ...commonPalette.text,
+    primary: 'rgba(10, 10, 11, 0.78)'
   }
 };
 

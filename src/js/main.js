@@ -24,7 +24,16 @@ const cssVariables = ({ palette: p }) => ({
   '@global': {
     ':root': {
       '--mui-primary-main': p.primary.main,
-      '--mui-secondary-main': p.secondary.main
+      '--mui-secondary-main': p.secondary.main,
+      '--mui-secondary-light': p.secondary.light,
+      '--mui-secondary-lighter': p.secondary.lighter,
+      '--mui-error-light': p.error.light,
+      '--mui-error-main': p.error.main,
+      '--mui-error-dark': p.error.dark,
+      '--mui-text-primary': p.text.primary,
+      '--mui-text-light': p.text.light,
+      '--mui-background-default': p.background.default,
+      '--mui-overlay': p.grey[400]
     }
   }
 });

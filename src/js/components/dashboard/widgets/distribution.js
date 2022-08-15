@@ -7,6 +7,7 @@ import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 import Loader from '../../common/loader';
 import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/Mender';
+import { useTheme } from '@mui/material/styles';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 
 const seriesOther = '__OTHER__';
@@ -62,10 +63,18 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
 
   const formatLabel = ({ datum }) => `${datum.y.toString()} (${(Math.round((datum.y * 1000) / (total || 1)) / 10.0).toString()}%)`;
 
+  const theme = useTheme();
+
   return (
     <div className="margin-right margin-bottom widget chart-widget" style={style}>
       {removing ? (
-        <Confirm classes="flexbox centered confirmation-overlay" cancel={toggleRemoving} action={onClick} style={{ height: '100%' }} type="chartRemoval" />
+        <Confirm
+          classes="flexbox centered confirmation-overlay"
+          cancel={toggleRemoving}
+          action={onClick}
+          style={{ height: '100%', justifyContent: 'center' }}
+          type="chartRemoval"
+        />
       ) : (
         <>
           <div className="flexbox space-between margin-left-small">
@@ -78,6 +87,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
             <VictoryGroup
               style={{
                 data: { fill: ({ datum }) => datum.fill },
+                labels: { fill: theme.palette.text.primary },
                 parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
               }}
               data={distribution}

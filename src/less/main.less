@@ -1,4 +1,3 @@
-@import 'variables_light'; // Can swap to dark to build a dev version while testing mui switching
 @import 'variables';
 @import 'fonts';
 @import 'loader';
@@ -74,7 +73,7 @@ body {
   font-size: 14px !important;
 }
 a.warning:hover {
-  color: lighten(@errorStyleColor, 10%) !important;
+  color: @errorStyleColorLight !important;
 }
 
 .box-sizing (@type: border-box) {
@@ -367,7 +366,7 @@ ul.link-list {
     .warning {
       a,
       span {
-        color: lighten(@errorStyleColor, 10%) !important;
+        color: @errorStyleColorLight !important;
       }
     }
   }
@@ -971,7 +970,7 @@ form .required.file {
       .animation(bouncedownup 1.3s infinite);
     }
     .dashboard-placeholder {
-      color: lighten(@text, 33%);
+      color: @textlight;
     }
     border-width: 2px;
   }
@@ -1472,7 +1471,8 @@ div.waiting-inventory {
 .confirmation-overlay {
   position: absolute;
   z-index: 1;
-  background: fadeout(@lightestgrey, 20%);
+  background: @overlay;
+  opacity: 0.9;
   width: 100%;
   height: 100%;
   justify-content: flex-end;
@@ -1908,15 +1908,15 @@ div.waiting-inventory {
 
 @keyframes highlight {
   0% {
-    border-color: lighten(@alertpurple, 10%);
+    border-color: @alertpurpleHover;
     animation-timing-function: ease-in;
   }
   50% {
-    border-color: lighten(@alertpurple, 70%);
+    border-color: @alertpurpleHover;
     animation-timing-function: ease-out;
   }
   100% {
-    border-color: lighten(@alertpurple, 10%);
+    border-color: @alertpurpleHover;
     animation-timing-function: ease-in;
   }
 }

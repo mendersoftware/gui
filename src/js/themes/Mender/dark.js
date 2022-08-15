@@ -4,32 +4,48 @@ import { buttonClasses } from '@mui/material/Button';
 import { palette as commonPalette, typography, overrides } from './common';
 
 const grey = {
-  'A400': '#5c5c5c',
-  '900': '#2a2828',
-  '800': '#484747',
-  '700': '#696868',
-  '600': '#8c8c8c',
-  '500': '#b1b1b1',
-  '400': '#d7d7d7',
-  '300': '#a0c7c4',
-  '200': '#89c6c1',
-  '100': '#4dc3bc',
-  '50': '#1d1f20'
+  'A400': '#1d1f20',
+  '900': '#4dc3bc',
+  '800': '#89c6c1',
+  '700': '#a0c7c4',
+  '600': '#d7d7d7',
+  '500': '#484747',
+  '400': '#2a2828',
+  '300': '#696868',
+  '200': '#b1b1b1',
+  '100': '#8c8c8c',
+  '50': '#4a4a4a'
 };
-const paper = '#343434';
+const paper = '#23252a';
 
 const palette = {
   ...commonPalette,
   mode: 'dark',
+  primary: {
+    main: '#4d8b96'
+  },
+  secondary: {
+    lighter: '#9e6f8e',
+    light: '#8e577b',
+    main: '#7d3f69'
+  },
   grey,
   background: {
     light: '#1d1f20',
     lightgrey: paper,
-    default: '#222',
+    default: '#1b1c22',
     paper
   },
   text: {
-    primary: 'hsl(240deg 5% 93% / 78%)'
+    primary: 'hsl(240deg 5% 93% / 67%)',
+    hint: 'hsl(240deg 5% 93% / 67%)'
+  },
+  error: {
+    main: '#ab1000',
+    dark: '#dc6a5e'
+  },
+  tooltip: {
+    text: grey[600]
   }
 };
 

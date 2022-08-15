@@ -140,7 +140,7 @@ export const AppRoot = ({
       <div {...containerProps}>
         {getToken() ? (
           <>
-            <Header history={history} />
+            <Header mode={mode} history={history} />
             <LeftNav />
             <div className="rightFluid container">
               <ErrorBoundary>

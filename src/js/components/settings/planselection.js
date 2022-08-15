@@ -13,7 +13,7 @@ export const useStyles = makeStyles()(theme => ({
       boxShadow: '0 1px 6px rgba(0, 0, 0, 0.15)'
     },
     ['&.active']: {
-      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.grey[400]
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[50] : theme.palette.grey[400]
     }
   },
   price: { fontSize: '1rem' }

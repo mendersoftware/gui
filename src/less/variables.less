@@ -2,34 +2,49 @@
 
 // Mui token map reference. Do not use directly but pull from theme.palette
 // If unmatched from theme.palette then copy from palette as the source of truth
-@MuiPaletteSecondaryLight: #7d3f68;
+@MuiPaletteSecondaryLight: var(--mui-secondary-light);
+@MuiPaletteSecondaryLighter: var(--mui-secondary-lighter);
 @MuiPaletteBrandMender: #015969;
 @MuiPaletteSucessMain: #009e73;
-@MuiPaletteErrorMain: #ab1000;
-@MuiPaletteErrorDark: #770b00;
+@MuiPaletteErrorMain: var(--mui-error-main);
+@MuiPaletteErrorDark: var(--mui-error-dark);
+@MuiPaletteErrorLight: var(--mui-error-light);
 
 // legacy color definitions
 @red: @MuiPaletteErrorDark;
 @green: @MuiPaletteSucessMain;
 @alertgreen: #679ba5;
 @alertpurple: @MuiPaletteSecondaryLight;
+@alertpurpleHover: @MuiPaletteSecondaryLighter;
 @errorStyleColor: @MuiPaletteErrorMain;
+@errorStyleColorLight: @MuiPaletteErrorLight;
 @linkgreen: var(--mui-primary-main);
 @linkhover: @alertgreen;
 @linksecondary: #669ba5;
+@grey: #cfcfcf;
+@lightergrey: #e6f2f1;
+@darkgrey: #a9a9a9;
+@lightestgrey: #f7f7f7;
+@lightgrey: #d4e9e7;
 
 @mendergreen: @MuiPaletteBrandMender;
 @mendermaroon: var(--mui-secondary-main);
 @menderwarning: rgb(225, 0, 80);
-@text: @MuiTextPrimary;
+@text: var(--mui-text-primary);
+@textlight: var(--mui-text-light);
+@MuiTextHint: rgba(0, 0, 0, 0.54);
 @textmuted: @MuiTextHint;
+
+@placeholder: #e3e3e3;
+@bordercolor: @placeholder;
+@overlay: var(--mui-overlay);
 
 @defaultLeftBarWidth: 260px;
 @defaultGutterWidth: 15px;
 
 
 // Added
-@defaultBackground: @MuiBackgroundDefault;
+@defaultBackground: var(--mui-background-default);
 
 // Not used
 // @textsecondary: #decfd9;
