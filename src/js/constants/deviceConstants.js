@@ -103,10 +103,10 @@ module.exports = {
       credentialsType: credentialTypes.aws,
       credentialsAttribute: 'value',
       icon: AWS,
-      title: 'AWS IoT core',
+      title: 'AWS IoT Core',
       provider: 'iot-core',
       enabled: false,
-      configHint: <>For help finding your AWS IoT core connection string, check the AWS IoT documentation.</>
+      configHint: <>For help finding your AWS IoT Core connection string, check the AWS IoT documentation.</>
     },
     'iot-hub': {
       article: 'an',
