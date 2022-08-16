@@ -107,6 +107,7 @@ module.exports = {
       twinTitle: 'Device Shadow',
       provider: 'iot-core',
       enabled: false,
+      deviceTwin: true,
       configHint: <>For help finding your AWS IoT Core connection string, check the AWS IoT documentation.</>
     },
     'iot-hub': {
@@ -118,6 +119,7 @@ module.exports = {
       twinTitle: 'Device Twin',
       provider: 'iot-hub',
       enabled: true,
+      deviceTwin: true,
       configHint: (
         <>
           For help finding your Azure IoT Hub connection string, look under &apos;Shared access policies&apos; in the Microsoft Azure UI as described{' '}

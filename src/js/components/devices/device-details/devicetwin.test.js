@@ -9,7 +9,7 @@ describe('DeviceTwin Component', () => {
     const { baseElement } = render(
       <DeviceTwin
         device={{ ...defaultState.devices.byId.a1, twinsByIntegration: { a123: { something: 'test', other: 'misc', ab: 12, nest: { here: 'some' } } } }}
-        integrations={[{ id: 'a123', provider: 'iot-hub' }]}
+        integration={{ id: 'a123', provider: 'iot-hub' }}
         setDeviceTwin={jest.fn}
       />
     );

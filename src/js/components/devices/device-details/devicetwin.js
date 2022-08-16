@@ -113,12 +113,11 @@ const editorProps = {
 };
 const maxWidth = 800;
 
-const externalProvider = EXTERNAL_PROVIDER['iot-hub'];
 const indentation = 4; // number of spaces, tab based indentation won't show in the editor, but be converted to 4 spaces
 
 const stringifyTwin = twin => JSON.stringify(twin, undefined, indentation) ?? '';
 
-export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin }) => {
+export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }) => {
   const theme = useTheme();
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
@@ -132,8 +131,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
   const [isSync, setIsSync] = useState(true);
   const editorRef = useRef(null);
 
-  const integration = integrations.find(integration => integration.provider === externalProvider.provider);
-
+  const externalProvider = EXTERNAL_PROVIDER[integration.provider];
   const { [integration.id]: deviceTwin = {} } = device.twinsByIntegration ?? {};
   const { desired: configuredTwin = {}, reported: reportedTwin = {}, twinError, updated_ts: updateTime = device.created_ts } = deviceTwin;
 
