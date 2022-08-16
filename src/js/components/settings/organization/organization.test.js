@@ -2,10 +2,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import MyOrganization, { OrgHeader } from './organization';
-import { TrialExpirationNote, DeviceLimitExpansionNotification, CancelSubscriptionAlert, CancelSubscriptionButton } from './billing';
+
+import userEvent from '@testing-library/user-event';
+import { act, screen, waitFor } from '@testing-library/react';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import { TrialExpirationNote, DeviceLimitExpansionNotification, CancelSubscriptionAlert, CancelSubscriptionButton } from './billing';
+import MyOrganization, { OrgHeader } from './organization';
 
 const mockStore = configureStore([thunk]);
 
@@ -65,6 +69,33 @@ describe('MyOrganization Component', () => {
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
+
+  it('supports modifying SSO settings', async () => {
+    const ui = (
+      <Provider store={store}>
+        <MyOrganization />
+      </Provider>
+    );
+    const { rerender } = render(ui);
+    userEvent.click(screen.getByRole('checkbox'));
+    await waitFor(() => rerender(ui));
+    act(() => userEvent.click(screen.getByText(/input with the text editor/i)));
+
+    const config = '<div>not quite right</div>';
+    const str = JSON.stringify(config);
+    const blob = new Blob([str]);
+    const file = new File([blob], 'values.xml', { type: 'application/xml' });
+    File.prototype.text = jest.fn().mockResolvedValue(str);
+    const input = document.querySelector('input[type=file]');
+    act(() => userEvent.upload(input, file));
+    await waitFor(() => rerender(ui));
+    expect(screen.getByText(/import from a file/i)).toBeVisible();
+    await waitFor(() => rerender(ui));
+    act(() => userEvent.upload(screen.getByText(/import from a file/i).previousSibling, file));
+    act(() => userEvent.click(screen.getByRole('button', { name: /cancel/i })));
+    await waitFor(() => rerender(ui));
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+  });
 });
 
 describe('smaller components', () => {
@@ -79,9 +110,10 @@ describe('smaller components', () => {
           mailBodyTexts={{ billing: 'bill this', upgrade: 'upgrade here' }}
         />
       );
-      const view = baseElement.firstChild.firstChild;
+      const view = baseElement.lastChild?.firstChild;
       expect(view).toMatchSnapshot();
       expect(view).toEqual(expect.not.stringMatching(undefineds));
+      expect(view).toBeTruthy();
     });
   });
 });
