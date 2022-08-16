@@ -1,6 +1,6 @@
 const React = require('react');
 
-const { mdiAws: AWS, mdiMicrosoftAzure: Azure, mdiGoogleCloud: GCP } = require('@mdi/js');
+const { mdiAws: AWS, mdiMicrosoftAzure: Azure } = require('@mdi/js');
 
 const credentialTypes = {
   aws: 'aws',
@@ -131,16 +131,6 @@ module.exports = {
           .
         </>
       )
-    },
-    google: {
-      article: 'a',
-      credentialsType: credentialTypes.x509,
-      credentialsAttribute: 'value',
-      icon: GCP,
-      title: 'Cloud IoT Core',
-      provider: 'google',
-      enabled: false,
-      configHint: <>For help finding your Cloud IoT core connection string, check the Cloud IoT documentation.</>
     }
   },
 
