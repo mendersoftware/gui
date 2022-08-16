@@ -24,6 +24,8 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   padding-bottom: 8px;
   padding-left: 16px;
   padding-right: 16px;
+  padding-top: 11px;
+  padding-bottom: 11px;
 }
 
 .emotion-0.Mui-focusVisible {
@@ -31,15 +33,33 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
 }
 
 .emotion-0.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.08);
+  background-color: rgba(51, 122, 135, 0.08);
 }
 
 .emotion-0.Mui-selected.Mui-focusVisible {
-  background-color: rgba(25, 118, 210, 0.2);
+  background-color: rgba(51, 122, 135, 0.2);
 }
 
 .emotion-0.Mui-disabled {
   opacity: 0.38;
+}
+
+.emotion-0.Mui-disabled {
+  opacity: 1;
+}
+
+.emotion-0.active {
+  background-color: #fff;
+}
+
+.emotion-0.leftNav.active {
+  border-top: 1px solid #d4e9e7;
+  border-bottom: 1px solid #d4e9e7;
+}
+
+.emotion-0.navLink,
+.emotion-0.navLink .MuiListItemText-root {
+  color: #969696;
 }
 
 .emotion-1 {
@@ -55,26 +75,27 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   min-width: 0;
   margin-top: 6px;
   margin-bottom: 6px;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-3 {
   margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
   line-height: 1.5;
-  letter-spacing: 0.00938em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
   display: block;
 }
 
 .emotion-4 {
   margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.43;
-  letter-spacing: 0.01071em;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.54);
   display: block;
 }
 

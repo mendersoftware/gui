@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import handlers from './__mocks__/requestHandlers';
 import { mockDate, token as mockToken } from './mockData';
+import { light as lightTheme } from '../src/js/themes/Mender';
 
 export const RETRY_TIMES = 3;
 export const TEST_LOCATION = 'localhost';
@@ -121,7 +122,7 @@ export const selectMaterialUiSelectOption = async (element, optionText) => {
   return Promise.resolve();
 };
 
-const theme = createTheme();
+const theme = createTheme(lightTheme);
 
 const AllTheProviders = ({ children }) => {
   return (

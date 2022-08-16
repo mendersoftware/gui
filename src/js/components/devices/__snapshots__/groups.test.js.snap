@@ -58,6 +58,8 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
   padding-right: 16px;
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding-top: 11px;
+  padding-bottom: 11px;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -81,11 +83,11 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
 }
 
 .emotion-0.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.08);
+  background-color: rgba(51, 122, 135, 0.08);
 }
 
 .emotion-0.Mui-selected.Mui-focusVisible {
-  background-color: rgba(25, 118, 210, 0.2);
+  background-color: rgba(51, 122, 135, 0.2);
 }
 
 .emotion-0.Mui-disabled {
@@ -105,13 +107,31 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
 }
 
 .emotion-0.Mui-selected:hover {
-  background-color: rgba(25, 118, 210, 0.12);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 @media (hover: none) {
   .emotion-0.Mui-selected:hover {
-    background-color: rgba(25, 118, 210, 0.08);
+    background-color: rgba(51, 122, 135, 0.08);
   }
+}
+
+.emotion-0.Mui-disabled {
+  opacity: 1;
+}
+
+.emotion-0.active {
+  background-color: #fff;
+}
+
+.emotion-0.leftNav.active {
+  border-top: 1px solid #d4e9e7;
+  border-bottom: 1px solid #d4e9e7;
+}
+
+.emotion-0.navLink,
+.emotion-0.navLink .MuiListItemText-root {
+  color: #969696;
 }
 
 .emotion-1 {
@@ -121,15 +141,17 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
   min-width: 0;
   margin-top: 4px;
   margin-bottom: 4px;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-2 {
   margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
   line-height: 1.5;
-  letter-spacing: 0.00938em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
   display: block;
 }
 
@@ -167,7 +189,7 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
 
 exports[`Groups Component renders GroupsSubheader correctly 1`] = `
 .emotion-0 {
-  color: #424242;
+  color: #a9a9a9;
   height: 48px;
 }
 
@@ -175,10 +197,10 @@ exports[`Groups Component renders GroupsSubheader correctly 1`] = `
   box-sizing: border-box;
   line-height: 48px;
   list-style: none;
-  color: rgba(0, 0, 0, 0.6);
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  color: rgba(0, 0, 0, 0.54);
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .emotion-2 {
@@ -186,7 +208,7 @@ exports[`Groups Component renders GroupsSubheader correctly 1`] = `
 }
 
 .emotion-3 {
-  background: #fafafa;
+  background: #d4e9e7;
 }
 
 <li
@@ -270,6 +292,8 @@ exports[`Groups Component renders correctly 1`] = `
   padding-right: 16px;
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding-top: 11px;
+  padding-bottom: 11px;
 }
 
 .emotion-1::-moz-focus-inner {
@@ -293,11 +317,11 @@ exports[`Groups Component renders correctly 1`] = `
 }
 
 .emotion-1.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.08);
+  background-color: rgba(51, 122, 135, 0.08);
 }
 
 .emotion-1.Mui-selected.Mui-focusVisible {
-  background-color: rgba(25, 118, 210, 0.2);
+  background-color: rgba(51, 122, 135, 0.2);
 }
 
 .emotion-1.Mui-disabled {
@@ -317,13 +341,31 @@ exports[`Groups Component renders correctly 1`] = `
 }
 
 .emotion-1.Mui-selected:hover {
-  background-color: rgba(25, 118, 210, 0.12);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 @media (hover: none) {
   .emotion-1.Mui-selected:hover {
-    background-color: rgba(25, 118, 210, 0.08);
+    background-color: rgba(51, 122, 135, 0.08);
   }
+}
+
+.emotion-1.Mui-disabled {
+  opacity: 1;
+}
+
+.emotion-1.active {
+  background-color: #fff;
+}
+
+.emotion-1.leftNav.active {
+  border-top: 1px solid #d4e9e7;
+  border-bottom: 1px solid #d4e9e7;
+}
+
+.emotion-1.navLink,
+.emotion-1.navLink .MuiListItemText-root {
+  color: #969696;
 }
 
 .emotion-2 {
@@ -333,15 +375,17 @@ exports[`Groups Component renders correctly 1`] = `
   min-width: 0;
   margin-top: 4px;
   margin-bottom: 4px;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-3 {
   margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
   line-height: 1.5;
-  letter-spacing: 0.00938em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
   display: block;
 }
 
@@ -358,7 +402,7 @@ exports[`Groups Component renders correctly 1`] = `
 }
 
 .emotion-5 {
-  color: #424242;
+  color: #a9a9a9;
   height: 48px;
 }
 
@@ -366,10 +410,10 @@ exports[`Groups Component renders correctly 1`] = `
   box-sizing: border-box;
   line-height: 48px;
   list-style: none;
-  color: rgba(0, 0, 0, 0.6);
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  color: rgba(0, 0, 0, 0.54);
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .emotion-7 {
@@ -377,7 +421,7 @@ exports[`Groups Component renders correctly 1`] = `
 }
 
 .emotion-8 {
-  background: #fafafa;
+  background: #d4e9e7;
 }
 
 .emotion-22 {
@@ -406,7 +450,11 @@ exports[`Groups Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-23 iconButton {
+  margin-right: 8px;
 }
 
 <div>

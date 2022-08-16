@@ -47,24 +47,25 @@ exports[`DeploymentDeviceListItem Component renders correctly 1`] = `
 }
 
 .emotion-0.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.08);
+  background-color: rgba(51, 122, 135, 0.08);
 }
 
 .emotion-0.Mui-selected:hover {
-  background-color: rgba(25, 118, 210, 0.12);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-1 {
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.43;
-  letter-spacing: 0.01071em;
   display: table-cell;
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
   padding: 16px;
+  padding: 0px 24px 0px 24px;
+  height: 48px;
 }
 
 .emotion-7 {
@@ -73,7 +74,7 @@ exports[`DeploymentDeviceListItem Component renders correctly 1`] = `
   display: block;
   height: 4px;
   z-index: 0;
-  background-color: rgb(167, 202, 237);
+  background-color: rgb(177, 204, 209);
 }
 
 @media print {
@@ -92,7 +93,7 @@ exports[`DeploymentDeviceListItem Component renders correctly 1`] = `
   -webkit-transition: -webkit-transform 0.2s linear;
   transition: transform 0.2s linear;
   transform-origin: left;
-  background-color: #1976d2;
+  background-color: #337a87;
   width: auto;
   -webkit-animation: animation-0 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   animation: animation-0 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
@@ -107,7 +108,7 @@ exports[`DeploymentDeviceListItem Component renders correctly 1`] = `
   -webkit-transition: -webkit-transform 0.2s linear;
   transition: transform 0.2s linear;
   transform-origin: left;
-  background-color: #1976d2;
+  background-color: #337a87;
   width: auto;
   -webkit-animation: animation-1 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
   animation: animation-1 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;

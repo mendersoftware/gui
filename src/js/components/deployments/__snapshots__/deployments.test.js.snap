@@ -68,11 +68,10 @@ exports[`Deployments Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.25;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   max-width: 360px;
   min-width: 90px;
@@ -88,7 +87,8 @@ exports[`Deployments Component renders correctly 1`] = `
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.54);
+  text-transform: none;
 }
 
 .emotion-3::-moz-focus-inner {
@@ -108,7 +108,7 @@ exports[`Deployments Component renders correctly 1`] = `
 }
 
 .emotion-3.Mui-selected {
-  color: #1976d2;
+  color: #337a87;
 }
 
 .emotion-3.Mui-disabled {
@@ -134,7 +134,7 @@ exports[`Deployments Component renders correctly 1`] = `
   width: 100%;
   -webkit-transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  background-color: #1976d2;
+  background-color: #337a87;
 }
 
 .emotion-10 {
@@ -170,11 +170,10 @@ exports[`Deployments Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 16px;
@@ -182,8 +181,11 @@ exports[`Deployments Component renders correctly 1`] = `
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #fff;
-  background-color: #9c27b0;
+  background-color: #5d0f43;
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .emotion-10::-moz-focus-inner {
@@ -205,13 +207,13 @@ exports[`Deployments Component renders correctly 1`] = `
 .emotion-10:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: #7b1fa2;
+  background-color: rgb(65, 10, 46);
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
   .emotion-10:hover {
-    background-color: #9c27b0;
+    background-color: #5d0f43;
   }
 }
 
@@ -227,6 +229,14 @@ exports[`Deployments Component renders correctly 1`] = `
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-10:hover {
+  colors: #337a87;
+}
+
+.emotion-10.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 <div

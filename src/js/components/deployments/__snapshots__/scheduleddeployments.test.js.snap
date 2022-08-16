@@ -2,7 +2,7 @@
 
 exports[`ScheduledDeployments Component renders correctly 1`] = `
 .emotion-0 {
-  fill: #bdbdbd;
+  fill: #f7f7f7;
   width: 111px;
   height: 111px;
 }
@@ -21,7 +21,11 @@ exports[`ScheduledDeployments Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-1 iconButton {
+  margin-right: 8px;
 }
 
 <div

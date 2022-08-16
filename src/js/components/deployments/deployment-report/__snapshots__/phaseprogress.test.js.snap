@@ -2,16 +2,54 @@
 
 exports[`PhaseProgress Component renders correctly 1`] = `
 .emotion-0 {
+  background-color: #f7f7f7;
+}
+
+.emotion-0 .progress-step {
+  border: none;
+  position: absolute;
+}
+
+.emotion-0 .progress-step-total .progress-bar {
+  background-color: #d4e9e7;
+}
+
+.emotion-0.stepped-progress .progress-step-total .progress-bar {
+  background-color: #fff;
+  border-color: #a9a9a9;
+}
+
+.emotion-1 {
+  -webkit-align-self: flex-end;
+  -ms-flex-item-align: flex-end;
+  align-self: flex-end;
+  margin-bottom: -20px;
+}
+
+.emotion-2 {
+  display: grid;
+  row-gap: 4px;
+  place-items: center;
+  position: absolute;
+  grid-template-rows: 20px 1.25rem min-content;
+}
+
+.emotion-2.compact {
+  grid-template-rows: 45px 1.25rem min-content;
+}
+
+.emotion-3 {
+  border-left-style: solid;
   border-left-width: 1px;
   height: 100%;
   z-index: 1;
 }
 
-.emotion-1 {
-  border-left-color: #9e9e9e;
+.emotion-4 {
+  border-left-color: #e9e9e9;
 }
 
-.emotion-2 {
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -25,7 +63,16 @@ exports[`PhaseProgress Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
+}
+
+.emotion-5 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-15 {
+  position: initial;
+  width: 110%;
 }
 
 <div>
@@ -33,7 +80,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
     class="flexbox column "
   >
     <div
-      class="progress-chart-container stepped-progress"
+      class="progress-chart-container stepped-progress emotion-0"
       style="background: none;"
     >
       Phase 1: 
@@ -48,7 +95,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
       >
         <div
           class="progress-step"
-          style="width: 25%; height: 100%; position: absolute; left: 0%;"
+          style="width: 25%; height: 100%; left: 0%;"
         >
           <div
             class="flexbox"
@@ -64,22 +111,21 @@ exports[`PhaseProgress Component renders correctly 1`] = `
             />
           </div>
           <div
-            class="progress-step-number"
-            style="align-self: flex-end; margin-bottom: -20px;"
+            class="progress-step-number emotion-1"
           >
             download
           </div>
         </div>
         <div
-          style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 45px 1.25rem min-content; left: 12.5%; width: 25%;"
+          class="emotion-2 compact"
+          style="left: 12.5%; width: 25%;"
         >
           <div
-            class="emotion-0 emotion-1"
-            style="border-left-style: solid;"
+            class="emotion-3 emotion-4"
           />
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-2"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
             data-testid="CheckCircleIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -92,7 +138,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
         </div>
         <div
           class="progress-step"
-          style="width: 25%; height: 100%; position: absolute; left: 25%;"
+          style="width: 25%; height: 100%; left: 25%;"
         >
           <div
             class="flexbox"
@@ -108,25 +154,24 @@ exports[`PhaseProgress Component renders correctly 1`] = `
             />
           </div>
           <div
-            class="progress-step-number"
-            style="align-self: flex-end; margin-bottom: -20px;"
+            class="progress-step-number emotion-1"
           >
             install
           </div>
         </div>
         <div
-          style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 45px 1.25rem min-content; left: 37.5%; width: 25%;"
+          class="emotion-2 compact"
+          style="left: 37.5%; width: 25%;"
         >
           <div
-            class="emotion-0 emotion-1"
-            style="border-left-style: solid;"
+            class="emotion-3 emotion-4"
           />
           <div />
           <div />
         </div>
         <div
           class="progress-step"
-          style="width: 25%; height: 100%; position: absolute; left: 50%;"
+          style="width: 25%; height: 100%; left: 50%;"
         >
           <div
             class="flexbox"
@@ -142,25 +187,24 @@ exports[`PhaseProgress Component renders correctly 1`] = `
             />
           </div>
           <div
-            class="progress-step-number"
-            style="align-self: flex-end; margin-bottom: -20px;"
+            class="progress-step-number emotion-1"
           >
             reboot
           </div>
         </div>
         <div
-          style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 45px 1.25rem min-content; left: 62.5%; width: 25%;"
+          class="emotion-2 compact"
+          style="left: 62.5%; width: 25%;"
         >
           <div
-            class="emotion-0 emotion-1"
-            style="border-left-style: solid;"
+            class="emotion-3 emotion-4"
           />
           <div />
           <div />
         </div>
         <div
           class="progress-step"
-          style="width: 25%; height: 100%; position: absolute; left: 75%;"
+          style="width: 25%; height: 100%; left: 75%;"
         >
           <div
             class="flexbox"
@@ -176,8 +220,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
             />
           </div>
           <div
-            class="progress-step-number"
-            style="align-self: flex-end; margin-bottom: -20px;"
+            class="progress-step-number emotion-1"
           >
             commit
           </div>
@@ -187,8 +230,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
           style="height: 100%;"
         >
           <div
-            class="progress-bar"
-            style="position: initial; width: 110%;"
+            class="progress-bar emotion-15"
           />
         </div>
       </div>
@@ -213,10 +255,28 @@ exports[`PhaseProgress Component renders correctly 1`] = `
 
 exports[`PhaseProgress Component renders correctly for list usage 1`] = `
 .emotion-0 {
-  margin-bottom: 8px;
+  background-color: #f7f7f7;
+}
+
+.emotion-0 .progress-step {
+  border: none;
+  position: absolute;
+}
+
+.emotion-0 .progress-step-total .progress-bar {
+  background-color: #d4e9e7;
+}
+
+.emotion-0.stepped-progress .progress-step-total .progress-bar {
+  background-color: #fff;
+  border-color: #a9a9a9;
 }
 
 .emotion-1 {
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -233,21 +293,38 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
   font-size: inherit;
 }
 
-.emotion-2 {
-  margin: 4px;
+.emotion-2 iconButton {
+  margin-right: 8px;
 }
 
 .emotion-3 {
+  margin: 4px;
+}
+
+.emotion-4 {
+  display: grid;
+  row-gap: 4px;
+  place-items: center;
+  position: absolute;
+  grid-template-rows: 20px 1.25rem min-content;
+}
+
+.emotion-4.compact {
+  grid-template-rows: 45px 1.25rem min-content;
+}
+
+.emotion-5 {
+  border-left-style: solid;
   border-left-width: 1px;
   height: 100%;
   z-index: 1;
 }
 
-.emotion-4 {
-  border-left-color: #9e9e9e;
+.emotion-6 {
+  border-left-color: #e9e9e9;
 }
 
-.emotion-5 {
+.emotion-7 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -261,19 +338,28 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
+}
+
+.emotion-7 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-14 {
+  position: initial;
+  width: 110%;
 }
 
 <div>
   <div
-    class="flexbox column progress-chart-container stepped-progress "
+    class="progress-chart-container flexbox column stepped-progress  emotion-0"
   >
     <div
-      class="flexbox space-between emotion-0"
+      class="flexbox space-between emotion-1"
     >
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-1"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-2"
         data-testid="PlayArrowIcon"
         focusable="false"
         viewBox="0 0 24 24"
@@ -289,7 +375,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
       </div>
     </div>
     <div
-      class="muted slightly-smaller emotion-2"
+      class="muted slightly-smaller emotion-3"
     >
       Phase 1 of 1
     </div>
@@ -299,7 +385,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
     >
       <div
         class="progress-step"
-        style="width: 25%; position: absolute; left: 0%;"
+        style="width: 25%; left: 0%;"
       >
         <div
           class="flexbox"
@@ -316,15 +402,15 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         </div>
       </div>
       <div
-        style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 20px 1.25rem min-content; left: 12.5%; width: 25%;"
+        class="emotion-4 "
+        style="left: 12.5%; width: 25%;"
       >
         <div
-          class="emotion-3 emotion-4"
-          style="border-left-style: solid;"
+          class="emotion-5 emotion-6"
         />
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-7"
           data-testid="CheckCircleIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -341,7 +427,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
       </div>
       <div
         class="progress-step"
-        style="width: 25%; position: absolute; left: 25%;"
+        style="width: 25%; left: 25%;"
       >
         <div
           class="flexbox"
@@ -358,11 +444,11 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         </div>
       </div>
       <div
-        style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 20px 1.25rem min-content; left: 37.5%; width: 25%;"
+        class="emotion-4 "
+        style="left: 37.5%; width: 25%;"
       >
         <div
-          class="emotion-3 emotion-4"
-          style="border-left-style: solid;"
+          class="emotion-5 emotion-6"
         />
         <div />
         <div
@@ -373,7 +459,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
       </div>
       <div
         class="progress-step"
-        style="width: 25%; position: absolute; left: 50%;"
+        style="width: 25%; left: 50%;"
       >
         <div
           class="flexbox"
@@ -390,11 +476,11 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         </div>
       </div>
       <div
-        style="display: grid; row-gap: 4px; place-items: center; position: absolute; grid-template-rows: 20px 1.25rem min-content; left: 62.5%; width: 25%;"
+        class="emotion-4 "
+        style="left: 62.5%; width: 25%;"
       >
         <div
-          class="emotion-3 emotion-4"
-          style="border-left-style: solid;"
+          class="emotion-5 emotion-6"
         />
         <div />
         <div
@@ -405,7 +491,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
       </div>
       <div
         class="progress-step"
-        style="width: 25%; position: absolute; left: 75%;"
+        style="width: 25%; left: 75%;"
       >
         <div
           class="flexbox"
@@ -425,8 +511,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
         class="progress-step progress-step-total"
       >
         <div
-          class="progress-bar"
-          style="position: initial; width: 110%;"
+          class="progress-bar emotion-14"
         />
       </div>
     </div>

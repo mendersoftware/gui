@@ -15,7 +15,11 @@ exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-0 iconButton {
+  margin-right: 8px;
 }
 
 <div
@@ -85,7 +89,7 @@ exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
   padding: 8px;
   border-radius: 50%;
   overflow: visible;
@@ -93,7 +97,9 @@ exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   padding: 12px;
-  font-size: 1.75rem;
+  font-size: 1.625rem;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .emotion-0::-moz-focus-inner {
@@ -141,7 +147,11 @@ exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
+}
+
+.emotion-1 iconButton {
+  margin-right: 8px;
 }
 
 .emotion-2 {

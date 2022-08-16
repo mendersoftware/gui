@@ -38,7 +38,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
   padding: 8px;
   border-radius: 50%;
   overflow: visible;
@@ -46,7 +46,9 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   padding: 12px;
-  font-size: 1.75rem;
+  font-size: 1.625rem;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .emotion-0::-moz-focus-inner {
@@ -94,7 +96,11 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-1 iconButton {
+  margin-right: 8px;
 }
 
 .emotion-2 {
@@ -162,11 +168,10 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 16px;
@@ -174,8 +179,11 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #fff;
-  background-color: #9c27b0;
+  background-color: #5d0f43;
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .emotion-6::-moz-focus-inner {
@@ -197,13 +205,13 @@ exports[`DeviceTwin Component renders correctly 1`] = `
 .emotion-6:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: #7b1fa2;
+  background-color: rgb(65, 10, 46);
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
   .emotion-6:hover {
-    background-color: #9c27b0;
+    background-color: #5d0f43;
   }
 }
 
@@ -219,6 +227,14 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-6:hover {
+  colors: #337a87;
+}
+
+.emotion-6.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-8 {
@@ -254,18 +270,21 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 8px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #1976d2;
+  color: #337a87;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
 }
 
 .emotion-8::-moz-focus-inner {
@@ -287,7 +306,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
 .emotion-8:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: rgba(25, 118, 210, 0.04);
+  background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
@@ -298,6 +317,14 @@ exports[`DeviceTwin Component renders correctly 1`] = `
 
 .emotion-8.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-8:hover {
+  colors: #337a87;
+}
+
+.emotion-8.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-9 {
@@ -577,7 +604,11 @@ exports[`DeviceTwin Component renders sub component TwinError correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
+}
+
+.emotion-2 iconButton {
+  margin-right: 8px;
 }
 
 <p
@@ -623,11 +654,15 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`]
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-0 iconButton {
+  margin-right: 8px;
 }
 
 <div
-  class="padding,tss-qbpf0s-root"
+  class="padding,tss-8wzxjs-root"
 >
   <svg
     aria-hidden="true"
@@ -672,7 +707,11 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 2`]
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-0 iconButton {
+  margin-right: 8px;
 }
 
 <div
@@ -737,7 +776,11 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 3`]
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
+}
+
+.emotion-2 iconButton {
+  margin-right: 8px;
 }
 
 <p
