@@ -22,7 +22,13 @@ describe('DeviceTwin Component', () => {
   [TwinSyncStatus, TwinSyncStatus, TwinSyncStatus, Title, TwinError].forEach((Component, index) => {
     it(`renders sub component ${Component.displayName || Component.name} correctly`, () => {
       const { baseElement } = render(
-        <Component diffCount={index} twinError={index > 1 ? 'twinError' : ''} providerTitle="Test" updateTime={defaultState.devices.byId.a1.updated_ts} />
+        <Component
+          diffCount={index}
+          twinError={index > 1 ? 'twinError' : ''}
+          providerTitle="Test"
+          twinTitle="Device Twin"
+          updateTime={defaultState.devices.byId.a1.updated_ts}
+        />
       );
       const view = baseElement.lastChild.firstChild;
       expect(view).toMatchSnapshot();

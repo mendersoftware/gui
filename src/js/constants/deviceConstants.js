@@ -104,6 +104,7 @@ module.exports = {
       credentialsAttribute: 'value',
       icon: AWS,
       title: 'AWS IoT Core',
+      twinTitle: 'Device Shadow',
       provider: 'iot-core',
       enabled: false,
       configHint: <>For help finding your AWS IoT Core connection string, check the AWS IoT documentation.</>
@@ -114,6 +115,7 @@ module.exports = {
       credentialsAttribute: 'connection_string',
       icon: Azure,
       title: 'Azure IoT Hub',
+      twinTitle: 'Device Twin',
       provider: 'iot-hub',
       enabled: true,
       configHint: (

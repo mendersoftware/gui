@@ -82,9 +82,11 @@ export const TwinSyncStatus = ({ diffCount, providerTitle, twinError, updateTime
   );
 };
 
-export const Title = ({ providerTitle }) => (
+export const Title = ({ providerTitle, twinTitle }) => (
   <div className="flexbox center-aligned">
-    <h4 className="margin-right">{providerTitle} Device Twin</h4>
+    <h4 className="margin-right">
+      {providerTitle} {twinTitle}
+    </h4>
     <Link to="/settings/integrations">Integration settings</Link>
   </div>
 );
@@ -226,7 +228,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
       isOpen={open}
       onClick={onExpandClick}
       shouldUnmount={false}
-      title={<Title providerTitle={externalProvider.title} />}
+      title={<Title providerTitle={externalProvider.title} twinTitle={externalProvider.twinTitle} />}
     >
       <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`}>
         <div style={widthStyle}>
