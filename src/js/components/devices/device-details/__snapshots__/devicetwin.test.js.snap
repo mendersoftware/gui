@@ -335,7 +335,8 @@ exports[`DeviceTwin Component renders correctly 1`] = `
         class="margin-right"
       >
         Azure IoT Hub
-         Device Twin
+         
+        Device Twin
       </h4>
       <a
         href="/settings/integrations"
@@ -541,7 +542,8 @@ exports[`DeviceTwin Component renders sub component Title correctly 1`] = `
     class="margin-right"
   >
     Test
-     Device Twin
+     
+    Device Twin
   </h4>
   <a
     href="/settings/integrations"

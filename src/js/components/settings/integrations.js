@@ -98,7 +98,6 @@ const ConnectionStringInput = ({ connectionConfig, isEditing, setConnectionConfi
 };
 
 const providerConfigMap = {
-  google: ConnectionDetailsInput,
   'iot-core': ConnectionDetailsInput,
   'iot-hub': ConnectionStringInput
 };

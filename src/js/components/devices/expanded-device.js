@@ -21,7 +21,7 @@ import {
 } from '../../actions/deviceActions';
 import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
@@ -218,9 +218,11 @@ export const ExpandedDevice = ({
         showHelptips={showHelptips}
       />
       <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
-      {!!integrations.length && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
-        <DeviceTwin device={device} integrations={integrations} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />
-      )}
+      {!!integrations.length &&
+        [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) &&
+        integrations.map(integration => (
+          <DeviceTwin key={integration.id} device={device} integration={integration} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />
+        ))}
       {isAcceptedDevice && (
         <>
           <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
@@ -327,7 +329,7 @@ const mapStateToProps = (state, ownProps) => {
     docsVersion: getDocsVersion(state),
     features: getFeatures(state),
     groupFilters,
-    integrations: state.organization.externalDeviceIntegrations.filter(integration => integration.id),
+    integrations: state.organization.externalDeviceIntegrations.filter(integration => integration.id && EXTERNAL_PROVIDER[integration.provider]?.deviceTwin),
     latestAlerts: latest,
     onboardingComplete: state.onboarding.complete,
     selectedGroup,
