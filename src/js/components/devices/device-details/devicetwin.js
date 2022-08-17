@@ -82,9 +82,11 @@ export const TwinSyncStatus = ({ diffCount, providerTitle, twinError, updateTime
   );
 };
 
-export const Title = ({ providerTitle }) => (
+export const Title = ({ providerTitle, twinTitle }) => (
   <div className="flexbox center-aligned">
-    <h4 className="margin-right">{providerTitle} Device Twin</h4>
+    <h4 className="margin-right">
+      {providerTitle} {twinTitle}
+    </h4>
     <Link to="/settings/integrations">Integration settings</Link>
   </div>
 );
@@ -111,12 +113,11 @@ const editorProps = {
 };
 const maxWidth = 800;
 
-const externalProvider = EXTERNAL_PROVIDER['iot-hub'];
 const indentation = 4; // number of spaces, tab based indentation won't show in the editor, but be converted to 4 spaces
 
 const stringifyTwin = twin => JSON.stringify(twin, undefined, indentation) ?? '';
 
-export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin }) => {
+export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }) => {
   const theme = useTheme();
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
@@ -130,8 +131,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
   const [isSync, setIsSync] = useState(true);
   const editorRef = useRef(null);
 
-  const integration = integrations.find(integration => integration.provider === externalProvider.provider);
-
+  const externalProvider = EXTERNAL_PROVIDER[integration.provider];
   const { [integration.id]: deviceTwin = {} } = device.twinsByIntegration ?? {};
   const { desired: configuredTwin = {}, reported: reportedTwin = {}, twinError, updated_ts: updateTime = device.created_ts } = deviceTwin;
 
@@ -226,7 +226,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integrations, setDeviceTwin 
       isOpen={open}
       onClick={onExpandClick}
       shouldUnmount={false}
-      title={<Title providerTitle={externalProvider.title} />}
+      title={<Title providerTitle={externalProvider.title} twinTitle={externalProvider.twinTitle} />}
     >
       <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`}>
         <div style={widthStyle}>
