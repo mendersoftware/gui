@@ -42,7 +42,7 @@ test:lint:
     - job: build:docker
       artifacts: true
   services:
-    - docker:19.03.5-dind
+    - docker:dind
   before_script:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
@@ -151,7 +151,7 @@ test:prep:
   only:
     - staging
   services:
-    - docker:19.03.5-dind
+    - docker:dind
   script:
     - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client:master -c "cp mender-stress-test-client /extract/"
   artifacts:
@@ -159,11 +159,20 @@ test:prep:
       - mender-stress-test-client
     expire_in: 30 days
 
+build:docker:
+  after_script:
+    - docker build --tag ${DOCKER_REPOSITORY}:base --target base --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}" .
+    - docker save ${DOCKER_REPOSITORY}:base > baseImage.tar
+  artifacts:
+    paths:
+      - baseImage.tar
+      - image.tar
+
 .template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
   stage: .post
   services:
-    - docker:19.03.5-dind
+    - docker:dind
   cache:
     key:
       files:
@@ -253,10 +262,16 @@ publish:e2e-tests:
 publish:disclaimer:
   stage: publish
   image: docker:git
+  needs:
+    - job: build:docker
+      artifacts: true
   services:
-    - docker:19.03.5-dind
+    - docker:dind
+  variables:
+    DOCKER_BUILDKIT: 1
   script:
-    - docker build -f Dockerfile.disclaimer -t disclaimer .
+    - docker load -i baseImage.tar
+    - docker build -t disclaimer --target disclaim .
     - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract disclaimer -c "cp disclaimer.txt /extract/"
     - docker image rm disclaimer
   artifacts:
