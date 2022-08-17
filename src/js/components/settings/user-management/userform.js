@@ -11,8 +11,11 @@ import {
   ListItemText,
   InputLabel,
   MenuItem,
-  Select
+  Select,
+  FormControlLabel,
+  Tooltip
 } from '@mui/material';
+import { InfoOutlined } from '@mui/icons-material';
 
 import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
@@ -99,9 +102,26 @@ export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
   );
 };
 
+const PasswordLabel = () => (
+  <div className="flexbox center-aligned">
+    Optional
+    <Tooltip
+      title={
+        <>
+          <p>You can skip setting a password for now - you can opt to send the new user an email containing a password reset link by checking the box below.</p>
+          <p>Organizations using Single Sign-On or other means of authorization may want to create users with no password.</p>
+        </>
+      }
+    >
+      <InfoOutlined fontSize="small" className="margin-left-small" />
+    </Tooltip>
+  </div>
+);
+
 export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterprise, roles, submit }) => {
   const [hadRoleChanges, setHadRoleChanges] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState();
+  const [shouldResetPassword, setShouldResetPassword] = useState(false);
 
   const onSelect = (newlySelectedRoles, hadRoleChanges) => {
     setSelectedRoles(newlySelectedRoles);
@@ -109,11 +129,12 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
   };
 
   const onSubmit = data => {
-    let submissionData = Object.assign({}, data, hadRoleChanges ? { roles: selectedRoles } : {});
-    delete submissionData['password_new'];
-    submissionData['password'] = data.password_new;
-    return submit(submissionData, 'create');
+    const { password_new: password, ...remainder } = data;
+    const roleData = hadRoleChanges ? { roles: selectedRoles } : {};
+    return submit({ ...remainder, ...roleData, password }, 'create');
   };
+
+  const togglePasswordReset = () => setShouldResetPassword(current => !current);
 
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">
@@ -131,14 +152,20 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
         >
           <TextInput hint="Email" label="Email" id="email" validations="isLength:1,isEmail" required autocomplete="off" />
           <PasswordInput
-            className="edit-pass"
             id="password_new"
-            label="Password"
-            create={true}
-            validations="isLength:8"
-            edit={false}
-            required={true}
+            className="edit-pass"
             autocomplete="off"
+            create
+            edit={false}
+            generate
+            InputLabelProps={{ shrink: true }}
+            label={<PasswordLabel />}
+            placeholder="Password"
+            validations="isLength:8"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={shouldResetPassword} onChange={togglePasswordReset} />}
+            label="Send an email to the user containing a link to reset the password"
           />
           {canManageUsers && isEnterprise && <UserRolesSelect currentUser={currentUser} onSelect={onSelect} roles={roles} user={{}} />}
         </Form>
