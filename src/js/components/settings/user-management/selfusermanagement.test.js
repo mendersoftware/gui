@@ -63,7 +63,7 @@ describe('SelfUserManagement Component', () => {
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
     act(() => userEvent.click(screen.getByRole('button', { name: /change password/i })));
-    const form = screen.getByLabelText('Password *').parentElement.parentElement.parentElement;
+    const form = screen.getByLabelText('Password *').parentElement.parentElement.parentElement.parentElement;
     const passwordGeneration = within(form).getByRole('button', { name: /generate/i });
     userEvent.click(passwordGeneration);
     expect(copyCheck).toHaveBeenCalled();

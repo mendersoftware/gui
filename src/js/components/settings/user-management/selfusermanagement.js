@@ -126,9 +126,9 @@ export const SelfUserManagement = ({
               buttonColor="secondary"
               showButtons={editPass}
             >
-              <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required={true} />
-              <PasswordInput className="edit-pass" id="password" label="Password *" validations={`isLength:8,isNot:${email}`} required={true} create={true} />
-              <PasswordInput id="password_confirmation" label="Confirm password *" validations={`isLength:8,isNot:${email}`} required={true} />
+              <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required />
+              <PasswordInput className="edit-pass" id="password" label="Password *" validations={`isLength:8,isNot:${email}`} create generate required />
+              <PasswordInput id="password_confirmation" label="Confirm password *" validations={`isLength:8,isNot:${email}`} required />
             </Form>
           </>
         ))}
