@@ -47,7 +47,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const ConnectionIndicator = isConnected => {
+const ConnectionIndicator = ({ isConnected }) => {
   const { classes } = useStyles();
   return (
     <div className="flexbox center-aligned">
@@ -57,8 +57,13 @@ const ConnectionIndicator = isConnected => {
 };
 
 const tabs = {
-  terminal: { link: 'session logs', title: ConnectionIndicator, value: 'terminal', needsWriteAccess: true, needsTroubleshoot: true },
-  transfer: { link: 'file transfer logs', title: () => 'File transfer', value: 'transfer', needsWriteAccess: false, needsTroubleshoot: false }
+  terminal: {
+    link: 'session logs',
+    title: ConnectionIndicator,
+    value: 'terminal',
+    canShow: ({ canTroubleshoot, canWriteDevices }) => canTroubleshoot && canWriteDevices
+  },
+  transfer: { link: 'file transfer logs', title: () => 'File transfer', value: 'transfer', canShow: ({ canTroubleshoot }) => canTroubleshoot }
 };
 
 export const TroubleshootDialog = ({
@@ -77,7 +82,7 @@ export const TroubleshootDialog = ({
   type = tabs.terminal.value,
   userCapabilities
 }) => {
-  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
+  const { canAuditlog, canTroubleshoot, canWriteDevices } = userCapabilities;
 
   const [currentTab, setCurrentTab] = useState(type);
   const [availableTabs, setAvailableTabs] = useState(Object.values(tabs));
@@ -111,14 +116,13 @@ export const TroubleshootDialog = ({
 
   useEffect(() => {
     const allowedTabs = Object.values(tabs).reduce((accu, tab) => {
-      if ((tab.needsWriteAccess && !hasWriteAccess) || (tab.needsTroubleshoot && !canTroubleshoot)) {
-        return accu;
+      if (tab.canShow({ canTroubleshoot, canWriteDevices })) {
+        accu.push(tab);
       }
-      accu.push(tab);
       return accu;
     }, []);
     setAvailableTabs(allowedTabs);
-  }, [canTroubleshoot, hasWriteAccess]);
+  }, [canTroubleshoot, canWriteDevices]);
 
   useEffect(() => {
     if (socketInitialized === undefined) {
@@ -244,8 +248,8 @@ export const TroubleshootDialog = ({
       </DialogTitle>
       <DialogContent className={`dialog-content flexbox column ${classes.content}`}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>
-          {availableTabs.map(tab => (
-            <Tab key={tab.value} label={tab.title(socketInitialized)} value={tab.value} />
+          {availableTabs.map(({ title: Title, value }) => (
+            <Tab key={value} label={<Title isConnected={socketInitialized} />} value={value} />
           ))}
         </Tabs>
         {currentTab === tabs.transfer.value && (
