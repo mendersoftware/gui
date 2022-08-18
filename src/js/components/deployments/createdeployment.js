@@ -96,8 +96,7 @@ export const CreateDialog = props => {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
       return;
     }
-    const selectedGroup = groups[deploymentObject.group];
-    if (!deploymentObject.group || !selectedGroup) {
+    if (!groups[deploymentObject.group]) {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
       return;
     }
