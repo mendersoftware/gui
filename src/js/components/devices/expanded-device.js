@@ -27,7 +27,6 @@ import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import { getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
-import { useDebounce } from '../../utils/debouncehook';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
 import DeviceConfiguration from './device-details/configuration';
@@ -95,6 +94,7 @@ export const ExpandedDevice = ({
   defaultConfig,
   device,
   deviceConfigDeployment,
+  deviceId,
   docsVersion,
   features,
   getDeviceAlerts,
@@ -185,12 +185,11 @@ export const ExpandedDevice = ({
   };
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
 
-  const hasEntered = useDebounce(!!device.id, 300);
   const onCloseClick = useCallback(() => {
-    if (hasEntered) {
+    if (deviceId) {
       onClose();
     }
-  }, [hasEntered, onClose]);
+  }, [deviceId, onClose]);
 
   return (
     <Drawer anchor="right" className="expandedDevice" open={!!device.id} onClose={onCloseClick} PaperProps={{ style: { minWidth: '67vw' } }}>
