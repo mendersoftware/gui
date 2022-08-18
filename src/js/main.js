@@ -20,23 +20,31 @@ const cache = createCache({
   prepend: true
 });
 
-const cssVariables = ({ palette: p }) => ({
-  '@global': {
-    ':root': {
-      '--mui-primary-main': p.primary.main,
-      '--mui-secondary-main': p.secondary.main,
-      '--mui-secondary-light': p.secondary.light,
-      '--mui-secondary-lighter': p.secondary.lighter,
-      '--mui-error-light': p.error.light,
-      '--mui-error-main': p.error.main,
-      '--mui-error-dark': p.error.dark,
-      '--mui-text-primary': p.text.primary,
-      '--mui-text-light': p.text.light,
-      '--mui-background-default': p.background.default,
-      '--mui-overlay': p.grey[400]
+const reducePalette =
+  prefix =>
+  (accu, [key, value]) => {
+    if (value instanceof Object) {
+      return {
+        ...accu,
+        ...Object.entries(value).reduce(reducePalette(`${prefix}-${key}`), {})
+      };
+    } else {
+      accu[`${prefix}-${key}`] = value;
     }
-  }
-});
+    return accu;
+  };
+
+const cssVariables = ({ palette }) => {
+  const muiVariables = Object.entries(palette).reduce(reducePalette('--mui'), {});
+  return {
+    '@global': {
+      ':root': {
+        ...muiVariables,
+        '--mui-overlay': palette.grey[400]
+      }
+    }
+  };
+};
 
 export const WrappedBaseline = withStyles(cssVariables)(CssBaseline);
 
