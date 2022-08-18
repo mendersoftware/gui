@@ -134,23 +134,21 @@ export const Organization = ({
           }
         />
       </List>
-      {isHosted && (
-        <div className="flexbox center-aligned">
-          <FormControlLabel
-            className={`margin-bottom-small ${classes.ssoToggle}`}
-            control={<Checkbox checked={!isResettingSSO && (hasSingleSignOn || isConfiguringSSO)} onChange={onSSOClick} />}
-            label="Enable SAML single sign-on"
-          />
-          {isResettingSSO && !isConfiguringSSO && (
-            <>
-              <Button onClick={onCancelSSOSettings}>Cancel</Button>
-              <Button onClick={onSaveSSOSettings} disabled={!hasSingleSignOn} variant="contained">
-                Save
-              </Button>
-            </>
-          )}
-        </div>
-      )}
+      <div className="flexbox center-aligned">
+        <FormControlLabel
+          className={`margin-bottom-small ${classes.ssoToggle}`}
+          control={<Checkbox checked={!isResettingSSO && (hasSingleSignOn || isConfiguringSSO)} onChange={onSSOClick} />}
+          label="Enable SAML single sign-on"
+        />
+        {isResettingSSO && !isConfiguringSSO && (
+          <>
+            <Button onClick={onCancelSSOSettings}>Cancel</Button>
+            <Button onClick={onSaveSSOSettings} disabled={!hasSingleSignOn} variant="contained">
+              Save
+            </Button>
+          </>
+        )}
+      </div>
       <Collapse className="margin-left-large" in={isConfiguringSSO}>
         <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={setSnackbar} />
       </Collapse>

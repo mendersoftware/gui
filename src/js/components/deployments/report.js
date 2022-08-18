@@ -182,7 +182,7 @@ export const DeploymentReport = props => {
         <div className="flexbox center-aligned">
           {!finished ? (
             <DeploymentAbortButton abort={abort} deployment={deployment} />
-          ) : deployment.stats.failure || deployment.stats.aborted ? (
+          ) : (deployment.stats.failure || deployment.stats.aborted) && !isConfigurationDeployment ? (
             <Tooltip
               title="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
               placement="bottom"
