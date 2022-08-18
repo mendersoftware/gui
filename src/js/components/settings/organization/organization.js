@@ -14,6 +14,8 @@ import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import Billing from './billing';
 import { SAMLConfig } from './samlconfig';
 import { makeStyles } from 'tss-react/mui';
+import { getTenantCapabilities } from '../../../selectors';
+import { versionCompare } from '../../../helpers';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
@@ -47,10 +49,12 @@ export const OrgHeader = () => {
 };
 
 export const Organization = ({
+  canPreview,
   changeSamlConfig,
   deleteSamlConfig,
   getSamlConfigs,
   getUserOrganization,
+  isEnterprise,
   isHosted,
   org,
   samlConfigs,
@@ -134,21 +138,23 @@ export const Organization = ({
           }
         />
       </List>
-      <div className="flexbox center-aligned">
-        <FormControlLabel
-          className={`margin-bottom-small ${classes.ssoToggle}`}
-          control={<Checkbox checked={!isResettingSSO && (hasSingleSignOn || isConfiguringSSO)} onChange={onSSOClick} />}
-          label="Enable SAML single sign-on"
-        />
-        {isResettingSSO && !isConfiguringSSO && (
-          <>
-            <Button onClick={onCancelSSOSettings}>Cancel</Button>
-            <Button onClick={onSaveSSOSettings} disabled={!hasSingleSignOn} variant="contained">
-              Save
-            </Button>
-          </>
-        )}
-      </div>
+      {canPreview && isEnterprise && (
+        <div className="flexbox center-aligned">
+          <FormControlLabel
+            className={`margin-bottom-small ${classes.ssoToggle}`}
+            control={<Checkbox checked={!isResettingSSO && (hasSingleSignOn || isConfiguringSSO)} onChange={onSSOClick} />}
+            label="Enable SAML single sign-on"
+          />
+          {isResettingSSO && !isConfiguringSSO && (
+            <>
+              <Button onClick={onCancelSSOSettings}>Cancel</Button>
+              <Button onClick={onSaveSSOSettings} disabled={!hasSingleSignOn} variant="contained">
+                Save
+              </Button>
+            </>
+          )}
+        </div>
+      )}
       <Collapse className="margin-left-large" in={isConfiguringSSO}>
         <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={setSnackbar} />
       </Collapse>
@@ -160,7 +166,10 @@ export const Organization = ({
 const actionCreators = { changeSamlConfig, deleteSamlConfig, getSamlConfigs, getUserOrganization, setSnackbar, storeSamlConfig };
 
 const mapStateToProps = state => {
+  const { isEnterprise } = getTenantCapabilities(state);
   return {
+    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
+    isEnterprise,
     isHosted: state.app.features.isHosted,
     org: state.organization.organization,
     samlConfigs: state.organization.samlConfigs
