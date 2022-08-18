@@ -70,8 +70,13 @@ export const Organization = ({
 
   useEffect(() => {
     getUserOrganization();
-    getSamlConfigs();
   }, []);
+
+  useEffect(() => {
+    if (isEnterprise) {
+      getSamlConfigs();
+    }
+  }, [isEnterprise]);
 
   useEffect(() => {
     setHasSingleSignOn(!!samlConfigs.length);
