@@ -6,6 +6,7 @@ type TestFixtures = {
   baseUrl: string;
   config: Object;
   environment: string;
+  samlCredentials: string;
   loggedInPage: Page;
   username: string;
   password: string;
@@ -49,6 +50,10 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
   environment: async ({}, use) => {
     const environment = process.env.TEST_ENVIRONMENT ? process.env.TEST_ENVIRONMENT : 'localhost';
     await use(environment);
+  },
+  samlCredentials: async ({}, use) => {
+    const samlCredentials = process.env.TEST_SAML_CREDENTIALS ? process.env.TEST_SAML_CREDENTIALS : 'chrome';
+    await use(samlCredentials);
   },
   username: async ({ environment }, use) => {
     let username = defaultConfig.username;

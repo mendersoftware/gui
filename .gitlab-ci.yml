@@ -202,16 +202,22 @@ test:prep:
 
 test:staging-deployment:chrome:
   extends: .template:test:staging-deployment
+  variables:
+    TEST_SAML_CREDENTIALS: "chrome"
   script:
     - npm run test-ci
 
 test:staging-deployment:firefox:
   extends: .template:test:staging-deployment
+  variables:
+    TEST_SAML_CREDENTIALS: "firefox"
   script:
     - npm run test-ci -- --browser=firefox
 
 test:staging-deployment:webkit:
   extends: .template:test:staging-deployment
+  variables:
+    TEST_SAML_CREDENTIALS: "webkit"
   script:
     - npm run test-ci -- --browser=webkit
 
