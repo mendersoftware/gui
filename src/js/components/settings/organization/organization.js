@@ -143,7 +143,7 @@ export const Organization = ({
           }
         />
       </List>
-      {canPreview && isEnterprise && (
+      {(window.location.hostname.includes('staging') || canPreview) && isEnterprise && (
         <div className="flexbox center-aligned">
           <FormControlLabel
             className={`margin-bottom-small ${classes.ssoToggle}`}
