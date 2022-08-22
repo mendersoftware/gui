@@ -1,7 +1,12 @@
-FROM --platform=amd64 node:18.7.0-alpine AS build
+FROM --platform=amd64 node:18.7.0-alpine AS base
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
 RUN npm ci
+
+FROM mendersoftware/gui:base AS disclaim
+RUN npm run disclaim
+
+FROM base AS build
 COPY . ./
 RUN npm run build
 
