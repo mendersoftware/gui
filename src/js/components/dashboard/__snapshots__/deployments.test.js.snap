@@ -2,7 +2,7 @@
 
 exports[`Deployments Component renders correctly 1`] = `
 .emotion-0 {
-  border-bottom: 1px solid #fafafa;
+  border-bottom: 1px solid #d4e9e7;
 }
 
 .emotion-0 span {
@@ -18,8 +18,7 @@ exports[`Deployments Component renders correctly 1`] = `
     </span>
   </h4>
   <div
-    class="deployments"
-    style="margin-bottom: 50px;"
+    class="deployments margin-bottom-large"
   >
     <div
       class="loaderContainer"

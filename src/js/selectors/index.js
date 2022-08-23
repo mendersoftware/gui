@@ -22,6 +22,8 @@ const getOnboarding = state => state.onboarding;
 const getShowHelptips = state => state.users.showHelptips;
 const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
+const getReleasesById = state => state.releases.byId;
+const getListedReleases = state => state.releases.releasesList.releaseIds;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.userSettings;
@@ -35,20 +37,25 @@ export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboardin
   return getDemoDeviceAddressHelper(devices, approach, demoArtifactPort);
 });
 
+const listItemMapper = (byId, ids, { defaultObject = {}, cutOffSize = DEVICE_LIST_MAXIMUM_LENGTH }) => {
+  return ids.slice(0, cutOffSize).reduce((accu, id) => {
+    if (id && byId[id]) {
+      accu.push({ ...defaultObject, ...byId[id] });
+    }
+    return accu;
+  }, []);
+};
+
 const listTypeDeviceIdMap = {
   deviceList: getListedDevices,
   search: getSearchedDevices,
   selectedDevice: state => [getSelectedDevice(state)]
 };
-export const getMappedDevicesList = createSelector([getDevicesById, (state, listType) => listTypeDeviceIdMap[listType](state)], (devicesById, deviceIds) => {
-  let devices = deviceIds.slice(0, DEVICE_LIST_MAXIMUM_LENGTH);
-  return devices.reduce((accu, deviceId) => {
-    if (deviceId && devicesById[deviceId]) {
-      accu.push({ auth_sets: [], ...devicesById[deviceId] });
-    }
-    return accu;
-  }, []);
-});
+const getDeviceMappingDefaults = () => ({ defaultObject: { auth_sets: [] }, cutOffSize: DEVICE_LIST_MAXIMUM_LENGTH });
+export const getMappedDevicesList = createSelector(
+  [getDevicesById, (state, listType) => listTypeDeviceIdMap[listType](state), getDeviceMappingDefaults],
+  listItemMapper
+);
 
 const defaultIdAttribute = Object.freeze({ attribute: 'id', scope: ATTRIBUTE_SCOPES.identity });
 export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = { ...defaultIdAttribute } }) => id_attribute);
@@ -183,3 +190,21 @@ export const getAvailableIssueOptionsByType = createSelector(
       return accu;
     }, {})
 );
+
+export const getDeviceTypes = createSelector([getAcceptedDevices, getDevicesById], ({ deviceIds = [] }, devicesById) =>
+  Object.keys(
+    deviceIds.slice(0, 200).reduce((accu, item) => {
+      const { device_type: deviceTypes = [] } = devicesById[item] ? devicesById[item].attributes : {};
+      accu = deviceTypes.reduce((deviceTypeAccu, deviceType) => {
+        if (deviceType.length > 1) {
+          deviceTypeAccu[deviceType] = deviceTypeAccu[deviceType] ? deviceTypeAccu[deviceType] + 1 : 1;
+        }
+        return deviceTypeAccu;
+      }, accu);
+      return accu;
+    }, {})
+  )
+);
+
+const getReleaseMappingDefaults = () => ({});
+export const getReleasesList = createSelector([getReleasesById, getListedReleases, getReleaseMappingDefaults], listItemMapper);

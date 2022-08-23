@@ -121,7 +121,7 @@ module.exports = {
       enabled: true,
       deviceTwin: true,
       configHint: (
-        <>
+        <span>
           For help finding your Azure IoT Hub connection string, look under &apos;Shared access policies&apos; in the Microsoft Azure UI as described{' '}
           {
             <a
@@ -133,7 +133,7 @@ module.exports = {
             </a>
           }
           .
-        </>
+        </span>
       )
     }
   },

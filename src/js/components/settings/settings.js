@@ -21,30 +21,30 @@ import Upgrade from './upgrade';
 let stripePromise = null;
 
 const sectionMap = {
-  'global-settings': { component: <Global />, text: () => 'Global settings', canAccess: () => true },
-  'my-profile': { component: <SelfUserManagement />, text: () => 'My profile', canAccess: () => true },
+  'global-settings': { component: Global, text: () => 'Global settings', canAccess: () => true },
+  'my-profile': { component: SelfUserManagement, text: () => 'My profile', canAccess: () => true },
   'organization-and-billing': {
-    component: <Organization />,
+    component: Organization,
     text: () => 'Organization and billing',
     canAccess: ({ hasMultitenancy }) => hasMultitenancy
   },
   'user-management': {
-    component: <UserManagement />,
+    component: UserManagement,
     text: () => 'User management',
     canAccess: ({ userCapabilities: { canManageUsers } }) => canManageUsers
   },
   'role-management': {
-    component: <Roles />,
+    component: Roles,
     text: () => 'Roles',
     canAccess: ({ currentUser, isEnterprise, userRoles: { isAdmin } }) => currentUser && isAdmin && isEnterprise
   },
   'integrations': {
-    component: <Integrations />,
+    component: Integrations,
     text: () => 'Integrations',
     canAccess: ({ userRoles: { isAdmin }, version }) => isAdmin && versionCompare(version, '3.2') > -1
   },
   upgrade: {
-    component: <Upgrade />,
+    component: Upgrade,
     icon: <PaymentIcon />,
     text: ({ isTrial }) => (isTrial ? 'Upgrade to a plan' : 'Upgrades and add-ons'),
     canAccess: ({ hasMultitenancy }) => hasMultitenancy
@@ -95,10 +95,17 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
   if (!section) {
     return <Navigate to="/settings/my-profile" replace />;
   }
+  const Component = section.component;
   return (
     <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
       <LeftNav sections={[{ itemClass: 'settingsNav', items: links, title: 'Settings' }]} />
-      <div className="rightFluid padding-right">{loadingFinished && <Elements stripe={stripePromise}>{section.component}</Elements>}</div>
+      <div className="rightFluid padding-right">
+        {loadingFinished && (
+          <Elements stripe={stripePromise}>
+            <Component />
+          </Elements>
+        )}
+      </div>
     </div>
   );
 };

@@ -14,6 +14,7 @@ import AddOnSelection from './addonselection';
 import PlanSelection from './planselection';
 import CardSection from './cardsection';
 import QuoteRequestForm from './quoterequestform';
+import InfoText from '../common/infotext';
 
 const offerTag = (
   <span className="offerTag">
@@ -35,14 +36,14 @@ export const PostUpgradeNote = ({ newPlan }) => (
 );
 
 export const PricingContactNote = () => (
-  <p className="info">
+  <InfoText>
     <InfoOutlinedIcon style={{ fontSize: '14px', margin: '0 4px 4px 0', verticalAlign: 'middle' }} />
     If you have any questions about the plan pricing or device limits,{' '}
     <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
       contact our team
     </a>
     .
-  </p>
+  </InfoText>
 );
 
 const upgradeNotes = {

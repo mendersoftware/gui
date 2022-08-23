@@ -10,7 +10,7 @@ export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
   tooltip: {
     backgroundColor: palette.secondary.main,
     boxShadow: shadows[1],
-    color: palette.grey[50],
+    color: palette.tooltip.text,
     fontSize: 'small',
     maxWidth: 600,
     info: {

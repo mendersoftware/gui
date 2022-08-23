@@ -3,8 +3,8 @@
 exports[`DeviceStatus Component renders correctly 1`] = `
 .emotion-0 {
   max-width: 100%;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-size: 0.8125rem;
+  font-family: Lato,sans-serif;
+  font-size: 0.7545rem;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -18,7 +18,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   -webkit-justify-content: center;
   justify-content: center;
   height: 24px;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   white-space: nowrap;
@@ -33,7 +33,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   vertical-align: middle;
   box-sizing: border-box;
   background-color: transparent;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #f7f7f7;
 }
 
 .emotion-0.Mui-disabled {
@@ -46,18 +46,18 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   margin-right: -6px;
   width: 24px;
   height: 24px;
-  color: #616161;
-  font-size: 0.75rem;
+  color: #bcbcbc;
+  font-size: 0.6964rem;
 }
 
 .emotion-0 .MuiChip-avatarColorPrimary {
   color: #fff;
-  background-color: #1565c0;
+  background-color: rgb(35, 85, 94);
 }
 
 .emotion-0 .MuiChip-avatarColorSecondary {
   color: #fff;
-  background-color: #7b1fa2;
+  background-color: rgb(65, 10, 46);
 }
 
 .emotion-0 .MuiChip-avatarSmall {
@@ -65,11 +65,11 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   margin-right: -4px;
   width: 18px;
   height: 18px;
-  font-size: 0.625rem;
+  font-size: 0.5804rem;
 }
 
 .emotion-0 .MuiChip-icon {
-  color: #616161;
+  color: #bcbcbc;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
@@ -77,7 +77,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
 
 .emotion-0 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
-  color: rgba(0, 0, 0, 0.26);
+  color: rgba(10, 10, 11, 0.26);
   font-size: 16px;
   cursor: pointer;
   margin: 0 5px 0 -6px;
@@ -86,7 +86,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
 }
 
 .emotion-0 .MuiChip-deleteIcon:hover {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(10, 10, 11, 0.4);
 }
 
 .emotion-0.MuiChip-clickable:hover {

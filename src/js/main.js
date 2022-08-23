@@ -20,14 +20,31 @@ const cache = createCache({
   prepend: true
 });
 
-const cssVariables = ({ palette: p }) => ({
-  '@global': {
-    ':root': {
-      '--mui-primary-main': p.primary.main,
-      '--mui-secondary-main': p.secondary.main
+const reducePalette =
+  prefix =>
+  (accu, [key, value]) => {
+    if (value instanceof Object) {
+      return {
+        ...accu,
+        ...Object.entries(value).reduce(reducePalette(`${prefix}-${key}`), {})
+      };
+    } else {
+      accu[`${prefix}-${key}`] = value;
     }
-  }
-});
+    return accu;
+  };
+
+const cssVariables = ({ palette }) => {
+  const muiVariables = Object.entries(palette).reduce(reducePalette('--mui'), {});
+  return {
+    '@global': {
+      ':root': {
+        ...muiVariables,
+        '--mui-overlay': palette.grey[400]
+      }
+    }
+  };
+};
 
 export const WrappedBaseline = withStyles(cssVariables)(CssBaseline);
 

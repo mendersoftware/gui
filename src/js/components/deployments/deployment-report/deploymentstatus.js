@@ -1,10 +1,40 @@
 import React from 'react';
+
+import { Pause as PauseIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
+
 import { TwoColumnData } from '../../common/configurationobject';
 import { defaultColumnDataProps } from '../report';
 import { deploymentDisplayStates, pauseMap } from '../../../constants/deploymentConstants';
 import { groupDeploymentStats } from '../../../helpers';
 
+const useStyles = makeStyles()(theme => ({
+  progressStatus: {
+    backgroundColor: theme.palette.background.light,
+    padding: `${theme.spacing(2)} ${theme.spacing(8)} ${theme.spacing(2)}`
+  },
+  scrollDown: { marginLeft: theme.spacing() }
+}));
+
+export const DeploymentPhaseNotification = ({ className = '', deployment = {}, onReviewClick }) => {
+  const { classes } = useStyles();
+  const { paused } = groupDeploymentStats(deployment);
+  if (paused === 0) {
+    return null;
+  }
+  return (
+    <div className={`${classes.progressStatus} flexbox center-aligned margin-bottom clickable ${className}`} onClick={onReviewClick} style={{ padding: 15 }}>
+      <PauseIcon />
+      <div className="muted">
+        Deployment is <span className="uppercased">paused</span>. <a>Review its status</a> to continue, retry or abort the deployment{' '}
+      </div>
+      <ScrollDownIcon fontSize="small" className={`link-color ${classes.scrollDown}`} />
+    </div>
+  );
+};
+
 export const DeploymentStatus = ({ className = '', deployment = {} }) => {
+  const { classes } = useStyles();
   const { finished, max_devices, retries = 1, status = 'pending', stats } = deployment;
   const phaseStats = groupDeploymentStats(deployment, true);
 
@@ -33,7 +63,7 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
   const { failure, finished: finishedDeployment, scheduled, success, ...phasesWithStats } = deploymentDisplayStates;
 
   return (
-    <div className={`progressStatus flexbox space-between centered margin-bottom ${className}`}>
+    <div className={`${classes.progressStatus} flexbox space-between centered margin-bottom ${className}`}>
       <div className="flexbox column">
         <div className="muted">Status</div>
         <h4 className="margin-bottom-none muted">{statusDescription}</h4>

@@ -4,6 +4,7 @@ import { Button } from '@mui/material';
 import Loader from '../common/loader';
 
 import stripeImage from '../../../assets/img/powered_by_stripe.png';
+import InfoText from '../common/infotext';
 
 const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) => {
   const stripe = useStripe();
@@ -66,7 +67,7 @@ const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) 
         <img src={stripeImage} />
       </div>
 
-      {isSignUp && <p className="info">Billing will be scheduled monthly, starting from today. You can cancel at any time.</p>}
+      {isSignUp && <InfoText>Billing will be scheduled monthly, starting from today. You can cancel at any time.</InfoText>}
 
       <div className="flexbox center-aligned margin-top-small" style={{ justifyContent: 'flex-end' }}>
         {!isSignUp && (

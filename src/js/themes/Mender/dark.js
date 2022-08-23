@@ -1,87 +1,117 @@
 import { accordionClasses } from '@mui/material/Accordion';
 import { buttonClasses } from '@mui/material/Button';
-import { listItemTextClasses } from '@mui/material/ListItemText';
 
-import { palette, typography, overrides } from './common';
+import { palette as commonPalette, typography, overrides } from './common';
 
-const variantPalette = {
-  ...palette,
+const grey = {
+  'A400': '#1d1f20',
+  '900': '#4dc3bc',
+  '800': '#89c6c1',
+  '700': '#a0c7c4',
+  '600': '#d7d7d7',
+  '500': '#484747',
+  '400': '#2a2828',
+  '300': '#696868',
+  '200': '#b1b1b1',
+  '100': '#8c8c8c',
+  '50': '#4a4a4a'
+};
+const paper = '#23252a';
+
+const palette = {
+  ...commonPalette,
   mode: 'dark',
-  grey: {
-    'A400': '#5c5c5c',
-    '900': '#2a2828',
-    '800': '#484747',
-    '700': '#696868',
-    '600': '#8c8c8c',
-    '500': '#b1b1b1',
-    '400': '#d7d7d7',
-    '300': '#a0c7c4',
-    '200': '#89c6c1',
-    '100': '#4dc3bc',
-    '50': '#00c1b9'
+  primary: {
+    main: '#4d8b96'
   },
+  secondary: {
+    lighter: '#9e6f8e',
+    light: '#8e577b',
+    main: '#7d3f69'
+  },
+  grey,
   background: {
-    default: '#222',
-    paper: '#343434'
+    light: '#1d1f20',
+    lightgrey: paper,
+    default: '#1b1c22',
+    paper
   },
   text: {
-    primary: 'hsl(240deg 5% 93% / 78%)',
-    hint: 'rgba(0, 0, 0, 0.54)'
+    primary: 'hsl(240deg 5% 93% / 67%)',
+    hint: 'hsl(240deg 5% 93% / 67%)'
+  },
+  error: {
+    main: '#ab1000',
+    dark: '#dc6a5e'
+  },
+  tooltip: {
+    text: grey[600]
   }
 };
 
 export const dark = {
-  palette: variantPalette,
+  palette,
   typography,
   components: {
     ...overrides,
     MuiAccordion: {
+      ...overrides.MuiAccordion,
       styleOverrides: {
         root: {
           ...overrides.MuiAccordion.styleOverrides.root,
           [`&.${accordionClasses.expanded}`]: {
             ...overrides.MuiAccordion.styleOverrides.root[`&.${accordionClasses.expanded}`],
-            backgroundColor: variantPalette.grey['A400']
+            backgroundColor: palette.grey['A400']
           }
         }
       }
     },
     MuiButton: {
+      ...overrides.MuiButton,
       styleOverrides: {
         ...overrides.MuiButton.styleOverrides,
         root: {
           ...overrides.MuiButton.styleOverrides.root,
           [`&.${buttonClasses.text}`]: {
             ...overrides.MuiButton.styleOverrides.root[`&.${buttonClasses.text}`],
-            color: variantPalette.text.primary
+            color: palette.text.primary
           }
         }
       }
     },
+    MuiIconButton: {
+      ...overrides.MuiIconButton,
+      styleOverrides: {
+        ...overrides.MuiIconButton.styleOverrides,
+        root: {
+          ...overrides.MuiIconButton.styleOverrides.root,
+          color: palette.text.primary
+        }
+      }
+    },
     MuiListItem: {
+      ...overrides.MuiListItem,
       styleOverrides: {
         ...overrides.MuiListItem.styleOverrides,
         root: {
           ...overrides.MuiListItem.styleOverrides.root,
           [`&.active`]: {
-            backgroundColor: variantPalette.background.default
+            backgroundColor: palette.background.default
           },
           [`&.leftNav.active`]: {
-            borderTop: `1px solid ${variantPalette.grey[50]}`,
-            borderBottom: `1px solid ${variantPalette.grey[50]}`
-          },
-          [`&.navLink, &.navLink .${listItemTextClasses.root}`]: {
-            color: variantPalette.grey[900]
+            borderTop: `1px solid ${palette.grey[50]}`,
+            borderBottom: `1px solid ${palette.grey[50]}`
           }
         }
       }
     },
     MuiListItemText: {
+      ...overrides.MuiListItemText,
       styleOverrides: {
         ...overrides.MuiListItemText.styleOverrides,
         root: {
           ...overrides.MuiListItemText.styleOverrides.root,
-          color: variantPalette.text.primary
+          color: palette.text.primary
         }
       }
     }

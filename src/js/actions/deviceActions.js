@@ -623,10 +623,10 @@ export const convertDeviceListStateToFilters = ({ filters = [], group, groups = 
 export const getDevicesByStatus =
   (status, options = {}) =>
   (dispatch, getState) => {
-    const { filterSelection, selectedIssues = [], page = defaultPage, perPage = defaultPerPage, sortOptions = [], selectedAttributes = [] } = options;
+    const { filterSelection, group, selectedIssues = [], page = defaultPage, perPage = defaultPerPage, sortOptions = [], selectedAttributes = [] } = options;
     const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({
       filters: filterSelection ?? getState().devices.filters,
-      group: options ? options.group ?? getState().devices.groups.selectedGroup : undefined,
+      group: group ?? getState().devices.groups.selectedGroup,
       groups: getState().devices.groups,
       selectedIssues,
       status

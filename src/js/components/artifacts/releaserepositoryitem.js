@@ -3,13 +3,23 @@ import React, { useEffect } from 'react';
 // material ui
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@mui/material';
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { formatTime, FileSize } from '../../helpers';
-import { colors } from '../../themes/Mender';
 import Time from '../common/time';
 import SelectedArtifact from './selectedartifact';
 
+const useStyles = makeStyles()(theme => ({
+  accordion: {
+    border: '1px solid',
+    borderColor: theme.palette.grey[500],
+    width: '100%'
+  }
+}));
+
 export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection, showRemoveArtifactDialog }) => {
+  const { classes } = useStyles();
+
   useEffect(() => {
     onExpanded();
   }, []);
@@ -20,11 +30,11 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
     <div className="release-repo-item flexbox" ref={itemRef}>
       <div className="muted">{index + 1}</div>
       <Accordion
+        className={classes.accordion}
         square
         expanded={expanded}
         onChange={() => onRowSelection(artifact)}
         TransitionProps={{ onEntered: onExpanded, onExited: onExpanded }}
-        style={{ width: '100%', border: '1px solid', borderColor: colors.borderColor }}
       >
         <AccordionSummary style={{ padding: '0 12px' }} classes={{ content: 'repo-item' }}>
           <Tooltip title={compatible} placement="top-start">

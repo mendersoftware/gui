@@ -12,12 +12,18 @@ import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deplo
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise, getUserCapabilities } from '../../selectors';
-import { colors } from '../../themes/Mender';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
+import { makeStyles } from 'tss-react/mui';
+
+const useStyles = makeStyles()(theme => ({
+  inactive: { color: theme.palette.text.disabled },
+  refreshIcon: { fill: theme.palette.grey[400], width: 111, height: 111 },
+  tabSelect: { textTransform: 'none' }
+}));
 
 const localizer = momentLocalizer(moment);
 
@@ -48,6 +54,8 @@ export const Scheduled = props => {
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [tabIndex, setTabIndex] = useState(tabs.list.index);
   const timer = useRef();
+
+  const { classes } = useStyles();
 
   const { abort, canDeploy, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, scheduledState, setDeploymentsState, setSnackbar } = props;
   const { page, perPage } = scheduledState;
@@ -118,10 +126,10 @@ export const Scheduled = props => {
           <div className="margin-large margin-left-small">
             {Object.entries(tabs).map(([currentIndex, tab]) => (
               <Button
+                className={`${classes.tabSelect} ${currentIndex !== tabIndex ? classes.inactive : ''}`}
                 color="primary"
                 key={currentIndex}
                 startIcon={tab.icon}
-                style={Object.assign({ textTransform: 'none' }, currentIndex !== tabIndex ? { color: colors.grey } : {})}
                 onClick={() => setTabIndex(currentIndex)}
               >
                 {tab.title}
@@ -166,7 +174,7 @@ export const Scheduled = props => {
               <EnterpriseNotification isEnterprise={isEnterprise} benefit="scheduled deployments to steer the distribution of your updates." />
             </div>
           )}
-          <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
+          <RefreshIcon className={`flip-horizontal ${classes.refreshIcon}`} />
         </div>
       )}
     </div>

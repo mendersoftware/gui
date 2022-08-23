@@ -1,4 +1,3 @@
-@import 'variables_light'; // Can swap to dark to build a dev version while testing mui switching
 @import 'variables';
 @import 'fonts';
 @import 'loader';
@@ -74,11 +73,7 @@ body {
   font-size: 14px !important;
 }
 a.warning:hover {
-  color: lighten(@errorStyleColor, 10%) !important;
-}
-
-.lightestgrey {
-  background-color: @lightestgrey;
+  color: @errorStyleColorLight !important;
 }
 
 .box-sizing (@type: border-box) {
@@ -371,7 +366,7 @@ ul.link-list {
     .warning {
       a,
       span {
-        color: lighten(@errorStyleColor, 10%) !important;
+        color: @errorStyleColorLight !important;
       }
     }
   }
@@ -458,7 +453,6 @@ ul.link-list {
     }
     .key > b {
       padding: 2px 14px;
-      background-color: #f7f7f7;
       border-radius: 10px;
     }
   }
@@ -584,7 +578,6 @@ ul.link-list {
   display: flex;
   flex-direction: column;
   .rpi-quickstart {
-    background-color: @lightergrey;
     border-radius: 5px;
   }
   .two-columns > div {
@@ -594,7 +587,6 @@ ul.link-list {
   .os-list img {
     height: 80px;
     margin: @defaultGutterWidth;
-    mix-blend-mode: darken;
   }
 }
 
@@ -672,9 +664,6 @@ ul.link-list {
   .tiny {
     font-size: 10px;
   }
-  .notActive {
-    background: @lightestgrey;
-  }
   .widget {
     display: flex;
     cursor: pointer;
@@ -725,7 +714,6 @@ ul.link-list {
   }
   .widgetMainContent {
     padding: 10px @defaultGutterWidth;
-    align-items: center;
     flex-grow: 1;
     .header {
       margin-bottom: 1pt;
@@ -795,32 +783,6 @@ ul.link-list {
 
   &.small {
     width: 20%;
-  }
-}
-
-.filter-header .filter-toggle,
-.filter-wrapper {
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 5px;
-  border-color: @lightgrey;
-  background: @defaultBackground;
-}
-.filter-header {
-  margin-bottom: -1px;
-  overflow: hidden !important;
-  z-index: 2;
-  .filter-toggle {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-}
-.filter-wrapper {
-  padding: 20px;
-}
-.filter-list {
-  > .MuiChip-root {
-    margin-bottom: 8px;
   }
 }
 
@@ -971,22 +933,6 @@ input[required]:-moz-ui-invalid {
   box-shadow: none;
 }
 
-p.info,
-span.info {
-  margin: 15px 0;
-  color: rgba(66, 66, 66, 0.6);
-
-  &.icon {
-    position: relative;
-    padding-left: 30px;
-
-    svg {
-      position: absolute;
-      left: 0;
-    }
-  }
-}
-
 form .required::after {
   content: '* required';
   position: absolute;
@@ -1024,7 +970,7 @@ form .required.file {
       .animation(bouncedownup 1.3s infinite);
     }
     .dashboard-placeholder {
-      color: lighten(@text, 33%);
+      color: @textlight;
     }
     border-width: 2px;
   }
@@ -1148,24 +1094,16 @@ div:focus {
 .planPanel {
   padding: 10px 20px;
   border-radius: 5px;
-  border: 1px solid @lightergrey;
+  border-width: 1px;
+  border-style: solid;
   vertical-align: top;
   width: 32%;
   .transition(all 0.2s ease);
   cursor: pointer;
-
-  &.active,
-  &:hover {
-    border-color: @lightgrey;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
-  }
   &.muted,
   &.muted:hover {
     cursor: default;
     box-shadow: none;
-  }
-  &.active {
-    background-color: @lightestgrey;
   }
 }
 
@@ -1256,7 +1194,6 @@ div:focus {
   .header {
     height: 56px;
     font-size: 0.8rem;
-    color: @textmuted;
     user-select: none;
     .resize-handle {
       position: absolute;
@@ -1480,13 +1417,10 @@ div.waiting-inventory {
 .deployments-pending {
   padding: 10px @defaultGutterWidth 2 * @defaultGutterWidth;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background-color: #fdfdfd;
+  border-style: solid;
+  border-width: 1px;
   .dashboard-header {
     margin-bottom: 2 * @defaultGutterWidth;
-    span {
-      background: #fdfdfd;
-    }
   }
   .deploy-table-contain {
     margin-bottom: initial;
@@ -1537,14 +1471,14 @@ div.waiting-inventory {
 .confirmation-overlay {
   position: absolute;
   z-index: 1;
-  background: fadeout(@lightestgrey, 20%);
+  background: @overlay;
+  opacity: 0.9;
   width: 100%;
   height: 100%;
   justify-content: flex-end;
 }
 
 .progress-chart-container {
-  background: @lightestgrey;
   padding: 10px 20px;
   min-height: 70px;
   border-radius: @dotSize * 0.5;
@@ -1564,7 +1498,8 @@ div.waiting-inventory {
   }
   .progress-step {
     align-items: center;
-    border-right: 1px dashed @darkgrey;
+    border-right-style: dashed;
+    border-right-width: 1px;
     z-index: 1;
     > .progress-bar {
       position: absolute;
@@ -1580,9 +1515,6 @@ div.waiting-inventory {
     position: absolute;
     z-index: 0;
     width: 100%;
-    .progress-bar {
-      background-color: @lightgrey;
-    }
   }
   .progress-step-number {
     align-self: flex-start;
@@ -1596,9 +1528,9 @@ div.waiting-inventory {
       height: 8px;
     }
     .progress-step-total .progress-bar {
-      background-color: @defaultBackground;
-      border: 1px solid @darkgrey;
+      border-style: solid;
       border-radius: 2px;
+      border-width: 1px;
       height: 12px;
       margin: -2px;
       padding: 2px;
@@ -1679,7 +1611,6 @@ div.waiting-inventory {
     min-height: 60px;
     padding: 10px 10px 10px 20px;
     margin: 0 8px 10px 10px;
-    background-color: @lightestgrey;
     position: relative;
     display: inline-block;
     font-size: 16px;
@@ -1694,7 +1625,6 @@ div.waiting-inventory {
       top: 5px;
       left: -19px;
       border-bottom: 10px solid transparent;
-      border-right: 20px solid @lightestgrey;
     }
 
     .statusWrapperMessage {
@@ -1702,11 +1632,6 @@ div.waiting-inventory {
       vertical-align: middle;
     }
   }
-}
-
-.progressStatus {
-  background-color: @lightestgrey;
-  padding: @defaultGutterWidth 4 * @defaultGutterWidth @defaultGutterWidth;
 }
 
 .substate {
@@ -1721,7 +1646,6 @@ div.waiting-inventory {
 
 // Past deployments
 .datepicker-container {
-  background-color: @lightestgrey;
   padding: 4px 25px 5px;
   display: flex;
   align-items: flex-end;
@@ -1752,7 +1676,6 @@ div.waiting-inventory {
 }
 
 .auditlogs-filters {
-  background-color: @lightestgrey;
   padding: 0px 25px 5px;
   display: grid;
   grid-template-columns: 400px 250px 250px 1fr;
@@ -1985,15 +1908,15 @@ div.waiting-inventory {
 
 @keyframes highlight {
   0% {
-    border-color: lighten(@alertpurple, 10%);
+    border-color: @alertpurpleHover;
     animation-timing-function: ease-in;
   }
   50% {
-    border-color: lighten(@alertpurple, 70%);
+    border-color: @alertpurpleHover;
     animation-timing-function: ease-out;
   }
   100% {
-    border-color: lighten(@alertpurple, 10%);
+    border-color: @alertpurpleHover;
     animation-timing-function: ease-in;
   }
 }
@@ -2020,13 +1943,12 @@ div.waiting-inventory {
   left: 230px;
   right: 2 * @defaultGutterWidth;
   bottom: 80px;
-  background-color: @defaultBackground;
-  border: 1px solid @lightergrey;
+  border-style: solid;
+  border-width: 1px;
   border-radius: 4px;
   height: 4 * @defaultGutterWidth;
   padding: 0 @defaultGutterWidth;
   overflow: hidden;
-  color: @grey;
   margin: 25px 0 @defaultGutterWidth;
   grid-template-rows: 30px 30px;
   grid-template-columns: 1fr 60px;

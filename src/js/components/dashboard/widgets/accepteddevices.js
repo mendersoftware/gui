@@ -3,29 +3,30 @@ import pluralize from 'pluralize';
 
 // material ui
 import { CheckCircle as CheckIcon, ReportProblem as ReportProblemIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
-import { colors } from '../../../themes/Mender';
-import { BaseWidget, styles } from './baseWidget';
+import { BaseWidget } from './baseWidget';
 
-const notificationStyles = {
+const useStyles = makeStyles()(theme => ({
   base: {
     marginRight: 10,
     height: 14,
     width: 14
   },
-  green: { color: colors.successStyleColor }
-};
+  green: { color: theme.palette.success.main }
+}));
 
 export const AcceptedDevices = props => {
+  const { classes } = useStyles();
   const { delta, deviceLimit, devicesCount, inactiveCount, onClick } = props;
   const onWidgetClick = () => onClick({ route: '/devices/accepted' });
 
   const timeframe = '24h';
   let timeframeNote = 'Active in';
   let activityNotificationText = 'All devices online';
-  let notificationSymbol = <CheckIcon style={{ ...notificationStyles.base, ...notificationStyles.green }} />;
+  let notificationSymbol = <CheckIcon className={`${classes.base} ${classes.green}`} />;
   if (inactiveCount) {
-    notificationSymbol = <ReportProblemIcon style={notificationStyles.base} className="warning" />;
+    notificationSymbol = <ReportProblemIcon className={`${classes.base} warning`} />;
     timeframeNote = 'Inactive for';
     activityNotificationText = `${inactiveCount} ${pluralize('devices', inactiveCount)} may be offline`;
   }
@@ -33,13 +34,13 @@ export const AcceptedDevices = props => {
   let widgetHeader;
   if (devicesCount && devicesCount < deviceLimit) {
     widgetHeader = (
-      <div style={styles.rowStyle}>
+      <>
         {notificationSymbol}
-        <div style={styles.columnStyle}>
+        <div className="flexbox column">
           <div className="hint">{activityNotificationText}</div>
           <div className="tiny">{`${timeframeNote} past ${timeframe}`}</div>
         </div>
-      </div>
+      </>
     );
   }
 

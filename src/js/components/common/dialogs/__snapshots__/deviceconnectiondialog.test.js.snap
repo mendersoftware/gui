@@ -64,7 +64,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
 
 .emotion-3 {
   background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -99,11 +99,10 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
 
 .emotion-4 {
   margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
   line-height: 1.6;
-  letter-spacing: 0.0075em;
   padding: 16px 24px;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
@@ -124,6 +123,10 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
 }
 
 .emotion-6 {
+  background-color: #f7f7f7;
+}
+
+.emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -156,11 +159,10 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 16px;
@@ -168,54 +170,65 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #fff;
-  background-color: #9c27b0;
+  background-color: #5d0f43;
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
-.emotion-6::-moz-focus-inner {
+.emotion-7::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-6.Mui-disabled {
+.emotion-7.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-6 {
+  .emotion-7 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-6:hover {
+.emotion-7:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: #7b1fa2;
+  background-color: rgb(65, 10, 46);
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
-  .emotion-6:hover {
-    background-color: #9c27b0;
+  .emotion-7:hover {
+    background-color: #5d0f43;
   }
 }
 
-.emotion-6:active {
+.emotion-7:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-6.Mui-focusVisible {
+.emotion-7.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-6.Mui-disabled {
+.emotion-7.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-7 {
+.emotion-7:hover {
+  colors: #337a87;
+}
+
+.emotion-7.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-8 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -227,7 +240,12 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-8 {
+.emotion-9 {
+  height: 40px;
+  margin-left: 16px;
+}
+
+.emotion-10 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -241,10 +259,14 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
 }
 
-.emotion-9 {
+.emotion-10 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -263,11 +285,11 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-9>:not(:first-of-type) {
+.emotion-11>:not(:first-of-type) {
   margin-left: 8px;
 }
 
-.emotion-10 {
+.emotion-12 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -300,50 +322,61 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 8px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #1976d2;
+  color: #337a87;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
 }
 
-.emotion-10::-moz-focus-inner {
+.emotion-12::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-10.Mui-disabled {
+.emotion-12.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-10 {
+  .emotion-12 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-10:hover {
+.emotion-12:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: rgba(25, 118, 210, 0.04);
+  background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-10:hover {
+  .emotion-12:hover {
     background-color: transparent;
   }
 }
 
-.emotion-10.Mui-disabled {
+.emotion-12.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-12:hover {
+  colors: #337a87;
+}
+
+.emotion-12.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 <div
@@ -384,7 +417,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
           You can connect almost any device and Linux OS with Mender, but to make things simple during evaluation we recommend you use a Raspberry Pi as a test device.
         </p>
         <div
-          class="padding-small padding-top-none rpi-quickstart"
+          class="padding-small padding-top-none rpi-quickstart emotion-6"
         >
           <h3>
             Raspberry Pi quick start
@@ -402,17 +435,17 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
                 src="raspberrypi.png"
               />
               <img
-                src="raspberrypi4.jpg"
+                src="raspberrypi4.png"
               />
             </div>
             <button
-              class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-6"
+              class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
               tabindex="0"
               type="button"
             >
               Get Started
               <span
-                class="MuiTouchRipple-root emotion-7"
+                class="MuiTouchRipple-root emotion-8"
               />
             </button>
           </div>
@@ -430,8 +463,8 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
                 Use a virtual device
               </h3>
               <img
+                class="emotion-9"
                 src="docker.png"
-                style="height: 40px; margin-left: 16px;"
               />
             </div>
             <p
@@ -495,7 +528,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
             data-testid="HelpIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -507,16 +540,16 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiDialogActions-root MuiDialogActions-spacing emotion-9"
+        class="MuiDialogActions-root MuiDialogActions-spacing emotion-11"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-10"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-12"
           tabindex="0"
           type="button"
         >
           Cancel
           <span
-            class="MuiTouchRipple-root emotion-7"
+            class="MuiTouchRipple-root emotion-8"
           />
         </button>
         <div

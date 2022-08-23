@@ -9,20 +9,6 @@ import DeviceDataCollapse from './devicedatacollapse';
 const style = { maxWidth: '80%', gridTemplateColumns: 'minmax(max-content, 150px) auto' };
 const previewStyle = { ...style, marginBottom: 5 };
 
-const NameColumnData = ({ device, style }) => {
-  return (
-    <div
-      className="break-all two-columns column-data compact"
-      style={{ ...style, alignItems: 'center', gridTemplateColumns: 'minmax(max-content, 150px) max-content' }}
-    >
-      <div className="align-right key muted">
-        <b>Name</b>
-      </div>
-      <DeviceNameInput device={device} isHovered />
-    </div>
-  );
-};
-
 export const DeviceIdentity = ({ device, setSnackbar }) => {
   const [open, setOpen] = useState(false);
   const { attributes = {}, created_ts, id, identity_data = {}, status = DEVICE_STATES.accepted } = device;
@@ -47,7 +33,14 @@ export const DeviceIdentity = ({ device, setSnackbar }) => {
     <DeviceDataCollapse
       header={
         <>
-          <NameColumnData device={device} style={previewStyle} />
+          <TwoColumnData
+            chipLikeKey
+            compact
+            style={{ ...previewStyle, alignItems: 'center', gridTemplateColumns: 'minmax(max-content, 150px) max-content' }}
+            config={{ Name: device }}
+            ValueProps={{ device, isHovered: true }}
+            ValueComponent={DeviceNameInput}
+          />
           <TwoColumnData config={keyContent} compact setSnackbar={setSnackbar} style={previewStyle} />
           {!open && !!extendedContentLength && <a onClick={setOpen}>show {extendedContentLength} more</a>}
         </>

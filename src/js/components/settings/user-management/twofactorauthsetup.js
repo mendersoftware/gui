@@ -10,6 +10,7 @@ import { getCurrentUser, getHas2FA } from '../../../selectors';
 
 import AuthSetup from './twofactorauth-steps/authsetup';
 import EmailVerification from './twofactorauth-steps/emailverification';
+import InfoText from '../../common/infotext';
 
 export const TwoFactorAuthSetup = ({
   activationCode,
@@ -96,9 +97,9 @@ export const TwoFactorAuthSetup = ({
         <p className="help-content">Enable Two Factor authentication</p>
         <Switch checked={is2FAEnabled} />
       </div>
-      <p className="info" style={{ width: '75%', margin: 0 }}>
+      <InfoText style={{ width: '75%', margin: 0 }}>
         Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
-      </p>
+      </InfoText>
       {showEmailVerification && (
         <EmailVerification activationCode={activationCode} verifyEmailComplete={verifyEmailComplete} verifyEmailStart={verifyEmailStart} />
       )}

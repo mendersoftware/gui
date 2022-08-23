@@ -39,7 +39,7 @@ export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
           </div>
         ))}
       </div>
-      <div className="body" style={{ position: 'relative' }}>
+      <div className="body relative">
         {showHelptips && <AuthExplainButton />}
         {orderedAuthsets.map(authset => (
           <AuthsetListItem

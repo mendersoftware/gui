@@ -34,11 +34,11 @@ export const Devices = props => {
     getDeviceCount,
     hasFullFiltering,
     inactiveDevicesCount,
+    itemsClassName,
     onboardingState,
     pendingDevicesCount,
     setShowConnectingDialog,
-    showHelptips,
-    styles
+    showHelptips
   } = props;
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export const Devices = props => {
   return (
     <div>
       <LinedHeader heading="Devices" />
-      <div style={Object.assign({ marginBottom: 30 }, styles)} ref={anchor}>
+      <div className={`margin-bottom ${itemsClassName}`} ref={anchor}>
         {!!pendingDevicesCount && (
           <PendingDevices
             advanceOnboarding={advanceOnboarding}

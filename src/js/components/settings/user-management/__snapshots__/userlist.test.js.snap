@@ -9,13 +9,12 @@ exports[`UserList Component renders correctly 1`] = `
 }
 
 .emotion-0 caption {
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.43;
-  letter-spacing: 0.01071em;
   padding: 16px;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.54);
   text-align: left;
   caption-side: bottom;
 }
@@ -36,25 +35,28 @@ exports[`UserList Component renders correctly 1`] = `
 }
 
 .emotion-2.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.08);
+  background-color: rgba(51, 122, 135, 0.08);
 }
 
 .emotion-2.Mui-selected:hover {
-  background-color: rgba(25, 118, 210, 0.12);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-3 {
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  letter-spacing: 0.01071em;
+  font-size: 0.8125rem;
+  line-height: 1.3929rem;
   display: table-cell;
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
   padding: 16px;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
+  padding: 0px 24px 0px 24px;
+  height: 48px;
+  height: 56px;
+  line-height: 1.15rem;
 }
 
 .emotion-7 {

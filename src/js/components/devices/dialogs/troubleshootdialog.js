@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -23,6 +23,7 @@ import { getCode } from './make-gateway-dialog';
 import { getFeatures, getIdAttribute, getIsEnterprise, getUserRoles } from '../../../selectors';
 import DeviceIdentityDisplay from './../../common/deviceidentity';
 import { useSession } from '../../../utils/sockethook';
+import { TwoColumns } from '../../common/configurationobject';
 
 momentDurationFormatSetup(moment);
 
@@ -267,18 +268,14 @@ export const TroubleshootDialog = ({
           />
         )}
         <div className={`${classes.terminalContent} ${socketInitialized ? 'device-connected' : ''} ${currentTab === tabs.terminal.value ? '' : 'hidden'}`}>
-          <div className={`margin-top-small margin-bottom-small two-columns ${classes.sessionInfo}`}>
-            {Object.entries({
+          <TwoColumns
+            className={`margin-top-small margin-bottom-small ${classes.sessionInfo}`}
+            items={{
               'Session status': socketInitialized ? 'connected' : 'disconnected',
               'Connection start': startTime ? <Time value={startTime} /> : '-',
               'Duration': `${duration.format('hh:mm:ss', { trim: false })}`
-            }).map(([key, value], index) => (
-              <Fragment key={index}>
-                <b>{key}</b>
-                <div>{value}</div>
-              </Fragment>
-            ))}
-          </div>
+            }}
+          />
           <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop} noClick>
             {({ getRootProps }) => (
               <div {...getRootProps()} style={{ position: 'relative', ...visibilityToggle }}>

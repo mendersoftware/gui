@@ -34,11 +34,10 @@ exports[`UserManagement Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 16px;
@@ -46,8 +45,11 @@ exports[`UserManagement Component renders correctly 1`] = `
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #fff;
-  background-color: #1976d2;
+  background-color: #337a87;
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -69,13 +71,13 @@ exports[`UserManagement Component renders correctly 1`] = `
 .emotion-0:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: #1565c0;
+  background-color: rgb(35, 85, 94);
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
   .emotion-0:hover {
-    background-color: #1976d2;
+    background-color: #337a87;
   }
 }
 
@@ -91,6 +93,14 @@ exports[`UserManagement Component renders correctly 1`] = `
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-0:hover {
+  colors: #337a87;
+}
+
+.emotion-0.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-1 {
@@ -113,13 +123,12 @@ exports[`UserManagement Component renders correctly 1`] = `
 }
 
 .emotion-2 caption {
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.43;
-  letter-spacing: 0.01071em;
   padding: 16px;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.54);
   text-align: left;
   caption-side: bottom;
 }
@@ -140,25 +149,28 @@ exports[`UserManagement Component renders correctly 1`] = `
 }
 
 .emotion-4.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.08);
+  background-color: rgba(51, 122, 135, 0.08);
 }
 
 .emotion-4.Mui-selected:hover {
-  background-color: rgba(25, 118, 210, 0.12);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-5 {
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  letter-spacing: 0.01071em;
+  font-size: 0.8125rem;
+  line-height: 1.3929rem;
   display: table-cell;
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
   padding: 16px;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
+  padding: 0px 24px 0px 24px;
+  height: 48px;
+  height: 56px;
+  line-height: 1.15rem;
 }
 
 .emotion-10 {
@@ -166,17 +178,18 @@ exports[`UserManagement Component renders correctly 1`] = `
 }
 
 .emotion-12 {
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.43;
-  letter-spacing: 0.01071em;
   display: table-cell;
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
   padding: 16px;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
+  padding: 0px 24px 0px 24px;
+  height: 48px;
 }
 
 .emotion-17 {
@@ -193,13 +206,17 @@ exports[`UserManagement Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-17 iconButton {
+  margin-right: 8px;
 }
 
 .emotion-20 {
   max-width: 100%;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-size: 0.8125rem;
+  font-family: Lato,sans-serif;
+  font-size: 0.7545rem;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -213,7 +230,7 @@ exports[`UserManagement Component renders correctly 1`] = `
   -webkit-justify-content: center;
   justify-content: center;
   height: 24px;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   white-space: nowrap;
@@ -228,7 +245,7 @@ exports[`UserManagement Component renders correctly 1`] = `
   vertical-align: middle;
   box-sizing: border-box;
   background-color: transparent;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #f7f7f7;
 }
 
 .emotion-20.Mui-disabled {
@@ -241,18 +258,18 @@ exports[`UserManagement Component renders correctly 1`] = `
   margin-right: -6px;
   width: 24px;
   height: 24px;
-  color: #616161;
-  font-size: 0.75rem;
+  color: #bcbcbc;
+  font-size: 0.6964rem;
 }
 
 .emotion-20 .MuiChip-avatarColorPrimary {
   color: #fff;
-  background-color: #1565c0;
+  background-color: rgb(35, 85, 94);
 }
 
 .emotion-20 .MuiChip-avatarColorSecondary {
   color: #fff;
-  background-color: #7b1fa2;
+  background-color: rgb(65, 10, 46);
 }
 
 .emotion-20 .MuiChip-avatarSmall {
@@ -260,11 +277,11 @@ exports[`UserManagement Component renders correctly 1`] = `
   margin-right: -4px;
   width: 18px;
   height: 18px;
-  font-size: 0.625rem;
+  font-size: 0.5804rem;
 }
 
 .emotion-20 .MuiChip-icon {
-  color: #616161;
+  color: #bcbcbc;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
@@ -272,7 +289,7 @@ exports[`UserManagement Component renders correctly 1`] = `
 
 .emotion-20 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
-  color: rgba(0, 0, 0, 0.26);
+  color: rgba(10, 10, 11, 0.26);
   font-size: 16px;
   cursor: pointer;
   margin: 0 5px 0 -6px;
@@ -281,7 +298,7 @@ exports[`UserManagement Component renders correctly 1`] = `
 }
 
 .emotion-20 .MuiChip-deleteIcon:hover {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(10, 10, 11, 0.4);
 }
 
 .emotion-20.MuiChip-clickable:hover {

@@ -3,9 +3,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 // material ui
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import withStyles from '@mui/styles/withStyles';
 import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
@@ -14,9 +13,9 @@ import Time from '../../../common/time';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
-const CustomAccordion = withStyles({
-  root: {
-    backgroundColor: '#f7f7f7',
+const useStyles = makeStyles()(theme => ({
+  accordion: {
+    backgroundColor: theme.palette.grey[50],
     '&:before': {
       display: 'none'
     },
@@ -24,8 +23,8 @@ const CustomAccordion = withStyles({
       margin: 'auto'
     }
   },
-  expanded: {}
-})(Accordion);
+  divider: { marginTop: theme.spacing(), marginBottom: theme.spacing() }
+}));
 
 export const getConfirmationMessage = (status, device, authset) => {
   let message = '';
@@ -71,13 +70,13 @@ export const getConfirmationMessage = (status, device, authset) => {
 const LF = '\n';
 
 const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total }) => {
-  const theme = useTheme();
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
   const [copied, setCopied] = useState(false);
   const [keyHash, setKeyHash] = useState('');
   const [endKey, setEndKey] = useState('');
+  const { classes } = useStyles();
 
   useEffect(() => {
     if (!isExpanded) {
@@ -162,7 +161,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
         </CopyToClipboard>
         <code className="pre-line">{endKey}</code>
         {copied && <p className="green fadeIn">Copied key to clipboard.</p>}
-        <Divider style={{ marginTop: theme.spacing(), marginBottom: theme.spacing() }} />
+        <Divider className={classes.divider} />
         <div title="SHA256">
           Checksum
           <br />
@@ -200,7 +199,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
   }
 
   return (
-    <CustomAccordion square expanded={isExpanded}>
+    <Accordion className={classes.accordion} square expanded={isExpanded}>
       <AccordionSummary style={{ cursor: 'default' }}>
         {authsetStatus}
         <div className="capitalized">{authset.status}</div>
@@ -231,7 +230,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
           )}
         </AccordionActions>
       )}
-    </CustomAccordion>
+    </Accordion>
   );
 };
 
