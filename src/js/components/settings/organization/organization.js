@@ -5,6 +5,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 // material ui
 import { Button, Checkbox, Collapse, FormControlLabel, List } from '@mui/material';
 import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { changeSamlConfig, deleteSamlConfig, getSamlConfigs, getUserOrganization, storeSamlConfig } from '../../../actions/organizationActions';
@@ -13,12 +14,12 @@ import ExpandableAttribute from '../../common/expandable-attribute';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import Billing from './billing';
 import { SAMLConfig } from './samlconfig';
-import { makeStyles } from 'tss-react/mui';
 import { getTenantCapabilities } from '../../../selectors';
 import { versionCompare } from '../../../helpers';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
+  deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
   ssoToggle: { width: `calc(${maxWidth}px + ${theme.spacing(4)})` },
   tenantToken: { width: `calc(${maxWidth}px - ${theme.spacing(4)})` },
   tokenTitle: { paddingRight: 10 },
@@ -124,8 +125,8 @@ export const Organization = ({
           content={{}}
           secondary={
             <ExpandableAttribute
-              component="div"
               className={classes.tenantToken}
+              component="div"
               disableGutters
               dividerDisabled
               key="org_token"

@@ -15,42 +15,38 @@ exports[`TimeframePicker Component renders correctly 1`] = `
   margin: 0;
   border: 0;
   vertical-align: top;
+  margin-top: 18px;
+  min-width: 240px;
 }
 
 .emotion-1 {
-  color: rgba(0, 0, 0, 0.6);
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.54);
   line-height: 1.4375em;
-  letter-spacing: 0.00938em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
   padding: 0;
   position: relative;
+  color: rgba(0, 0, 0, 0.54);
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 24px);
+  max-width: 133%;
   position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  z-index: 1;
-  pointer-events: auto;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
 .emotion-1.Mui-focused {
-  color: #1976d2;
+  color: #337a87;
 }
 
 .emotion-1.Mui-disabled {
@@ -58,16 +54,19 @@ exports[`TimeframePicker Component renders correctly 1`] = `
 }
 
 .emotion-1.Mui-error {
-  color: #d32f2f;
+  color: #ab1000;
+}
+
+.emotion-1.Mui-focused {
+  color: #337a87;
 }
 
 .emotion-2 {
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
   line-height: 1.4375em;
-  letter-spacing: 0.00938em;
-  color: rgba(0, 0, 0, 0.87);
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
+  color: rgba(10, 10, 11, 0.78);
   box-sizing: border-box;
   position: relative;
   cursor: text;
@@ -80,7 +79,6 @@ exports[`TimeframePicker Component renders correctly 1`] = `
   -ms-flex-align: center;
   align-items: center;
   position: relative;
-  border-radius: 4px;
 }
 
 .emotion-2.Mui-disabled {
@@ -88,27 +86,77 @@ exports[`TimeframePicker Component renders correctly 1`] = `
   cursor: default;
 }
 
-.emotion-2:hover .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(0, 0, 0, 0.87);
+label+.emotion-2 {
+  margin-top: 16px;
+}
+
+.emotion-2:after {
+  border-bottom: 2px solid #337a87;
+  left: 0;
+  bottom: 0;
+  content: "";
+  position: absolute;
+  right: 0;
+  -webkit-transform: scaleX(0);
+  -moz-transform: scaleX(0);
+  -ms-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-2.Mui-focused:after {
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
+}
+
+.emotion-2.Mui-error:after {
+  border-bottom-color: #ab1000;
+  -webkit-transform: scaleX(1);
+  -moz-transform: scaleX(1);
+  -ms-transform: scaleX(1);
+  transform: scaleX(1);
+}
+
+.emotion-2:before {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  left: 0;
+  bottom: 0;
+  content: "\\00a0";
+  position: absolute;
+  right: 0;
+  -webkit-transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-2:hover:not(.Mui-disabled):before {
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-2:hover .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(0, 0, 0, 0.23);
+  .emotion-2:hover:not(.Mui-disabled):before {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
 
-.emotion-2.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #1976d2;
-  border-width: 2px;
+.emotion-2.Mui-disabled:before {
+  border-bottom-style: dotted;
 }
 
-.emotion-2.Mui-error .MuiOutlinedInput-notchedOutline {
-  border-color: #d32f2f;
+.emotion-2:before {
+  border-bottom: 1px solid rgb(224, 224, 224);
 }
 
-.emotion-2.Mui-disabled .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(0, 0, 0, 0.26);
+.emotion-2:hover:not($disabled):before {
+  border-bottom: 2px solid #337a87!important;
+}
+
+.emotion-2:after {
+  border-bottom: 2px solid #337a87;
 }
 
 .emotion-3 {
@@ -129,7 +177,6 @@ exports[`TimeframePicker Component renders correctly 1`] = `
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
-  padding: 16.5px 14px;
 }
 
 .emotion-3::-webkit-input-placeholder {
@@ -216,57 +263,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   animation-name: mui-auto-fill;
 }
 
-.emotion-3:-webkit-autofill {
-  border-radius: inherit;
-}
-
-.emotion-4 {
-  text-align: left;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  top: -5px;
-  left: 0;
-  margin: 0;
-  padding: 0 8px;
-  pointer-events: none;
-  border-radius: inherit;
-  border-style: solid;
-  border-width: 1px;
-  overflow: hidden;
-  min-width: 0%;
-  border-color: rgba(0, 0, 0, 0.23);
-}
-
-.emotion-5 {
-  float: unset;
-  overflow: hidden;
-  display: block;
-  width: auto;
-  padding: 0;
-  height: 11px;
-  font-size: 0.75em;
-  visibility: hidden;
-  max-width: 100%;
-  -webkit-transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  white-space: nowrap;
-}
-
-.emotion-5>span {
-  padding-left: 5px;
-  padding-right: 5px;
-  display: inline-block;
-  opacity: 0;
-  visibility: visible;
-}
-
 <div>
   <div
     class="MuiFormControl-root MuiTextField-root margin-top-none margin-left-small emotion-0"
   >
     <label
-      class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-1"
+      class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-1"
       data-shrink="true"
       for="mui-1"
       id="mui-1-label"
@@ -274,37 +276,25 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       From
     </label>
     <div
-      class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+      class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
     >
       <input
         aria-invalid="false"
         aria-label="Choose date, selected date is Jan 1, 2019"
         aria-readonly="true"
-        class="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+        class="MuiInput-input MuiInputBase-input emotion-3"
         id="mui-1"
         readonly=""
         type="text"
         value="January 1st"
       />
-      <fieldset
-        aria-hidden="true"
-        class="MuiOutlinedInput-notchedOutline emotion-4"
-      >
-        <legend
-          class="emotion-5"
-        >
-          <span>
-            From
-          </span>
-        </legend>
-      </fieldset>
     </div>
   </div>
   <div
     class="MuiFormControl-root MuiTextField-root margin-top-none margin-left-small emotion-0"
   >
     <label
-      class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-1"
+      class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-1"
       data-shrink="true"
       for="mui-3"
       id="mui-3-label"
@@ -312,30 +302,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       To
     </label>
     <div
-      class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+      class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
     >
       <input
         aria-invalid="false"
         aria-label="Choose date, selected date is Jan 1, 2019"
         aria-readonly="true"
-        class="MuiOutlinedInput-input MuiInputBase-input emotion-3"
+        class="MuiInput-input MuiInputBase-input emotion-3"
         id="mui-3"
         readonly=""
         type="text"
         value="January 1st"
       />
-      <fieldset
-        aria-hidden="true"
-        class="MuiOutlinedInput-notchedOutline emotion-4"
-      >
-        <legend
-          class="emotion-5"
-        >
-          <span>
-            To
-          </span>
-        </legend>
-      </fieldset>
     </div>
   </div>
 </div>

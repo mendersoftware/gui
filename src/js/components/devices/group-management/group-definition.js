@@ -7,6 +7,7 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 
 import { fullyDecodeURI } from '../../../helpers';
 import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
+import InfoText from '../../common/infotext';
 
 const filter = createFilterOptions();
 
@@ -85,11 +86,11 @@ export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputCh
       />
       <FormHelperText>{errortext}</FormHelperText>
       {isCreationDynamic && (
-        <p className="info">
+        <InfoText>
           Note: individual devices can&apos;t be added to dynamic groups.
           <br />
           <Link to="/help/devices">Learn more about static vs. dynamic groups</Link>
-        </p>
+        </InfoText>
       )}
     </>
   );

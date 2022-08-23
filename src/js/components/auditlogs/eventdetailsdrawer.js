@@ -2,13 +2,14 @@ import React from 'react';
 
 import { Divider, Drawer } from '@mui/material';
 import { HelpOutline as HelpOutlineIcon } from '@mui/icons-material';
-
 import { useTheme } from '@mui/material/styles';
+
 import DeviceConfiguration from './eventdetails/deviceconfiguration';
 import FileTransfer from './eventdetails/filetransfer';
 import PortForward from './eventdetails/portforward';
 import TerminalSession from './eventdetails/terminalsession';
 import UserChange from './eventdetails/userchange';
+import { Code } from '../common/copy-code';
 
 const FallbackComponent = ({ item }) => {
   let content = '';
@@ -17,11 +18,7 @@ const FallbackComponent = ({ item }) => {
   } catch (error) {
     content = `error parsing the logged event:\n${error}`;
   }
-  return (
-    <div className="code" style={{ whiteSpace: 'pre' }}>
-      {content}
-    </div>
-  );
+  return <Code style={{ whiteSpace: 'pre' }}>{content}</Code>;
 };
 
 const changeTypes = {

@@ -1,7 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeploymentOverview Component renders correctly 1`] = `
-.emotion-0 {
+.emotion-0 .key>b {
+  background-color: #f7f7f7;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -15,19 +20,23 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
 }
 
-.emotion-2 {
+.emotion-1 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-3 {
   opacity: 0.5;
   font-size: 0.675rem;
   height: 18px;
 }
 
-.emotion-3 {
+.emotion-4 {
   max-width: 100%;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
-  font-size: 0.8125rem;
+  font-family: Lato,sans-serif;
+  font-size: 0.7545rem;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -41,7 +50,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   -webkit-justify-content: center;
   justify-content: center;
   height: 24px;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   white-space: nowrap;
@@ -57,48 +66,48 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   box-sizing: border-box;
 }
 
-.emotion-3.Mui-disabled {
+.emotion-4.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-3 .MuiChip-avatar {
+.emotion-4 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
   height: 24px;
-  color: #616161;
-  font-size: 0.75rem;
+  color: #bcbcbc;
+  font-size: 0.6964rem;
 }
 
-.emotion-3 .MuiChip-avatarColorPrimary {
+.emotion-4 .MuiChip-avatarColorPrimary {
   color: #fff;
-  background-color: #1565c0;
+  background-color: rgb(35, 85, 94);
 }
 
-.emotion-3 .MuiChip-avatarColorSecondary {
+.emotion-4 .MuiChip-avatarColorSecondary {
   color: #fff;
-  background-color: #7b1fa2;
+  background-color: rgb(65, 10, 46);
 }
 
-.emotion-3 .MuiChip-avatarSmall {
+.emotion-4 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
   height: 18px;
-  font-size: 0.625rem;
+  font-size: 0.5804rem;
 }
 
-.emotion-3 .MuiChip-icon {
-  color: #616161;
+.emotion-4 .MuiChip-icon {
+  color: #bcbcbc;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
 }
 
-.emotion-3 .MuiChip-deleteIcon {
+.emotion-4 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
-  color: rgba(0, 0, 0, 0.26);
+  color: rgba(10, 10, 11, 0.26);
   font-size: 16px;
   cursor: pointer;
   margin: 0 5px 0 -6px;
@@ -106,11 +115,11 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   margin-left: -4px;
 }
 
-.emotion-3 .MuiChip-deleteIcon:hover {
-  color: rgba(0, 0, 0, 0.4);
+.emotion-4 .MuiChip-deleteIcon:hover {
+  color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-4 {
+.emotion-5 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 8px;
@@ -118,11 +127,11 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   white-space: nowrap;
 }
 
-.emotion-5 {
+.emotion-7 {
   margin-left: 96px;
 }
 
-.emotion-5svg {
+.emotion-7svg {
   margin-left: 8px;
 }
 
@@ -130,7 +139,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   class="report-container margin-top-large margin-bottom-large"
 >
   <div
-    class="break-all two-columns column-data  "
+    class="break-all two-columns emotion-0  column-data "
     style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
   >
     <div
@@ -153,7 +162,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
         test
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-0"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-1"
           data-testid="LaunchIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -184,7 +193,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
         test deployment
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-0"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-1"
           data-testid="LaunchIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -194,10 +203,10 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
           />
         </svg>
         <div
-          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased emotion-2 emotion-3"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased emotion-3 emotion-4"
         >
           <span
-            class="MuiChip-label MuiChip-labelSmall emotion-4"
+            class="MuiChip-label MuiChip-labelSmall emotion-5"
           >
             static
           </span>
@@ -221,7 +230,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
     class="flexbox column"
   >
     <div
-      class="break-all two-columns column-data  "
+      class="break-all two-columns emotion-0  column-data "
       style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
     >
       <div
@@ -242,12 +251,12 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
       </div>
     </div>
     <a
-      class="margin-top-small flexbox center-aligned emotion-5"
+      class="margin-top-small flexbox center-aligned emotion-7"
     >
       Schedule details 
       <svg
         aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-0"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-1"
         data-testid="ArrowDropDownCircleOutlinedIcon"
         focusable="false"
         viewBox="0 0 24 24"

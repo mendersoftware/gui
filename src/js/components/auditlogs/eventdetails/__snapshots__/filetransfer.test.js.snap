@@ -1,7 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FileTransfer Component renders correctly 1`] = `
-.emotion-0 {
+.emotion-0 .key>b {
+  background-color: #f7f7f7;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-1 {
+  grid-template-columns: minmax(max-content, 150px) max-content;
+  row-gap: 20px;
+}
+
+.emotion-2 {
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: initial;
+}
+
+.emotion-3 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -15,7 +30,11 @@ exports[`FileTransfer Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
+}
+
+.emotion-3 iconButton {
+  margin-right: 8px;
 }
 
 <div
@@ -32,28 +51,28 @@ exports[`FileTransfer Component renders correctly 1`] = `
        details
     </b>
     <div
-      class="muted two-columns"
-      style="grid-template-columns: minmax(max-content, 150px) max-content; row-gap: 20px;"
+      class="break-all two-columns emotion-0  emotion-1"
     >
       <div
-        class="align-right"
+        class="align-right key muted"
       >
         <b>
           Device ID
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox "
+      >
         <a
-          class="flexbox center-aligned"
+          class="flexbox center-aligned emotion-2"
           href="/devices?id=a1"
-          style="color: rgba(0, 0, 0, 0.54); font-weight: initial;"
         >
           <div>
             a1
           </div>
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-0"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-3"
             data-testid="LaunchIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -65,33 +84,39 @@ exports[`FileTransfer Component renders correctly 1`] = `
         </a>
       </div>
       <div
-        class="align-right"
+        class="align-right key muted"
       >
         <b>
           Device type
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox "
+      >
         raspberrypi4
       </div>
       <div
-        class="align-right"
+        class="align-right key muted"
       >
         <b>
           System software version
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox "
+      >
         -
       </div>
       <div
-        class="align-right"
+        class="align-right key muted"
       >
         <b>
            
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox "
+      >
         <a
           href="/auditlog?object_type=device&object_id=a1&start_date=2016-01-01T00:00:00.000Z"
         >
@@ -110,27 +135,30 @@ exports[`FileTransfer Component renders correctly 1`] = `
        details
     </b>
     <div
-      class="muted two-columns"
-      style="grid-template-columns: minmax(max-content, 150px) max-content; row-gap: 20px;"
+      class="break-all two-columns emotion-0  emotion-1"
     >
       <div
-        class="align-right"
+        class="align-right key muted"
       >
         <b>
           Path
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox "
+      >
         /dev/null
       </div>
       <div
-        class="align-right"
+        class="align-right key muted"
       >
         <b>
           User
         </b>
       </div>
-      <div>
+      <div
+        class="flexbox "
+      >
         string@example.com
       </div>
     </div>

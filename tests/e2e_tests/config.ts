@@ -37,8 +37,8 @@ const options: PlaywrightTestConfig = {
             // Configure the reports to generate.
             // The value is an array of istanbul reports, with optional configuration attached.
             reports: [['lcov'], ['text-summary', { file: null }]],
-            rewritePath: ({ absolutePath, relativePath }) => {
-              let sourcePath = absolutePath;
+            rewritePath: ({ relativePath }) => {
+              let sourcePath;
               if (process.env.GUI_REPOSITORY) {
                 sourcePath = path.join(process.env.GUI_REPOSITORY, relativePath.substring(relativePath.indexOf('/')));
               } else {

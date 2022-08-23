@@ -7,7 +7,6 @@ import momentDurationFormatSetup from 'moment-duration-format';
 
 // material ui
 import { Button, Divider, Drawer, IconButton, Tooltip } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import {
   Block as BlockIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
@@ -15,6 +14,7 @@ import {
   Link as LinkIcon,
   Refresh as RefreshIcon
 } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
@@ -31,11 +31,20 @@ import RolloutSchedule from './deployment-report/rolloutschedule';
 import { statCollector } from '../../helpers';
 import Confirm from '../common/confirm';
 import DeviceList from './deployment-report/devicelist';
-import DeploymentStatus from './deployment-report/deploymentstatus';
-import DeploymentPhaseNotification from './deployment-report/deploymentphasenotification';
+import DeploymentStatus, { DeploymentPhaseNotification } from './deployment-report/deploymentstatus';
 import LinedHeader from '../common/lined-header';
 
 momentDurationFormatSetup(moment);
+
+const useStyles = makeStyles()(theme => ({
+  divider: { marginTop: theme.spacing(2) },
+  header: {
+    ['&.dashboard-header span']: {
+      backgroundColor: theme.palette.background.paper,
+      backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15))'
+    }
+  }
+}));
 
 export const defaultColumnDataProps = {
   chipLikeKey: false,
@@ -80,7 +89,7 @@ export const DeploymentReport = props => {
     type,
     updateDeploymentControlMap
   } = props;
-  const theme = useTheme();
+  const { classes } = useStyles();
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
   const timer = useRef();
@@ -208,17 +217,23 @@ export const DeploymentReport = props => {
         <DeploymentOverview creator={creator} deployment={deployment} devicesById={devicesById} idAttribute={idAttribute} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (
           <>
-            <LinedHeader heading="Configuration" />
+            <LinedHeader className={classes.header} heading="Configuration" />
             <ConfigurationObject className="margin-top-small margin-bottom-large" config={config} />
           </>
         )}
-        <LinedHeader heading="Status" />
+        <LinedHeader className={classes.header} heading="Status" />
         <DeploymentStatus deployment={deployment} />
         <DeviceList {...props} viewLog={viewLog} />
-        <RolloutSchedule deployment={deployment} onUpdateControlChange={onUpdateControlChange} onAbort={abort} innerRef={rolloutSchedule} />
+        <RolloutSchedule
+          deployment={deployment}
+          headerClass={classes.header}
+          onUpdateControlChange={onUpdateControlChange}
+          onAbort={abort}
+          innerRef={rolloutSchedule}
+        />
         {Boolean(deviceId.length) && <LogDialog logData={logData} onClose={() => setDeviceId('')} />}
       </div>
-      <Divider light style={{ marginTop: theme.spacing(2) }} />
+      <Divider className={classes.divider} light />
     </Drawer>
   );
 };

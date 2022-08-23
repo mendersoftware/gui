@@ -2,11 +2,11 @@ import React from 'react';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import DeploymentStatus from './deploymentstatus';
+import RolloutSchedule from './rolloutschedule';
 
-describe('DeploymentStatus Component', () => {
+describe('RolloutSchedule Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<DeploymentStatus deployment={defaultState.deployments.byId.d2} />);
+    const { baseElement } = render(<RolloutSchedule deployment={defaultState.deployments.byId.d2} innerRef={jest.fn} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

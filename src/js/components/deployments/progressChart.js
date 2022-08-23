@@ -6,6 +6,7 @@ import pluralize from 'pluralize';
 import { Tooltip } from '@mui/material';
 import { RotateLeftOutlined, Warning as WarningIcon } from '@mui/icons-material';
 import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
+import { makeStyles } from 'tss-react/mui';
 
 import { groupDeploymentStats } from '../../helpers';
 import MaterialDesignIcon from '../common/materialdesignicon';
@@ -23,6 +24,32 @@ const statusMap = {
     description: () => 'Queued to start'
   },
   paused: { icon: <RotateLeftOutlined fontSize="inherit" />, description: window => `Paused until next window ${window}` }
+};
+
+const useStyles = makeStyles()(theme => ({
+  container: {
+    backgroundColor: theme.palette.grey[400],
+    ['.progress-step']: {
+      border: 'none',
+      position: 'absolute'
+    },
+    ['.progress-step-total .progress-bar']: {
+      backgroundColor: theme.palette.grey[50]
+    },
+    ['&.stepped-progress .progress-step-total .progress-bar']: {
+      backgroundColor: theme.palette.background.default,
+      borderColor: theme.palette.grey[800]
+    }
+  }
+}));
+
+export const ProgressChartContainer = ({ children, className = '', style = {} }) => {
+  const { classes } = useStyles();
+  return (
+    <div className={`progress-chart-container ${className} ${classes.container}`} style={style}>
+      {children}
+    </div>
+  );
 };
 
 export const ProgressChart = ({ currentPhase, currentProgressCount, phases, showPhaseNumber, totalDeviceCount, totalFailureCount, totalSuccessCount }) => {
@@ -121,7 +148,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
   const duration = moment.duration(nextPhaseStart.diff(momentaryTime));
 
   return (
-    <div className={`flexbox column progress-chart-container ${className}`}>
+    <ProgressChartContainer className={`flexbox column ${className}`}>
       {statusMap[status] && (
         <span className="flexbox center-aligned small muted">
           {statusMap[status].icon}
@@ -155,7 +182,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
           <div>{`Current phase: ${currentPhaseIndex + 1} of ${phases.length}`}</div>
         )}
       </div>
-    </div>
+    </ProgressChartContainer>
   );
 };
 

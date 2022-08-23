@@ -35,15 +35,14 @@ exports[`SharedSnackbar Component renders correctly 1`] = `
 
 .emotion-1 {
   background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.43;
-  letter-spacing: 0.01071em;
   color: #fff;
   background-color: rgb(50, 50, 50);
   display: -webkit-box;

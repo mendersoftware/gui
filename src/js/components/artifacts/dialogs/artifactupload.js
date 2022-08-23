@@ -2,12 +2,14 @@ import React, { useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
 import { IconButton, TextField } from '@mui/material';
-import { CloudUpload, Delete as DeleteIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { CloudUpload, Delete as DeleteIcon } from '@mui/icons-material';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { FileSize } from '../../../helpers';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
+import InfoHint from '../../common/info-hint';
+import InfoText from '../../common/infotext';
 
 const reFilename = new RegExp(/^[a-z0-9.,_-]+$/i);
 
@@ -84,10 +86,7 @@ export const ArtifactUpload = ({
         )}
       </Dropzone>
       {!!onboardingComponent && onboardingComponent}
-      <p className="info flexbox centered" style={{ marginTop: '10px' }}>
-        <InfoIcon fontSize="small" />
-        Upload a pre-built .mender Artifact OR any file to create a single-file update Artifact
-      </p>
+      <InfoHint content="Upload a pre-built .mender Artifact OR any file to create a single-file update Artifact" style={{ marginTop: 10 }} />
     </>
   ) : (
     <div className="file-upload-form">
@@ -129,15 +128,15 @@ export const ArtifactUpload = ({
       <div className="info margin-top-large">
         {isMenderArtifact ? (
           <>
-            <p className="info">Artifacts that share the same name but different device type compatibility will be grouped together as a Release.</p>
-            <p className="info">If no Release with the Artifact name exists, a new one will be created.</p>
+            <InfoText>Artifacts that share the same name but different device type compatibility will be grouped together as a Release.</InfoText>
+            <InfoText>If no Release with the Artifact name exists, a new one will be created.</InfoText>
           </>
         ) : (
           <>
-            <p className="info">
+            <InfoText>
               This file will be converted to a .mender Artifact file before it is uploaded to the server, which requires some metadata to be entered.
-            </p>
-            <p className="info">Click &apos;Next&apos; to continue</p>
+            </InfoText>
+            <InfoText>Click &apos;Next&apos; to continue</InfoText>
           </>
         )}
       </div>

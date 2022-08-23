@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Code } from '../copy-code';
 
 const wrapperStyle = { marginRight: 10, display: 'inline-block' };
 
@@ -32,7 +33,7 @@ export const LogDialog = ({ logData = '', onClose, type = 'deviceLog' }) => {
     <Dialog open={true}>
       <DialogTitle>{dialogTypes[type].title}</DialogTitle>
       <DialogContent>
-        <div className="code log">{logData}</div>
+        <Code className="log">{logData}</Code>
         <p style={{ marginLeft: 24 }}>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</p>
       </DialogContent>
       <DialogActions>

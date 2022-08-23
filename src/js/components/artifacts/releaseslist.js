@@ -5,7 +5,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import InfiniteLoader from 'react-window-infinite-loader';
 
 // material ui
-import { Button, ButtonGroup, ListItem, ListItemText, Menu, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, ButtonGroup, ListItem, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import { ArrowDropDown as ArrowDropDownIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import Loader from '../common/loader';
@@ -13,6 +13,7 @@ import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { defaultVisibleSection } from '../../constants/releaseConstants';
 import { useDebounce } from '../../utils/debouncehook';
 import useWindowSize from '../../utils/resizehook';
+import Search from '../common/search';
 
 const sortingOptions = {
   Name: 'Name',
@@ -74,7 +75,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
   const onSetReleaseListState = changedState =>
     setReleasesListState({ page: 1, releaseIds: [], visibleSection: { ...currentVisibleSection }, ...changedState });
 
-  const searchUpdated = ({ target: { value } }) => onSetReleaseListState({ searchTerm: value, searchAttribute: undefined });
+  const searchUpdated = searchTerm => onSetReleaseListState({ searchTerm, searchAttribute: undefined });
 
   const handleToggle = event => {
     const anchor = anchorEl ? null : event?.currentTarget.parentElement;
@@ -110,7 +111,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
     <div className="repository-list flexbox column">
       <div className="flexbox center-aligned">
         <h3>Releases</h3>
-        <TextField placeholder="Filter" className="search" onChange={searchUpdated} style={{ marginLeft: 30, marginTop: 0 }} value={searchTerm} />
+        <Search onSearch={searchUpdated} searchTerm={searchTerm} placeholder="Filter" style={{ marginLeft: 30, marginTop: 0 }} />
       </div>
       {searchTerm && searchTotal !== total ? <p className="muted">{`Filtered from ${total} ${pluralize('Release', total)}`}</p> : <div />}
       <ButtonGroup className="muted" size="small" variant="text">

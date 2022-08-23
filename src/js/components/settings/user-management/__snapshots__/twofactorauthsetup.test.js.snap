@@ -94,7 +94,7 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
 }
 
 .emotion-1.Mui-disabled {
-  color: #f5f5f5;
+  color: #d8ebe9;
 }
 
 .emotion-1.Mui-checked+.MuiSwitch-track {
@@ -121,11 +121,11 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
 }
 
 .emotion-1.Mui-checked {
-  color: #1976d2;
+  color: #337a87;
 }
 
 .emotion-1.Mui-checked:hover {
-  background-color: rgba(25, 118, 210, 0.04);
+  background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
@@ -135,11 +135,11 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
 }
 
 .emotion-1.Mui-checked.Mui-disabled {
-  color: rgb(167, 202, 237);
+  color: rgb(177, 204, 209);
 }
 
 .emotion-1.Mui-checked+.MuiSwitch-track {
-  background-color: #1976d2;
+  background-color: #337a87;
 }
 
 .emotion-2 {
@@ -186,6 +186,11 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
   opacity: 0.38;
 }
 
+.emotion-6 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
 <div
   class="margin-top"
 >
@@ -220,7 +225,7 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
     </span>
   </div>
   <p
-    class="info"
+    class="emotion-6 "
     style="width: 75%; margin: 0px;"
   >
     Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.

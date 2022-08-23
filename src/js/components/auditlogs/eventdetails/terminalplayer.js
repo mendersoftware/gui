@@ -10,8 +10,8 @@ import { blobToString, byteArrayToString } from '../../../utils/sockethook';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
 import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
 import XTerm from '../../common/xterm';
-import { colors } from '../../../themes/Mender';
 import { createFileDownload } from '../../../helpers';
+import { makeStyles } from 'tss-react/mui';
 
 const MessagePack = msgpack5();
 const fitAddon = new FitAddon();
@@ -20,6 +20,10 @@ const searchAddon = new SearchAddon();
 let socket = null;
 let buffer = [];
 let timer;
+
+const useStyles = makeStyles()(theme => ({
+  playArrow: { fontSize: '7rem', color: theme.palette.text.disabled }
+}));
 
 const generateHtml = (versions, content) => {
   const { fit, search, xterm } = Object.entries(versions).reduce((accu, [key, version]) => {
@@ -155,6 +159,8 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
 
+  const { classes } = useStyles();
+
   useEffect(() => {
     if (!sessionInitialized) {
       return;
@@ -251,7 +257,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
             style={{ background: 'black', width: '100%', height: '100%', position: 'absolute', top: 0, zIndex: 10 }}
             onClick={onTogglePlayClick}
           >
-            <PlayArrow color="disabled" style={{ fontSize: '7rem', color: colors.grey }} />
+            <PlayArrow className={classes.playArrow} />
           </div>
         )}
       </div>

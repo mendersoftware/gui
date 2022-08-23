@@ -64,7 +64,7 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
 
 .emotion-3 {
   background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -98,11 +98,10 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
 
 .emotion-4 {
   margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
   line-height: 1.6;
-  letter-spacing: 0.0075em;
   padding: 16px 24px;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
@@ -124,7 +123,7 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
 
 .emotion-6 {
   background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
@@ -132,6 +131,9 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   overflow-anchor: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 .emotion-6:before {
@@ -175,6 +177,15 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   margin: 16px 0;
 }
 
+.emotion-6:before {
+  display: none;
+}
+
+.emotion-6.Mui-expanded {
+  margin: auto;
+  background-color: #f7f7f7;
+}
+
 .emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -216,6 +227,8 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   padding: 0px 16px;
   -webkit-transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  margin-bottom: 0;
+  height: 48px;
 }
 
 .emotion-7::-moz-focus-inner {
@@ -250,6 +263,11 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   min-height: 64px;
 }
 
+.emotion-7.Mui-expanded {
+  height: 48px;
+  min-height: 48px;
+}
+
 .emotion-8 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -262,10 +280,22 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   margin: 12px 0;
   -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .emotion-8.Mui-expanded {
   margin: 20px 0;
+}
+
+.emotion-8.Mui-expanded {
+  margin: 0;
+}
+
+.emotion-8>:last-child {
+  padding-right: 12px;
 }
 
 .emotion-9 {
@@ -282,7 +312,11 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+  font-size: 1.3929rem;
+}
+
+.emotion-9 iconButton {
+  margin-right: 8px;
 }
 
 .emotion-10 {
@@ -307,6 +341,9 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
 
 .emotion-13 {
   padding: 8px 16px 16px;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 
 .emotion-20 {
@@ -323,7 +360,11 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
+}
+
+.emotion-20 iconButton {
+  margin-right: 8px;
 }
 
 .emotion-24 {
@@ -382,18 +423,21 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 8px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #1976d2;
+  color: #337a87;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
 }
 
 .emotion-25::-moz-focus-inner {
@@ -415,7 +459,7 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
 .emotion-25:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: rgba(25, 118, 210, 0.04);
+  background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
@@ -426,6 +470,14 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
 
 .emotion-25.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-25:hover {
+  colors: #337a87;
+}
+
+.emotion-25.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-26 {
@@ -473,11 +525,10 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 16px;
@@ -485,8 +536,11 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   color: #fff;
-  background-color: #1976d2;
+  background-color: #337a87;
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .emotion-27::-moz-focus-inner {
@@ -508,13 +562,13 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
 .emotion-27:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: #1565c0;
+  background-color: rgb(35, 85, 94);
   box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
   .emotion-27:hover {
-    background-color: #1976d2;
+    background-color: #337a87;
   }
 }
 
@@ -530,6 +584,14 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-27:hover {
+  colors: #337a87;
+}
+
+.emotion-27.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 <div
@@ -830,7 +892,7 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
 
 .emotion-3 {
   background-color: #fff;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(10, 10, 11, 0.78);
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   border-radius: 4px;
@@ -864,11 +926,10 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
 
 .emotion-4 {
   margin: 0;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 1.25rem;
+  font-size: 1.1607rem;
   line-height: 1.6;
-  letter-spacing: 0.0075em;
   padding: 16px 24px;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
@@ -964,18 +1025,21 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
-  letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
   padding: 6px 8px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #1976d2;
+  color: #337a87;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
 }
 
 .emotion-10::-moz-focus-inner {
@@ -997,7 +1061,7 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
 .emotion-10:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
-  background-color: rgba(25, 118, 210, 0.04);
+  background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
@@ -1008,6 +1072,14 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
 
 .emotion-10.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-10:hover {
+  colors: #337a87;
+}
+
+.emotion-10.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-11 {

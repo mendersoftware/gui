@@ -1,5 +1,4 @@
 import { listItemClasses } from '@mui/material/ListItem';
-import { formLabelClasses } from '@mui/material/FormLabel';
 import { accordionClasses } from '@mui/material/Accordion';
 import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
 
@@ -55,64 +54,6 @@ palette['qualitative'] = qualitative;
 
 export const chartColorPalette = Object.values(generatedColors);
 
-/**
- * Favor using materials' `theme.palette` instead due to themed support.
- */
-export const colors = {
-  /**
-   * @deprecated #347A87 was close enough to use theme {@link palette.primary.main}
-   */
-  linkgreen: palette.primary.main,
-  /**
-   * @deprecated use theme {@link palette.brand.mender}
-   */
-  mendergreen: palette.brand.mender,
-  grey: '#c7c7c7',
-  /**
-   * @deprecated use theme {@link palette.secondary.main}
-   */
-  mendermaroon: palette.secondary.main,
-  accent2Color: '#f5f5f5',
-  alertpurple: '#7D3F69',
-  /**
-   * @deprecated use theme {@link palette.text.primary}
-   */
-  textColor: palette.text.primary,
-  /**
-   * was rgba(0, 0, 0, 0.3) inconsistent with mutedText from variables.less .54
-   * @deprecated use theme {@link palette.text.hint}
-   */
-  mutedText: palette.text.hint,
-  /**
-   * @deprecated Is not in use see {@link palette.text.secondary}
-   */
-  tooltipText: '#DECFD9',
-  alternateTextColor: 'white',
-  canvasColor: 'white',
-  /**
-   * @deprecated use theme.palette.grey[500]
-   */
-  borderColor: '#e0e0e0',
-  /**
-   * @deprecated use theme.palette.grey[400]
-   */
-  expansionBackground: '#f7f7f7',
-  /**
-   * @deprecated use theme.palette.text.secondary
-   */
-  disabledColor: secondaryText,
-  /**
-   * @deprecated use theme {@link palette.error.main}
-   */
-  errorStyleColor: palette.error.main,
-  /**
-   * @deprecated use theme {@link palette.sucess.main}
-   */
-  successStyleColor: '#009e73',
-  red: '#8f0d0d',
-  green: '#009e73'
-};
-
 const round = value => Math.round(value * 1e4) / 1e4;
 const htmlFontSize = 16;
 const fontSize = 13;
@@ -149,13 +90,6 @@ const componentProps = {
 
 export const overrides = {
   ...componentProps,
-  MuiCheckbox: {
-    styleOverrides: {
-      root: {
-        color: palette.text.primary
-      }
-    }
-  },
   MuiSnackbarContent: {
     styleOverrides: {
       action: {
@@ -180,7 +114,6 @@ export const overrides = {
         },
         padding: 0,
         [`&.${accordionClasses.expanded}`]: {
-          backgroundColor: colors.expansionBackground,
           margin: 'auto'
         }
       }
@@ -221,20 +154,10 @@ export const overrides = {
           borderBottom: '1px solid rgb(224, 224, 224)'
         },
         '&:hover:not($disabled):before': {
-          borderBottom: `2px solid ${colors.linkgreen} !important`
+          borderBottom: `2px solid ${palette.primary.main} !important`
         },
         '&:after': {
-          borderBottom: `2px solid ${colors.linkgreen}`
-        }
-      }
-    }
-  },
-  MuiFormLabel: {
-    styleOverrides: {
-      root: {
-        color: palette.text.hint,
-        [`&.${formLabelClasses.focused}`]: {
-          color: colors.linkgreen
+          borderBottom: `2px solid ${palette.primary.main}`
         }
       }
     }
@@ -258,7 +181,6 @@ export const overrides = {
   MuiIconButton: {
     styleOverrides: {
       root: {
-        color: palette.text.hint,
         fontSize: '1.2rem'
       }
     }

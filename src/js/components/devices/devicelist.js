@@ -13,6 +13,7 @@ import DeviceListItem from './devicelistitem';
 import { deepCompare } from '../../helpers';
 import MenderTooltip from '../common/mendertooltip';
 import useWindowSize from '../../utils/resizehook';
+import { makeStyles } from 'tss-react/mui';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -20,10 +21,26 @@ const sortingNotes = {
   name: 'Sorting by Name will only work properly with devices that already have a device name defined'
 };
 
+const useStyles = makeStyles()(theme => ({
+  header: {
+    color: theme.palette.text.hint
+  },
+  resizeHandle: {
+    background: 'initial',
+    ['&.hovering']: {
+      background: theme.palette.grey[600]
+    },
+    ['&.resizing']: {
+      background: theme.palette.mode === 'dark' ? theme.palette.grey[200] : theme.palette.grey[900]
+    }
+  }
+}));
+
 const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onResizeChange, onResizeFinish, resizable }) => {
   const [isHovering, setIsHovering] = useState(false);
   const resizeRef = useRef();
   const ref = useRef();
+  const { classes } = useStyles();
 
   const onMouseOut = () => setIsHovering(false);
   const onMouseOver = () => setIsHovering(true);
@@ -68,8 +85,8 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
     };
   }, [resizeRef.current, mouseMove, mouseUp, removeListeners]);
 
-  let resizeHandleStyle = resizable && isHovering ? { background: '#ccc' } : {};
-  resizeHandleStyle = resizeRef.current ? { background: '#517ea5' } : resizeHandleStyle;
+  let resizeHandleClassName = resizable && isHovering ? 'hovering' : '';
+  resizeHandleClassName = resizeRef.current ? 'resizing' : resizeHandleClassName;
 
   const header = (
     <div className="columnHeader flexbox space-between relative" style={column.style} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} ref={ref}>
@@ -84,7 +101,7 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
       </div>
       <div className="flexbox center-aligned">
         {column.customize && <SettingsIcon onClick={column.customize} style={{ fontSize: 16, marginRight: 4 }} />}
-        {index > 0 && index < columnCount - 2 && <span onMouseDown={mouseDown} className="resize-handle" style={resizeHandleStyle} />}
+        {index > 0 && index < columnCount - 2 && <span onMouseDown={mouseDown} className={`resize-handle ${classes.resizeHandle} ${resizeHandleClassName}`} />}
       </div>
     </div>
   );
@@ -157,6 +174,7 @@ export const DeviceList = props => {
 
   const size = useWindowSize();
   const selectable = !!onSelect;
+  const { classes } = useStyles();
 
   useEffect(() => {
     selectedRowsRef.current = selectedRows;
@@ -210,7 +228,7 @@ export const DeviceList = props => {
   const numSelected = (selectedRows || []).length;
   return (
     <div className={`deviceList ${selectable ? 'selectable' : ''}`} ref={deviceListRef}>
-      <div className="header">
+      <div className={`header ${classes.header}`}>
         <div className="deviceListRow">
           {selectable && (
             <div>

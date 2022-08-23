@@ -14,6 +14,7 @@ import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { getDeviceIdentityText } from '../../devices/base-devices';
+import InfoText from '../../common/infotext';
 
 const useStyles = makeStyles()(theme => ({
   infoStyle: {
@@ -35,10 +36,10 @@ const hardCodedStyle = {
 const ReleasesWarning = ({ lacksReleases }) => (
   <div className={`flexbox ${lacksReleases ? 'center-aligned' : 'centered'}`}>
     <ErrorOutlineIcon fontSize="small" style={{ marginRight: 4, top: 4, color: 'rgb(171, 16, 0)' }} />
-    <p className="info">
+    <InfoText>
       There are no {lacksReleases ? 'compatible ' : ''}artifacts available.{lacksReleases ? <br /> : ' '}
       <Link to="/releases">Upload one to the repository</Link> to get started.
-    </p>
+    </InfoText>
   </div>
 );
 
@@ -188,7 +189,7 @@ export const SoftwareDevices = ({
                   value={group}
                 />
                 {!(hasDevices || hasDynamicGroups) && (
-                  <p className="info" style={{ marginTop: '10px' }}>
+                  <InfoText style={{ marginTop: '10px' }}>
                     <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)', position: 'relative' }} />
                     There are no connected devices.{' '}
                     {hasPending ? (
@@ -200,12 +201,12 @@ export const SoftwareDevices = ({
                         <Link to="/help/get-started">Read the help pages</Link> for help with connecting devices.
                       </span>
                     )}
-                  </p>
+                  </InfoText>
                 )}
               </div>
             )}
             {(deploymentDeviceIds.length > 0 || group) && (
-              <p className="info">
+              <InfoText>
                 {group ? (
                   <>All devices{group !== ALL_DEVICES ? ' in this group' : null}</>
                 ) : (
@@ -214,7 +215,7 @@ export const SoftwareDevices = ({
                   </>
                 )}{' '}
                 will be targeted. <Link to={groupLink}>View the {pluralize('devices', group === ALL_DEVICES ? 2 : deploymentDeviceIds.length)}</Link>
-              </p>
+              </InfoText>
             )}
             {onboardingComponent}
           </div>
@@ -239,11 +240,7 @@ export const SoftwareDevices = ({
             {!releaseItems.length ? (
               <ReleasesWarning lacksReleases />
             ) : (
-              !!releaseDeviceTypes.length && (
-                <p className="info" style={{ marginBottom: 0 }}>
-                  This Release is compatible with {devicetypesInfo}.
-                </p>
-              )
+              !!releaseDeviceTypes.length && <InfoText style={{ marginBottom: 0 }}>This Release is compatible with {devicetypesInfo}.</InfoText>
             )}
           </div>
           <InfoHint content="The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type." />

@@ -28,11 +28,7 @@ const iconStyles = {
   marginRight: '30px'
 };
 
-const headerStyle = {
-  justifyContent: 'flex-end'
-};
-
-export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressCount, onboardingState, pendingCount, setSnackbar, styles }) => {
+export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressCount, itemsClassName, onboardingState, pendingCount, setSnackbar }) => {
   const [lastDeploymentCheck, setLastDeploymentCheck] = useState();
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
@@ -81,7 +77,7 @@ export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressC
   const pendingWidgetMain = {
     counter: pendingCount,
     header: (
-      <div className="flexbox center-aligned" style={headerStyle}>
+      <div className="flexbox center-aligned">
         <UpdateIcon className="flip-horizontal" style={iconStyles} />
         <div>Pending {pluralize('deployment', pendingCount)}</div>
       </div>
@@ -91,7 +87,7 @@ export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressC
   const activeWidgetMain = {
     counter: inprogressCount,
     header: (
-      <div className="flexbox center-aligned" style={headerStyle}>
+      <div className="flexbox center-aligned">
         <RefreshIcon className="flip-horizontal" style={iconStyles} />
         <div>{pluralize('Deployment', inprogressCount)} in progress</div>
       </div>
@@ -109,11 +105,11 @@ export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressC
   return (
     <div>
       <LinedHeader heading="Deployments" />
-      <div className="deployments" style={{ marginBottom: 50 }}>
+      <div className="deployments margin-bottom-large">
         {loading ? (
           <Loader show={loading} fade={true} />
         ) : (
-          <div style={styles}>
+          <div className={itemsClassName}>
             <BaseWidget
               className={inprogressCount ? 'current-widget active' : 'current-widget'}
               main={activeWidgetMain}

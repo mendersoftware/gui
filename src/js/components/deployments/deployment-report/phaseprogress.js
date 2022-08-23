@@ -4,14 +4,38 @@ import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
 
 import { Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { deploymentDisplayStates, deploymentSubstates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';
 import Confirm from '../../common/confirm';
-import { colors } from '../../../themes/Mender';
 import inprogressImage from '../../../../assets/img/pending_status.png';
+import { ProgressChartContainer } from '../progressChart';
+
+const fullWidthStyle = { width: '100%' };
+const stepHeight = { compact: 20, default: '100%' };
+
+const useStyles = makeStyles()(theme => ({
+  active: { borderLeftColor: theme.palette.text.primary },
+  borderColor: { borderLeftStyle: 'solid', borderLeftWidth: 1, height: '100%', zIndex: 1 },
+  continueButton: { marginRight: theme.spacing(2) },
+  inactive: { borderLeftColor: theme.palette.grey[500] },
+  phaseInfo: { marginBottom: theme.spacing() },
+  phaseIndex: { margin: theme.spacing(0.5) },
+  phaseDelimiter: {
+    display: 'grid',
+    rowGap: 4,
+    placeItems: 'center',
+    position: 'absolute',
+    gridTemplateRows: `${stepHeight.compact}px 1.25rem min-content`,
+    ['&.compact']: {
+      gridTemplateRows: '45px 1.25rem min-content'
+    }
+  },
+  progressBarBackground: { position: 'initial', width: '110%' },
+  progressStepNumber: { alignSelf: 'flex-end', marginBottom: -20 }
+}));
 
 momentDurationFormatSetup(moment);
 
@@ -25,24 +49,14 @@ const substateIconMap = {
   pendingPause: { state: 'pendingPause', icon: <Pause fontSize="small" color="disabled" /> }
 };
 
-const fullWidthStyle = { width: '100%' };
-const stepHeight = { compact: 20, default: '100%' };
-
-const phaseDelimiterStyle = {
-  display: 'grid',
-  rowGap: 4,
-  placeItems: 'center',
-  position: 'absolute'
-};
-
-const PhaseDelimiter = ({ compact, delimiterStyle, index, isActive, status, substate, stepTotalWidth }) => {
+const PhaseDelimiter = ({ compact, index, isActive, status, substate, stepTotalWidth }) => {
   const offset = `${stepTotalWidth * (index + 1) - stepTotalWidth / 2}%`;
   const width = `${stepTotalWidth}%`;
-  const borderColor = isActive ? colors.textColor : colors.borderColor;
-  const border = <div style={{ borderLeft: `${borderColor} ${delimiterStyle} 1px`, height: '100%', zIndex: 1 }} />;
+  const { classes } = useStyles();
+  const border = <div className={`${classes.borderColor} ${isActive ? classes.active : classes.inactive}`} />;
   const icon = substateIconMap[status] ? substateIconMap[status].icon : <div />;
   return (
-    <div style={{ ...phaseDelimiterStyle, gridTemplateRows: `${compact ? 45 : stepHeight.compact}px 1.25rem min-content`, left: offset, width }}>
+    <div className={`${classes.phaseDelimiter} ${compact ? 'compact' : ''}`} style={{ left: offset, width }}>
       {border}
       {icon}
       {compact ? <div /> : <div className="capitalized slightly-smaller">{substate}</div>}
@@ -53,6 +67,7 @@ const PhaseDelimiter = ({ compact, delimiterStyle, index, isActive, status, subs
 const ProgressChart = ({ deployment = {}, showDetails, style }) => {
   const { device_count = 0, max_devices = 0, stats, update_control_map = {} } = deployment;
   const totalDeviceCount = Math.max(device_count, max_devices);
+  const { classes } = useStyles();
 
   const determineSubstateStatus = (successes, failures, totalDeviceCount, pauseIndicator, hasPauseDefined) => {
     let status;
@@ -101,7 +116,6 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
   const stepTotalWidth = 100 / Object.keys(installationSubstatesMap).length;
   const stepWidth = `${stepTotalWidth}%`;
   const height = showDetails ? stepHeight.details : stepHeight.default;
-  const stepStyle = { border: 'none', width: stepWidth, height };
   return (
     <>
       {!showDetails && (
@@ -113,16 +127,12 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
         {displayablePhases.map((phase, index) => {
           return (
             <React.Fragment key={`deployment-progress-phase-${index}`}>
-              <div className="progress-step" style={{ ...stepStyle, position: 'absolute', left: `${stepTotalWidth * index}%` }}>
+              <div className="progress-step" style={{ width: stepWidth, height, left: `${stepTotalWidth * index}%` }}>
                 <div className="flexbox" style={fullWidthStyle}>
                   <div className="progress-bar green" style={{ width: phase.successWidth }} />
                   <div className="progress-bar warning" style={{ width: phase.failureWidth }} />
                 </div>
-                {!showDetails && (
-                  <div className="progress-step-number" style={{ alignSelf: 'flex-end', marginBottom: -20 }}>
-                    {phase.substate.title}
-                  </div>
-                )}
+                {!showDetails && <div className={`progress-step-number ${classes.progressStepNumber}`}>{phase.substate.title}</div>}
               </div>
               {index !== displayablePhases.length - 1 && (
                 <PhaseDelimiter
@@ -132,14 +142,13 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
                   status={phase.status}
                   stepTotalWidth={stepTotalWidth}
                   index={index}
-                  delimiterStyle="solid"
                 />
               )}
             </React.Fragment>
           );
         })}
         <div className="progress-step progress-step-total" style={{ height }}>
-          <div className="progress-bar" style={{ position: 'initial', width: '110%' }}></div>
+          <div className={`progress-bar ${classes.progressBarBackground}`} />
         </div>
       </div>
     </>
@@ -152,22 +161,20 @@ const statusMap = {
 };
 
 export const PhaseProgressDisplay = ({ className = '', deployment, status }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const { failures } = groupDeploymentStats(deployment);
   return (
-    <div className={`flexbox column progress-chart-container stepped-progress ${className}`}>
-      <div className="flexbox space-between" style={{ marginBottom: theme.spacing() }}>
+    <ProgressChartContainer className={`flexbox column stepped-progress ${className}`}>
+      <div className={`flexbox space-between ${classes.phaseInfo}`}>
         {statusMap[status] ? statusMap[status] : <div />}
         <div className="flexbox center-aligned">
           {!!failures && <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />}
           {`${failures} ${pluralize('failure', failures)}`}
         </div>
       </div>
-      <div className="muted slightly-smaller" style={{ margin: theme.spacing(0.5) }}>
-        Phase 1 of 1
-      </div>
+      <div className={`muted slightly-smaller ${classes.phaseIndex}`}>Phase 1 of 1</div>
       <ProgressChart deployment={deployment} showDetails style={{ maxWidth: '90%', minHeight: 65 }} />
-    </div>
+    </ProgressChartContainer>
   );
 };
 
@@ -177,7 +184,7 @@ const confirmationStyle = {
 };
 
 export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpdateControlChange }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const [shouldContinue, setShouldContinue] = useState(false);
   const [shouldAbort, setShouldAbort] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -214,9 +221,9 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
   const disableContinuationButtons = isLoading || (canContinue && states[pauseMap[currentPauseState].followUp].action !== 'pause');
   return (
     <div className={`flexbox column ${className}`}>
-      <div className="progress-chart-container stepped-progress" style={{ background: 'none' }}>
+      <ProgressChartContainer className="stepped-progress" style={{ background: 'none' }}>
         <ProgressChart deployment={deployment} />
-      </div>
+      </ProgressChartContainer>
       <div className="margin-top">
         Deployment is <span className="uppercased">{status}</span> with {totalFailureCount} {pluralize('failure', totalFailureCount)}
         {isPaused && !canContinue && ` - waiting for an action on the ${pluralize('device', totalPausedCount)} to continue`}
@@ -241,13 +248,7 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
               style={confirmationStyle}
             />
           )}
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={disableContinuationButtons}
-            onClick={setShouldContinue}
-            style={{ marginRight: theme.spacing(2) }}
-          >
+          <Button color="primary" disabled={disableContinuationButtons} onClick={setShouldContinue} variant="contained" className={classes.continueButton}>
             Continue
           </Button>
           <Button disabled={disableContinuationButtons} onClick={setShouldAbort}>

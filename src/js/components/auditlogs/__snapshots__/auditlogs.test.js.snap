@@ -10,17 +10,17 @@ exports[`Auditlogs Component renders correctly 1`] = `
       Audit log
     </h3>
     <div
-      class=\\"auditlogs-filters margin-bottom margin-top-small\\"
+      class=\\"auditlogs-filters margin-bottom margin-top-small tss-1691o3y-filters\\"
     >
       <div
         class=\\"MuiAutocomplete-root css-16awh2u-MuiAutocomplete-root\\"
         style=\\"max-width: 250px;\\"
       >
         <div
-          class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root\\"
+          class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
             for=\\"audit-log-user-selection\\"
             id=\\"audit-log-user-selection-label\\"
@@ -28,7 +28,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             Filter by user
           </label>
           <div
-            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-md26zr-MuiInputBase-root-MuiOutlinedInput-root\\"
+            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-autocomplete=\\"list\\"
@@ -36,7 +36,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
-              class=\\"MuiOutlinedInput-input MuiInputBase-input MuiAutocomplete-input MuiAutocomplete-inputFocused css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
+              class=\\"MuiInput-input MuiInputBase-input MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               id=\\"audit-log-user-selection\\"
               placeholder=\\"Select a user\\"
               role=\\"combobox\\"
@@ -44,18 +44,6 @@ exports[`Auditlogs Component renders correctly 1`] = `
               type=\\"text\\"
               value=\\"\\"
             />
-            <fieldset
-              aria-hidden=\\"true\\"
-              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-            >
-              <legend
-                class=\\"css-1in441m\\"
-              >
-                <span>
-                  Filter by user
-                </span>
-              </legend>
-            </fieldset>
           </div>
         </div>
       </div>
@@ -64,10 +52,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
         style=\\"margin-left: 7.5px;\\"
       >
         <div
-          class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root\\"
+          class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
             for=\\"audit-log-type-selection\\"
             id=\\"audit-log-type-selection-label\\"
@@ -75,7 +63,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             Filter by change
           </label>
           <div
-            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root\\"
+            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-autocomplete=\\"list\\"
@@ -83,7 +71,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
-              class=\\"MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input\\"
+              class=\\"MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               id=\\"audit-log-type-selection\\"
               placeholder=\\"Type\\"
               role=\\"combobox\\"
@@ -96,14 +84,14 @@ exports[`Auditlogs Component renders correctly 1`] = `
             >
               <button
                 aria-label=\\"Open\\"
-                class=\\"MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-1xk1zqq-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator\\"
                 tabindex=\\"-1\\"
                 title=\\"Open\\"
                 type=\\"button\\"
               >
                 <svg
                   aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
                   data-testid=\\"ArrowDropDownIcon\\"
                   focusable=\\"false\\"
                   viewBox=\\"0 0 24 24\\"
@@ -117,18 +105,6 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 />
               </button>
             </div>
-            <fieldset
-              aria-hidden=\\"true\\"
-              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-            >
-              <legend
-                class=\\"css-1in441m\\"
-              >
-                <span>
-                  Filter by change
-                </span>
-              </legend>
-            </fieldset>
           </div>
         </div>
       </div>
@@ -137,10 +113,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
         style=\\"margin-right: 15px; margin-top: 16px;\\"
       >
         <div
-          class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root\\"
+          class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root\\"
         >
           <div
-            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root\\"
+            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-autocomplete=\\"list\\"
@@ -148,7 +124,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
-              class=\\"MuiOutlinedInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-nxo287-MuiInputBase-input-MuiOutlinedInput-input\\"
+              class=\\"MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               disabled=\\"\\"
               id=\\"audit-log-type-details-selection\\"
               placeholder=\\"-\\"
@@ -162,7 +138,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             >
               <button
                 aria-label=\\"Open\\"
-                class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator\\"
+                class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-1xk1zqq-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator\\"
                 disabled=\\"\\"
                 tabindex=\\"-1\\"
                 title=\\"Open\\"
@@ -170,7 +146,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               >
                 <svg
                   aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
                   data-testid=\\"ArrowDropDownIcon\\"
                   focusable=\\"false\\"
                   viewBox=\\"0 0 24 24\\"
@@ -181,20 +157,6 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 </svg>
               </button>
             </div>
-            <fieldset
-              aria-hidden=\\"true\\"
-              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-            >
-              <legend
-                class=\\"css-hdw1oc\\"
-              >
-                <span
-                  class=\\"notranslate\\"
-                >
-                  ​
-                </span>
-              </legend>
-            </fieldset>
           </div>
         </div>
       </div>
@@ -242,10 +204,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
         style=\\"grid-column-start: 2; grid-column-end: 4; margin-left: -7.5px;\\"
       >
         <div
-          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1x6hzm-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
             for=\\"mui-1\\"
             id=\\"mui-1-label\\"
@@ -253,37 +215,25 @@ exports[`Auditlogs Component renders correctly 1`] = `
             From
           </label>
           <div
-            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
+            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-et2z1i-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-invalid=\\"false\\"
               aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
               aria-readonly=\\"true\\"
-              class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
+              class=\\"MuiInput-input MuiInputBase-input css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               
               readonly=\\"\\"
               type=\\"text\\"
               value=\\"January 1st\\"
             />
-            <fieldset
-              aria-hidden=\\"true\\"
-              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-            >
-              <legend
-                class=\\"css-1in441m\\"
-              >
-                <span>
-                  From
-                </span>
-              </legend>
-            </fieldset>
           </div>
         </div>
         <div
-          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1u3bzj6-MuiFormControl-root-MuiTextField-root\\"
+          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1x6hzm-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1sumxir-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
             for=\\"mui-3\\"
             id=\\"mui-3-label\\"
@@ -291,30 +241,18 @@ exports[`Auditlogs Component renders correctly 1`] = `
             To
           </label>
           <div
-            class=\\"MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root\\"
+            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-et2z1i-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-invalid=\\"false\\"
               aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
               aria-readonly=\\"true\\"
-              class=\\"MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input\\"
+              class=\\"MuiInput-input MuiInputBase-input css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               
               readonly=\\"\\"
               type=\\"text\\"
               value=\\"January 1st\\"
             />
-            <fieldset
-              aria-hidden=\\"true\\"
-              class=\\"MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline\\"
-            >
-              <legend
-                class=\\"css-1in441m\\"
-              >
-                <span>
-                  To
-                </span>
-              </legend>
-            </fieldset>
           </div>
         </div>
       </div>
@@ -350,7 +288,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class=\\"MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-zcbmsk-MuiButtonBase-root-MuiButton-root\\"
+        class=\\"MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-1fxol34-MuiButtonBase-root-MuiButton-root\\"
         style=\\"margin-left: 15px;\\"
         tabindex=\\"0\\"
         type=\\"button\\"
@@ -403,7 +341,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           Time
           <svg
             aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected false css-i4bv87-MuiSvgIcon-root\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected false css-1lqc678-MuiSvgIcon-root\\"
             data-testid=\\"SortIcon\\"
             focusable=\\"false\\"
             viewBox=\\"0 0 24 24\\"
@@ -454,7 +392,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             view details 
             <svg
               aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
               data-testid=\\"ArrowRightAltIcon\\"
               focusable=\\"false\\"
               viewBox=\\"0 0 24 24\\"
@@ -500,7 +438,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             view details 
             <svg
               aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
               data-testid=\\"ArrowRightAltIcon\\"
               focusable=\\"false\\"
               viewBox=\\"0 0 24 24\\"
@@ -544,7 +482,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             view details 
             <svg
               aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
               data-testid=\\"ArrowRightAltIcon\\"
               focusable=\\"false\\"
               viewBox=\\"0 0 24 24\\"
@@ -577,7 +515,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class=\\"MuiTablePagination-root flexbox margin-top  css-jtlhu6-MuiTablePagination-root\\"
+        class=\\"MuiTablePagination-root flexbox margin-top  css-1s8wd9s-MuiTablePagination-root\\"
       >
         <div
           class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
@@ -586,13 +524,13 @@ exports[`Auditlogs Component renders correctly 1`] = `
             class=\\"flexbox no-basis MuiTablePagination-spacer css-1psng7p-MuiTablePagination-spacer\\"
           />
           <p
-            class=\\"MuiTablePagination-selectLabel css-pdct74-MuiTablePagination-selectLabel\\"
+            class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
             
           >
             Rows
           </p>
           <div
-            class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-16c50h-MuiInputBase-root-MuiTablePagination-select\\"
+            class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
             variant=\\"standard\\"
           >
             <div
@@ -614,7 +552,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             />
             <svg
               aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTablePagination-selectIcon MuiSelect-icon MuiSelect-iconStandard css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon\\"
+              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTablePagination-selectIcon MuiSelect-icon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
               data-testid=\\"ArrowDropDownIcon\\"
               focusable=\\"false\\"
               viewBox=\\"0 0 24 24\\"
@@ -625,7 +563,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             </svg>
           </div>
           <p
-            class=\\"MuiTablePagination-displayedRows css-levciy-MuiTablePagination-displayedRows\\"
+            class=\\"MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows\\"
           />
           <div
             class=\\"flexbox center-aligned\\"
@@ -634,14 +572,14 @@ exports[`Auditlogs Component renders correctly 1`] = `
               1-3 of 3
             </div>
             <button
-              class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
+              class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
               disabled=\\"\\"
               tabindex=\\"-1\\"
               type=\\"button\\"
             >
               <svg
                 aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
                 data-testid=\\"KeyboardArrowLeftIcon\\"
                 focusable=\\"false\\"
                 viewBox=\\"0 0 24 24\\"
@@ -653,14 +591,14 @@ exports[`Auditlogs Component renders correctly 1`] = `
             </button>
             <div>
               <button
-                class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root\\"
+                class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
                 disabled=\\"\\"
                 tabindex=\\"-1\\"
                 type=\\"button\\"
               >
                 <svg
                   aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
                   data-testid=\\"KeyboardArrowRightIcon\\"
                   focusable=\\"false\\"
                   viewBox=\\"0 0 24 24\\"

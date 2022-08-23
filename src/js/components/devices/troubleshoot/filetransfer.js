@@ -5,6 +5,7 @@ import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 
 import FileUpload from '../../common/forms/fileupload';
+import InfoText from '../../common/infotext';
 
 const tabs = ['upload', 'download'];
 
@@ -54,9 +55,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
       <div className="rightFluid padding-right">
         {currentTab === 'upload' ? (
           <>
-            <p className="info" style={columnStyle}>
-              Upload a file to the device
-            </p>
+            <InfoText style={columnStyle}>Upload a file to the device</InfoText>
             <FileUpload
               enableContentReading={false}
               fileNameSelection={file?.name}
@@ -102,7 +101,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
           </>
         ) : (
           <>
-            <p className="info">Download a file from the device</p>
+            <InfoText>Download a file from the device</InfoText>
             <div style={{ display: 'grid', gridTemplateColumns: `${columnStyle.maxWidth}px max-content` }}>
               <TextField
                 autoFocus={true}

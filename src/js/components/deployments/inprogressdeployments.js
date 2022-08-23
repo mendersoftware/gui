@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Refresh as RefreshIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
@@ -18,6 +19,21 @@ import DeploymentsList from './deploymentslist';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 
 export const minimalRefreshDeploymentsLength = 2000;
+
+const useStyles = makeStyles()(theme => ({
+  deploymentsPending: {
+    borderColor: 'rgba(0, 0, 0, 0.06)',
+    backgroundColor: theme.palette.background.light,
+    color: theme.palette.text.primary,
+    ['.dashboard-header span']: {
+      backgroundColor: theme.palette.background.light,
+      color: theme.palette.text.primary
+    },
+    ['.MuiButtonBase-root']: {
+      color: theme.palette.text.primary
+    }
+  }
+}));
 
 export const Progress = props => {
   const {
@@ -45,6 +61,8 @@ export const Progress = props => {
 
   const inprogressRef = useRef();
   const dynamicTimer = useRef();
+
+  const { classes } = useStyles();
 
   useEffect(() => {
     return () => {
@@ -134,7 +152,7 @@ export const Progress = props => {
       )}
       {!!onboardingComponent && onboardingComponent}
       {!!pending.length && (
-        <div className="deployments-pending margin-top margin-bottom-large">
+        <div className={`deployments-pending margin-top margin-bottom-large ${classes.deploymentsPending}`}>
           <LinedHeader className="margin-small margin-top" heading="Pending" />
           <DeploymentsList
             {...props}
@@ -158,7 +176,7 @@ export const Progress = props => {
               <a onClick={createClick}>Create a deployment</a> to get started
             </p>
           )}
-          <RefreshIcon style={{ transform: 'rotateY(-180deg)', fill: '#e3e3e3', width: 111, height: 111 }} />
+          <RefreshIcon className="flip-horizontal" style={{ fill: '#e3e3e3', width: 111, height: 111 }} />
         </div>
       )}
     </div>
