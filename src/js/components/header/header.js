@@ -53,8 +53,7 @@ const useStyles = makeStyles()(theme => ({
     paddingRight: theme.spacing(5),
     width: '100%',
     borderBottom: `1px solid ${theme.palette.grey[100]}`,
-    display: 'grid',
-    gridTemplateRows: theme.mixins.toolbar.minHeight
+    display: 'grid'
   },
   banner: { gridTemplateRows: `1fr ${theme.mixins.toolbar.minHeight}px` },
   buttonColor: { color: theme.palette.grey[600] },
@@ -62,10 +61,7 @@ const useStyles = makeStyles()(theme => ({
   exitIcon: { color: theme.palette.grey[600], fill: theme.palette.grey[600] },
   demoTrialAnnouncement: {
     fontSize: 14,
-    height: '100%',
-    maxHeight: theme.mixins.toolbar.minHeight,
-    minWidth: 164,
-    overflow: 'hidden'
+    height: 'auto'
   },
   demoAnnouncementIcon: {
     height: 16,
@@ -176,6 +172,15 @@ export const Header = ({
 
   return (
     <Toolbar id="fixedHeader" className={showOffer ? `${classes.header} ${classes.banner}` : classes.header}>
+      {!!announcement && (
+        <Announcement
+          announcement={announcement}
+          errorIconClassName={classes.redAnnouncementIcon}
+          iconClassName={classes.demoAnnouncementIcon}
+          sectionClassName={classes.demoTrialAnnouncement}
+          onHide={setHideAnnouncement}
+        />
+      )}
       {showOffer && <OfferHeader docsVersion={docsVersion} onHide={setHideOffer} />}
       <div className="flexbox space-between">
         <div className="flexbox center-aligned">
@@ -183,15 +188,6 @@ export const Header = ({
             <img id="logo" src={headerLogo} />
           </Link>
           {demo && <DemoNotification iconClassName={classes.demoAnnouncementIcon} sectionClassName={classes.demoTrialAnnouncement} docsVersion={docsVersion} />}
-          {!!announcement && (
-            <Announcement
-              announcement={announcement}
-              errorIconClassName={classes.redAnnouncementIcon}
-              iconClassName={classes.demoAnnouncementIcon}
-              sectionClassName={classes.demoTrialAnnouncement}
-              onHide={setHideAnnouncement}
-            />
-          )}
           {organization.trial && (
             <TrialNotification
               expiration={organization.trial_expiration}
