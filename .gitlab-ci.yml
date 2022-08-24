@@ -148,8 +148,6 @@ test:docs-links:hosted:
 test:prep:
   stage: pre-test
   image: docker
-  only:
-    - staging
   services:
     - docker:19.03.5-dind
   script:
@@ -189,10 +187,6 @@ test:prep:
   after_script:
     - cd $CI_PROJECT_DIR
     - mkdir logs && cp /root/.npm/_logs/* logs/
-  only:
-    - staging
-  when: delayed
-  start_in: 15 minutes
   artifacts:
     expire_in: 2w
     paths:
