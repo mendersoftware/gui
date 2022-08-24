@@ -8,7 +8,6 @@ exports[`Main Component renders correctly 1`] = `
   width: 100%;
   border-bottom: 1px solid #d8ebe9;
   display: grid;
-  grid-template-rows: 56px;
 }
 
 .emotion-1 {
