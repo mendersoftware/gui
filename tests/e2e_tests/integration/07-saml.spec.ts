@@ -87,14 +87,20 @@ test.describe('SAML Login', () => {
       console.log(`IdP metadata len=${metadata.length} loaded and uploading`);
 
       await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
+      console.log('here 0');
       await expect(page).toHaveURL(`${baseUrl}ui/settings/organization-and-billing`);
+      console.log('here 1');
       // Check input[type="checkbox"]
       await page.locator('input[type="checkbox"]').check();
+      console.log('here 2');
+      await page.screenshot({'path': 'bp0.png'});
       // Click text=input with the text editor
       await page.locator('text=input with the text editor').click();
+      console.log('here 3');
 
       // Click .view-lines
       await page.locator('.view-lines').click();
+      console.log('here 4');
 
       console.log('typing metadata');
       await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]').type(metadata.replace(/(?:\r\n|\r|\n)/g, ''))
