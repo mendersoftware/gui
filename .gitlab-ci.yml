@@ -159,7 +159,7 @@ test:prep:
 
 .template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
-  stage: .post
+  stage: test
   services:
     - docker:19.03.5-dind
   cache:
