@@ -385,14 +385,10 @@ export const detectOsIdentifier = () => {
 };
 
 export const getRemainderPercent = phases => {
-  // use this to get remaining percent of final phase so we don't set a hard number
-  let remainder = 100;
   // remove final phase size if set
   phases[phases.length - 1].batch_size = null;
-  for (let phase of phases) {
-    remainder = phase.batch_size ? remainder - phase.batch_size : remainder;
-  }
-  return remainder;
+  // use this to get remaining percent of final phase so we don't set a hard number
+  return phases.reduce((accu, phase) => (phase.batch_size ? accu - phase.batch_size : accu), 100);
 };
 
 export const validatePhases = (phases, deploymentDeviceCount, hasFilter) => {

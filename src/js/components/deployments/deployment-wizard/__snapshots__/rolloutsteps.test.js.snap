@@ -131,7 +131,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
 }
 
 .emotion-3 {
-  min-width: 80px;
+  min-width: 120px;
 }
 
 .emotion-4 {
@@ -734,7 +734,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
 }
 
 .emotion-3 {
-  min-width: 80px;
+  min-width: 120px;
 }
 
 .emotion-4 {
@@ -1337,7 +1337,7 @@ exports[`RolloutSteps Component renders correctly 3`] = `
 }
 
 .emotion-3 {
-  min-width: 80px;
+  min-width: 120px;
 }
 
 .emotion-4 {

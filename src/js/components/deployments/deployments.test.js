@@ -172,9 +172,8 @@ describe('Deployments Component', () => {
     fireEvent.keyDown(groupSelect, { key: 'Enter' });
     await waitFor(() => rerender(ui));
     expect(groupSelect).toHaveValue(ALL_DEVICES);
-    act(() => userEvent.click(screen.getByRole('button', { name: 'Next' })));
     const post = jest.spyOn(GeneralApi, 'post');
-    await act(async () => await userEvent.click(screen.getByRole('button', { name: 'Create' })));
+    await act(async () => await userEvent.click(screen.getByRole('button', { name: 'Create deployment' })));
     jest.runAllTicks();
     await waitFor(() => rerender(ui));
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
@@ -189,6 +188,7 @@ describe('Deployments Component', () => {
     });
     await jest.runAllTicks();
     await waitFor(() => rerender(ui));
+    jest.advanceTimersByTime(1000);
     expect(screen.queryByText(/Cancel/i)).not.toBeInTheDocument();
   }, 20000);
 
@@ -254,19 +254,19 @@ describe('Deployments Component', () => {
     fireEvent.keyDown(releaseSelect, { key: 'Enter' });
     jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
-    act(() => userEvent.click(screen.getAllByText('Next')[0]));
+    act(() => userEvent.click(screen.getByRole('checkbox', { name: /select a rollout pattern/i })));
+    await waitFor(() => rerender(ui));
     await selectMaterialUiSelectOption(screen.getByText(/Single phase: 100%/i), /Custom/i);
-    const firstPhase = screen.getByText(/Phase 1/i).parentElement.parentElement.parentElement;
-    await selectMaterialUiSelectOption(within(firstPhase).getByText(/hours/i), /minutes/i);
+    const firstPhase = screen.getByText(/Phase 1/i).parentElement?.parentElement?.parentElement;
+    await selectMaterialUiSelectOption(within(firstPhase).getByText(/hours/i).parentElement, /minutes/i);
     fireEvent.change(within(firstPhase).getByDisplayValue(20), { target: { value: '50' } });
     fireEvent.change(within(firstPhase).getByDisplayValue('2'), { target: { value: '30' } });
     act(() => userEvent.click(screen.getByText(/Add a phase/i)));
-    const secondPhase = screen.getByText(/Phase 2/i).parentElement.parentElement.parentElement;
-    await selectMaterialUiSelectOption(within(secondPhase).getByText(/hours/i), /days/i);
+    const secondPhase = screen.getByText(/Phase 2/i).parentElement?.parentElement?.parentElement;
+    await selectMaterialUiSelectOption(within(secondPhase).getByText(/hours/i).parentElement, /days/i);
     expect(within(secondPhase).getByText(/Phases must have at least 1 device/i)).toBeTruthy();
     fireEvent.change(within(secondPhase).getByDisplayValue(10), { target: { value: '25' } });
     fireEvent.change(within(secondPhase).getByDisplayValue('2'), { target: { value: '25' } });
-    act(() => userEvent.click(screen.getAllByText('Next')[0]));
 
     act(() => userEvent.click(screen.getByRole('checkbox', { name: /save as default/i })));
     const retrySelect = screen.getByPlaceholderText(/don't retry/i);
@@ -274,15 +274,14 @@ describe('Deployments Component', () => {
     fireEvent.keyDown(retrySelect, { key: 'Enter' });
     jest.advanceTimersByTime(1000);
     expect(retrySelect).toHaveValue(1);
-    act(() => userEvent.click(screen.getAllByText('Next')[0]));
 
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
     jest.setSystemTime(mockDate);
     const secondBatchDate = new Date(new Date(mockDate).setMinutes(mockDate.getMinutes() + 30));
     const thirdBatchDate = new Date(new Date(secondBatchDate).setDate(secondBatchDate.getDate() + 25));
     const post = jest.spyOn(GeneralApi, 'post');
-    const creationButton = screen.getByText('Create');
-    await act(async () => userEvent.click(creationButton));
+    const creationButton = screen.getByText('Create deployment');
+    act(() => userEvent.click(creationButton));
     await waitFor(() => rerender(ui));
     expect(creationButton).toBeDisabled();
     jest.runAllTicks();
@@ -298,7 +297,7 @@ describe('Deployments Component', () => {
       phases: [
         { batch_size: 50, delay: 30, delayUnit: 'minutes', start_ts: undefined },
         { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: secondBatchDate.toISOString() },
-        { batch_size: 25, start_ts: thirdBatchDate.toISOString() }
+        { batch_size: null, start_ts: thirdBatchDate.toISOString() }
       ],
       retries: 1,
       update_control_map: undefined
@@ -317,7 +316,7 @@ describe('Deployments Component', () => {
           [
             { batch_size: 50, delay: 30, delayUnit: 'minutes' },
             { batch_size: 25, delay: 25, delayUnit: 'days', start_ts: 1 },
-            { batch_size: 25, start_ts: 2 }
+            { batch_size: null, start_ts: 2 }
           ]
         ],
         retries: 1

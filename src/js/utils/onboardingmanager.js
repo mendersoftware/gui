@@ -97,19 +97,19 @@ export const onboardingSteps = {
     progress: 1
   },
   [stepNames.SCHEDULING_ALL_DEVICES_SELECTION]: {
-    condition: { min: stepNames.ARTIFACT_INCLUDED_ONBOARDING, max: stepNames.SCHEDULING_ARTIFACT_SELECTION },
+    condition: { min: stepNames.ARTIFACT_INCLUDED_ONBOARDING, max: stepNames.DEPLOYMENTS_INPROGRESS },
     component: SchedulingAllDevicesSelection,
     fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
     progress: 2
   },
   [stepNames.SCHEDULING_GROUP_SELECTION]: {
-    condition: { min: stepNames.ARTIFACT_INCLUDED_ONBOARDING },
+    condition: { min: stepNames.ARTIFACT_INCLUDED_ONBOARDING, max: stepNames.DEPLOYMENTS_INPROGRESS },
     component: SchedulingGroupSelection,
     fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
     progress: 2
   },
   [stepNames.SCHEDULING_ARTIFACT_SELECTION]: {
-    condition: { min: stepNames.SCHEDULING_ALL_DEVICES_SELECTION },
+    condition: { min: stepNames.SCHEDULING_ALL_DEVICES_SELECTION, max: stepNames.DEPLOYMENTS_INPROGRESS },
     component: SchedulingArtifactSelection,
     fallbackStep: stepNames.ARTIFACT_INCLUDED_ONBOARDING,
     progress: 2
