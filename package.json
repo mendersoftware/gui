@@ -66,6 +66,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
     "assert": "^2.0.0",
     "autoprefixer": "^10.4.8",
     "axios-mock-adapter": "^1.21.2",
@@ -175,8 +177,8 @@
   "scripts": {
     "build": "webpack --mode production --entry ./src/js/main.js",
     "disclaim": "yarn licenses generate-disclaimer > disclaimer.txt",
-    "lint": "eslint src",
-    "lint-fix": "eslint --fix src",
+    "lint": "eslint src && eslint tests",
+    "lint-fix": "eslint --fix src && eslint --fix tests",
     "serve": "./entrypoint.sh && webpack serve  --mode development --entry ./src/js/main.js",
     "test": "node test.js",
     "watch": "webpack --watch --mode development --entry ./src/js/main.js"
