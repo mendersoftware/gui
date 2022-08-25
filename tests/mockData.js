@@ -26,12 +26,12 @@ window.mender_environment = {
   }
 };
 
-export const TEST_SESSION_DATETIME = '2019-01-01T13:00:00.000Z';
+export const TEST_SESSION_DATETIME = '2019-01-13T13:00:00.000Z';
 const testDate = new Date(TEST_SESSION_DATETIME);
 export const mockDate = new Date(testDate.setMilliseconds(testDate.getMilliseconds() + 900));
 
 export const defaultPassword = 'mysecretpassword!123';
-export const defaultCreationDate = '2019-01-01T06:25:00.000Z';
+export const defaultCreationDate = '2019-01-13T06:25:00.000Z';
 export const defaultMacAddress = 'dc:a6:32:12:ad:bf';
 
 const deviceTypes = { qemu: 'qemux86-64' };

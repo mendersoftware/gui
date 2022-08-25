@@ -50,14 +50,14 @@ describe('locationutils', () => {
         },
         { today, tonight }
       );
-      expect(search).toEqual('objectId=testgroup&userId=1&objectType=deployment&endDate=2019-01-01&startDate=2000-01-01');
+      expect(search).toEqual('objectId=testgroup&userId=1&objectType=deployment&endDate=2019-01-13&startDate=2000-01-01');
     });
     it('uses working utilities - parseAuditlogsQuery', () => {
-      const result = parseAuditlogsQuery(new URLSearchParams('objectId=testgroup&userId=1&objectType=device&endDate=2019-01-01&startDate=2000-01-01'), {
+      const result = parseAuditlogsQuery(new URLSearchParams('objectId=testgroup&userId=1&objectType=device&endDate=2019-01-13&startDate=2000-01-01'), {
         today,
         tonight
       });
-      const endDate = new Date('2019-01-01');
+      const endDate = new Date('2019-01-13');
       endDate.setHours(23, 59, 59, 999);
       expect(result).toEqual({
         detail: 'testgroup',
