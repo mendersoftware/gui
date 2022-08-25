@@ -396,7 +396,7 @@ export const getRemainderPercent = phases => {
 };
 
 export const validatePhases = (phases, deploymentDeviceCount, hasFilter) => {
-  if (!phases) {
+  if (!phases?.length) {
     return true;
   }
   const remainder = getRemainderPercent(phases);
