@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 
 import test, { expect } from '../fixtures/fixtures';
+import { selectors } from '../utils/constants';
 
 dayjs.extend(isBetween);
 
@@ -19,9 +20,9 @@ test.describe('Deployments', () => {
     // create an artifact to download first
     await page.click(`.repository-list-item:has-text('mender-demo-artifact')`);
     await page.click(`a:has-text('Create deployment')`);
-    await page.waitForSelector('#deployment-device-group-selection', { timeout: 5000 });
-    await page.focus('#deployment-device-group-selection');
-    await page.type('#deployment-device-group-selection', 'All');
+    await page.waitForSelector(selectors.deviceGroupSelect, { timeout: 5000 });
+    await page.focus(selectors.deviceGroupSelect);
+    await page.type(selectors.deviceGroupSelect, 'All');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('All devices')`);
     const creationButton = await page.waitForSelector('text=/Create deployment/i');
     await creationButton.scrollIntoViewIfNeeded();
@@ -31,7 +32,7 @@ test.describe('Deployments', () => {
     await page.waitForSelector('.deployment-item:not(.deployment-header-item)', { timeout: 60000 });
     const datetime = await page.getAttribute('.deployment-item:not(.deployment-header-item) time', 'datetime');
     const time = dayjs(datetime);
-    let earlier = dayjs().subtract(5, 'minutes');
+    const earlier = dayjs().subtract(5, 'minutes');
     const now = dayjs();
     expect(time.isBetween(earlier, now));
   });
@@ -41,14 +42,14 @@ test.describe('Deployments', () => {
     await page.click(`a:has-text('Deployments')`);
     await page.click(`button:has-text('Create a deployment')`);
 
-    await page.waitForSelector('#deployment-release-selection', { timeout: 5000 });
-    await page.focus('#deployment-release-selection');
-    await page.type('#deployment-release-selection', 'mender');
+    await page.waitForSelector(selectors.releaseSelect, { timeout: 5000 });
+    await page.focus(selectors.releaseSelect);
+    await page.type(selectors.releaseSelect, 'mender');
     await page.click(`#deployment-release-selection-listbox li:has-text('mender-demo-artifact')`);
 
-    await page.waitForSelector('#deployment-device-group-selection', { timeout: 5000 });
-    await page.focus('#deployment-device-group-selection');
-    await page.type('#deployment-device-group-selection', 'test');
+    await page.waitForSelector(selectors.deviceGroupSelect, { timeout: 5000 });
+    await page.focus(selectors.deviceGroupSelect);
+    await page.type(selectors.deviceGroupSelect, 'test');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('testgroup')`);
     const creationButton = await page.waitForSelector('text=/Create deployment/i');
     await creationButton.scrollIntoViewIfNeeded();

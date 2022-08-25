@@ -25,7 +25,7 @@ test.describe('Auditlogs', () => {
     // the terminal content might take a bit to get painted - thus the waiting
     await page.click(terminalElement, { timeout: 3000 });
 
-    let elementHandle = await page.$('.terminal.xterm .xterm-text-layer');
+    const elementHandle = await page.$('.terminal.xterm .xterm-text-layer');
     await page.type('.terminal.xterm textarea', 'passwd');
     await page.keyboard.press('Enter');
     const expectedPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalSecretContent.png');

@@ -180,13 +180,13 @@ export const userHandlers = [
   }),
   rest.get(`${useradmApiUrl}/2faqr`, (req, res, ctx) => res(ctx.json({ qr: btoa('test') }))),
   rest.post(`${useradmApiUrl}/users/:userId/2fa/enable`, ({ params: { userId } }, res, ctx) => {
-    if (defaultState.users.byId[userId] || 'me') {
+    if (defaultState.users.byId[userId] || userId === 'me') {
       return res(ctx.status(200));
     }
     return res(ctx.status(570));
   }),
   rest.post(`${useradmApiUrl}/users/:userId/2fa/disable`, ({ params: { userId } }, res, ctx) => {
-    if (defaultState.users.byId[userId] || 'me') {
+    if (defaultState.users.byId[userId] || userId === 'me') {
       return res(ctx.status(200));
     }
     return res(ctx.status(571));
