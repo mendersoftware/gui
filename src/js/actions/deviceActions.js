@@ -456,7 +456,6 @@ export const getDeviceById = id => (dispatch, getState) =>
     .then(res => {
       const device = reduceReceivedDevices([res.data], [], getState()).devicesById[id];
       device.etag = res.headers.etag;
-      delete device.updated_ts;
       dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device });
       return Promise.resolve(device);
     })
@@ -482,7 +481,7 @@ export const getDeviceById = id => (dispatch, getState) =>
     });
 
 export const getDeviceInfo = deviceId => (dispatch, getState) => {
-  const device = getState().devices.byId[deviceId];
+  const device = getState().devices.byId[deviceId] || {};
   const { hasDeviceConfig, hasMonitor } = getTenantCapabilities(getState());
   let tasks = [dispatch(getDeviceAuth(deviceId)), dispatch(getDeviceTwin(deviceId))];
   if (hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
