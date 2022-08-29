@@ -150,7 +150,7 @@ export const CreateDeployment = props => {
     isCreating.current = true;
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts : undefined;
-    const retrySetting = canRetry ? { retries } : {};
+    const retrySetting = canRetry && retries ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
       devices: (filterId || group) && !device ? undefined : deploymentDeviceIds,
@@ -250,7 +250,7 @@ export const CreateDeployment = props => {
   const hasReleases = !!Object.keys(releasesById).length;
   return (
     <Drawer anchor="right" open={open} onClose={closeWizard} PaperProps={{ style: { minWidth: '50vw' } }}>
-      <div className="flexbox margin-bottom space-between center-aligned">
+      <div className="flexbox space-between center-aligned">
         <h3>Create a deployment</h3>
         <IconButton onClick={closeWizard} aria-label="close" size="large">
           <CloseIcon />

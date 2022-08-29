@@ -17,6 +17,11 @@ import { ALL_DEVICES } from '../../constants/deviceConstants';
 const mockStore = configureStore([thunk]);
 const defaultLocationProps = { location: { search: 'startDate=2019-01-01' }, match: {} };
 
+const specialKeys = {
+  ArrowDown: { key: 'ArrowDown' },
+  Enter: { key: 'Enter' }
+};
+
 describe('Deployments Component', () => {
   let mockState = {
     ...defaultState,
@@ -164,12 +169,12 @@ describe('Deployments Component', () => {
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     expect(within(releaseSelect).queryByDisplayValue(releaseId)).not.toBeInTheDocument();
     act(() => userEvent.click(releaseSelect));
-    fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
-    fireEvent.keyDown(releaseSelect, { key: 'Enter' });
+    fireEvent.keyDown(releaseSelect, specialKeys.ArrowDown);
+    fireEvent.keyDown(releaseSelect, specialKeys.Enter);
     jest.advanceTimersByTime(2000);
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     act(() => userEvent.click(groupSelect));
-    fireEvent.keyDown(groupSelect, { key: 'Enter' });
+    fireEvent.keyDown(groupSelect, specialKeys.Enter);
     await waitFor(() => rerender(ui));
     expect(groupSelect).toHaveValue(ALL_DEVICES);
     const post = jest.spyOn(GeneralApi, 'post');
@@ -245,13 +250,13 @@ describe('Deployments Component', () => {
     await waitFor(() => rerender(ui));
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
     act(() => userEvent.click(groupSelect));
-    fireEvent.keyDown(groupSelect, { key: 'Enter' });
+    fireEvent.keyDown(groupSelect, specialKeys.Enter);
     expect(groupSelect).toHaveValue(ALL_DEVICES);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     act(() => userEvent.click(releaseSelect));
-    fireEvent.keyDown(releaseSelect, { key: 'ArrowDown' });
-    fireEvent.keyDown(releaseSelect, { key: 'Enter' });
+    fireEvent.keyDown(releaseSelect, specialKeys.ArrowDown);
+    fireEvent.keyDown(releaseSelect, specialKeys.Enter);
     jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
     act(() => userEvent.click(screen.getByRole('checkbox', { name: /select a rollout pattern/i })));
@@ -269,11 +274,13 @@ describe('Deployments Component', () => {
     fireEvent.change(within(secondPhase).getByDisplayValue('2'), { target: { value: '25' } });
 
     act(() => userEvent.click(screen.getByRole('checkbox', { name: /save as default/i })));
-    const retrySelect = screen.getByPlaceholderText(/don't retry/i);
+    const retrySelect = document.querySelector('#deployment-retries-selection');
     act(() => userEvent.click(retrySelect));
-    fireEvent.keyDown(retrySelect, { key: 'Enter' });
+    fireEvent.keyDown(retrySelect, specialKeys.ArrowDown);
+    fireEvent.keyDown(retrySelect, specialKeys.Enter);
+    fireEvent.keyDown(retrySelect, { key: 'Tab' });
     jest.advanceTimersByTime(1000);
-    expect(retrySelect).toHaveValue(1);
+    expect(retrySelect).toHaveValue(2);
 
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
     jest.setSystemTime(mockDate);

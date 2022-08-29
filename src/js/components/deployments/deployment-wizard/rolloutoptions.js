@@ -66,12 +66,12 @@ export const Retries = ({
   const { retries } = deploymentObject;
   const { classes } = useStyles();
 
-  const [currentRetries, setCurrentRetries] = useState(retries !== undefined ? retries : previousRetries);
-  const debouncedRetries = useDebounce(currentRetries, 300);
+  const [currentAttempts, setCurrentAttempts] = useState(Number(retries ?? previousRetries ?? 0) + 1);
+  const debouncedAttempts = useDebounce(currentAttempts, 300);
 
   useEffect(() => {
-    setDeploymentSettings({ retries: Number(debouncedRetries) });
-  }, [debouncedRetries]);
+    setDeploymentSettings({ retries: Number(debouncedAttempts) - 1 });
+  }, [debouncedAttempts]);
 
   const formatValue = value => {
     const newValue = Math.max(0, Math.min(value, 100));
@@ -84,7 +84,7 @@ export const Retries = ({
     } else if ((reason === 'reset' && !e) || reason === 'blur') {
       return;
     }
-    setCurrentRetries(formatValue(value));
+    setCurrentAttempts(formatValue(value));
   };
 
   const onSaveRetriesSettingClick = (_, checked) => onSaveRetriesSetting(checked);
@@ -97,6 +97,7 @@ export const Retries = ({
       <FormControl className="margin-top-none" disabled={!canRetry}>
         <FormGroup row>
           <Autocomplete
+            autoSelect
             autoHighlight
             className={`margin-right ${classes.retryInput}`}
             freeSolo
@@ -104,19 +105,18 @@ export const Retries = ({
             getOptionLabel={formatValue}
             handleHomeEndKeys
             id="deployment-retries-selection"
-            options={[1, 2, 3]}
+            options={[1, 2, 3, 4]}
             onInputChange={onInputChange}
             renderInput={params => (
               <TextField
                 {...params}
                 className={classes.retryInput}
-                placeholder="Don't retry"
                 inputProps={{ ...params.inputProps, value: formatValue(params.inputProps.value) }}
                 InputProps={{ ...params.InputProps }}
                 type="number"
               />
             )}
-            value={currentRetries}
+            value={currentAttempts}
           />
           <FormControlLabel
             className={classes.defaultBox}

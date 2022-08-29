@@ -1792,11 +1792,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               class="MuiInput-input MuiInputBase-input Mui-disabled MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-8"
               disabled=""
               id="deployment-retries-selection"
-              placeholder="Don't retry"
               role="combobox"
               spellcheck="false"
               type="number"
-              value=""
+              value="1"
             />
           </div>
         </div>
@@ -2454,11 +2453,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               class="MuiInput-input MuiInputBase-input Mui-disabled MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-8"
               disabled=""
               id="deployment-retries-selection"
-              placeholder="Don't retry"
               role="combobox"
               spellcheck="false"
               type="number"
-              value=""
+              value="1"
             />
           </div>
         </div>
