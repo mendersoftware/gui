@@ -1849,15 +1849,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
       />
     </svg>
-    With a more advanced commercial Mender plan you get access to optional retries for failed rollout attempts. Get an overview of the Mender plans on the 
-    <a
-      href="https://mender.io/plans/features"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      features page
-    </a>
-    .
+    <span>
+      With a more advanced commercial Mender plan you get access to optional retries for failed rollout attempts. Get an overview of the Mender plans on the 
+      <a
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        features page
+      </a>
+      .
+    </span>
   </p>
 </div>
 `;
@@ -2509,15 +2511,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
       />
     </svg>
-    With a more advanced commercial Mender plan you get access to optional retries for failed rollout attempts. Get an overview of the Mender plans on the 
-    <a
-      href="https://mender.io/plans/features"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      features page
-    </a>
-    .
+    <span>
+      With a more advanced commercial Mender plan you get access to optional retries for failed rollout attempts. Get an overview of the Mender plans on the 
+      <a
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        features page
+      </a>
+      .
+    </span>
   </p>
 </div>
 `;
@@ -3059,15 +3063,17 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
         d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
       />
     </svg>
-    With a more advanced commercial Mender plan you get access to granular control about update rollout to allow synchronization across your fleet. Get an overview of the Mender plans on the 
-    <a
-      href="https://mender.io/plans/features"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      features page
-    </a>
-    .
+    <span>
+      With a more advanced commercial Mender plan you get access to granular control about update rollout to allow synchronization across your fleet. Get an overview of the Mender plans on the 
+      <a
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        features page
+      </a>
+      .
+    </span>
   </p>
 </div>
 `;
@@ -4454,15 +4460,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
       />
     </svg>
-    With a more advanced commercial Mender plan you get access to choose to roll out deployments in multiple phases. Get an overview of the Mender plans on the 
-    <a
-      href="https://mender.io/plans/features"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      features page
-    </a>
-    .
+    <span>
+      With a more advanced commercial Mender plan you get access to choose to roll out deployments in multiple phases. Get an overview of the Mender plans on the 
+      <a
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        features page
+      </a>
+      .
+    </span>
   </p>
 </div>
 `;
