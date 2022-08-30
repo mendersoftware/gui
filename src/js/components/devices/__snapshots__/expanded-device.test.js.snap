@@ -989,9 +989,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           />
         </button>
         <div
-          class="muted margin-left margin-right"
+          class="muted margin-left margin-right flexbox"
         >
-          Last check-in: 
+          <div
+            class="margin-right-small"
+          >
+            Last check-in:
+          </div>
           <span
             aria-label="Tue Jan 01 2019 09:25:00 GMT+0000"
             class=""

@@ -101,22 +101,6 @@ export const DeviceGroups = ({
   const { refreshTrigger, selectedId, state: selectedState } = deviceListState;
 
   useEffect(() => {
-    maybeSetGroupAndFilters(locationParams);
-    clearInterval(deviceTimer.current);
-    deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
-    setYesterday();
-    const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
-    let listState = { state, refreshTrigger: !refreshTrigger };
-    if (locationParams.id && Boolean(locationParams.open)) {
-      listState.selectedId = locationParams.id;
-    }
-    setDeviceListState(listState);
-    return () => {
-      clearInterval(deviceTimer.current);
-    };
-  }, []);
-
-  useEffect(() => {
     refreshGroups();
   }, [groupCount]);
 
@@ -142,13 +126,26 @@ export const DeviceGroups = ({
     }
   }, [locationParams.groupName]);
 
-  const maybeSetGroupAndFilters = ({ filters, groupName }) => {
+  useEffect(() => {
+    const { groupName, filters, ...remainder } = locationParams;
     if (groupName) {
       selectGroup(groupName, filters);
     } else if (filters?.length) {
       setDeviceFilters(filters);
     }
-  };
+    const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
+    let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
+    if (locationParams.id && Boolean(locationParams.open)) {
+      listState.selectedId = locationParams.id;
+    }
+    setDeviceListState(listState);
+    clearInterval(deviceTimer.current);
+    deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
+    setYesterday();
+    return () => {
+      clearInterval(deviceTimer.current);
+    };
+  }, []);
 
   /*
    * Groups
