@@ -135,16 +135,16 @@ export const ExpandedDevice = ({
   const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
 
   useEffect(() => {
-    if (!device.id) {
+    if (!deviceId) {
       return;
     }
     clearInterval(timer.current);
-    timer.current = setInterval(() => getDeviceInfo(device.id), refreshDeviceLength);
-    getDeviceInfo(device.id);
+    timer.current = setInterval(() => getDeviceInfo(deviceId), refreshDeviceLength);
+    getDeviceInfo(deviceId);
     return () => {
       clearInterval(timer.current);
     };
-  }, [device.id, device.status]);
+  }, [deviceId, device.status]);
 
   const onDecommissionDevice = device_id => {
     // close dialog!
@@ -164,15 +164,15 @@ export const ExpandedDevice = ({
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
-    copy(`${location}?id=${device.id}`);
+    copy(`${location}?id=${deviceId}`);
     setSnackbar('Link copied to clipboard');
   };
 
   const scrollToMonitor = () => monitoring.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${device.id}`);
+  const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${deviceId}`);
 
-  const deviceIdentifier = attributes.name ?? device.id ?? '-';
+  const deviceIdentifier = attributes.name ?? deviceId ?? '-';
   const isAcceptedDevice = status === DEVICE_STATES.accepted;
   const isGateway = stringToBoolean(attributes.mender_is_gateway);
   const actionCallbacks = {
@@ -192,14 +192,15 @@ export const ExpandedDevice = ({
   }, [deviceId, onClose]);
 
   return (
-    <Drawer anchor="right" className="expandedDevice" open={!!device.id} onClose={onCloseClick} PaperProps={{ style: { minWidth: '67vw' } }}>
+    <Drawer anchor="right" className="expandedDevice" open={!!deviceId} onClose={onCloseClick} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned">
         <h3>Device information for {deviceIdentifier}</h3>
         <IconButton onClick={copyLinkToClipboard} size="large">
           <LinkIcon />
         </IconButton>
-        <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right`}>
-          Last check-in: <RelativeTime updateTime={device.updated_ts} />
+        <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right flexbox`}>
+          <div className="margin-right-small">Last check-in:</div>
+          <RelativeTime updateTime={device.updated_ts} />
         </div>
         {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} />}
         <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">
