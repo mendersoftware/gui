@@ -50,8 +50,6 @@ describe('PasswordReset Component', () => {
 
     const passwordInput = screen.getByLabelText('Password *');
     act(() => userEvent.paste(passwordInput, badPassword));
-    await waitFor(() => rerender(ui));
-    act(() => userEvent.paste(passwordInput, badPassword));
     userEvent.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
     userEvent.click(screen.getByRole('button', { name: /Save password/i }));
     expect(snackbar).toHaveBeenCalledWith('The passwords you provided do not match, please check again.', 5000, '');
