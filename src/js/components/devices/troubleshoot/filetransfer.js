@@ -112,7 +112,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 InputLabelProps={{ shrink: true }}
                 label="Path to the file on the device"
                 onChange={e => setDownloadPath(e.target.value)}
-                placeholder="Example: /home/pi/"
+                placeholder="Example: /home/mender/"
                 value={downloadPath}
                 style={columnStyle}
               />
