@@ -13,7 +13,7 @@ import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getIsEnterprise, getOnboardingState, getUserCapabilities } from '../../selectors';
 
-import CreateDialog from './createdeployment';
+import CreateDeployment from './createdeployment';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
@@ -191,14 +191,13 @@ export const Deployments = ({
         <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} isShowingDetails={reportDialog} />
       </div>
       <Report abort={onAbortDeployment} onClose={closeReport} open={reportDialog} retry={retryDeployment} type={reportType} />
-      {createDialog && (
-        <CreateDialog
-          onDismiss={onCreationDismiss}
-          deploymentObject={deploymentObject}
-          onScheduleSubmit={onScheduleSubmit}
-          setDeploymentObject={setDeploymentObject}
-        />
-      )}
+      <CreateDeployment
+        open={createDialog}
+        onDismiss={onCreationDismiss}
+        deploymentObject={deploymentObject}
+        onScheduleSubmit={onScheduleSubmit}
+        setDeploymentObject={setDeploymentObject}
+      />
       {!reportDialog && onboardingComponent}
     </>
   );

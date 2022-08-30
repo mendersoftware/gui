@@ -4,7 +4,6 @@ import { Chip } from '@mui/material';
 import { Add as AddIcon, ArrowRight as ArrowRightIcon, PauseCircleOutline as PauseIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import EnterpriseNotification from '../../common/enterpriseNotification';
 import InfoHint from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
 import InfoText from '../../common/infotext';
@@ -12,14 +11,14 @@ import InfoText from '../../common/infotext';
 const useStyles = makeStyles()(theme => ({
   chip: { marginLeft: theme.spacing(-3), marginRight: theme.spacing(-3) },
   connector: {
-    backgroundColor: theme.palette.text.hint,
+    backgroundColor: theme.palette.text.secondary,
     height: 3,
     width: '100%',
     marginRight: theme.spacing(-1),
-    '& svg': { color: theme.palette.text.hint }
+    '& svg': { color: theme.palette.text.secondary }
   },
   connectorArrowWrapper: { height: theme.spacing(4), paddingLeft: theme.spacing(), width: '100%' },
-  connectorWrapper: { minWidth: theme.spacing(10) },
+  connectorWrapper: { minWidth: 120 },
   pauseConnector: { borderLeft: `${theme.palette.grey[500]} dashed 1px`, height: theme.spacing(6), margin: 4, marginTop: -10 },
   stepChip: { minWidth: theme.spacing(11) }
 }));
@@ -128,7 +127,7 @@ export const RolloutSteps = ({ disabled, onStepChange, release, steps = {} }) =>
   );
 };
 
-export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, isEnterprise, onStepChange, release, steps }) => (
+export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, onStepChange, release, steps }) => (
   <div className={className}>
     <div className={disabled ? 'muted' : ''}>
       <RolloutSteps disabled={disabled} onStepChange={onStepChange} release={release} steps={steps} />
@@ -142,19 +141,15 @@ export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, i
         </InfoText>
       )}
     </div>
-    {isEnterprise ? (
-      disabled && (
-        <InfoHint
-          content={
-            <>
-              This feature is not available on <b>phased deployments</b>. If you&apos;d like to set pause states between update steps, go back and adjust the
-              rollout schedule to a <b>single phase</b>.
-            </>
-          }
-        />
-      )
-    ) : (
-      <EnterpriseNotification isEnterprise={isEnterprise} benefit="granular control about update rollout to allow synchronization across your fleet" />
+    {disabled && (
+      <InfoHint
+        content={
+          <>
+            This feature is not available on <b>phased deployments</b>. If you&apos;d like to set pause states between update steps, go back and adjust the
+            rollout schedule to a <b>single phase</b>.
+          </>
+        }
+      />
     )}
   </div>
 );

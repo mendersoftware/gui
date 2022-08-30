@@ -24,6 +24,7 @@ export const Artifacts = props => {
   const {
     canUpload,
     getReleases,
+    isUploading,
     onboardingState,
     releases,
     releasesListState,
@@ -129,6 +130,7 @@ export const Artifacts = props => {
               {' '}
               <Button
                 ref={uploadButtonRef}
+                disabled={isUploading}
                 color="secondary"
                 onClick={onUploadClick}
                 startIcon={<CloudUpload fontSize="small" />}
@@ -175,6 +177,7 @@ const mapStateToProps = state => {
   return {
     canUpload,
     deviceTypes: getDeviceTypes(state),
+    isUploading: state.app.uploading,
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
     releases: getReleasesList(state),

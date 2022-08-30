@@ -545,6 +545,7 @@ describe('validatePhases function', () => {
     expect(validatePhases(undefined, 10000, true)).toEqual(true);
     expect(validatePhases(phases, 10, true)).toEqual(true);
     expect(validatePhases(phases, 10, true)).toEqual(true);
+    expect(validatePhases([], 10, true)).toEqual(true);
     expect(
       validatePhases(
         [
