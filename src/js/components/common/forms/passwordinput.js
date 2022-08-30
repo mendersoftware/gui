@@ -44,13 +44,14 @@ export default class PasswordInput extends React.Component {
     };
   }
   setValue(event) {
-    var value = event ? event.currentTarget.value : '';
+    const value = event ? event.currentTarget.value : '';
+    this.setState({ value });
     if (this.props.create) {
       import(/* webpackChunkName: "zxcvbn" */ 'zxcvbn').then(({ default: zxcvbn }) => {
-        var strength = zxcvbn(value);
-        var score = strength.score;
-        var feedback = strength.feedback.suggestions || [];
-        this.setState({ score, feedback, value });
+        const strength = zxcvbn(value);
+        const score = strength.score;
+        const feedback = strength.feedback.suggestions || [];
+        this.setState({ score, feedback });
         if (score > 3) {
           this.props.validate(this, value);
         } else {
@@ -59,7 +60,6 @@ export default class PasswordInput extends React.Component {
         }
       });
     } else {
-      this.setState({ value });
       this.props.validate(this, value);
     }
   }

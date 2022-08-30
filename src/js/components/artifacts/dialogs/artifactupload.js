@@ -40,7 +40,7 @@ export const ArtifactUpload = ({
           advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD);
         }
         setAcceptedFiles(acceptedFiles);
-        updateCreation({ file: acceptedFiles[0] });
+        updateCreation({ file: acceptedFiles[0], name: acceptedFiles[0].name });
       }
     } else {
       setAcceptedFiles([]);
