@@ -1,35 +1,46 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@mui/material';
+import { Button, Divider, Drawer, IconButton, Typography } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
-import SoftwareDevices from './deployment-wizard/softwaredevices';
-import ScheduleRollout from './deployment-wizard/schedulerollout';
-import Review from './deployment-wizard/review';
-import RolloutOptions from './deployment-wizard/rolloutoptions';
-
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { createDeployment } from '../../actions/deploymentActions';
 import { getGroupDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { PLANS } from '../../constants/appConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getDocsVersion, getIdAttribute, getIsEnterprise, getOnboardingState } from '../../selectors';
-
+import { getDocsVersion, getIdAttribute, getIsEnterprise, getOnboardingState, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
+import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
+import { ScheduleRollout } from './deployment-wizard/schedulerollout';
+import { Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
+import { RolloutPatternSelection } from './deployment-wizard/phasesettings';
 
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 
-const deploymentSteps = [
-  { title: 'Select devices and Release', closed: false, component: SoftwareDevices },
-  { title: 'Set a rollout schedule', closed: true, component: ScheduleRollout },
-  { title: 'Set update process options', closed: true, component: RolloutOptions },
-  { title: 'Review and create', closed: false, component: Review }
-];
+const useStyles = makeStyles()(theme => ({
+  columns: {
+    alignItems: 'start',
+    columnGap: 30,
+    display: 'grid',
+    gridTemplateColumns: 'max-content 1fr',
+    '&>p': {
+      marginTop: theme.spacing(3)
+    }
+  },
+  disabled: { color: theme.palette.text.disabled }
+}));
+
+const getAnchor = (element, heightAdjustment = 3) => ({
+  top: element.offsetTop + element.offsetHeight / heightAdjustment,
+  left: element.offsetLeft + element.offsetWidth
+});
 
 export const getPhaseStartTime = (phases, index, startDate) => {
   if (index < 1) {
@@ -42,32 +53,37 @@ export const getPhaseStartTime = (phases, index, startDate) => {
   return newStartTime.toISOString();
 };
 
-export const CreateDialog = props => {
+export const CreateDeployment = props => {
   const {
     acceptedDeviceCount,
     advanceOnboarding,
+    canRetry,
+    createdGroup,
     createDeployment,
-    deploymentObject,
+    deploymentObject = {},
     getGroupDevices,
     getReleases,
     globalSettings,
     groups,
-    isEnterprise,
-    isHosted,
+    hasDevices,
     isOnboardingComplete,
+    onboardingState,
     onDismiss,
     onScheduleSubmit,
-    plan,
+    open = true,
+    releases,
+    releasesById,
     saveGlobalSettings,
     setDeploymentObject
   } = props;
 
-  const [activeStep, setActiveStep] = useState(0);
   const isCreating = useRef(false);
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
-  const [steps, setSteps] = useState(deploymentSteps);
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
-  const deploymentRef = useRef();
+  const releaseRef = useRef();
+  const groupRef = useRef();
+  const deploymentAnchor = useRef();
+  const { classes } = useStyles();
 
   useEffect(() => {
     const searchConfig = deploymentObject.device?.attributes.device_type
@@ -77,22 +93,16 @@ export const CreateDialog = props => {
   }, []);
 
   useEffect(() => {
-    const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && ((!isEnterprise && plan === PLANS.os.value) || !(isHosted || isEnterprise))) {
-        return accu;
-      }
-      accu.push(step);
-      return accu;
-    }, []);
-    setSteps(steps);
-  }, [isEnterprise, isHosted, plan]);
-
-  useEffect(() => {
+    if (deploymentObject.release) {
+      advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION);
+    }
     if (!deploymentObject.group) {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
       return;
     }
+    advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION);
     if (deploymentObject.group === ALL_DEVICES) {
+      advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION);
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
       return;
     }
@@ -103,7 +113,19 @@ export const CreateDialog = props => {
     getGroupDevices(deploymentObject.group, { perPage: 1 }).then(({ group: { total: deploymentDeviceCount } }) =>
       setDeploymentObject(deploymentObject => ({ ...deploymentObject, deploymentDeviceCount }))
     );
-  }, [deploymentObject.group]);
+  }, [deploymentObject.group, deploymentObject.release]);
+
+  useEffect(() => {
+    let deviceIds = deploymentObject.deploymentDeviceIds || [];
+    let deviceCount = deploymentObject.deploymentDeviceCount;
+    if (deploymentObject.device) {
+      deviceIds = [deploymentObject.device.id];
+      deviceCount = deviceIds.length;
+    } else if (deploymentObject.group === ALL_DEVICES) {
+      deviceCount = acceptedDeviceCount;
+    }
+    setDeploymentObject({ ...deploymentObject, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount });
+  }, [JSON.stringify(deploymentObject)]);
 
   const cleanUpDeploymentsStatus = () => {
     const location = window.location.hash.substring(0, window.location.hash.indexOf('?'));
@@ -111,6 +133,13 @@ export const CreateDialog = props => {
   };
 
   const onSaveRetriesSetting = hasNewRetryDefault => setHasNewRetryDefault(hasNewRetryDefault);
+
+  const setDeploymentSettings = useCallback(
+    change => {
+      setDeploymentObject({ ...deploymentObject, ...change });
+    },
+    [JSON.stringify(deploymentObject)]
+  );
 
   const closeWizard = () => {
     cleanUpDeploymentsStatus();
@@ -121,7 +150,7 @@ export const CreateDialog = props => {
     isCreating.current = true;
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts : undefined;
-    const retrySetting = isEnterprise || (isHosted && plan !== PLANS.os.value) ? { retries } : {};
+    const retrySetting = canRetry && retries ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
       devices: (filterId || group) && !device ? undefined : deploymentDeviceIds,
@@ -160,75 +189,114 @@ export const CreateDialog = props => {
         cleanUpDeploymentsStatus();
         onScheduleSubmit();
       })
-      .catch(() => {
+      .finally(() => {
         isCreating.current = false;
       });
   };
 
-  const { group, phases } = deploymentObject;
-  const ComponentToShow = steps[activeStep].component;
+  const { deploymentDeviceCount, device, group, phases, release: deploymentRelease = null } = deploymentObject;
+
+  let onboardingComponent = null;
+  if (releaseRef.current && groupRef.current && deploymentAnchor.current) {
+    const anchor = getAnchor(releaseRef.current);
+    const groupAnchor = getAnchor(groupRef.current);
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION, onboardingState, { anchor: groupAnchor, place: 'right' });
+    if (createdGroup) {
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_GROUP_SELECTION,
+        { ...onboardingState, createdGroup },
+        { anchor: groupAnchor, place: 'right' },
+        onboardingComponent
+      );
+    }
+    if (deploymentDeviceCount && !deploymentRelease) {
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
+        { ...onboardingState, selectedRelease: releasesById[releases[0]] || {} },
+        { anchor, place: 'right' },
+        onboardingComponent
+      );
+    }
+    if (hasDevices && deploymentDeviceCount && deploymentRelease) {
+      const buttonAnchor = getAnchor(deploymentAnchor.current, 2);
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
+        { ...onboardingState, selectedDevice: device, selectedGroup: group, selectedRelease: deploymentRelease },
+        { anchor: buttonAnchor, place: 'right' },
+        onboardingComponent
+      );
+    }
+  }
+
   const deploymentSettings = {
     ...deploymentObject,
     filterId: groups[group] ? groups[group].id : undefined
   };
-  const disableSchedule = isCreating.current || !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
   const disabled =
-    activeStep === 0
-      ? !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || deploymentSettings.group))
-      : disableSchedule;
-  const finalStep = activeStep === steps.length - 1;
+    isCreating.current ||
+    !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || deploymentSettings.group)) ||
+    !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
+
+  const sharedProps = {
+    ...props,
+    commonClasses: classes,
+    deploymentObject: deploymentSettings,
+    hasNewRetryDefault,
+    onSaveRetriesSetting,
+    open: false,
+    releaseSelectionLocked,
+    setDeploymentSettings
+  };
+  const hasReleases = !!Object.keys(releasesById).length;
   return (
-    <Dialog open={true} fullWidth={false} maxWidth="md" PaperProps={{ style: { maxWidth: 800 } }}>
-      <DialogTitle>Create a deployment</DialogTitle>
-      <DialogContent className="dialog">
-        <Stepper activeStep={activeStep} alternativeLabel style={{ minWidth: 500 }}>
-          {steps.map(step => (
-            <Step key={step.title}>
-              <StepLabel>{step.title}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        <ComponentToShow
-          {...props}
-          deploymentAnchor={deploymentRef}
-          deploymentObject={deploymentSettings}
-          filters={deploymentSettings.filterId ? groups[deploymentObject.group || group].filters : undefined}
-          hasNewRetryDefault={hasNewRetryDefault}
-          onSaveRetriesSetting={onSaveRetriesSetting}
-          releaseSelectionLocked={releaseSelectionLocked}
-          setDeploymentSettings={setDeploymentObject}
-        />
-      </DialogContent>
-      <DialogActions className="margin-left margin-right">
+    <Drawer anchor="right" open={open} onClose={closeWizard} PaperProps={{ style: { minWidth: '50vw' } }}>
+      <div className="flexbox space-between center-aligned">
+        <h3>Create a deployment</h3>
+        <IconButton onClick={closeWizard} aria-label="close" size="large">
+          <CloseIcon />
+        </IconButton>
+      </div>
+      <Divider className="margin-bottom" />
+      <form>
+        {!hasReleases ? (
+          <ReleasesWarning />
+        ) : (
+          <>
+            <Devices {...sharedProps} groupRef={groupRef} />
+            <Software {...sharedProps} releaseRef={releaseRef} />
+          </>
+        )}
+        <ScheduleRollout {...sharedProps} />
+        <Typography className={`margin-top-large ${classes.disabled}`} variant="subtitle2" display="block">
+          Advanced options
+        </Typography>
+        <RolloutPatternSelection {...sharedProps} />
+        <RolloutOptions {...sharedProps} />
+        <Retries {...sharedProps} />
+      </form>
+      <div className="margin-top">
         <Button onClick={closeWizard} style={{ marginRight: 10 }}>
           Cancel
         </Button>
-        <Button disabled={activeStep === 0} onClick={() => setActiveStep(activeStep - 1)}>
-          Back
+        <Button variant="contained" color="primary" ref={deploymentAnchor} disabled={disabled} onClick={() => onScheduleSubmitClick(deploymentSettings)}>
+          Create deployment
         </Button>
-        <div style={{ flexGrow: 1 }} />
-        <Button
-          variant="contained"
-          color="primary"
-          ref={deploymentRef}
-          disabled={disabled}
-          onClick={finalStep ? () => onScheduleSubmitClick(deploymentSettings) : () => setActiveStep(activeStep + 1)}
-        >
-          {finalStep ? 'Create' : 'Next'}
-        </Button>
-      </DialogActions>
-    </Dialog>
+      </div>
+      {onboardingComponent}
+    </Drawer>
   );
 };
 
 const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, saveGlobalSettings };
 
 export const mapStateToProps = state => {
-  const { plan = PLANS.os.value } = state.organization.organization;
+  const { canRetry, canSchedule } = getTenantCapabilities(state);
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
+    canRetry,
+    canSchedule,
     createdGroup: Object.keys(groups).length ? Object.keys(groups)[0] : undefined,
     docsVersion: getDocsVersion(state),
     globalSettings: state.users.globalSettings,
@@ -241,7 +309,6 @@ export const mapStateToProps = state => {
     isHosted: state.app.features.isHosted,
     isOnboardingComplete: state.onboarding.complete,
     onboardingState: getOnboardingState(state),
-    plan,
     previousPhases: state.users.globalSettings.previousPhases,
     previousRetries: state.users.globalSettings.retries || 0,
     releases: state.releases.releasesList.searchedIds,
@@ -249,4 +316,4 @@ export const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(CreateDialog);
+export default connect(mapStateToProps, actionCreators)(CreateDeployment);

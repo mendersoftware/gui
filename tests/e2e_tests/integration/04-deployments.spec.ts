@@ -15,7 +15,7 @@ test.describe('Deployments', () => {
     await page.waitForTimeout(2000);
   });
 
-  test('allows shortcut deployments', async ({ environment, loggedInPage: page }) => {
+  test('allows shortcut deployments', async ({ loggedInPage: page }) => {
     // create an artifact to download first
     await page.click(`.repository-list-item:has-text('mender-demo-artifact')`);
     await page.click(`a:has-text('Create deployment')`);
@@ -23,19 +23,9 @@ test.describe('Deployments', () => {
     await page.focus('#deployment-device-group-selection');
     await page.type('#deployment-device-group-selection', 'All');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('All devices')`);
-    await page.click(`button:has-text('Next')`);
-    if (['enterprise', 'staging'].includes(environment)) {
-      await page.click(`css=.MuiDialog-container button >> text=Next`);
-      await page.click(`css=.MuiDialog-container button >> text=Next`);
-    }
-    // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs
-    try {
-      await page.waitForSelector('..MuiDialog-container button >> text=Next', { timeout: 1000 });
-      await page.click(`.MuiDialog-container button >> text=Next`);
-    } catch (e) {
-      console.log(`go ahead and create the deployment`);
-    }
-    await page.click(`css=.MuiDialog-container button >> text=Create`);
+    const creationButton = await page.waitForSelector('text=/Create deployment/i');
+    await creationButton.scrollIntoViewIfNeeded();
+    await creationButton.click();
     await page.waitForSelector('.deployment-item', { timeout: 10000 });
     await page.click(`[role="tab"]:has-text('Finished')`);
     await page.waitForSelector('.deployment-item:not(.deployment-header-item)', { timeout: 60000 });
@@ -46,7 +36,7 @@ test.describe('Deployments', () => {
     expect(time.isBetween(earlier, now));
   });
 
-  test('allows group deployments', async ({ environment, loggedInPage: page }) => {
+  test('allows group deployments', async ({ loggedInPage: page }) => {
     console.log(`allows group deployments`);
     await page.click(`a:has-text('Deployments')`);
     await page.click(`button:has-text('Create a deployment')`);
@@ -60,19 +50,9 @@ test.describe('Deployments', () => {
     await page.focus('#deployment-device-group-selection');
     await page.type('#deployment-device-group-selection', 'test');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('testgroup')`);
-    await page.click(`button:has-text('Next')`);
-    if (['enterprise', 'staging'].includes(environment)) {
-      await page.click(`.MuiDialog-container button >> text=Next`);
-      await page.click(`.MuiDialog-container button >> text=Next`);
-    }
-    // adding the following to ensure we reached the end of the dialog, as this might not happen in CI runs
-    try {
-      await page.waitForSelector('..MuiDialog-container button >> text=Next', { timeout: 1000 });
-      await page.click(`.MuiDialog-container button >> text=Next`);
-    } catch (e) {
-      console.log(`go ahead and create the deployment`);
-    }
-    await page.click(`.MuiDialog-container button >> text=Create`);
+    const creationButton = await page.waitForSelector('text=/Create deployment/i');
+    await creationButton.scrollIntoViewIfNeeded();
+    await creationButton.click();
     await page.waitForSelector('.deployment-item', { timeout: 10000 });
     await page.click(`[role="tab"]:has-text('Finished')`);
     await page.waitForSelector('.deployment-item:not(.deployment-header-item)', { timeout: 60000 });
