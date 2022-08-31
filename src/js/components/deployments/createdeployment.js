@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import pluralize from 'pluralize';
 
 import { Button, Divider, Drawer, IconButton, Typography } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -14,6 +15,7 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import Confirm from '../common/confirm';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDocsVersion, getIdAttribute, getIsEnterprise, getOnboardingState, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
@@ -64,7 +66,6 @@ export const CreateDeployment = props => {
     deploymentObject = {},
     getGroupDevices,
     getReleases,
-    globalSettings,
     groups,
     hasDevices,
     isOnboardingComplete,
@@ -72,6 +73,9 @@ export const CreateDeployment = props => {
     onDismiss,
     onScheduleSubmit,
     open = true,
+    needsCheck,
+    previousPhases,
+    previousRetries,
     releases,
     releasesById,
     saveGlobalSettings,
@@ -81,6 +85,7 @@ export const CreateDeployment = props => {
   const isCreating = useRef(false);
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
   const navigate = useNavigate();
   const releaseRef = useRef();
   const groupRef = useRef();
@@ -152,6 +157,9 @@ export const CreateDeployment = props => {
   };
 
   const onScheduleSubmitClick = settings => {
+    if (needsCheck && !isChecking) {
+      return setIsChecking(true);
+    }
     isCreating.current = true;
     const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts : undefined;
@@ -177,15 +185,14 @@ export const CreateDeployment = props => {
     }
     return createDeployment(newDeployment)
       .then(() => {
-        let newSettings = { retries: hasNewRetryDefault ? retries : globalSettings.retries };
+        let newSettings = { retries: hasNewRetryDefault ? retries : previousRetries };
         if (phases) {
           const standardPhases = standardizePhases(phases);
-          let previousPhases = globalSettings.previousPhases || [];
-          previousPhases = previousPhases.map(standardizePhases);
-          if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-            previousPhases.push(standardPhases);
+          let prevPhases = previousPhases.map(standardizePhases);
+          if (!prevPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+            prevPhases.push(standardPhases);
           }
-          newSettings.previousPhases = previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
+          newSettings.previousPhases = prevPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
         }
         saveGlobalSettings(newSettings);
         // track in GA
@@ -196,6 +203,7 @@ export const CreateDeployment = props => {
       })
       .finally(() => {
         isCreating.current = false;
+        setIsChecking(false);
       });
   };
 
@@ -280,6 +288,18 @@ export const CreateDeployment = props => {
         <Retries {...sharedProps} />
       </form>
       <div className="margin-top">
+        {isChecking && (
+          <Confirm
+            classes="confirmation-overlay"
+            cancel={() => setIsChecking(false)}
+            action={() => onScheduleSubmitClick(deploymentSettings)}
+            message={`This will deploy ${deploymentSettings.release?.Name} to ${deploymentDeviceCount} ${pluralize(
+              'device',
+              deploymentDeviceCount
+            )}. Are you sure?`}
+            style={{ paddingLeft: 12, justifyContent: 'flex-start', maxHeight: 44 }}
+          />
+        )}
         <Button onClick={closeWizard} style={{ marginRight: 10 }}>
           Cancel
         </Button>
@@ -304,7 +324,6 @@ export const mapStateToProps = state => {
     canSchedule,
     createdGroup: Object.keys(groups).length ? Object.keys(groups)[0] : undefined,
     docsVersion: getDocsVersion(state),
-    globalSettings: state.users.globalSettings,
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     hasDynamicGroups: Object.values(groups).some(group => !!group.id),
@@ -313,8 +332,9 @@ export const mapStateToProps = state => {
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     isOnboardingComplete: state.onboarding.complete,
+    needsCheck: state.users.globalSettings.needsDeploymentConfirmation,
     onboardingState: getOnboardingState(state),
-    previousPhases: state.users.globalSettings.previousPhases,
+    previousPhases: state.users.globalSettings.previousPhases || [],
     previousRetries: state.users.globalSettings.retries || 0,
     releases: state.releases.releasesList.searchedIds,
     releasesById: state.releases.byId
