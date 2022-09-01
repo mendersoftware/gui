@@ -138,7 +138,7 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
     class="MuiList-root MuiList-padding emotion-1 emotion-2"
   >
     <li
-      class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding opaque Mui-disabled emotion-3 emotion-4"
+      class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding Mui-disabled opaque emotion-3 emotion-4"
       disabled=""
     >
       <div
@@ -157,7 +157,7 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
       </div>
     </li>
     <li
-      class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding opaque Mui-disabled emotion-3 emotion-4"
+      class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding Mui-disabled opaque emotion-3 emotion-4"
       disabled=""
     >
       <div

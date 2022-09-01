@@ -795,7 +795,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-7"
           >
             <label
-              class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-8"
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-8"
               data-shrink="false"
               for="group-creation-selection"
               id="group-creation-selection-label"
@@ -803,7 +803,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
               Select a group, or type to create new
             </label>
             <div
-              class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-9"
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-9"
             >
               <input
                 aria-autocomplete="list"
@@ -811,7 +811,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
                 aria-invalid="false"
                 autocapitalize="none"
                 autocomplete="off"
-                class="MuiInput-input MuiInputBase-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-10"
+                class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-10"
                 id="group-creation-selection"
                 role="combobox"
                 spellcheck="false"
@@ -830,7 +830,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
         style="margin-top: 0px;"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-13"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-13"
           style="margin-right: 10px;"
           tabindex="0"
           type="button"
@@ -841,7 +841,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
           />
         </button>
         <button
-          class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-15"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-15"
           disabled=""
           tabindex="-1"
           type="button"

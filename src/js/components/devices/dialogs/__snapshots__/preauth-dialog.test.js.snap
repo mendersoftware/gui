@@ -891,11 +891,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
               class="MuiFormControl-root emotion-7"
             >
               <div
-                class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-8"
+                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-8"
               >
                 <input
                   aria-invalid="false"
-                  class="MuiInput-input MuiInputBase-input emotion-9"
+                  class="MuiInputBase-input MuiInput-input emotion-9"
                   placeholder="Key"
                   type="text"
                   value=""
@@ -906,11 +906,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
               class="MuiFormControl-root emotion-7"
             >
               <div
-                class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-8"
+                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-8"
               >
                 <input
                   aria-invalid="false"
-                  class="MuiInput-input MuiInputBase-input emotion-9"
+                  class="MuiInputBase-input MuiInput-input emotion-9"
                   placeholder="Value"
                   type="text"
                   value=""
@@ -956,7 +956,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-15"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-16"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-16"
           tabindex="0"
           type="button"
         >
@@ -966,7 +966,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
           />
         </button>
         <button
-          class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-18"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-18"
           disabled=""
           style="margin-left: 10px;"
           tabindex="-1"
@@ -975,7 +975,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
           Save and add another
         </button>
         <button
-          class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-19"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-19"
           disabled=""
           style="margin-left: 10px;"
           tabindex="-1"

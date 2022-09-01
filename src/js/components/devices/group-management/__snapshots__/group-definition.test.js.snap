@@ -419,7 +419,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-1"
     >
       <label
-        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-2"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-2"
         data-shrink="false"
         for="group-creation-selection"
         id="group-creation-selection-label"
@@ -427,7 +427,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         Select a group, or type to create new
       </label>
       <div
-        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-3"
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-3"
       >
         <input
           aria-autocomplete="list"
@@ -435,7 +435,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           aria-invalid="false"
           autocapitalize="none"
           autocomplete="off"
-          class="MuiInput-input MuiInputBase-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
+          class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
           id="group-creation-selection"
           role="combobox"
           spellcheck="false"
