@@ -20,7 +20,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
             for=\\"audit-log-user-selection\\"
             id=\\"audit-log-user-selection-label\\"
@@ -28,7 +28,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             Filter by user
           </label>
           <div
-            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-autocomplete=\\"list\\"
@@ -36,7 +36,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
-              class=\\"MuiInput-input MuiInputBase-input MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
+              class=\\"MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               id=\\"audit-log-user-selection\\"
               placeholder=\\"Select a user\\"
               role=\\"combobox\\"
@@ -55,7 +55,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
             for=\\"audit-log-type-selection\\"
             id=\\"audit-log-type-selection-label\\"
@@ -63,7 +63,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             Filter by change
           </label>
           <div
-            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-autocomplete=\\"list\\"
@@ -71,7 +71,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
-              class=\\"MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
+              class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               id=\\"audit-log-type-selection\\"
               placeholder=\\"Type\\"
               role=\\"combobox\\"
@@ -116,7 +116,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           class=\\"MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root\\"
         >
           <div
-            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-n6ydg5-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-autocomplete=\\"list\\"
@@ -124,7 +124,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               aria-invalid=\\"false\\"
               autocapitalize=\\"none\\"
               autocomplete=\\"off\\"
-              class=\\"MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
+              class=\\"MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               disabled=\\"\\"
               id=\\"audit-log-type-details-selection\\"
               placeholder=\\"-\\"
@@ -204,10 +204,10 @@ exports[`Auditlogs Component renders correctly 1`] = `
         style=\\"grid-column-start: 2; grid-column-end: 4; margin-left: -7.5px;\\"
       >
         <div
-          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1x6hzm-MuiFormControl-root-MuiTextField-root\\"
+          class=\\"MuiFormControl-root MuiTextField-root css-1x6hzm-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
             for=\\"mui-1\\"
             id=\\"mui-1-label\\"
@@ -215,44 +215,90 @@ exports[`Auditlogs Component renders correctly 1`] = `
             From
           </label>
           <div
-            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-et2z1i-MuiInputBase-root-MuiInput-root\\"
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-et2z1i-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-invalid=\\"false\\"
-              aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
-              aria-readonly=\\"true\\"
-              class=\\"MuiInput-input MuiInputBase-input css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
+              class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               
-              readonly=\\"\\"
+              placeholder=\\"mmmm do\\"
               type=\\"text\\"
               value=\\"January 1st\\"
             />
+            <div
+              class=\\"MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root\\"
+            >
+              <button
+                aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root\\"
+                tabindex=\\"0\\"
+                type=\\"button\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
+                  data-testid=\\"CalendarIcon\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z\\"
+                  />
+                </svg>
+                <span
+                  class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
-          class=\\"MuiFormControl-root MuiTextField-root margin-top-none margin-left-small css-1x6hzm-MuiFormControl-root-MuiTextField-root\\"
+          class=\\"MuiFormControl-root MuiTextField-root margin-left-small css-1x6hzm-MuiFormControl-root-MuiTextField-root\\"
         >
           <label
-            class=\\"MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
+            class=\\"MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root\\"
             data-shrink=\\"true\\"
-            for=\\"mui-3\\"
-            id=\\"mui-3-label\\"
+            for=\\"mui-2\\"
+            id=\\"mui-2-label\\"
           >
             To
           </label>
           <div
-            class=\\"MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-et2z1i-MuiInputBase-root-MuiInput-root\\"
+            class=\\"MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-et2z1i-MuiInputBase-root-MuiInput-root\\"
           >
             <input
               aria-invalid=\\"false\\"
-              aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
-              aria-readonly=\\"true\\"
-              class=\\"MuiInput-input MuiInputBase-input css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
+              class=\\"MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input\\"
               
-              readonly=\\"\\"
+              placeholder=\\"mmmm do\\"
               type=\\"text\\"
               value=\\"January 1st\\"
             />
+            <div
+              class=\\"MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root\\"
+            >
+              <button
+                aria-label=\\"Choose date, selected date is Jan 1, 2019\\"
+                class=\\"MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root\\"
+                tabindex=\\"0\\"
+                type=\\"button\\"
+              >
+                <svg
+                  aria-hidden=\\"true\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
+                  data-testid=\\"CalendarIcon\\"
+                  focusable=\\"false\\"
+                  viewBox=\\"0 0 24 24\\"
+                >
+                  <path
+                    d=\\"M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z\\"
+                  />
+                </svg>
+                <span
+                  class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -288,7 +334,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class=\\"MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-1fxol34-MuiButtonBase-root-MuiButton-root\\"
+        class=\\"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium  css-1fxol34-MuiButtonBase-root-MuiButton-root\\"
         style=\\"margin-left: 15px;\\"
         tabindex=\\"0\\"
         type=\\"button\\"
@@ -521,7 +567,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
         >
           <div
-            class=\\"flexbox no-basis MuiTablePagination-spacer css-1psng7p-MuiTablePagination-spacer\\"
+            class=\\"MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer\\"
           />
           <p
             class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
@@ -537,7 +583,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               aria-expanded=\\"false\\"
               aria-haspopup=\\"listbox\\"
               
-              class=\\"MuiTablePagination-select MuiSelect-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
+              class=\\"MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
               
               role=\\"button\\"
               tabindex=\\"0\\"
@@ -552,7 +598,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             />
             <svg
               aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTablePagination-selectIcon MuiSelect-icon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
+              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
               data-testid=\\"ArrowDropDownIcon\\"
               focusable=\\"false\\"
               viewBox=\\"0 0 24 24\\"

@@ -623,19 +623,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
       class="MuiFormControl-root emotion-3"
     >
       <label
-        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-4"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-4"
         data-shrink="true"
         id="device-id"
       >
         Device identity attribute
       </label>
       <div
-        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl  emotion-5"
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl  emotion-5"
       >
         <div
           aria-expanded="false"
           aria-haspopup="listbox"
-          class="MuiSelect-select MuiSelect-standard MuiInput-input MuiInputBase-input emotion-6"
+          class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-6"
           role="button"
           tabindex="0"
         >
@@ -686,7 +686,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
       class="margin-left margin-top flexbox"
     >
       <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled  emotion-10"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled  emotion-10"
         disabled=""
         style="margin-right: 10px;"
         tabindex="-1"
@@ -695,7 +695,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         Cancel
       </button>
       <button
-        class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-11"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-11"
         disabled=""
         tabindex="-1"
         type="button"

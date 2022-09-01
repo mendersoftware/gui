@@ -639,20 +639,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
                 class="MuiFormControl-root  required emotion-0"
               >
                 <label
-                  class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
+                  class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-1"
                   data-shrink="false"
                   for="token2fa"
                 >
                   Verification code
                 </label>
                 <div
-                  class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+                  class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
                   required=""
                   style="width: 400px; max-width: 100%;"
                 >
                   <input
                     aria-invalid="false"
-                    class="MuiInput-input MuiInputBase-input emotion-3"
+                    class="MuiInputBase-input MuiInput-input emotion-3"
                     id="token2fa"
                     name="token2fa"
                     placeholder="Verification code"
@@ -671,7 +671,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
                 style="justify-content: flex-end; margin-top: 32px;"
               >
                 <button
-                  class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-5"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-5"
                   disabled=""
                   id="confirm-button"
                   tabindex="-1"
@@ -697,7 +697,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       style="justify-content: flex-end;"
     >
       <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-6"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-6"
         style="margin-right: 10px;"
         tabindex="0"
         type="button"
@@ -708,7 +708,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         />
       </button>
       <button
-        class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-8"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-8"
         disabled=""
         tabindex="-1"
         type="button"

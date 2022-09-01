@@ -1084,10 +1084,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               </b>
             </div>
             <div
-              class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-15 emotion-16"
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-15 emotion-16"
             >
               <input
-                class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-17"
+                class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-17"
                 disabled=""
                 id="a1-id-input"
                 placeholder="a1..."
@@ -1278,7 +1278,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 Tags
               </h4>
               <button
-                class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root  emotion-32"
+                class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall  emotion-32"
                 tabindex="0"
                 type="button"
               >

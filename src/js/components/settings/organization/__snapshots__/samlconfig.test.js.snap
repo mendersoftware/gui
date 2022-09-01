@@ -249,7 +249,7 @@ exports[`SamlConfig Component renders correctly 1`] = `
       class="flexbox"
     >
       <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-1"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-1"
         tabindex="0"
         type="button"
       >
@@ -267,7 +267,7 @@ exports[`SamlConfig Component renders correctly 1`] = `
       class="emotion-3"
     >
       <li
-        class="attributes copy-to-clipboard MuiListItem-root MuiListItem-padding emotion-4"
+        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-padding emotion-4"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-5"
@@ -308,7 +308,7 @@ exports[`SamlConfig Component renders correctly 1`] = `
       class="emotion-3"
     >
       <li
-        class="attributes copy-to-clipboard MuiListItem-root MuiListItem-padding emotion-4"
+        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-padding emotion-4"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-5"
@@ -349,7 +349,7 @@ exports[`SamlConfig Component renders correctly 1`] = `
       class="emotion-3"
     >
       <li
-        class="attributes copy-to-clipboard MuiListItem-root MuiListItem-padding emotion-4"
+        class="MuiListItem-root attributes copy-to-clipboard MuiListItem-padding emotion-4"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-5"
