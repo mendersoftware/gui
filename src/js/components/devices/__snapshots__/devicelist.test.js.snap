@@ -81,7 +81,6 @@ exports[`DeviceList Component renders correctly 1`] = `
           </p>
           <div
             class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
-            variant=\\"standard\\"
           >
             <div
               aria-expanded=\\"false\\"

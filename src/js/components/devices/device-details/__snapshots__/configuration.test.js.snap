@@ -352,7 +352,7 @@ exports[`Configuration Component renders correctly 1`] = `
           Device configuration
         </h4>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall  emotion-0"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-0"
           tabindex="0"
           type="button"
         >
@@ -382,7 +382,7 @@ exports[`Configuration Component renders correctly 1`] = `
       class="flexbox centered"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-4"
+        class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-4"
         disabled=""
         style="margin-right: 16px; font-weight: 900; font-size: smaller;"
         tabindex="-1"
@@ -742,7 +742,7 @@ exports[`tiny components renders ConfigEditingActions correctly 1`] = `
     </div>
   </div>
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium  emotion-6"
+    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-6"
     style="margin-left: 30px;"
     tabindex="0"
     type="button"
@@ -1009,7 +1009,7 @@ exports[`tiny components renders ConfigUpdateFailureActions correctly 1`] = `
 
 <div>
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-0"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-0"
     style="margin-left: 30px;"
     tabindex="0"
     type="button"

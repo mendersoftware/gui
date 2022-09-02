@@ -21,7 +21,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       class=\\"flexbox centered\\"
     >
       <button
-        class=\\"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  css-1ef84cu-MuiButtonBase-root-MuiButton-root\\"
+        class=\\"MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1ef84cu-MuiButtonBase-root-MuiButton-root\\"
         disabled=\\"\\"
         style=\\"margin-right: 16px; font-weight: 900; font-size: smaller;\\"
         tabindex=\\"-1\\"
@@ -192,7 +192,6 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
               </p>
               <div
                 class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
-                variant=\\"standard\\"
               >
                 <div
                   aria-expanded=\\"false\\"

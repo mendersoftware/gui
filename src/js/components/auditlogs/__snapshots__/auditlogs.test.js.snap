@@ -13,7 +13,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
       class=\\"auditlogs-filters margin-bottom margin-top-small tss-1691o3y-filters\\"
     >
       <div
-        class=\\"MuiAutocomplete-root css-16awh2u-MuiAutocomplete-root\\"
+        class=\\"MuiAutocomplete-root css-1qqsdnr-MuiAutocomplete-root\\"
         style=\\"max-width: 250px;\\"
       >
         <div
@@ -48,7 +48,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class=\\"MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-16awh2u-MuiAutocomplete-root\\"
+        class=\\"MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1qqsdnr-MuiAutocomplete-root\\"
         style=\\"margin-left: 7.5px;\\"
       >
         <div
@@ -109,7 +109,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class=\\"MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-16awh2u-MuiAutocomplete-root\\"
+        class=\\"MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1qqsdnr-MuiAutocomplete-root\\"
         style=\\"margin-right: 15px; margin-top: 16px;\\"
       >
         <div
@@ -334,7 +334,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class=\\"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium  css-1fxol34-MuiButtonBase-root-MuiButton-root\\"
+        class=\\"MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1fxol34-MuiButtonBase-root-MuiButton-root\\"
         style=\\"margin-left: 15px;\\"
         tabindex=\\"0\\"
         type=\\"button\\"
@@ -577,7 +577,6 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </p>
           <div
             class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
-            variant=\\"standard\\"
           >
             <div
               aria-expanded=\\"false\\"

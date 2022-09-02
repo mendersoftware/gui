@@ -345,7 +345,7 @@ exports[`ColumnCustomizationDialog Component renders correctly 1`] = `
     style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
   />
   <div
-    data-test="sentinelStart"
+    data-testid="sentinelStart"
     tabindex="0"
   />
   <div
@@ -389,7 +389,7 @@ exports[`ColumnCustomizationDialog Component renders correctly 1`] = `
         class="MuiDialogActions-root MuiDialogActions-spacing space-between emotion-5"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-6"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-6"
           tabindex="0"
           type="button"
         >
@@ -399,7 +399,7 @@ exports[`ColumnCustomizationDialog Component renders correctly 1`] = `
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium  emotion-8"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-8"
           tabindex="0"
           type="button"
         >
@@ -412,7 +412,7 @@ exports[`ColumnCustomizationDialog Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    data-test="sentinelEnd"
+    data-testid="sentinelEnd"
     tabindex="0"
   />
 </div>

@@ -149,7 +149,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
         class="flexbox centered"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-0"
+          class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
           disabled=""
           style="margin-right: 16px; font-weight: 900; font-size: smaller;"
           tabindex="-1"
@@ -497,7 +497,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
         class="flexbox centered"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-0"
+          class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
           disabled=""
           style="margin-right: 16px; font-weight: 900; font-size: smaller;"
           tabindex="-1"
@@ -515,7 +515,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
         class="flexbox "
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled  emotion-1"
+          class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
           disabled=""
           style="margin-right: 16px;"
           tabindex="-1"
@@ -543,7 +543,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
           </h6>
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled  emotion-1"
+          class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
           disabled=""
           style="margin-right: 16px;"
           tabindex="-1"
@@ -746,7 +746,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
         class="flexbox centered"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-0"
+          class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
           disabled=""
           style="margin-right: 16px; font-weight: 900; font-size: smaller;"
           tabindex="-1"

@@ -435,7 +435,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           </p>
         </div>
         <a
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-13"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-13"
           href="/devices/accepted"
           tabindex="0"
         >
