@@ -15,7 +15,6 @@ import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import Billing from './billing';
 import { SAMLConfig } from './samlconfig';
 import { getTenantCapabilities } from '../../../selectors';
-import { versionCompare } from '../../../helpers';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
@@ -50,7 +49,6 @@ export const OrgHeader = () => {
 };
 
 export const Organization = ({
-  canPreview,
   changeSamlConfig,
   deleteSamlConfig,
   getSamlConfigs,
@@ -144,7 +142,7 @@ export const Organization = ({
           }
         />
       </List>
-      {(window.location.hostname.includes('staging') || canPreview) && isEnterprise && (
+      {isEnterprise && (
         <div className="flexbox center-aligned">
           <FormControlLabel
             className={`margin-bottom-small ${classes.ssoToggle}`}
@@ -174,7 +172,6 @@ const actionCreators = { changeSamlConfig, deleteSamlConfig, getSamlConfigs, get
 const mapStateToProps = state => {
   const { isEnterprise } = getTenantCapabilities(state);
   return {
-    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     isEnterprise,
     isHosted: state.app.features.isHosted,
     org: state.organization.organization,
