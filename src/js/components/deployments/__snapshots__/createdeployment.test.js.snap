@@ -82,7 +82,9 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
@@ -621,7 +623,9 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
@@ -1314,7 +1318,9 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 }
 
 .emotion-4 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-4 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
@@ -1975,7 +1981,9 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 }
 
 .emotion-4 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-4 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
@@ -5723,7 +5731,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   style="position: absolute; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
 >
   <div
-    data-test="sentinelStart"
+    data-testid="sentinelStart"
     tabindex="0"
   />
   <div
@@ -6243,7 +6251,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
     </div>
   </div>
   <div
-    data-test="sentinelEnd"
+    data-testid="sentinelEnd"
     tabindex="0"
   />
 </div>
@@ -6925,7 +6933,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   style="position: absolute; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
 >
   <div
-    data-test="sentinelStart"
+    data-testid="sentinelStart"
     tabindex="0"
   />
   <div
@@ -7445,7 +7453,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
     </div>
   </div>
   <div
-    data-test="sentinelEnd"
+    data-testid="sentinelEnd"
     tabindex="0"
   />
 </div>
@@ -7531,7 +7539,9 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
@@ -7973,7 +7983,9 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {

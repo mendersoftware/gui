@@ -1955,7 +1955,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
                   </span>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-deleteIcon MuiChip-deleteIconMedium MuiChip-deleteIconColorDefault MuiChip-deleteIconOutlinedColorDefault emotion-6"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-deleteIcon MuiChip-deleteIconMedium MuiChip-deleteIconColorDefault MuiChip-deleteIconFilledColorDefault emotion-6"
                     data-testid="ArrowDropDownIcon"
                     focusable="false"
                     value="https://downloads.mender.io/mender-artifact/3.8.0/linux/mender-artifact"
@@ -2241,7 +2241,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
                   </span>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-deleteIcon MuiChip-deleteIconMedium MuiChip-deleteIconColorDefault MuiChip-deleteIconOutlinedColorDefault emotion-6"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-deleteIcon MuiChip-deleteIconMedium MuiChip-deleteIconColorDefault MuiChip-deleteIconFilledColorDefault emotion-6"
                     data-testid="ArrowDropDownIcon"
                     focusable="false"
                     value="https://downloads.mender.io/mender-cli/1.8.0/linux/mender-cli"

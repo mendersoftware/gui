@@ -466,7 +466,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 }
 
 .emotion-17 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-17 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {

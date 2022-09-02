@@ -71,7 +71,9 @@ exports[`PhysicalDeviceOnboarding Component renders correctly 1`] = `
 }
 
 .emotion-0 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-0 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
@@ -710,7 +712,9 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders DeviceT
 }
 
 .emotion-0 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-0 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
@@ -1583,7 +1587,7 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders Install
     class="code emotion-0 "
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-1"
+      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
       style="float: right; margin: -20px 0px 0px 10px;"
       tabindex="0"
       type="button"

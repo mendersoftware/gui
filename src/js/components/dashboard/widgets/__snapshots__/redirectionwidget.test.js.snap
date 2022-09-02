@@ -114,7 +114,7 @@ exports[`RedirectionWidget Component renders correctly 1`] = `
         />
       </div>
       <a
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-0"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-0"
         href="/testlocation"
         tabindex="0"
       >

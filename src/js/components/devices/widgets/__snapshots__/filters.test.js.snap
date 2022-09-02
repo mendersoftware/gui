@@ -90,7 +90,9 @@ exports[`Filters Component renders correctly 1`] = `
 }
 
 .emotion-3 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
 }
 
 .emotion-3 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {

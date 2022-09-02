@@ -760,7 +760,7 @@ exports[`AuthStatus Component renders correctly 1`] = `
             class="flexbox emotion-18"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-19"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-19"
               tabindex="0"
               type="button"
             >

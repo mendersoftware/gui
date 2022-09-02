@@ -404,7 +404,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
             style="flex-grow: 1;"
           />
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium  emotion-9"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-9"
             tabindex="0"
             type="button"
           >

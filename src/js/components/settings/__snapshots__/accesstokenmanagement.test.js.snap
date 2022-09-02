@@ -1031,7 +1031,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
     class="MuiDialogActions-root MuiDialogActions-spacing emotion-20"
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-21"
+      class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-21"
       disabled=""
       tabindex="-1"
       type="button"
@@ -1251,7 +1251,7 @@ exports[`UserManagement Component renders AccessTokenRevocationDialog correctly 
     class="MuiDialogActions-root MuiDialogActions-spacing emotion-3"
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-4"
+      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-4"
       tabindex="0"
       type="button"
     >
@@ -1261,7 +1261,7 @@ exports[`UserManagement Component renders AccessTokenRevocationDialog correctly 
       />
     </button>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-4"
+      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-4"
       tabindex="0"
       type="button"
     >
@@ -1390,7 +1390,7 @@ exports[`UserManagement Component renders correctly 1`] = `
     Personal access token management
   </p>
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-1"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
     tabindex="0"
     type="button"
   >

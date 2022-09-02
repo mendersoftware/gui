@@ -773,7 +773,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       </div>
       <div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-21"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-21"
           tabindex="0"
           type="button"
         >
@@ -891,7 +891,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             class="flexbox"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-21"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-21"
               tabindex="0"
               type="button"
             >
@@ -901,7 +901,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               />
             </button>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled emotion-39 emotion-43"
+              class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-39 emotion-43"
               disabled=""
               tabindex="-1"
               type="button"

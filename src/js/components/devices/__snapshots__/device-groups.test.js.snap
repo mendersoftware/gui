@@ -20,7 +20,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         role=\\"group\\"
       >
         <button
-          class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
+          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium tss-1q5gdbl-buttonStyle css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >
@@ -30,7 +30,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </button>
         <button
-          class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e8ajgx-MuiButtonBase-root-MuiButton-root\\"
+          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall tss-1q5gdbl-buttonStyle css-1e8ajgx-MuiButtonBase-root-MuiButton-root\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >
@@ -259,7 +259,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               </div>
             </div>
             <button
-              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
+              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
               tabindex=\\"0\\"
               type=\\"button\\"
             >
@@ -292,7 +292,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             class=\\"flexbox centered filter-header \\"
           >
             <button
-              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium  css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
+              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
               style=\\"background-color: transparent;\\"
               tabindex=\\"0\\"
               type=\\"button\\"
@@ -316,7 +316,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             </button>
           </div>
           <button
-            class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
+            class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
             style=\\"text-transform: none;\\"
             tabindex=\\"0\\"
             type=\\"button\\"
@@ -708,7 +708,6 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </p>
                 <div
                   class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
-                  variant=\\"standard\\"
                 >
                   <div
                     aria-expanded=\\"false\\"
