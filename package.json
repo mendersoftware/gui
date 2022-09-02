@@ -11,7 +11,7 @@
     "@mui/material": "^5.10.3",
     "@mui/styles": "^5.10.3",
     "@mui/x-date-pickers": "^5.0.0",
-    "@redux-devtools/extension": "^3.2.2",
+    "@redux-devtools/extension": "^3.2.3",
     "@reduxjs/toolkit": "^1.8.5",
     "@stripe/react-stripe-js": "^1.10.0",
     "@stripe/stripe-js": "^1.35.0",
