@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Graphical user interface for Mender.",
   "dependencies": {
-    "@emotion/react": "^11.10.0",
+    "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mdi/js": "^7.0.96",
     "@monaco-editor/react": "^4.4.5",
@@ -73,7 +73,7 @@
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
-    "core-js": "^3.24.1",
+    "core-js": "^3.25.0",
     "css-loader": "^6.7.1",
     "esbuild-loader": "^2.19.0",
     "eslint": "^8.23.0",
