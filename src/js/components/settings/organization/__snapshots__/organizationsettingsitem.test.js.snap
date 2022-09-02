@@ -63,12 +63,6 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  display: grid;
-  width: 100%;
-  margin-bottom: 8px;
-}
-
-.emotion-2 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -78,9 +72,12 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   margin-top: 0;
   margin-bottom: 0;
   color: rgba(10, 10, 11, 0.78);
+  display: grid;
+  width: 100%;
+  margin-bottom: 8px;
 }
 
-.emotion-3 {
+.emotion-2 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -89,7 +86,7 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-4 {
+.emotion-3 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -99,13 +96,7 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-5 {
-  margin-bottom: 8px;
-  margin-left: -16px;
-  width: 500px;
-}
-
-.emotion-6 {
+.emotion-4 {
   margin: 0;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -114,24 +105,27 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.12);
   border-bottom-width: thin;
+  margin-bottom: 8px;
+  margin-left: -16px;
+  width: 500px;
 }
 
 <li
   class="margin-top-small org-settings-item"
 >
   <div
-    class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-0"
+    class="MuiListItem-root flexbox column MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-0"
   >
     <div
-      class="MuiListItemText-root MuiListItemText-multiline emotion-1 emotion-2"
+      class="MuiListItemText-root MuiListItemText-multiline emotion-1"
     >
       <span
-        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-2"
       >
         Current plan
       </span>
       <div
-        class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-4"
+        class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary two-columns emotion-3"
       >
         <div>
           Trial
@@ -147,7 +141,7 @@ exports[`OrganizationSettingsItem Component renders correctly 1`] = `
       </div>
     </div>
     <hr
-      class="MuiDivider-root MuiDivider-fullWidth emotion-5 emotion-6"
+      class="MuiDivider-root MuiDivider-fullWidth emotion-4"
     />
     upgrade now!
   </div>

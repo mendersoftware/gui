@@ -1,9 +1,8 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import * as https from 'https';
-import jwtDecode from 'jwt-decode';
 
-import test, {expect} from '../fixtures/fixtures';
+import test, { expect } from '../fixtures/fixtures';
 
 const timeoutFourSeconds = 4000;
 const timeoutOneSecond = 1000;
@@ -23,7 +22,7 @@ const samlSettings = {
       'login': 'sheldon',
       'password': 'bazinga',
       'email': 'scooper@samltest.id'
-    },
+    }
   },
   'idp_url': 'https://samltest.id/saml/idp'
 };
@@ -31,9 +30,12 @@ let metadataId;
 let jwt;
 
 test.describe('SAML Login', () => {
-  test.use({storageState: 'storage.json'});
+  test.use({ storageState: 'storage.json' });
   test.describe('SAML login via sso/id/login', () => {
-    test.afterAll(async ({baseUrl, browserName}, testInfo) => {
+    test.afterAll(async ({ environment, baseUrl, browserName }, testInfo) => {
+      if (environment !== 'staging') {
+        return;
+      }
       console.log(`Finished ${testInfo.title} with status ${testInfo.status}. Cleaning up.`);
       const response = await axios({
         url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings.credentials[browserName].email)}`,
@@ -70,7 +72,7 @@ test.describe('SAML Login', () => {
     });
 
     // Setups the SAML/SSO login with samltest.id Identity Provider
-    test('Set up SAML', async ({environment, context, baseUrl, page, password, username}) => {
+    test('Set up SAML', async ({ environment, context, baseUrl, page }) => {
       test.skip(environment !== 'staging');
       test.setTimeout(320000);
       const storage = await context.storageState();
@@ -97,10 +99,10 @@ test.describe('SAML Login', () => {
       await page.locator('.view-lines').click();
 
       console.log('typing metadata');
-      await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]').type(metadata.replace(/(?:\r\n|\r|\n)/g, ''))
+      await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]').type(metadata.replace(/(?:\r\n|\r|\n)/g, ''));
       console.log('typing metadata done.');
       // The screenshot saves the view of the typed metadata
-      await page.screenshot({'path': 'saml-edit-saving.png'});
+      await page.screenshot({ 'path': 'saml-edit-saving.png' });
       // Click text=Save >> nth=1
       await page.locator('text=Save').nth(1).click();
       console.log('typing metadata done. waiting for Entity ID to be present on page.');
@@ -120,43 +122,40 @@ test.describe('SAML Login', () => {
       });
       expect(response.status).toBe(200);
       metadataId = response.data[0]['id'];
-      console.log(`got metadata id: ${metadataId}`)
+      console.log(`got metadata id: ${metadataId}`);
 
       await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
       await page.locator('text=View metadata in the text editor').click();
       // Click text=Download file
-      const [download] = await Promise.all([
-        page.waitForEvent('download'),
-        page.locator('text=Download file').click()
-      ]);
+      const [download] = await Promise.all([page.waitForEvent('download'), page.locator('text=Download file').click()]);
       const downloadTargetPath = await download.path();
       expect(downloadTargetPath).toBeTruthy();
       const spMetadaData = fs.readFileSync(downloadTargetPath, 'utf8');
-      console.log(`downloaded SP metadata length=${spMetadaData.length}`)
+      console.log(`downloaded SP metadata length=${spMetadaData.length}`);
 
       await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
 
       const expectedLoginUrl = `${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/login`;
-      const findResults = await page.locator('span', {'hasText': expectedLoginUrl})
+      const findResults = await page.locator('span', { 'hasText': expectedLoginUrl });
       await expect(findResults).toHaveText(expectedLoginUrl);
-      console.log(`got span with login url: ${await findResults.count()}`)
+      console.log(`got span with login url: ${await findResults.count()}`);
 
       const expectedAcsUrl = `${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/acs`;
-      const findResultsAcs = await page.locator('span', {'hasText': expectedAcsUrl})
+      const findResultsAcs = await page.locator('span', { 'hasText': expectedAcsUrl });
       await expect(findResultsAcs).toHaveText(expectedAcsUrl);
-      console.log(`got span with acs url: ${await findResultsAcs.count()}`)
+      console.log(`got span with acs url: ${await findResultsAcs.count()}`);
 
       const expectedSpMetaUrl = `${baseUrl}api/management/v1/useradm/sso/sp/metadata/${metadataId}`;
-      const findResultsSpMeta = await page.locator('span', {'hasText': expectedSpMetaUrl})
+      const findResultsSpMeta = await page.locator('span', { 'hasText': expectedSpMetaUrl });
       await expect(findResultsSpMeta).toHaveText(expectedSpMetaUrl);
-      console.log(`got span with SP metadata url: ${await findResultsSpMeta.count()}`)
+      console.log(`got span with SP metadata url: ${await findResultsSpMeta.count()}`);
 
-      const serviceProviderMetadata = spMetadaData.replaceAll('Signed="true"', 'Signed="false"')
+      const serviceProviderMetadata = spMetadaData.replaceAll('Signed="true"', 'Signed="false"');
       fs.writeFileSync('fixtures/service_provider_metadata.xml', serviceProviderMetadata);
 
       await page.goto('https://samltest.id/upload.php');
       await page.waitForSelector('input[id=uploader]');
-      const handle=await page.$('input[id="uploader"]');
+      const handle = await page.$('input[id="uploader"]');
       await handle.setInputFiles('fixtures/service_provider_metadata.xml');
       // Click input:has-text("Upload")
       await page.locator('input:has-text("Upload")').click();
@@ -165,11 +164,11 @@ test.describe('SAML Login', () => {
       console.log('uploaded file, making screen shot, after waiting 4s');
       await page.waitForTimeout(timeoutFourSeconds);
       // Let's save the image after the upload
-      await page.screenshot({path: 'saml-uploaded.png'});
+      await page.screenshot({ path: 'saml-uploaded.png' });
     });
 
     // Creates a user with login that matches Identity privder (samltest.id) user email
-    test('Creates a user without a password', async ({ environment, browserName, context, baseUrl, page }) => {
+    test('Creates a user without a password', async ({ environment, browserName, baseUrl, page }) => {
       test.skip(environment !== 'staging');
       const response = await axios({
         url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings.credentials[browserName].email)}`,
@@ -204,15 +203,15 @@ test.describe('SAML Login', () => {
 
     // This test calls auth/sso/${id}/login, where id is the id of the identity provider
     // and verifies that login is successful.
-    test('User can login via sso/login endpoint', async ({environment, browserName, baseUrl, browser}) => {
+    test('User can login via sso/login endpoint', async ({ environment, browserName, baseUrl, browser }) => {
       test.skip(environment !== 'staging');
       console.log(`logging in via ${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/login (credentials set:${browserName})`);
-      const context = await browser.newContext()
-      const page = await context.newPage()
+      const context = await browser.newContext();
+      const page = await context.newPage();
       await page.goto(`${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/login`);
       await page.waitForTimeout(timeoutFourSeconds);
       // This screenshot saves the view right after the first redirection
-      await page.screenshot({path: 'saml-redirected.png'});
+      await page.screenshot({ path: 'saml-redirected.png' });
 
       // Click input[name="j_username"]
       await page.locator('input[name="j_username"]').click();
@@ -230,12 +229,12 @@ test.describe('SAML Login', () => {
       await page.locator('button:has-text("Login")').click();
       await page.waitForSelector('text=Accept');
       // This screen shot saves the summary of the data that will be sent in assertion
-      await page.screenshot({path: 'saml-logging-in.png'});
+      await page.screenshot({ path: 'saml-logging-in.png' });
 
       // Click text=Accept
       await page.locator('text=Accept').click();
       // confirm we have logged in successfully
-      await page.screenshot({path: 'saml-logging-in-accept.png'});
+      await page.screenshot({ path: 'saml-logging-in-accept.png' });
       await page.waitForSelector('text=License information');
       await page.waitForSelector(`text=${samlSettings.credentials[browserName].email}`);
     });

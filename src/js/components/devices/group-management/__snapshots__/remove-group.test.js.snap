@@ -358,7 +358,7 @@ exports[`RemoveGroup Component renders correctly 1`] = `
     style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
   />
   <div
-    data-test="sentinelStart"
+    data-testid="sentinelStart"
     tabindex="0"
   />
   <div
@@ -389,7 +389,7 @@ exports[`RemoveGroup Component renders correctly 1`] = `
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-6"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-7"
           style="margin-right: 10px;"
           tabindex="0"
           type="button"
@@ -400,7 +400,7 @@ exports[`RemoveGroup Component renders correctly 1`] = `
           />
         </button>
         <button
-          class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-9"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-9"
           tabindex="0"
           type="button"
         >
@@ -413,7 +413,7 @@ exports[`RemoveGroup Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    data-test="sentinelEnd"
+    data-testid="sentinelEnd"
     tabindex="0"
   />
 </div>

@@ -126,7 +126,7 @@ exports[`DeviceListItem Component renders correctly 1`] = `
 >
   <div>
     <span
-      class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-0"
+      class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-0"
     >
       <input
         class="PrivateSwitchBase-input emotion-1"

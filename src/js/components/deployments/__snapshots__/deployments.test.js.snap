@@ -301,7 +301,7 @@ exports[`Deployments Component renders correctly 1`] = `
       </div>
     </div>
     <button
-      class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-10"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-10"
       style="height: 100%;"
       tabindex="0"
       type="button"

@@ -470,13 +470,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
           >
             Status:
             <div
-              class="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary  emotion-0"
+              class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary  emotion-0"
               style="font-size: 13px; margin-left: 8px; margin-top: 2px;"
             >
               <div
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                class="MuiSelect-select MuiSelect-standard MuiInput-input MuiInputBase-input emotion-1"
+                class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-1"
                 role="button"
                 tabindex="0"
               >
@@ -511,7 +511,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
         class="flexbox centered filter-header "
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-4"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-4"
           style="background-color: transparent;"
           tabindex="0"
           type="button"
@@ -535,7 +535,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
         </button>
       </div>
       <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-7"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-7"
         style="text-transform: none;"
         tabindex="0"
         type="button"

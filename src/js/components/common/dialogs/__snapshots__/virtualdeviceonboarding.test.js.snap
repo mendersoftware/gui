@@ -161,7 +161,7 @@ exports[`VirtualDeviceOnboarding Component renders correctly 1`] = `
     class="code emotion-0 "
   >
     <button
-      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-1"
+      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
       style="float: right; margin: -20px 0px 0px 10px;"
       tabindex="0"
       type="button"

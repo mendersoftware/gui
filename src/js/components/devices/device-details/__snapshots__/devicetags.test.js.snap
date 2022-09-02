@@ -245,7 +245,7 @@ exports[`DeviceTags Component renders correctly 1`] = `
           Tags
         </h4>
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root  emotion-0"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-0"
           tabindex="0"
           type="button"
         >

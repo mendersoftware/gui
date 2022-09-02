@@ -389,7 +389,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
     style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
   />
   <div
-    data-test="sentinelStart"
+    data-testid="sentinelStart"
     tabindex="0"
   />
   <div
@@ -439,7 +439,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
               />
             </div>
             <button
-              class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-7"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
               tabindex="0"
               type="button"
             >
@@ -543,7 +543,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-11"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-12"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-12"
           tabindex="0"
           type="button"
         >
@@ -559,7 +559,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    data-test="sentinelEnd"
+    data-testid="sentinelEnd"
     tabindex="0"
   />
 </div>

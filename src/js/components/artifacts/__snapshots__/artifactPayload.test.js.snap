@@ -10,6 +10,12 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
 }
 
 .emotion-1 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 8px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -20,21 +26,6 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
 }
 
 .emotion-2 {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.emotion-3 {
-  padding-bottom: 11px;
-  border-bottom: 1px solid #cfcfcf;
-  margin-right: 2vw;
-}
-
-.emotion-4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -59,43 +50,46 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
   padding-right: 16px;
   padding-top: 11px;
   padding-bottom: 11px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid #cfcfcf;
+  margin-right: 2vw;
 }
 
-.emotion-4.Mui-focusVisible {
+.emotion-2.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-4.Mui-selected {
+.emotion-2.Mui-selected {
   background-color: rgba(51, 122, 135, 0.08);
 }
 
-.emotion-4.Mui-selected.Mui-focusVisible {
+.emotion-2.Mui-selected.Mui-focusVisible {
   background-color: rgba(51, 122, 135, 0.2);
 }
 
-.emotion-4.Mui-disabled {
+.emotion-2.Mui-disabled {
   opacity: 0.38;
 }
 
-.emotion-4.Mui-disabled {
+.emotion-2.Mui-disabled {
   opacity: 1;
 }
 
-.emotion-4.active {
+.emotion-2.active {
   background-color: #fff;
 }
 
-.emotion-4.leftNav.active {
+.emotion-2.leftNav.active {
   border-top: 1px solid #d4e9e7;
   border-bottom: 1px solid #d4e9e7;
 }
 
-.emotion-4.navLink,
-.emotion-4.navLink .MuiListItemText-root {
+.emotion-2.navLink,
+.emotion-2.navLink .MuiListItemText-root {
   color: #969696;
 }
 
-.emotion-5 {
+.emotion-3 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -107,7 +101,7 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-6 {
+.emotion-4 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -116,7 +110,7 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-7 {
+.emotion-5 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -135,41 +129,41 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
     Payload 
   </h4>
   <ul
-    class="MuiList-root MuiList-padding emotion-1 emotion-2"
+    class="MuiList-root MuiList-padding emotion-1"
   >
     <li
-      class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding opaque Mui-disabled emotion-3 emotion-4"
+      class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding Mui-disabled opaque emotion-2"
       disabled=""
     >
       <div
-        class="MuiListItemText-root MuiListItemText-multiline emotion-5"
+        class="MuiListItemText-root MuiListItemText-multiline emotion-3"
       >
         <span
-          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
         >
           Type
         </span>
         <p
-          class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-7"
+          class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-5"
         >
           test
         </p>
       </div>
     </li>
     <li
-      class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding opaque Mui-disabled emotion-3 emotion-4"
+      class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding Mui-disabled opaque emotion-2"
       disabled=""
     >
       <div
-        class="MuiListItemText-root MuiListItemText-multiline emotion-5"
+        class="MuiListItemText-root MuiListItemText-multiline emotion-3"
       >
         <span
-          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
         >
           Total Size (uncompressed)
         </span>
         <p
-          class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-7"
+          class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-5"
         >
           0 Bytes
         </p>

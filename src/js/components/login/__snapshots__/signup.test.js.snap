@@ -584,7 +584,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     class="flexbox centered"
   >
     <a
-      class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root oauth-provider emotion-0"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-0"
       href="/api/management/v1/useradm/oauth2/github"
       tabindex="0"
     >
@@ -608,7 +608,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       />
     </a>
     <a
-      class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root oauth-provider emotion-0"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-0"
       href="/api/management/v1/useradm/oauth2/google"
       tabindex="0"
     >
@@ -632,7 +632,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       />
     </a>
     <a
-      class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root oauth-provider emotion-0"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-0"
       href="/api/management/v1/useradm/oauth2/microsoft"
       tabindex="0"
     >
@@ -672,20 +672,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       class="MuiFormControl-root  required emotion-13"
     >
       <label
-        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-14"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-14"
         data-shrink="false"
         for="email"
       >
         Email *
       </label>
       <div
-        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-15"
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-15"
         required=""
         style="width: 400px; max-width: 100%;"
       >
         <input
           aria-invalid="false"
-          class="MuiInput-input MuiInputBase-input emotion-16"
+          class="MuiInputBase-input MuiInput-input emotion-16"
           id="email"
           name="email"
           placeholder="Email *"
@@ -710,20 +710,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
           class="MuiFormControl-root required emotion-13"
         >
           <label
-            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-14"
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-14"
             data-shrink="false"
             for="password_new"
           >
             Password *
           </label>
           <div
-            class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-15"
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-15"
             required=""
             style="width: 400px;"
           >
             <input
               aria-invalid="false"
-              class="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd emotion-16"
+              class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-16"
               id="password_new"
               name="password_new"
               required=""
@@ -788,20 +788,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
           class="MuiFormControl-root required emotion-13"
         >
           <label
-            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-14"
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-14"
             data-shrink="false"
             for="password_confirmation"
           >
             Confirm password *
           </label>
           <div
-            class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-15"
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-15"
             required=""
             style="width: 400px;"
           >
             <input
               aria-invalid="false"
-              class="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd emotion-16"
+              class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-16"
               id="password_confirmation"
               name="password_confirmation"
               required=""
@@ -845,7 +845,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       style="justify-content: flex-end; margin-top: 32px;"
     >
       <button
-        class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-0"
+        class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
         disabled=""
         id="login_button"
         tabindex="-1"

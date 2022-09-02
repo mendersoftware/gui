@@ -2,10 +2,6 @@
 
 exports[`RolloutSteps Component renders correctly 1`] = `
 .emotion-0 {
-  min-width: 88px;
-}
-
-.emotion-1 {
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
@@ -38,14 +34,15 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   box-sizing: border-box;
   background-color: transparent;
   border: 1px solid #f7f7f7;
+  min-width: 88px;
 }
 
-.emotion-1.Mui-disabled {
+.emotion-0.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-1 .MuiChip-avatar {
+.emotion-0 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -54,17 +51,17 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   font-size: 0.6964rem;
 }
 
-.emotion-1 .MuiChip-avatarColorPrimary {
+.emotion-0 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-1 .MuiChip-avatarColorSecondary {
+.emotion-0 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(65, 10, 46);
 }
 
-.emotion-1 .MuiChip-avatarSmall {
+.emotion-0 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -72,13 +69,13 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   font-size: 0.5804rem;
 }
 
-.emotion-1 .MuiChip-icon {
+.emotion-0 .MuiChip-icon {
   color: #bcbcbc;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-1 .MuiChip-deleteIcon {
+.emotion-0 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(10, 10, 11, 0.26);
   font-size: 22px;
@@ -86,43 +83,43 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-1 .MuiChip-deleteIcon:hover {
+.emotion-0 .MuiChip-deleteIcon:hover {
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-1.MuiChip-clickable:hover {
+.emotion-0.MuiChip-clickable:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-.emotion-1.Mui-focusVisible {
+.emotion-0.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-1 .MuiChip-avatar {
+.emotion-0 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-1 .MuiChip-avatarSmall {
+.emotion-0 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-1 .MuiChip-icon {
+.emotion-0 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-1 .MuiChip-iconSmall {
+.emotion-0 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-1 .MuiChip-deleteIcon {
+.emotion-0 .MuiChip-deleteIcon {
   margin-right: 5px;
 }
 
-.emotion-1 .MuiChip-deleteIconSmall {
+.emotion-0 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-2 {
+.emotion-1 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -130,28 +127,28 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   white-space: nowrap;
 }
 
-.emotion-3 {
+.emotion-2 {
   min-width: 120px;
 }
 
-.emotion-4 {
+.emotion-3 {
   height: 32px;
   padding-left: 8px;
   width: 100%;
 }
 
-.emotion-5 {
+.emotion-4 {
   background-color: rgba(0, 0, 0, 0.54);
   height: 3px;
   width: 100%;
   margin-right: -8px;
 }
 
-.emotion-5 svg {
+.emotion-4 svg {
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-6 {
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -168,23 +165,18 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-6 iconButton {
+.emotion-5 iconButton {
   margin-right: 8px;
 }
 
-.emotion-7 {
+.emotion-6 {
   border-left: #e9e9e9 dashed 1px;
   height: 48px;
   margin: 4px;
   margin-top: -10px;
 }
 
-.emotion-8 {
-  margin-left: -24px;
-  margin-right: -24px;
-}
-
-.emotion-9 {
+.emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -253,30 +245,32 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
+  margin-left: -24px;
+  margin-right: -24px;
 }
 
-.emotion-9::-moz-focus-inner {
+.emotion-7::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-9 {
+  .emotion-7 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-9 .MuiChip-avatar {
+.emotion-7 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -285,17 +279,17 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   font-size: 0.6964rem;
 }
 
-.emotion-9 .MuiChip-avatarColorPrimary {
+.emotion-7 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-9 .MuiChip-avatarColorSecondary {
+.emotion-7 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(65, 10, 46);
 }
 
-.emotion-9 .MuiChip-avatarSmall {
+.emotion-7 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -303,13 +297,13 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   font-size: 0.5804rem;
 }
 
-.emotion-9 .MuiChip-icon {
+.emotion-7 .MuiChip-icon {
   color: inherit;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-9 .MuiChip-deleteIcon {
+.emotion-7 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -317,33 +311,33 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-9 .MuiChip-deleteIcon:hover {
+.emotion-7 .MuiChip-deleteIcon:hover {
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-9 .MuiChip-deleteIcon:hover,
-.emotion-9 .MuiChip-deleteIcon:active {
+.emotion-7 .MuiChip-deleteIcon:hover,
+.emotion-7 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-9:hover {
+.emotion-7:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-9.Mui-focusVisible {
+.emotion-7.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-9:active {
+.emotion-7:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-9:hover,
-.emotion-9.Mui-focusVisible {
+.emotion-7:hover,
+.emotion-7.Mui-focusVisible {
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-10 {
+.emotion-8 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -360,11 +354,11 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-10 iconButton {
+.emotion-8 iconButton {
   margin-right: 8px;
 }
 
-.emotion-12 {
+.emotion-10 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -376,7 +370,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-42 {
+.emotion-35 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
@@ -393,27 +387,27 @@ exports[`RolloutSteps Component renders correctly 1`] = `
       >
         <div
           aria-label="The Artifact is downloaded (streamed) to the inactive partition."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Download
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -424,16 +418,16 @@ exports[`RolloutSteps Component renders correctly 1`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -443,37 +437,37 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Install
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -484,16 +478,16 @@ exports[`RolloutSteps Component renders correctly 1`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -503,38 +497,38 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
           aria-label="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Reboot
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -545,16 +539,16 @@ exports[`RolloutSteps Component renders correctly 1`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -564,29 +558,29 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
           aria-label="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Commit
           </span>
         </div>
       </div>
       <p
-        class="emotion-42 "
+        class="emotion-35 "
       >
         A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
          
@@ -605,10 +599,6 @@ exports[`RolloutSteps Component renders correctly 1`] = `
 
 exports[`RolloutSteps Component renders correctly 2`] = `
 .emotion-0 {
-  min-width: 88px;
-}
-
-.emotion-1 {
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
@@ -641,14 +631,15 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   box-sizing: border-box;
   background-color: transparent;
   border: 1px solid #f7f7f7;
+  min-width: 88px;
 }
 
-.emotion-1.Mui-disabled {
+.emotion-0.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-1 .MuiChip-avatar {
+.emotion-0 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -657,17 +648,17 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   font-size: 0.6964rem;
 }
 
-.emotion-1 .MuiChip-avatarColorPrimary {
+.emotion-0 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-1 .MuiChip-avatarColorSecondary {
+.emotion-0 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(65, 10, 46);
 }
 
-.emotion-1 .MuiChip-avatarSmall {
+.emotion-0 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -675,13 +666,13 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   font-size: 0.5804rem;
 }
 
-.emotion-1 .MuiChip-icon {
+.emotion-0 .MuiChip-icon {
   color: #bcbcbc;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-1 .MuiChip-deleteIcon {
+.emotion-0 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(10, 10, 11, 0.26);
   font-size: 22px;
@@ -689,43 +680,43 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-1 .MuiChip-deleteIcon:hover {
+.emotion-0 .MuiChip-deleteIcon:hover {
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-1.MuiChip-clickable:hover {
+.emotion-0.MuiChip-clickable:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-.emotion-1.Mui-focusVisible {
+.emotion-0.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-1 .MuiChip-avatar {
+.emotion-0 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-1 .MuiChip-avatarSmall {
+.emotion-0 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-1 .MuiChip-icon {
+.emotion-0 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-1 .MuiChip-iconSmall {
+.emotion-0 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-1 .MuiChip-deleteIcon {
+.emotion-0 .MuiChip-deleteIcon {
   margin-right: 5px;
 }
 
-.emotion-1 .MuiChip-deleteIconSmall {
+.emotion-0 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-2 {
+.emotion-1 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -733,28 +724,28 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   white-space: nowrap;
 }
 
-.emotion-3 {
+.emotion-2 {
   min-width: 120px;
 }
 
-.emotion-4 {
+.emotion-3 {
   height: 32px;
   padding-left: 8px;
   width: 100%;
 }
 
-.emotion-5 {
+.emotion-4 {
   background-color: rgba(0, 0, 0, 0.54);
   height: 3px;
   width: 100%;
   margin-right: -8px;
 }
 
-.emotion-5 svg {
+.emotion-4 svg {
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-6 {
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -771,23 +762,18 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-6 iconButton {
+.emotion-5 iconButton {
   margin-right: 8px;
 }
 
-.emotion-7 {
+.emotion-6 {
   border-left: #e9e9e9 dashed 1px;
   height: 48px;
   margin: 4px;
   margin-top: -10px;
 }
 
-.emotion-8 {
-  margin-left: -24px;
-  margin-right: -24px;
-}
-
-.emotion-9 {
+.emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -856,30 +842,32 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
+  margin-left: -24px;
+  margin-right: -24px;
 }
 
-.emotion-9::-moz-focus-inner {
+.emotion-7::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-9 {
+  .emotion-7 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-9 .MuiChip-avatar {
+.emotion-7 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -888,17 +876,17 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   font-size: 0.6964rem;
 }
 
-.emotion-9 .MuiChip-avatarColorPrimary {
+.emotion-7 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-9 .MuiChip-avatarColorSecondary {
+.emotion-7 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(65, 10, 46);
 }
 
-.emotion-9 .MuiChip-avatarSmall {
+.emotion-7 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -906,13 +894,13 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   font-size: 0.5804rem;
 }
 
-.emotion-9 .MuiChip-icon {
+.emotion-7 .MuiChip-icon {
   color: inherit;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-9 .MuiChip-deleteIcon {
+.emotion-7 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -920,33 +908,33 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-9 .MuiChip-deleteIcon:hover {
+.emotion-7 .MuiChip-deleteIcon:hover {
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-9 .MuiChip-deleteIcon:hover,
-.emotion-9 .MuiChip-deleteIcon:active {
+.emotion-7 .MuiChip-deleteIcon:hover,
+.emotion-7 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-9:hover {
+.emotion-7:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-9.Mui-focusVisible {
+.emotion-7.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-9:active {
+.emotion-7:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-9:hover,
-.emotion-9.Mui-focusVisible {
+.emotion-7:hover,
+.emotion-7.Mui-focusVisible {
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-10 {
+.emotion-8 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -963,11 +951,11 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-10 iconButton {
+.emotion-8 iconButton {
   margin-right: 8px;
 }
 
-.emotion-12 {
+.emotion-10 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -979,7 +967,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   border-radius: inherit;
 }
 
-.emotion-42 {
+.emotion-35 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
@@ -996,27 +984,27 @@ exports[`RolloutSteps Component renders correctly 2`] = `
       >
         <div
           aria-label="The Artifact is downloaded (streamed) to the inactive partition."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Download
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1027,16 +1015,16 @@ exports[`RolloutSteps Component renders correctly 2`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1046,37 +1034,37 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Install
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1087,16 +1075,16 @@ exports[`RolloutSteps Component renders correctly 2`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1106,38 +1094,38 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
           aria-label="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Reboot
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1148,16 +1136,16 @@ exports[`RolloutSteps Component renders correctly 2`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1167,29 +1155,29 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
           aria-label="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Commit
           </span>
         </div>
       </div>
       <p
-        class="emotion-42 "
+        class="emotion-35 "
       >
         A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
          
@@ -1208,10 +1196,6 @@ exports[`RolloutSteps Component renders correctly 2`] = `
 
 exports[`RolloutSteps Component renders correctly 3`] = `
 .emotion-0 {
-  min-width: 88px;
-}
-
-.emotion-1 {
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
@@ -1244,14 +1228,15 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   box-sizing: border-box;
   background-color: transparent;
   border: 1px solid #f7f7f7;
+  min-width: 88px;
 }
 
-.emotion-1.Mui-disabled {
+.emotion-0.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-1 .MuiChip-avatar {
+.emotion-0 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -1260,17 +1245,17 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   font-size: 0.6964rem;
 }
 
-.emotion-1 .MuiChip-avatarColorPrimary {
+.emotion-0 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-1 .MuiChip-avatarColorSecondary {
+.emotion-0 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(65, 10, 46);
 }
 
-.emotion-1 .MuiChip-avatarSmall {
+.emotion-0 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -1278,13 +1263,13 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   font-size: 0.5804rem;
 }
 
-.emotion-1 .MuiChip-icon {
+.emotion-0 .MuiChip-icon {
   color: #bcbcbc;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-1 .MuiChip-deleteIcon {
+.emotion-0 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(10, 10, 11, 0.26);
   font-size: 22px;
@@ -1292,43 +1277,43 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-1 .MuiChip-deleteIcon:hover {
+.emotion-0 .MuiChip-deleteIcon:hover {
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-1.MuiChip-clickable:hover {
+.emotion-0.MuiChip-clickable:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-.emotion-1.Mui-focusVisible {
+.emotion-0.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-1 .MuiChip-avatar {
+.emotion-0 .MuiChip-avatar {
   margin-left: 4px;
 }
 
-.emotion-1 .MuiChip-avatarSmall {
+.emotion-0 .MuiChip-avatarSmall {
   margin-left: 2px;
 }
 
-.emotion-1 .MuiChip-icon {
+.emotion-0 .MuiChip-icon {
   margin-left: 4px;
 }
 
-.emotion-1 .MuiChip-iconSmall {
+.emotion-0 .MuiChip-iconSmall {
   margin-left: 2px;
 }
 
-.emotion-1 .MuiChip-deleteIcon {
+.emotion-0 .MuiChip-deleteIcon {
   margin-right: 5px;
 }
 
-.emotion-1 .MuiChip-deleteIconSmall {
+.emotion-0 .MuiChip-deleteIconSmall {
   margin-right: 3px;
 }
 
-.emotion-2 {
+.emotion-1 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 12px;
@@ -1336,28 +1321,28 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   white-space: nowrap;
 }
 
-.emotion-3 {
+.emotion-2 {
   min-width: 120px;
 }
 
-.emotion-4 {
+.emotion-3 {
   height: 32px;
   padding-left: 8px;
   width: 100%;
 }
 
-.emotion-5 {
+.emotion-4 {
   background-color: rgba(0, 0, 0, 0.54);
   height: 3px;
   width: 100%;
   margin-right: -8px;
 }
 
-.emotion-5 svg {
+.emotion-4 svg {
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-6 {
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1374,23 +1359,18 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-6 iconButton {
+.emotion-5 iconButton {
   margin-right: 8px;
 }
 
-.emotion-7 {
+.emotion-6 {
   border-left: #e9e9e9 dashed 1px;
   height: 48px;
   margin: 4px;
   margin-top: -10px;
 }
 
-.emotion-8 {
-  margin-left: -24px;
-  margin-right: -24px;
-}
-
-.emotion-9 {
+.emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1459,30 +1439,32 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
+  margin-left: -24px;
+  margin-right: -24px;
 }
 
-.emotion-9::-moz-focus-inner {
+.emotion-7::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-9 {
+  .emotion-7 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-9 .MuiChip-avatar {
+.emotion-7 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -1491,17 +1473,17 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   font-size: 0.6964rem;
 }
 
-.emotion-9 .MuiChip-avatarColorPrimary {
+.emotion-7 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-9 .MuiChip-avatarColorSecondary {
+.emotion-7 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(65, 10, 46);
 }
 
-.emotion-9 .MuiChip-avatarSmall {
+.emotion-7 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -1509,13 +1491,13 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   font-size: 0.5804rem;
 }
 
-.emotion-9 .MuiChip-icon {
+.emotion-7 .MuiChip-icon {
   color: inherit;
   margin-left: 5px;
   margin-right: -6px;
 }
 
-.emotion-9 .MuiChip-deleteIcon {
+.emotion-7 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(255, 255, 255, 0.7);
   font-size: 22px;
@@ -1523,33 +1505,33 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   margin: 0 5px 0 -6px;
 }
 
-.emotion-9 .MuiChip-deleteIcon:hover {
+.emotion-7 .MuiChip-deleteIcon:hover {
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-9 .MuiChip-deleteIcon:hover,
-.emotion-9 .MuiChip-deleteIcon:active {
+.emotion-7 .MuiChip-deleteIcon:hover,
+.emotion-7 .MuiChip-deleteIcon:active {
   color: #fff;
 }
 
-.emotion-9:hover {
+.emotion-7:hover {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-9.Mui-focusVisible {
+.emotion-7.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.emotion-9:active {
+.emotion-7:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-9:hover,
-.emotion-9.Mui-focusVisible {
+.emotion-7:hover,
+.emotion-7.Mui-focusVisible {
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-10 {
+.emotion-8 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1566,11 +1548,11 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-10 iconButton {
+.emotion-8 iconButton {
   margin-right: 8px;
 }
 
-.emotion-12 {
+.emotion-10 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -1582,7 +1564,7 @@ exports[`RolloutSteps Component renders correctly 3`] = `
   border-radius: inherit;
 }
 
-.emotion-42 {
+.emotion-35 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
@@ -1599,27 +1581,27 @@ exports[`RolloutSteps Component renders correctly 3`] = `
       >
         <div
           aria-label="The Artifact is downloaded (streamed) to the inactive partition."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Download
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1630,16 +1612,16 @@ exports[`RolloutSteps Component renders correctly 3`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1649,37 +1631,37 @@ exports[`RolloutSteps Component renders correctly 3`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Install
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1690,16 +1672,16 @@ exports[`RolloutSteps Component renders correctly 3`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1709,38 +1691,38 @@ exports[`RolloutSteps Component renders correctly 3`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
           aria-label="The device will reboot and the installed update will be active when the device boots up again. As changes are not yet committed, the update is not persistent and the device will still roll back again on the next reboot."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Reboot
           </span>
         </div>
         <div
-          class="flexbox column center-aligned emotion-3"
+          class="flexbox column center-aligned emotion-2"
         >
           <div
-            class="flexbox centered emotion-4"
+            class="flexbox centered emotion-3"
           >
             <div
-              class="emotion-5"
+              class="emotion-4"
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
               data-testid="ArrowRightIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1751,16 +1733,16 @@ exports[`RolloutSteps Component renders correctly 3`] = `
             </svg>
           </div>
           <div
-            class="emotion-7"
+            class="emotion-6"
           />
           <div
-            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-8 emotion-9"
+            class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-7"
             role="button"
             tabindex="0"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiChip-icon MuiChip-iconMedium MuiChip-iconColorPrimary emotion-8"
               data-testid="AddIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1770,29 +1752,29 @@ exports[`RolloutSteps Component renders correctly 3`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
             >
               Add a pause
             </span>
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-10"
             />
           </div>
         </div>
         <div
           aria-label="If the update passes integrity checks, Mender will mark the update as successful and continue running from this partition. The commit makes the update persistent."
-          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0 emotion-1"
+          class="MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorDefault MuiChip-outlinedDefault emotion-0"
           data-mui-internal-clone-element="true"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-1"
           >
             Commit
           </span>
         </div>
       </div>
       <p
-        class="emotion-42 "
+        class="emotion-35 "
       >
         A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI.
          

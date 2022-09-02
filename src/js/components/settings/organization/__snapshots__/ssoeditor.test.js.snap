@@ -415,7 +415,7 @@ exports[`SSOEditor Component renders correctly 1`] = `
       style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
     />
     <div
-      data-test="sentinelStart"
+      data-testid="sentinelStart"
       tabindex="0"
     />
     <div
@@ -442,7 +442,7 @@ exports[`SSOEditor Component renders correctly 1`] = `
               type="file"
             />
             <button
-              class="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-3"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-3"
               tabindex="0"
               type="button"
             >
@@ -532,7 +532,7 @@ exports[`SSOEditor Component renders correctly 1`] = `
           class="flexbox center-aligned"
         >
           <button
-            class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-12"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-12"
             tabindex="0"
             type="button"
           >
@@ -542,7 +542,7 @@ exports[`SSOEditor Component renders correctly 1`] = `
             />
           </button>
           <button
-            class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-12"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-12"
             tabindex="0"
             type="button"
           >
@@ -552,7 +552,7 @@ exports[`SSOEditor Component renders correctly 1`] = `
             />
           </button>
           <button
-            class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-12"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-12"
             tabindex="0"
             type="button"
           >
@@ -580,7 +580,7 @@ exports[`SSOEditor Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      data-test="sentinelEnd"
+      data-testid="sentinelEnd"
       tabindex="0"
     />
   </div>
