@@ -49,7 +49,7 @@ describe('App Component', () => {
         <App />
       </Provider>
     );
-    const view = baseElement.firstChild;
+    const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
