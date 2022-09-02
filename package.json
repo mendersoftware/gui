@@ -68,7 +68,7 @@
     "@testing-library/user-event": "^13.5.0",
     "assert": "^2.0.0",
     "autoprefixer": "^10.4.8",
-    "axios-mock-adapter": "^1.21.1",
+    "axios-mock-adapter": "^1.21.2",
     "babel-jest": "~29.0.1",
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^4.0.0",
