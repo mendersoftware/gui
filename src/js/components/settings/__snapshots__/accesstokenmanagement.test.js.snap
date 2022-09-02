@@ -918,11 +918,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         class="MuiFormControl-root MuiTextField-root emotion-4 required emotion-5"
       >
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-6"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-6"
         >
           <input
             aria-invalid="false"
-            class="MuiInputBase-input MuiInput-input Mui-disabled emotion-7"
+            class="MuiInput-input MuiInputBase-input Mui-disabled emotion-7"
             disabled=""
             id="mui-8"
             placeholder="Name"
@@ -937,19 +937,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         class="MuiFormControl-root emotion-4 emotion-9"
       >
         <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-10"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-10"
           data-shrink="true"
         >
           Expiration
         </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl  emotion-11"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl  emotion-11"
         >
           <div
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
-            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiInputBase-input MuiInput-input Mui-disabled emotion-12"
+            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiInput-input MuiInputBase-input Mui-disabled emotion-12"
             role="button"
           >
             a year
@@ -1031,7 +1031,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
     class="MuiDialogActions-root MuiDialogActions-spacing emotion-20"
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-21"
+      class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-21"
       disabled=""
       tabindex="-1"
       type="button"
@@ -1251,7 +1251,7 @@ exports[`UserManagement Component renders AccessTokenRevocationDialog correctly 
     class="MuiDialogActions-root MuiDialogActions-spacing emotion-3"
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-4"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-4"
       tabindex="0"
       type="button"
     >
@@ -1261,7 +1261,7 @@ exports[`UserManagement Component renders AccessTokenRevocationDialog correctly 
       />
     </button>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-4"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-4"
       tabindex="0"
       type="button"
     >
@@ -1390,7 +1390,7 @@ exports[`UserManagement Component renders correctly 1`] = `
     Personal access token management
   </p>
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-1"
+    class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-1"
     tabindex="0"
     type="button"
   >

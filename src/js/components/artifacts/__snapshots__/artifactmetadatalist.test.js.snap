@@ -119,7 +119,7 @@ exports[`ArtifactPayload Component renders correctly 1`] = `
       class=""
     >
       <li
-        class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-1"
+        class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2"

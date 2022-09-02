@@ -777,7 +777,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     style="display: grid; grid-template-columns: calc(600px + 2vw) 300px;"
   >
     <li
-      class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding emotion-1 emotion-2"
+      class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1 emotion-2"
     >
       <div
         class="MuiListItemText-root MuiListItemText-multiline emotion-3"
@@ -793,11 +793,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-5"
         >
           <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-6"
+            class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-6"
             style="width: 100%;"
           >
             <input
-              class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-7"
+              class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-7"
               disabled=""
               id="artifact-description"
               placeholder="-"
@@ -833,7 +833,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       </div>
     </li>
     <li
-      class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding emotion-1 undefined emotion-2"
+      class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-1 undefined emotion-2"
     >
       <div
         class="MuiListItemText-root MuiListItemText-multiline emotion-3"
@@ -920,7 +920,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
     style="max-width: fit-content;"
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled  emotion-30"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled  emotion-30"
       disabled=""
       tabindex="-1"
       target="_blank"
@@ -945,7 +945,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       Download Artifact
     </button>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-30"
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-30"
       tabindex="0"
       type="button"
     >

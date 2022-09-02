@@ -1016,7 +1016,7 @@ label+.emotion-15 {
       style="margin-top: 0px; margin-bottom: 15px;"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-2"
+        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-2"
         data-shrink="true"
         for="filter-selection"
         id="filter-selection-label"
@@ -1024,7 +1024,7 @@ label+.emotion-15 {
         Attribute
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-3"
+        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot emotion-3"
       >
         <input
           aria-autocomplete="both"
@@ -1032,7 +1032,7 @@ label+.emotion-15 {
           aria-invalid="false"
           autocapitalize="none"
           autocomplete="off"
-          class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
+          class="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
           id="filter-selection"
           role="combobox"
           spellcheck="false"
@@ -1069,12 +1069,12 @@ label+.emotion-15 {
     </div>
   </div>
   <div
-    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary margin-left-small margin-right-small emotion-9"
+    class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary margin-left-small margin-right-small emotion-9"
   >
     <div
       aria-expanded="false"
       aria-haspopup="listbox"
-      class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-10"
+      class="MuiSelect-select MuiSelect-standard MuiInput-input MuiInputBase-input emotion-10"
       role="button"
       tabindex="0"
     >
@@ -1107,7 +1107,7 @@ label+.emotion-15 {
     style="margin-top: 0px; margin-bottom: 15px;"
   >
     <label
-      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-2"
+      class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled emotion-2"
       data-shrink="true"
       for="mui-1"
       id="mui-1-label"
@@ -1115,11 +1115,11 @@ label+.emotion-15 {
       Value
     </label>
     <div
-      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-15"
+      class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-15"
     >
       <input
         aria-invalid="false"
-        class="MuiInputBase-input MuiInput-input emotion-4"
+        class="MuiInput-input MuiInputBase-input emotion-4"
         id="mui-1"
         type="text"
         value="testvalue"

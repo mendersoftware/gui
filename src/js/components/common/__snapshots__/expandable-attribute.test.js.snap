@@ -91,7 +91,7 @@ exports[`ExpandableAttribute Component renders correctly 1`] = `
   class=""
 >
   <li
-    class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-0"
+    class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-divider emotion-0"
   >
     <div
       class="MuiListItemText-root emotion-1"

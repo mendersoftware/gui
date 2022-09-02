@@ -498,7 +498,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
       class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-4"
+        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-4"
         data-shrink="true"
         for="mui-2"
         id="mui-2-label"
@@ -506,11 +506,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         Azure IoT Hub connection string
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
+        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
       >
         <textarea
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+          class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
           disabled=""
           id="mui-2"
           style="height: 0px; overflow: hidden;"
@@ -519,7 +519,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         </textarea>
         <textarea
           aria-hidden="true"
-          class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+          class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
           readonly=""
           style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
           tabindex="-1"
@@ -530,7 +530,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
       class="flexbox"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-8 emotion-9"
+        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root emotion-8 emotion-9"
         tabindex="0"
         type="button"
       >
@@ -540,7 +540,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-9"
+        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-9"
         tabindex="0"
         type="button"
       >
@@ -596,7 +596,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
           data-shrink="false"
           for="mui-3"
           id="mui-3-label"
@@ -604,18 +604,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           Key ID
         </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
         >
           <textarea
             aria-invalid="false"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             disabled=""
             id="mui-3"
             style="height: 0px; overflow: hidden;"
           />
           <textarea
             aria-hidden="true"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             readonly=""
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
             tabindex="-1"
@@ -626,7 +626,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
           data-shrink="false"
           for="mui-4"
           id="mui-4-label"
@@ -634,18 +634,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           Key Secret
         </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
         >
           <textarea
             aria-invalid="false"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             disabled=""
             id="mui-4"
             style="height: 0px; overflow: hidden;"
           />
           <textarea
             aria-hidden="true"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             readonly=""
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
             tabindex="-1"
@@ -656,7 +656,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
           data-shrink="false"
           for="mui-5"
           id="mui-5-label"
@@ -664,18 +664,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           Region
         </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
         >
           <textarea
             aria-invalid="false"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             disabled=""
             id="mui-5"
             style="height: 0px; overflow: hidden;"
           />
           <textarea
             aria-hidden="true"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             readonly=""
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
             tabindex="-1"
@@ -686,7 +686,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         class="MuiFormControl-root MuiTextField-root emotion-2 emotion-3"
       >
         <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled emotion-23"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-23"
           data-shrink="false"
           for="mui-6"
           id="mui-6-label"
@@ -694,18 +694,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           Device Policy Name
         </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-5"
         >
           <textarea
             aria-invalid="false"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             disabled=""
             id="mui-6"
             style="height: 0px; overflow: hidden;"
           />
           <textarea
             aria-hidden="true"
-            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
+            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-6"
             readonly=""
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
             tabindex="-1"
@@ -717,7 +717,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
       class="flexbox"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-8 emotion-9"
+        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root emotion-8 emotion-9"
         tabindex="0"
         type="button"
       >
@@ -727,7 +727,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-9"
+        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-9"
         tabindex="0"
         type="button"
       >

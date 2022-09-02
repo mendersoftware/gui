@@ -498,7 +498,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
       class="MuiFormControl-root MuiTextField-root emotion-1 emotion-2"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-3"
+        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-3"
         data-shrink="true"
         for="mui-1"
         id="mui-1-label"
@@ -506,11 +506,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
         Email
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-4"
+        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-4"
       >
         <input
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input Mui-disabled emotion-5"
+          class="MuiInput-input MuiInputBase-input Mui-disabled emotion-5"
           disabled=""
           id="mui-1"
           type="text"
@@ -531,10 +531,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
       class="MuiSwitch-root MuiSwitch-sizeMedium emotion-6"
     >
       <span
-        class="MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary emotion-7"
+        class="MuiSwitch-switchBase MuiSwitch-colorPrimary MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root emotion-7"
       >
         <input
-          class="PrivateSwitchBase-input MuiSwitch-input emotion-8"
+          class="MuiSwitch-input PrivateSwitchBase-input emotion-8"
           type="checkbox"
         />
         <span

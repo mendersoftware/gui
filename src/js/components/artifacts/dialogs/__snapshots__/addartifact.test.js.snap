@@ -469,7 +469,7 @@ exports[`AddArtifact Component renders correctly 1`] = `
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-10"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-11"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-11"
           tabindex="0"
           type="button"
         >
@@ -482,7 +482,7 @@ exports[`AddArtifact Component renders correctly 1`] = `
           style="flex-grow: 1;"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-13"
+          class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-13"
           disabled=""
           tabindex="-1"
           type="button"

@@ -228,7 +228,7 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="MuiTooltip-popper emotion-1 MuiTooltip-popperInteractive emotion-2 MuiPopperUnstyled-root"
+    class="emotion-1 MuiTooltip-popper MuiTooltip-popperInteractive emotion-2 MuiPopperUnstyled-root"
     data-popper-escaped=""
     data-popper-placement="bottom"
     data-popper-reference-hidden=""
@@ -237,7 +237,7 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
     style="position: absolute; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
   >
     <div
-      class="MuiTooltip-tooltip emotion-3 MuiTooltip-tooltipPlacementBottom emotion-4"
+      class="emotion-3 MuiTooltip-tooltip MuiTooltip-tooltipPlacementBottom emotion-4"
       style="opacity: 1; transform: scale(1, 1); transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 133ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
     >
       <div
@@ -253,7 +253,7 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
           class="flexbox centered"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root emotion-5 MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-5 emotion-7"
+            class="emotion-5 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root emotion-5 emotion-7"
             tabindex="0"
             type="button"
           >

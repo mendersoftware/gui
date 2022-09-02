@@ -427,7 +427,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-16"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-17"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-17"
           tabindex="0"
           type="button"
         >

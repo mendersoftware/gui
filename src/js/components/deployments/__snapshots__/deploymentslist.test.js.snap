@@ -449,7 +449,7 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-1 emotion-2"
+        class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root emotion-1 emotion-2"
         tabindex="0"
         type="button"
       >
@@ -585,7 +585,7 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-1 emotion-2"
+        class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root emotion-1 emotion-2"
         tabindex="0"
         type="button"
       >

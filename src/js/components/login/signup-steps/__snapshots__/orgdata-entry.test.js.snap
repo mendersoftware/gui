@@ -557,20 +557,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       class="MuiFormControl-root  required emotion-0"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-1"
+        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
         data-shrink="false"
         for="name"
       >
         Company or organization name *
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         required=""
         style="width: 400px; max-width: 100%;"
       >
         <input
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input emotion-3"
+          class="MuiInput-input MuiInputBase-input emotion-3"
           id="name"
           name="name"
           placeholder="Company or organization name *"
@@ -588,20 +588,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       class="MuiFormControl-root  required emotion-0"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-1"
+        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
         data-shrink="false"
         for="email"
       >
         Email *
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
+        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
         required=""
         style="width: 400px; max-width: 100%;"
       >
         <input
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input emotion-3"
+          class="MuiInput-input MuiInputBase-input emotion-3"
           id="email"
           name="email"
           placeholder="Email *"
@@ -619,7 +619,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-10"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-11"
+        class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-11"
       >
         <input
           class="PrivateSwitchBase-input emotion-12"
@@ -677,7 +677,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-10"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-11"
+        class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-11"
       >
         <input
           class="PrivateSwitchBase-input emotion-12"
@@ -718,7 +718,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       style="justify-content: flex-end; margin-top: 32px;"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-22"
+        class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-22"
         disabled=""
         id="login_button"
         tabindex="-1"

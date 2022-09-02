@@ -283,7 +283,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
   class="MuiFormControl-root MuiTextField-root emotion-0 emotion-1"
 >
   <div
-    class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedStart MuiInputBase-adornedEnd emotion-2"
+    class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedStart MuiInputBase-adornedEnd emotion-2"
   >
     <div
       class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-standard MuiInputAdornment-sizeSmall emotion-3"
@@ -307,7 +307,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
     </div>
     <input
       aria-invalid="false"
-      class="MuiInputBase-input MuiInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd emotion-5"
+      class="MuiInput-input MuiInputBase-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd emotion-5"
       id="mui-1"
       placeholder="Search devices"
       type="text"

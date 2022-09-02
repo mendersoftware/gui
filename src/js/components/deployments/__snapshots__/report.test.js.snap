@@ -69,7 +69,7 @@ exports[`DeploymentReport Component renders correctly 1`] = `
             aria-label=\\"Devices that have not yet started the deployment will not start the deployment.
 Devices that have already completed the deployment are not affected by the abort.
 Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.\\"
-            class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium  css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
+            class=\\"MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
             data-mui-internal-clone-element=\\"true\\"
             tabindex=\\"0\\"
             type=\\"button\\"
@@ -563,7 +563,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
             >
               <div
-                class=\\"MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer\\"
+                class=\\"flexbox no-basis MuiTablePagination-spacer css-1psng7p-MuiTablePagination-spacer\\"
               />
               <p
                 class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
@@ -579,7 +579,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                   aria-expanded=\\"false\\"
                   aria-haspopup=\\"listbox\\"
                   
-                  class=\\"MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
+                  class=\\"MuiTablePagination-select MuiSelect-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
                   
                   role=\\"button\\"
                   tabindex=\\"0\\"
@@ -594,7 +594,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                 />
                 <svg
                   aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
+                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTablePagination-selectIcon MuiSelect-icon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
                   data-testid=\\"ArrowDropDownIcon\\"
                   focusable=\\"false\\"
                   viewBox=\\"0 0 24 24\\"

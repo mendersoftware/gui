@@ -691,7 +691,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
       style="margin-top: 10px;"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-15"
+        class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-15"
       >
         <input
           class="PrivateSwitchBase-input emotion-16"
@@ -751,7 +751,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
       style="margin-top: 10px;"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-15"
+        class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-15"
       >
         <input
           class="PrivateSwitchBase-input emotion-16"
@@ -838,18 +838,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-30"
       >
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-31"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-31"
         >
           <textarea
             aria-invalid="false"
-            class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline emotion-32"
+            class="MuiInput-input MuiInputBase-input MuiInputBase-inputMultiline emotion-32"
             id="mui-1"
             placeholder="If you have any questions regarding plan pricing or device limits, leave us a message and we'll respond as soon as we can."
             style="height: 0px; overflow: hidden;"
           />
           <textarea
             aria-hidden="true"
-            class="MuiInputBase-input MuiInput-input MuiInputBase-inputMultiline emotion-32"
+            class="MuiInput-input MuiInputBase-input MuiInputBase-inputMultiline emotion-32"
             readonly=""
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
             tabindex="-1"
@@ -861,7 +861,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
       We'll send you a confirmation of any changes to your subscription.
     </p>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled margin-top margin-bottom emotion-34"
+      class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled margin-top margin-bottom emotion-34"
       disabled=""
       style="align-self: flex-start;"
       tabindex="-1"

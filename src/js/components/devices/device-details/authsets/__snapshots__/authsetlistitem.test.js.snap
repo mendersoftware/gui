@@ -516,7 +516,7 @@ exports[`AuthsetListItem Component renders correctly 1`] = `
             class="MuiAccordionActions-root MuiAccordionActions-spacing margin-right-small emotion-8"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium margin-right-small emotion-9"
+              class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root margin-right-small emotion-9"
               tabindex="0"
               type="button"
             >
@@ -526,7 +526,7 @@ exports[`AuthsetListItem Component renders correctly 1`] = `
               />
             </button>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium  emotion-11"
+              class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-11"
               tabindex="0"
               type="button"
             >

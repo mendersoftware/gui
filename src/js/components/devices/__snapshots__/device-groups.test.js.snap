@@ -20,7 +20,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         role=\\"group\\"
       >
         <button
-          class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
+          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >
@@ -30,7 +30,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </button>
         <button
-          class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e8ajgx-MuiButtonBase-root-MuiButton-root\\"
+          class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root tss-1q5gdbl-buttonStyle MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary css-1e8ajgx-MuiButtonBase-root-MuiButton-root\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >
@@ -68,7 +68,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         class=\\"MuiList-root MuiList-padding css-h4y409-MuiList-root\\"
       >
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
+          class=\\"MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
           role=\\"button\\"
           tabindex=\\"0\\"
         >
@@ -86,7 +86,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </div>
         <li
-          class=\\"MuiListSubheader-root heading-lined tss-qt6h77-header css-w3e8pi-MuiListSubheader-root\\"
+          class=\\"heading-lined MuiListSubheader-root tss-qt6h77-header css-w3e8pi-MuiListSubheader-root\\"
         >
           <span
             class=\\"tss-1nyp150-groupHeading\\"
@@ -98,7 +98,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </li>
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
+          class=\\"MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
           role=\\"button\\"
           tabindex=\\"0\\"
         >
@@ -116,7 +116,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </div>
         <li
-          class=\\"MuiListSubheader-root heading-lined tss-qt6h77-header css-w3e8pi-MuiListSubheader-root\\"
+          class=\\"heading-lined MuiListSubheader-root tss-qt6h77-header css-w3e8pi-MuiListSubheader-root\\"
         >
           <span
             class=\\"tss-1nyp150-groupHeading\\"
@@ -128,7 +128,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </li>
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
+          class=\\"MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
           role=\\"button\\"
           tabindex=\\"0\\"
         >
@@ -146,7 +146,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </div>
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
+          class=\\"MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
           role=\\"button\\"
           style=\\"margin-top: 30px;\\"
           tabindex=\\"0\\"
@@ -208,13 +208,13 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               >
                 Status:
                 <div
-                  class=\\"MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary  css-9qara2-MuiInputBase-root-MuiInput-root-MuiSelect-root\\"
+                  class=\\"MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary  css-9qara2-MuiInputBase-root-MuiInput-root-MuiSelect-root\\"
                   style=\\"font-size: 13px; margin-left: 8px; margin-top: 2px;\\"
                 >
                   <div
                     aria-expanded=\\"false\\"
                     aria-haspopup=\\"listbox\\"
-                    class=\\"MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input css-emq5k1-MuiSelect-select-MuiInputBase-input-MuiInput-input\\"
+                    class=\\"MuiSelect-select MuiSelect-standard MuiInput-input MuiInputBase-input css-emq5k1-MuiSelect-select-MuiInputBase-input-MuiInput-input\\"
                     role=\\"button\\"
                     tabindex=\\"0\\"
                   >
@@ -259,7 +259,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               </div>
             </div>
             <button
-              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
+              class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
               tabindex=\\"0\\"
               type=\\"button\\"
             >
@@ -292,7 +292,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             class=\\"flexbox centered filter-header \\"
           >
             <button
-              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium  css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
+              class=\\"MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
               style=\\"background-color: transparent;\\"
               tabindex=\\"0\\"
               type=\\"button\\"
@@ -316,7 +316,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             </button>
           </div>
           <button
-            class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
+            class=\\"MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
             style=\\"text-transform: none;\\"
             tabindex=\\"0\\"
             type=\\"button\\"
@@ -378,7 +378,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class=\\"MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
+                  class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
                 >
                   <input
                     class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
@@ -552,7 +552,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class=\\"MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
+                  class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
                 >
                   <input
                     class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
@@ -622,7 +622,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class=\\"MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
+                  class=\\"MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
                 >
                   <input
                     class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
@@ -698,7 +698,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
               >
                 <div
-                  class=\\"MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer\\"
+                  class=\\"flexbox no-basis MuiTablePagination-spacer css-1psng7p-MuiTablePagination-spacer\\"
                 />
                 <p
                   class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
@@ -714,7 +714,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                     aria-expanded=\\"false\\"
                     aria-haspopup=\\"listbox\\"
                     
-                    class=\\"MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
+                    class=\\"MuiTablePagination-select MuiSelect-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
                     
                     role=\\"button\\"
                     tabindex=\\"0\\"
@@ -729,7 +729,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   />
                   <svg
                     aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
+                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTablePagination-selectIcon MuiSelect-icon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
                     data-testid=\\"ArrowDropDownIcon\\"
                     focusable=\\"false\\"
                     viewBox=\\"0 0 24 24\\"

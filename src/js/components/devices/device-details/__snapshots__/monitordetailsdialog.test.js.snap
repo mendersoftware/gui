@@ -629,7 +629,7 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
         style="min-width: 600px;"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 MuiAccordion-root ForwardRef(Accordion)-root-1 MuiAccordion-gutters emotion-6"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 ForwardRef(Accordion)-root-1 MuiAccordion-root MuiAccordion-gutters emotion-6"
         >
           <div
             aria-expanded="false"
@@ -799,7 +799,7 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-24"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-25"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-25"
           tabindex="0"
           type="button"
         >
@@ -809,7 +809,7 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium  emotion-27"
+          class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-27"
           tabindex="0"
           type="button"
         >
@@ -1160,7 +1160,7 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-9"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-10"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-10"
           tabindex="0"
           type="button"
         >

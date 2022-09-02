@@ -224,7 +224,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
       >
         <div
-          class=\\"MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer\\"
+          class=\\"flexbox no-basis MuiTablePagination-spacer css-1psng7p-MuiTablePagination-spacer\\"
         />
         <p
           class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
@@ -240,7 +240,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             aria-expanded=\\"false\\"
             aria-haspopup=\\"listbox\\"
             
-            class=\\"MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
+            class=\\"MuiTablePagination-select MuiSelect-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
             
             role=\\"button\\"
             tabindex=\\"0\\"
@@ -255,7 +255,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           />
           <svg
             aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTablePagination-selectIcon MuiSelect-icon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
             data-testid=\\"ArrowDropDownIcon\\"
             focusable=\\"false\\"
             viewBox=\\"0 0 24 24\\"

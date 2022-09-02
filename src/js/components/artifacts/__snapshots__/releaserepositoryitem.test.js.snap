@@ -794,7 +794,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
       tabindex="0"
     >
       <div
-        class="MuiAccordionSummary-content repo-item MuiAccordionSummary-contentGutters emotion-3"
+        class="repo-item MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-3"
       >
         <div
           aria-label="test-type"
@@ -861,7 +861,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   style="display: grid; grid-template-columns: calc(600px + 2vw) 300px;"
                 >
                   <li
-                    class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding emotion-12 emotion-13"
+                    class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-12 emotion-13"
                   >
                     <div
                       class="MuiListItemText-root MuiListItemText-multiline emotion-14"
@@ -877,11 +877,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                         class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-16"
                       >
                         <div
-                          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-17"
+                          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-17"
                           style="width: 100%;"
                         >
                           <input
-                            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-18"
+                            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-18"
                             disabled=""
                             id="artifact-description"
                             placeholder="-"
@@ -917,7 +917,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     </div>
                   </li>
                   <li
-                    class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding emotion-12 undefined emotion-13"
+                    class="attributes MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-12 undefined emotion-13"
                   >
                     <div
                       class="MuiListItemText-root MuiListItemText-multiline emotion-14"
@@ -1004,7 +1004,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   style="max-width: fit-content;"
                 >
                   <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled  emotion-41"
+                    class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled  emotion-41"
                     disabled=""
                     tabindex="-1"
                     target="_blank"
@@ -1029,7 +1029,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     Download Artifact
                   </button>
                   <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-41"
+                    class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-41"
                     tabindex="0"
                     type="button"
                   >

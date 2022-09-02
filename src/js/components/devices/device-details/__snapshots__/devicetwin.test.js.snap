@@ -489,7 +489,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
               style="align-items: flex-start; justify-content: flex-end;"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium  emotion-6"
+                class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-6"
                 tabindex="0"
                 type="button"
               >
@@ -524,7 +524,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
                 </div>
               </div>
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-8"
+                class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-8"
                 tabindex="0"
                 type="button"
               >

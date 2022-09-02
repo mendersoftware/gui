@@ -858,7 +858,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -907,7 +907,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -956,7 +956,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -1005,7 +1005,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -1054,7 +1054,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -1103,7 +1103,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -1152,7 +1152,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -1201,7 +1201,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
               style="margin-top: 0px;"
             >
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-9"
+                class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-9"
               >
                 <input
                   class="PrivateSwitchBase-input emotion-10"
@@ -1247,12 +1247,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
             </label>
           </div>
           <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-72"
+            class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-72"
             style="margin-left: 30px;"
           >
             <input
               aria-invalid="false"
-              class="MuiInputBase-input MuiInput-input Mui-disabled emotion-73"
+              class="MuiInput-input MuiInputBase-input Mui-disabled emotion-73"
               disabled=""
               id="reason_other"
               name="reason_other"
@@ -1268,11 +1268,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
           Which key areas should we improve?
         </p>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary margin-bottom emotion-74"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary margin-bottom emotion-74"
           style="width: 100%;"
         >
           <input
-            class="MuiInputBase-input MuiInput-input emotion-73"
+            class="MuiInput-input MuiInputBase-input emotion-73"
             id="suggestions"
             name="suggestions"
             placeholder="Fill in suggestions"
@@ -1285,7 +1285,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-76"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-77"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-77"
           tabindex="0"
           type="button"
         >
@@ -1298,7 +1298,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
           style="flex-grow: 1;"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-79"
+          class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-79"
           disabled=""
           tabindex="-1"
           type="button"

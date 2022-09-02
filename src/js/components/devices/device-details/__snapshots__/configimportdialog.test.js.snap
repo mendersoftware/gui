@@ -635,7 +635,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
             style="margin-top: 0px;"
           >
             <span
-              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked emotion-8"
+              class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root Mui-checked emotion-8"
             >
               <input
                 checked=""
@@ -690,7 +690,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
             style="margin-top: 0px;"
           >
             <span
-              class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary emotion-8"
+              class="MuiRadio-root MuiRadio-colorPrimary MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root emotion-8"
             >
               <input
                 class="PrivateSwitchBase-input emotion-9"
@@ -775,7 +775,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-24"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-25"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-25"
           tabindex="0"
           type="button"
         >
@@ -785,7 +785,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium  emotion-27"
+          class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  emotion-27"
           style="margin-left: 10px;"
           tabindex="0"
           type="button"

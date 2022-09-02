@@ -206,10 +206,10 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
       class="MuiSwitch-root MuiSwitch-sizeMedium emotion-0"
     >
       <span
-        class="MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary emotion-1"
+        class="MuiSwitch-switchBase MuiSwitch-colorPrimary MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root emotion-1"
       >
         <input
-          class="PrivateSwitchBase-input MuiSwitch-input emotion-2"
+          class="MuiSwitch-input PrivateSwitchBase-input emotion-2"
           type="checkbox"
         />
         <span

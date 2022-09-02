@@ -537,7 +537,7 @@ label+.emotion-8 {
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root device-types-input emotion-1"
       >
         <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-2"
+          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-2"
           data-shrink="false"
           for="compatible-device-type-selection"
           id="compatible-device-type-selection-label"
@@ -545,7 +545,7 @@ label+.emotion-8 {
           Device types compatible
         </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-3"
+          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-3"
         >
           <input
             aria-autocomplete="list"
@@ -553,7 +553,7 @@ label+.emotion-8 {
             aria-invalid="false"
             autocapitalize="none"
             autocomplete="off"
-            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
+            class="MuiInput-input MuiInputBase-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
             id="compatible-device-type-selection"
             placeholder="Enter all device types this software is compatible with"
             role="combobox"
@@ -568,7 +568,7 @@ label+.emotion-8 {
       class="MuiFormControl-root emotion-5"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-2"
+        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-2"
         data-shrink="false"
         for="release-name"
         style="align-items: center; display: flex;"
@@ -576,7 +576,7 @@ label+.emotion-8 {
         Release name
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall emotion-7"
+          class="margin-left-small MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-7"
           data-mui-internal-clone-element="true"
           data-testid="InfoOutlinedIcon"
           focusable="false"
@@ -588,11 +588,11 @@ label+.emotion-8 {
         </svg>
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl release-name-input emotion-8"
+        class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl release-name-input emotion-8"
       >
         <input
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input emotion-4"
+          class="MuiInput-input MuiInputBase-input emotion-4"
           id="release-name"
           placeholder="A descriptive name for the software"
           type="text"

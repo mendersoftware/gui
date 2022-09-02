@@ -265,14 +265,14 @@ exports[`DeviceIssuesSelection Component renders EmptySelection correctly 1`] = 
 }
 
 <li
-  class="MuiButtonBase-root MuiMenuItem-root MuiMenuItem-gutters emotion-0"
+  class="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root emotion-0"
   role="menuitem"
   style="font-size: 13px; padding-right: 24px;"
   tabindex="-1"
   value=""
 >
   <span
-    class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-indeterminate MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-indeterminate MuiCheckbox-colorPrimary emotion-1"
+    class="MuiCheckbox-root MuiCheckbox-indeterminate MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-indeterminate MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-1"
     style="margin-left: -12px;"
   >
     <input
@@ -780,25 +780,25 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
 
 <div>
   <div
-    class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary margin-left emotion-0"
+    class="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary margin-left emotion-0"
   >
     <div
       aria-expanded="false"
       aria-haspopup="listbox"
-      class="MuiSelect-select MuiSelect-standard MuiSelect-multiple MuiInputBase-input MuiInput-input emotion-1"
+      class="MuiSelect-select MuiSelect-standard MuiSelect-multiple MuiInput-input MuiInputBase-input emotion-1"
       role="button"
       style="padding: 0px;"
       tabindex="0"
     >
       <li
-        class="MuiButtonBase-root MuiMenuItem-root MuiMenuItem-gutters emotion-2"
+        class="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root emotion-2"
         role="menuitem"
         style="font-size: 13px; padding-right: 24px;"
         tabindex="-1"
         value=""
       >
         <span
-          class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary Mui-checked emotion-3"
+          class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root Mui-checked emotion-3"
           style="margin-left: -12px;"
         >
           <input

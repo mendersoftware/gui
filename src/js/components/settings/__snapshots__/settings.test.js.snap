@@ -799,7 +799,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
           class="MuiFormControl-root MuiTextField-root emotion-35 emotion-36"
         >
           <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-37"
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-37"
             data-shrink="true"
             for="mui-1"
             id="mui-1-label"
@@ -807,11 +807,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
             Email
           </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-38"
+            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-38"
           >
             <input
               aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-39"
+              class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled emotion-39"
               disabled=""
               id="mui-1"
               type="text"
@@ -832,7 +832,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
           </div>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium inline-block emotion-42 emotion-43"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root inline-block emotion-42 emotion-43"
           id="change_email"
           tabindex="0"
           type="button"
@@ -850,7 +850,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
           class="MuiFormControl-root MuiTextField-root emotion-35 emotion-36"
         >
           <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-37"
+            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled emotion-37"
             data-shrink="true"
             for="mui-2"
             id="mui-2-label"
@@ -858,11 +858,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
             Password
           </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-38"
+            class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-38"
           >
             <input
               aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-39"
+              class="MuiOutlinedInput-input MuiInputBase-input Mui-disabled emotion-39"
               disabled=""
               id="mui-2"
               type="password"
@@ -883,7 +883,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
           </div>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-42 emotion-43"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root emotion-42 emotion-43"
           id="change_password"
           tabindex="0"
           type="button"
@@ -906,10 +906,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
           class="MuiSwitch-root MuiSwitch-sizeMedium emotion-55"
         >
           <span
-            class="MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary emotion-56"
+            class="MuiSwitch-switchBase MuiSwitch-colorPrimary MuiButtonBase-root MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-root emotion-56"
           >
             <input
-              class="PrivateSwitchBase-input MuiSwitch-input emotion-57"
+              class="MuiSwitch-input PrivateSwitchBase-input emotion-57"
               type="checkbox"
             />
             <span
@@ -933,7 +933,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
           Personal access token management
         </p>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-43"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-43"
           tabindex="0"
           type="button"
         >

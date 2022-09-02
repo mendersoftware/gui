@@ -675,7 +675,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       class="margin-top-small org-settings-item"
     >
       <div
-        class="MuiListItem-root flexbox column MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
+        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-2 emotion-3"
@@ -686,7 +686,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             Organization name
           </span>
           <div
-            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary two-columns emotion-5"
+            class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-5"
           >
             <div>
               test
@@ -705,7 +705,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       class="margin-top-small org-settings-item"
     >
       <div
-        class="MuiListItem-root flexbox column MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
+        class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
           class="MuiListItemText-root MuiListItemText-multiline emotion-9 emotion-3"
@@ -746,7 +746,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               class="emotion-15"
             >
               <div
-                class="MuiListItem-root attributes MuiListItem-padding emotion-16"
+                class="attributes MuiListItem-root MuiListItem-padding emotion-16"
               >
                 <div
                   class="MuiListItemText-root emotion-17"
@@ -773,7 +773,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       </div>
       <div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-21"
+          class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-21"
           tabindex="0"
           type="button"
         >
@@ -810,7 +810,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd margin-bottom-small emotion-26 emotion-27"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-28"
+        class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-28"
       >
         <input
           class="PrivateSwitchBase-input emotion-29"
@@ -891,7 +891,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             class="flexbox"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-21"
+              class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-21"
               tabindex="0"
               type="button"
             >
@@ -901,7 +901,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               />
             </button>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled emotion-39 emotion-43"
+              class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled emotion-39 emotion-43"
               disabled=""
               tabindex="-1"
               type="button"
@@ -942,7 +942,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
         class="margin-top-small org-settings-item"
       >
         <div
-          class="MuiListItem-root flexbox column MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
+          class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
         >
           <div
             class="MuiListItemText-root MuiListItemText-multiline emotion-2 emotion-3"
@@ -953,7 +953,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               Current plan
             </span>
             <div
-              class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary two-columns emotion-5"
+              class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-5"
             >
               <div>
                 Trial
@@ -1004,7 +1004,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
         class="margin-top-small org-settings-item"
       >
         <div
-          class="MuiListItem-root flexbox column MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
+          class="flexbox column MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
         >
           <div
             class="MuiListItemText-root MuiListItemText-multiline emotion-2 emotion-3"
@@ -1015,7 +1015,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               Current add-ons
             </span>
             <div
-              class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary two-columns emotion-5"
+              class="MuiTypography-root MuiTypography-body2 two-columns MuiListItemText-secondary emotion-5"
             >
               <div>
                 Configure, Monitor
