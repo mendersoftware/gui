@@ -22,19 +22,7 @@ exports[`Help Component renders correctly 1`] = `
   padding-right: 16px;
 }
 
-.emotion-2.navLink .MuiListItemText-root {
-  color: #212121;
-}
-
-.emotion-2.navLink.active .MuiListItemText-root {
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.emotion-2.active {
-  background: #bdbdbd;
-}
-
-.emotion-3 {
+.emotion-2 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -59,31 +47,35 @@ exports[`Help Component renders correctly 1`] = `
   padding-right: 16px;
 }
 
-.emotion-3.Mui-focusVisible {
+.emotion-2.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-3.Mui-selected {
+.emotion-2.Mui-selected {
   background-color: rgba(25, 118, 210, 0.08);
 }
 
-.emotion-3.Mui-selected.Mui-focusVisible {
+.emotion-2.Mui-selected.Mui-focusVisible {
   background-color: rgba(25, 118, 210, 0.2);
 }
 
-.emotion-3.Mui-disabled {
+.emotion-2.Mui-disabled {
   opacity: 0.38;
 }
 
-.emotion-4 .MuiListItemText-primary {
-  font-size: 0.8rem;
+.emotion-2.navLink .MuiListItemText-root {
+  color: #212121;
 }
 
-.emotion-4 .MuiListItemText-primary:hover {
-  color: #1976d2;
+.emotion-2.navLink.active .MuiListItemText-root {
+  color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-5 {
+.emotion-2.active {
+  background: #bdbdbd;
+}
+
+.emotion-3 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -92,7 +84,15 @@ exports[`Help Component renders correctly 1`] = `
   margin-bottom: 4px;
 }
 
-.emotion-6 {
+.emotion-3 .MuiListItemText-primary {
+  font-size: 0.8rem;
+}
+
+.emotion-3 .MuiListItemText-primary:hover {
+  color: #1976d2;
+}
+
+.emotion-4 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 400;
@@ -102,7 +102,7 @@ exports[`Help Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-22 {
+.emotion-14 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -132,52 +132,52 @@ exports[`Help Component renders correctly 1`] = `
     </li>
     <a
       aria-current="page"
-      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3 active"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 active"
       href="/help/get-started"
     >
       <div
-        class="MuiListItemText-root emotion-4 emotion-5"
+        class="MuiListItemText-root emotion-3"
         url=""
       >
         <span
-          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
         >
           Getting started
         </span>
       </div>
     </a>
     <a
-      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2"
       href="/help/support"
     >
       <div
-        class="MuiListItemText-root emotion-4 emotion-5"
+        class="MuiListItemText-root emotion-3"
         url=""
       >
         <span
-          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
         >
           Contact support
         </span>
       </div>
     </a>
     <a
-      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2"
       href="/help/mender-hub"
     >
       <div
-        class="MuiListItemText-root emotion-4 emotion-5"
+        class="MuiListItemText-root emotion-3"
         url=""
       >
         <span
-          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
         >
           Mender Hub
         </span>
       </div>
     </a>
     <a
-      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2 emotion-3"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2"
       exact="true"
       href="https://docs.mender.io/"
       rel="noopener noreferrer"
@@ -185,11 +185,11 @@ exports[`Help Component renders correctly 1`] = `
       to="https://docs.mender.io/"
     >
       <div
-        class="MuiListItemText-root emotion-4 emotion-5"
+        class="MuiListItemText-root emotion-3"
         url="https://docs.mender.io/"
       >
         <span
-          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+          class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
         >
           Documentation
         </span>
@@ -226,7 +226,7 @@ exports[`Help Component renders correctly 1`] = `
             Get Started chapter in our documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-22"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-14"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -253,7 +253,7 @@ exports[`Help Component renders correctly 1`] = `
             Client Installation documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-22"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-14"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -277,7 +277,7 @@ exports[`Help Component renders correctly 1`] = `
             Mender Hub 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-22"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-14"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"
@@ -303,7 +303,7 @@ exports[`Help Component renders correctly 1`] = `
             Artifact Creation documentation 
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-22"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-14"
               data-testid="LaunchIcon"
               focusable="false"
               style="vertical-align: text-bottom;"

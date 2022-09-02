@@ -7,7 +7,7 @@ exports[`DeviceList Component renders correctly 1`] = `
     style=\\"grid-template-columns: minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
   >
     <div
-      class=\\"header tss-nsqcrh-header\\"
+      class=\\"header css-nsqcrh-header\\"
     >
       <div
         class=\\"deviceListRow\\"
@@ -32,7 +32,7 @@ exports[`DeviceList Component renders correctly 1`] = `
             class=\\"flexbox center-aligned\\"
           >
             <span
-              class=\\"resize-handle tss-1bzlqzi-resizeHandle \\"
+              class=\\"resize-handle css-1bzlqzi-resizeHandle \\"
             />
           </div>
         </div>

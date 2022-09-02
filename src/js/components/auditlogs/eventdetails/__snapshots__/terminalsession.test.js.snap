@@ -2,11 +2,6 @@
 
 exports[`TerminalSession Component renders correctly 1`] = `
 .emotion-0 {
-  font-size: 7rem;
-  color: rgba(0, 0, 0, 0.38);
-}
-
-.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -21,13 +16,15 @@ exports[`TerminalSession Component renders correctly 1`] = `
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   font-size: 1.3929rem;
+  font-size: 7rem;
+  color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-1 iconButton {
+.emotion-0 iconButton {
   margin-right: 8px;
 }
 
-.emotion-2 {
+.emotion-1 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -77,57 +74,78 @@ exports[`TerminalSession Component renders correctly 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-2::-moz-focus-inner {
+.emotion-1::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-2.Mui-disabled {
+.emotion-1.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-2 {
+  .emotion-1 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-2:hover {
+.emotion-1:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-2:hover {
+  .emotion-1:hover {
     background-color: transparent;
   }
 }
 
-.emotion-2.Mui-disabled {
+.emotion-1.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-2:hover {
+.emotion-1:hover {
   colors: #337a87;
 }
 
-.emotion-2.MuiButton-text {
+.emotion-1.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-3 {
+.emotion-2 {
   display: inherit;
   margin-right: 8px;
   margin-left: -4px;
 }
 
-.emotion-3>*:nth-of-type(1) {
+.emotion-2>*:nth-of-type(1) {
   font-size: 20px;
 }
 
-.emotion-5 {
+.emotion-3 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+}
+
+.emotion-3 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-4 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -139,22 +157,22 @@ exports[`TerminalSession Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-13 .key>b {
+.emotion-12 .key>b {
   background-color: #f7f7f7;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-14 {
+.emotion-13 {
   grid-template-columns: minmax(max-content, 150px) max-content;
   row-gap: 20px;
 }
 
-.emotion-15 {
+.emotion-14 {
   color: rgba(0, 0, 0, 0.54);
   font-weight: initial;
 }
 
-.emotion-16 {
+.emotion-15 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -171,7 +189,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-16 iconButton {
+.emotion-15 iconButton {
   margin-right: 8px;
 }
 
@@ -255,7 +273,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0 emotion-1"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
           data-testid="PlayArrowIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -270,16 +288,16 @@ exports[`TerminalSession Component renders correctly 1`] = `
       class="flexbox margin-top-small margin-bottom-small"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-2"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
         tabindex="0"
         type="button"
       >
         <span
-          class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-3"
+          class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-3"
             data-testid="PlayArrowIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -291,20 +309,20 @@ exports[`TerminalSession Component renders correctly 1`] = `
         </span>
         Play
         <span
-          class="MuiTouchRipple-root emotion-5"
+          class="MuiTouchRipple-root emotion-4"
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-2"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
         tabindex="0"
         type="button"
       >
         <span
-          class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-3"
+          class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-3"
             data-testid="RefreshIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -316,21 +334,21 @@ exports[`TerminalSession Component renders correctly 1`] = `
         </span>
         Replay
         <span
-          class="MuiTouchRipple-root emotion-5"
+          class="MuiTouchRipple-root emotion-4"
         />
       </button>
       <button
-        class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-2"
+        class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
         disabled=""
         tabindex="-1"
         type="button"
       >
         <span
-          class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-3"
+          class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-3"
             data-testid="CloudDownloadIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -358,7 +376,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
          details
       </b>
       <div
-        class="break-all two-columns emotion-13  emotion-14"
+        class="break-all two-columns emotion-12  emotion-13"
       >
         <div
           class="align-right key muted"
@@ -371,7 +389,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
           class="flexbox "
         >
           <a
-            class="flexbox center-aligned emotion-15"
+            class="flexbox center-aligned emotion-14"
             href="/devices?id=a1"
           >
             <div>
@@ -379,7 +397,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
             </div>
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-16"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-15"
               data-testid="LaunchIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -442,7 +460,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
          details
       </b>
       <div
-        class="break-all two-columns emotion-13  emotion-14"
+        class="break-all two-columns emotion-12  emotion-13"
       >
         <div
           class="align-right key muted"

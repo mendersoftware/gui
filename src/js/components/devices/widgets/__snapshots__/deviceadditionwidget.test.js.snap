@@ -30,10 +30,6 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  text-transform: none;
-}
-
-.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -81,49 +77,50 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   font-size: 14px;
   font-weight: bold;
   padding: 10px 15px;
+  text-transform: none;
 }
 
-.emotion-2::-moz-focus-inner {
+.emotion-1::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-2.Mui-disabled {
+.emotion-1.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-2 {
+  .emotion-1 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-2:hover {
+.emotion-1:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-2:hover {
+  .emotion-1:hover {
     background-color: transparent;
   }
 }
 
-.emotion-2.Mui-disabled {
+.emotion-1.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-2:hover {
+.emotion-1:hover {
   colors: #337a87;
 }
 
-.emotion-2.MuiButton-text {
+.emotion-1.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-3 {
+.emotion-2 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -135,7 +132,7 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-5 {
+.emotion-3 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -183,49 +180,50 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   font-size: 14px;
   font-weight: bold;
   padding: 10px 15px;
+  text-transform: none;
 }
 
-.emotion-5::-moz-focus-inner {
+.emotion-3::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-5.Mui-disabled {
+.emotion-3.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-5 {
+  .emotion-3 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-5:hover {
+.emotion-3:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-5:hover {
+  .emotion-3:hover {
     background-color: transparent;
   }
 }
 
-.emotion-5.Mui-disabled {
+.emotion-3.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-5:hover {
+.emotion-3:hover {
   colors: #337a87;
 }
 
-.emotion-5.MuiButton-text {
+.emotion-3.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-6 {
+.emotion-4 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -242,7 +240,7 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-6 iconButton {
+.emotion-4 iconButton {
   margin-right: 8px;
 }
 
@@ -251,23 +249,23 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   role="group"
 >
   <button
-    class="MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1 emotion-2"
+    class="MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
     tabindex="0"
     type="button"
   >
     Connect a new device
     <span
-      class="MuiTouchRipple-root emotion-3"
+      class="MuiTouchRipple-root emotion-2"
     />
   </button>
   <button
-    class="MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-1 emotion-5"
+    class="MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-3"
     tabindex="0"
     type="button"
   >
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
       data-testid="ArrowDropDownIcon"
       focusable="false"
       viewBox="0 0 24 24"
@@ -277,7 +275,7 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
       />
     </svg>
     <span
-      class="MuiTouchRipple-root emotion-3"
+      class="MuiTouchRipple-root emotion-2"
     />
   </button>
 </div>

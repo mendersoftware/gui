@@ -662,7 +662,7 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`]
 }
 
 <div
-  class="padding,tss-8wzxjs-root"
+  class="padding,css-8wzxjs-root"
 >
   <svg
     aria-hidden="true"

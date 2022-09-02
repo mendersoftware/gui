@@ -174,16 +174,31 @@ exports[`Dashboard Component renders correctly 1`] = `
 }
 
 .emotion-9 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
   margin-right: 10px;
   height: 14px;
   width: 14px;
-}
-
-.emotion-10 {
   color: #009e73;
 }
 
-.emotion-13 {
+.emotion-9 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-11 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -233,56 +248,56 @@ exports[`Dashboard Component renders correctly 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-13::-moz-focus-inner {
+.emotion-11::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-13.Mui-disabled {
+.emotion-11.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-13 {
+  .emotion-11 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-13:hover {
+.emotion-11:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-13:hover {
+  .emotion-11:hover {
     background-color: transparent;
   }
 }
 
-.emotion-13.Mui-disabled {
+.emotion-11.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-13:hover {
+.emotion-11:hover {
   colors: #337a87;
 }
 
-.emotion-13.MuiButton-text {
+.emotion-11.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-16 {
+.emotion-14 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
 
-.emotion-17 {
+.emotion-15 {
   gap: 8px;
 }
 
-.emotion-18 {
+.emotion-16 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -299,7 +314,7 @@ exports[`Dashboard Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-18 iconButton {
+.emotion-16 iconButton {
   margin-right: 8px;
 }
 
@@ -381,7 +396,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-9 emotion-10 emotion-2"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-9"
               data-testid="CheckCircleIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -435,7 +450,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           </p>
         </div>
         <a
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-13"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-11"
           href="/devices/accepted"
           tabindex="0"
         >
@@ -488,11 +503,11 @@ exports[`Dashboard Component renders correctly 1`] = `
       class="flexbox centered"
     >
       <p
-        class="emotion-16 icon flexbox center-aligned emotion-17 "
+        class="emotion-14 icon flexbox center-aligned emotion-15 "
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-18"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-16"
           data-testid="InfoOutlinedIcon"
           focusable="false"
           viewBox="0 0 24 24"

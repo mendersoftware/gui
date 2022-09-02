@@ -28,10 +28,6 @@ exports[`DeploymentPhaseNotification Component renders correctly 1`] = `
 }
 
 .emotion-2 {
-  margin-left: 8px;
-}
-
-.emotion-3 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -46,9 +42,10 @@ exports[`DeploymentPhaseNotification Component renders correctly 1`] = `
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   font-size: 1.1607rem;
+  margin-left: 8px;
 }
 
-.emotion-3 iconButton {
+.emotion-2 iconButton {
   margin-right: 8px;
 }
 
@@ -86,7 +83,7 @@ exports[`DeploymentPhaseNotification Component renders correctly 1`] = `
     </div>
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall link-color emotion-2 emotion-3"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall link-color emotion-2"
       data-testid="ArrowDropDownCircleOutlinedIcon"
       focusable="false"
       viewBox="0 0 24 24"

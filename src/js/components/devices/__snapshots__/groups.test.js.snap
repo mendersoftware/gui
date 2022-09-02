@@ -189,11 +189,6 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
 
 exports[`Groups Component renders GroupsSubheader correctly 1`] = `
 .emotion-0 {
-  color: #a9a9a9;
-  height: 48px;
-}
-
-.emotion-1 {
   box-sizing: border-box;
   line-height: 48px;
   list-style: none;
@@ -201,26 +196,28 @@ exports[`Groups Component renders GroupsSubheader correctly 1`] = `
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
+  color: #a9a9a9;
+  height: 48px;
 }
 
-.emotion-2 {
+.emotion-1 {
   background: #fff;
 }
 
-.emotion-3 {
+.emotion-2 {
   background: #d4e9e7;
 }
 
 <li
-  class="MuiListSubheader-root heading-lined emotion-0 emotion-1"
+  class="MuiListSubheader-root heading-lined emotion-0"
 >
   <span
-    class="emotion-2"
+    class="emotion-1"
   >
     test
   </span>
   <div
-    class="emotion-3"
+    class="emotion-2"
   />
 </li>
 `;
@@ -402,11 +399,6 @@ exports[`Groups Component renders correctly 1`] = `
 }
 
 .emotion-5 {
-  color: #a9a9a9;
-  height: 48px;
-}
-
-.emotion-6 {
   box-sizing: border-box;
   line-height: 48px;
   list-style: none;
@@ -414,17 +406,19 @@ exports[`Groups Component renders correctly 1`] = `
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
+  color: #a9a9a9;
+  height: 48px;
 }
 
-.emotion-7 {
+.emotion-6 {
   background: #fff;
 }
 
-.emotion-8 {
+.emotion-7 {
   background: #d4e9e7;
 }
 
-.emotion-22 {
+.emotion-20 {
   min-width: 56px;
   color: rgba(0, 0, 0, 0.54);
   -webkit-flex-shrink: 0;
@@ -436,7 +430,7 @@ exports[`Groups Component renders correctly 1`] = `
   display: inline-flex;
 }
 
-.emotion-23 {
+.emotion-21 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -453,7 +447,7 @@ exports[`Groups Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-23 iconButton {
+.emotion-21 iconButton {
   margin-right: 8px;
 }
 
@@ -485,15 +479,15 @@ exports[`Groups Component renders correctly 1`] = `
       />
     </div>
     <li
-      class="MuiListSubheader-root heading-lined emotion-5 emotion-6"
+      class="MuiListSubheader-root heading-lined emotion-5"
     >
       <span
-        class="emotion-7"
+        class="emotion-6"
       >
         Dynamic
       </span>
       <div
-        class="emotion-8"
+        class="emotion-7"
       />
     </li>
     <div
@@ -515,15 +509,15 @@ exports[`Groups Component renders correctly 1`] = `
       />
     </div>
     <li
-      class="MuiListSubheader-root heading-lined emotion-5 emotion-6"
+      class="MuiListSubheader-root heading-lined emotion-5"
     >
       <span
-        class="emotion-7"
+        class="emotion-6"
       >
         Static
       </span>
       <div
-        class="emotion-8"
+        class="emotion-7"
       />
     </li>
     <div
@@ -551,11 +545,11 @@ exports[`Groups Component renders correctly 1`] = `
       tabindex="0"
     >
       <div
-        class="MuiListItemIcon-root emotion-22"
+        class="MuiListItemIcon-root emotion-20"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-23"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
           data-testid="InfoOutlinedIcon"
           focusable="false"
           viewBox="0 0 24 24"
