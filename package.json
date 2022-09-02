@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.10.4",
     "@mdi/js": "^7.0.96",
     "@monaco-editor/react": "^4.4.5",
-    "@mui/icons-material": "^5.8.4",
+    "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.3",
     "@mui/styles": "^5.10.3",
     "@mui/x-date-pickers": "^5.0.0",
