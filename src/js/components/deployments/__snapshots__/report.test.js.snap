@@ -126,7 +126,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           class=\\"report-container margin-top-large margin-bottom-large\\"
         >
           <div
-            class=\\"break-all two-columns tss-lcys7r-root  column-data \\"
+            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
             style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
           >
             <div
@@ -190,7 +190,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                   />
                 </svg>
                 <div
-                  class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased tss-7h6f8v-chip css-fcxs9x-MuiChip-root\\"
+                  class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased css-1rh47q2-MuiChip-root-chip\\"
                 >
                   <span
                     class=\\"MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label\\"
@@ -217,7 +217,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
             class=\\"flexbox column\\"
           >
             <div
-              class=\\"break-all two-columns tss-lcys7r-root  column-data \\"
+              class=\\"break-all two-columns css-lcys7r-root  column-data \\"
               style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
             >
               <div
@@ -238,7 +238,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               </div>
             </div>
             <a
-              class=\\"margin-top-small flexbox center-aligned tss-1ds475v-scheduleLink\\"
+              class=\\"margin-top-small flexbox center-aligned css-1ds475v-scheduleLink\\"
             >
               Schedule details 
               <svg
@@ -256,14 +256,14 @@ Devices that are in the middle of the deployment at the time of abort will finis
           </div>
         </div>
         <h4
-          class=\\"dashboard-header tss-1oyj5ad-border tss-zr8z23-header\\"
+          class=\\"dashboard-header css-1oyj5ad-border css-zr8z23-header\\"
         >
           <span>
             Status
           </span>
         </h4>
         <div
-          class=\\"tss-byr84k-progressStatus flexbox space-between centered margin-bottom \\"
+          class=\\"css-byr84k-progressStatus flexbox space-between centered margin-bottom \\"
         >
           <div
             class=\\"flexbox column\\"
@@ -382,7 +382,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
             </div>
           </div>
           <div
-            class=\\"break-all two-columns tss-lcys7r-root  column-data \\"
+            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
             style=\\"align-items: center; align-self: flex-start; grid-template-columns: max-content 1fr; max-width: 25vw;\\"
           >
             <div
@@ -655,7 +655,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           </div>
         </div>
         <h4
-          class=\\"dashboard-header tss-1oyj5ad-border margin-top-large tss-zr8z23-header\\"
+          class=\\"dashboard-header css-1oyj5ad-border margin-top-large css-zr8z23-header\\"
         >
           <span>
             Schedule details
@@ -665,7 +665,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           class=\\"flexbox\\"
         >
           <div
-            class=\\"break-all two-columns tss-lcys7r-root  column-data \\"
+            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
             style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
           >
             <div
@@ -699,7 +699,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           </div>
           <svg
             aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium tss-9o8jgx-phasesOverviewArrow css-1lqc678-MuiSvgIcon-root\\"
+            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-106xbqu-MuiSvgIcon-root-phasesOverviewArrow\\"
             data-testid=\\"ArrowForwardIcon\\"
             focusable=\\"false\\"
             viewBox=\\"0 0 24 24\\"
@@ -709,7 +709,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
             />
           </svg>
           <div
-            class=\\"break-all two-columns tss-lcys7r-root  column-data \\"
+            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
             style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
           >
             <div
@@ -727,7 +727,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           </div>
         </div>
         <div
-          class=\\"progress-chart-container margin-top tss-frz7ob-container\\"
+          class=\\"progress-chart-container margin-top css-frz7ob-container\\"
         >
           <div
             class=\\"progress-chart detailed\\"
@@ -768,7 +768,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
           style=\\"grid-template-columns: repeat(auto-fit, 270px);\\"
         >
           <div
-            class=\\"flexbox column centered tss-1r3tzyq-phaseInfo \\"
+            class=\\"flexbox column centered css-1r3tzyq-phaseInfo \\"
           >
             <div
               class=\\"muted\\"
@@ -776,7 +776,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               Complete
             </div>
             <div
-              class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault tss-1huds4t-phaseIndex css-fcxs9x-MuiChip-root\\"
+              class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault css-128repl-MuiChip-root-phaseIndex\\"
             >
               <span
                 class=\\"MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label\\"
@@ -785,7 +785,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
               </span>
             </div>
             <div
-              class=\\"break-all two-columns tss-lcys7r-root  column-data \\"
+              class=\\"break-all two-columns css-lcys7r-root  column-data \\"
               style=\\"align-items: center; align-self: initial; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
             >
               <div
@@ -825,7 +825,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
         </div>
       </div>
       <hr
-        class=\\"MuiDivider-root MuiDivider-fullWidth MuiDivider-light tss-12awelr-divider css-xetjfm-MuiDivider-root\\"
+        class=\\"MuiDivider-root MuiDivider-fullWidth MuiDivider-light css-13mkc9d-MuiDivider-root-divider\\"
       />
     </div>
     <div

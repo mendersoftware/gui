@@ -23,7 +23,7 @@ exports[`DemoNotification Component renders correctly 1`] = `
 }
 
 <div
-  class="flexbox centered"
+  class="flexbox centered "
   data-mui-internal-clone-element="true"
 >
   <svg

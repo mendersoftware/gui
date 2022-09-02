@@ -20,7 +20,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
         role=\\"group\\"
       >
         <button
-          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium tss-1q5gdbl-buttonStyle css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
+          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1m1nv3s-MuiButtonBase-root-MuiButton-root-buttonStyle\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >
@@ -30,7 +30,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </button>
         <button
-          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall tss-1q5gdbl-buttonStyle css-1e8ajgx-MuiButtonBase-root-MuiButton-root\\"
+          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-6b0d5c-MuiButtonBase-root-MuiButton-root-buttonStyle\\"
           tabindex=\\"0\\"
           type=\\"button\\"
         >
@@ -86,15 +86,15 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </div>
         <li
-          class=\\"MuiListSubheader-root heading-lined tss-qt6h77-header css-w3e8pi-MuiListSubheader-root\\"
+          class=\\"MuiListSubheader-root heading-lined css-1aj8t4d-MuiListSubheader-root-header\\"
         >
           <span
-            class=\\"tss-1nyp150-groupHeading\\"
+            class=\\"css-1nyp150-groupHeading\\"
           >
             Dynamic
           </span>
           <div
-            class=\\"tss-1qij3wx-groupBorder\\"
+            class=\\"css-1qij3wx-groupBorder\\"
           />
         </li>
         <div
@@ -116,15 +116,15 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </div>
         <li
-          class=\\"MuiListSubheader-root heading-lined tss-qt6h77-header css-w3e8pi-MuiListSubheader-root\\"
+          class=\\"MuiListSubheader-root heading-lined css-1aj8t4d-MuiListSubheader-root-header\\"
         >
           <span
-            class=\\"tss-1nyp150-groupHeading\\"
+            class=\\"css-1nyp150-groupHeading\\"
           >
             Static
           </span>
           <div
-            class=\\"tss-1qij3wx-groupBorder\\"
+            class=\\"css-1qij3wx-groupBorder\\"
           />
         </li>
         <div
@@ -371,7 +371,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           style=\\"grid-template-columns: 52px minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
         >
           <div
-            class=\\"header tss-nsqcrh-header\\"
+            class=\\"header css-nsqcrh-header\\"
           >
             <div
               class=\\"deviceListRow\\"
@@ -462,7 +462,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   class=\\"flexbox center-aligned\\"
                 >
                   <span
-                    class=\\"resize-handle tss-1bzlqzi-resizeHandle \\"
+                    class=\\"resize-handle css-1bzlqzi-resizeHandle \\"
                   />
                 </div>
               </div>
@@ -490,7 +490,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   class=\\"flexbox center-aligned\\"
                 >
                   <span
-                    class=\\"resize-handle tss-1bzlqzi-resizeHandle \\"
+                    class=\\"resize-handle css-1bzlqzi-resizeHandle \\"
                   />
                 </div>
               </div>

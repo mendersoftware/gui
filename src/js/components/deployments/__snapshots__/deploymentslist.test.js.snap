@@ -20,18 +20,6 @@ exports[`DeploymentsList Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  background-color: transparent;
-  color: rgba(10, 10, 11, 0.78);
-  justify-self: center;
-  text-transform: none;
-}
-
-.emotion-1:hover {
-  background-color: transparent;
-  color: rgba(10, 10, 11, 0.78);
-}
-
-.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -80,25 +68,29 @@ exports[`DeploymentsList Component renders correctly 1`] = `
   border-radius: 2px;
   font-size: 14px;
   font-weight: bold;
+  background-color: transparent;
+  color: rgba(10, 10, 11, 0.78);
+  justify-self: center;
+  text-transform: none;
 }
 
-.emotion-2::-moz-focus-inner {
+.emotion-1::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-2.Mui-disabled {
+.emotion-1.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-2 {
+  .emotion-1 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-2:hover {
+.emotion-1:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -106,34 +98,39 @@ exports[`DeploymentsList Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-2:hover {
+  .emotion-1:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-2:active {
+.emotion-1:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-2.Mui-focusVisible {
+.emotion-1.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-2.Mui-disabled {
+.emotion-1.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-2:hover {
+.emotion-1:hover {
   colors: #337a87;
 }
 
-.emotion-2.MuiButton-text {
+.emotion-1.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-3 {
+.emotion-1:hover {
+  background-color: transparent;
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-2 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -145,7 +142,7 @@ exports[`DeploymentsList Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-4 {
+.emotion-3 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -195,38 +192,38 @@ exports[`DeploymentsList Component renders correctly 1`] = `
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-4::-moz-focus-inner {
+.emotion-3::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-4.Mui-disabled {
+.emotion-3.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-4 {
+  .emotion-3 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-4:hover {
+.emotion-3:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-4:hover {
+  .emotion-3:hover {
     background-color: transparent;
   }
 }
 
-.emotion-4.Mui-disabled {
+.emotion-3.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-5 {
+.emotion-4 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -243,11 +240,11 @@ exports[`DeploymentsList Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-5 iconButton {
+.emotion-4 iconButton {
   margin-right: 8px;
 }
 
-.emotion-7 {
+.emotion-6 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -264,7 +261,7 @@ exports[`DeploymentsList Component renders correctly 1`] = `
   font-size: inherit;
 }
 
-.emotion-7 iconButton {
+.emotion-6 iconButton {
   margin-right: 8px;
 }
 
@@ -449,25 +446,25 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-1 emotion-2"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-1"
         tabindex="0"
         type="button"
       >
         View details
         <span
-          class="MuiTouchRipple-root emotion-3"
+          class="MuiTouchRipple-root emotion-2"
         />
       </button>
       <button
         aria-label="Abort"
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-4"
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-3"
         data-mui-internal-clone-element="true"
         tabindex="0"
         type="button"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-5"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-4"
           data-testid="CancelOutlinedIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -477,7 +474,7 @@ exports[`DeploymentsList Component renders correctly 1`] = `
           />
         </svg>
         <span
-          class="MuiTouchRipple-root emotion-3"
+          class="MuiTouchRipple-root emotion-2"
         />
       </button>
     </div>
@@ -569,7 +566,7 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-7"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-6"
             focusable="false"
             viewBox="0 0 24 24"
           >
@@ -585,25 +582,25 @@ exports[`DeploymentsList Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-1 emotion-2"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-1"
         tabindex="0"
         type="button"
       >
         View details
         <span
-          class="MuiTouchRipple-root emotion-3"
+          class="MuiTouchRipple-root emotion-2"
         />
       </button>
       <button
         aria-label="Abort"
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-4"
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-3"
         data-mui-internal-clone-element="true"
         tabindex="0"
         type="button"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-5"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-4"
           data-testid="CancelOutlinedIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -613,7 +610,7 @@ exports[`DeploymentsList Component renders correctly 1`] = `
           />
         </svg>
         <span
-          class="MuiTouchRipple-root emotion-3"
+          class="MuiTouchRipple-root emotion-2"
         />
       </button>
     </div>

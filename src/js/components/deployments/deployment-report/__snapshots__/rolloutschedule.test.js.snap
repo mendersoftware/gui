@@ -15,11 +15,6 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
 }
 
 .emotion-2 {
-  margin-left: 32px;
-  margin-right: 32px;
-}
-
-.emotion-3 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -34,46 +29,40 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   font-size: 1.3929rem;
+  margin-left: 32px;
+  margin-right: 32px;
 }
 
-.emotion-3 iconButton {
+.emotion-2 iconButton {
   margin-right: 8px;
 }
 
-.emotion-5 {
+.emotion-4 {
   background-color: #f7f7f7;
 }
 
-.emotion-5 .progress-step {
+.emotion-4 .progress-step {
   border: none;
   position: absolute;
 }
 
-.emotion-5 .progress-step-total .progress-bar {
+.emotion-4 .progress-step-total .progress-bar {
   background-color: #d4e9e7;
 }
 
-.emotion-5.stepped-progress .progress-step-total .progress-bar {
+.emotion-4.stepped-progress .progress-step-total .progress-bar {
   background-color: #fff;
   border-color: #a9a9a9;
 }
 
-.emotion-6 {
+.emotion-5 {
   max-width: 270px;
   border-radius: 5px;
   padding-top: 8px;
   padding-bottom: 24px;
 }
 
-.emotion-7 {
-  -webkit-align-self: flex-start;
-  -ms-flex-item-align: flex-start;
-  align-self: flex-start;
-  margin: 16px;
-  margin-left: 20px;
-}
-
-.emotion-8 {
+.emotion-6 {
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
@@ -104,14 +93,19 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: flex-start;
+  align-self: flex-start;
+  margin: 16px;
+  margin-left: 20px;
 }
 
-.emotion-8.Mui-disabled {
+.emotion-6.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-8 .MuiChip-avatar {
+.emotion-6 .MuiChip-avatar {
   margin-left: 5px;
   margin-right: -6px;
   width: 24px;
@@ -120,17 +114,17 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   font-size: 0.6964rem;
 }
 
-.emotion-8 .MuiChip-avatarColorPrimary {
+.emotion-6 .MuiChip-avatarColorPrimary {
   color: #fff;
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-8 .MuiChip-avatarColorSecondary {
+.emotion-6 .MuiChip-avatarColorSecondary {
   color: #fff;
   background-color: rgb(65, 10, 46);
 }
 
-.emotion-8 .MuiChip-avatarSmall {
+.emotion-6 .MuiChip-avatarSmall {
   margin-left: 4px;
   margin-right: -4px;
   width: 18px;
@@ -138,14 +132,14 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   font-size: 0.5804rem;
 }
 
-.emotion-8 .MuiChip-icon {
+.emotion-6 .MuiChip-icon {
   color: #bcbcbc;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
 }
 
-.emotion-8 .MuiChip-deleteIcon {
+.emotion-6 .MuiChip-deleteIcon {
   -webkit-tap-highlight-color: transparent;
   color: rgba(10, 10, 11, 0.26);
   font-size: 16px;
@@ -155,11 +149,11 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   margin-left: -4px;
 }
 
-.emotion-8 .MuiChip-deleteIcon:hover {
+.emotion-6 .MuiChip-deleteIcon:hover {
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-9 {
+.emotion-7 {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 8px;
@@ -213,7 +207,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     </div>
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-2 emotion-3"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-2"
       data-testid="ArrowForwardIcon"
       focusable="false"
       viewBox="0 0 24 24"
@@ -241,7 +235,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="progress-chart-container margin-top emotion-5"
+    class="progress-chart-container margin-top emotion-4"
   >
     <div
       class="progress-chart detailed"
@@ -282,7 +276,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     style="grid-template-columns: repeat(auto-fit, 270px);"
   >
     <div
-      class="flexbox column centered emotion-6 "
+      class="flexbox column centered emotion-5 "
     >
       <div
         class="muted"
@@ -290,10 +284,10 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
         Complete
       </div>
       <div
-        class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault emotion-7 emotion-8"
+        class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault emotion-6"
       >
         <span
-          class="MuiChip-label MuiChip-labelSmall emotion-9"
+          class="MuiChip-label MuiChip-labelSmall emotion-7"
         >
           Phase 1
         </span>

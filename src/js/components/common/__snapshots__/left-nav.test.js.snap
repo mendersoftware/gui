@@ -22,19 +22,7 @@ exports[`LeftNav Component renders correctly 1`] = `
   padding-right: 16px;
 }
 
-.emotion-2.navLink .MuiListItemText-root {
-  color: #969696;
-}
-
-.emotion-2.navLink.active .MuiListItemText-root {
-  color: rgba(10, 10, 11, 0.78);
-}
-
-.emotion-2.active {
-  background: #f7f7f7;
-}
-
-.emotion-3 {
+.emotion-2 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -61,49 +49,53 @@ exports[`LeftNav Component renders correctly 1`] = `
   padding-bottom: 11px;
 }
 
-.emotion-3.Mui-focusVisible {
+.emotion-2.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-3.Mui-selected {
+.emotion-2.Mui-selected {
   background-color: rgba(51, 122, 135, 0.08);
 }
 
-.emotion-3.Mui-selected.Mui-focusVisible {
+.emotion-2.Mui-selected.Mui-focusVisible {
   background-color: rgba(51, 122, 135, 0.2);
 }
 
-.emotion-3.Mui-disabled {
+.emotion-2.Mui-disabled {
   opacity: 0.38;
 }
 
-.emotion-3.Mui-disabled {
+.emotion-2.Mui-disabled {
   opacity: 1;
 }
 
-.emotion-3.active {
+.emotion-2.active {
   background-color: #fff;
 }
 
-.emotion-3.leftNav.active {
+.emotion-2.leftNav.active {
   border-top: 1px solid #d4e9e7;
   border-bottom: 1px solid #d4e9e7;
 }
 
-.emotion-3.navLink,
-.emotion-3.navLink .MuiListItemText-root {
+.emotion-2.navLink,
+.emotion-2.navLink .MuiListItemText-root {
   color: #969696;
 }
 
-.emotion-4 .MuiListItemText-primary {
-  font-size: 0.8rem;
+.emotion-2.navLink .MuiListItemText-root {
+  color: #969696;
 }
 
-.emotion-4 .MuiListItemText-primary:hover {
-  color: #337a87;
+.emotion-2.navLink.active .MuiListItemText-root {
+  color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-5 {
+.emotion-2.active {
+  background: #f7f7f7;
+}
+
+.emotion-3 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -115,7 +107,15 @@ exports[`LeftNav Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-6 {
+.emotion-3 .MuiListItemText-primary {
+  font-size: 0.8rem;
+}
+
+.emotion-3 .MuiListItemText-primary:hover {
+  color: #337a87;
+}
+
+.emotion-4 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -124,7 +124,7 @@ exports[`LeftNav Component renders correctly 1`] = `
   display: block;
 }
 
-.emotion-7 {
+.emotion-5 {
   min-width: 56px;
   color: rgba(0, 0, 0, 0.54);
   -webkit-flex-shrink: 0;
@@ -145,21 +145,21 @@ exports[`LeftNav Component renders correctly 1`] = `
     test
   </li>
   <a
-    class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink test-list emotion-2 emotion-3"
+    class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink test-list emotion-2"
     href="/far/away"
     style="background: red;"
   >
     <div
-      class="MuiListItemText-root emotion-4 emotion-5"
+      class="MuiListItemText-root emotion-3"
     >
       <span
-        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
       >
         test1
       </span>
     </div>
     <div
-      class="MuiListItemIcon-root emotion-7"
+      class="MuiListItemIcon-root emotion-5"
     >
       <div>
         HEYA!
@@ -167,14 +167,14 @@ exports[`LeftNav Component renders correctly 1`] = `
     </div>
   </a>
   <a
-    class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink test-list emotion-2 emotion-3"
+    class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink test-list emotion-2"
     href="/far/away"
   >
     <div
-      class="MuiListItemText-root emotion-4 emotion-5"
+      class="MuiListItemText-root emotion-3"
     >
       <span
-        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-6"
+        class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-4"
       >
         test1
       </span>
