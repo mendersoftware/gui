@@ -1339,7 +1339,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
         class="flexbox center-aligned"
       >
         <button
-          class="MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled flexbox center-aligned emotion-3"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled flexbox center-aligned emotion-3"
           disabled=""
           style="margin-right: 16px;"
           tabindex="-1"
@@ -1384,7 +1384,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
           class="MuiFormControl-root MuiTextField-root emotion-9"
         >
           <label
-            class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-10"
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled emotion-10"
             data-shrink="false"
             for="role-name"
             id="role-name-label"
@@ -1392,11 +1392,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
             Name
           </label>
           <div
-            class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-11"
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-11"
           >
             <input
               aria-invalid="false"
-              class="MuiInput-input MuiInputBase-input Mui-disabled emotion-12"
+              class="MuiInputBase-input MuiInput-input Mui-disabled emotion-12"
               disabled=""
               id="role-name"
               type="text"
@@ -1409,7 +1409,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
         class="MuiFormControl-root MuiTextField-root emotion-9"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary Mui-disabled emotion-10"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled emotion-10"
           data-shrink="false"
           for="role-description"
           id="role-description-label"
@@ -1417,11 +1417,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
           Description
         </label>
         <div
-          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-15"
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl MuiInputBase-multiline emotion-15"
         >
           <textarea
             aria-invalid="false"
-            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-16"
+            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-16"
             disabled=""
             id="role-description"
             placeholder="-"
@@ -1429,7 +1429,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
           />
           <textarea
             aria-hidden="true"
-            class="MuiInput-input MuiInputBase-input Mui-disabled MuiInputBase-inputMultiline emotion-16"
+            class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-16"
             readonly=""
             style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
             tabindex="-1"
@@ -1438,7 +1438,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
       </div>
     </div>
     <label
-      class="MuiInputLabel-root MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-root MuiFormLabel-colorPrimary margin-top emotion-18"
+      class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-colorPrimary margin-top emotion-18"
       data-shrink="true"
     >
       Permissions
@@ -1469,21 +1469,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
         class="MuiFormControl-root emotion-8"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-10"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-10"
           data-shrink="false"
           id="permission-selection-label"
         >
           
         </label>
         <div
-          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-22"
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-22"
         >
           <div
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="permission-selection-label"
-            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInput-input MuiInputBase-input Mui-disabled emotion-23"
+            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInputBase-input MuiInput-input Mui-disabled emotion-23"
             role="button"
           >
             None
@@ -1530,21 +1530,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
         class="MuiFormControl-root emotion-8"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-10"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-10"
           data-shrink="false"
           id="permission-selection-label"
         >
           
         </label>
         <div
-          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-22"
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-22"
         >
           <div
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="permission-selection-label"
-            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInput-input MuiInputBase-input Mui-disabled emotion-23"
+            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInputBase-input MuiInput-input Mui-disabled emotion-23"
             role="button"
           >
             None
@@ -1591,21 +1591,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
         class="MuiFormControl-root emotion-8"
       >
         <label
-          class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-10"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-10"
           data-shrink="false"
           id="permission-selection-label"
         >
           
         </label>
         <div
-          class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-22"
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-22"
         >
           <div
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="permission-selection-label"
-            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInput-input MuiInputBase-input Mui-disabled emotion-23"
+            class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInputBase-input MuiInput-input Mui-disabled emotion-23"
             role="button"
           >
             None
@@ -1640,7 +1640,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
       style="justify-content: flex-end;"
     >
       <button
-        class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-41"
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-41"
         style="margin-right: 16px;"
         tabindex="0"
         type="button"
@@ -1651,7 +1651,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
         />
       </button>
       <button
-        class="MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-43"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-43"
         disabled=""
         tabindex="-1"
         target="_blank"

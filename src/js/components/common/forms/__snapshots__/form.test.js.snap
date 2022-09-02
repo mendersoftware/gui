@@ -111,7 +111,7 @@ exports[`Form Component renders correctly 1`] = `
     style="justify-content: flex-end; margin-top: 32px;"
   >
     <button
-      class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-0"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-0"
       disabled=""
       tabindex="-1"
       type="button"

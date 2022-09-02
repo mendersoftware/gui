@@ -168,7 +168,7 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
 }
 
 <div
-  class="MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected emotion-0"
+  class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected emotion-0"
   role="button"
   tabindex="0"
 >
@@ -212,7 +212,7 @@ exports[`Groups Component renders GroupsSubheader correctly 1`] = `
 }
 
 <li
-  class="heading-lined MuiListSubheader-root emotion-0 emotion-1"
+  class="MuiListSubheader-root heading-lined emotion-0 emotion-1"
 >
   <span
     class="emotion-2"
@@ -467,7 +467,7 @@ exports[`Groups Component renders correctly 1`] = `
     class="MuiList-root MuiList-padding emotion-0"
   >
     <div
-      class="MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected emotion-1"
+      class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected emotion-1"
       role="button"
       tabindex="0"
     >
@@ -485,7 +485,7 @@ exports[`Groups Component renders correctly 1`] = `
       />
     </div>
     <li
-      class="heading-lined MuiListSubheader-root emotion-5 emotion-6"
+      class="MuiListSubheader-root heading-lined emotion-5 emotion-6"
     >
       <span
         class="emotion-7"
@@ -497,7 +497,7 @@ exports[`Groups Component renders correctly 1`] = `
       />
     </li>
     <div
-      class="MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button emotion-1"
+      class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button emotion-1"
       role="button"
       tabindex="0"
     >
@@ -515,7 +515,7 @@ exports[`Groups Component renders correctly 1`] = `
       />
     </div>
     <li
-      class="heading-lined MuiListSubheader-root emotion-5 emotion-6"
+      class="MuiListSubheader-root heading-lined emotion-5 emotion-6"
     >
       <span
         class="emotion-7"
@@ -527,7 +527,7 @@ exports[`Groups Component renders correctly 1`] = `
       />
     </li>
     <div
-      class="MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button emotion-1"
+      class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button emotion-1"
       role="button"
       tabindex="0"
     >
@@ -545,7 +545,7 @@ exports[`Groups Component renders correctly 1`] = `
       />
     </div>
     <div
-      class="MuiButtonBase-root grouplist MuiListItem-root MuiListItem-gutters MuiListItem-padding MuiListItem-button emotion-1"
+      class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button emotion-1"
       role="button"
       style="margin-top: 30px;"
       tabindex="0"

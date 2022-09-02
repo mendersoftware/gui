@@ -122,7 +122,7 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="emotion-1 MuiTooltip-popper MuiTooltip-popperInteractive emotion-2 MuiPopperUnstyled-root"
+      class="MuiTooltip-popper emotion-1 MuiTooltip-popperInteractive emotion-2 MuiPopperUnstyled-root"
       data-popper-escaped=""
       data-popper-placement="bottom"
       data-popper-reference-hidden=""
@@ -131,7 +131,7 @@ exports[`BaseOnboardingTip Component renders correctly 1`] = `
       style="position: fixed; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
     >
       <div
-        class="emotion-3 MuiTooltip-tooltip MuiTooltip-tooltipPlacementBottom emotion-4"
+        class="MuiTooltip-tooltip emotion-3 MuiTooltip-tooltipPlacementBottom emotion-4"
         style="opacity: 1; transform: scale(1, 1); transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 133ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
       >
         <div

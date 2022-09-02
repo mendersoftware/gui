@@ -975,20 +975,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             class="MuiFormControl-root  required emotion-6"
           >
             <label
-              class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-7"
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-7"
               data-shrink="false"
               for="email"
             >
               Email
             </label>
             <div
-              class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-8"
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-8"
               required=""
               style="width: 400px; max-width: 100%;"
             >
               <input
                 aria-invalid="false"
-                class="MuiInput-input MuiInputBase-input emotion-9"
+                class="MuiInputBase-input MuiInput-input emotion-9"
                 id="email"
                 name="email"
                 placeholder="Email"
@@ -1013,7 +1013,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                 class="MuiFormControl-root emotion-6"
               >
                 <label
-                  class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary emotion-12"
+                  class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-12"
                   data-shrink="true"
                   for="password_new"
                 >
@@ -1036,12 +1036,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                   </div>
                 </label>
                 <div
-                  class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-8"
+                  class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-8"
                   style="width: 400px;"
                 >
                   <input
                     aria-invalid="false"
-                    class="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd emotion-9"
+                    class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-9"
                     id="password_new"
                     name="password_new"
                     placeholder="Password"
@@ -1082,7 +1082,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                 class="pass-buttons"
               >
                 <button
-                  class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  emotion-21"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  emotion-21"
                   tabindex="0"
                   type="button"
                 >
@@ -1115,7 +1115,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             validations=""
           >
             <span
-              class="MuiCheckbox-root MuiCheckbox-colorPrimary MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root emotion-24"
+              class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary emotion-24"
             >
               <input
                 class="PrivateSwitchBase-input emotion-25"
@@ -1148,7 +1148,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             style="justify-content: flex-end; margin: 24px 0px -16px 0px;"
           >
             <button
-              class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled  emotion-29"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled  emotion-29"
               disabled=""
               id="submit_button"
               tabindex="-1"
