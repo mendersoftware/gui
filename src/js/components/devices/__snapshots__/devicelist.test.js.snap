@@ -3,160 +3,160 @@
 exports[`DeviceList Component renders correctly 1`] = `
 "<div>
   <div
-    class=\\"deviceList \\"
-    style=\\"grid-template-columns: minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
+    class="deviceList "
+    style="grid-template-columns: minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);"
   >
     <div
-      class=\\"header css-nsqcrh-header\\"
+      class="header css-nsqcrh-header"
     >
       <div
-        class=\\"deviceListRow\\"
+        class="deviceListRow"
       >
         <div
-          class=\\"columnHeader flexbox space-between relative\\"
+          class="columnHeader flexbox space-between relative"
         >
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           />
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           />
         </div>
         <div
-          class=\\"columnHeader flexbox space-between relative\\"
+          class="columnHeader flexbox space-between relative"
         >
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           />
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           >
             <span
-              class=\\"resize-handle css-1bzlqzi-resizeHandle \\"
+              class="resize-handle css-1bzlqzi-resizeHandle "
             />
           </div>
         </div>
         <div
-          class=\\"columnHeader flexbox space-between relative\\"
+          class="columnHeader flexbox space-between relative"
         >
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           />
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           />
         </div>
         <div
-          class=\\"columnHeader flexbox space-between relative\\"
+          class="columnHeader flexbox space-between relative"
         >
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           />
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           />
         </div>
       </div>
     </div>
     <div
-      class=\\"body\\"
+      class="body"
     />
     <div
-      class=\\"footer flexbox margin-top\\"
+      class="footer flexbox margin-top"
     >
       <div
-        class=\\"MuiTablePagination-root flexbox margin-top margin-top-none css-1s8wd9s-MuiTablePagination-root\\"
+        class="MuiTablePagination-root flexbox margin-top margin-top-none css-1s8wd9s-MuiTablePagination-root"
       >
         <div
-          class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
+          class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar"
         >
           <div
-            class=\\"MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer\\"
+            class="MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer"
           />
           <p
-            class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
+            class="MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel"
             
           >
             Rows
           </p>
           <div
-            class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
+            class="MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
           >
             <div
-              aria-expanded=\\"false\\"
-              aria-haspopup=\\"listbox\\"
+              aria-expanded="false"
+              aria-haspopup="listbox"
               
-              class=\\"MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
+              class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
               
-              role=\\"button\\"
-              tabindex=\\"0\\"
+              role="button"
+              tabindex="0"
             >
               20
             </div>
             <input
-              aria-hidden=\\"true\\"
-              class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
-              tabindex=\\"-1\\"
-              value=\\"20\\"
+              aria-hidden="true"
+              class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+              tabindex="-1"
+              value="20"
             />
             <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
-              data-testid=\\"ArrowDropDownIcon\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon"
+              data-testid="ArrowDropDownIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
               <path
-                d=\\"M7 10l5 5 5-5z\\"
+                d="M7 10l5 5 5-5z"
               />
             </svg>
           </div>
           <p
-            class=\\"MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows\\"
+            class="MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows"
           />
           <div
-            class=\\"flexbox center-aligned\\"
+            class="flexbox center-aligned"
           >
             <div>
               1-20 of 50
             </div>
             <button
-              class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-              disabled=\\"\\"
-              tabindex=\\"-1\\"
-              type=\\"button\\"
+              class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+              disabled=""
+              tabindex="-1"
+              type="button"
             >
               <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                data-testid=\\"KeyboardArrowLeftIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                data-testid="KeyboardArrowLeftIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d=\\"M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                  d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
                 />
               </svg>
             </button>
             <div>
               <button
-                class=\\"MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-                tabindex=\\"0\\"
-                type=\\"button\\"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+                tabindex="0"
+                type="button"
               >
                 <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                  data-testid=\\"KeyboardArrowRightIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                  data-testid="KeyboardArrowRightIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d=\\"M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                    d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
                   />
                 </svg>
                 <span
-                  class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                 />
               </button>
             </div>
