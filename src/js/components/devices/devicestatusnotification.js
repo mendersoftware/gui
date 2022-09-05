@@ -7,9 +7,11 @@ import InfoText from '../common/infotext';
 
 const useStyles = makeStyles()(theme => ({
   default: {
-    background: theme.palette.grey[400],
     flexGrow: 1,
-    padding: theme.spacing(1.5)
+    ['&.onboard']: {
+      background: theme.palette.grey[400],
+      padding: theme.spacing(1.5)
+    }
   }
 }));
 
