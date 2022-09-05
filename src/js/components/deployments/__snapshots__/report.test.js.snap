@@ -2,198 +2,198 @@
 
 exports[`DeploymentReport Component renders correctly 1`] = `
 "<body
-  style=\\"padding-right: 1024px; overflow: hidden;\\"
+  style="padding-right: 1024px; overflow: hidden;"
 >
   <div
-    aria-hidden=\\"true\\"
+    aria-hidden="true"
   />
   <div
-    class=\\"MuiDrawer-root MuiDrawer-modal fadeIn MuiModal-root css-xvvah-MuiModal-root-MuiDrawer-root\\"
-    role=\\"presentation\\"
+    class="MuiDrawer-root MuiDrawer-modal fadeIn MuiModal-root css-xvvah-MuiModal-root-MuiDrawer-root"
+    role="presentation"
   >
     <div
-      aria-hidden=\\"true\\"
-      class=\\"MuiBackdrop-root css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop\\"
-      style=\\"opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\\"
+      aria-hidden="true"
+      class="MuiBackdrop-root css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop"
+      style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
     />
     <div
-      data-testid=\\"sentinelStart\\"
-      tabindex=\\"0\\"
+      data-testid="sentinelStart"
+      tabindex="0"
     />
     <div
-      class=\\"MuiPaper-root MuiPaper-elevation MuiPaper-elevation16 MuiDrawer-paper MuiDrawer-paperAnchorRight css-1ptxztg-MuiPaper-root-MuiDrawer-paper\\"
-      style=\\"min-width: 75vw;\\"
-      tabindex=\\"-1\\"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation16 MuiDrawer-paper MuiDrawer-paperAnchorRight css-1ptxztg-MuiPaper-root-MuiDrawer-paper"
+      style="min-width: 75vw;"
+      tabindex="-1"
     >
       <div
-        class=\\"flexbox margin-bottom-small space-between\\"
+        class="flexbox margin-bottom-small space-between"
       >
         <div
-          class=\\"flexbox\\"
+          class="flexbox"
         >
           <h3>
             Deployment details
           </h3>
           <h4
-            class=\\"margin-left-small margin-right-small\\"
+            class="margin-left-small margin-right-small"
           >
             ID: 
             d1
           </h4>
           <button
-            class=\\"MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-            style=\\"align-self: center;\\"
-            tabindex=\\"0\\"
-            type=\\"button\\"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+            style="align-self: center;"
+            tabindex="0"
+            type="button"
           >
             <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-              data-testid=\\"LinkIcon\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+              data-testid="LinkIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
               <path
-                d=\\"M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z\\"
+                d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
               />
             </svg>
             <span
-              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
             />
           </button>
         </div>
         <div
-          class=\\"flexbox center-aligned\\"
+          class="flexbox center-aligned"
         >
           <button
-            aria-label=\\"Devices that have not yet started the deployment will not start the deployment.
+            aria-label="Devices that have not yet started the deployment will not start the deployment.
 Devices that have already completed the deployment are not affected by the abort.
-Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.\\"
-            class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
-            data-mui-internal-clone-element=\\"true\\"
-            tabindex=\\"0\\"
-            type=\\"button\\"
+Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-qkdycn-MuiButtonBase-root-MuiButton-root"
+            data-mui-internal-clone-element="true"
+            tabindex="0"
+            type="button"
           >
             <span
-              class=\\"MuiButton-startIcon MuiButton-iconSizeMedium css-gcc2o7-MuiButton-startIcon\\"
+              class="MuiButton-startIcon MuiButton-iconSizeMedium css-gcc2o7-MuiButton-startIcon"
             >
               <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root\\"
-                data-testid=\\"BlockIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root"
+                data-testid="BlockIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z\\"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"
                 />
               </svg>
             </span>
             Abort
              deployment
             <span
-              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
             />
           </button>
           <button
-            aria-label=\\"close\\"
-            class=\\"MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-            tabindex=\\"0\\"
-            type=\\"button\\"
+            aria-label="close"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+            tabindex="0"
+            type="button"
           >
             <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-              data-testid=\\"CloseIcon\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
               <path
-                d=\\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\\"
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
               />
             </svg>
             <span
-              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
             />
           </button>
         </div>
       </div>
       <hr
-        class=\\"MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root\\"
+        class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
       />
       <div>
         <div
-          class=\\"report-container margin-top-large margin-bottom-large\\"
+          class="report-container margin-top-large margin-bottom-large"
         >
           <div
-            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
-            style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
+            class="break-all two-columns css-lcys7r-root  column-data "
+            style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
           >
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 Release
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               <a
-                class=\\"flexbox centered\\"
-                href=\\"/releases/a1\\"
-                rel=\\"noopener noreferrer\\"
-                style=\\"font-weight: 500;\\"
-                target=\\"_blank\\"
+                class="flexbox centered"
+                href="/releases/a1"
+                rel="noopener noreferrer"
+                style="font-weight: 500;"
+                target="_blank"
               >
                 a1
                 <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small css-1cwsc1r-MuiSvgIcon-root\\"
-                  data-testid=\\"LaunchIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small css-1cwsc1r-MuiSvgIcon-root"
+                  data-testid="LaunchIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d=\\"M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z\\"
+                    d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
                   />
                 </svg>
               </a>
             </div>
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 Target device(s)
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               <a
-                class=\\"flexbox centered\\"
-                href=\\"/devices?group=test%20deployment\\"
-                rel=\\"noopener noreferrer\\"
-                style=\\"font-weight: 500;\\"
-                target=\\"_blank\\"
+                class="flexbox centered"
+                href="/devices?group=test%20deployment"
+                rel="noopener noreferrer"
+                style="font-weight: 500;"
+                target="_blank"
               >
                 test deployment
                 <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small css-1cwsc1r-MuiSvgIcon-root\\"
-                  data-testid=\\"LaunchIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small css-1cwsc1r-MuiSvgIcon-root"
+                  data-testid="LaunchIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d=\\"M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z\\"
+                    d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"
                   />
                 </svg>
                 <div
-                  class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased css-1rh47q2-MuiChip-root-chip\\"
+                  class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault margin-left uppercased css-1rh47q2-MuiChip-root-chip"
                 >
                   <span
-                    class=\\"MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label\\"
+                    class="MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label"
                   >
                     static
                   </span>
@@ -201,94 +201,94 @@ Devices that are in the middle of the deployment at the time of abort will finis
               </a>
             </div>
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 Category
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               Software update
             </div>
           </div>
           <div
-            class=\\"flexbox column\\"
+            class="flexbox column"
           >
             <div
-              class=\\"break-all two-columns css-lcys7r-root  column-data \\"
-              style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
+              class="break-all two-columns css-lcys7r-root  column-data "
+              style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
             >
               <div
-                class=\\"align-right  muted\\"
+                class="align-right  muted"
               >
                 <b>
                   Created at
                 </b>
               </div>
               <div
-                class=\\"flexbox \\"
+                class="flexbox "
               >
                 <time
-                  datetime=\\"2019-01-01T12:30:00+00:00\\"
+                  datetime="2019-01-01T12:30:00+00:00"
                 >
                   2019-01-01 12:30
                 </time>
               </div>
             </div>
             <a
-              class=\\"margin-top-small flexbox center-aligned css-1ds475v-scheduleLink\\"
+              class="margin-top-small flexbox center-aligned css-1ds475v-scheduleLink"
             >
               Schedule details 
               <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root\\"
-                data-testid=\\"ArrowDropDownCircleOutlinedIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root"
+                data-testid="ArrowDropDownCircleOutlinedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d=\\"M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13-4-4h8z\\"
+                  d="M12 4c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8m0-2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13-4-4h8z"
                 />
               </svg>
             </a>
           </div>
         </div>
         <h4
-          class=\\"dashboard-header css-1oyj5ad-border css-zr8z23-header\\"
+          class="dashboard-header css-1oyj5ad-border css-zr8z23-header"
         >
           <span>
             Status
           </span>
         </h4>
         <div
-          class=\\"css-byr84k-progressStatus flexbox space-between centered margin-bottom \\"
+          class="css-byr84k-progressStatus flexbox space-between centered margin-bottom "
         >
           <div
-            class=\\"flexbox column\\"
+            class="flexbox column"
           >
             <div
-              class=\\"muted\\"
+              class="muted"
             >
               Status
             </div>
             <h4
-              class=\\"margin-bottom-none muted\\"
+              class="margin-bottom-none muted"
             >
               Pending
                (awaiting devices)
             </h4>
           </div>
           <div
-            class=\\"flexbox space-between align-right\\"
-            style=\\"min-width: 40%;\\"
+            class="flexbox space-between align-right"
+            style="min-width: 40%;"
           >
             <div
-              class=\\"flexbox column\\"
+              class="flexbox column"
             >
               <div
-                class=\\"muted margin-bottom-small\\"
+                class="muted margin-bottom-small"
               >
                 # devices
               </div>
@@ -297,212 +297,212 @@ Devices that are in the middle of the deployment at the time of abort will finis
               </div>
             </div>
             <div
-              class=\\"flexbox column disabled\\"
+              class="flexbox column disabled"
             >
               <div
-                class=\\"muted margin-bottom-small\\"
+                class="muted margin-bottom-small"
               >
                 Skipped
               </div>
               <div
-                class=\\"status\\"
+                class="status"
               >
                 0
               </div>
             </div>
             <div
-              class=\\"flexbox column disabled\\"
+              class="flexbox column disabled"
             >
               <div
-                class=\\"muted margin-bottom-small\\"
+                class="muted margin-bottom-small"
               >
                 Paused
               </div>
               <div
-                class=\\"status\\"
+                class="status"
               >
                 0
               </div>
             </div>
             <div
-              class=\\"flexbox column disabled\\"
+              class="flexbox column disabled"
             >
               <div
-                class=\\"muted margin-bottom-small\\"
+                class="muted margin-bottom-small"
               >
                 Pending
               </div>
               <div
-                class=\\"status\\"
+                class="status"
               >
                 0
               </div>
             </div>
             <div
-              class=\\"flexbox column \\"
+              class="flexbox column "
             >
               <div
-                class=\\"muted margin-bottom-small\\"
+                class="muted margin-bottom-small"
               >
                 In Progress
               </div>
               <div
-                class=\\"status\\"
+                class="status"
               >
                 1
               </div>
             </div>
             <div
-              class=\\"flexbox column disabled\\"
+              class="flexbox column disabled"
             >
               <div
-                class=\\"muted margin-bottom-small\\"
+                class="muted margin-bottom-small"
               >
                 Success
               </div>
               <div
-                class=\\"status\\"
+                class="status"
               >
                 0
               </div>
             </div>
             <div
-              class=\\"flexbox column disabled\\"
+              class="flexbox column disabled"
             >
               <div
-                class=\\"muted margin-bottom-small\\"
+                class="muted margin-bottom-small"
               >
                 Fail
               </div>
               <div
-                class=\\"status\\"
+                class="status"
               >
                 0
               </div>
             </div>
           </div>
           <div
-            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
-            style=\\"align-items: center; align-self: flex-start; grid-template-columns: max-content 1fr; max-width: 25vw;\\"
+            class="break-all two-columns css-lcys7r-root  column-data "
+            style="align-items: center; align-self: flex-start; grid-template-columns: max-content 1fr; max-width: 25vw;"
           >
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 Max attempts per device
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               1
             </div>
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 Maximum number of devices
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               N/A
             </div>
           </div>
         </div>
         <div
-          class=\\"loaderContainer shrunk\\"
+          class="loaderContainer shrunk"
         >
           <div
-            class=\\"  loader\\"
+            class="  loader"
           >
             <span
-              class=\\"dot dot_1\\"
+              class="dot dot_1"
             />
             <span
-              class=\\"dot dot_2\\"
+              class="dot dot_2"
             />
             <span
-              class=\\"dot dot_3\\"
+              class="dot dot_3"
             />
             <span
-              class=\\"dot dot_4\\"
+              class="dot dot_4"
             />
           </div>
         </div>
         <div>
           <table
-            class=\\"MuiTable-root css-1nu5t2j-MuiTable-root\\"
-            style=\\"min-height: 10vh; max-height: 40vh; overflow-x: auto;\\"
+            class="MuiTable-root css-1nu5t2j-MuiTable-root"
+            style="min-height: 10vh; max-height: 40vh; overflow-x: auto;"
           >
             <thead
-              class=\\"MuiTableHead-root css-15wwp11-MuiTableHead-root\\"
+              class="MuiTableHead-root css-15wwp11-MuiTableHead-root"
             >
               <tr
-                class=\\"MuiTableRow-root MuiTableRow-head css-cmdtp3-MuiTableRow-root\\"
+                class="MuiTableRow-root MuiTableRow-head css-cmdtp3-MuiTableRow-root"
               >
                 <th
-                  class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root\\"
-                  scope=\\"col\\"
-                  tooltip=\\"id\\"
+                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
+                  scope="col"
+                  tooltip="id"
                 >
                   id
                 </th>
                 <th
-                  class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root\\"
-                  scope=\\"col\\"
-                  tooltip=\\"Device type\\"
+                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
+                  scope="col"
+                  tooltip="Device type"
                 >
                   Device type
                 </th>
                 <th
-                  class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root\\"
-                  scope=\\"col\\"
-                  tooltip=\\"Current software\\"
+                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
+                  scope="col"
+                  tooltip="Current software"
                 >
                   Current software
                 </th>
                 <th
-                  class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root\\"
-                  scope=\\"col\\"
-                  tooltip=\\"Started\\"
+                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
+                  scope="col"
+                  tooltip="Started"
                 >
                   Started
                 </th>
                 <th
-                  class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root\\"
-                  scope=\\"col\\"
-                  tooltip=\\"Finished\\"
+                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
+                  scope="col"
+                  tooltip="Finished"
                 >
                   Finished
                 </th>
                 <th
-                  class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root\\"
-                  scope=\\"col\\"
-                  tooltip=\\"Deployment status\\"
+                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
+                  scope="col"
+                  tooltip="Deployment status"
                 >
                   Deployment status
                 </th>
                 <th
-                  class=\\"MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root\\"
-                  scope=\\"col\\"
-                  tooltip=\\"\\"
+                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
+                  scope="col"
+                  tooltip=""
                 />
               </tr>
             </thead>
             <tbody
-              class=\\"MuiTableBody-root css-apqrd9-MuiTableBody-root\\"
+              class="MuiTableBody-root css-apqrd9-MuiTableBody-root"
             >
               <tr
-                class=\\"MuiTableRow-root css-cmdtp3-MuiTableRow-root\\"
+                class="MuiTableRow-root css-cmdtp3-MuiTableRow-root"
               >
                 <td
-                  class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root\\"
+                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
                 >
                   <a
-                    href=\\"/devices?id=a1\\"
-                    style=\\"font-weight: initial; opacity: 1;\\"
+                    href="/devices?id=a1"
+                    style="font-weight: initial; opacity: 1;"
                   >
                     <div>
                       a1
@@ -510,142 +510,142 @@ Devices that are in the middle of the deployment at the time of abort will finis
                   </a>
                 </td>
                 <td
-                  class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root\\"
+                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
                 >
                   -
                 </td>
                 <td
-                  class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root\\"
+                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
                 >
                   -
                 </td>
                 <td
-                  class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root\\"
+                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
                 >
                   -
                 </td>
                 <td
-                  class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root\\"
+                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
                 >
                   -
                 </td>
                 <td
-                  class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root\\"
-                  style=\\"padding-right: 0px; position: relative; min-width: 200px;\\"
+                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
+                  style="padding-right: 0px; position: relative; min-width: 200px;"
                 >
                   installing
                   <div
-                    style=\\"position: absolute; bottom: 0px; width: 100%;\\"
+                    style="position: absolute; bottom: 0px; width: 100%;"
                   >
                     <span
-                      class=\\"MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate css-1pt8ui5-MuiLinearProgress-root\\"
-                      role=\\"progressbar\\"
+                      class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate css-1pt8ui5-MuiLinearProgress-root"
+                      role="progressbar"
                     >
                       <span
-                        class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate css-1hkl6bl-MuiLinearProgress-bar1\\"
+                        class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate css-1hkl6bl-MuiLinearProgress-bar1"
                       />
                       <span
-                        class=\\"MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate css-18y399u-MuiLinearProgress-bar2\\"
+                        class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate css-18y399u-MuiLinearProgress-bar2"
                       />
                     </span>
                   </div>
                 </td>
                 <td
-                  class=\\"MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root\\"
+                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
                 />
               </tr>
             </tbody>
           </table>
           <div
-            class=\\"MuiTablePagination-root flexbox margin-top  css-1s8wd9s-MuiTablePagination-root\\"
+            class="MuiTablePagination-root flexbox margin-top  css-1s8wd9s-MuiTablePagination-root"
           >
             <div
-              class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
+              class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar"
             >
               <div
-                class=\\"MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer\\"
+                class="MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer"
               />
               <p
-                class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
+                class="MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel"
                 
               >
                 Rows
               </p>
               <div
-                class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
+                class="MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
               >
                 <div
-                  aria-expanded=\\"false\\"
-                  aria-haspopup=\\"listbox\\"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
                   
-                  class=\\"MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
+                  class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
                   
-                  role=\\"button\\"
-                  tabindex=\\"0\\"
+                  role="button"
+                  tabindex="0"
                 >
                   10
                 </div>
                 <input
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
-                  tabindex=\\"-1\\"
-                  value=\\"10\\"
+                  aria-hidden="true"
+                  class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+                  tabindex="-1"
+                  value="10"
                 />
                 <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
-                  data-testid=\\"ArrowDropDownIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon"
+                  data-testid="ArrowDropDownIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d=\\"M7 10l5 5 5-5z\\"
+                    d="M7 10l5 5 5-5z"
                   />
                 </svg>
               </div>
               <p
-                class=\\"MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows\\"
+                class="MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows"
               />
               <div
-                class=\\"flexbox center-aligned\\"
+                class="flexbox center-aligned"
               >
                 <div>
                   1-1 of 1
                 </div>
                 <button
-                  class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-                  disabled=\\"\\"
-                  tabindex=\\"-1\\"
-                  type=\\"button\\"
+                  class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
                 >
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"KeyboardArrowLeftIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="KeyboardArrowLeftIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                      d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
                     />
                   </svg>
                 </button>
                 <div>
                   <button
-                    class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-                    disabled=\\"\\"
-                    tabindex=\\"-1\\"
-                    type=\\"button\\"
+                    class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
                   >
                     <svg
-                      aria-hidden=\\"true\\"
-                      class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                      data-testid=\\"KeyboardArrowRightIcon\\"
-                      focusable=\\"false\\"
-                      viewBox=\\"0 0 24 24\\"
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                      data-testid="KeyboardArrowRightIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
                     >
                       <path
-                        d=\\"M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                        d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
                       />
                     </svg>
                   </button>
@@ -655,167 +655,167 @@ Devices that are in the middle of the deployment at the time of abort will finis
           </div>
         </div>
         <h4
-          class=\\"dashboard-header css-1oyj5ad-border margin-top-large css-zr8z23-header\\"
+          class="dashboard-header css-1oyj5ad-border margin-top-large css-zr8z23-header"
         >
           <span>
             Schedule details
           </span>
         </h4>
         <div
-          class=\\"flexbox\\"
+          class="flexbox"
         >
           <div
-            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
-            style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
+            class="break-all two-columns css-lcys7r-root  column-data "
+            style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
           >
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 Start time
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               <time
-                datetime=\\"2019-01-01T12:30:00+00:00\\"
+                datetime="2019-01-01T12:30:00+00:00"
               >
                 2019-01-01 12:30
               </time>
             </div>
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 Current phase
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               1
             </div>
           </div>
           <svg
-            aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-106xbqu-MuiSvgIcon-root-phasesOverviewArrow\\"
-            data-testid=\\"ArrowForwardIcon\\"
-            focusable=\\"false\\"
-            viewBox=\\"0 0 24 24\\"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-106xbqu-MuiSvgIcon-root-phasesOverviewArrow"
+            data-testid="ArrowForwardIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
           >
             <path
-              d=\\"m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z\\"
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
             />
           </svg>
           <div
-            class=\\"break-all two-columns css-lcys7r-root  column-data \\"
-            style=\\"align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
+            class="break-all two-columns css-lcys7r-root  column-data "
+            style="align-items: center; align-self: flex-start; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
           >
             <div
-              class=\\"align-right  muted\\"
+              class="align-right  muted"
             >
               <b>
                 End time
               </b>
             </div>
             <div
-              class=\\"flexbox \\"
+              class="flexbox "
             >
               -
             </div>
           </div>
         </div>
         <div
-          class=\\"progress-chart-container margin-top css-frz7ob-container\\"
+          class="progress-chart-container margin-top css-frz7ob-container"
         >
           <div
-            class=\\"progress-chart detailed\\"
+            class="progress-chart detailed"
           >
             <div
-              class=\\"progress-step progress-step-total\\"
+              class="progress-step progress-step-total"
             >
               <div
-                class=\\"progress-bar\\"
+                class="progress-bar"
               />
             </div>
             <div
-              class=\\"progress-step\\"
-              style=\\"flex-grow: 1;\\"
+              class="progress-step"
+              style="flex-grow: 1;"
             >
               <div
-                class=\\"progress-step-number muted\\"
+                class="progress-step-number muted"
               >
                 Phase 1
               </div>
               <div
-                class=\\"flexbox progress-bar\\"
+                class="flexbox progress-bar"
               >
                 <div
-                  class=\\"progress-bar green\\"
-                  style=\\"width: 0%;\\"
+                  class="progress-bar green"
+                  style="width: 0%;"
                 />
                 <div
-                  class=\\"progress-bar warning\\"
-                  style=\\"width: 0%;\\"
+                  class="progress-bar warning"
+                  style="width: 0%;"
                 />
               </div>
             </div>
           </div>
         </div>
         <div
-          class=\\"deployment-phases-report margin-top margin-bottom\\"
-          style=\\"grid-template-columns: repeat(auto-fit, 270px);\\"
+          class="deployment-phases-report margin-top margin-bottom"
+          style="grid-template-columns: repeat(auto-fit, 270px);"
         >
           <div
-            class=\\"flexbox column centered css-1r3tzyq-phaseInfo \\"
+            class="flexbox column centered css-1r3tzyq-phaseInfo "
           >
             <div
-              class=\\"muted\\"
+              class="muted"
             >
               Complete
             </div>
             <div
-              class=\\"MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault css-128repl-MuiChip-root-phaseIndex\\"
+              class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault MuiChip-filledDefault css-128repl-MuiChip-root-phaseIndex"
             >
               <span
-                class=\\"MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label\\"
+                class="MuiChip-label MuiChip-labelSmall css-wjsjww-MuiChip-label"
               >
                 Phase 1
               </span>
             </div>
             <div
-              class=\\"break-all two-columns css-lcys7r-root  column-data \\"
-              style=\\"align-items: center; align-self: initial; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;\\"
+              class="break-all two-columns css-lcys7r-root  column-data "
+              style="align-items: center; align-self: initial; grid-template-columns: minmax(140px, 1fr) minmax(220px, 1fr); max-width: 25vw;"
             >
               <div
-                class=\\"align-right  muted\\"
+                class="align-right  muted"
               >
                 <b>
                   Start time
                 </b>
               </div>
               <div
-                class=\\"flexbox \\"
+                class="flexbox "
               >
                 <time
-                  datetime=\\"2019-01-01T12:30:00+00:00\\"
+                  datetime="2019-01-01T12:30:00+00:00"
                 >
                   2019-01-01 12:30
                 </time>
               </div>
               <div
-                class=\\"align-right  muted\\"
+                class="align-right  muted"
               >
                 <b>
                   Batch size
                 </b>
               </div>
               <div
-                class=\\"flexbox \\"
+                class="flexbox "
               >
                 <div
-                  class=\\"muted\\"
+                  class="muted"
                 >
                   100% (1 device)
                 </div>
@@ -825,12 +825,12 @@ Devices that are in the middle of the deployment at the time of abort will finis
         </div>
       </div>
       <hr
-        class=\\"MuiDivider-root MuiDivider-fullWidth MuiDivider-light css-13mkc9d-MuiDivider-root-divider\\"
+        class="MuiDivider-root MuiDivider-fullWidth MuiDivider-light css-13mkc9d-MuiDivider-root-divider"
       />
     </div>
     <div
-      data-testid=\\"sentinelEnd\\"
-      tabindex=\\"0\\"
+      data-testid="sentinelEnd"
+      tabindex="0"
     />
   </div>
 </body>"
