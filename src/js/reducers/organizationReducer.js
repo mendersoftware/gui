@@ -30,7 +30,12 @@ export const initialState = {
   externalDeviceIntegrations: [
     // { <connection_string|x509|...>, id, provider }
   ],
-  samlConfigs: []
+  samlConfigs: [],
+  webhooks: {
+    // [id]: { events: [] }
+    // for now:
+    events: []
+  }
 };
 
 const organizationReducer = (state = initialState, action) => {
@@ -81,6 +86,14 @@ const organizationReducer = (state = initialState, action) => {
       return {
         ...state,
         samlConfigs: action.value
+      };
+    case OrganizationConstants.RECEIVE_WEBHOOK_EVENTS:
+      return {
+        ...state,
+        webhooks: {
+          ...state.webhooks,
+          events: action.value
+        }
       };
     default:
       return state;

@@ -2,6 +2,7 @@ import Cookies from 'universal-cookie';
 
 import Api, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
+import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
@@ -14,6 +15,8 @@ export const tenantadmApiUrlv1 = `${apiUrl.v1}/tenantadm`;
 export const tenantadmApiUrlv2 = `${apiUrl.v2}/tenantadm`;
 export const samlIdpApiUrlv1 = `${apiUrl.v1}/useradm/sso/idp/metadata`;
 export const samlSpApiUrlv1 = `${apiUrl.v1}/useradm/sso/sp/metadata`;
+
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
@@ -192,6 +195,13 @@ export const getIntegrations = () => (dispatch, getState) =>
       }, []);
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
     });
+
+export const getWebhookEvents = config => dispatch => {
+  const { page = defaultPage, perPage = defaultPerPage } = config;
+  return Api.get(`${iotManagerBaseURL}/events?page=${page}&per_page=${perPage}`)
+    .catch(err => commonErrorHandler(err, 'There was an error retrieving activity for this integration', dispatch, commonErrorFallback))
+    .then(({ data }) => Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS, value: data })));
+};
 
 const samlConfigActions = {
   create: { success: 'stored', error: 'storing' },

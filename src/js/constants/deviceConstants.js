@@ -4,6 +4,7 @@ const { mdiAws: AWS, mdiMicrosoftAzure: Azure } = require('@mdi/js');
 
 const credentialTypes = {
   aws: 'aws',
+  http: 'http',
   sas: 'sas',
   x509: 'x509'
 };
@@ -131,6 +132,13 @@ module.exports = {
           .
         </span>
       )
+    },
+    webhook: {
+      credentialsType: credentialTypes.http,
+      deviceTwin: false,
+      // disable the webhook provider here, since it is treated different than other integrations, with a custom configuration & management view, etc.
+      enabled: false,
+      provider: 'webhook'
     }
   },
 
