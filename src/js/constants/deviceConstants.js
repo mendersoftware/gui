@@ -99,9 +99,7 @@ module.exports = {
 
   EXTERNAL_PROVIDER: {
     'iot-core': {
-      article: 'an',
       credentialsType: credentialTypes.aws,
-      credentialsAttribute: 'value',
       icon: AWS,
       title: 'AWS IoT Core',
       twinTitle: 'Device Shadow',
@@ -111,9 +109,7 @@ module.exports = {
       configHint: <>For help finding your AWS IoT Core connection string, check the AWS IoT documentation.</>
     },
     'iot-hub': {
-      article: 'an',
       credentialsType: credentialTypes.sas,
-      credentialsAttribute: 'connection_string',
       icon: Azure,
       title: 'Azure IoT Hub',
       twinTitle: 'Device Twin',

@@ -9,12 +9,12 @@ const integrations = [
   {
     id: 'iot-hub',
     provider: 'iot-hub',
-    credentials: { type: EXTERNAL_PROVIDER['iot-hub'].credentialsType, [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: 'something' }
+    credentials: { type: EXTERNAL_PROVIDER['iot-hub'].credentialsType, connection_string: 'something' }
   },
   {
     id: 'iot-core',
     provider: 'iot-core',
-    credentials: { type: EXTERNAL_PROVIDER['iot-core'].credentialsType, [EXTERNAL_PROVIDER['iot-core'].credentialsAttribute]: 'something else' }
+    credentials: { type: EXTERNAL_PROVIDER['iot-core'].credentialsType, aws: 'something else' }
   }
 ];
 

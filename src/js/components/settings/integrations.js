@@ -171,20 +171,20 @@ export const IntegrationConfiguration = ({ integration, isLast, onCancel, onDele
   );
 };
 
+const determineAvailableIntegrations = (integrations, isPreRelease) =>
+  Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
+    const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
+    if (provider.title && (provider.enabled || isPreRelease) && !hasIntegrationConfigured) {
+      accu.push(provider);
+    }
+    return accu;
+  }, []);
+
 export const Integrations = ({ changeIntegration, createIntegration, deleteIntegration, getIntegrations, integrations = [], isPreRelease }) => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
 
   const { classes } = useStyles();
-
-  const determineAvailableIntegrations = (integrations, isPreRelease) =>
-    Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
-      const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
-      if ((provider.enabled || isPreRelease) && !hasIntegrationConfigured) {
-        accu.push(provider);
-      }
-      return accu;
-    }, []);
 
   useEffect(() => {
     const available = determineAvailableIntegrations(integrations, isPreRelease);

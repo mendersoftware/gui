@@ -155,10 +155,13 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
 
-export const createIntegration = integration => dispatch =>
-  Api.post(`${iotManagerBaseURL}/integrations`, { provider: integration.provider, credentials: integration.credentials })
+export const createIntegration = integration => dispatch => {
+  // eslint-disable-next-line no-unused-vars
+  const { credentials, id, provider, ...remainder } = integration;
+  return Api.post(`${iotManagerBaseURL}/integrations`, { provider, credentials, ...remainder })
     .catch(err => commonErrorHandler(err, 'There was an error creating the integration', dispatch, commonErrorFallback))
     .then(() => Promise.all([dispatch(setSnackbar('The integration was set up successfully')), dispatch(getIntegrations())]));
+};
 
 export const changeIntegration = integration => dispatch =>
   Api.put(`${iotManagerBaseURL}/integrations/${integration.id}/credentials`, integration.credentials)
