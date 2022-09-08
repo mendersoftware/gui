@@ -50,6 +50,10 @@ describe('organization reducer', () => {
       12, 23
     ]);
   });
+  it('should handle RECEIVE_WEBHOOK_EVENTS', async () => {
+    expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS, value: [] }).webhooks.events).toEqual([]);
+    expect(reducer(initialState, { type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS, value: [12, 23] }).webhooks.events).toEqual([12, 23]);
+  });
   it('should handle RECEIVE_SAML_CONFIGS', async () => {
     expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: [] }).samlConfigs).toEqual([]);
     expect(reducer(initialState, { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: [12, 23] }).samlConfigs).toEqual([12, 23]);

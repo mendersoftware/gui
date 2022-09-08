@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { defaultState } from '../mockData';
+import { defaultState, webhookEvents } from '../mockData';
 import { PLANS } from '../../src/js/constants/appConstants';
 import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
 import { auditLogsApiUrl, samlSpApiUrlv1, samlIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
@@ -156,17 +156,7 @@ export const organizationHandlers = [
     return res(ctx.status(200));
   }),
   rest.get(`${iotManagerBaseURL}/events`, (req, res, ctx) => {
-    return res(
-      ctx.json([
-        {
-          id: '1',
-          type: 'device-status-changed',
-          data: { id: '1', status: 'accepted' },
-          time: '2020-09-01T12:00:00.000Z',
-          delivery_statuses: [{ integration_id: '1', success: true, status_code: 200 }]
-        }
-      ])
-    );
+    return res(ctx.json(webhookEvents));
   }),
   rest.get(samlIdpApiUrlv1, (req, res, ctx) => {
     return res(

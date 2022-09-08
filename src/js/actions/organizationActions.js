@@ -196,12 +196,14 @@ export const getIntegrations = () => (dispatch, getState) =>
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
     });
 
-export const getWebhookEvents = config => dispatch => {
-  const { page = defaultPage, perPage = defaultPerPage } = config;
-  return Api.get(`${iotManagerBaseURL}/events?page=${page}&per_page=${perPage}`)
-    .catch(err => commonErrorHandler(err, 'There was an error retrieving activity for this integration', dispatch, commonErrorFallback))
-    .then(({ data }) => Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS, value: data })));
-};
+export const getWebhookEvents =
+  (config = {}) =>
+  dispatch => {
+    const { page = defaultPage, perPage = defaultPerPage } = config;
+    return Api.get(`${iotManagerBaseURL}/events?page=${page}&per_page=${perPage}`)
+      .catch(err => commonErrorHandler(err, 'There was an error retrieving activity for this integration', dispatch, commonErrorFallback))
+      .then(({ data }) => Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS, value: data })));
+  };
 
 const samlConfigActions = {
   create: { success: 'stored', error: 'storing' },
