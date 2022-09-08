@@ -11,7 +11,7 @@ import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
 
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
-import { getIdAttribute, getTenantCapabilities, getUserSettings } from '../selectors';
+import { getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 import { Link } from 'react-router-dom';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
@@ -483,8 +483,9 @@ export const getDeviceById = id => (dispatch, getState) =>
 export const getDeviceInfo = deviceId => (dispatch, getState) => {
   const device = getState().devices.byId[deviceId] || {};
   const { hasDeviceConfig, hasMonitor } = getTenantCapabilities(getState());
+  const { canConfigure } = getUserCapabilities(getState());
   let tasks = [dispatch(getDeviceAuth(deviceId)), dispatch(getDeviceTwin(deviceId))];
-  if (hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
+  if (hasDeviceConfig && canConfigure && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
     tasks.push(dispatch(getDeviceConfig(deviceId)));
   }
   if (device.status === DEVICE_STATES.accepted) {
