@@ -33,7 +33,7 @@ test.describe('SAML Login', () => {
   test.use({ storageState: 'storage.json' });
   test.describe('SAML login via sso/id/login', () => {
     test.afterAll(async ({ environment, baseUrl, browserName }, testInfo) => {
-      if (environment !== 'staging') {
+      if (testInfo.status === 'skipped' || environment !== 'staging') {
         return;
       }
       console.log(`Finished ${testInfo.title} with status ${testInfo.status}. Cleaning up.`);
