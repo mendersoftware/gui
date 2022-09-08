@@ -2,16 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Button, Chip } from '@mui/material';
-import { Add as AddIcon, ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
+import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations, getWebhookEvents } from '../../../actions/organizationActions';
 import { emptyWebhook } from '../../../constants/organizationConstants';
 import { getDocsVersion } from '../../../selectors';
 import Time from '../../common/time';
-import Pagination from '../../common/pagination';
 import DetailsTable from '../../common/detailstable';
-import Confirm from '../../common/confirm';
 import WebhookManagement from './management';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 
@@ -48,8 +45,6 @@ export const Webhooks = ({
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const [selectedWebhook, setSelectedWebhook] = useState(webhook);
-  const [isRemoving, setIsRemoving] = useState(false);
-  const [confirmRemoval, setConfirmRemoval] = useState(false);
 
   useEffect(() => {
     getIntegrations();
@@ -58,12 +53,6 @@ export const Webhooks = ({
   useEffect(() => {
     setSelectedWebhook(webhook);
   }, [JSON.stringify(webhook)]);
-
-  const onAddClick = () => {
-    setAdding(true);
-    setEditing(false);
-    setSelectedWebhook({ ...emptyWebhook });
-  };
 
   const onEdit = item => {
     setAdding(false);
@@ -88,16 +77,6 @@ export const Webhooks = ({
 
   const onRemoveClick = () => deleteIntegration(selectedWebhook);
 
-  const onRemoveAllClick = () => {
-    setIsRemoving(true);
-    return Promise.all(webhooks.map(hook => deleteIntegration(hook))).finally(() => {
-      setIsRemoving(false);
-      setConfirmRemoval(false);
-    });
-  };
-
-  const toggleConfirmRemoval = () => setConfirmRemoval(current => !current);
-
   const { mappedWebhooks, relevantColumns } = useMemo(() => {
     const mappedWebhooks = webhooks.map(item => ({ ...item, url: item.credentials[EXTERNAL_PROVIDER.webhook.credentialsType].url, status: 'enabled' }));
     const relevantColumns = columns.reduce((accu, item) => {
@@ -113,10 +92,7 @@ export const Webhooks = ({
     <div>
       <h2>Webhooks</h2>
       {webhooks.length ? (
-        <>
-          <DetailsTable columns={relevantColumns} items={mappedWebhooks} onItemClick={onEdit} />
-          {webhooks.length > 20 && <Pagination />}
-        </>
+        <DetailsTable columns={relevantColumns} items={mappedWebhooks} onItemClick={onEdit} />
       ) : (
         <div className="flexbox centered">
           No webhooks are configured yet. Learn more about webhooks in our{' '}
@@ -125,23 +101,6 @@ export const Webhooks = ({
           </a>
         </div>
       )}
-      <div className="flexbox center-aligned relative hidden">
-        <Chip color="primary" icon={<AddIcon />} label="Add a webhook" onClick={onAddClick} />
-        <div className="margin-left-large">
-          {confirmRemoval && (
-            <Confirm
-              action={onRemoveAllClick}
-              cancel={toggleConfirmRemoval}
-              classes="confirmation-overlay"
-              style={{ width: 'inherit', paddingLeft: 20 }}
-              type="webhooksRemoval"
-            />
-          )}
-          <Button disabled={isRemoving} onClick={toggleConfirmRemoval}>
-            delete all
-          </Button>
-        </div>
-      </div>
       <WebhookManagement
         adding={adding}
         editing={editing}
