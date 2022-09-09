@@ -223,13 +223,13 @@ exports[`Auditlogs Component renders correctly 1`] = `
               
               placeholder="mmmm do"
               type="text"
-              value="January 1st"
+              value="January 13th"
             />
             <div
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
             >
               <button
-                aria-label="Choose date, selected date is Jan 1, 2019"
+                aria-label="Choose date, selected date is Jan 13, 2019"
                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root"
                 tabindex="0"
                 type="button"
@@ -272,13 +272,13 @@ exports[`Auditlogs Component renders correctly 1`] = `
               
               placeholder="mmmm do"
               type="text"
-              value="January 1st"
+              value="January 13th"
             />
             <div
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
             >
               <button
-                aria-label="Choose date, selected date is Jan 1, 2019"
+                aria-label="Choose date, selected date is Jan 13, 2019"
                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root"
                 tabindex="0"
                 type="button"

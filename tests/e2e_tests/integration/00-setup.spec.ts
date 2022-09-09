@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { expect } from '@playwright/test';
 
 import { baseUrlToDomain, login, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
+import { selectors } from '../utils/constants';
 import test from '../fixtures/fixtures';
 
 test.describe('Test setup', () => {
@@ -14,7 +15,9 @@ test.describe('Test setup', () => {
       try {
         fs.unlinkSync('loginInfo.json');
         await stopDockerClient();
-      } catch (error) {}
+      } catch (error) {
+        // ...continue
+      }
     });
     test('get the document object', async ({ page }) => {
       const documentCharset = await page.evaluate(() => document.charset);
@@ -41,11 +44,11 @@ test.describe('Test setup', () => {
       expect(await page.isVisible('text=/Sign up/i')).toBeTruthy();
       await page.click(`text=/Sign up/i`);
       console.log(`creating user with username: ${username} and password: ${password}`);
-      await page.fill('[id=email]', username);
-      await page.fill('[id=password_new]', password);
-      await page.fill('[id=password_new]', '');
-      await page.fill('[id=password_new]', password);
-      await page.fill('[id=password_confirmation]', password);
+      await page.fill(selectors.email, username);
+      await page.fill(selectors.passwordNew, password);
+      await page.fill(selectors.passwordNew, '');
+      await page.fill(selectors.passwordNew, password);
+      await page.fill(selectors.passwordConfirmation, password);
 
       await page.click(`button:has-text('Sign up')`);
       await page.waitForSelector(`button:has-text('Complete')`);

@@ -26,7 +26,7 @@ export const getPeristentLoginInfo = () => {
 
 const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io', token = '', projectRoot) => {
   const connectConfigFile = fs.readFileSync(`dockerClient/${fileName}.json`, 'utf8');
-  let connectConfig = JSON.parse(connectConfigFile);
+  const connectConfig = JSON.parse(connectConfigFile);
   connectConfig.ServerURL = serverUrl;
   if (token) {
     connectConfig.TenantToken = token;
@@ -46,7 +46,7 @@ export const startClient = async (baseUrl, token, count) => {
     mac_enp0: '12.34'
   };
   const updateInterval = 5;
-  let args = [
+  const args = [
     'run',
     ...Object.entries(attributes).map(([key, value]) => `--inventory-attribute="${key}:${value}"`),
     `--device-type=${deviceType}`,
@@ -61,7 +61,7 @@ export const startClient = async (baseUrl, token, count) => {
     args.push(`--tenant-token=${token}`);
   }
   console.log(`starting using: ./mender-stress-test-client ${args.join(' ')}`);
-  let child = spawn('./mender-stress-test-client', args);
+  const child = spawn('./mender-stress-test-client', args);
   child.on('error', err => console.error(`${err}`));
   child.on('message', err => console.error(`${err}`));
   child.on('spawn', err => console.error(`${err}`));
@@ -84,7 +84,7 @@ export const startDockerClient = async (baseUrl, token) => {
   // NB! to run the tests against a running local Mender backend, uncomment & adjust the following
   // const localNetwork = ['--network', 'menderintegration_mender'];
   const localNetwork = baseUrl.includes('docker.mender.io') ? ['--network', 'gui-tests_mender'] : [];
-  let args = [
+  const args = [
     'run',
     '--name',
     'connect-client',
@@ -101,7 +101,7 @@ export const startDockerClient = async (baseUrl, token) => {
   ];
   console.log(`starting with: ${token}`);
   console.log(`starting using: docker ${args.join(' ')}`);
-  let child = spawn('docker', args);
+  const child = spawn('docker', args);
   child.on('error', err => console.error(`${err}`));
   child.on('message', err => console.error(`${err}`));
   child.on('spawn', err => console.error(`${err}`));
@@ -119,7 +119,7 @@ export const startDockerClient = async (baseUrl, token) => {
 
 export const stopDockerClient = async () => {
   console.log('stopping: docker');
-  let child = spawn('docker stop connect-client && docker rm connect-client', {
+  const child = spawn('docker stop connect-client && docker rm connect-client', {
     shell: true
   });
   child.on('error', err => console.error(`${err}`));

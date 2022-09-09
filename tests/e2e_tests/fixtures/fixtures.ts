@@ -4,7 +4,7 @@ import { expect, test as coveredTest } from '@bgotink/playwright-coverage';
 
 type TestFixtures = {
   baseUrl: string;
-  config: Object;
+  config: unknown;
   environment: string;
   loggedInPage: Page;
   username: string;
@@ -46,6 +46,7 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     await use(page);
     await context.storageState({ path: 'storage.json' });
   },
+  // eslint-disable-next-line no-empty-pattern
   environment: async ({}, use) => {
     const environment = process.env.TEST_ENVIRONMENT ? process.env.TEST_ENVIRONMENT : 'localhost';
     await use(environment);

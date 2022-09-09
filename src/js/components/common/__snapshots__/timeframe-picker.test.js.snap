@@ -413,13 +413,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         id="mui-1"
         placeholder="mmmm do"
         type="text"
-        value="January 1st"
+        value="January 13th"
       />
       <div
         class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-4"
       >
         <button
-          aria-label="Choose date, selected date is Jan 1, 2019"
+          aria-label="Choose date, selected date is Jan 13, 2019"
           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-5"
           tabindex="0"
           type="button"
@@ -462,13 +462,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         id="mui-2"
         placeholder="mmmm do"
         type="text"
-        value="January 1st"
+        value="January 13th"
       />
       <div
         class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-4"
       >
         <button
-          aria-label="Choose date, selected date is Jan 1, 2019"
+          aria-label="Choose date, selected date is Jan 13, 2019"
           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-5"
           tabindex="0"
           type="button"

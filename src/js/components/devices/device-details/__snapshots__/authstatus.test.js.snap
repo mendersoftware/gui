@@ -701,9 +701,9 @@ exports[`AuthStatus Component renders correctly 1`] = `
                       show key
                     </a>
                     <time
-                      datetime="2019-01-01T06:25:00+00:00"
+                      datetime="2019-01-13T06:25:00+00:00"
                     >
-                      2019-01-01 06:25
+                      2019-01-13 06:25
                     </time>
                     <div
                       class="action-buttons flexbox"

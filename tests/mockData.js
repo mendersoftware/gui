@@ -26,11 +26,29 @@ window.mender_environment = {
   }
 };
 
-export const TEST_SESSION_DATETIME = '2019-01-01T13:00:00.000Z';
+export const TEST_SESSION_DATETIME = '2019-01-13T13:00:00.000Z';
 const testDate = new Date(TEST_SESSION_DATETIME);
 export const mockDate = new Date(testDate.setMilliseconds(testDate.getMilliseconds() + 900));
 
 export const defaultPassword = 'mysecretpassword!123';
+export const defaultCreationDate = '2019-01-13T06:25:00.000Z';
+export const defaultMacAddress = 'dc:a6:32:12:ad:bf';
+
+const deviceTypes = { qemu: 'qemux86-64' };
+const permissionSetObjectTypes = {
+  any: 'Any',
+  artifacts: 'Artifacts',
+  empty: '',
+  groups: 'Device groups',
+  releases: 'Releases',
+  userManagement: 'User management'
+};
+
+const commonEndpoints = {
+  artifacts: '^/api/management/v1/deployments/artifacts',
+  artifactDetails: '^/api/management/v1/deployments/artifacts/[^/]+',
+  deviceManagement: '^/api/management/(v[1-9])/(devauth|inventory)/'
+};
 
 export const token =
   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjZTNkMGY4Yy1hZWRlLTQwMzAtYjM5MS03ZDUwMjBlYjg3M2UiLCJzdWIiOiJhMzBhNzgwYi1iODQzLTUzNDQtODBlMy0wZmQ5NWE0ZjZmYzMiLCJleHAiOjE2MDY4MTUzNjksImlhdCI6MTYwNjIxMDU2OSwibWVuZGVyLnRlbmFudCI6IjVmODVjMTdiY2U2MmI3ZmE3ZjVmNzA0MCIsIm1lbmRlci51c2VyIjp0cnVlLCJpc3MiOiJNZW5kZXIgVXNlcnMiLCJzY3AiOiJtZW5kZXIuKiIsIm1lbmRlci5wbGFuIjoicHJvZmVzc2lvbmFsIiwibmJmIjoxNjA2MjEwNTY5fQ.qVgYdCzLTf8OdK9uUctqqaY_HWkIiwpekuGvuGQAXCEgOv4bRNDlZRN_ZRSbxQoARG3pquhScbQrjBV9tcF4irTUPlTn3yrsXNO17DpcbTVeKRkb88RDtIKiRw3orVZ_GlIb-ckTQ5dS-Nqlyyf3Fmrhca-gwt6m_xv2UrmJK6eYYTMfggdRRWb-4u7mEkBI_pHPMTQrT8kJ2BeX-vHgazH9AoH0k85LHtFZQXD7pXHlDZRnLxJXukncwMGDmF17374gavYAIyDIzcC8sEBMDnVXgpikeA1sauzirqix6mAVs6XmxdQO7aF0wfXO1_PTYUA3Nk1oQfMYNlEI3U9uLRJRZIq2L8fmrrBryhstKd4y0KlBbGAQrx8NtRkgajjd1ljMfPBUEZrb7uSerVjneiO-aIBO76CuH0zdklphIjpGJeogkBhe8pAYNggp1XsZHgpZfl7IE5faKaDkMGnutaea--Czor6bhqUNCuY4tR0cpQJbNwy6LS9o1CFy4Log';
@@ -149,17 +167,17 @@ export const defaultState = {
           device_type: ['raspberrypi4'],
           ipv4_wlan0: '192.168.10.141/24'
         },
-        identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+        identity_data: { mac: defaultMacAddress },
         status: 'accepted',
         decommissioning: false,
-        created_ts: '2019-01-01T06:25:00.000Z',
+        created_ts: defaultCreationDate,
         updated_ts: '2019-01-01T09:25:00.000Z',
         auth_sets: [
           {
             id: 'auth1',
-            identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+            identity_data: { mac: defaultMacAddress },
             pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
-            ts: '2019-01-01T06:25:00.000Z',
+            ts: defaultCreationDate,
             status: 'accepted'
           }
         ]
@@ -168,19 +186,19 @@ export const defaultState = {
         id: 'b1',
         attributes: {
           ipv4_wlan0: '192.168.10.141/24',
-          device_type: ['qemux86-64']
+          device_type: [deviceTypes.qemu]
         },
-        identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+        identity_data: { mac: defaultMacAddress },
         status: 'accepted',
         decommissioning: false,
-        created_ts: '2019-01-01T06:25:00.000Z',
+        created_ts: defaultCreationDate,
         updated_ts: '2019-01-01T09:25:00.000Z',
         auth_sets: [
           {
             id: 'auth1',
-            identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+            identity_data: { mac: defaultMacAddress },
             pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
-            ts: '2019-01-01T06:25:00.000Z',
+            ts: defaultCreationDate,
             status: 'accepted'
           }
         ]
@@ -370,21 +388,21 @@ export const defaultState = {
           {
             id: 'art1',
             description: 'test description',
-            device_types_compatible: ['qemux86-64'],
+            device_types_compatible: [deviceTypes.qemu],
             modified: '2020-09-10T12:16:22.667Z',
             updates: [{ type_info: 'testtype' }],
             artifact_depends: {
-              device_type: ['qemux86-64']
+              device_type: [deviceTypes.qemu]
             },
             artifact_provides: {
               artifact_name: 'myapp',
               'data-partition.myapp.version': 'v2020.10',
-              list_of_fancy: ['qemux86-64', 'x172']
+              list_of_fancy: [deviceTypes.qemu, 'x172']
             },
             clears_artifact_provides: ['data-partition.myapp.*']
           }
         ],
-        device_types_compatible: ['qemux86-64'],
+        device_types_compatible: [deviceTypes.qemu],
         modified: '2020-09-10T12:16:22.667Z',
         metaData: {}
       }
@@ -444,7 +462,7 @@ export const releasesList = Array.from({ length: 5000 }, (x, i) => ({
 export const permissionSets = [
   {
     name: defaultPermissionSets.Basic.value,
-    object: '',
+    object: permissionSetObjectTypes.empty,
     description: 'Set containing basic permissions.',
     permissions: [
       { action: 'http', object: { type: 'any', value: '^/api/management/v1/useradm/settings$' } },
@@ -458,34 +476,34 @@ export const permissionSets = [
   },
   {
     name: defaultPermissionSets.ManageReleases.value,
-    action: 'Manage',
-    object: 'Releases',
+    action: uiPermissionsById.manage.title,
+    object: permissionSetObjectTypes.releases,
     description: 'Set of permissions which allows user to manage releases',
     permissions: [
-      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts' } },
-      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
-      { action: 'http', object: { type: 'PUT', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
-      { action: 'http', object: { type: 'DELETE', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
+      { action: 'http', object: { type: 'GET', value: commonEndpoints.artifacts } },
+      { action: 'http', object: { type: 'GET', value: commonEndpoints.artifactDetails } },
+      { action: 'http', object: { type: 'PUT', value: commonEndpoints.artifactDetails } },
+      { action: 'http', object: { type: 'DELETE', value: commonEndpoints.artifactDetails } },
       { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+/download' } }
     ]
   },
   {
     name: defaultPermissionSets.ReadUsers.value,
-    action: 'Read',
-    object: 'User management',
+    action: uiPermissionsById.read.title,
+    object: permissionSetObjectTypes.userManagement,
     description: 'Set of permissions which allows user to view other users',
     permissions: [{ action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9])/useradm/' } }]
   },
   {
     name: defaultPermissionSets.ManageUsers.value,
-    action: 'Manage',
-    object: 'User management',
+    action: uiPermissionsById.manage.title,
+    object: permissionSetObjectTypes.userManagement,
     description: 'Set of permissions which allows user manage other user accounts',
     permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/useradm/' } }]
   },
   {
     name: defaultPermissionSets.ReadAuditLogs.value,
-    action: 'Read',
+    action: uiPermissionsById.read.title,
     object: 'System audit log',
     description: 'Set of permissions which allows user to view system audit log',
     permissions: [{ action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/auditlogs/logs' } }]
@@ -493,7 +511,7 @@ export const permissionSets = [
   {
     name: defaultPermissionSets.DeployToDevices.value,
     action: 'Deploy',
-    object: 'Device groups',
+    object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to deploy to devices',
     permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/(deployments|deviceconfig)/' } }],
     supported_scope_types: ['DeviceGroups']
@@ -501,7 +519,7 @@ export const permissionSets = [
   {
     name: defaultPermissionSets.ConnectToDevices.value,
     action: 'Connect',
-    object: 'Device groups',
+    object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to use remote terminal and file transfer',
     permissions: [
       { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+/connect$' } },
@@ -513,24 +531,24 @@ export const permissionSets = [
   {
     name: defaultPermissionSets.SuperUser.value,
     action: 'Any',
-    object: 'Any',
+    object: permissionSetObjectTypes.any,
     description: 'Set of permissions which allows user to do anything',
     permissions: [{ action: 'any', object: { type: 'any', value: 'any' } }]
   },
   {
     name: defaultPermissionSets.UploadArtifacts.value,
     action: 'Upload',
-    object: 'Artifacts',
+    object: permissionSetObjectTypes.artifacts,
     description: 'Set of permissions which allows user to upload artifacts',
     permissions: [
-      { action: 'http', object: { type: 'POST', value: '^/api/management/v1/deployments/artifacts' } },
+      { action: 'http', object: { type: 'POST', value: commonEndpoints.artifacts } },
       { action: 'http', object: { type: 'POST', value: '^/api/management/v1/deployments/artifacts/generate' } }
     ]
   },
   {
     name: defaultPermissionSets.ReadDevices.value,
-    action: 'Read',
-    object: 'Device groups',
+    action: uiPermissionsById.read.title,
+    object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to view devices',
     permissions: [
       { action: 'http', object: { type: 'POST', value: '^/api/management/v2/inventory/filters/search' } },
@@ -542,24 +560,24 @@ export const permissionSets = [
   },
   {
     name: defaultPermissionSets.ManageDevices.value,
-    action: 'Manage',
-    object: 'Device groups',
+    action: uiPermissionsById.manage.title,
+    object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to manage devices',
     permissions: [
-      { action: 'http', object: { type: 'POST', value: '^/api/management/(v[1-9])/(devauth|inventory)/' } },
-      { action: 'http', object: { type: 'PUT', value: '^/api/management/(v[1-9])/(devauth|inventory)/' } },
-      { action: 'http', object: { type: 'DELETE', value: '^/api/management/(v[1-9])/(devauth|inventory)/' } }
+      { action: 'http', object: { type: 'POST', value: commonEndpoints.deviceManagement } },
+      { action: 'http', object: { type: 'PUT', value: commonEndpoints.deviceManagement } },
+      { action: 'http', object: { type: 'DELETE', value: commonEndpoints.deviceManagement } }
     ],
     supported_scope_types: ['DeviceGroups']
   },
   {
     name: defaultPermissionSets.ReadReleases.value,
-    action: 'Read',
-    object: 'Releases',
+    action: uiPermissionsById.read.title,
+    object: permissionSetObjectTypes.releases,
     description: 'Set of permissions which allows user to view releases',
     permissions: [
-      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts' } },
-      { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+' } },
+      { action: 'http', object: { type: 'GET', value: commonEndpoints.artifacts } },
+      { action: 'http', object: { type: 'GET', value: commonEndpoints.artifactDetails } },
       { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+/download' } }
     ]
   }

@@ -35,7 +35,7 @@ test.describe('Device details', () => {
     // NB! screenshots should only be taken by running the docker composition (as in CI) - never in open mode,
     // as the resizing option on `allowSizeMismatch` only pads the screenshot with transparent pixels until
     // the larger size is met (when diffing screenshots of multiple sizes) and does not scale to fit!
-    let elementHandle = await page.$('.terminal.xterm .xterm-text-layer');
+    const elementHandle = await page.$('.terminal.xterm .xterm-text-layer');
     expect(elementHandle).toBeTruthy();
     if (['chromium', 'webkit'].includes(browserName)) {
       const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalContent-actual.png');

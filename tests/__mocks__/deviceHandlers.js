@@ -1,23 +1,23 @@
 import { rest } from 'msw';
 
-import { defaultState } from '../mockData';
+import { defaultCreationDate, defaultMacAddress, defaultState } from '../mockData';
 import { deviceAuthV2, deviceConfig, deviceConnect, inventoryApiUrl, inventoryApiUrlV2, iotManagerBaseURL } from '../../src/js/actions/deviceActions';
 import { headerNames } from '../../src/js/api/general-api';
 import DeviceConstants from '../../src/js/constants/deviceConstants';
 
 const deviceAuthDevice = {
   id: defaultState.devices.byId.a1.id,
-  identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+  identity_data: { mac: defaultMacAddress },
   status: 'accepted',
   decommissioning: false,
-  created_ts: '2019-01-01T06:25:00.000Z',
+  created_ts: defaultCreationDate,
   updated_ts: '2019-01-01T09:25:00.000Z',
   auth_sets: [
     {
       id: 'auth1',
-      identity_data: { mac: 'dc:a6:32:12:ad:bf' },
+      identity_data: { mac: defaultMacAddress },
       pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
-      ts: '2019-01-01T06:25:00.000Z',
+      ts: defaultCreationDate,
       status: 'accepted'
     }
   ]
@@ -30,7 +30,7 @@ export const inventoryDevice = {
     { name: 'kernel', value: 'Linux version 4.19.75-v7l+', scope: 'inventory' },
     { name: 'artifact_name', value: 'raspotifyInstaller', scope: 'inventory' },
     { name: 'ipv6_wlan0', value: 'fe80::68d9:8453:3e9c:7c80/64', scope: 'inventory' },
-    { name: 'mac_eth0', value: 'dc:a6:32:12:ad:bf', scope: 'inventory' },
+    { name: 'mac_eth0', value: defaultMacAddress, scope: 'inventory' },
     { name: 'rootfs_type', value: 'ext4', scope: 'inventory' },
     { name: 'mender_bootloader_integration', value: 'unknown', scope: 'inventory' },
     { name: 'cpu_model', value: 'ARMv7 Processor rev 3 (v7l)', scope: 'inventory' },
@@ -41,10 +41,10 @@ export const inventoryDevice = {
     { name: 'mem_total_kB', value: '1986024', scope: 'inventory' },
     { name: 'mac_wlan0', value: 'dc:a6:32:12:ad:c0', scope: 'inventory' },
     { name: 'os', value: 'Raspbian GNU/Linux 10 (buster)', scope: 'inventory' },
-    { name: 'created_ts', value: '2019-01-01T06:25:00.000Z', scope: 'system' },
+    { name: 'created_ts', value: defaultCreationDate, scope: 'system' },
     { name: 'updated_ts', value: '2019-01-01T10:25:00.000Z', scope: 'system' },
     { name: 'status', value: 'accepted', scope: 'identity' },
-    { name: 'mac', value: 'dc:a6:32:12:ad:bf', scope: 'identity' },
+    { name: 'mac', value: defaultMacAddress, scope: 'identity' },
     { name: 'group', value: 'test', scope: 'system' }
   ],
   updated_ts: '2019-01-01T10:25:00.000Z'

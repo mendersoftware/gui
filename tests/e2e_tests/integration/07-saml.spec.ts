@@ -7,27 +7,19 @@ import test, { expect } from '../fixtures/fixtures';
 const timeoutFourSeconds = 4000;
 const timeoutOneSecond = 1000;
 const samlSettings = {
-  'credentials': {
-    'chromium': {
-      'login': 'morty',
-      'password': 'panic',
-      'email': 'msmith@samltest.id'
-    },
-    'firefox': {
-      'login': 'rick',
-      'password': 'psych',
-      'email': 'rsanchez@samltest.id'
-    },
-    'webkit': {
-      'login': 'sheldon',
-      'password': 'bazinga',
-      'email': 'scooper@samltest.id'
-    }
+  credentials: {
+    chromium: { login: 'morty', password: 'panic', email: 'msmith@samltest.id' },
+    firefox: { login: 'rick', password: 'psych', email: 'rsanchez@samltest.id' },
+    webkit: { login: 'sheldon', password: 'bazinga', email: 'scooper@samltest.id' }
   },
-  'idp_url': 'https://samltest.id/saml/idp'
+  idp_url: 'https://samltest.id/saml/idp'
 };
+
 let metadataId;
 let jwt;
+
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+const defaultHeaders = { 'Content-Type': 'application/json' };
 
 test.describe('SAML Login', () => {
   test.use({ storageState: 'storage.json' });
@@ -40,13 +32,8 @@ test.describe('SAML Login', () => {
       const response = await axios({
         url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings.credentials[browserName].email)}`,
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json'
-        },
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        })
+        headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` },
+        httpsAgent
       });
 
       const responseStatus = await response.status;
@@ -58,15 +45,10 @@ test.describe('SAML Login', () => {
         const responseDelete = await axios({
           url: `${baseUrl}api/management/v1/useradm/users/${userId}`,
           method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            'Content-Type': 'application/json'
-          },
-          httpsAgent: new https.Agent({
-            rejectUnauthorized: false
-          })
+          headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` },
+          httpsAgent
         });
-        expect(response.status).toBe(200);
+        expect(responseDelete.status).toBe(200);
         console.log(`removed user ${samlSettings.credentials[browserName].email}/${userId}.`);
       }
     });
@@ -78,10 +60,7 @@ test.describe('SAML Login', () => {
       const storage = await context.storageState();
       jwt = storage['cookies'].find(cookie => cookie.name === 'JWT').value;
 
-      const idpResponse = await axios({
-        url: samlSettings.idp_url,
-        method: 'GET'
-      });
+      const idpResponse = await axios({ url: samlSettings.idp_url, method: 'GET' });
       expect(idpResponse.status).toBe(200);
       const metadata = idpResponse.data;
 
@@ -112,13 +91,8 @@ test.describe('SAML Login', () => {
       const response = await axios({
         url: `${baseUrl}api/management/v1/useradm/sso/idp/metadata`,
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json'
-        },
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        })
+        headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` },
+        httpsAgent
       });
       expect(response.status).toBe(200);
       metadataId = response.data[0]['id'];
@@ -173,13 +147,8 @@ test.describe('SAML Login', () => {
       const response = await axios({
         url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings.credentials[browserName].email)}`,
         method: 'GET',
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json'
-        },
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        })
+        headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` },
+        httpsAgent
       });
 
       const responseStatus = await response.status;
