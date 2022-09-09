@@ -3,6 +3,11 @@ import * as path from 'path';
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
 
+const terminalReferenceFileMap = {
+  default: 'terminalContent.png',
+  webkit: 'terminalContent-webkit.png'
+};
+
 test.describe('Device details', () => {
   test.use({ storageState: 'storage.json' });
 
@@ -41,7 +46,7 @@ test.describe('Device details', () => {
       const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalContent-actual.png');
       await elementHandle.screenshot({ path: screenShotPath });
 
-      const expectedPath = path.join(__dirname, '..', 'fixtures', 'terminalContent.png');
+      const expectedPath = path.join(__dirname, '..', 'fixtures', terminalReferenceFileMap[browserName] ?? terminalReferenceFileMap.default);
       const { pass } = compareImages(expectedPath, screenShotPath);
       expect(pass).toBeTruthy();
 
