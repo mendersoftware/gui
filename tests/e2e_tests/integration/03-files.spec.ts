@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import md5 from 'md5';
 import test, { expect } from '../fixtures/fixtures';
+import { selectors } from '../utils/constants';
 
 dayjs.extend(isBetween);
 
@@ -56,11 +57,11 @@ test.describe('Files', () => {
     await page.click(`css=.expandedDevice >> text=file transfer`);
     await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });
     await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
-    await page.click('[placeholder*=Example]', { clickCount: 3 });
-    await page.type('[placeholder*=Example]', `/tmp/${fileName}`);
+    await page.click(selectors.placeholderExample, { clickCount: 3 });
+    await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
     await page.click('css=button >> text=Upload');
     await page.click('css=.navLink >> text=Download');
-    await page.type('[placeholder*=Example]', `/tmp/${fileName}`);
+    await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
     expect(await page.isVisible(`css=button >> text=Download`)).toBeTruthy();
     const [download] = await Promise.all([page.waitForEvent('download'), page.click(`css=button >> text=Download`)]);
     const downloadTargetPath = await download.path();

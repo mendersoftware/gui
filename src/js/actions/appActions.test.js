@@ -336,7 +336,7 @@ describe('app actions', () => {
   });
   it('should calculate yesterdays timestamp', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: AppConstants.SET_YESTERDAY, value: '2018-12-31T13:00:00.900Z' }];
+    const expectedActions = [{ type: AppConstants.SET_YESTERDAY, value: '2019-01-12T13:00:00.900Z' }];
     await store.dispatch(setYesterday());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

@@ -3,6 +3,7 @@ import * as https from 'https';
 import jwtDecode from 'jwt-decode';
 
 import test, { expect } from '../fixtures/fixtures';
+import { selectors } from '../utils/constants';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {
@@ -13,12 +14,12 @@ test.describe('Login', () => {
     test('Logs in using UI', async ({ context, page, password, username }) => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       // enter valid username and password
-      await page.waitForSelector('[name=email]');
-      await page.click('[name=email]');
-      await page.fill('[name=email]', username);
-      await page.waitForSelector('[name=password]');
-      await page.focus('[name=password]');
-      await page.fill('[name=password]', password);
+      await page.waitForSelector(selectors.email);
+      await page.click(selectors.email);
+      await page.fill(selectors.email, username);
+      await page.waitForSelector(selectors.password);
+      await page.focus(selectors.password);
+      await page.fill(selectors.password, password);
       await page.click(`:is(button:has-text('Log in'))`);
       // confirm we have logged in successfully
       await page.waitForSelector('text=License information');
@@ -60,12 +61,12 @@ test.describe('Login', () => {
       console.log(`logging in user with username: ${username} and password: lewrongpassword`);
       await page.goto(`${baseUrl}ui/`);
       // enter valid username and invalid password
-      await page.waitForSelector('[name=email]');
-      await page.click('[name=email]');
-      await page.fill('[name=email]', username);
-      await page.waitForSelector('[name=password]');
-      await page.click('[name=password]');
-      await page.fill('[name=password]', 'lewrongpassword');
+      await page.waitForSelector(selectors.email);
+      await page.click(selectors.email);
+      await page.fill(selectors.email, username);
+      await page.waitForSelector(selectors.password);
+      await page.click(selectors.password);
+      await page.fill(selectors.password, 'lewrongpassword');
       await page.click(`:is(button:has-text('Log in'))`);
 
       // still on /login page plus an error is displayed
@@ -83,12 +84,12 @@ test.describe('Login', () => {
     test('pt1', async ({ context, password, page, username }) => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       // enter valid username and password
-      await page.waitForSelector('[name=email]');
-      await page.click('[name=email]');
-      await page.fill('[name=email]', username);
-      await page.waitForSelector('[name=password]');
-      await page.click('[name=password]');
-      await page.fill('[name=password]', password);
+      await page.waitForSelector(selectors.email);
+      await page.click(selectors.email);
+      await page.fill(selectors.email, username);
+      await page.waitForSelector(selectors.password);
+      await page.click(selectors.password);
+      await page.fill(selectors.password, password);
       await page.check('[type=checkbox]', { force: true });
       await page.click(`:is(button:has-text('Log in'))`);
 

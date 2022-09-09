@@ -27,6 +27,7 @@ const PermissionTypes = {
 
 const permissionSetIds = {
   Basic: 'Basic',
+  ConfigureDevices: 'ConfigureDevices',
   ConnectToDevices: 'ConnectToDevices',
   DeployToDevices: 'DeployToDevices',
   ManageDevices: 'ManageDevices',
@@ -41,6 +42,14 @@ const permissionSetIds = {
 };
 
 const uiPermissionsById = {
+  configure: {
+    explanations: { groups: `'Configure' allows the user to use mender-configure features and apply configurations.` },
+    permissionLevel: 2,
+    permissionSets: { groups: permissionSetIds.ConfigureDevices },
+    title: 'Configure',
+    value: 'configure',
+    verbs: [PermissionTypes.Get, PermissionTypes.Put, PermissionTypes.Post]
+  },
   connect: {
     explanations: { groups: `'Connect' allows the user to use mender-connect features and Troubleshoot add-ons.` },
     permissionLevel: 2,
@@ -134,6 +143,12 @@ const defaultPermissionSets = {
       releases: [uiPermissionsById.manage.value]
     }
   },
+  [permissionSetIds.ConfigureDevices]: {
+    value: permissionSetIds.ConfigureDevices,
+    result: {
+      groups: { [ALL_DEVICES]: [uiPermissionsById.configure.value] }
+    }
+  },
   [permissionSetIds.ConnectToDevices]: {
     value: permissionSetIds.ConnectToDevices,
     result: {
@@ -189,13 +204,13 @@ const uiPermissionsByArea = {
         types: [PermissionTypes.Get],
         uiPermissions: [uiPermissionsById.read]
       },
-      { path: /\/(devauth|inventory|deviceconfig)/i, types: [PermissionTypes.Put, PermissionTypes.Post], uiPermissions: [uiPermissionsById.manage] },
-      { path: /\/(deviceconfig)/i, types: [PermissionTypes.Post], uiPermissions: [uiPermissionsById.deploy] },
+      { path: /\/(devauth|inventory)/i, types: [PermissionTypes.Put, PermissionTypes.Post], uiPermissions: [uiPermissionsById.manage] },
+      { path: /\/(deviceconfig)/i, types: [PermissionTypes.Get, PermissionTypes.Put, PermissionTypes.Post], uiPermissions: [uiPermissionsById.configure] },
       { path: /\/(deviceconnect\/devices)/i, types: [PermissionTypes.Get, PermissionTypes.Post], uiPermissions: [uiPermissionsById.connect] }
     ],
     explanation: 'Device group management permissions control the degree to which devices in a group can be accessed and moved to other groups.',
     scope: 'DeviceGroups',
-    uiPermissions: [uiPermissionsById.read, uiPermissionsById.manage, uiPermissionsById.deploy, uiPermissionsById.connect],
+    uiPermissions: [uiPermissionsById.read, uiPermissionsById.manage, uiPermissionsById.deploy, uiPermissionsById.configure, uiPermissionsById.connect],
     title: 'Group Management'
   },
   releases: {

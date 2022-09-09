@@ -1,4 +1,5 @@
 import test, { expect } from '../fixtures/fixtures';
+import { selectors } from '../utils/constants';
 
 test.describe('Layout assertions', () => {
   const navbar = '.leftFixed.leftNav';
@@ -32,7 +33,7 @@ test.describe('Layout assertions', () => {
     if (!hasAcceptedDevice) {
       await page.waitForSelector(`text=pending authorization`, { timeout: 60000 });
       await page.click(`text=pending authorization`);
-      await page.click('.deviceListItem input');
+      await page.click(selectors.deviceListCheckbox);
       await page.click('.MuiSpeedDial-fab');
       await page.hover('#device-actions-actions');
       await page.click('[aria-label="accept"]');
@@ -49,7 +50,7 @@ test.describe('Layout assertions', () => {
 
   test('can group a device', async ({ loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
-    await page.click('.deviceListItem input');
+    await page.click(selectors.deviceListCheckbox);
     await page.hover('.MuiSpeedDial-fab');
     await page.click('[aria-label="group-add"]');
     await page.type('#group-creation-selection', 'testgroup');
@@ -57,7 +58,7 @@ test.describe('Layout assertions', () => {
     await page.click(`:is(:text-matches('create group', 'i'), :text-matches('add to group', 'i'))`);
     expect(await page.isVisible(`.grouplist:has-text('testgroup')`)).toBeTruthy();
     await page.click(`.grouplist:has-text('All devices')`);
-    await page.click('.deviceListItem input');
+    await page.click(selectors.deviceListCheckbox);
     await page.click(`.grouplist:has-text('testgroup')`);
     expect(await page.locator(`css=.deviceListItem >> text=/release/`)).toBeVisible();
   });

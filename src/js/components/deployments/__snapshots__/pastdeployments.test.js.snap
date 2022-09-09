@@ -830,13 +830,13 @@ label+.emotion-20 {
           id="mui-1"
           placeholder="mmmm do"
           type="text"
-          value="January 1st"
+          value="January 13th"
         />
         <div
           class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-5"
         >
           <button
-            aria-label="Choose date, selected date is Jan 1, 2019"
+            aria-label="Choose date, selected date is Jan 13, 2019"
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-6"
             tabindex="0"
             type="button"
@@ -879,13 +879,13 @@ label+.emotion-20 {
           id="mui-2"
           placeholder="mmmm do"
           type="text"
-          value="January 1st"
+          value="January 13th"
         />
         <div
           class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-5"
         >
           <button
-            aria-label="Choose date, selected date is Jan 1, 2019"
+            aria-label="Choose date, selected date is Jan 13, 2019"
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium emotion-6"
             tabindex="0"
             type="button"

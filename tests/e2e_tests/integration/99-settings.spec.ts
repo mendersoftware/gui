@@ -4,6 +4,7 @@ import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
 import { baseUrlToDomain, generateOtp, login, startClient, tenantTokenRetrieval } from '../utils/commands';
+import { selectors } from '../utils/constants';
 
 test.describe('Settings', () => {
   test.describe('access token feature', () => {
@@ -140,8 +141,8 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
       // enter valid username and password
-      await page.fill('[name=email]', username);
-      await page.fill('[name=password]', password);
+      await page.fill(selectors.email, username);
+      await page.fill(selectors.password, password);
       await page.click(`button:text('Log in')`);
       await page.waitForTimeout(1000);
       await page.fill('#token2fa', '123456');
@@ -153,8 +154,8 @@ test.describe('Settings', () => {
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/login`);
-      await page.fill('[name=email]', username);
-      await page.fill('[name=password]', password);
+      await page.fill(selectors.email, username);
+      await page.fill(selectors.password, password);
       await page.click(`button:text('Log in')`);
       const newToken = await generateOtp();
       await page.fill('#token2fa', newToken);
@@ -167,8 +168,8 @@ test.describe('Settings', () => {
     test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/login`);
-      await page.fill('[name=email]', username);
-      await page.fill('[name=password]', password);
+      await page.fill(selectors.email, username);
+      await page.fill(selectors.password, password);
       await page.click(`:is(button:has-text('Log in'))`);
       await page.waitForSelector('text=License information');
       await page.goto(`${baseUrl}ui/settings`);
@@ -196,26 +197,26 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('#change_email');
     });
-    test('allows changing the password', async ({ baseUrl, browserName, context, loggedInPage: page, username, password }) => {
+    test('allows changing the password', async ({ baseUrl, browserName, loggedInPage: page, username, password }) => {
       if (browserName === 'webkit') {
         test.skip();
       }
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('#change_password');
 
-      expect(await page.$eval('[name=password]', (el: HTMLInputElement) => el.value)).toBeFalsy();
+      expect(await page.$eval(selectors.password, (el: HTMLInputElement) => el.value)).toBeFalsy();
       await page.click(`:is(button:has-text('Generate'))`);
       await page.click(`:is(button:has-text('Generate'))`);
-      await page.click('[name=current_password]', { clickCount: 3 });
-      await page.fill('[name=current_password]', password);
-      const typedCurrentPassword = await page.$eval('[name=current_password]', (el: HTMLInputElement) => el.value);
+      await page.click(selectors.passwordCurrent, { clickCount: 3 });
+      await page.fill(selectors.passwordCurrent, password);
+      const typedCurrentPassword = await page.$eval(selectors.passwordCurrent, (el: HTMLInputElement) => el.value);
       expect(typedCurrentPassword === password);
-      expect(await page.$eval('[name=password]', (el: HTMLInputElement) => el.value)).toBeTruthy();
-      await page.click('[name=password]', { clickCount: 3 });
-      await page.fill('[name=password]', replacementPassword);
-      const typedPassword = await page.$eval('[name=password]', (el: HTMLInputElement) => el.value);
+      expect(await page.$eval(selectors.password, (el: HTMLInputElement) => el.value)).toBeTruthy();
+      await page.click(selectors.password, { clickCount: 3 });
+      await page.fill(selectors.password, replacementPassword);
+      const typedPassword = await page.$eval(selectors.password, (el: HTMLInputElement) => el.value);
       expect(typedPassword === replacementPassword);
-      await page.fill('[name=password_confirmation]', replacementPassword);
+      await page.fill(selectors.passwordConfirmation, replacementPassword);
       await page.click(`button:has-text('Save')`);
       await page.waitForSelector('text=/user has been updated/i', { timeout: 10000 });
       await page.click(`:is(.header-dropdown:has-text('${username}'))`);
@@ -242,16 +243,16 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('#change_password');
 
-      await page.fill('[name=password]', password);
-      const typedPassword = await page.$eval('[name=password]', (el: HTMLInputElement) => el.value);
+      await page.fill(selectors.password, password);
+      const typedPassword = await page.$eval(selectors.password, (el: HTMLInputElement) => el.value);
       if (typedPassword !== password) {
-        await page.click('[name=password]', { clickCount: 3 });
-        await page.fill('[name=password]', password);
+        await page.click(selectors.password, { clickCount: 3 });
+        await page.fill(selectors.password, password);
       }
-      await page.click('[name=password_confirmation]');
-      await page.fill('[name=password_confirmation]', password);
-      await page.click('[name=current_password]');
-      await page.fill('[name=current_password]', replacementPassword);
+      await page.click(selectors.passwordConfirmation);
+      await page.fill(selectors.passwordConfirmation, password);
+      await page.click(selectors.passwordCurrent);
+      await page.fill(selectors.passwordCurrent, replacementPassword);
       await page.click(`:is(button:has-text('Save'))`);
       await page.waitForSelector('text=/user has been updated/i', { timeout: 10000 });
       await page.waitForTimeout(3000);

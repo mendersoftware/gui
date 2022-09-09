@@ -65,13 +65,11 @@ const userReducer = (state = initialState, action) => {
         }
       };
     case UserConstants.REMOVED_USER: {
-      const byId = state.byId;
-      delete byId[action.userId];
+      // eslint-disable-next-line no-unused-vars
+      const { [action.userId]: removedUser, ...byId } = state.byId;
       return {
         ...state,
-        byId: {
-          ...byId
-        },
+        byId,
         currentUser: state.currentUser === action.userId ? null : state.currentUser
       };
     }

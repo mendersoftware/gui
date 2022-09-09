@@ -3,254 +3,254 @@
 exports[`DeviceGroups Component renders correctly 1`] = `
 "<div>
   <div
-    class=\\"tab-container with-sub-panels margin-bottom-small\\"
-    style=\\"padding: 0px; min-height: initial;\\"
+    class="tab-container with-sub-panels margin-bottom-small"
+    style="padding: 0px; min-height: initial;"
   >
     <h3
-      style=\\"margin-bottom: 0px;\\"
+      style="margin-bottom: 0px;"
     >
       Devices
     </h3>
     <div
-      class=\\"flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small\\"
+      class="flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small"
     >
       <div />
       <div
-        class=\\"MuiButtonGroup-root MuiButtonGroup-outlined muted device-addition-widget css-iajp3t-MuiButtonGroup-root\\"
-        role=\\"group\\"
+        class="MuiButtonGroup-root MuiButtonGroup-outlined muted device-addition-widget css-iajp3t-MuiButtonGroup-root"
+        role="group"
       >
         <button
-          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1m1nv3s-MuiButtonBase-root-MuiButton-root-buttonStyle\\"
-          tabindex=\\"0\\"
-          type=\\"button\\"
+          class="MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1m1nv3s-MuiButtonBase-root-MuiButton-root-buttonStyle"
+          tabindex="0"
+          type="button"
         >
           Connect a new device
           <span
-            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
         <button
-          class=\\"MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-6b0d5c-MuiButtonBase-root-MuiButton-root-buttonStyle\\"
-          tabindex=\\"0\\"
-          type=\\"button\\"
+          class="MuiButtonBase-root MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-6b0d5c-MuiButtonBase-root-MuiButton-root-buttonStyle"
+          tabindex="0"
+          type="button"
         >
           <svg
-            aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-            data-testid=\\"ArrowDropDownIcon\\"
-            focusable=\\"false\\"
-            viewBox=\\"0 0 24 24\\"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+            data-testid="ArrowDropDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
           >
             <path
-              d=\\"m7 10 5 5 5-5z\\"
+              d="m7 10 5 5 5-5z"
             />
           </svg>
           <span
-            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
       </div>
     </div>
   </div>
   <div
-    class=\\"tab-container with-sub-panels\\"
-    style=\\"padding: 0px; height: 100%;\\"
+    class="tab-container with-sub-panels"
+    style="padding: 0px; height: 100%;"
   >
     <div
-      class=\\"leftFixed\\"
+      class="leftFixed"
     >
       <div
-        class=\\"muted margin-bottom-small\\"
+        class="muted margin-bottom-small"
       >
         Groups
       </div>
       <ul
-        class=\\"MuiList-root MuiList-padding css-h4y409-MuiList-root\\"
+        class="MuiList-root MuiList-padding css-h4y409-MuiList-root"
       >
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
-          role=\\"button\\"
-          tabindex=\\"0\\"
+          class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root"
+          role="button"
+          tabindex="0"
         >
           <div
-            class=\\"MuiListItemText-root css-924vb1-MuiListItemText-root\\"
+            class="MuiListItemText-root css-924vb1-MuiListItemText-root"
           >
             <span
-              class=\\"MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root\\"
+              class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root"
             >
               All devices
             </span>
           </div>
           <span
-            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </div>
         <li
-          class=\\"MuiListSubheader-root heading-lined css-1aj8t4d-MuiListSubheader-root-header\\"
+          class="MuiListSubheader-root heading-lined css-1aj8t4d-MuiListSubheader-root-header"
         >
           <span
-            class=\\"css-1nyp150-groupHeading\\"
+            class="css-1nyp150-groupHeading"
           >
             Dynamic
           </span>
           <div
-            class=\\"css-1qij3wx-groupBorder\\"
+            class="css-1qij3wx-groupBorder"
           />
         </li>
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
-          role=\\"button\\"
-          tabindex=\\"0\\"
+          class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root"
+          role="button"
+          tabindex="0"
         >
           <div
-            class=\\"MuiListItemText-root css-924vb1-MuiListItemText-root\\"
+            class="MuiListItemText-root css-924vb1-MuiListItemText-root"
           >
             <span
-              class=\\"MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root\\"
+              class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root"
             >
               testGroupDynamic
             </span>
           </div>
           <span
-            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </div>
         <li
-          class=\\"MuiListSubheader-root heading-lined css-1aj8t4d-MuiListSubheader-root-header\\"
+          class="MuiListSubheader-root heading-lined css-1aj8t4d-MuiListSubheader-root-header"
         >
           <span
-            class=\\"css-1nyp150-groupHeading\\"
+            class="css-1nyp150-groupHeading"
           >
             Static
           </span>
           <div
-            class=\\"css-1qij3wx-groupBorder\\"
+            class="css-1qij3wx-groupBorder"
           />
         </li>
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
-          role=\\"button\\"
-          tabindex=\\"0\\"
+          class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button Mui-selected css-1ckued1-MuiButtonBase-root-MuiListItem-root"
+          role="button"
+          tabindex="0"
         >
           <div
-            class=\\"MuiListItemText-root css-924vb1-MuiListItemText-root\\"
+            class="MuiListItemText-root css-924vb1-MuiListItemText-root"
           >
             <span
-              class=\\"MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root\\"
+              class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root"
             >
               testGroup
             </span>
           </div>
           <span
-            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </div>
         <div
-          class=\\"MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root\\"
-          role=\\"button\\"
-          style=\\"margin-top: 30px;\\"
-          tabindex=\\"0\\"
+          class="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-padding MuiListItem-button css-1ckued1-MuiButtonBase-root-MuiListItem-root"
+          role="button"
+          style="margin-top: 30px;"
+          tabindex="0"
         >
           <div
-            class=\\"MuiListItemIcon-root css-cveggr-MuiListItemIcon-root\\"
+            class="MuiListItemIcon-root css-cveggr-MuiListItemIcon-root"
           >
             <svg
-              aria-hidden=\\"true\\"
-              class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-              data-testid=\\"InfoOutlinedIcon\\"
-              focusable=\\"false\\"
-              viewBox=\\"0 0 24 24\\"
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+              data-testid="InfoOutlinedIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
               <path
-                d=\\"M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z\\"
+                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
               />
             </svg>
           </div>
           <div
-            class=\\"MuiListItemText-root css-924vb1-MuiListItemText-root\\"
+            class="MuiListItemText-root css-924vb1-MuiListItemText-root"
           >
             <span
-              class=\\"MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root\\"
+              class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-mon4qq-MuiTypography-root"
             >
               Create a group
             </span>
           </div>
           <span
-            class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </div>
       </ul>
     </div>
     <div
-      class=\\"rightFluid relative\\"
-      style=\\"padding-top: 0px;\\"
+      class="rightFluid relative"
+      style="padding-top: 0px;"
     >
       <div
-        class=\\"margin-left-small\\"
+        class="margin-left-small"
       >
         <div
-          class=\\"flexbox\\"
+          class="flexbox"
         >
           <h3
-            class=\\"margin-right\\"
+            class="margin-right"
           >
             testGroup
           </h3>
           <div
-            class=\\"flexbox space-between center-aligned\\"
-            style=\\"flex-grow: 1;\\"
+            class="flexbox space-between center-aligned"
+            style="flex-grow: 1;"
           >
             <div
-              class=\\"flexbox\\"
+              class="flexbox"
             >
               <div
-                class=\\"flexbox centered\\"
+                class="flexbox centered"
               >
                 Status:
                 <div
-                  class=\\"MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary  css-9qara2-MuiInputBase-root-MuiInput-root-MuiSelect-root\\"
-                  style=\\"font-size: 13px; margin-left: 8px; margin-top: 2px;\\"
+                  class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary  css-9qara2-MuiInputBase-root-MuiInput-root-MuiSelect-root"
+                  style="font-size: 13px; margin-left: 8px; margin-top: 2px;"
                 >
                   <div
-                    aria-expanded=\\"false\\"
-                    aria-haspopup=\\"listbox\\"
-                    class=\\"MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input css-emq5k1-MuiSelect-select-MuiInputBase-input-MuiInput-input\\"
-                    role=\\"button\\"
-                    tabindex=\\"0\\"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input css-emq5k1-MuiSelect-select-MuiInputBase-input-MuiInput-input"
+                    role="button"
+                    tabindex="0"
                   >
                     accepted
                   </div>
                   <input
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
-                    tabindex=\\"-1\\"
-                    value=\\"accepted\\"
+                    aria-hidden="true"
+                    class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+                    tabindex="-1"
+                    value="accepted"
                   />
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
-                    data-testid=\\"ArrowDropDownIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon"
+                    data-testid="ArrowDropDownIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M7 10l5 5 5-5z\\"
+                      d="M7 10l5 5 5-5z"
                     />
                   </svg>
                 </div>
               </div>
               <div
-                class=\\"margin-left muted flexbox centered\\"
+                class="margin-left muted flexbox centered"
               >
                 <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root\\"
-                  data-testid=\\"LockOutlinedIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root"
+                  data-testid="LockOutlinedIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d=\\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z\\"
+                    d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
                   />
                 </svg>
                 <span>
@@ -259,56 +259,56 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               </div>
             </div>
             <button
-              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
-              tabindex=\\"0\\"
-              type=\\"button\\"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-xrc3fm-MuiButtonBase-root-MuiButton-root"
+              tabindex="0"
+              type="button"
             >
               <span
-                class=\\"MuiButton-startIcon MuiButton-iconSizeMedium css-gcc2o7-MuiButton-startIcon\\"
+                class="MuiButton-startIcon MuiButton-iconSizeMedium css-gcc2o7-MuiButton-startIcon"
               >
                 <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                  data-testid=\\"DeleteIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                  data-testid="DeleteIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d=\\"M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z\\"
+                    d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
                   />
                 </svg>
               </span>
               Remove group
               <span
-                class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
           </div>
         </div>
         <div
-          class=\\"flexbox space-between\\"
+          class="flexbox space-between"
         >
           <div
-            class=\\"flexbox centered filter-header \\"
+            class="flexbox centered filter-header "
           >
             <button
-              class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-qkdycn-MuiButtonBase-root-MuiButton-root\\"
-              style=\\"background-color: transparent;\\"
-              tabindex=\\"0\\"
-              type=\\"button\\"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-qkdycn-MuiButtonBase-root-MuiButton-root"
+              style="background-color: transparent;"
+              tabindex="0"
+              type="button"
             >
               <span
-                class=\\"MuiButton-startIcon MuiButton-iconSizeMedium css-gcc2o7-MuiButton-startIcon\\"
+                class="MuiButton-startIcon MuiButton-iconSizeMedium css-gcc2o7-MuiButton-startIcon"
               >
                 <svg
-                  aria-hidden=\\"true\\"
-                  class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                  data-testid=\\"FilterListIcon\\"
-                  focusable=\\"false\\"
-                  viewBox=\\"0 0 24 24\\"
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                  data-testid="FilterListIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    d=\\"M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z\\"
+                    d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
                   />
                 </svg>
               </span>
@@ -316,262 +316,262 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             </button>
           </div>
           <button
-            class=\\"MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-xrc3fm-MuiButtonBase-root-MuiButton-root\\"
-            style=\\"text-transform: none;\\"
-            tabindex=\\"0\\"
-            type=\\"button\\"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-xrc3fm-MuiButtonBase-root-MuiButton-root"
+            style="text-transform: none;"
+            tabindex="0"
+            type="button"
           >
             Table options
             <span
-              class=\\"MuiButton-endIcon MuiButton-iconSizeMedium css-1gnd1fd-MuiButton-endIcon\\"
+              class="MuiButton-endIcon MuiButton-iconSizeMedium css-1gnd1fd-MuiButton-endIcon"
             >
               <svg
-                aria-hidden=\\"true\\"
-                class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                data-testid=\\"ArrowDropDownIcon\\"
-                focusable=\\"false\\"
-                viewBox=\\"0 0 24 24\\"
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                data-testid="ArrowDropDownIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d=\\"m7 10 5 5 5-5z\\"
+                  d="m7 10 5 5 5-5z"
                 />
               </svg>
             </span>
             <span
-              class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
             />
           </button>
         </div>
       </div>
       <div
-        class=\\"loaderContainer shrunk\\"
+        class="loaderContainer shrunk"
       >
         <div
-          class=\\"  loader\\"
+          class="  loader"
         >
           <span
-            class=\\"dot dot_1\\"
+            class="dot dot_1"
           />
           <span
-            class=\\"dot dot_2\\"
+            class="dot dot_2"
           />
           <span
-            class=\\"dot dot_3\\"
+            class="dot dot_3"
           />
           <span
-            class=\\"dot dot_4\\"
+            class="dot dot_4"
           />
         </div>
       </div>
       <div
-        class=\\"padding-bottom\\"
+        class="padding-bottom"
       >
         <div
-          class=\\"deviceList selectable\\"
-          style=\\"grid-template-columns: 52px minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);\\"
+          class="deviceList selectable"
+          style="grid-template-columns: 52px minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);"
         >
           <div
-            class=\\"header css-nsqcrh-header\\"
+            class="header css-nsqcrh-header"
           >
             <div
-              class=\\"deviceListRow\\"
+              class="deviceListRow"
             >
               <div>
                 <span
-                  class=\\"MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
-                    class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
-                    data-indeterminate=\\"false\\"
-                    type=\\"checkbox\\"
+                    class="PrivateSwitchBase-input css-1m9pwf3"
+                    data-indeterminate="false"
+                    type="checkbox"
                   />
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"CheckBoxOutlineBlankIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
                     />
                   </svg>
                   <span
-                    class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
                 </span>
               </div>
               <div
-                class=\\"columnHeader flexbox space-between relative\\"
+                class="columnHeader flexbox space-between relative"
               >
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   Device ID
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"SortIcon\\"
-                    focusable=\\"false\\"
-                    style=\\"font-size: 16px;\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root"
+                    data-testid="SortIcon"
+                    focusable="false"
+                    style="font-size: 16px;"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                      d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
                     />
                   </svg>
                 </div>
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"SettingsIcon\\"
-                    focusable=\\"false\\"
-                    style=\\"font-size: 16px; margin-right: 4px;\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="SettingsIcon"
+                    focusable="false"
+                    style="font-size: 16px; margin-right: 4px;"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z\\"
+                      d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
                     />
                   </svg>
                 </div>
               </div>
               <div
-                class=\\"columnHeader flexbox space-between relative\\"
+                class="columnHeader flexbox space-between relative"
               >
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   Device type
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"SortIcon\\"
-                    focusable=\\"false\\"
-                    style=\\"font-size: 16px;\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root"
+                    data-testid="SortIcon"
+                    focusable="false"
+                    style="font-size: 16px;"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                      d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
                     />
                   </svg>
                 </div>
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   <span
-                    class=\\"resize-handle css-1bzlqzi-resizeHandle \\"
+                    class="resize-handle css-1bzlqzi-resizeHandle "
                   />
                 </div>
               </div>
               <div
-                class=\\"columnHeader flexbox space-between relative\\"
+                class="columnHeader flexbox space-between relative"
               >
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   Current software
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"SortIcon\\"
-                    focusable=\\"false\\"
-                    style=\\"font-size: 16px;\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root"
+                    data-testid="SortIcon"
+                    focusable="false"
+                    style="font-size: 16px;"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                      d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
                     />
                   </svg>
                 </div>
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   <span
-                    class=\\"resize-handle css-1bzlqzi-resizeHandle \\"
+                    class="resize-handle css-1bzlqzi-resizeHandle "
                   />
                 </div>
               </div>
               <div
-                class=\\"columnHeader flexbox space-between relative\\"
+                class="columnHeader flexbox space-between relative"
               >
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   Last check-in
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"SortIcon\\"
-                    focusable=\\"false\\"
-                    style=\\"font-size: 16px;\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root"
+                    data-testid="SortIcon"
+                    focusable="false"
+                    style="font-size: 16px;"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                      d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
                     />
                   </svg>
                 </div>
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 />
               </div>
               <div
-                class=\\"columnHeader flexbox space-between relative\\"
+                class="columnHeader flexbox space-between relative"
               >
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   Status
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"SortIcon\\"
-                    focusable=\\"false\\"
-                    style=\\"font-size: 16px;\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root"
+                    data-testid="SortIcon"
+                    focusable="false"
+                    style="font-size: 16px;"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z\\"
+                      d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
                     />
                   </svg>
                 </div>
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 />
               </div>
             </div>
           </div>
           <div
-            class=\\"body\\"
+            class="body"
           >
             <div
-              class=\\"deviceListRow deviceListItem clickable  \\"
+              class="deviceListRow deviceListItem clickable  "
             >
               <div>
                 <span
-                  class=\\"MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
-                    class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
-                    data-indeterminate=\\"false\\"
-                    type=\\"checkbox\\"
+                    class="PrivateSwitchBase-input css-1m9pwf3"
+                    data-indeterminate="false"
+                    type="checkbox"
                   />
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"CheckBoxOutlineBlankIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
                     />
                   </svg>
                   <span
-                    class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
                 </span>
               </div>
@@ -579,31 +579,31 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 a1
               </div>
               <div
-                title=\\"raspberrypi4\\"
+                title="raspberrypi4"
               >
                 <div
-                  class=\\"text-overflow\\"
+                  class="text-overflow"
                 >
                   raspberrypi4
                 </div>
               </div>
               <div
-                title=\\"-\\"
+                title="-"
               >
                 <div
-                  class=\\"text-overflow\\"
+                  class="text-overflow"
                 >
                   -
                 </div>
               </div>
               <div>
                 <span
-                  aria-label=\\"Tue Jan 01 2019 09:25:00 GMT+0000\\"
-                  class=\\"\\"
-                  data-mui-internal-clone-element=\\"true\\"
+                  aria-label="Tue Jan 01 2019 09:25:00 GMT+0000"
+                  class=""
+                  data-mui-internal-clone-element="true"
                 >
                   <time
-                    datetime=\\"2019-01-01T09:25:00+00:00\\"
+                    datetime="2019-01-01T09:25:00+00:00"
                   >
                     2019-01-01 09:25
                   </time>
@@ -611,37 +611,37 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               </div>
               <div>
                 <div
-                  class=\\"margin-right-small\\"
+                  class="margin-right-small"
                 >
                   accepted
                 </div>
               </div>
             </div>
             <div
-              class=\\"deviceListRow deviceListItem clickable  \\"
+              class="deviceListRow deviceListItem clickable  "
             >
               <div>
                 <span
-                  class=\\"MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root\\"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
-                    class=\\"PrivateSwitchBase-input css-1m9pwf3\\"
-                    data-indeterminate=\\"false\\"
-                    type=\\"checkbox\\"
+                    class="PrivateSwitchBase-input css-1m9pwf3"
+                    data-indeterminate="false"
+                    type="checkbox"
                   />
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                    data-testid=\\"CheckBoxOutlineBlankIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\\"
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
                     />
                   </svg>
                   <span
-                    class=\\"MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root\\"
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
                 </span>
               </div>
@@ -649,31 +649,31 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 b1
               </div>
               <div
-                title=\\"qemux86-64\\"
+                title="qemux86-64"
               >
                 <div
-                  class=\\"text-overflow\\"
+                  class="text-overflow"
                 >
                   qemux86-64
                 </div>
               </div>
               <div
-                title=\\"-\\"
+                title="-"
               >
                 <div
-                  class=\\"text-overflow\\"
+                  class="text-overflow"
                 >
                   -
                 </div>
               </div>
               <div>
                 <span
-                  aria-label=\\"Tue Jan 01 2019 09:25:00 GMT+0000\\"
-                  class=\\"\\"
-                  data-mui-internal-clone-element=\\"true\\"
+                  aria-label="Tue Jan 01 2019 09:25:00 GMT+0000"
+                  class=""
+                  data-mui-internal-clone-element="true"
                 >
                   <time
-                    datetime=\\"2019-01-01T09:25:00+00:00\\"
+                    datetime="2019-01-01T09:25:00+00:00"
                   >
                     2019-01-01 09:25
                   </time>
@@ -681,7 +681,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               </div>
               <div>
                 <div
-                  class=\\"margin-right-small\\"
+                  class="margin-right-small"
                 >
                   accepted
                 </div>
@@ -689,98 +689,98 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class=\\"footer flexbox margin-top\\"
+            class="footer flexbox margin-top"
           >
             <div
-              class=\\"MuiTablePagination-root flexbox margin-top margin-top-none css-1s8wd9s-MuiTablePagination-root\\"
+              class="MuiTablePagination-root flexbox margin-top margin-top-none css-1s8wd9s-MuiTablePagination-root"
             >
               <div
-                class=\\"MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar\\"
+                class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar"
               >
                 <div
-                  class=\\"MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer\\"
+                  class="MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer"
                 />
                 <p
-                  class=\\"MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel\\"
+                  class="MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel"
                   
                 >
                   Rows
                 </p>
                 <div
-                  class=\\"MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select\\"
+                  class="MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
                 >
                   <div
-                    aria-expanded=\\"false\\"
-                    aria-haspopup=\\"listbox\\"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
                     
-                    class=\\"MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input\\"
+                    class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
                     
-                    role=\\"button\\"
-                    tabindex=\\"0\\"
+                    role="button"
+                    tabindex="0"
                   >
                     20
                   </div>
                   <input
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput\\"
-                    tabindex=\\"-1\\"
-                    value=\\"20\\"
+                    aria-hidden="true"
+                    class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+                    tabindex="-1"
+                    value="20"
                   />
                   <svg
-                    aria-hidden=\\"true\\"
-                    class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon\\"
-                    data-testid=\\"ArrowDropDownIcon\\"
-                    focusable=\\"false\\"
-                    viewBox=\\"0 0 24 24\\"
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon"
+                    data-testid="ArrowDropDownIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      d=\\"M7 10l5 5 5-5z\\"
+                      d="M7 10l5 5 5-5z"
                     />
                   </svg>
                 </div>
                 <p
-                  class=\\"MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows\\"
+                  class="MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows"
                 />
                 <div
-                  class=\\"flexbox center-aligned\\"
+                  class="flexbox center-aligned"
                 >
                   <div>
                     1-0 of 0
                   </div>
                   <button
-                    class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-                    disabled=\\"\\"
-                    tabindex=\\"-1\\"
-                    type=\\"button\\"
+                    class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
                   >
                     <svg
-                      aria-hidden=\\"true\\"
-                      class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                      data-testid=\\"KeyboardArrowLeftIcon\\"
-                      focusable=\\"false\\"
-                      viewBox=\\"0 0 24 24\\"
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                      data-testid="KeyboardArrowLeftIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
                     >
                       <path
-                        d=\\"M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z\\"
+                        d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
                       />
                     </svg>
                   </button>
                   <div>
                     <button
-                      class=\\"MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root\\"
-                      disabled=\\"\\"
-                      tabindex=\\"-1\\"
-                      type=\\"button\\"
+                      class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+                      disabled=""
+                      tabindex="-1"
+                      type="button"
                     >
                       <svg
-                        aria-hidden=\\"true\\"
-                        class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-                        data-testid=\\"KeyboardArrowRightIcon\\"
-                        focusable=\\"false\\"
-                        viewBox=\\"0 0 24 24\\"
+                        aria-hidden="true"
+                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                        data-testid="KeyboardArrowRightIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
                       >
                         <path
-                          d=\\"M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z\\"
+                          d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
                         />
                       </svg>
                     </button>
@@ -791,19 +791,19 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class=\\"tooltip help\\"
-          data-mui-internal-clone-element=\\"true\\"
-          style=\\"right: 45px;\\"
+          class="tooltip help"
+          data-mui-internal-clone-element="true"
+          style="right: 45px;"
         >
           <svg
-            aria-hidden=\\"true\\"
-            class=\\"MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root\\"
-            data-testid=\\"HelpIcon\\"
-            focusable=\\"false\\"
-            viewBox=\\"0 0 24 24\\"
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+            data-testid="HelpIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
           >
             <path
-              d=\\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z\\"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
             />
           </svg>
         </div>

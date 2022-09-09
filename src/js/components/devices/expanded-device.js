@@ -133,6 +133,7 @@ export const ExpandedDevice = ({
   const { classes } = useStyles();
 
   const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
+  const { canConfigure } = userCapabilities;
 
   useEffect(() => {
     if (!deviceId) {
@@ -229,7 +230,7 @@ export const ExpandedDevice = ({
           <DeviceInventory device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
         </>
       )}
-      {hasDeviceConfig && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
+      {hasDeviceConfig && canConfigure && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
         <DeviceConfiguration
           abortDeployment={abortDeployment}
           applyDeviceConfig={applyDeviceConfig}

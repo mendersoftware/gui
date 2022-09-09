@@ -33,6 +33,7 @@ test:lint:
       - .npm/
   script:
     - npm ci --cache .npm --prefer-offline
+    - cd tests/e2e_tests && npm ci && cd ../..
     - npm run lint
 
 .template:test:acceptance:

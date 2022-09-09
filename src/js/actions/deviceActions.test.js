@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
-import { defaultState } from '../../../tests/mockData';
+import { defaultCreationDate, defaultState } from '../../../tests/mockData';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants from '../constants/deviceConstants';
@@ -81,14 +81,14 @@ describe('selecting things', () => {
             identity_data: { mac: 'dc:a6:32:12:ad:bf' },
             status: 'accepted',
             decommissioning: false,
-            created_ts: '2019-01-01T06:25:00.000Z',
+            created_ts: defaultCreationDate,
             updated_ts: '2019-01-01T09:25:00.000Z',
             auth_sets: [
               {
                 id: 'auth1',
                 identity_data: { mac: 'dc:a6:32:12:ad:bf' },
                 pubkey: '-----BEGIN PUBLIC KEY-----\nMIIBojWELzgJ62hcXIhAfqfoNiaB1326XZByZwcnHr5BuSPAgMBAAE=\n-----END PUBLIC KEY-----\n',
-                ts: '2019-01-01T06:25:00.000Z',
+                ts: defaultCreationDate,
                 status: 'accepted'
               }
             ]
@@ -692,7 +692,7 @@ describe('device retrieval ', () => {
         status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
-      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 2, inactiveDeviceTotal: 0 }
+      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 0, inactiveDeviceTotal: 2 }
     ];
     await store.dispatch(getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
     const storeActions = store.getActions();
