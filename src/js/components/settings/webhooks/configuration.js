@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import validator from 'validator';
 
 // material ui
@@ -30,14 +30,20 @@ const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = {
     setSecretFormatError(!secret || validator.isHexadecimal(secret) ? '' : 'The secret has to be entered as a hexadecimal string');
   }, [secret]);
 
-  const onSubmitClick = () => {
-    onSubmit({
+  const onSubmitClick = useCallback(() => {
+    let webhookConfig = {
       id,
       provider: EXTERNAL_PROVIDER.webhook.provider,
       credentials: { type: EXTERNAL_PROVIDER.webhook.credentialsType, [EXTERNAL_PROVIDER.webhook.credentialsType]: { secret, url } },
       description
-    });
-  };
+    };
+    if (editing) {
+      // eslint-disable-next-line no-unused-vars
+      const { credentials, description, ...remainder } = webhookConfig;
+      webhookConfig = { ...remainder, credentials: { ...credentials, [EXTERNAL_PROVIDER.webhook.credentialsType]: { url } } };
+    }
+    onSubmit(webhookConfig);
+  }, [description, editing, id, secret, url]);
 
   const secretInputTip = editing ? 'Cannot edit webhook secrets after they have been saved' : 'The secret has to be entered as a hexadecimal string';
   const descriptionInput = (
