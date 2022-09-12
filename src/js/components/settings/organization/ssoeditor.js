@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Dropzone from 'react-dropzone';
+import copy from 'copy-to-clipboard';
 
 // material ui
 import { Button, Divider, Drawer, IconButton } from '@mui/material';
@@ -8,7 +10,6 @@ import Editor, { loader } from '@monaco-editor/react';
 
 import { createFileDownload } from '../../../helpers';
 import Loader from '../../common/loader';
-import Dropzone from 'react-dropzone';
 
 loader.config({ paths: { vs: '/ui/vs' } });
 
@@ -67,6 +68,8 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
     onSave();
     setIsEditing(false);
   };
+
+  const onCopyClick = () => copy(fileContent);
 
   const onDrop = acceptedFiles => {
     let reader = new FileReader();
@@ -127,7 +130,9 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
           <div className="flexbox center-aligned">
             <Button onClick={onEditClick}>Edit</Button>
             <Button onClick={onDownloadClick}>Download file</Button>
-            <Button startIcon={<CopyPasteIcon />}>Copy to clipboard</Button>
+            <Button onClick={onCopyClick} startIcon={<CopyPasteIcon />}>
+              Copy to clipboard
+            </Button>
           </div>
         ) : (
           <>
