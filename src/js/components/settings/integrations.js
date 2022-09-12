@@ -249,7 +249,7 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
               {item.title}
             </MenuItem>
           ))}
-          <MenuItem value="webhook">Webhooks</MenuItem>
+          {isPreRelease && <MenuItem value="webhook">Webhooks</MenuItem>}
         </Select>
       )}
       {!!configuredWebhook && <Webhooks webhook={configuredWebhook} />}
