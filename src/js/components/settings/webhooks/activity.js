@@ -7,6 +7,8 @@ import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
 import { makeStyles } from 'tss-react/mui';
 
 import Time from '../../common/time';
+import Pagination from '../../common/pagination';
+import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 
 const useStyles = makeStyles()(theme => ({
   activityList: {
@@ -95,13 +97,14 @@ const ListItem = ({ entry = {}, webhook }) => {
   );
 };
 
-const WebhookActivity = ({ events = [], getWebhookEvents, webhook }) => {
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
+const WebhookActivity = ({ events = [], getWebhookEvents, eventTotal, webhook }) => {
   const { classes } = useStyles();
+  const [page, setPage] = useState(defaultPage);
 
   useEffect(() => {
-    // for now we can't offer pagination here, so show the last 50 events as a compromise
-    getWebhookEvents({ perPage: 50 });
-  }, []);
+    getWebhookEvents({ page, perPage: defaultPerPage });
+  }, [page]);
 
   return (
     <div className={classes.activityList}>
@@ -116,6 +119,17 @@ const WebhookActivity = ({ events = [], getWebhookEvents, webhook }) => {
             {events.map(entry => (
               <ListItem key={entry.id} entry={entry} webhook={webhook} />
             ))}
+            {eventTotal > defaultPerPage && (
+              <Pagination
+                className="margin-top-none"
+                count={eventTotal ? eventTotal : defaultPerPage}
+                showCountInfo={false}
+                rowsPerPageOptions={[defaultPerPage]}
+                page={page}
+                rowsPerPage={defaultPerPage}
+                onChangePage={setPage}
+              />
+            )}
           </div>
         </>
       ) : (

@@ -198,11 +198,23 @@ export const getIntegrations = () => (dispatch, getState) =>
 
 export const getWebhookEvents =
   (config = {}) =>
-  dispatch => {
-    const { page = defaultPage, perPage = defaultPerPage } = config;
+  (dispatch, getState) => {
+    const { isFollowUp, page = defaultPage, perPage = defaultPerPage } = config;
     return Api.get(`${iotManagerBaseURL}/events?page=${page}&per_page=${perPage}`)
       .catch(err => commonErrorHandler(err, 'There was an error retrieving activity for this integration', dispatch, commonErrorFallback))
-      .then(({ data }) => Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS, value: data })));
+      .then(({ data }) => {
+        let tasks = [
+          dispatch({
+            type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
+            value: isFollowUp ? getState().organization.webhooks.events : data,
+            total: (page - 1) * perPage + data.length
+          })
+        ];
+        if (data.length >= perPage && !isFollowUp) {
+          tasks.push(dispatch(getWebhookEvents({ isFollowUp: true, page: page + 1, perPage: 1 })));
+        }
+        return Promise.all(tasks);
+      });
   };
 
 const samlConfigActions = {

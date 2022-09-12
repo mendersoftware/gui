@@ -34,7 +34,8 @@ export const initialState = {
   webhooks: {
     // [id]: { events: [] }
     // for now:
-    events: []
+    events: [],
+    eventsTotal: 0
   }
 };
 
@@ -92,7 +93,8 @@ const organizationReducer = (state = initialState, action) => {
         ...state,
         webhooks: {
           ...state.webhooks,
-          events: action.value
+          events: action.value,
+          eventsTotal: action.total
         }
       };
     default:

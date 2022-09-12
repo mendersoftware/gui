@@ -47,6 +47,13 @@ export const webhookEvents = [
     data: { id: '1', status: 'accepted' },
     time: '2020-09-01T12:00:00.000Z',
     delivery_statuses: [{ integration_id: '1', success: true, status_code: 200 }]
+  },
+  {
+    id: '2',
+    type: 'device-status-changed',
+    data: { id: '3', status: 'accepted' },
+    time: '2020-09-01T12:00:05.000Z',
+    delivery_statuses: [{ integration_id: '1', success: true, status_code: 200 }]
   }
 ];
 
@@ -369,7 +376,8 @@ export const defaultState = {
       plan: 'os',
       trial: false
     },
-    samlConfigs: []
+    samlConfigs: [],
+    webhooks: {}
   },
   releases: {
     artifactProgress: 0,

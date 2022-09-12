@@ -37,6 +37,7 @@ export const Webhooks = ({
   deleteIntegration,
   docsVersion,
   events,
+  eventTotal,
   getIntegrations,
   getWebhookEvents,
   webhook = { ...emptyWebhook },
@@ -105,6 +106,7 @@ export const Webhooks = ({
         adding={adding}
         editing={editing}
         events={events}
+        eventTotal={eventTotal}
         getWebhookEvents={getWebhookEvents}
         onCancel={onCancel}
         onSubmit={onSubmit}
@@ -125,6 +127,7 @@ const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
     events,
+    eventTotal: state.organization.webhooks.eventTotal,
     webhooks
   };
 };

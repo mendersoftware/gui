@@ -564,6 +564,89 @@ exports[`Webhooks Component static components renders WebhookActivity correctly 
             </div>
           </div>
         </div>
+        <div
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 MuiAccordion-root MuiAccordion-gutters emotion-1"
+        >
+          <div
+            aria-expanded="false"
+            class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-2"
+            role="button"
+            tabindex="0"
+          >
+            <div
+              class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-3"
+            >
+              <time
+                datetime="2020-09-01T12:00:05+00:00"
+              >
+                2020-09-01 12:00
+              </time>
+              <div
+                class="trigger-type"
+              >
+                Device status updated
+              </div>
+              <div
+                class="flexbox center-aligned"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-4"
+                  data-testid="CircleIcon"
+                  focusable="false"
+                  style="font-size: 12px; margin-right: 8px;"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"
+                  />
+                </svg>
+                <div
+                  class=""
+                >
+                  200
+                </div>
+              </div>
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+                data-testid="ArrowDropDownIcon"
+                focusable="false"
+                style="justify-self: right; margin-right: 8px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="m7 10 5 5 5-5z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-6"
+            style="min-height: 0px;"
+          >
+            <div
+              class="MuiCollapse-wrapper MuiCollapse-vertical emotion-7"
+            >
+              <div
+                class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-8"
+              >
+                <div
+                  class="MuiAccordion-region"
+                  role="region"
+                >
+                  <div
+                    class="MuiAccordionDetails-root emotion-9"
+                  >
+                    <code>
+                      {"id":"3","status":"accepted"}
+                    </code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

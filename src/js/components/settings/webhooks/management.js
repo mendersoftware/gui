@@ -10,7 +10,7 @@ import WebhookActivity from './activity';
 
 const tabs = ['settings', 'activity'];
 
-export const WebhookManagement = ({ adding, editing, events, getWebhookEvents, onCancel, onSubmit, onRemove, webhook = { ...emptyWebhook } }) => {
+export const WebhookManagement = ({ adding, editing, events, eventTotal, getWebhookEvents, onCancel, onSubmit, onRemove, webhook = { ...emptyWebhook } }) => {
   const [currentTab, setCurrentTab] = useState(tabs[0]);
 
   return (
@@ -35,7 +35,7 @@ export const WebhookManagement = ({ adding, editing, events, getWebhookEvents, o
       {currentTab === tabs[0] ? (
         <WebhookConfiguration adding={adding} editing={editing} onCancel={onCancel} onSubmit={onSubmit} webhook={webhook} />
       ) : (
-        <WebhookActivity events={events} getWebhookEvents={getWebhookEvents} webhook={webhook} />
+        <WebhookActivity events={events} eventTotal={eventTotal} getWebhookEvents={getWebhookEvents} webhook={webhook} />
       )}
     </Drawer>
   );

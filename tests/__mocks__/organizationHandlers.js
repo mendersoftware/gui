@@ -155,8 +155,10 @@ export const organizationHandlers = [
     }
     return res(ctx.status(200));
   }),
-  rest.get(`${iotManagerBaseURL}/events`, (req, res, ctx) => {
-    return res(ctx.json(webhookEvents));
+  rest.get(`${iotManagerBaseURL}/events`, ({ url: { searchParams } }, res, ctx) => {
+    const page = Number(searchParams.get('page'));
+    const perPage = Number(searchParams.get('per_page'));
+    return res(ctx.json(webhookEvents.slice(page - 1, page * perPage)));
   }),
   rest.get(samlIdpApiUrlv1, (req, res, ctx) => {
     return res(
