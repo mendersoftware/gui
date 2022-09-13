@@ -2,11 +2,14 @@
 
 exports[`DeviceStatusNotification Component renders correctly 1`] = `
 .emotion-0 {
-  background: #f7f7f7;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+}
+
+.emotion-0.onboard {
+  background: #f7f7f7;
   padding: 12px;
 }
 

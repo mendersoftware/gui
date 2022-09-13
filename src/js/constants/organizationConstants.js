@@ -1,3 +1,5 @@
+const { EXTERNAL_PROVIDER } = require('./deviceConstants');
+
 module.exports = {
   AUDIT_LOGS_TYPES: [
     { title: 'Deployment', queryParameter: 'object_deployment_name', value: 'deployment' },
@@ -10,5 +12,17 @@ module.exports = {
   SET_AUDITLOG_STATE: 'SET_AUDITLOG_STATE',
   SET_ORGANIZATION: 'SET_ORGANIZATION',
   RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS: 'RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS',
-  RECEIVE_SAML_CONFIGS: 'RECEIVE_SAML_CONFIGS'
+  RECEIVE_SAML_CONFIGS: 'RECEIVE_SAML_CONFIGS',
+  RECEIVE_WEBHOOK_EVENTS: 'RECEIVE_WEBHOOK_EVENTS',
+  emptyWebhook: {
+    description: '',
+    enabled: true,
+    credentials: {
+      type: EXTERNAL_PROVIDER.webhook.credentialsType,
+      [EXTERNAL_PROVIDER.webhook.credentialsType]: {
+        secret: '',
+        url: ''
+      }
+    }
+  }
 };

@@ -2,6 +2,7 @@ import Cookies from 'universal-cookie';
 
 import Api, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
+import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
@@ -14,6 +15,8 @@ export const tenantadmApiUrlv1 = `${apiUrl.v1}/tenantadm`;
 export const tenantadmApiUrlv2 = `${apiUrl.v2}/tenantadm`;
 export const samlIdpApiUrlv1 = `${apiUrl.v1}/useradm/sso/idp/metadata`;
 export const samlSpApiUrlv1 = `${apiUrl.v1}/useradm/sso/sp/metadata`;
+
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
@@ -155,10 +158,13 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
 
-export const createIntegration = integration => dispatch =>
-  Api.post(`${iotManagerBaseURL}/integrations`, { provider: integration.provider, credentials: integration.credentials })
+export const createIntegration = integration => dispatch => {
+  // eslint-disable-next-line no-unused-vars
+  const { credentials, id, provider, ...remainder } = integration;
+  return Api.post(`${iotManagerBaseURL}/integrations`, { provider, credentials, ...remainder })
     .catch(err => commonErrorHandler(err, 'There was an error creating the integration', dispatch, commonErrorFallback))
     .then(() => Promise.all([dispatch(setSnackbar('The integration was set up successfully')), dispatch(getIntegrations())]));
+};
 
 export const changeIntegration = integration => dispatch =>
   Api.put(`${iotManagerBaseURL}/integrations/${integration.id}/credentials`, integration.credentials)
@@ -189,6 +195,27 @@ export const getIntegrations = () => (dispatch, getState) =>
       }, []);
       return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
     });
+
+export const getWebhookEvents =
+  (config = {}) =>
+  (dispatch, getState) => {
+    const { isFollowUp, page = defaultPage, perPage = defaultPerPage } = config;
+    return Api.get(`${iotManagerBaseURL}/events?page=${page}&per_page=${perPage}`)
+      .catch(err => commonErrorHandler(err, 'There was an error retrieving activity for this integration', dispatch, commonErrorFallback))
+      .then(({ data }) => {
+        let tasks = [
+          dispatch({
+            type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
+            value: isFollowUp ? getState().organization.webhooks.events : data,
+            total: (page - 1) * perPage + data.length
+          })
+        ];
+        if (data.length >= perPage && !isFollowUp) {
+          tasks.push(dispatch(getWebhookEvents({ isFollowUp: true, page: page + 1, perPage: 1 })));
+        }
+        return Promise.all(tasks);
+      });
+  };
 
 const samlConfigActions = {
   create: { success: 'stored', error: 'storing' },

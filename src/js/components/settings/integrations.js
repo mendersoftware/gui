@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Divider, MenuItem, Select, TextField } from '@mui/material';
@@ -10,6 +10,8 @@ import InfoHint from '../common/info-hint';
 import { useDebounce } from '../../utils/debouncehook';
 import { makeStyles } from 'tss-react/mui';
 import { customSort, versionCompare } from '../../helpers';
+import { WebhookCreation } from './webhooks/configuration';
+import Webhooks from './webhooks/webhooks';
 
 const maxWidth = 750;
 
@@ -171,25 +173,26 @@ export const IntegrationConfiguration = ({ integration, isLast, onCancel, onDele
   );
 };
 
+const determineAvailableIntegrations = (integrations, isPreRelease) =>
+  Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
+    const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
+    if (provider.title && (provider.enabled || isPreRelease) && !hasIntegrationConfigured) {
+      accu.push(provider);
+    }
+    return accu;
+  }, []);
+
 export const Integrations = ({ changeIntegration, createIntegration, deleteIntegration, getIntegrations, integrations = [], isPreRelease }) => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
+  const [isConfiguringWebhook, setIsConfiguringWebhook] = useState(false);
 
   const { classes } = useStyles();
 
-  const determineAvailableIntegrations = (integrations, isPreRelease) =>
-    Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
-      const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
-      if ((provider.enabled || isPreRelease) && !hasIntegrationConfigured) {
-        accu.push(provider);
-      }
-      return accu;
-    }, []);
-
   useEffect(() => {
     const available = determineAvailableIntegrations(integrations, isPreRelease);
-    setAvailableIntegrations(available);
-    setConfiguredIntegrations(integrations);
+    setAvailableIntegrations(integrations.length ? [] : available);
+    setConfiguredIntegrations(integrations.filter(integration => integration.provider !== EXTERNAL_PROVIDER.webhook.provider));
   }, [integrations, isPreRelease]);
 
   useEffect(() => {
@@ -197,6 +200,9 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
   }, []);
 
   const onConfigureIntegration = ({ target: { value: provider = '' } }) => {
+    if (provider === EXTERNAL_PROVIDER.webhook.provider) {
+      return setIsConfiguringWebhook(true);
+    }
     setConfiguredIntegrations([...configuredIntegrations, { id: 'new', provider }]);
     setAvailableIntegrations(integrations => integrations.filter(integration => integration.provider !== provider));
   };
@@ -204,17 +210,24 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
   const onCancelClick = ({ id, provider }) => {
     if (id === 'new') {
       setAvailableIntegrations(current => [...current, EXTERNAL_PROVIDER[provider]].sort(customSort(true, 'provider')));
-      setConfiguredIntegrations(current => current.filter(integration => !(integration.id === id && integration.provider === provider)));
+      setConfiguredIntegrations(current =>
+        current.filter(
+          integration => !(integration.id === id && integration.provider === provider && integration.provider !== EXTERNAL_PROVIDER.webhook.provider)
+        )
+      );
     }
+    setIsConfiguringWebhook(false);
   };
 
   const onSaveClick = integration => {
     if (integration.id === 'new') {
+      setIsConfiguringWebhook(false);
       return createIntegration(integration);
     }
     changeIntegration(integration);
   };
 
+  const configuredWebhook = useMemo(() => integrations.find(integration => integration.provider === EXTERNAL_PROVIDER.webhook.provider), [integrations]);
   return (
     <div>
       <h2 className="margin-top-small">Integrations</h2>
@@ -228,7 +241,7 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
           onSave={onSaveClick}
         />
       ))}
-      {!!availableIntegrations.length && (
+      {!configuredWebhook && !!availableIntegrations.length && (
         <Select className={classes.select} displayEmpty onChange={onConfigureIntegration} value="">
           <MenuItem value="">Add new integration</MenuItem>
           {availableIntegrations.map(item => (
@@ -236,8 +249,11 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
               {item.title}
             </MenuItem>
           ))}
+          {isPreRelease && <MenuItem value="webhook">Webhooks</MenuItem>}
         </Select>
       )}
+      {!!configuredWebhook && <Webhooks webhook={configuredWebhook} />}
+      <WebhookCreation adding={isConfiguringWebhook} onCancel={onCancelClick} onSubmit={onSaveClick} />
     </div>
   );
 };

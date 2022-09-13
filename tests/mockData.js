@@ -58,6 +58,23 @@ export const accessTokens = [
   { id: 'some-id-2', expiration_date: '2022-06-02T11:11:21.725Z', last_used: '2022-06-02T11:05:21.725Z', name: 'some-name-2' }
 ];
 
+export const webhookEvents = [
+  {
+    id: '1',
+    type: 'device-status-changed',
+    data: { id: '1', status: 'accepted' },
+    time: '2020-09-01T12:00:00.000Z',
+    delivery_statuses: [{ integration_id: '1', success: true, status_code: 200 }]
+  },
+  {
+    id: '2',
+    type: 'device-status-changed',
+    data: { id: '3', status: 'accepted' },
+    time: '2020-09-01T12:00:05.000Z',
+    delivery_statuses: [{ integration_id: '1', success: true, status_code: 200 }]
+  }
+];
+
 export const userId = 'a30a780b-b843-5344-80e3-0fd95a4f6fc3';
 export const defaultState = {
   app: {
@@ -377,7 +394,8 @@ export const defaultState = {
       plan: 'os',
       trial: false
     },
-    samlConfigs: []
+    samlConfigs: [],
+    webhooks: {}
   },
   releases: {
     artifactProgress: 0,

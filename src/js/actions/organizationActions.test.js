@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { defaultState } from '../../../tests/mockData';
+import { defaultState, webhookEvents } from '../../../tests/mockData';
 import AppConstants from '../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
@@ -9,24 +9,25 @@ import {
   cancelRequest,
   cancelUpgrade,
   changeIntegration,
-  confirmCardUpdate,
+  changeSamlConfig,
   completeUpgrade,
+  confirmCardUpdate,
   createIntegration,
   createOrganizationTrial,
   deleteIntegration,
+  deleteSamlConfig,
   getAuditLogs,
   getAuditLogsCsvLink,
   getCurrentCard,
   getIntegrations,
+  getSamlConfigs,
   getUserOrganization,
+  getWebhookEvents,
   requestPlanChange,
   sendSupportMessage,
+  setAuditlogsState,
   startCardUpdate,
   startUpgrade,
-  setAuditlogsState,
-  changeSamlConfig,
-  deleteSamlConfig,
-  getSamlConfigs,
   storeSamlConfig
 } from './organizationActions';
 
@@ -382,6 +383,74 @@ describe('organization actions', () => {
       { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }
     ];
     const request = store.dispatch(deleteIntegration({ id: 1 }));
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow retrieving webhook events', async () => {
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        webhooks: {
+          ...defaultState.organization.webhooks,
+          events: [
+            { id: 1, something: 'something' },
+            { id: 2, provider: 'aws', something: 'new' }
+          ]
+        }
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const expectedActions = [
+      {
+        type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
+        value: webhookEvents,
+        total: 2
+      }
+    ];
+    const request = store.dispatch(getWebhookEvents());
+    expect(request).resolves.toBeTruthy();
+    await request.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions).toHaveLength(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should auto check for more webhook events', async () => {
+    const existingEvents = [
+      { id: 1, something: 'something' },
+      { id: 2, provider: 'aws', something: 'new' }
+    ];
+    const store = mockStore({
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        webhooks: {
+          ...defaultState.organization.webhooks,
+          events: existingEvents,
+          eventTotal: 2
+        }
+      }
+    });
+    expect(store.getActions()).toHaveLength(0);
+    const defaultEvent = webhookEvents[0];
+    const expectedActions = [
+      {
+        type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
+        value: [defaultEvent],
+        total: 1
+      },
+      {
+        type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
+        value: existingEvents,
+        total: 2
+      }
+    ];
+    const request = store.dispatch(getWebhookEvents({ page: 1, perPage: 1 }));
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
       const storeActions = store.getActions();

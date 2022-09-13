@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Chip } from '@mui/material';
 import { Add as AddIcon, ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 
 import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
@@ -10,6 +10,21 @@ import { createRole, editRole, getRoles, removeRole } from '../../actions/userAc
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { emptyRole } from '../../constants/userConstants';
 import RoleDefinition from './roledefinition';
+import DetailsTable from '../common/detailstable';
+
+const columns = [
+  { key: 'name', title: 'Role', render: ({ name }) => name },
+  { key: 'description', title: 'Description', render: ({ description }) => description || '-' },
+  {
+    key: 'manage',
+    title: 'Manage',
+    render: () => (
+      <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>
+        view details <ArrowRightAltIcon />
+      </div>
+    )
+  }
+];
 
 export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGroups, getRoles, groups, removeRole, roles }) => {
   const [adding, setAdding] = useState(false);
@@ -53,28 +68,7 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
   return (
     <div>
       <h2 style={{ marginLeft: 20 }}>Roles</h2>
-      <Table className="margin-bottom">
-        <TableHead>
-          <TableRow>
-            <TableCell>Role</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Manage</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {roles.map((role, index) => (
-            <TableRow className="clickable" key={role.id || index} hover onClick={() => onEditRole(role)}>
-              <TableCell>{role.name}</TableCell>
-              <TableCell>{role.description || '-'}</TableCell>
-              <TableCell>
-                <div className="bold flexbox center-aligned link-color margin-right-small uppercased" style={{ whiteSpace: 'nowrap' }}>
-                  view details <ArrowRightAltIcon />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <DetailsTable columns={columns} items={roles} onItemClick={onEditRole} />
       <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} />
       <RoleDefinition
         adding={adding}

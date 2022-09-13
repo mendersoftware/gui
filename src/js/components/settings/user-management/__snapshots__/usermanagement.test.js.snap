@@ -361,7 +361,7 @@ exports[`UserManagement Component renders correctly 1`] = `
     </button>
   </div>
   <table
-    class="MuiTable-root emotion-2"
+    class="MuiTable-root margin-bottom emotion-2"
   >
     <thead
       class="MuiTableHead-root emotion-3"

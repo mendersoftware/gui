@@ -38,7 +38,7 @@ const sectionMap = {
     text: () => 'Roles',
     canAccess: ({ currentUser, isEnterprise, userRoles: { isAdmin } }) => currentUser && isAdmin && isEnterprise
   },
-  'integrations': {
+  integrations: {
     component: Integrations,
     text: () => 'Integrations',
     canAccess: ({ userRoles: { isAdmin }, version }) => isAdmin && versionCompare(version, '3.2') > -1
