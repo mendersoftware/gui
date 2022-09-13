@@ -4,6 +4,8 @@ import IconButton from '@mui/material/IconButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
+const defaultRemoving = 'Removing...';
+
 const confirmationType = {
   retry: {
     loading: 'Creating new deployment...',
@@ -14,7 +16,7 @@ const confirmationType = {
     message: 'Confirm abort?'
   },
   chartRemoval: {
-    loading: 'Removing...',
+    loading: defaultRemoving,
     message: 'Remove this chart?'
   },
   decommissioning: {
@@ -30,8 +32,12 @@ const confirmationType = {
     message: 'This will abort the deployment and attempt to roll back all devices. Confirm abort?'
   },
   integrationRemoval: {
-    loading: 'Removing...',
+    loading: defaultRemoving,
     message: 'Remove the ingration. Are you sure?'
+  },
+  webhooksRemoval: {
+    loading: defaultRemoving,
+    message: 'Delete all webhooks?'
   }
 };
 

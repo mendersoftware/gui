@@ -4,6 +4,7 @@ const { mdiAws: AWS, mdiMicrosoftAzure: Azure } = require('@mdi/js');
 
 const credentialTypes = {
   aws: 'aws',
+  http: 'http',
   sas: 'sas',
   x509: 'x509'
 };
@@ -99,9 +100,7 @@ module.exports = {
 
   EXTERNAL_PROVIDER: {
     'iot-core': {
-      article: 'an',
       credentialsType: credentialTypes.aws,
-      credentialsAttribute: 'value',
       icon: AWS,
       title: 'AWS IoT Core',
       twinTitle: 'Device Shadow',
@@ -111,9 +110,7 @@ module.exports = {
       configHint: <>For help finding your AWS IoT Core connection string, check the AWS IoT documentation.</>
     },
     'iot-hub': {
-      article: 'an',
       credentialsType: credentialTypes.sas,
-      credentialsAttribute: 'connection_string',
       icon: Azure,
       title: 'Azure IoT Hub',
       twinTitle: 'Device Twin',
@@ -135,6 +132,13 @@ module.exports = {
           .
         </span>
       )
+    },
+    webhook: {
+      credentialsType: credentialTypes.http,
+      deviceTwin: false,
+      // disable the webhook provider here, since it is treated different than other integrations, with a custom configuration & management view, etc.
+      enabled: false,
+      provider: 'webhook'
     }
   },
 
