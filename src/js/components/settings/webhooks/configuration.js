@@ -56,12 +56,19 @@ const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = {
       value={description}
     />
   );
+  const urlInput = <TextField label="Url" id="webhook-name" disabled={editing} value={url} onChange={e => setUrl(e.target.value)} />;
   const isSubmitDisabled = !url || (editing && url === hookUrl);
   return (
     <>
       <InfoHint content="Webhooks are triggered when a device's status is updated, or a device is decommissioned or provisioned." />
       <div className="flexbox column" style={{ width: 500 }}>
-        <TextField label="Url" id="webhook-name" value={url} onChange={e => setUrl(e.target.value)} />
+        {editing ? (
+          <MenderTooltip arrow placement="bottom-start" title="Cannot edit webhook url after it has been saved">
+            {urlInput}
+          </MenderTooltip>
+        ) : (
+          urlInput
+        )}
         {editing ? (
           <MenderTooltip arrow placement="bottom-start" title="Cannot edit webhook description after it has been saved">
             {descriptionInput}
@@ -85,9 +92,11 @@ const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = {
       <Divider className="margin-top-large" light />
       <div className="flexbox centered margin-top" style={{ justifyContent: 'flex-end' }}>
         <Button onClick={onCancel}>Cancel</Button>
-        <Button color="secondary" variant="contained" disabled={isSubmitDisabled} onClick={onSubmitClick}>
-          {editing ? 'Save' : 'Submit'}
-        </Button>
+        {!editing && (
+          <Button color="secondary" variant="contained" disabled={isSubmitDisabled} onClick={onSubmitClick}>
+            Submit
+          </Button>
+        )}
       </div>
     </>
   );
