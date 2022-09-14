@@ -23,6 +23,7 @@ test.describe('Layout assertions', () => {
   });
 
   test('can authorize a device', async ({ loggedInPage: page }) => {
+    test.setTimeout(140000);
     await page.click(`.leftNav :text('Devices')`);
     let hasAcceptedDevice = false;
     try {
