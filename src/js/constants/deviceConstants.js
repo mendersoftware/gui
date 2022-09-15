@@ -105,7 +105,7 @@ module.exports = {
       title: 'AWS IoT Core',
       twinTitle: 'Device Shadow',
       provider: 'iot-core',
-      enabled: false,
+      enabled: true,
       deviceTwin: true,
       configHint: <>For help finding your AWS IoT Core connection string, check the AWS IoT documentation.</>
     },
