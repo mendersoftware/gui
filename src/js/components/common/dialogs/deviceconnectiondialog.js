@@ -16,6 +16,7 @@ import { DeviceSupportTip } from '../../helptips/helptooltips';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 import InfoText from '../../common/infotext';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles()(theme => ({
   rpiQuickstart: {
@@ -95,6 +96,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
   const [virtualDevice, setVirtualDevice] = useState(false);
   const [pendingDevicesCount] = useState(pendingCount);
   const [hasMoreDevices, setHasMoreDevices] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setHasMoreDevices(pendingCount > pendingDevicesCount);
@@ -127,7 +129,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
   }
   if (progress >= 2 && hasMoreDevices && !window.location.hash.includes('pending')) {
     advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
-    window.location.replace('#/devices/pending');
+    navigate('/devices/pending');
   }
 
   return (
