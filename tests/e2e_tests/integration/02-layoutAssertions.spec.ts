@@ -27,16 +27,16 @@ test.describe('Layout assertions', () => {
     await page.click(`.leftNav :text('Devices')`);
     let hasAcceptedDevice = false;
     try {
-      hasAcceptedDevice = Boolean(await page.waitForSelector('.deviceListItem', { timeout: 10000 }));
+      hasAcceptedDevice = await page.isVisible('.deviceListItem');
     } catch (e) {
       console.log(`no accepted device present so far`);
     }
     if (!hasAcceptedDevice) {
-      await page.waitForSelector(`text=pending authorization`, { timeout: 60000 });
-      await page.click(`text=pending authorization`);
+      const pendingMessage = await page.locator(`text=/pending authorization/i`);
+      await pendingMessage.waitFor({ timeout: 60000 });
+      await pendingMessage.click();
       await page.click(selectors.deviceListCheckbox);
-      await page.click('.MuiSpeedDial-fab');
-      await page.hover('#device-actions-actions');
+      await page.hover('.MuiSpeedDial-fab');
       await page.click('[aria-label="accept"]');
     }
     await page.locator(`input:near(:text("Status:"))`).first().click({ force: true });
@@ -45,7 +45,7 @@ test.describe('Layout assertions', () => {
     const element = await page.textContent('.deviceListItem');
     expect(element.includes('release')).toBeTruthy();
     await page.click(`.deviceListItem div:last-child`);
-    await page.waitForSelector(`text=/Device information for/i`, { timeout: 2000 });
+    await page.waitForSelector(`text=/Device information for/i`);
     expect(await page.isVisible('text=Authentication status')).toBeTruthy();
   });
 
