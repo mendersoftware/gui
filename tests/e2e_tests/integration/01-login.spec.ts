@@ -74,6 +74,16 @@ test.describe('Login', () => {
       expect(loginVisible).toBeTruthy();
       await page.waitForSelector('text=There was a problem logging in');
     });
+
+    test('Does not log in without password', async ({ baseUrl, page, username }) => {
+      console.log(`logging in user with username: ${username} and without a password`);
+      await page.goto(`${baseUrl}ui/`);
+      // enter valid username and invalid password
+      await page.waitForSelector(selectors.email);
+      await page.click(selectors.email);
+      await page.fill(selectors.email, username);
+      expect(await page.isDisabled('button:has-text("Log in")')).toBeTruthy();
+    });
   });
 
   test.describe('stays logged in across sessions, after browser restart if selected', () => {
