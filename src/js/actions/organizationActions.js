@@ -14,7 +14,6 @@ export const auditLogsApiUrl = `${apiUrl.v1}/auditlogs`;
 export const tenantadmApiUrlv1 = `${apiUrl.v1}/tenantadm`;
 export const tenantadmApiUrlv2 = `${apiUrl.v2}/tenantadm`;
 export const samlIdpApiUrlv1 = `${apiUrl.v1}/useradm/sso/idp/metadata`;
-export const samlSpApiUrlv1 = `${apiUrl.v1}/useradm/sso/sp/metadata`;
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -255,7 +254,7 @@ export const deleteSamlConfig =
       });
 
 const getSamlConfigById = config => dispatch =>
-  Api.get(`${samlSpApiUrlv1}/${config.id}`)
+  Api.get(`${samlIdpApiUrlv1}/${config.id}`)
     .catch(err => dispatch(samlConfigActionErrorHandler(err, 'read')))
     .then(({ data }) => Promise.resolve({ ...config, config: data }));
 

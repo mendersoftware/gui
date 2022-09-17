@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { defaultState, webhookEvents } from '../mockData';
 import { PLANS } from '../../src/js/constants/appConstants';
 import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
-import { auditLogsApiUrl, samlSpApiUrlv1, samlIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
+import { auditLogsApiUrl, samlIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { headerNames } from '../../src/js/api/general-api';
 import { EXTERNAL_PROVIDER } from '../../src/js/constants/deviceConstants';
 
@@ -171,7 +171,7 @@ export const organizationHandlers = [
   rest.post(samlIdpApiUrlv1, (req, res, ctx) => {
     return res(ctx.status(200));
   }),
-  rest.get(`${samlSpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+  rest.get(`${samlIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
     if (!configId) {
       return res(ctx.status(550));
     }
