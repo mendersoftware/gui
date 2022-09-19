@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 
 import { Button, Divider, Drawer, IconButton, Typography } from '@mui/material';
@@ -80,6 +81,7 @@ export const CreateDeployment = props => {
   const isCreating = useRef(false);
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
+  const navigate = useNavigate();
   const releaseRef = useRef();
   const groupRef = useRef();
   const deploymentAnchor = useRef();
@@ -129,7 +131,7 @@ export const CreateDeployment = props => {
 
   const cleanUpDeploymentsStatus = () => {
     const location = window.location.hash.substring(0, window.location.hash.indexOf('?'));
-    return location.length ? window.location.replace(location) : null; // lgtm [js/client-side-unvalidated-url-redirection]
+    return location.length ? navigate(location) : null; // lgtm [js/client-side-unvalidated-url-redirection]
   };
 
   const onSaveRetriesSetting = hasNewRetryDefault => setHasNewRetryDefault(hasNewRetryDefault);

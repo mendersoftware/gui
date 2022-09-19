@@ -9,12 +9,14 @@ import Confirm from '../../common/confirm';
 import { chartColorPalette } from '../../../themes/Mender';
 import { useTheme } from '@mui/material/styles';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
+import { useNavigate } from 'react-router-dom';
 
 const seriesOther = '__OTHER__';
 
 export const DistributionReport = ({ attribute, devices, group, groups, onClick, selectGroup, style }) => {
   const [distribution, setDistribution] = useState([]);
   const [removing, setRemoving] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     initializeDistributionData();
@@ -55,7 +57,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
       const groupFilters = groups[group]?.filters?.length ? groups[group].filters : [];
       const filters = [...groupFilters, { key: attribute, value: thing, operator: '$eq', scope: 'inventory' }];
       selectGroup(group, filters);
-      window.location.replace(`#/devices?${group ? `group=${group}&` : ''}${attribute}=${thing}`);
+      navigate(`/devices?${group ? `group=${group}&` : ''}${attribute}=${thing}`);
     }
   };
 

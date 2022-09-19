@@ -70,7 +70,7 @@ export const loginUser = userData => dispatch =>
       cookies.set('JWT', token, options);
 
       window.sessionStorage.removeItem('pendings-redirect');
-      window.location.replace('#/');
+      window.location.replace('/ui/');
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(OWN_USER_ID))]);
     });
 

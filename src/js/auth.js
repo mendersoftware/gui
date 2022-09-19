@@ -13,7 +13,7 @@ export const cleanUp = () => {
 
 export const logout = () => {
   cleanUp();
-  window.location.replace('/');
+  window.location.replace('/ui/');
 };
 
 const maxAge = 900;
