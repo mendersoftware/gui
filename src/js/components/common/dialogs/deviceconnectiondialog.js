@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -16,6 +16,7 @@ import { DeviceSupportTip } from '../../helptips/helptooltips';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 import InfoText from '../../common/infotext';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles()(theme => ({
   rpiQuickstart: {
@@ -93,6 +94,13 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
   const [onDevice, setOnDevice] = useState(false);
   const [progress, setProgress] = useState(1);
   const [virtualDevice, setVirtualDevice] = useState(false);
+  const [pendingDevicesCount] = useState(pendingCount);
+  const [hasMoreDevices, setHasMoreDevices] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setHasMoreDevices(pendingCount > pendingDevicesCount);
+  }, [pendingDevicesCount, pendingCount]);
 
   const onBackClick = () => {
     let updatedProgress = progress - 1;
@@ -116,12 +124,12 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
     content = <VirtualDeviceOnboarding />;
   }
 
-  if (pendingCount && !onboardingComplete) {
+  if (hasMoreDevices && !onboardingComplete) {
     setTimeout(onCancel, 2000);
   }
-  if (progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
+  if (progress >= 2 && hasMoreDevices && !window.location.hash.includes('pending')) {
     advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
-    window.location.replace('#/devices/pending');
+    navigate('/devices/pending');
   }
 
   return (

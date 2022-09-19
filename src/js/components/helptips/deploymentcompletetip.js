@@ -14,6 +14,7 @@ import { getDemoDeviceAddress } from '../../selectors';
 import Tracking from '../../tracking';
 import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
+import { useNavigate } from 'react-router-dom';
 
 export const CompletionButton = withStyles(Button, ({ palette }) => ({
   root: {
@@ -33,6 +34,8 @@ export const DeploymentCompleteTip = ({
   setOnboardingComplete,
   url
 }) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).then(tasks => tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById));
     Tracking.event({ category: 'onboarding', action: onboardingSteps.DEPLOYMENTS_PAST_COMPLETED });
@@ -44,7 +47,7 @@ export const DeploymentCompleteTip = ({
     advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
     setOnboardingComplete(false);
     setShowCreateArtifactDialog(true);
-    window.location.replace('#/releases');
+    navigate('/releases');
   };
 
   return (
