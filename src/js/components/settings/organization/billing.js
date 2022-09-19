@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // material ui
 import { List, LinearProgress } from '@mui/material';
@@ -75,6 +75,7 @@ export const CancelSubscriptionButton = ({ handleCancelSubscription, isTrial }) 
 export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLimit, isEnterprise, organization }) => {
   const [cancelSubscription, setCancelSubscription] = useState(false);
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
+  const navigate = useNavigate();
   const { classes } = useStyles();
 
   const planName = PLANS[currentPlan].name;
@@ -129,7 +130,7 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
         <OrganizationSettingsItem
           title="Current add-ons"
           content={{
-            action: { title: 'Purchase an add-on', internal: true, action: () => window.location.replace('#/settings/upgrade') },
+            action: { title: 'Purchase an add-on', internal: true, action: () => navigate('/settings/upgrade') },
             description: enabledAddOns.length ? enabledAddOns.join(', ') : `You currently don't have any add-ons`
           }}
           notification={organization.trial && <TrialExpirationNote trial_expiration={organization.trial_expiration} />}
