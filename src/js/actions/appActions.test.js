@@ -72,6 +72,7 @@ describe('app actions', () => {
     const expectedActions = [
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
       {
         type: DeviceConstants.SET_FILTER_ATTRIBUTES,
         attributes: {

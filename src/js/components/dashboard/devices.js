@@ -6,7 +6,7 @@ import { setShowConnectingDialog } from '../../actions/userActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getOfflineThresholdSettings, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -35,6 +35,8 @@ export const Devices = props => {
     hasFullFiltering,
     inactiveDevicesCount,
     itemsClassName,
+    offlineThreshold,
+    offlineThresholdSetting,
     onboardingState,
     pendingDevicesCount,
     setShowConnectingDialog,
@@ -52,12 +54,9 @@ export const Devices = props => {
       return;
     }
     setLoading(true);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdaysIsoString = yesterday.toISOString();
     let tasks = [getDeviceCount(DEVICE_STATES.pending)];
     if (hasFullFiltering) {
-      tasks.push(getActiveDevices(yesterdaysIsoString));
+      tasks.push(getActiveDevices(offlineThreshold));
     } else {
       tasks.push(getAllDevicesByStatus(DEVICE_STATES.accepted));
     }
@@ -138,6 +137,7 @@ export const Devices = props => {
           devicesCount={acceptedDevicesCount}
           inactiveCount={inactiveDevicesCount}
           delta={deltaActivity}
+          offlineThreshold={offlineThresholdSetting}
           onClick={clickHandle}
         />
         {canManageDevices && (
@@ -167,6 +167,8 @@ const mapStateToProps = state => {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     hasFullFiltering,
     inactiveDevicesCount: state.devices.byStatus.inactive.total,
+    offlineThreshold: state.app.offlineThreshold,
+    offlineThresholdSetting: getOfflineThresholdSettings(state),
     onboardingState: getOnboardingState(state),
     pendingDevicesCount: state.devices.byStatus.pending.total,
     showHelptips: state.users.showHelptips

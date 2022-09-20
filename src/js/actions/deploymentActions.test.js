@@ -130,6 +130,7 @@ describe('deployment actions', () => {
       },
       defaultResponseActions.receive,
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
+      { type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } },
       defaultResponseActions.receiveMultiple
     ];
