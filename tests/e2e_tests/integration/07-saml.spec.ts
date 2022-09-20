@@ -27,12 +27,11 @@ test.describe('SAML Login', () => {
       }
       const storage = await context.storageState();
       const jwt = storage['cookies'].find(cookie => cookie.name === 'JWT').value;
+      const requestInfo = { headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` }, httpsAgent, method: 'GET' };
       console.log(`Finished ${testInfo.title} with status ${testInfo.status}. Cleaning up.`);
       const response = await axios({
-        url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings.credentials[browserName].email)}`,
-        method: 'GET',
-        headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` },
-        httpsAgent
+        ...requestInfo,
+        url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings.credentials[browserName].email)}`
       });
       if (response.status >= 300 || !response.data.length) {
         console.log(`${samlSettings.credentials[browserName].email} does not exist.`);
@@ -40,16 +39,15 @@ test.describe('SAML Login', () => {
       }
       const { id: userId } = response.data[0];
       await axios({
+        ...requestInfo,
         url: `${baseUrl}api/management/v1/useradm/users/${userId}`,
-        method: 'DELETE',
-        headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` },
-        httpsAgent
+        method: 'DELETE'
       });
       console.log(`removed user ${samlSettings.credentials[browserName].email}.`);
     });
 
     // Setups the SAML/SSO login with samltest.id Identity Provider
-    test('Set up SAML', async ({ environment, baseUrl, page }) => {
+    test('Set up SAML', async ({ context, environment, baseUrl, page }) => {
       test.skip(environment !== 'staging');
       test.setTimeout(320000);
 
@@ -86,20 +84,28 @@ test.describe('SAML Login', () => {
       const [download] = await Promise.all([page.waitForEvent('download'), page.locator('text=Download file').click()]);
       const downloadTargetPath = await download.path();
       expect(downloadTargetPath).toBeTruthy();
-      const spMetadaData = fs.readFileSync(downloadTargetPath, 'utf8');
-      const entityIdAttribute = 'entityID="';
-      const entityIdStart = spMetadaData.indexOf(entityIdAttribute) + entityIdAttribute.length;
-      const entityId = spMetadaData.substring(entityIdStart, spMetadaData.indexOf('"', entityIdStart));
-      const metadataId = entityId.substring(entityId.lastIndexOf('/') + 1);
-      console.log(`looking for config info for metadata id: ${metadata}`);
+      const dialog = await page.locator('text=SAML metadata >> .. >> ..');
+      await dialog.locator('data-testid=CloseIcon').click();
+
+      const storage = await context.storageState();
+      const jwt = storage['cookies'].find(cookie => cookie.name === 'JWT').value;
+      const requestInfo = { method: 'GET', headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` }, httpsAgent };
+      const { data } = await axios({ ...requestInfo, url: `${baseUrl}api/management/v1/useradm/sso/idp/metadata` });
+      const metadataId = data[0].id;
+      console.log(`looking for config info for metadata id: ${metadataId}`);
       const expectedLoginUrl = `${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/login`;
+      await page.waitForSelector(`text=${expectedLoginUrl}`);
       expect(await page.isVisible(`text=${expectedLoginUrl}`)).toBeTruthy();
       const expectedAcsUrl = `${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/acs`;
       expect(await page.isVisible(`text=${expectedAcsUrl}`)).toBeTruthy();
       const expectedSpMetaUrl = `${baseUrl}api/management/v1/useradm/sso/sp/metadata/${metadataId}`;
       expect(await page.isVisible(`text=${expectedSpMetaUrl}`)).toBeTruthy();
 
-      const serviceProviderMetadata = spMetadaData.replaceAll('Signed="true"', 'Signed="false"');
+      const { data: spMetadata, status: spDataStatus } = await axios({ ...requestInfo, url: expectedSpMetaUrl });
+      expect(spDataStatus).toBeGreaterThanOrEqual(200);
+      expect(spDataStatus).toBeLessThan(300);
+
+      const serviceProviderMetadata = spMetadata.replaceAll('Signed="true"', 'Signed="false"');
       fs.writeFileSync('fixtures/service_provider_metadata.xml', serviceProviderMetadata);
 
       await page.goto('https://samltest.id/upload.php');

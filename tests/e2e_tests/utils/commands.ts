@@ -86,6 +86,7 @@ export const startDockerClient = async (baseUrl, token) => {
   const localNetwork = baseUrl.includes('docker.mender.io') ? ['--network', 'gui-tests_mender'] : [];
   const args = [
     'run',
+    '-d',
     '--name',
     'connect-client',
     ...localNetwork,
