@@ -125,7 +125,10 @@ export const Progress = props => {
 
   let onboardingComponent = null;
   if (!onboardingState.complete && inprogressRef.current) {
-    const anchor = { left: inprogressRef.current.offsetWidth - 100, top: inprogressRef.current.offsetTop + inprogressRef.current.offsetHeight };
+    const anchor = {
+      left: inprogressRef.current.offsetLeft + (inprogressRef.current.offsetWidth / 100) * 90,
+      top: inprogressRef.current.offsetTop + inprogressRef.current.offsetHeight
+    };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
   }
 
