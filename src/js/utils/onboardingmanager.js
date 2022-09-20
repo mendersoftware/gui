@@ -184,7 +184,7 @@ export const onboardingSteps = {
     specialComponent: <OnboardingCompleteTip targetUrl="destination-unreachable" />
   },
   [stepNames.ONBOARDING_FINISHED_NOTIFICATION]: {
-    condition: { min: stepNames.ARTIFACT_MODIFIED_ONBOARDING },
+    condition: { min: stepNames.ONBOARDING_FINISHED },
     specialComponent: <WelcomeSnackTip progress={4} />
   },
   [stepNames.ONBOARDING_CANCELED]: {
