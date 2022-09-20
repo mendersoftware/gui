@@ -130,8 +130,11 @@ export const CreateDeployment = props => {
   }, [JSON.stringify(deploymentObject)]);
 
   const cleanUpDeploymentsStatus = () => {
-    const location = window.location.hash.substring(0, window.location.hash.indexOf('?'));
-    return location.length ? navigate(location) : null; // lgtm [js/client-side-unvalidated-url-redirection]
+    if (!window.location.search) {
+      return;
+    }
+    const location = window.location.pathname.slice('/ui'.length);
+    navigate(location); // lgtm [js/client-side-unvalidated-url-redirection]
   };
 
   const onSaveRetriesSetting = hasNewRetryDefault => setHasNewRetryDefault(hasNewRetryDefault);
