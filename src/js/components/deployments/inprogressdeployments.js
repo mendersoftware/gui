@@ -134,7 +134,6 @@ export const Progress = props => {
       {!!progress.length && (
         <div className="margin-left">
           <LinedHeader className="margin-top-large  margin-right" heading="In progress now" />
-          {/* <div ref={inprogressRef}> */}
           <DeploymentsList
             {...props}
             abort={abortDeployment}
@@ -143,11 +142,11 @@ export const Progress = props => {
             listClass="margin-right-small"
             page={progressPage}
             pageSize={progressPerPage}
+            rootRef={inprogressRef}
             onChangeRowsPerPage={perPage => setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page: 1, perPage } })}
             onChangePage={page => setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page } })}
             type={DEPLOYMENT_STATES.inprogress}
           />
-          {/* </div> */}
         </div>
       )}
       {!!onboardingComponent && onboardingComponent}
