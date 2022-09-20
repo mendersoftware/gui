@@ -241,7 +241,11 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        1
+        <div
+          title="1"
+        >
+          1
+        </div>
       </div>
       <div
         class="align-right  muted"
@@ -253,7 +257,11 @@ exports[`DeploymentStatus Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        N/A
+        <div
+          title="N/A"
+        >
+          N/A
+        </div>
       </div>
     </div>
   </div>

@@ -210,7 +210,11 @@ Devices that are in the middle of the deployment at the time of abort will finis
             <div
               class="flexbox "
             >
-              Software update
+              <div
+                title="Software update"
+              >
+                Software update
+              </div>
             </div>
           </div>
           <div
@@ -395,7 +399,11 @@ Devices that are in the middle of the deployment at the time of abort will finis
             <div
               class="flexbox "
             >
-              1
+              <div
+                title="1"
+              >
+                1
+              </div>
             </div>
             <div
               class="align-right  muted"
@@ -407,7 +415,11 @@ Devices that are in the middle of the deployment at the time of abort will finis
             <div
               class="flexbox "
             >
-              N/A
+              <div
+                title="N/A"
+              >
+                N/A
+              </div>
             </div>
           </div>
         </div>
@@ -694,7 +706,11 @@ Devices that are in the middle of the deployment at the time of abort will finis
             <div
               class="flexbox "
             >
-              1
+              <div
+                title="1"
+              >
+                1
+              </div>
             </div>
           </div>
           <svg
@@ -722,7 +738,11 @@ Devices that are in the middle of the deployment at the time of abort will finis
             <div
               class="flexbox "
             >
-              -
+              <div
+                title="-"
+              >
+                -
+              </div>
             </div>
           </div>
         </div>

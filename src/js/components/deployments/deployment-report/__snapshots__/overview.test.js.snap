@@ -220,7 +220,11 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
     <div
       class="flexbox "
     >
-      Software update
+      <div
+        title="Software update"
+      >
+        Software update
+      </div>
     </div>
   </div>
   <div

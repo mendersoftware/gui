@@ -644,7 +644,11 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
             <div
               class="flexbox "
             >
-              disconnected
+              <div
+                title="disconnected"
+              >
+                disconnected
+              </div>
             </div>
             <div
               class="align-right key muted"
@@ -656,7 +660,11 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
             <div
               class="flexbox "
             >
-              -
+              <div
+                title="-"
+              >
+                -
+              </div>
             </div>
             <div
               class="align-right key muted"
@@ -668,7 +676,11 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
             <div
               class="flexbox "
             >
-              00:00:00
+              <div
+                title="00:00:00"
+              >
+                00:00:00
+              </div>
             </div>
           </div>
           <div
