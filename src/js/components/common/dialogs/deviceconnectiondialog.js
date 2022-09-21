@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
@@ -8,7 +9,9 @@ import docker from '../../../../assets/img/docker.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.png';
 
+import { setDeviceListState } from '../../../actions/deviceActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
+import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDocsVersion, getTenantCapabilities } from '../../../selectors';
 import { DeviceSupportTip } from '../../helptips/helptooltips';
@@ -16,7 +19,6 @@ import { DeviceSupportTip } from '../../helptips/helptooltips';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 import InfoText from '../../common/infotext';
-import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles()(theme => ({
   rpiQuickstart: {
@@ -90,7 +92,16 @@ const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVi
   );
 };
 
-export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMonitor, onboardingDeviceType, onboardingComplete, onCancel, pendingCount }) => {
+export const DeviceConnectionDialog = ({
+  advanceOnboarding,
+  docsVersion,
+  hasMonitor,
+  onboardingDeviceType,
+  onboardingComplete,
+  onCancel,
+  pendingCount,
+  setDeviceListState
+}) => {
   const [onDevice, setOnDevice] = useState(false);
   const [progress, setProgress] = useState(1);
   const [virtualDevice, setVirtualDevice] = useState(false);
@@ -101,6 +112,14 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
   useEffect(() => {
     setHasMoreDevices(pendingCount > pendingDevicesCount);
   }, [pendingDevicesCount, pendingCount]);
+
+  useEffect(() => {
+    if ((virtualDevice || progress >= 2) && hasMoreDevices && !window.location.hash.includes('pending')) {
+      advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
+      setDeviceListState({ state: DEVICE_STATES.pending });
+      navigate('/devices/pending');
+    }
+  }, [advanceOnboarding, hasMoreDevices, progress, virtualDevice]);
 
   const onBackClick = () => {
     let updatedProgress = progress - 1;
@@ -126,10 +145,6 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
 
   if (hasMoreDevices && !onboardingComplete) {
     setTimeout(onCancel, 2000);
-  }
-  if (progress >= 2 && hasMoreDevices && !window.location.hash.includes('pending')) {
-    advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
-    navigate('/devices/pending');
   }
 
   return (
@@ -160,7 +175,7 @@ export const DeviceConnectionDialog = ({ advanceOnboarding, docsVersion, hasMoni
   );
 };
 
-const actionCreators = { advanceOnboarding };
+const actionCreators = { advanceOnboarding, setDeviceListState };
 
 const mapStateToProps = state => {
   return {
