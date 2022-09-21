@@ -16,18 +16,24 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const ValueColumn = ({ value, setSnackbar }) => {
+const cutoffLength = 100;
+const ValueColumn = ({ value = '', setSnackbar }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const isComponent = React.isValidElement(value);
   const onClick = () => {
     if (setSnackbar) {
       let copyable = value;
-      if (React.isValidElement(value)) {
+      if (isComponent) {
         copyable = value.props.value;
       }
       copy(copyable);
       setSnackbar('Value copied to clipboard');
     }
   };
+  let shownValue = value;
+  if (!isComponent) {
+    shownValue = <div title={value}>{value.length > cutoffLength ? `${value.substring(0, cutoffLength - 3)}...` : value}</div>;
+  }
   return (
     <div
       className={`flexbox ${setSnackbar ? 'clickable' : ''}`}
@@ -35,7 +41,7 @@ const ValueColumn = ({ value, setSnackbar }) => {
       onMouseEnter={() => setTooltipVisible(true)}
       onMouseLeave={() => setTooltipVisible(false)}
     >
-      {value}
+      {shownValue}
       {setSnackbar && (
         <Tooltip title={'Copy to clipboard'} placement="top" open={tooltipVisible}>
           <CopyToClipboardIcon color="primary" className={`margin-left-small ${tooltipVisible ? 'fadeIn' : 'fadeOut'}`} fontSize="small"></CopyToClipboardIcon>

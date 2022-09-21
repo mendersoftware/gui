@@ -418,7 +418,11 @@ exports[`TerminalSession Component renders correctly 1`] = `
         <div
           class="flexbox "
         >
-          raspberrypi4
+          <div
+            title="raspberrypi4"
+          >
+            raspberrypi4
+          </div>
         </div>
         <div
           class="align-right key muted"
@@ -430,7 +434,11 @@ exports[`TerminalSession Component renders correctly 1`] = `
         <div
           class="flexbox "
         >
-          -
+          <div
+            title="-"
+          >
+            -
+          </div>
         </div>
         <div
           class="align-right key muted"
@@ -472,7 +480,11 @@ exports[`TerminalSession Component renders correctly 1`] = `
         <div
           class="flexbox "
         >
-          abd313a8-ee88-48ab-9c99-fbcd80048e6e
+          <div
+            title="abd313a8-ee88-48ab-9c99-fbcd80048e6e"
+          >
+            abd313a8-ee88-48ab-9c99-fbcd80048e6e
+          </div>
         </div>
         <div
           class="align-right key muted"
@@ -516,7 +528,11 @@ exports[`TerminalSession Component renders correctly 1`] = `
         <div
           class="flexbox "
         >
-          00:05:59:998
+          <div
+            title="00:05:59:998"
+          >
+            00:05:59:998
+          </div>
         </div>
         <div
           class="align-right key muted"
@@ -528,7 +544,11 @@ exports[`TerminalSession Component renders correctly 1`] = `
         <div
           class="flexbox "
         >
-          string@example.com
+          <div
+            title="string@example.com"
+          >
+            string@example.com
+          </div>
         </div>
       </div>
     </div>
