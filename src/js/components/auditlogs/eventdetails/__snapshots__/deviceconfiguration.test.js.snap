@@ -93,7 +93,11 @@ exports[`DeviceConfiguration Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        raspberrypi4
+        <div
+          title="raspberrypi4"
+        >
+          raspberrypi4
+        </div>
       </div>
       <div
         class="align-right key muted"
@@ -105,7 +109,11 @@ exports[`DeviceConfiguration Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        -
+        <div
+          title="-"
+        >
+          -
+        </div>
       </div>
       <div
         class="align-right key muted"
@@ -147,7 +155,11 @@ exports[`DeviceConfiguration Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        here
+        <div
+          title="here"
+        >
+          here
+        </div>
       </div>
     </div>
   </div>
@@ -173,7 +185,11 @@ exports[`DeviceConfiguration Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        string@example.com
+        <div
+          title="string@example.com"
+        >
+          string@example.com
+        </div>
       </div>
     </div>
   </div>

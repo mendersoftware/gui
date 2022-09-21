@@ -202,7 +202,11 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        1
+        <div
+          title="1"
+        >
+          1
+        </div>
       </div>
     </div>
     <svg
@@ -230,7 +234,11 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        -
+        <div
+          title="-"
+        >
+          -
+        </div>
       </div>
     </div>
   </div>

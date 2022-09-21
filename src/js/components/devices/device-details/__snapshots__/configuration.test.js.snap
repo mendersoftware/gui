@@ -427,7 +427,11 @@ exports[`Configuration Component renders correctly 1`] = `
       <div
         class="flexbox "
       >
-        true
+        <div
+          title="true"
+        >
+          true
+        </div>
       </div>
     </div>
     <a>

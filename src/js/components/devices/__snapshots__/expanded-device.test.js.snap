@@ -1165,7 +1165,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             <div
               class="flexbox clickable"
             >
-              a1
+              <div
+                title="a1"
+              >
+                a1
+              </div>
               <svg
                 aria-hidden="true"
                 aria-label="Copy to clipboard"
@@ -1190,7 +1194,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             <div
               class="flexbox clickable"
             >
-              dc:a6:32:12:ad:bf
+              <div
+                title="dc:a6:32:12:ad:bf"
+              >
+                dc:a6:32:12:ad:bf
+              </div>
               <svg
                 aria-hidden="true"
                 aria-label="Copy to clipboard"
@@ -1423,6 +1431,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             <div
               class="flexbox clickable"
             >
+              <div
+                title=""
+              />
               <svg
                 aria-hidden="true"
                 aria-label="Copy to clipboard"
@@ -1499,6 +1510,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               <div
                 class="flexbox clickable"
               >
+                <div
+                  title=""
+                />
                 <svg
                   aria-hidden="true"
                   aria-label="Copy to clipboard"
@@ -1527,7 +1541,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               <div
                 class="flexbox clickable"
               >
-                raspberrypi4
+                <div
+                  title="raspberrypi4"
+                >
+                  raspberrypi4
+                </div>
                 <svg
                   aria-hidden="true"
                   aria-label="Copy to clipboard"
@@ -1556,7 +1574,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               <div
                 class="flexbox clickable"
               >
-                192.168.10.141/24
+                <div
+                  title="192.168.10.141/24"
+                >
+                  192.168.10.141/24
+                </div>
                 <svg
                   aria-hidden="true"
                   aria-label="Copy to clipboard"
