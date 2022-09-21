@@ -62,7 +62,9 @@ export const getOnboardingState = () => (dispatch, getState) => {
     onboardingState.progress = onboardingStepNames.ARTIFACT_CREATION_DIALOG;
     // although it would be more appropriate to do this in the app component, this happens here because in the app component we would need to track
     // redirects, if we want to still allow navigation across the UI while the dialog is visible
-    window.location.replace('/ui/releases');
+    if (!window.location.pathname.includes('/ui/releases')) {
+      window.location.replace('/ui/releases');
+    }
   }
   return Promise.resolve(dispatch(setOnboardingState(onboardingState)));
 };
