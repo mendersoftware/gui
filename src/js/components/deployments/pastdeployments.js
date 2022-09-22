@@ -97,7 +97,12 @@ export const Past = props => {
     }
     setTimeout(() => {
       let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState, { setSnackbar });
-      notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar }, notification);
+      // the following extra check is needed since this component will still be mounted if a user returns to the initial tab after the first
+      // onboarding deployment & thus the effects will still run, so only ever consider the notification for the second deployment
+      notification =
+        past.length > 1
+          ? getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar }, notification)
+          : notification;
       !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
     }, 400);
   }, [past.length, onboardingState.complete]);
