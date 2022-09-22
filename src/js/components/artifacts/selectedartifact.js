@@ -199,13 +199,15 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
         </Accordion>
       )}
       <div className="two-columns margin-top-small" style={{ maxWidth: 'fit-content' }}>
-        <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
-          Download Artifact
-        </Button>
         {canManageReleases && (
-          <Button onClick={showRemoveArtifactDialog} startIcon={<CancelIcon className="red auth" />}>
-            Remove this Artifact?
-          </Button>
+          <>
+            <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
+              Download Artifact
+            </Button>
+            <Button onClick={showRemoveArtifactDialog} startIcon={<CancelIcon className="red auth" />}>
+              Remove this Artifact?
+            </Button>
+          </>
         )}
       </div>
     </div>
