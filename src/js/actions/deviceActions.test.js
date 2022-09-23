@@ -596,7 +596,9 @@ describe('dynamic grouping related actions', () => {
 
 describe('device retrieval ', () => {
   it('should allow single device retrieval from inventory', async () => {
-    const store = mockStore({ ...defaultState });
+    const store = mockStore({
+      ...defaultState
+    });
     const { attributes, id } = defaultState.devices.byId.a1;
     const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } }];
     await store.dispatch(getDeviceById(defaultState.devices.byId.a1.id));
@@ -605,7 +607,10 @@ describe('device retrieval ', () => {
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should allow single device retrieval from detailed sources', async () => {
-    const store = mockStore({ ...defaultState });
+    const store = mockStore({
+      ...defaultState,
+      organization: { ...defaultState.organization, externalDeviceIntegrations: [{ ...DeviceConstants.EXTERNAL_PROVIDER['iot-hub'], id: 'test' }] }
+    });
     const { attributes, updated_ts, id, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [id]: { ...expectedDevice, id } } },
@@ -807,7 +812,7 @@ describe('device twin related actions', () => {
   it('should allow retrieving twin data from azure', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
-    await store.dispatch(getDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub'].provider));
+    await store.dispatch(getDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub']));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -815,7 +820,7 @@ describe('device twin related actions', () => {
   it('should allow configuring twin data on azure', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: defaultState.devices.byId.a1 }];
-    await store.dispatch(setDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub'].provider, { something: 'asdl' }));
+    await store.dispatch(setDeviceTwin(defaultState.devices.byId.a1.id, DeviceConstants.EXTERNAL_PROVIDER['iot-hub'], { something: 'asdl' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

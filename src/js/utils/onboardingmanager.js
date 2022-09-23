@@ -65,7 +65,7 @@ export const onboardingSteps = {
     progress: 1
   },
   [stepNames.DEVICES_ACCEPTED_ONBOARDING]: {
-    condition: { max: stepNames.APPLICATION_UPDATE_REMINDER_TIP },
+    condition: { max: stepNames.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION },
     component: DevicesAcceptedOnboarding,
     progress: 1
   },
