@@ -11,7 +11,7 @@ import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
 
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
-import { getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
+import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 import { Link } from 'react-router-dom';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
@@ -484,7 +484,8 @@ export const getDeviceInfo = deviceId => (dispatch, getState) => {
   const device = getState().devices.byId[deviceId] || {};
   const { hasDeviceConfig, hasMonitor } = getTenantCapabilities(getState());
   const { canConfigure } = getUserCapabilities(getState());
-  let tasks = [dispatch(getDeviceAuth(deviceId)), dispatch(getDeviceTwin(deviceId))];
+  const integrations = getDeviceTwinIntegrations(getState());
+  let tasks = [dispatch(getDeviceAuth(deviceId)), ...integrations.map(integration => dispatch(getDeviceTwin(deviceId, integration)))];
   if (hasDeviceConfig && canConfigure && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
     tasks.push(dispatch(getDeviceConfig(deviceId)));
   }
@@ -1014,14 +1015,18 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
       .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
   });
 
-export const getDeviceTwin = deviceId => (dispatch, getState) => {
+export const getDeviceTwin = (deviceId, integration) => (dispatch, getState) => {
   let providerResult = {};
   return GeneralApi.get(`${iotManagerBaseURL}/devices/${deviceId}/state`)
     .then(({ data }) => {
       providerResult = { ...data, twinError: '' };
     })
     .catch(err => {
-      providerResult = { twinError: `There was an error getting the device twin for device ${deviceId}. ${err}` };
+      providerResult = {
+        twinError: `There was an error getting the ${DeviceConstants.EXTERNAL_PROVIDER[
+          integration.provider
+        ].twinTitle.toLowerCase()} for device ${deviceId}. ${err}`
+      };
     })
     .finally(() =>
       Promise.resolve(
@@ -1041,7 +1046,13 @@ export const getDeviceTwin = deviceId => (dispatch, getState) => {
 
 export const setDeviceTwin = (deviceId, integration, settings) => (dispatch, getState) =>
   GeneralApi.put(`${iotManagerBaseURL}/devices/${deviceId}/state/${integration.id}`, { desired: settings })
-    .catch(err => commonErrorHandler(err, `There was an error updating the device twin for device ${deviceId}.`, dispatch))
+    .catch(err =>
+      commonErrorHandler(
+        err,
+        `There was an error updating the ${DeviceConstants.EXTERNAL_PROVIDER[integration.provider].twinTitle.toLowerCase()} for device ${deviceId}.`,
+        dispatch
+      )
+    )
     .then(() => {
       const { twinsByIntegration = {} } = getState().devices.byId[deviceId];
       const { [integration.id]: currentState = {} } = twinsByIntegration;

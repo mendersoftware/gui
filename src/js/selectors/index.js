@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
-import { ATTRIBUTE_SCOPES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH } from '../constants/deviceConstants';
+import { ATTRIBUTE_SCOPES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH, EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
 import { attributeDuplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
@@ -24,6 +24,7 @@ const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
 const getReleasesById = state => state.releases.byId;
 const getListedReleases = state => state.releases.releasesList.releaseIds;
+const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.userSettings;
@@ -89,6 +90,10 @@ export const getFilterAttributes = createSelector(
     ];
     return attributeDuplicateFilter(attributes, 'key');
   }
+);
+
+export const getDeviceTwinIntegrations = createSelector([getExternalIntegrations], integrations =>
+  integrations.filter(integration => integration.id && EXTERNAL_PROVIDER[integration.provider]?.deviceTwin)
 );
 
 export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips }, showHelptips) => ({
