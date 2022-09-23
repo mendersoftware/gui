@@ -21,11 +21,11 @@ import {
 } from '../../actions/deviceActions';
 import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
-import { getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getDeviceTwinIntegrations, getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import TroubleshootDialog from './dialogs/troubleshootdialog';
 import AuthStatus from './device-details/authstatus';
@@ -330,7 +330,7 @@ const mapStateToProps = (state, ownProps) => {
     docsVersion: getDocsVersion(state),
     features: getFeatures(state),
     groupFilters,
-    integrations: state.organization.externalDeviceIntegrations.filter(integration => integration.id && EXTERNAL_PROVIDER[integration.provider]?.deviceTwin),
+    integrations: getDeviceTwinIntegrations(state),
     latestAlerts: latest,
     onboardingComplete: state.onboarding.complete,
     selectedGroup,
