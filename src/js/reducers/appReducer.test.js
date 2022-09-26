@@ -74,6 +74,8 @@ describe('app reducer', () => {
   it('should handle SET_VERSION_INFORMATION', async () => {
     expect(reducer(undefined, { type: AppConstants.SET_VERSION_INFORMATION, value: 'something' }).versionInformation).toEqual('something');
     expect(reducer(initialState, { type: AppConstants.SET_VERSION_INFORMATION, value: undefined }).versionInformation).toEqual(undefined);
+    expect(reducer(undefined, { type: AppConstants.SET_VERSION_INFORMATION, docsVersion: 'something' }).docsVersion).toEqual('something');
+    expect(reducer(initialState, { type: AppConstants.SET_VERSION_INFORMATION, docsVersion: undefined }).docsVersion).toEqual(undefined);
   });
 
   it('should handle UPLOAD_PROGRESS', async () => {

@@ -131,6 +131,7 @@ const appReducer = (state = initialState, action) => {
     case AppConstants.SET_VERSION_INFORMATION: {
       return {
         ...state,
+        docsVersion: action.docsVersion,
         versionInformation: action.value
       };
     }
