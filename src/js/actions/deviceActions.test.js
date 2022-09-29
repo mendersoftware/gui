@@ -609,7 +609,8 @@ describe('device retrieval ', () => {
   it('should allow single device retrieval from detailed sources', async () => {
     const store = mockStore({
       ...defaultState,
-      organization: { ...defaultState.organization, externalDeviceIntegrations: [{ ...DeviceConstants.EXTERNAL_PROVIDER['iot-hub'], id: 'test' }] }
+      app: { ...defaultState.app, features: { ...defaultState.app.features, hasDeviceConnect: true } },
+      organization: { ...defaultState.organization, addons: [], externalDeviceIntegrations: [{ ...DeviceConstants.EXTERNAL_PROVIDER['iot-hub'], id: 'test' }] }
     });
     const { attributes, updated_ts, id, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
