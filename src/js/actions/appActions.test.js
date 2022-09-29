@@ -13,6 +13,7 @@ import {
   setYesterday,
   setVersionInfo
 } from './appActions';
+import { tenantDataDivergedMessage } from './organizationActions';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants, { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
@@ -197,6 +198,7 @@ describe('app actions', () => {
       { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
       { type: UserConstants.RECEIVED_ROLES, value: receivedRoles },
       { type: OrganizationConstants.SET_ORGANIZATION, organization: defaultState.organization.organization },
+      { type: AppConstants.SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage },
       {
         type: DeploymentConstants.RECEIVE_DEPLOYMENTS,
         deployments: {

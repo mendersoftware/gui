@@ -1,11 +1,14 @@
 import Cookies from 'universal-cookie';
+import jwtDecode from 'jwt-decode';
+import hashString from 'md5';
 
 import Api, { apiUrl, headerNames } from '../api/general-api';
-import { SORTING_OPTIONS } from '../constants/appConstants';
+import { SET_ANNOUNCEMENT, SORTING_OPTIONS } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
+import { getToken } from '../auth';
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import { iotManagerBaseURL } from './deviceActions';
 
@@ -144,8 +147,20 @@ export const setAuditlogsState = selectionState => (dispatch, getState) => {
 /*
   Tenant management + Hosted Mender
 */
+export const tenantDataDivergedMessage = 'The system detected there is a change in your plan or purchased add-ons. Please log out and log in again';
 export const getUserOrganization = () => dispatch =>
-  Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => Promise.resolve(dispatch({ type: OrganizationConstants.SET_ORGANIZATION, organization: res.data })));
+  Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => {
+    let tasks = [dispatch({ type: OrganizationConstants.SET_ORGANIZATION, organization: res.data })];
+    const { addons, plan, trial } = res.data;
+    const jwt = jwtDecode(getToken());
+    const jwtData = { addons: jwt['mender.addons'], plan: jwt['mender.plan'], trial: jwt['mender.trial'] };
+    if (!deepCompare({ addons, plan, trial }, jwtData)) {
+      const hash = hashString(tenantDataDivergedMessage);
+      cookies.remove(`${jwt.sub}${hash}`);
+      tasks.push(dispatch({ type: SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage }));
+    }
+    return Promise.all(tasks);
+  });
 
 export const sendSupportMessage = content => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/contact/support`, content)
