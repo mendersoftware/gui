@@ -21,7 +21,14 @@ const osMap = {
   Linux: 'linux'
 };
 
-const defaultArchitectures = ['armhf', 'arm64', 'amd64'];
+const architectures = {
+  all: 'all',
+  amd64: 'amd64',
+  arm64: 'arm64',
+  armhf: 'armhf'
+};
+
+const defaultArchitectures = [architectures.armhf, architectures.arm64, architectures.amd64];
 const defaultOSVersions = ['debian+buster', 'debian+bullseye', 'ubuntu+bionic', 'ubuntu+focal'];
 
 const getVersion = (versions, id) => versions[id] || 'master';
@@ -48,10 +55,12 @@ const defaultLocationFormatter = ({ os, tool, versionInfo }) => {
   return { locations };
 };
 
-const osArchLocationReducer = ({ archList, location = downloadLocations.public, packageId, id, osList, versionInfo }) =>
+const osArchLocationReducer = ({ archList, location = downloadLocations.public, packageName, packageId, id, osList, versionInfo }) =>
   osList.reduce((accu, os) => {
     const osArchitectureLocations = archList.map(arch => ({
-      location: `${location}/repos/debian/pool/main/${id[0]}/${id}/${encodeURIComponent(`${packageId}_${getVersion(versionInfo, id)}-1+${os}_${arch}.deb`)}`,
+      location: `${location}/repos/debian/pool/main/${id[0]}/${packageName || packageId || id}/${encodeURIComponent(
+        `${packageId}_${getVersion(versionInfo, id)}-1+${os}_${arch}.deb`
+      )}`,
       title: `${os} - ${arch}`
     }));
     accu.push(...osArchitectureLocations);
@@ -59,14 +68,14 @@ const osArchLocationReducer = ({ archList, location = downloadLocations.public, 
   }, []);
 
 const multiArchLocationFormatter = ({ tool, versionInfo }) => {
-  const { id, packageId, packageExtras = [] } = tool;
-  const locations = osArchLocationReducer({ ...tool, packageId: packageId || id, versionInfo });
-  const flump = packageExtras.reduce((accu, extra) => {
-    const extraPackageId = `${packageId || id}-${extra}`;
-    accu[extraPackageId] = osArchLocationReducer({ ...tool, packageId: extraPackageId, versionInfo });
+  const { id, packageId: packageName, packageExtras = [] } = tool;
+  const packageId = packageName || id;
+  const locations = osArchLocationReducer({ ...tool, packageId, versionInfo });
+  const extraLocations = packageExtras.reduce((accu, extra) => {
+    accu[extra.packageId] = osArchLocationReducer({ ...tool, ...extra, packageName: packageId, versionInfo });
     return accu;
   }, {});
-  return { locations, ...flump };
+  return { locations, ...extraLocations };
 };
 
 const nonOsLocationFormatter = ({ tool, versionInfo }) => {
@@ -118,7 +127,7 @@ const tools = [
   {
     id: 'mender',
     packageId: 'mender-client',
-    packageExtras: ['dev'],
+    packageExtras: [{ packageId: 'mender-client-dev', archList: [architectures.all] }],
     title: 'Mender Client Debian package',
     getLocations: multiArchLocationFormatter,
     canAccess: () => true,
@@ -130,7 +139,7 @@ const tools = [
     title: 'Mender Artifact',
     getLocations: defaultLocationFormatter,
     canAccess: () => true,
-    osList: ['darwin', 'linux']
+    osList: [osMap.MacOs, osMap.Linux]
   },
   {
     id: 'mender-binary-delta',
@@ -144,17 +153,20 @@ const tools = [
     title: 'Mender CLI',
     getLocations: defaultLocationFormatter,
     canAccess: () => true,
-    osList: ['darwin', 'linux']
+    osList: [osMap.MacOs, osMap.Linux]
   },
   {
     id: 'mender-configure-module',
     packageId: 'mender-configure',
-    packageExtras: ['demo', 'timezone'],
+    packageExtras: [
+      { packageId: 'mender-configure-demo', archList: [architectures.all] },
+      { packageId: 'mender-configure-timezone', archList: [architectures.all] }
+    ],
     title: 'Mender Configure',
     getLocations: multiArchLocationFormatter,
     canAccess: ({ tenantCapabilities }) => tenantCapabilities.hasDeviceConfig,
     osList: defaultOSVersions,
-    archList: ['all']
+    archList: [architectures.all]
   },
   {
     id: 'mender-connect',
@@ -194,7 +206,7 @@ const tools = [
     location: downloadLocations.private,
     canAccess: ({ tenantCapabilities }) => tenantCapabilities.hasMonitor,
     osList: defaultOSVersions,
-    archList: ['all']
+    archList: [architectures.all]
   }
 ];
 
