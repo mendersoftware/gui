@@ -29,7 +29,7 @@ const statusMap = {
 const useStyles = makeStyles()(theme => ({
   container: {
     backgroundColor: theme.palette.grey[400],
-    ['.progress-step']: {
+    ['&.progress-chart-container .progress-step']: {
       border: 'none',
       position: 'absolute'
     },
