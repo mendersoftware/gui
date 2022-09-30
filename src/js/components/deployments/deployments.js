@@ -105,15 +105,19 @@ export const Deployments = ({
   const retryDeployment = (deployment, deploymentDeviceIds) => {
     const { artifact_name, name, update_control_map = {} } = deployment;
     const release = releases[artifact_name];
-    const updateControlMap = isEnterprise ? { update_control_map: { states: update_control_map.states || {} } } : {};
+    const enterpriseSettings = isEnterprise
+      ? {
+          phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
+          update_control_map: { states: update_control_map.states || {} }
+        }
+      : {};
     const targetDevicesConfig = name === ALL_DEVICES || groupsById[name] ? { group: name } : { device: devicesById[name] };
     const deploymentObject = {
       deploymentDeviceIds,
-      phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
       release,
       deploymentDeviceCount: deploymentDeviceIds.length,
       ...targetDevicesConfig,
-      ...updateControlMap
+      ...enterpriseSettings
     };
     setDeploymentObject(deploymentObject);
     setDeploymentsState({ general: { showCreationDialog: true, showReportDialog: false } });
