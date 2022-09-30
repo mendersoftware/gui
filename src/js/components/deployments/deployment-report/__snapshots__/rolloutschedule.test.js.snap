@@ -41,7 +41,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   background-color: #f7f7f7;
 }
 
-.emotion-4 .progress-step {
+.emotion-4.progress-chart-container .progress-step {
   border: none;
   position: absolute;
 }
