@@ -17,7 +17,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
   background-color: #f7f7f7;
 }
 
-.emotion-3 .progress-step {
+.emotion-3.progress-chart-container .progress-step {
   border: none;
   position: absolute;
 }

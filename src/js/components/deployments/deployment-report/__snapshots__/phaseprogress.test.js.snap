@@ -5,7 +5,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
   background-color: #f7f7f7;
 }
 
-.emotion-0 .progress-step {
+.emotion-0.progress-chart-container .progress-step {
   border: none;
   position: absolute;
 }
@@ -258,7 +258,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
   background-color: #f7f7f7;
 }
 
-.emotion-0 .progress-step {
+.emotion-0.progress-chart-container .progress-step {
   border: none;
   position: absolute;
 }
