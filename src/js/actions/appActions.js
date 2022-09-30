@@ -172,6 +172,7 @@ export const setVersionInfo = info => (dispatch, getState) =>
   Promise.resolve(
     dispatch({
       type: AppConstants.SET_VERSION_INFORMATION,
+      docsVersion: getState().app.docsVersion,
       value: {
         ...getState().app.versionInformation,
         ...info
@@ -216,6 +217,7 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
     return Promise.resolve(
       dispatch({
         type: AppConstants.SET_VERSION_INFORMATION,
+        docsVersion: latestVersions.Integration.split('.').slice(0, 2).join('.'),
         value: {
           ...getState().app.versionInformation,
           ...latestVersions,
