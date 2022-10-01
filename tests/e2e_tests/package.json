@@ -22,7 +22,7 @@
   "devDependencies": {
     "@bgotink/playwright-coverage": "^0.1.6",
     "@nuintun/qrcode": "^3.3.0",
-    "@playwright/test": "1.25.2",
+    "@playwright/test": "1.26.1",
     "axios": "^0.27.2",
     "dayjs": "^1.11.5",
     "jwt-decode": "^3.1.2",
