@@ -154,8 +154,13 @@ export const setOfflineThreshold = () => (dispatch, getState) => {
   const setter = dateFunctionMap[`set${intervalName}`] ?? `set${intervalName}`;
   const getter = dateFunctionMap[`get${intervalName}`] ?? `get${intervalName}`;
   today[setter](today[getter]() - interval);
-
-  return Promise.resolve(dispatch({ type: AppConstants.SET_OFFLINE_THRESHOLD, value: today.toISOString() }));
+  let value;
+  try {
+    value = today.toISOString();
+  } catch {
+    return Promise.resolve(dispatch(setSnackbar('There was an error saving the offline threshold, please check your settings.')));
+  }
+  return Promise.resolve(dispatch({ type: AppConstants.SET_OFFLINE_THRESHOLD, value }));
 };
 
 export const progress = (e, dispatch) => {
