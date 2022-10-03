@@ -124,6 +124,7 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  background-color: #fff;
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
@@ -157,6 +158,10 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
+}
+
+.emotion-3:hover {
+  background-color: #fff;
 }
 
 .emotion-3:hover {
@@ -249,7 +254,7 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
           class="flexbox centered"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-3"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-3"
             tabindex="0"
             type="button"
           >
