@@ -364,10 +364,6 @@ describe('user actions', () => {
     const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
     const expectedActions = [
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, ...settings } },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Settings saved successfully' } }
-    ];
-    const store = mockStore({ ...defaultState });
     await store.dispatch(saveGlobalSettings(settings, false, true));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

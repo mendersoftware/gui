@@ -325,7 +325,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.status = status ? status : device.status || identity.status;
       device.created_ts = created_ts;
       device.updated_ts = updated_ts;
-      device.isOffline = new Date(updated_ts) < new Date(state.app.yesterday);
+      device.isOffline = new Date(updated_ts) < new Date(state.app.offlineThreshold);
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;

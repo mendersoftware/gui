@@ -6,7 +6,7 @@ import pluralize from 'pluralize';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { AddCircle as AddIcon } from '@mui/icons-material';
 
-import { setSnackbar, setYesterday } from '../../actions/appActions';
+import { setOfflineThreshold, setSnackbar } from '../../actions/appActions';
 import {
   addDynamicGroup,
   addStaticGroup,
@@ -73,8 +73,8 @@ export const DeviceGroups = ({
   setDeviceFilters,
   setDeviceListState,
   setShowConnectingDialog,
+  setOfflineThreshold,
   setSnackbar,
-  setYesterday,
   showDeviceConnectionDialog,
   showHelptips,
   tenantCapabilities,
@@ -141,7 +141,7 @@ export const DeviceGroups = ({
     setDeviceListState(listState);
     clearInterval(deviceTimer.current);
     deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
-    setYesterday();
+    setOfflineThreshold();
     return () => {
       clearInterval(deviceTimer.current);
     };
@@ -336,9 +336,9 @@ const actionCreators = {
   selectGroup,
   setDeviceFilters,
   setDeviceListState,
+  setOfflineThreshold,
   setShowConnectingDialog,
   setSnackbar,
-  setYesterday,
   updateDynamicGroup
 };
 

@@ -143,7 +143,7 @@ export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch =>
     firstLoginAfterSignup: firstLoginAfterSignup
   });
 
-export const setYesterday = () => dispatch => {
+export const setOfflineThreshold = () => dispatch => {
   const today = new Date();
   const intervalName = `${DEVICE_ONLINE_CUTOFF.intervalName.charAt(0).toUpperCase()}${DEVICE_ONLINE_CUTOFF.intervalName.substring(1)}`;
   const setter = `set${intervalName}s`;
