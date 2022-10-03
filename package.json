@@ -6,7 +6,7 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mdi/js": "^7.0.96",
-    "@monaco-editor/react": "^4.4.5",
+    "@monaco-editor/react": "^4.4.6",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.5",
     "@mui/styles": "^5.10.7",
