@@ -37,7 +37,7 @@
     "react-google-recaptcha": "^2.1.0",
     "react-idle-timer": "^5.4.2",
     "react-linkify": "^1.0.0-alpha",
-    "react-redux": "^8.0.2",
+    "react-redux": "^8.0.4",
     "react-router-dom": "^6.3.0",
     "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.7",
