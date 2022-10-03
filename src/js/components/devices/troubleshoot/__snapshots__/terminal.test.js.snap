@@ -18,6 +18,7 @@ exports[`Terminal Component renders correctly 1`] = `
       </div>
       <div
         class="xterm-screen"
+        style="width: 0px; height: 0px;"
       >
         <div
           class="xterm-helpers"
@@ -42,24 +43,32 @@ exports[`Terminal Component renders correctly 1`] = `
             class="composition-view"
           />
         </div>
+        <div
+          class="xterm-decoration-container"
+        />
         <canvas
           class="xterm-text-layer"
-          style="z-index: 0;"
+          height="0"
+          style="z-index: 0; width: 0px; height: 0px;"
+          width="0"
         />
         <canvas
           class="xterm-selection-layer"
-          style="z-index: 1;"
+          height="0"
+          style="z-index: 1; width: 0px; height: 0px;"
+          width="0"
         />
         <canvas
           class="xterm-link-layer"
-          style="z-index: 2;"
+          height="0"
+          style="z-index: 2; width: 0px; height: 0px;"
+          width="0"
         />
         <canvas
           class="xterm-cursor-layer"
-          style="z-index: 3;"
-        />
-        <div
-          class="xterm-decoration-container"
+          height="0"
+          style="z-index: 3; width: 0px; height: 0px;"
+          width="0"
         />
       </div>
     </div>

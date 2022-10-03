@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { FitAddon } from 'xterm-addon-fit';
-import { SearchAddon } from 'xterm-addon-search';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 
 import { DEVICE_MESSAGE_TYPES as MessageTypes } from '../../../constants/deviceConstants';
@@ -9,12 +8,10 @@ import useWindowSize from '../../../utils/resizehook';
 import XTerm from '../../common/xterm';
 
 const fitAddon = new FitAddon();
-const searchAddon = new SearchAddon();
 
 export const options = {
   cursorBlink: 'block',
-  macOptionIsMeta: true,
-  scrollback: 5000
+  macOptionIsMeta: true
 };
 
 // only matching absolute paths, so: /here/there - but not ../here or ./here or here/there
@@ -86,7 +83,7 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
 
   const onData = data => sendMessage({ typ: MessageTypes.Shell, body: data });
 
-  return <XTerm ref={xtermRef} addons={[fitAddon, searchAddon]} options={options} onData={onData} {...xtermProps} />;
+  return <XTerm xtermRef={xtermRef} addons={[fitAddon]} options={options} onData={onData} {...xtermProps} />;
 };
 
 export default Terminal;

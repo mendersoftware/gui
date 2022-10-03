@@ -4,6 +4,7 @@ import * as readline from 'readline';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
+import { selectors } from '../utils/constants';
 
 test.describe('Auditlogs', () => {
   test.use({ storageState: 'storage.json' });
@@ -21,16 +22,15 @@ test.describe('Auditlogs', () => {
     await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });
     expect(await page.isVisible('.terminal.xterm canvas')).toBeTruthy();
 
-    const terminalElement = '.terminal.xterm';
     // the terminal content might take a bit to get painted - thus the waiting
-    await page.click(terminalElement, { timeout: 3000 });
+    await page.click(selectors.terminalElement, { timeout: 3000 });
 
-    const elementHandle = await page.$('.terminal.xterm .xterm-text-layer');
-    await page.type('.terminal.xterm textarea', 'passwd');
+    await page.type(selectors.terminalText, 'passwd');
     await page.keyboard.press('Enter');
     const expectedPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalSecretContent.png');
+    const elementHandle = await page.$(selectors.terminalElement);
     await elementHandle.screenshot({ path: expectedPath });
-    await page.type('.terminal.xterm textarea', secret);
+    await page.type(selectors.terminalText, secret);
 
     const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalSecretContent-actual.png');
     await elementHandle.screenshot({ path: screenShotPath });
