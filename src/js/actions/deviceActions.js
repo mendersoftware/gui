@@ -482,7 +482,7 @@ export const getDeviceById = id => (dispatch, getState) =>
 
 export const getDeviceInfo = deviceId => (dispatch, getState) => {
   const device = getState().devices.byId[deviceId] || {};
-  const { hasDeviceConfig, hasMonitor } = getTenantCapabilities(getState());
+  const { hasDeviceConfig, hasDeviceConnect, hasMonitor } = getTenantCapabilities(getState());
   const { canConfigure } = getUserCapabilities(getState());
   const integrations = getDeviceTwinIntegrations(getState());
   let tasks = [dispatch(getDeviceAuth(deviceId)), ...integrations.map(integration => dispatch(getDeviceTwin(deviceId, integration)))];
@@ -492,7 +492,9 @@ export const getDeviceInfo = deviceId => (dispatch, getState) => {
   if (device.status === DEVICE_STATES.accepted) {
     // Get full device identity details for single selected device
     tasks.push(dispatch(getDeviceById(deviceId)));
-    tasks.push(dispatch(getDeviceConnect(deviceId)));
+    if (hasDeviceConnect) {
+      tasks.push(dispatch(getDeviceConnect(deviceId)));
+    }
     if (hasMonitor) {
       tasks.push(dispatch(getLatestDeviceAlerts(deviceId)));
       tasks.push(dispatch(getDeviceMonitorConfig(deviceId)));
