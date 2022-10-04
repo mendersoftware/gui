@@ -187,7 +187,7 @@ const tools = [
         }
       ]
     }),
-    canAccess: ({ tenantCapabilities }) => tenantCapabilities.hasDeviceConnect
+    canAccess: () => true
   },
   {
     id: 'mender-gateway',
