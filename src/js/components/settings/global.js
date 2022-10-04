@@ -37,7 +37,13 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
 
   const changed = selectedAttribute !== attributeSelection;
 
-  const onChangeIdAttribute = ({ target: { value } }) => setAttributeSelection(value);
+  const onChangeIdAttribute = ({ target: { value: attributeSelection } }) => {
+    setAttributeSelection(attributeSelection);
+    if (dialog) {
+      return;
+    }
+    onSaveClick(undefined, { attribute: attributeSelection, scope: attributes.find(({ value }) => value === attributeSelection).scope });
+  };
 
   const undoChanges = e => {
     setAttributeSelection(selectedAttribute);
@@ -71,14 +77,16 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
           </div>
         </FormHelperText>
       </FormControl>
-      <div className="margin-left margin-top flexbox">
-        <Button disabled={!changed && !dialog} onClick={undoChanges} style={{ marginRight: 10 }}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={saveSettings} disabled={!changed} color="primary">
-          Save
-        </Button>
-      </div>
+      {dialog && (
+        <div className="margin-left margin-top flexbox">
+          <Button onClick={undoChanges} style={{ marginRight: 10 }}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={saveSettings} disabled={!changed} color="primary">
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
