@@ -7,5 +7,7 @@ export const selectors = {
   passwordCurrent: '[name=current_password]',
   passwordNew: '[name=password_new]',
   placeholderExample: '[placeholder*=Example]',
-  releaseSelect: '#deployment-release-selection'
+  releaseSelect: '#deployment-release-selection',
+  terminalElement: '.terminal.xterm',
+  terminalText: '.terminal.xterm textarea'
 };

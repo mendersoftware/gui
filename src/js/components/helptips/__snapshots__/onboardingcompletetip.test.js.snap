@@ -124,6 +124,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  background-color: #fff;
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
@@ -157,6 +158,10 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
+}
+
+.emotion-3:hover {
+  background-color: #fff;
 }
 
 .emotion-3:hover {
@@ -353,7 +358,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
             style="margin: 5px 0px;"
           >
             <a
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium button emotion-3"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium button emotion-3"
               href="http://192.168.10.141:85/index.html?source=http%3A%2F%2Ftest.com"
               tabindex="0"
               target="_blank"
@@ -400,7 +405,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
             style="flex-grow: 1;"
           />
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-5"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-5"
             tabindex="0"
             type="button"
           >

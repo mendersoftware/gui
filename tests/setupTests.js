@@ -73,6 +73,11 @@ beforeAll(async () => {
   window.ENV = 'test';
   global.MessageChannel = MessageChannel;
   global.TextEncoder = TextEncoder;
+  global.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn()
+  }));
   global.crypto = {
     subtle: {
       digest: (_, data) => Promise.resolve(crypto.createHash('sha256').update(data))

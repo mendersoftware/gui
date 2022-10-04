@@ -98,7 +98,7 @@ export const TroubleshootDialog = ({
   const closeTimer = useRef();
   const snackTimer = useRef();
   const timer = useRef();
-  const termRef = useRef();
+  const termRef = useRef({ terminal: React.createRef(), terminalRef: React.createRef() });
   const { classes } = useStyles();
 
   useEffect(() => {

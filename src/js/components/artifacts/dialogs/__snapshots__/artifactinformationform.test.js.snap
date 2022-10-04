@@ -539,7 +539,7 @@ label+.emotion-8 {
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root device-types-input emotion-1"
       >
         <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-2"
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-2"
           data-shrink="false"
           for="compatible-device-type-selection"
           id="compatible-device-type-selection-label"
@@ -570,7 +570,7 @@ label+.emotion-8 {
       class="MuiFormControl-root emotion-5"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary emotion-2"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-2"
         data-shrink="false"
         for="release-name"
         style="align-items: center; display: flex;"

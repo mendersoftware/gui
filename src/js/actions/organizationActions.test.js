@@ -28,7 +28,8 @@ import {
   setAuditlogsState,
   startCardUpdate,
   startUpgrade,
-  storeSamlConfig
+  storeSamlConfig,
+  tenantDataDivergedMessage
 } from './organizationActions';
 
 const middlewares = [thunk];
@@ -107,7 +108,8 @@ describe('organization actions', () => {
       {
         type: OrganizationConstants.SET_ORGANIZATION,
         organization: defaultState.organization.organization
-      }
+      },
+      { type: AppConstants.SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage }
     ];
     await store.dispatch(getUserOrganization()).then(() => {
       const storeActions = store.getActions();
@@ -182,7 +184,8 @@ describe('organization actions', () => {
       {
         organization: defaultState.organization.organization,
         type: OrganizationConstants.SET_ORGANIZATION
-      }
+      },
+      { type: AppConstants.SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage }
     ];
     await store.dispatch(completeUpgrade(defaultState.organization.organization.id, 'enterprise')).then(() => {
       const storeActions = store.getActions();
