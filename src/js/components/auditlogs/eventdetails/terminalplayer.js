@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 
 import { FitAddon } from 'xterm-addon-fit';
-import { SearchAddon } from 'xterm-addon-search';
 import msgpack5 from 'msgpack5';
 import { deviceConnect } from '../../../actions/deviceActions';
 import { blobToString, byteArrayToString } from '../../../utils/sockethook';
@@ -15,7 +14,6 @@ import { makeStyles } from 'tss-react/mui';
 
 const MessagePack = msgpack5();
 const fitAddon = new FitAddon();
-const searchAddon = new SearchAddon();
 
 let socket = null;
 let buffer = [];
@@ -151,7 +149,7 @@ const generateHtml = (versions, content) => {
 };
 
 export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
-  const xtermRef = useRef(null);
+  const xtermRef = useRef({ terminal: React.createRef(), terminalRef: React.createRef() });
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [bufferIndex, setBufferIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -250,7 +248,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   return (
     <div className={`${className} `}>
       <div className="relative">
-        <XTerm addons={[fitAddon, searchAddon]} className="xterm-min-screen" ref={xtermRef} options={{ scrollback: 5000 }} />
+        <XTerm addons={[fitAddon]} className="xterm-min-screen" xtermRef={xtermRef} />
         {!wasStarted && (
           <div
             className="flexbox centered clickable"
