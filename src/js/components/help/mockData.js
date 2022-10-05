@@ -3,7 +3,10 @@ export const helpProps = {
   isHosted: false,
   menderVersion: 'master',
   isEnterprise: true,
-  tenantCapabilities: {},
+  tenantCapabilities: {
+    hasDeviceConfig: true,
+    hasMonitor: true
+  },
   tokens: [],
   versions: {
     repos: {
@@ -17,6 +20,6 @@ export const helpProps = {
       'mender-gateway': '1.0.0',
       'monitor-client': '1.2.0'
     },
-    releaseDate: '01-01-2003'
+    releaseDate: '2003-01-01'
   }
 };
