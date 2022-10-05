@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+import axios from 'axios';
+import https from 'https';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import md5 from 'md5';
@@ -35,14 +37,24 @@ test.describe('Files', () => {
   //       })
   // })
 
-  test('allows artifact downloads', async ({ loggedInPage: page }) => {
+  test('allows artifact downloads', async ({ browserName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Releases')`);
     await page.click('.expandButton');
-    await page.waitForSelector(`a:has-text('Download Artifact'), button:has-text('Download Artifact')`, { timeout: 2000 });
-    expect(await page.isVisible(`a:has-text('Download Artifact'), button:has-text('Download Artifact')`)).toBeTruthy();
-    const [download] = await Promise.all([page.waitForEvent('download'), page.click(`a:has-text('Download Artifact'), button:has-text('Download Artifact')`)]);
-    const path = await download.path();
-    const newFile = await fs.readFileSync(path);
+    await page.waitForSelector(`text=Download Artifact`, { timeout: 2000 });
+    expect(await page.isVisible(`text=Download Artifact`)).toBeTruthy();
+    let newFile;
+    // the option for webkit is the proper way, but unfortunately the firefox integration gets flaky with the download
+    // + the chrome integration times out waiting for the download event almost every time => work around by getting the file
+    if (browserName === 'webkit') {
+      const [download] = await Promise.all([page.waitForEvent('download'), page.locator(`text=Download Artifact`).click()]);
+      const path = await download.path();
+      newFile = await fs.readFileSync(path);
+    } else {
+      const locator = await page.locator('text=Download Artifact');
+      const downloadUrl = await locator.getAttribute('href');
+      const download = await axios.get(downloadUrl, { httpsAgent: new https.Agent({ rejectUnauthorized: false }), responseType: 'arraybuffer' });
+      newFile = download.data;
+    }
     const testFile = await fs.readFileSync(`fixtures/${fileName}`);
     expect(md5(newFile)).toEqual(md5(testFile));
   });

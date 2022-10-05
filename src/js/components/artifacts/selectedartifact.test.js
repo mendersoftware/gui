@@ -17,7 +17,7 @@ describe('SelectedArtifact Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <SelectedArtifact artifact={{ description: 'text' }} />
+        <SelectedArtifact artifact={{ description: 'text', name: 'test' }} />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

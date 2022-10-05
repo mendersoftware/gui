@@ -201,7 +201,13 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
       <div className="two-columns margin-top-small" style={{ maxWidth: 'fit-content' }}>
         {canManageReleases && (
           <>
-            <Button href={artifact.url} target="_blank" disabled={!artifact.url} startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}>
+            <Button
+              href={artifact.url}
+              target="_blank"
+              disabled={!artifact.url}
+              download={artifact.name ? `${artifact.name}.mender` : true}
+              startIcon={<ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />}
+            >
               Download Artifact
             </Button>
             <Button onClick={showRemoveArtifactDialog} startIcon={<CancelIcon className="red auth" />}>
