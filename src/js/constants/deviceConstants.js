@@ -9,6 +9,8 @@ const credentialTypes = {
   x509: 'x509'
 };
 
+const offlineThresholds = ['minutes', 'hours', 'days'];
+
 const DEVICE_FILTERING_OPTIONS = {
   $eq: { key: '$eq', title: 'equals', shortform: '=' },
   $ne: { title: 'not equal', shortform: '!=' },
@@ -208,7 +210,7 @@ module.exports = {
     disconnected: 'disconnected',
     unknown: 'unknown'
   },
-  DEVICE_ONLINE_CUTOFF: { interval: 24, intervalName: 'hour' },
+  DEVICE_ONLINE_CUTOFF: { interval: 24, intervalName: offlineThresholds[1] },
   ATTRIBUTE_SCOPES: {
     inventory: 'inventory',
     identity: 'identity',
@@ -217,5 +219,6 @@ module.exports = {
     tags: 'tags'
   },
   ALL_DEVICES: 'All devices',
-  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' }
+  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Unassigned' },
+  offlineThresholds
 };

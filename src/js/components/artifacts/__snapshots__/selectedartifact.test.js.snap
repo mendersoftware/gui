@@ -759,9 +759,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   font-size: 20px;
 }
 
-<div
-  class="muted"
->
+<div>
   <ul
     class="MuiList-root MuiList-padding emotion-0"
     style="display: grid; grid-template-columns: calc(600px + 2vw) 300px;"
@@ -912,6 +910,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
     <button
       class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
       disabled=""
+      download="test.mender"
       tabindex="-1"
       target="_blank"
       type="button"

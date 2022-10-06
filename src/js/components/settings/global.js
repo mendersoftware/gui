@@ -1,15 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
+
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { getDeviceAttributes } from '../../actions/deviceActions';
 import { changeNotificationSetting } from '../../actions/monitorActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
+import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
-import { getDocsVersion, getIdAttribute, getUserRoles, getTenantCapabilities } from '../../selectors';
+import { settingsKeys } from '../../constants/userConstants';
+import { getDocsVersion, getIdAttribute, getUserRoles, getTenantCapabilities, getOfflineThresholdSettings } from '../../selectors';
+import { useDebounce } from '../../utils/debouncehook';
 import InfoHint from '../common/info-hint';
 
 const maxWidth = 750;
+
+const useStyles = makeStyles()(theme => ({
+  threshold: {
+    display: 'grid',
+    gridTemplateColumns: '100px 100px',
+    columnGap: theme.spacing(2)
+  },
+  textInput: {
+    marginTop: 0,
+    minWidth: 'initial'
+  }
+}));
 
 export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
   const [attributeSelection, setAttributeSelection] = useState('name');
@@ -20,7 +37,13 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
 
   const changed = selectedAttribute !== attributeSelection;
 
-  const onChangeIdAttribute = ({ target: { value } }) => setAttributeSelection(value);
+  const onChangeIdAttribute = ({ target: { value: attributeSelection } }) => {
+    setAttributeSelection(attributeSelection);
+    if (dialog) {
+      return;
+    }
+    onSaveClick(undefined, { attribute: attributeSelection, scope: attributes.find(({ value }) => value === attributeSelection).scope });
+  };
 
   const undoChanges = e => {
     setAttributeSelection(selectedAttribute);
@@ -54,14 +77,16 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
           </div>
         </FormHelperText>
       </FormControl>
-      <div className="margin-left margin-top flexbox">
-        <Button disabled={!changed && !dialog} onClick={undoChanges} style={{ marginRight: 10 }}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={saveSettings} disabled={!changed} color="primary">
-          Save
-        </Button>
-      </div>
+      {dialog && (
+        <div className="margin-left margin-top flexbox">
+          <Button onClick={undoChanges} style={{ marginRight: 10 }}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={saveSettings} disabled={!changed} color="primary">
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
@@ -72,20 +97,58 @@ export const GlobalSettingsDialog = ({
   hasMonitor,
   isAdmin,
   notificationChannelSettings,
+  offlineThresholdSettings,
   onChangeNotificationSetting,
   onCloseClick,
   onSaveClick,
+  saveGlobalSettings,
   selectedAttribute
 }) => {
   const [channelSettings, setChannelSettings] = useState(notificationChannelSettings);
+  const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
+  const [currentIntervalUnit, setCurrentIntervalUnit] = useState(offlineThresholdSettings.intervalUnit);
+  const [intervalErrorText, setIntervalErrorText] = useState('');
+  const debouncedInterval = useDebounce(currentInterval, 300);
+  const debouncedIntervalUnit = useDebounce(currentIntervalUnit, 300);
+  const timer = useRef(false);
+
+  const { classes } = useStyles();
 
   useEffect(() => {
     setChannelSettings(notificationChannelSettings);
   }, [notificationChannelSettings]);
 
+  useEffect(() => {
+    setCurrentInterval(offlineThresholdSettings.interval);
+    setCurrentIntervalUnit(offlineThresholdSettings.intervalUnit);
+  }, [offlineThresholdSettings.interval, offlineThresholdSettings.intervalUnit]);
+
+  useEffect(() => {
+    if (!window.sessionStorage.getItem(settingsKeys.initialized) || !timer.current) {
+      return;
+    }
+    saveGlobalSettings({ offlineThreshold: { interval: debouncedInterval, intervalUnit: debouncedIntervalUnit } }, false, true);
+  }, [debouncedInterval, debouncedIntervalUnit]);
+
+  useEffect(() => {
+    const initTimer = setTimeout(() => (timer.current = true), 3000);
+    return () => {
+      clearTimeout(initTimer);
+    };
+  }, []);
+
   const onNotificationSettingsClick = ({ target: { checked } }, channel) => {
     setChannelSettings({ ...channelSettings, channel: { enabled: !checked } });
     onChangeNotificationSetting(!checked, channel);
+  };
+
+  const onChangeOfflineIntervalUnit = ({ target: { value } }) => setCurrentIntervalUnit(value);
+  const onChangeOfflineInterval = ({ target: { validity, value } }) => {
+    if (validity.valid) {
+      setCurrentInterval(value);
+      return setIntervalErrorText('');
+    }
+    setIntervalErrorText('Please enter a valid number.');
   };
 
   return (
@@ -115,6 +178,35 @@ export const GlobalSettingsDialog = ({
             </FormHelperText>
           </FormControl>
         ))}
+
+      <InputLabel className="margin-top" shrink id="offline-theshold">
+        Offline threshold
+      </InputLabel>
+      <div className={classes.threshold}>
+        <Select onChange={onChangeOfflineIntervalUnit} value={currentIntervalUnit}>
+          {offlineThresholds.map(value => (
+            <MenuItem key={value} value={value}>
+              <div className="capitalized-start">{value}</div>
+            </MenuItem>
+          ))}
+        </Select>
+        <TextField
+          className={classes.textInput}
+          type="number"
+          onChange={onChangeOfflineInterval}
+          inputProps={{ min: '1', max: '1000' }}
+          error={!!intervalErrorText}
+          value={currentInterval}
+        />
+      </div>
+      {!!intervalErrorText && (
+        <FormHelperText className="warning" component="div">
+          {intervalErrorText}
+        </FormHelperText>
+      )}
+      <FormHelperText className="info" component="div">
+        Choose how long a device can go without reporting to the server before it is considered “offline”.
+      </FormHelperText>
     </div>
   );
 };
@@ -130,6 +222,7 @@ export const GlobalSettingsContainer = ({
   hasMonitor,
   isAdmin,
   notificationChannelSettings,
+  offlineThresholdSettings,
   saveGlobalSettings,
   selectedAttribute,
   settings
@@ -145,7 +238,7 @@ export const GlobalSettingsContainer = ({
 
   useEffect(() => {
     setUpdatedSettings({ ...updatedSettings, ...settings });
-  }, [settings]);
+  }, [JSON.stringify(settings)]);
 
   const onCloseClick = e => {
     if (dialog) {
@@ -180,9 +273,11 @@ export const GlobalSettingsContainer = ({
       hasMonitor={hasMonitor}
       isAdmin={isAdmin}
       notificationChannelSettings={notificationChannelSettings}
+      offlineThresholdSettings={offlineThresholdSettings}
       onChangeNotificationSetting={changeNotificationSetting}
       onCloseClick={onCloseClick}
       onSaveClick={saveAttributeSetting}
+      saveGlobalSettings={saveGlobalSettings}
       selectedAttribute={selectedAttribute}
     />
   );
@@ -210,6 +305,7 @@ const mapStateToProps = state => {
     devicesCount: Object.keys(state.devices.byId).length,
     docsVersion: getDocsVersion(state),
     notificationChannelSettings: state.monitor.settings.global.channels,
+    offlineThresholdSettings: getOfflineThresholdSettings(state),
     selectedAttribute: getIdAttribute(state).attribute,
     settings: state.users.globalSettings
   };

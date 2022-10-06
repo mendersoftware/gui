@@ -66,9 +66,9 @@ describe('app reducer', () => {
     expect(reducer(undefined, { type: AppConstants.SET_SEARCH_STATE, state: { aWhole: 'newState' } }).searchState).toEqual({ aWhole: 'newState' });
     expect(reducer(initialState, { type: AppConstants.SET_SEARCH_STATE, state: undefined }).searchState).toEqual(undefined);
   });
-  it('should handle SET_YESTERDAY', async () => {
-    expect(reducer(undefined, { type: AppConstants.SET_YESTERDAY, value: 'something' }).yesterday).toEqual('something');
-    expect(reducer(initialState, { type: AppConstants.SET_YESTERDAY, value: undefined }).yesterday).toEqual(undefined);
+  it('should handle SET_OFFLINE_THRESHOLD', async () => {
+    expect(reducer(undefined, { type: AppConstants.SET_OFFLINE_THRESHOLD, value: 'something' }).offlineThreshold).toEqual('something');
+    expect(reducer(initialState, { type: AppConstants.SET_OFFLINE_THRESHOLD, value: undefined }).offlineThreshold).toEqual(undefined);
   });
 
   it('should handle SET_VERSION_INFORMATION', async () => {

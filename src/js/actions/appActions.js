@@ -3,12 +3,12 @@ import Cookies from 'universal-cookie';
 import GeneralApi from '../api/general-api';
 import { getToken } from '../auth';
 import AppConstants from '../constants/appConstants';
-import { DEVICE_ONLINE_CUTOFF, DEVICE_STATES } from '../constants/deviceConstants';
+import { DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID } from '../helpers';
-import { getCurrentUser, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getCurrentUser, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import {
   getDeviceAttributes,
@@ -143,14 +143,24 @@ export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch =>
     firstLoginAfterSignup: firstLoginAfterSignup
   });
 
-export const setYesterday = () => dispatch => {
+const dateFunctionMap = {
+  getDays: 'getDate',
+  setDays: 'setDate'
+};
+export const setOfflineThreshold = () => (dispatch, getState) => {
+  const { interval, intervalUnit } = getOfflineThresholdSettings(getState());
   const today = new Date();
-  const intervalName = `${DEVICE_ONLINE_CUTOFF.intervalName.charAt(0).toUpperCase()}${DEVICE_ONLINE_CUTOFF.intervalName.substring(1)}`;
-  const setter = `set${intervalName}s`;
-  const getter = `get${intervalName}s`;
-  today[setter](today[getter]() - DEVICE_ONLINE_CUTOFF.interval);
-
-  return Promise.resolve(dispatch({ type: AppConstants.SET_YESTERDAY, value: today.toISOString() }));
+  const intervalName = `${intervalUnit.charAt(0).toUpperCase()}${intervalUnit.substring(1)}`;
+  const setter = dateFunctionMap[`set${intervalName}`] ?? `set${intervalName}`;
+  const getter = dateFunctionMap[`get${intervalName}`] ?? `get${intervalName}`;
+  today[setter](today[getter]() - interval);
+  let value;
+  try {
+    value = today.toISOString();
+  } catch {
+    return Promise.resolve(dispatch(setSnackbar('There was an error saving the offline threshold, please check your settings.')));
+  }
+  return Promise.resolve(dispatch({ type: AppConstants.SET_OFFLINE_THRESHOLD, value }));
 };
 
 export const progress = (e, dispatch) => {
