@@ -114,10 +114,10 @@ const appReducer = (state = initialState, action) => {
         ...state,
         searchState: action.state
       };
-    case AppConstants.SET_YESTERDAY:
+    case AppConstants.SET_OFFLINE_THRESHOLD:
       return {
         ...state,
-        yesterday: action.value
+        offlineThreshold: action.value
       };
     case AppConstants.UPLOAD_PROGRESS: {
       const cancelSource = action.inprogress ? action.cancelSource || state.cancelSource : undefined;

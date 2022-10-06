@@ -18,10 +18,10 @@ const useStyles = makeStyles()(theme => ({
 
 export const AcceptedDevices = props => {
   const { classes } = useStyles();
-  const { delta, deviceLimit, devicesCount, inactiveCount, onClick } = props;
+  const { delta, deviceLimit, devicesCount, inactiveCount, offlineThreshold, onClick } = props;
   const onWidgetClick = () => onClick({ route: '/devices/accepted' });
 
-  const timeframe = '24h';
+  const timeframe = `${offlineThreshold.interval} ${offlineThreshold.intervalUnit}`;
   let timeframeNote = 'Active in';
   let activityNotificationText = 'All devices online';
   let notificationSymbol = <CheckIcon className={`${classes.base} ${classes.green}`} />;

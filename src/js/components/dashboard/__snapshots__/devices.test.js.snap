@@ -383,7 +383,7 @@ exports[`Devices Component renders correctly 1`] = `
             <div
               class="tiny"
             >
-              Active in past 24h
+              Active in past 24 hours
             </div>
           </div>
         </div>

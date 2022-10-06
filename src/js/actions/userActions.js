@@ -2,7 +2,7 @@
 import hashString from 'md5';
 import Cookies from 'universal-cookie';
 
-import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
+import { commonErrorFallback, commonErrorHandler, setOfflineThreshold, setSnackbar } from './appActions';
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
 import AppConstants from '../constants/appConstants';
@@ -547,7 +547,7 @@ export const removeRole = roleId => (dispatch, getState) =>
 export const getGlobalSettings = () => dispatch =>
   GeneralApi.get(`${useradmApiUrl}/settings`).then(({ data: settings, headers: { etag } }) => {
     window.sessionStorage.setItem(UserConstants.settingsKeys.initialized, true);
-    return Promise.all([dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }), etag]);
+    return Promise.all([dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings }), dispatch(setOfflineThreshold()), etag]);
   });
 
 export const saveGlobalSettings =
