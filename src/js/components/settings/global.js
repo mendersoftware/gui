@@ -145,10 +145,10 @@ export const GlobalSettingsDialog = ({
   const onChangeOfflineIntervalUnit = ({ target: { value } }) => setCurrentIntervalUnit(value);
   const onChangeOfflineInterval = ({ target: { validity, value } }) => {
     if (validity.valid) {
-      setCurrentInterval(value);
+      setCurrentInterval(value || 1);
       return setIntervalErrorText('');
     }
-    setIntervalErrorText('Please enter a valid number.');
+    setIntervalErrorText('Please enter a valid number between 1 and 1000.');
   };
 
   return (
