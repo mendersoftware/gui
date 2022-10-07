@@ -9,7 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import { UserRolesSelect } from './userform';
 import { uiPermissionsById, uiPermissionsByArea } from '../../../constants/userConstants';
 import { TwoColumnData } from '../../common/configurationobject';
-import { OAuth2Providers } from '../../login/oauth2providers';
+import { genericProvider, OAuth2Providers } from '../../login/oauth2providers';
 import { mapUserRolesToUiPermissions } from '../../../actions/userActions';
 
 const useStyles = makeStyles()(theme => ({
@@ -20,8 +20,15 @@ const useStyles = makeStyles()(theme => ({
   widthLimit: { maxWidth: 500 }
 }));
 
+export const getUserSSOState = user => {
+  const { sso = [] } = user;
+  const isOAuth2 = !!sso.length;
+  const provider = isOAuth2 ? OAuth2Providers.find(provider => sso.some(({ kind }) => kind.includes(provider.id))) ?? genericProvider : null;
+  return { isOAuth2, provider };
+};
+
 export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
-  const { email = '', id, login } = selectedUser;
+  const { email = '', id } = selectedUser;
 
   const { classes } = useStyles();
 
@@ -88,8 +95,7 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
 
   const isSubmitDisabled = !selectedRoles.length;
 
-  const isOAuth2 = !!login;
-  const provider = isOAuth2 ? OAuth2Providers.find(provider => !!login[provider.id]) : {};
+  const { isOAuth2, provider } = getUserSSOState(selectedUser);
   return (
     <Drawer anchor="right" open={!!id} PaperProps={{ style: { minWidth: 600, width: '50vw' } }}>
       <div className="flexbox margin-bottom-small space-between">
