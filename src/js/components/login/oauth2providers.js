@@ -1,8 +1,14 @@
 import React from 'react';
 
-import { mdiGithub, mdiGoogle, mdiMicrosoft } from '@mdi/js';
+import { mdiAccountKey, mdiGithub, mdiGoogle, mdiMicrosoft } from '@mdi/js';
 
 import MaterialDesignIcon from '../common/materialdesignicon';
+
+export const genericProvider = {
+  id: 'generic',
+  name: 'SSO provider',
+  icon: <MaterialDesignIcon path={mdiAccountKey} />
+};
 
 export const OAuth2Providers = [
   {

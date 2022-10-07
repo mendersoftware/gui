@@ -11,10 +11,10 @@ import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../../selec
 import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';
 import PasswordInput from '../../common/forms/passwordinput';
-import { OAuth2Providers } from '../../login/oauth2providers';
 import TwoFactorAuthSetup from './twofactorauthsetup';
 import AccessTokenManagement from '../accesstokenmanagement';
 import InfoText from '../../common/infotext';
+import { getUserSSOState } from './userdefinition';
 
 const useStyles = makeStyles()(() => ({
   formField: { width: 400, maxWidth: '100%' },
@@ -68,8 +68,7 @@ export const SelfUserManagement = ({
 
   const handlePass = () => setEditPass(!editPass);
   const email = currentUser.email;
-  const isOAuth2 = !!currentUser.sso?.length;
-  const provider = isOAuth2 ? OAuth2Providers.find(provider => currentUser.sso.some(({ kind }) => kind.includes(provider.id))) : null;
+  const { isOAuth2, provider } = getUserSSOState(currentUser);
   return (
     <div className={`margin-top-small ${classes.widthLimit}`}>
       <h2 className="margin-top-small">My profile</h2>
