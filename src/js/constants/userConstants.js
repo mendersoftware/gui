@@ -306,7 +306,8 @@ const rolesById = Object.freeze({
     uiPermissions: {
       ...emptyUiPermissions,
       deployments: uiPermissionsByArea.deployments.uiPermissions.map(permissionMapper),
-      groups: { [ALL_DEVICES]: [uiPermissionsById.deploy.value] }
+      groups: { [ALL_DEVICES]: [uiPermissionsById.deploy.value] },
+      releases: [uiPermissionsById.read.value]
     }
   },
   [staticRolesByName.terminalAccess]: {
