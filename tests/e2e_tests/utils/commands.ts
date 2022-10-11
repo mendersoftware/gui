@@ -34,29 +34,28 @@ const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io
   fs.writeFileSync(`${projectRoot}/dockerClient/${fileName}-test.json`, JSON.stringify(connectConfig));
 };
 
+const deviceType = 'qemux86-64';
+const artifactName = 'original';
+const updateInterval = 5;
+const attributes = {
+  device_type: deviceType,
+  client_version: 'mender-2.2.0',
+  artifact_name: artifactName,
+  kernel: 'test Linux version',
+  mac_enp0: '12.34'
+};
+const clientArgs = [
+  'run',
+  ...Object.entries(attributes).map(([key, value]) => `--inventory-attribute="${key}:${value}"`),
+  `--device-type=${deviceType}`,
+  `--artifact-name=${artifactName}`,
+  `--auth-interval=${updateInterval}`,
+  `--inventory-interval=${updateInterval}`,
+  `--update-interval=${updateInterval}`
+];
 export const startClient = async (baseUrl, token, count) => {
   const srippedBaseUrl = baseUrl.replace(/\/$/, '');
-  const deviceType = 'qemux86-64';
-  const artifactName = 'release-v1';
-  const attributes = {
-    device_type: deviceType,
-    client_version: 'mender-2.2.0',
-    artifact_name: artifactName,
-    kernel: 'test Linux version',
-    mac_enp0: '12.34'
-  };
-  const updateInterval = 5;
-  const args = [
-    'run',
-    ...Object.entries(attributes).map(([key, value]) => `--inventory-attribute="${key}:${value}"`),
-    `--device-type=${deviceType}`,
-    `--artifact-name=${artifactName}`,
-    `--auth-interval=${updateInterval}`,
-    `--inventory-interval=${updateInterval}`,
-    `--update-interval=${updateInterval}`,
-    `--count=${count}`,
-    `--server-url=${srippedBaseUrl}`
-  ];
+  const args = [...clientArgs, `--count=${count}`, `--server-url=${srippedBaseUrl}`];
   if (token) {
     args.push(`--tenant-token=${token}`);
   }
@@ -90,10 +89,6 @@ export const startDockerClient = async (baseUrl, token) => {
     '--name',
     'connect-client',
     ...localNetwork,
-    '-v',
-    `${projectRoot}/dockerClient/artifact_info:/etc/mender/artifact_info`,
-    '-v',
-    `${projectRoot}/dockerClient/device_type:/var/lib/mender/device_type`,
     '-v',
     `${projectRoot}/dockerClient/mender-test.json:/etc/mender/mender.conf`,
     '-v',
