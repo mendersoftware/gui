@@ -22,7 +22,7 @@ const defaultConfig = {
   baseUrl: urls.localhost,
   username: 'mender-demo@example.com',
   password: 'mysecretpassword!123',
-  demoDeviceName: 'release-v1'
+  demoDeviceName: 'original'
 };
 
 const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : coveredTest).extend<TestFixtures>({
