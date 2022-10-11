@@ -36,7 +36,7 @@ services:
       - ${GUI_REPOSITORY}/videos:/e2e/videos
 
   mender-client:
-    image: mendersoftware/mender-client-docker-addons:master
+    image: mendersoftware/mender-client-docker-addons:mender-master
     volumes:
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/artifact_info:/etc/mender/artifact_info
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/device_type:/var/lib/mender/device_type

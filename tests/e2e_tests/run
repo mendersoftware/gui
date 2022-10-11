@@ -90,7 +90,7 @@ run_tests() {
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/artifact_info:/etc/mender/artifact_info \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/device_type:/var/lib/mender/device_type \
-            mendersoftware/mender-client-docker-addons:master
+            mendersoftware/mender-client-docker-addons:mender-master
     else
         while [[ $retries -gt 0 && -z $containerid ]]; do
             containerid=$(get_container_id mender-useradm)
