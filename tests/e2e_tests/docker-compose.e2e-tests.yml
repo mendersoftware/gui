@@ -38,8 +38,6 @@ services:
   mender-client:
     image: mendersoftware/mender-client-docker-addons:master
     volumes:
-      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/artifact_info:/etc/mender/artifact_info
-      - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/device_type:/var/lib/mender/device_type
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json:/etc/mender/mender.conf
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf
 
