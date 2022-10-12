@@ -41,9 +41,9 @@ test.describe('Layout assertions', () => {
     }
     await page.locator(`input:near(:text("Status:"))`).first().click({ force: true });
     await page.click(`css=.MuiPaper-root >> text=/Accepted/i`);
-    await page.waitForSelector(`css=.deviceListItem >> text=/release/`, { timeout: 60000 });
+    await page.waitForSelector(`css=.deviceListItem >> text=/original/`, { timeout: 60000 });
     const element = await page.textContent('.deviceListItem');
-    expect(element.includes('release')).toBeTruthy();
+    expect(element.includes('original')).toBeTruthy();
     await page.click(`.deviceListItem div:last-child`);
     await page.waitForSelector(`text=/Device information for/i`);
     expect(await page.isVisible('text=Authentication status')).toBeTruthy();
@@ -61,6 +61,6 @@ test.describe('Layout assertions', () => {
     await page.click(`.grouplist:has-text('All devices')`);
     await page.click(selectors.deviceListCheckbox);
     await page.click(`.grouplist:has-text('testgroup')`);
-    expect(await page.locator(`css=.deviceListItem >> text=/release/`)).toBeVisible();
+    expect(await page.locator(`css=.deviceListItem >> text=/original/`)).toBeVisible();
   });
 });

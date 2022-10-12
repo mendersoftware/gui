@@ -18,7 +18,6 @@ test.describe('Device details', () => {
     await page.click(`text=/show 1\\d+ more/i`);
     expect(await page.isVisible(`css=.expandedDevice >> text=Linux`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=mac`)).toBeTruthy();
-    expect(await page.isVisible(`css=.expandedDevice >> text=qemux86-64`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
   });
 
