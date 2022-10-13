@@ -56,17 +56,9 @@ export const loginUser = userData => dispatch =>
       if (!token) {
         return;
       }
-      let options = { sameSite: 'strict', secure: true, path: '/' };
-      if (userData.hasOwnProperty('noExpiry')) {
-        // set no expiry as cookie to remember checkbox value, even though this is set, maxAge takes precedent if present
-        options = { ...options, expires: new Date('2500-12-31') };
-        cookies.set('noExpiry', userData.noExpiry.toString(), options);
-      } else {
-        options = { ...options, maxAge: 900 };
-      }
-
       // save token as cookie
       // set maxAge if noexpiry checkbox not checked
+      const options = { sameSite: 'strict', secure: true, path: '/', maxAge: cookies.get('noExpiry') ? undefined : 900 };
       cookies.set('JWT', token, options);
 
       window.sessionStorage.removeItem('pendings-redirect');
