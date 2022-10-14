@@ -53,7 +53,7 @@ export const ExpandableAttribute = ({
   const currentTextClasses = `${textClasses ? textClasses.secondary : 'inventory-text'}${expanded && overflowActive ? ' expanded-attribute' : ''}`;
   const secondaryText = (
     <>
-      <span className={currentTextClasses} ref={textContent} style={overflowActive ? { marginBottom: '-0.5em' } : {}}>
+      <span className={currentTextClasses} ref={textContent}>
         {secondary}
       </span>{' '}
       {overflowActive ? <a>show {expanded ? 'less' : 'more'}</a> : null}
