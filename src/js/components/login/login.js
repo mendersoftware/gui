@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
-import { Button } from '@mui/material';
+import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { Help as HelpIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
@@ -18,7 +18,6 @@ import { getCurrentUser } from '../../selectors';
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
-import FormCheckbox from '../common/forms/formcheckbox';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
 import { OAuth2Providers } from './oauth2providers';
@@ -36,6 +35,8 @@ const entryText = {
   signup: { linkText: 'Sign up here', question: `Don't have an account?`, target: '/signup' },
   login: { linkText: 'Log in', question: `Already have an account?`, target: '/login' }
 };
+
+const cookieOptions = { sameSite: 'strict', secure: true, path: '/', expires: new Date('2500-12-31') };
 
 export const EntryLink = ({ target = 'signup' }) => (
   <div className="margin-top flexbox centered">
@@ -64,7 +65,7 @@ export const OAuthHeader = ({ buttonProps, type }) => (
 );
 
 export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackbar }) => {
-  const [noExpiry] = useState(cookies.get('noExpiry'));
+  const [noExpiry, setNoExpiry] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [has2FA, setHas2FA] = useState(false);
   const twoFARef = useRef();
@@ -79,6 +80,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
       setSnackbar(loginError, 10000);
       cookies.remove('error');
     }
+    cookies.remove('noExpiry', { path: '/' });
     return () => {
       setSnackbar('');
     };
@@ -89,6 +91,11 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
       setSnackbar('');
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    // set no expiry as cookie to remember checkbox value, even though this is set, maxAge takes precedent if present
+    cookies.set('noExpiry', noExpiry, cookieOptions);
+  }, [noExpiry]);
 
   const onLoginClick = loginData =>
     loginUser(loginData).catch(err => {
@@ -110,6 +117,8 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
     window.localStorage.setItem('oauth', `${oauthTimeout.getTime()}`);
     window.location.replace(`${useradmApiUrl}/oauth2/${providerId}`);
   };
+
+  const onNoExpiryClick = ({ target: { checked } }) => setNoExpiry(checked);
 
   let twoFAAnchor = {};
   if (twoFARef.current) {
@@ -149,7 +158,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
         ) : (
           <div />
         )}
-        <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
+        <FormControlLabel control={<Checkbox color="primary" checked={noExpiry} onChange={onNoExpiryClick} />} label="Stay logged in" />
       </Form>
       {isHosted && (
         <>
