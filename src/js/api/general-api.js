@@ -39,8 +39,20 @@ const Api = {
   post: authenticatedRequest.post,
   postUnauthorized: (url, data, config = {}) => axios.post(url, data, { ...commonRequestConfig, ...config }),
   put: authenticatedRequest.put,
-  upload: (url, formData, progress, cancelToken) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0, cancelToken }),
-  uploadPut: (url, formData, progress, cancelToken) => authenticatedRequest.put(url, formData, { onUploadProgress: progress, timeout: 0, cancelToken })
+  upload: (url, formData, progress, cancelSignal) =>
+    authenticatedRequest.post(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progress,
+      timeout: 0,
+      signal: cancelSignal
+    }),
+  uploadPut: (url, formData, progress, cancelSignal) =>
+    authenticatedRequest.put(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progress,
+      timeout: 0,
+      signal: cancelSignal
+    })
 };
 
 export default Api;

@@ -45,6 +45,7 @@
     "stream-browserify": "^3.0.0",
     "tss-react": "^4.3.3",
     "universal-cookie": "^4.0.4",
+    "uuid": "^9.0.0",
     "validator": "^13.7.0",
     "victory": "^36.6.8",
     "xterm": "^5.0.0",

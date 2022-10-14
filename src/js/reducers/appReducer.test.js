@@ -79,22 +79,20 @@ describe('app reducer', () => {
   });
 
   it('should handle UPLOAD_PROGRESS', async () => {
-    const { uploading, uploadProgress } = reducer(undefined, {
+    const { uploadsById } = reducer(undefined, {
       type: AppConstants.UPLOAD_PROGRESS,
-      inprogress: true,
-      uploadProgress: 40
+      uploads: { uploading: true, uploadProgress: 40 }
     });
-    expect({ uploading, uploadProgress }).toEqual({
+    expect(uploadsById).toEqual({
       uploading: true,
       uploadProgress: 40
     });
 
-    const { uploading: uploading2, uploadProgress: uploadProgress2 } = reducer(initialState, {
+    const { uploadsById: uploading2 } = reducer(initialState, {
       type: AppConstants.UPLOAD_PROGRESS,
-      inprogress: true,
-      uploadProgress: 40
+      uploads: { uploading: true, uploadProgress: 40 }
     });
-    expect({ uploading: uploading2, uploadProgress: uploadProgress2 }).toEqual({
+    expect(uploading2).toEqual({
       uploading: true,
       uploadProgress: 40
     });

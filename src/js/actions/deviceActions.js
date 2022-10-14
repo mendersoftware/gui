@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import pluralize from 'pluralize';
+import { v4 as uuid } from 'uuid';
 
-import { commonErrorFallback, commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
+import { commonErrorFallback, commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { getSingleDeployment } from '../actions/deploymentActions';
-import { saveGlobalSettings } from '../actions/userActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
+import { progress } from '../actions/releaseActions';
+import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
@@ -833,15 +835,17 @@ export const getSessionDetails = (sessionId, deviceId, userId, startDate, endDat
 export const getDeviceFileDownloadLink = (deviceId, path) => () =>
   Promise.resolve(`${deviceConnect}/devices/${deviceId}/download?path=${encodeURIComponent(path)}`);
 
-export const deviceFileUpload = (deviceId, path, file) => dispatch => {
+export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) => {
   var formData = new FormData();
   formData.append('path', path);
   formData.append('file', file);
-  const cancelSource = axios.CancelToken.source();
+  const uploadId = uuid();
+  const cancelSource = new AbortController();
+  const uploads = { ...getState().app.uploads, [uploadId]: { inprogress: true, uploadProgress: 0, cancelSource } };
   return Promise.all([
     dispatch(setSnackbar('Uploading file')),
-    dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
-    GeneralApi.uploadPut(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => progress(e, dispatch), cancelSource.token)
+    dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads }),
+    GeneralApi.uploadPut(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
