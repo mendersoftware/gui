@@ -27,7 +27,7 @@ export const getUserSSOState = user => {
   return { isOAuth2, provider };
 };
 
-export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
+export const UserDefinition = ({ canManageUsers, currentUser, isEnterprise, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
   const { email = '', id } = selectedUser;
 
   const { classes } = useStyles();
@@ -131,17 +131,21 @@ export const UserDefinition = ({ canManageUsers, currentUser, onCancel, onSubmit
           label="Send an email to the user containing a link to reset the password"
         />
       )}
-      <UserRolesSelect currentUser={currentUser} onSelect={onRolesSelect} roles={roles} user={selectedUser} />
-      {!!(Object.keys(groups).length || Object.keys(areas).length) && (
-        <InputLabel className="margin-top" shrink>
-          Role permissions
-        </InputLabel>
-      )}
-      <TwoColumnData config={areas} />
-      {!!Object.keys(groups).length && (
+      {isEnterprise && (
         <>
-          <div className="slightly-smaller text-muted">Device groups</div>
-          <TwoColumnData config={groups} />
+          <UserRolesSelect currentUser={currentUser} onSelect={onRolesSelect} roles={roles} user={selectedUser} />
+          {!!(Object.keys(groups).length || Object.keys(areas).length) && (
+            <InputLabel className="margin-top" shrink>
+              Role permissions
+            </InputLabel>
+          )}
+          <TwoColumnData config={areas} />
+          {!!Object.keys(groups).length && (
+            <>
+              <div className="slightly-smaller text-muted">Device groups</div>
+              <TwoColumnData config={groups} />
+            </>
+          )}
         </>
       )}
       <Divider className={classes.divider} light />
