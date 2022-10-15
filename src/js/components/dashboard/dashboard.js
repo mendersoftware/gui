@@ -45,7 +45,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
     } else {
       redirect = params.route;
     }
-    navigate(redirect, { replace: true });
+    navigate(redirect);
   };
 
   return currentUser ? (
