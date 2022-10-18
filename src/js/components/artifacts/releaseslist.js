@@ -9,7 +9,7 @@ import { Button, ButtonGroup, ListItem, ListItemText, Menu, MenuItem, Typography
 import { ArrowDropDown as ArrowDropDownIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import Loader from '../common/loader';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { defaultVisibleSection } from '../../constants/releaseConstants';
 import { useDebounce } from '../../utils/debouncehook';
 import useWindowSize from '../../utils/resizehook';
@@ -62,7 +62,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
   const { searchTerm, sort = {}, searchTotal, total } = releasesListState;
   const { key: attribute, direction } = sort;
 
-  const debouncedVisibleSection = useDebounce(visibleSection, 300);
+  const debouncedVisibleSection = useDebounce(visibleSection, TIMEOUTS.debounceShort);
 
   useEffect(() => {
     setReleasesListState({ visibleSection: debouncedVisibleSection });

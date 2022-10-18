@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { Button, IconButton } from '@mui/material';
-
-import CopyPasteIcon from '@mui/icons-material/FileCopy';
+import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
+
+import { TIMEOUTS } from '../../constants/appConstants';
 
 const buttonStyle = { float: 'right', margin: '-20px 0 0 10px' };
 
@@ -30,7 +31,7 @@ export const CopyCode = ({ code, onCopy, withDescription }) => {
 
   const onCopied = (_text, result) => {
     setCopied(result);
-    setTimeout(() => setCopied(false), 5000);
+    setTimeout(() => setCopied(false), TIMEOUTS.fiveSeconds);
     if (onCopy) {
       onCopy();
     }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { getToken, logout } from '../auth';
+import { TIMEOUTS } from '../constants/appConstants';
 
 export const headerNames = {
   link: 'link',
@@ -23,7 +24,7 @@ const unauthorizedRedirect = error => {
   return Promise.reject(error);
 };
 
-export const commonRequestConfig = { timeout: 10000, headers: { 'Content-Type': 'application/json' } };
+export const commonRequestConfig = { timeout: TIMEOUTS.refreshDefault, headers: { 'Content-Type': 'application/json' } };
 
 export const authenticatedRequest = axios.create(commonRequestConfig);
 authenticatedRequest.interceptors.response.use(res => res, unauthorizedRedirect);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextField, Autocomplete } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
+import { TIMEOUTS } from '../../constants/appConstants';
 import { useDebounce } from '../../utils/debouncehook';
 import Loader from './loader';
 
@@ -23,7 +24,7 @@ export const AsyncAutocomplete = ({
   const [inputValue, setInputValue] = useState(initialValue);
   const loading = open && isLoading;
 
-  const debouncedValue = useDebounce(inputValue, 300);
+  const debouncedValue = useDebounce(inputValue, TIMEOUTS.debounceShort);
 
   useEffect(() => {
     if (debouncedValue === undefined) {

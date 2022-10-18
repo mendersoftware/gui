@@ -11,6 +11,7 @@ import raspberryPi4 from '../../../../assets/img/raspberrypi4.png';
 
 import { setDeviceListState } from '../../../actions/deviceActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDocsVersion, getTenantCapabilities } from '../../../selectors';
@@ -144,7 +145,7 @@ export const DeviceConnectionDialog = ({
   }
 
   if (hasMoreDevices && !onboardingComplete) {
-    setTimeout(onCancel, 2000);
+    setTimeout(onCancel, TIMEOUTS.twoSeconds);
   }
 
   return (

@@ -10,7 +10,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { setSearchState, setSnackbar, setVersionInfo } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';
-import { SORTING_OPTIONS } from '../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import { getIdAttribute, getMappedDevicesList, getOnboardingState, getUserSettings } from '../selectors';
 import { getHeaders } from './devices/authorized-devices';
 import { routes } from './devices/base-devices';
@@ -91,7 +91,7 @@ export const SearchResult = ({
   const onDeviceSelect = device => {
     setDeviceListState({ selectedId: device.id });
     onToggleSearchResult();
-    setTimeout(() => navigate(`/devices/${device.status}?id=${device.id}`), 300);
+    setTimeout(() => navigate(`/devices/${device.status}?id=${device.id}`), TIMEOUTS.debounceShort);
   };
 
   const handlePageChange = page => {

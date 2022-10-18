@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import { IconButton, TablePagination } from '@mui/material';
 
+import { TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
 import MenderTooltip from '../common/mendertooltip';
 import { useDebounce } from '../../utils/debouncehook';
@@ -35,7 +36,7 @@ export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerP
     setPageNo(page + paginationIndex);
   }, [page, rowsPerPage, count]);
 
-  const debouncedPage = useDebounce(pageNo, 300);
+  const debouncedPage = useDebounce(pageNo, TIMEOUTS.debounceShort);
 
   useEffect(() => {
     const newPage = Math.min(Math.max(paginationIndex, debouncedPage), Math.ceil(count / rowsPerPage));

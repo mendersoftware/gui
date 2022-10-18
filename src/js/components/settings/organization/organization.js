@@ -15,6 +15,7 @@ import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import Billing from './billing';
 import { SAMLConfig } from './samlconfig';
 import { getTenantCapabilities } from '../../../selectors';
+import { TIMEOUTS } from '../../../constants/appConstants';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
@@ -48,6 +49,25 @@ export const OrgHeader = () => {
   );
 };
 
+export const CopyTextToClipboard = ({ token }) => {
+  const [copied, setCopied] = useState(false);
+  const { classes } = useStyles();
+
+  const onCopied = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), TIMEOUTS.fiveSeconds);
+  };
+
+  return (
+    <div>
+      <CopyToClipboard text={token} onCopy={onCopied}>
+        <Button startIcon={<CopyPasteIcon />}>Copy to clipboard</Button>
+      </CopyToClipboard>
+      <div className={classes.copyNotification}>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</div>
+    </div>
+  );
+};
+
 export const Organization = ({
   changeSamlConfig,
   deleteSamlConfig,
@@ -60,7 +80,6 @@ export const Organization = ({
   setSnackbar,
   storeSamlConfig
 }) => {
-  const [copied, setCopied] = useState(false);
   const [hasSingleSignOn, setHasSingleSignOn] = useState(false);
   const [isResettingSSO, setIsResettingSSO] = useState(false);
   const [isConfiguringSSO, setIsConfiguringSSO] = useState(false);
@@ -81,11 +100,6 @@ export const Organization = ({
     setHasSingleSignOn(!!samlConfigs.length);
     setIsConfiguringSSO(!!samlConfigs.length);
   }, [samlConfigs]);
-
-  const onCopied = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 5000);
-  };
 
   const onSSOClick = () => {
     if (hasSingleSignOn) {
@@ -132,14 +146,7 @@ export const Organization = ({
               textClasses={{ secondary: 'inventory-text tenant-token-text' }}
             />
           }
-          sideBarContent={
-            <div>
-              <CopyToClipboard text={org.tenant_token} onCopy={onCopied}>
-                <Button startIcon={<CopyPasteIcon />}>Copy to clipboard</Button>
-              </CopyToClipboard>
-              <div className={classes.copyNotification}>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</div>
-            </div>
-          }
+          sideBarContent={<CopyTextToClipboard token={org.tenant_token} />}
         />
       </List>
       {isEnterprise && (

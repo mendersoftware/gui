@@ -10,6 +10,8 @@ import {
   ReportProblemOutlined as WarningIcon
 } from '@mui/icons-material';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
+
 const CopyButton = ({ text, onCopy }) => (
   <CopyToClipboard text={text} onCopy={onCopy}>
     <IconButton size="small">
@@ -24,7 +26,7 @@ const LogLine = ({ beExplicit, line, prefix }) => {
 
   const onCopied = () => {
     setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
+    setTimeout(() => setCopied(false), TIMEOUTS.threeSeconds);
   };
 
   const toggleHovering = () => setHovering(!hovering);

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 import { Autocomplete, Checkbox, Collapse, FormControl, FormControlLabel, FormGroup, TextField } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import RolloutSteps from './rolloutsteps';
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { useDebounce } from '../../../utils/debouncehook';
-import { makeStyles } from 'tss-react/mui';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 
 const useStyles = makeStyles()(() => ({
@@ -67,7 +68,7 @@ export const Retries = ({
   const { classes } = useStyles();
 
   const [currentAttempts, setCurrentAttempts] = useState(Number(retries ?? previousRetries ?? 0) + 1);
-  const debouncedAttempts = useDebounce(currentAttempts, 300);
+  const debouncedAttempts = useDebounce(currentAttempts, TIMEOUTS.debounceShort);
 
   useEffect(() => {
     setDeploymentSettings({ retries: Number(debouncedAttempts) - 1 });

@@ -17,6 +17,7 @@ import Global from './global';
 import Integrations from './integrations';
 import Roles from './roles';
 import Upgrade from './upgrade';
+import { TIMEOUTS } from '../../constants/appConstants';
 
 let stripePromise = null;
 
@@ -65,7 +66,7 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
         }
       });
     } else {
-      const notStripePromise = new Promise(resolve => setTimeout(resolve, 700));
+      const notStripePromise = new Promise(resolve => setTimeout(resolve, TIMEOUTS.debounceDefault));
       Promise.race([stripePromise, notStripePromise]).then(result => setLoadingFinished(result !== notStripePromise));
     }
   }, []);

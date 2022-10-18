@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie';
 
 import GeneralApi from '../api/general-api';
 import { getToken } from '../auth';
-import AppConstants from '../constants/appConstants';
+import AppConstants, { TIMEOUTS } from '../constants/appConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
@@ -85,7 +85,7 @@ export const initializeAppData = () => (dispatch, getState) => {
         showTips: state.onboarding.showTips
       });
       if (welcomeTip) {
-        tasks.push(dispatch(setSnackbar('open', 10000, '', welcomeTip, () => {}, true)));
+        tasks.push(dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', welcomeTip, () => {}, true)));
       }
       // try to retrieve full device details for onboarding devices to ensure ips etc. are available
       // we only load the first few/ 20 devices, as it is possible the onboarding is left dangling
