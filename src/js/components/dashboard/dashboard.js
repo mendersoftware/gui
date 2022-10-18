@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { makeStyles } from 'tss-react/mui';
+
 import { setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -10,8 +12,8 @@ import Loader from '../common/loader';
 import Deployments from './deployments';
 import Devices from './devices';
 import SoftwareDistribution from './software-distribution';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
-import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
   row: { flexWrap: 'wrap', maxWidth: '85vw' }
@@ -32,7 +34,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
     }
     timeoutID = setTimeout(() => {
       const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState, { setSnackbar });
-      !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
+      !!notification && setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
     }, 400);
   }, [currentUser, JSON.stringify(onboardingState)]);
 

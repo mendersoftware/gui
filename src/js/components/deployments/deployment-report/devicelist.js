@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 // material ui
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import Loader from '../../common/loader';
 import Pagination from '../../common/pagination';
@@ -50,9 +51,7 @@ export const DeploymentDeviceList = ({
   }, [currentPage, deployment.status, deployment.stats, loadingDone]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoadingDone(true);
-    }, 1000);
+    setTimeout(() => setLoadingDone(true), TIMEOUTS.oneSecond);
   }, []);
 
   return (

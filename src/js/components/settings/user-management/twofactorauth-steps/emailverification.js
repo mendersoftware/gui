@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Button } from '@mui/material';
 
+import { TIMEOUTS } from '../../../../constants/appConstants';
 import Form from '../../../common/forms/form';
 import TextInput from '../../../common/forms/textinput';
 import Loader from '../../../common/loader';
@@ -19,7 +20,7 @@ export const EmailVerification = ({ activationCode, verifyEmailComplete, verifyE
     setTimeout(() => {
       setIsVerifying(true);
       setIsLoading(false);
-    }, 3000);
+    }, TIMEOUTS.threeSeconds);
     verifyEmailStart().catch(() => setIsVerifying(false));
   };
 

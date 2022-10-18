@@ -21,6 +21,7 @@ import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
@@ -100,7 +101,7 @@ export const DeploymentReport = props => {
     }
     clearInterval(timer.current);
     if (!(deployment.finished || deployment.status === DEPLOYMENT_STATES.finished)) {
-      timer.current = past ? null : setInterval(refreshDeployment, 5000);
+      timer.current = past ? null : setInterval(refreshDeployment, TIMEOUTS.fiveSeconds);
     }
     if ((deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) && deployment.artifact_name) {
       getRelease(deployment.artifact_name);
@@ -132,7 +133,7 @@ export const DeploymentReport = props => {
     if (!!device_count && progressCount <= 0 && timer.current) {
       // if no more devices in "progress" statuses, deployment has finished, stop counter
       clearInterval(timer.current);
-      timer.current = setTimeout(refreshDeployment, 1000);
+      timer.current = setTimeout(refreshDeployment, TIMEOUTS.oneSecond);
       return () => {
         clearTimeout(timer.current);
       };

@@ -10,6 +10,7 @@ import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 
 import pluralize from 'pluralize';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
 import InfoHint from '../../common/info-hint';
@@ -196,7 +197,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
 
   const onRefreshClick = () => {
     setIsRefreshing(true);
-    getDeviceTwin(device.id, integration).finally(() => setTimeout(() => setIsRefreshing(false), 500));
+    getDeviceTwin(device.id, integration).finally(() => setTimeout(() => setIsRefreshing(false), TIMEOUTS.halfASecond));
   };
 
   const onEditClick = () => setIsEditing(true);

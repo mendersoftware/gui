@@ -12,7 +12,7 @@ import { deleteAuthset, setDeviceFilters, setDeviceListState, updateDevicesAuth 
 import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, isEmpty } from '../../helpers';
@@ -42,7 +42,7 @@ import { defaultHeaders, routes as states, defaultTextRender, getDeviceIdentityT
 import DeviceList, { minCellWidth } from './devicelist';
 import ExpandedDevice from './expanded-device';
 
-const refreshDeviceLength = 10000;
+const refreshDeviceLength = TIMEOUTS.refreshDefault;
 
 const idAttributeTitleMap = {
   id: 'Device ID',
@@ -222,7 +222,7 @@ export const Authorized = props => {
       }
       setTimeout(() => {
         const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState, { setSnackbar });
-        !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
+        !!notification && setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
       }, 400);
     }
   }, [acceptedCount, allCount, pendingCount, onboardingState.complete]);
@@ -397,7 +397,7 @@ export const Authorized = props => {
   const isUngroupedGroup = selectedGroup && selectedGroup === UNGROUPED_GROUP.id;
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
 
-  const openedDevice = useDebounce(selectedId, 300);
+  const openedDevice = useDebounce(selectedId, TIMEOUTS.debounceShort);
   return (
     <>
       <div className="margin-left-small">

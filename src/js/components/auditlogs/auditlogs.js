@@ -8,7 +8,7 @@ import historyImage from '../../../assets/img/history.png';
 
 import { getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import Loader from '../common/loader';
@@ -58,9 +58,9 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
   const { classes } = useStyles();
 
-  const debouncedDetail = useDebounce(detailValue, 700);
-  const debouncedType = useDebounce(typeValue, 700);
-  const debouncedUser = useDebounce(userValue, 700);
+  const debouncedDetail = useDebounce(detailValue, TIMEOUTS.debounceDefault);
+  const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
+  const debouncedUser = useDebounce(userValue, TIMEOUTS.debounceDefault);
 
   useEffect(() => {
     setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser });

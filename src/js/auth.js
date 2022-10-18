@@ -1,4 +1,6 @@
 import Cookies from 'universal-cookie';
+import { TIMEOUTS } from './constants/appConstants';
+
 const cookies = new Cookies();
 
 export const getToken = () => cookies.get('JWT', { doNotParse: true });
@@ -23,7 +25,7 @@ export const updateMaxAge = () => {
   const oAuthExpiration = Number(window.localStorage.getItem('oauth'));
   let updateWithOAuth = false;
   if (oAuthExpiration) {
-    const soon = Date.now() + maxAge * 1000;
+    const soon = Date.now() + maxAge * TIMEOUTS.oneSecond;
     updateWithOAuth = oAuthExpiration <= soon;
     if (updateWithOAuth) {
       window.localStorage.removeItem('oauth');

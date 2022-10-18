@@ -11,7 +11,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { getDeviceFileDownloadLink, deviceFileUpload } from '../../../actions/deviceActions';
-import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
+import { BEGINNING_OF_TIME, TIMEOUTS } from '../../../constants/appConstants';
 
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import Time from '../../common/time';
@@ -132,7 +132,7 @@ export const TroubleshootDialog = ({
     clearInterval(timer.current);
     if (socketInitialized) {
       setStartTime(new Date());
-      timer.current = setInterval(() => setElapsed(moment()), 500);
+      timer.current = setInterval(() => setElapsed(moment()), TIMEOUTS.halfASecond);
     } else {
       close();
     }
@@ -148,7 +148,7 @@ export const TroubleshootDialog = ({
     canTroubleshoot ? connect(device.id) : undefined;
     return () => {
       close();
-      setTimeout(() => setSocketClosed(true), 5000);
+      setTimeout(() => setSocketClosed(true), TIMEOUTS.fiveSeconds);
     };
   }, [device.id, open]);
 
@@ -185,7 +185,7 @@ export const TroubleshootDialog = ({
   const onNotify = content => {
     setSnackbarAlreadySet(true);
     setSnackbar(content, 5000);
-    snackTimer.current = setTimeout(() => setSnackbarAlreadySet(false), 5300);
+    snackTimer.current = setTimeout(() => setSnackbarAlreadySet(false), TIMEOUTS.fiveSeconds + TIMEOUTS.debounceShort);
   };
 
   const onHealthCheckFailed = () => {
@@ -207,7 +207,7 @@ export const TroubleshootDialog = ({
     } else {
       onNotify('Connection with the device died.');
     }
-    closeTimer.current = setTimeout(() => setSocketClosed(true), 5000);
+    closeTimer.current = setTimeout(() => setSocketClosed(true), TIMEOUTS.fiveSeconds);
   };
 
   const onMessageReceived = useCallback(

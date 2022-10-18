@@ -15,6 +15,7 @@ import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import Billing from './billing';
 import { SAMLConfig } from './samlconfig';
 import { getTenantCapabilities } from '../../../selectors';
+import { TIMEOUTS } from '../../../constants/appConstants';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
@@ -54,7 +55,7 @@ export const CopyTextToClipboard = ({ token }) => {
 
   const onCopied = () => {
     setCopied(true);
-    setTimeout(() => setCopied(false), 5000);
+    setTimeout(() => setCopied(false), TIMEOUTS.fiveSeconds);
   };
 
   return (

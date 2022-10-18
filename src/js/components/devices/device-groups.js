@@ -23,6 +23,7 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
+import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Global from '../settings/global';
@@ -37,9 +38,8 @@ import Groups from './groups';
 import DeviceStatusNotification from './devicestatusnotification';
 import { versionCompare } from '../../helpers';
 import { useLocationParams } from '../../utils/liststatehook';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
 
-const refreshLength = 10000;
+const refreshLength = TIMEOUTS.refreshDefault;
 
 export const DeviceGroups = ({
   acceptedCount,

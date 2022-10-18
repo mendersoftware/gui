@@ -8,6 +8,7 @@ import { RotateLeftOutlined, Warning as WarningIcon } from '@mui/icons-material'
 import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 import { makeStyles } from 'tss-react/mui';
 
+import { TIMEOUTS } from '../../constants/appConstants';
 import { groupDeploymentStats } from '../../helpers';
 import MaterialDesignIcon from '../common/materialdesignicon';
 import Time from '../common/time';
@@ -127,7 +128,7 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
   const totalDeviceCount = Math.max(device_count, max_devices || 0);
 
   useEffect(() => {
-    timer.current = setInterval(updateTime, 1000);
+    timer.current = setInterval(updateTime, TIMEOUTS.oneSecond);
     return () => {
       clearInterval(timer.current);
     };

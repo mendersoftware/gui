@@ -11,6 +11,7 @@ import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { getCurrentUser } from '../../selectors';
@@ -77,7 +78,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
     }
     const loginError = cookies.get('error');
     if (loginError) {
-      setSnackbar(loginError, 10000);
+      setSnackbar(loginError, TIMEOUTS.refreshDefault);
       cookies.remove('error');
     }
     cookies.remove('noExpiry', { path: '/' });

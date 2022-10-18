@@ -6,6 +6,7 @@ import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button
 import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
+import { TIMEOUTS } from '../../../../constants/appConstants';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { formatTime } from '../../../../helpers';
 import Loader from '../../../common/loader';
@@ -140,7 +141,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
 
   const onCopied = (_, result) => {
     setCopied(result);
-    setTimeout(() => setCopied(false), 5000);
+    setTimeout(() => setCopied(false), TIMEOUTS.fiveSeconds);
   };
 
   let key = <a onClick={onShowKey}>show key</a>;

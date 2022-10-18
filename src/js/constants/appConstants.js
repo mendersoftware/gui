@@ -3,6 +3,8 @@ const startingDeviceCount = {
   professional: 'for first 250 devices'
 };
 
+const oneSecond = 1000;
+
 module.exports = {
   RECEIVED_HOSTED_LINKS: 'RECEIVED_HOSTED_LINKS',
   SET_ANNOUNCEMENT: 'SET_ANNOUNCEMENT',
@@ -17,6 +19,16 @@ module.exports = {
     desc: 'desc'
   },
   BEGINNING_OF_TIME: '2016-01-01T00:00:00.000Z',
+  TIMEOUTS: {
+    debounceDefault: 700,
+    debounceShort: 300,
+    halfASecond: 0.5 * oneSecond,
+    oneSecond,
+    twoSeconds: 2 * oneSecond,
+    threeSeconds: 3 * oneSecond,
+    fiveSeconds: 5 * oneSecond,
+    refreshDefault: 10 * oneSecond
+  },
   PLANS: {
     os: {
       name: 'Basic',

@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import { setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
 import { stringToBoolean } from '../../helpers';
 import Loader from '../common/loader';
@@ -82,7 +83,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
         setFirstLoginAfterSignup(true);
         if (!oauthProvider) {
           return new Promise((resolve, reject) => {
-            setTimeout(() => loginUser({ email, password }).catch(reject).then(resolve), 3000);
+            setTimeout(() => loginUser({ email, password }).catch(reject).then(resolve), TIMEOUTS.threeSeconds);
           });
         }
         return Promise.resolve();

@@ -9,6 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
 
+import { TIMEOUTS } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
@@ -72,7 +73,7 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       setClicks(0);
-    }, 3000);
+    }, TIMEOUTS.threeSeconds);
     if (clicks > 5) {
       setVersionInfo({ Integration: 'next' });
     }

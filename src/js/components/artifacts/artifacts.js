@@ -8,6 +8,7 @@ import { CloudUpload } from '@mui/icons-material';
 import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDeviceTypes, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -43,7 +44,7 @@ export const Artifacts = props => {
   const { artifactVersion } = useParams();
 
   const { searchTerm, sort = {}, visibleSection = {} } = releasesListState;
-  const debouncedSearchTerm = useDebounce(searchTerm, 700);
+  const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
 
   useEffect(() => {
     clearInterval(artifactTimer.current);
