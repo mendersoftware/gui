@@ -1,5 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+
 import { defaultState, releasesList } from '../../../tests/mockData';
 
 import {
@@ -17,6 +18,7 @@ import {
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import ReleaseConstants from '../constants/releaseConstants';
+import { mockAbortController } from '../../../tests/setupTests';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -201,9 +203,15 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Generating artifact' } },
-      { type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 },
+      {
+        type: AppConstants.UPLOAD_PROGRESS,
+        uploads: { 'mock-uuid': { cancelSource: mockAbortController, name: undefined, size: undefined, uploadProgress: 0 } }
+      },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      { type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }
+      {
+        type: AppConstants.UPLOAD_PROGRESS,
+        uploads: {}
+      }
     ];
     await store.dispatch(createArtifact({ name: 'createdRelease', some: 'thing', someList: ['test', 'more'], complex: { objectThing: 'yes' } }, 'filethings'));
     const storeActions = store.getActions();
@@ -231,9 +239,15 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Uploading artifact' } },
-      { type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 },
+      {
+        type: AppConstants.UPLOAD_PROGRESS,
+        uploads: { 'mock-uuid': { cancelSource: mockAbortController, name: undefined, size: 1234, uploadProgress: 0 } }
+      },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      { type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 }
+      {
+        type: AppConstants.UPLOAD_PROGRESS,
+        uploads: {}
+      }
     ];
     await store.dispatch(uploadArtifact({ description: 'new artifact to upload' }, { size: 1234 }));
     const storeActions = store.getActions();

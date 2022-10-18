@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { v4 as uuid } from 'uuid';
 
-import { commonErrorHandler, progress, setSnackbar } from '../actions/appActions';
+import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
@@ -65,7 +66,7 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
 
-export const createArtifact = (meta, file) => dispatch => {
+export const createArtifact = (meta, file) => (dispatch, getState) => {
   let formData = Object.entries(meta).reduce((accu, [key, value]) => {
     if (Array.isArray(value)) {
       accu.append(key, value.join(','));
@@ -78,11 +79,13 @@ export const createArtifact = (meta, file) => dispatch => {
   }, new FormData());
   formData.append('type', ReleaseConstants.ARTIFACT_GENERATION_TYPE.SINGLE_FILE);
   formData.append('file', file);
-  const cancelSource = axios.CancelToken.source();
+  const uploadId = uuid();
+  const cancelSource = new AbortController();
+  const uploads = { ...getState().app.uploadsById, [uploadId]: { name: file.name, size: file.size, uploadProgress: 0, cancelSource } };
   return Promise.all([
     dispatch(setSnackbar('Generating artifact')),
-    dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
-    GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => progress(e, dispatch), cancelSource.token)
+    dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads }),
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
@@ -91,19 +94,25 @@ export const createArtifact = (meta, file) => dispatch => {
       }
       return commonErrorHandler(err, `Artifact couldn't be generated.`, dispatch);
     })
-    .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
+    .finally(() => {
+      // eslint-disable-next-line no-unused-vars
+      const { [uploadId]: current, ...remainder } = getState().app.uploadsById;
+      return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
+    });
 };
 
-export const uploadArtifact = (meta, file) => dispatch => {
+export const uploadArtifact = (meta, file) => (dispatch, getState) => {
   let formData = new FormData();
   formData.append('size', file.size);
   formData.append('description', meta.description);
   formData.append('artifact', file);
-  const cancelSource = axios.CancelToken.source();
+  const uploadId = uuid();
+  const cancelSource = new AbortController();
+  const uploads = { ...getState().app.uploadsById, [uploadId]: { name: file.name, size: file.size, uploadProgress: 0, cancelSource } };
   return Promise.all([
     dispatch(setSnackbar('Uploading artifact')),
-    dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0, cancelSource }),
-    GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e, dispatch), cancelSource.token)
+    dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads }),
+    GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
@@ -112,7 +121,24 @@ export const uploadArtifact = (meta, file) => dispatch => {
       }
       return commonErrorHandler(err, `Artifact couldn't be uploaded.`, dispatch);
     })
-    .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
+    .finally(() => {
+      // eslint-disable-next-line no-unused-vars
+      const { [uploadId]: current, ...remainder } = getState().app.uploadsById;
+      return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
+    });
+};
+
+export const progress = (e, uploadId) => (dispatch, getState) => {
+  let uploadProgress = (e.loaded / e.total) * 100;
+  uploadProgress = uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress);
+  const uploads = { ...getState().app.uploadsById, [uploadId]: { ...getState().app.uploadsById[uploadId], uploadProgress } };
+  return dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads });
+};
+
+export const cancelFileUpload = id => (dispatch, getState) => {
+  const { [id]: current, ...remainder } = getState().app.uploadsById;
+  current.cancelSource.abort();
+  return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
 };
 
 export const editArtifact = (id, body) => (dispatch, getState) =>

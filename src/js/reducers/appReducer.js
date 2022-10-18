@@ -69,8 +69,9 @@ export const initialState = {
   },
   stripeAPIKey: menderEnvironment.stripeAPIKey,
   trackerCode: menderEnvironment.trackerCode,
-  uploading: false,
-  uploadProgress: 0,
+  uploadsById: {
+    // id: { uploading: false, uploadProgress: 0, cancelSource: undefined }
+  },
   versionInformation: {
     Integration: getComparisonCompatibleVersion(menderEnvironment.integrationVersion),
     'Mender-Client': getComparisonCompatibleVersion(menderEnvironment.menderVersion),
@@ -120,12 +121,9 @@ const appReducer = (state = initialState, action) => {
         offlineThreshold: action.value
       };
     case AppConstants.UPLOAD_PROGRESS: {
-      const cancelSource = action.inprogress ? action.cancelSource || state.cancelSource : undefined;
       return {
         ...state,
-        cancelSource,
-        uploading: action.inprogress,
-        uploadProgress: action.uploadProgress
+        uploadsById: action.uploads
       };
     }
     case AppConstants.SET_VERSION_INFORMATION: {

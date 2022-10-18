@@ -90,6 +90,7 @@ export const defaultState = {
       sort: {}
     },
     snackbar: {},
+    uploadsById: {},
     versionInformation: {}
   },
   deployments: {
