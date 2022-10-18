@@ -66,6 +66,12 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
 
+export const cleanUpUpload = uploadId => (dispatch, getState) => {
+  // eslint-disable-next-line no-unused-vars
+  const { [uploadId]: current, ...remainder } = getState().app.uploadsById;
+  return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
+};
+
 export const createArtifact = (meta, file) => (dispatch, getState) => {
   let formData = Object.entries(meta).reduce((accu, [key, value]) => {
     if (Array.isArray(value)) {
@@ -94,11 +100,7 @@ export const createArtifact = (meta, file) => (dispatch, getState) => {
       }
       return commonErrorHandler(err, `Artifact couldn't be generated.`, dispatch);
     })
-    .finally(() => {
-      // eslint-disable-next-line no-unused-vars
-      const { [uploadId]: current, ...remainder } = getState().app.uploadsById;
-      return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
-    });
+    .finally(() => dispatch(cleanUpUpload(uploadId)));
 };
 
 export const uploadArtifact = (meta, file) => (dispatch, getState) => {
@@ -121,11 +123,7 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
       }
       return commonErrorHandler(err, `Artifact couldn't be uploaded.`, dispatch);
     })
-    .finally(() => {
-      // eslint-disable-next-line no-unused-vars
-      const { [uploadId]: current, ...remainder } = getState().app.uploadsById;
-      return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
-    });
+    .finally(() => dispatch(cleanUpUpload(uploadId)));
 };
 
 export const progress = (e, uploadId) => (dispatch, getState) => {
