@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@mui/material';
+import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 
 import { FitAddon } from 'xterm-addon-fit';
 import msgpack5 from 'msgpack5';
+
 import { deviceConnect } from '../../../actions/deviceActions';
 import { blobToString, byteArrayToString } from '../../../utils/sockethook';
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
-import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
 import XTerm from '../../common/xterm';
 import { createFileDownload } from '../../../helpers';
-import { makeStyles } from 'tss-react/mui';
 
 const MessagePack = msgpack5();
 const fitAddon = new FitAddon();
@@ -185,7 +187,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
           return;
         }
         clearTimeout(timer);
-        timer = setTimeout(() => setIsLoadingSession(false), 1000);
+        timer = setTimeout(() => setIsLoadingSession(false), TIMEOUTS.oneSecond);
         switch (typ) {
           case MessageTypes.Shell:
             return buffer.push({ content: body });
@@ -228,7 +230,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
         fitAddon.fit();
         xtermRef.current.terminal.focus();
         setIsPlaying(!isPlaying);
-      }, 300);
+      }, TIMEOUTS.debounceShort);
     }
     setIsPaused(isPlaying);
     setIsPlaying(!isPlaying);

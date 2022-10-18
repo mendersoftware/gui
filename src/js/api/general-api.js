@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { getToken, logout } from '../auth';
+import { TIMEOUTS } from '../constants/appConstants';
 
 export const headerNames = {
   link: 'link',
@@ -23,7 +24,7 @@ const unauthorizedRedirect = error => {
   return Promise.reject(error);
 };
 
-export const commonRequestConfig = { timeout: 10000, headers: { 'Content-Type': 'application/json' } };
+export const commonRequestConfig = { timeout: TIMEOUTS.refreshDefault, headers: { 'Content-Type': 'application/json' } };
 
 export const authenticatedRequest = axios.create(commonRequestConfig);
 authenticatedRequest.interceptors.response.use(res => res, unauthorizedRedirect);
@@ -39,8 +40,20 @@ const Api = {
   post: authenticatedRequest.post,
   postUnauthorized: (url, data, config = {}) => axios.post(url, data, { ...commonRequestConfig, ...config }),
   put: authenticatedRequest.put,
-  upload: (url, formData, progress, cancelToken) => authenticatedRequest.post(url, formData, { onUploadProgress: progress, timeout: 0, cancelToken }),
-  uploadPut: (url, formData, progress, cancelToken) => authenticatedRequest.put(url, formData, { onUploadProgress: progress, timeout: 0, cancelToken })
+  upload: (url, formData, progress, cancelSignal) =>
+    authenticatedRequest.post(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progress,
+      timeout: 0,
+      signal: cancelSignal
+    }),
+  uploadPut: (url, formData, progress, cancelSignal) =>
+    authenticatedRequest.put(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progress,
+      timeout: 0,
+      signal: cancelSignal
+    })
 };
 
 export default Api;

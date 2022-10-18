@@ -1246,8 +1246,9 @@ div:focus {
   &.tenant-token-text {
     display: block;
     max-height: initial;
-    white-space: nowrap;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
     &.expanded-attribute {
       white-space: initial;
     }
@@ -1924,36 +1925,6 @@ div.waiting-inventory {
   }
   &:-ms-input-placeholder {
     @rules();
-  }
-}
-
-/* Progress bar */
-#progressBarContainer {
-  position: fixed;
-  display: grid;
-  left: 230px;
-  right: 2 * @defaultGutterWidth;
-  bottom: 80px;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 4px;
-  height: 4 * @defaultGutterWidth;
-  padding: 0 @defaultGutterWidth;
-  overflow: hidden;
-  margin: 25px 0 @defaultGutterWidth;
-  grid-template-rows: 30px 30px;
-  grid-template-columns: 1fr 60px;
-  z-index: 10000;
-  > .MuiIconButton-root {
-    grid-column: 2;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    height: inherit;
-  }
-  .transition(all 0.2s ease-in-out);
-  &.shrunk {
-    border: none;
-    height: 0;
   }
 }
 

@@ -6,6 +6,7 @@ import ArtifactInformationForm from './artifactinformationform';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { unionizeStrings } from '../../../helpers';
 import Tracking from '../../../tracking';
+import { TIMEOUTS } from '../../../constants/appConstants';
 
 const steps = [
   { title: 'File Upload', component: ArtifactUpload, validator: ({ fileSelected, isValidDestination }) => !(isValidDestination && fileSelected) },
@@ -67,7 +68,7 @@ export const AddArtifactDialog = ({
       }
       // track in GA
       Tracking.event({ category: 'artifacts', action: 'create' });
-      return setTimeout(() => onUploadFinished(meta.name), 1000);
+      return setTimeout(() => onUploadFinished(meta.name), TIMEOUTS.oneSecond);
     });
   };
 

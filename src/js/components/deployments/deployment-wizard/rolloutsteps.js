@@ -4,6 +4,7 @@ import { Chip } from '@mui/material';
 import { Add as AddIcon, ArrowRight as ArrowRightIcon, PauseCircleOutline as PauseIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
 import InfoHint from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
 import InfoText from '../../common/infotext';
@@ -83,7 +84,7 @@ export const RolloutStepConnector = ({ disabled, step, onStepChange, release = {
     step.state === defaultSteps.ArtifactReboot_Enter.state && release.Name?.includes(menderDemoArtifactName) ? (
       <MenderTooltip
         arrow
-        leaveDelay={1000}
+        leaveDelay={TIMEOUTS.oneSecond}
         placement="top"
         title="The demo artifact you selected does not require a reboot and will not pause before starting with the next stage."
       >

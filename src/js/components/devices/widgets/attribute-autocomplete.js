@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // material ui
 import { Autocomplete, createFilterOptions, TextField } from '@mui/material';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { getFilterLabelByKey } from './filters';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
@@ -67,7 +68,7 @@ export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFi
 
   useEffect(() => {
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => onSelect({ key, scope }), 700);
+    timer.current = setTimeout(() => onSelect({ key, scope }), TIMEOUTS.debounceDefault);
   }, [key, scope]);
 
   const updateFilterKey = (value, selectedScope) => {

@@ -9,6 +9,8 @@ import { Sort as SortIcon } from '@mui/icons-material';
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { editArtifact, removeArtifact, selectArtifact, selectRelease, uploadArtifact } from '../../actions/releaseActions';
+import { TIMEOUTS } from '../../constants/appConstants';
+import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { customSort } from '../../helpers';
 import { getOnboardingState, getUserCapabilities } from '../../selectors';
@@ -19,7 +21,6 @@ import ForwardingLink from '../common/forwardlink';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
-import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -76,7 +77,7 @@ export const ReleaseRepository = ({
 
   useEffect(() => {
     if (wasSelectedRecently) {
-      setTimeout(() => setWasSelectedRecently(false), 200);
+      setTimeout(() => setWasSelectedRecently(false), TIMEOUTS.debounceShort);
     }
   }, [wasSelectedRecently]);
 
@@ -121,7 +122,7 @@ export const ReleaseRepository = ({
     setSortCol(col);
   };
 
-  const onExpansion = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), 500);
+  const onExpansion = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), TIMEOUTS.halfASecond);
 
   const onRemoveArtifact = artifact => removeArtifact(artifact.id).finally(() => setShowRemoveArtifactDialog(false));
 

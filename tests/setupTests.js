@@ -17,6 +17,8 @@ import { light as lightTheme } from '../src/js/themes/Mender';
 export const RETRY_TIMES = 3;
 export const TEST_LOCATION = 'localhost';
 
+export const mockAbortController = { signal: { addEventListener: () => {}, removeEventListener: () => {} } };
+
 window.RTCPeerConnection = () => {
   return {
     createOffer: () => {},
@@ -46,6 +48,8 @@ jest.mock('universal-cookie', () => {
   return jest.fn(() => mockCookie);
 });
 
+jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }));
+
 jest.setSystemTime(mockDate);
 
 beforeAll(async () => {
@@ -71,6 +75,7 @@ beforeAll(async () => {
     removeItem: jest.fn()
   };
   window.ENV = 'test';
+  global.AbortController = jest.fn().mockImplementation(() => mockAbortController);
   global.MessageChannel = MessageChannel;
   global.TextEncoder = TextEncoder;
   global.ResizeObserver = jest.fn().mockImplementation(() => ({

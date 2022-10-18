@@ -37,12 +37,12 @@ export const getConfiguredStore = config =>
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
         immutableCheck: {
-          ignoredPaths: ['app.cancelSource.token']
+          ignoredPaths: ['app.uploadsById']
         },
         serializableCheck: {
           ignoredActions: [RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, SET_SNACKBAR, UPLOAD_PROGRESS],
-          ignoredActionPaths: ['cancelSource.token', 'snackbar'],
-          ignoredPaths: ['app.cancelSource.token', 'app.snackbar', 'organization.externalDeviceIntegrations']
+          ignoredActionPaths: ['uploads', 'snackbar'],
+          ignoredPaths: ['app.uploadsById', 'app.snackbar', 'organization.externalDeviceIntegrations']
         }
       })
   });

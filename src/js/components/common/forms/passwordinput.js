@@ -5,6 +5,8 @@ import generator from 'generate-password';
 import { Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel } from '@mui/material';
 import { CheckCircle as CheckIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from '@mui/icons-material';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
+
 const PasswordGenerateButtons = ({ clearPass, edit, generatePass }) => (
   <div className="pass-buttons">
     <Button color="primary" onClick={generatePass}>
@@ -74,7 +76,7 @@ export default class PasswordInput extends React.Component {
     self.setValue({ currentTarget: { value: password } });
     copy(password);
     self.setState({ copied: true, visible: true });
-    setTimeout(() => self.setState({ copied: false }), 5000);
+    setTimeout(() => self.setState({ copied: false }), TIMEOUTS.fiveSeconds);
   }
   render() {
     const { className, create, defaultValue, disabled, edit, generate, handleKeyPress, id, InputLabelProps = {}, label, placeholder, required } = this.props;

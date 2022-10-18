@@ -4,6 +4,7 @@ import { InputAdornment, TextField } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
+import { TIMEOUTS } from '../../constants/appConstants';
 import Loader from './loader';
 import { useDebounce } from '../../utils/debouncehook';
 
@@ -25,7 +26,7 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
   const [searchValue, setSearchValue] = useState('');
   const { classes } = useStyles();
 
-  const debouncedSearchTerm = useDebounce(searchValue, 700);
+  const debouncedSearchTerm = useDebounce(searchValue, TIMEOUTS.debounceDefault);
 
   useEffect(() => {
     onSearch(debouncedSearchTerm);

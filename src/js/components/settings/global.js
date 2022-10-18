@@ -7,6 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import { getDeviceAttributes } from '../../actions/deviceActions';
 import { changeNotificationSetting } from '../../actions/monitorActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
@@ -108,8 +109,8 @@ export const GlobalSettingsDialog = ({
   const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
   const [currentIntervalUnit, setCurrentIntervalUnit] = useState(offlineThresholdSettings.intervalUnit);
   const [intervalErrorText, setIntervalErrorText] = useState('');
-  const debouncedInterval = useDebounce(currentInterval, 300);
-  const debouncedIntervalUnit = useDebounce(currentIntervalUnit, 300);
+  const debouncedInterval = useDebounce(currentInterval, TIMEOUTS.debounceShort);
+  const debouncedIntervalUnit = useDebounce(currentIntervalUnit, TIMEOUTS.debounceShort);
   const timer = useRef(false);
 
   const { classes } = useStyles();
@@ -131,7 +132,7 @@ export const GlobalSettingsDialog = ({
   }, [debouncedInterval, debouncedIntervalUnit]);
 
   useEffect(() => {
-    const initTimer = setTimeout(() => (timer.current = true), 3000);
+    const initTimer = setTimeout(() => (timer.current = true), TIMEOUTS.threeSeconds);
     return () => {
       clearTimeout(initTimer);
     };

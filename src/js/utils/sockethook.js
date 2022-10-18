@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import msgpack5 from 'msgpack5';
 
 import { apiUrl } from '../api/general-api';
+import { TIMEOUTS } from '../constants/appConstants';
 import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../constants/deviceConstants';
 
 const MessagePack = msgpack5();
@@ -69,7 +70,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
               return close();
             } else {
               clearTimeout(healthcheckTimeout.current);
-              healthcheckTimeout.current = setTimeout(healthcheckFailed, 65 * 1000);
+              healthcheckTimeout.current = setTimeout(healthcheckFailed, 65 * TIMEOUTS.oneSecond);
               return setSessionId(sid);
             }
           }
@@ -85,7 +86,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
             //
             const timeout = parseInt(props.timeout);
             if (timeout > 0) {
-              healthcheckTimeout.current = setTimeout(healthcheckFailed, timeout * 1000);
+              healthcheckTimeout.current = setTimeout(healthcheckFailed, timeout * TIMEOUTS.oneSecond);
             }
             return;
           }

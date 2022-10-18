@@ -15,11 +15,15 @@ import TwoFactorAuthSetup from './twofactorauthsetup';
 import AccessTokenManagement from '../accesstokenmanagement';
 import InfoText from '../../common/infotext';
 import { getUserSSOState } from './userdefinition';
+import { getToken } from '../../../auth';
+import { CopyTextToClipboard } from '../organization/organization';
+import ExpandableAttribute from '../../common/expandable-attribute';
 
 const useStyles = makeStyles()(() => ({
   formField: { width: 400, maxWidth: '100%' },
   changeButton: { margin: '30px 0 0 15px' },
   infoText: { margin: 0, width: '75%' },
+  jwt: { maxWidth: '70%' },
   oauthIcon: { fontSize: '36px', marginRight: 10 },
   widthLimit: { maxWidth: 750 }
 }));
@@ -145,6 +149,21 @@ export const SelfUserManagement = ({
           </div>
         </div>
       )}
+      <div className="flexbox space-between margin-top-large">
+        <div className={classes.jwt}>
+          <div className="help-content">Session token</div>
+          <ExpandableAttribute
+            component="div"
+            disableGutters
+            dividerDisabled
+            secondary={getToken()}
+            textClasses={{ secondary: 'inventory-text tenant-token-text' }}
+          />
+        </div>
+        <div className="flexbox center-aligned">
+          <CopyTextToClipboard token={getToken()} />
+        </div>
+      </div>
       {!isOAuth2 && <AccessTokenManagement />}
       {isEnterprise && hasTracking && (
         <div className="margin-top">

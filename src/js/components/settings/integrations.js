@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Button, Divider, MenuItem, Select, TextField } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations } from '../../actions/organizationActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import Confirm from '../common/confirm';
 import InfoHint from '../common/info-hint';
 import { useDebounce } from '../../utils/debouncehook';
-import { makeStyles } from 'tss-react/mui';
 import { customSort, versionCompare } from '../../helpers';
 import { WebhookCreation } from './webhooks/configuration';
 import Webhooks from './webhooks/webhooks';
@@ -30,10 +31,10 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
   const [awsRegion, setRegion] = useState(region);
   const [policy, setPolicy] = useState(device_policy_name);
 
-  const debouncedId = useDebounce(keyId, 700);
-  const debouncedSecret = useDebounce(keySecret, 700);
-  const debouncedRegion = useDebounce(awsRegion, 700);
-  const debounced = useDebounce(policy, 700);
+  const debouncedId = useDebounce(keyId, TIMEOUTS.debounceDefault);
+  const debouncedSecret = useDebounce(keySecret, TIMEOUTS.debounceDefault);
+  const debouncedRegion = useDebounce(awsRegion, TIMEOUTS.debounceDefault);
+  const debounced = useDebounce(policy, TIMEOUTS.debounceDefault);
 
   const { classes } = useStyles();
 
@@ -73,7 +74,7 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
 
 const ConnectionStringInput = ({ connectionConfig, isEditing, setConnectionConfig, title }) => {
   const [value, setValue] = useState(connectionConfig.connection_string);
-  const debouncedValue = useDebounce(value, 700);
+  const debouncedValue = useDebounce(value, TIMEOUTS.debounceDefault);
 
   const { classes } = useStyles();
 

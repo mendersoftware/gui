@@ -9,7 +9,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { cancelUpgrade, completeUpgrade, getUserOrganization, requestPlanChange, startUpgrade } from '../../actions/organizationActions';
 import Loader from '../common/loader';
-import { PLANS } from '../../constants/appConstants';
+import { PLANS, TIMEOUTS } from '../../constants/appConstants';
 import AddOnSelection from './addonselection';
 import PlanSelection from './planselection';
 import CardSection from './cardsection';
@@ -102,7 +102,7 @@ export const Upgrade = ({
       setTimeout(() => {
         getDeviceLimit();
         navigate('/settings/organization-and-billing');
-      }, 3000);
+      }, TIMEOUTS.threeSeconds);
     });
 
   const addOnsToString = (addons = []) =>

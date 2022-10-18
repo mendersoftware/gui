@@ -9,7 +9,7 @@ import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { BEGINNING_OF_TIME, SORTING_OPTIONS } from '../../constants/appConstants';
+import { BEGINNING_OF_TIME, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -60,8 +60,8 @@ export const Past = props => {
   const [typeValue, setTypeValue] = useState('');
   const { classes } = useStyles();
 
-  const debouncedSearch = useDebounce(searchValue, 700);
-  const debouncedType = useDebounce(typeValue, 700);
+  const debouncedSearch = useDebounce(searchValue, TIMEOUTS.debounceDefault);
+  const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
 
   const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
 
@@ -118,7 +118,7 @@ export const Past = props => {
         past.length > 1
           ? getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar }, notification)
           : notification;
-      !!notification && setSnackbar('open', 10000, '', notification, () => {}, true);
+      !!notification && setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
     }, 400);
   }, [past.length, onboardingState.complete]);
 

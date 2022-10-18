@@ -5,9 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { CloudUpload } from '@mui/icons-material';
 
-import { cancelFileUpload, setSnackbar } from '../../actions/appActions';
+import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDeviceTypes, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -24,7 +25,6 @@ export const Artifacts = props => {
   const {
     canUpload,
     getReleases,
-    isUploading,
     onboardingState,
     releases,
     releasesListState,
@@ -43,7 +43,7 @@ export const Artifacts = props => {
   const { artifactVersion } = useParams();
 
   const { searchTerm, sort = {}, visibleSection = {} } = releasesListState;
-  const debouncedSearchTerm = useDebounce(searchTerm, 700);
+  const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
 
   useEffect(() => {
     clearInterval(artifactTimer.current);
@@ -130,7 +130,6 @@ export const Artifacts = props => {
               {' '}
               <Button
                 ref={uploadButtonRef}
-                disabled={isUploading}
                 color="secondary"
                 onClick={onUploadClick}
                 startIcon={<CloudUpload fontSize="small" />}
@@ -161,7 +160,6 @@ export const Artifacts = props => {
 
 const actionCreators = {
   advanceOnboarding,
-  cancelFileUpload,
   createArtifact,
   getReleases,
   removeArtifact,
@@ -177,7 +175,6 @@ const mapStateToProps = state => {
   return {
     canUpload,
     deviceTypes: getDeviceTypes(state),
-    isUploading: state.app.uploading,
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
     releases: getReleasesList(state),

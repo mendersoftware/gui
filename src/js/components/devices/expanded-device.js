@@ -21,6 +21,7 @@ import {
 } from '../../actions/deviceActions';
 import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
@@ -62,7 +63,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const refreshDeviceLength = 10000;
+const refreshDeviceLength = TIMEOUTS.refreshDefault;
 
 const GatewayNotification = ({ device, docsVersion }) => {
   const ipAddress = getDemoDeviceAddress([device]);
