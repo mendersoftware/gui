@@ -472,7 +472,7 @@ export const getSnackbarMessage = (skipped, done) => {
 export const extractSoftware = (attributes = {}) => {
   const softwareKeys = Object.keys(attributes).reduce((accu, item) => {
     if (item.endsWith('.version')) {
-      accu.push(item.substring(0, item.indexOf('.')));
+      accu.push(item.substring(0, item.lastIndexOf('.')));
     }
     return accu;
   }, []);
@@ -487,57 +487,6 @@ export const extractSoftware = (attributes = {}) => {
     },
     { software: [], nonSoftware: [] }
   );
-
-const defaultSoftwareTitleMap = {
-  'rootfs-image.version': { title: 'System filesystem', priority: 0 },
-  'rootfs-image.checksum': { title: 'checksum', priority: 1 }
-};
-
-export const extractSoftwareInformation = (capabilities = {}, softwareTitleMap = defaultSoftwareTitleMap, softwareHeaderList = []) => {
-  const mapLayerInformation = (key, value, i) => {
-    let primary = key;
-    let secondary = value;
-    let priority = i + Object.keys(softwareTitleMap).length;
-    let result = [];
-    const infoItems = key.split('.');
-    if (infoItems.length === 2) {
-      primary = softwareTitleMap[key] ? softwareTitleMap[key].title : primary;
-      priority = softwareTitleMap[key] ? softwareTitleMap[key].priority : i;
-      result.push({ priority, primary, secondary });
-    } else if (infoItems.length >= 3) {
-      primary = softwareTitleMap[key] ? softwareTitleMap[key].title : infoItems[1];
-      // this is required with the "secondary" assignment in the softwareHeaderList.map to support keys with more than 2 dots
-      const punctuated = infoItems.length > softwareHeaderList.length ? infoItems.slice(1, infoItems.length - 1).join('.') : null;
-      const things = softwareHeaderList.length
-        ? softwareHeaderList.map((item, index) => ({
-            priority: index,
-            primary: item,
-            secondary: infoItems[index] === 'version' && index === infoItems.length - 1 ? value : punctuated ?? infoItems[index]
-          }))
-        : [{ priority, primary, secondary }];
-      result.push(...things);
-    } else {
-      result.push({ priority, primary, secondary });
-    }
-    return result;
-  };
-
-  const softwareInformation = extractSoftware(capabilities);
-  const softwareLayers = Object.entries(capabilities).reduce((accu, item, index) => {
-    const softwareAttribute = softwareInformation.find(info => item[0].startsWith(info));
-    if (softwareAttribute) {
-      if (!accu[softwareAttribute]) {
-        accu[softwareAttribute] = [];
-      }
-      accu[softwareAttribute].push(...mapLayerInformation(item[0], item[1], index));
-    }
-    return accu;
-  }, {});
-
-  return Object.entries(softwareLayers).reduce((accu, item) => {
-    accu[item[0]] = item[1].sort((a, b) => a.priority - b.priority);
-    return accu;
-  }, {});
 };
 
 export const createDownload = (target, filename) => {
