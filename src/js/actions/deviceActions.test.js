@@ -4,6 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultCreationDate, defaultState } from '../../../tests/mockData';
+import { mockAbortController } from '../../../tests/setupTests';
 import AppConstants from '../constants/appConstants';
 import DeploymentConstants from '../constants/deploymentConstants';
 import DeviceConstants from '../constants/deviceConstants';
@@ -14,6 +15,7 @@ import {
   applyDeviceConfig,
   decommissionDevice,
   deleteAuthset,
+  deviceFileUpload,
   getAllDeviceCounts,
   getAllDevicesByStatus,
   getAllDynamicGroupDevices,
@@ -23,6 +25,7 @@ import {
   getDeviceById,
   getDeviceConfig,
   getDeviceCount,
+  getDeviceFileDownloadLink,
   getDeviceInfo,
   getDeviceLimit,
   getDevicesByStatus,
@@ -806,6 +809,28 @@ describe('troubleshooting related actions', () => {
     const result = await store.dispatch(getSessionDetails(sessionId, defaultState.devices.byId.a1.id, defaultState.users.currentUser, undefined, endDate));
 
     expect(result).toMatchObject({ start: new Date(endDate), end: new Date(endDate) });
+  });
+
+  it('should allow device file transfers', async () => {
+    const link = await getDeviceFileDownloadLink('aDeviceId', '/tmp/file')();
+    expect(link).toBe('/api/management/v1/deviceconnect/devices/aDeviceId/download?path=%2Ftmp%2Ffile');
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Uploading file' } },
+      {
+        type: AppConstants.UPLOAD_PROGRESS,
+        uploads: { 'mock-uuid': { cancelSource: mockAbortController, uploadProgress: 0 } }
+      },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
+      {
+        type: AppConstants.UPLOAD_PROGRESS,
+        uploads: {}
+      }
+    ];
+    await store.dispatch(deviceFileUpload(defaultState.devices.byId.a1.id, '/tmp/file', 'file'));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });
 
