@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { getSingleDeployment } from '../actions/deploymentActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
-import { progress } from '../actions/releaseActions';
+import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
@@ -854,7 +854,7 @@ export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) =
       }
       return commonErrorHandler(err, `Error uploading file to device.`, dispatch);
     })
-    .finally(() => Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, inprogress: false, uploadProgress: 0 })));
+    .finally(() => dispatch(cleanUpUpload(uploadId)));
 };
 
 export const getDeviceAuth = id => dispatch =>
