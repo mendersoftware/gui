@@ -469,13 +469,24 @@ export const getSnackbarMessage = (skipped, done) => {
   return `${doneText}${skipText}`;
 };
 
-export const extractSoftware = (capabilities = {}) =>
-  Object.keys(capabilities).reduce((accu, item) => {
+export const extractSoftware = (attributes = {}) => {
+  const softwareKeys = Object.keys(attributes).reduce((accu, item) => {
     if (item.endsWith('.version')) {
       accu.push(item.substring(0, item.indexOf('.')));
     }
     return accu;
   }, []);
+  return Object.entries(attributes).reduce(
+    (accu, item) => {
+      if (softwareKeys.some(key => item[0].startsWith(key))) {
+        accu.software.push(item);
+      } else {
+        accu.nonSoftware.push(item);
+      }
+      return accu;
+    },
+    { software: [], nonSoftware: [] }
+  );
 
 const defaultSoftwareTitleMap = {
   'rootfs-image.version': { title: 'System filesystem', priority: 0 },
