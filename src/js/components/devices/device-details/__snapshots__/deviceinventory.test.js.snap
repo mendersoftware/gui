@@ -202,16 +202,16 @@ exports[`DeviceInventory Component renders correctly 1`] = `
           class="align-right key muted"
         >
           <b>
-            artifact_name
+            device_type
           </b>
         </div>
         <div
           class="flexbox clickable"
         >
           <div
-            title="myapp"
+            title="raspberrypi4"
           >
-            myapp
+            raspberrypi4
           </div>
           <svg
             aria-hidden="true"
@@ -235,16 +235,16 @@ exports[`DeviceInventory Component renders correctly 1`] = `
           class="align-right key muted"
         >
           <b>
-            device_type
+            artifact_name
           </b>
         </div>
         <div
           class="flexbox clickable"
         >
           <div
-            title="raspberrypi4"
+            title="myapp"
           >
-            raspberrypi4
+            myapp
           </div>
           <svg
             aria-hidden="true"
