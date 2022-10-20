@@ -16,10 +16,10 @@ import {
 import { makeStyles } from 'tss-react/mui';
 
 import { getArtifactUrl } from '../../actions/releaseActions';
-import { extractSoftwareInformation } from '../../helpers';
+import { extractSoftware } from '../../helpers';
+import { getUserCapabilities } from '../../selectors';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
-import { getUserCapabilities } from '../../selectors';
 
 const useStyles = makeStyles()(theme => ({
   editButton: {
@@ -53,11 +53,6 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const softwareTitleMap = {
-  'rootfs-image.version': { title: 'System filesystem', priority: 0 },
-  'rootfs-image.checksum': { title: 'checksum', priority: 1 }
-};
-
 export const transformArtifactCapabilities = (capabilities = {}) => {
   return Object.entries(capabilities).reduce((accu, [key, value]) => {
     if (!Array.isArray(value)) {
@@ -87,6 +82,25 @@ export const transformArtifactMetadata = (metadata = {}) => {
     }
     return accu;
   }, []);
+};
+
+const extractSoftwareItem = (artifactProvides = {}) => {
+  const { software } = extractSoftware(artifactProvides);
+  return (
+    software
+      .reduce((accu, item) => {
+        const infoItems = item[0].split('.');
+        if (infoItems[infoItems.length - 1] !== 'version') {
+          return accu;
+        }
+        accu.push({ key: infoItems[0], name: infoItems.slice(1, infoItems.length - 1).join('.'), version: item[1], nestingLevel: infoItems.length });
+        return accu;
+      }, [])
+      // we assume the smaller the nesting level in the software name, the closer the software is to the rootfs/ the higher the chances we show the rootfs
+      // sort based on this assumption & then only return the first item (can't use index access, since there might not be any software item at all)
+      .sort((a, b) => a.nestingLevel - b.nestingLevel)
+      .reduce((accu, item) => accu ?? item, undefined)
+  );
 };
 
 export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
@@ -119,9 +133,18 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
     }
   };
 
-  const softwareInformation = Object.values(
-    extractSoftwareInformation(artifact.artifact_provides, softwareTitleMap, ['Software filesystem', 'Software name', 'Software version'])
-  ).map(content => ({ title: 'Software versioning information', content }))[0];
+  const softwareItem = extractSoftwareItem(artifact.artifact_provides);
+  const softwareInformation = softwareItem
+    ? {
+        title: 'Software versioning information',
+        content: [
+          { primary: 'Software filesystem', secondary: softwareItem.key },
+          { primary: 'Software name', secondary: softwareItem.name },
+          { primary: 'Software version', secondary: softwareItem.version }
+        ]
+      }
+    : { content: [] };
+
   const artifactMetaInfo = [
     { title: 'Depends', content: transformArtifactCapabilities(artifact.artifact_depends) },
     { title: 'Clears', content: transformArtifactCapabilities(artifact.artifact_clears) },
