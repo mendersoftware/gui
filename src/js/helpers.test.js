@@ -7,7 +7,6 @@ import {
   detectOsIdentifier,
   duplicateFilter,
   extractSoftware,
-  extractSoftwareInformation,
   FileSize,
   formatTime,
   fullyDecodeURI,
@@ -419,52 +418,14 @@ describe('extractSoftware function', () => {
         'test.version': 'test-2',
         'a.whole.lot.of.dots.version': 'test-3'
       })
-    ).toEqual(['rootfs-image', 'test', 'a']);
-  });
-});
-
-describe('extractSoftwareInformation function', () => {
-  it('works as expected', async () => {
-    expect(
-      extractSoftwareInformation(defaultState.releases.byId.r1.Artifacts[0].artifact_provides, undefined, [
-        'Software filesystem',
-        'Software name',
-        'Software version'
-      ])
     ).toEqual({
-      'data-partition': [
-        { primary: 'Software filesystem', priority: 0, secondary: 'data-partition' },
-        { primary: 'Software name', priority: 1, secondary: 'myapp' },
-        { primary: 'Software version', priority: 2, secondary: 'v2020.10' }
+      nonSoftware: [['artifact_name', 'myapp']],
+      software: [
+        ['rootfs-image.version', 'stablev1-beta-final-v0'],
+        ['rootfs-image.checksum', '12341143'],
+        ['test.version', 'test-2'],
+        ['a.whole.lot.of.dots.version', 'test-3']
       ]
-    });
-    expect(extractSoftwareInformation(defaultState.devices.byId.a1.attributes)).toEqual({});
-    expect(
-      extractSoftwareInformation({
-        artifact_name: 'myapp',
-        'rootfs-image.version': 'stablev1-beta-final-v0',
-        'rootfs-image.checksum': '12341143',
-        'test.version': 'test-2',
-        'a.whole.lot.of.dots.version': 'test-3',
-        'a.whole.lot.of.dots.more': 'test-4',
-        'even.more.dots.than.before.version': 'test-5',
-        'even.more.dots.than.before.more': 'test-6'
-      })
-    ).toEqual({
-      a: [
-        { primary: 'artifact_name', priority: 2, secondary: 'myapp' },
-        { primary: 'whole', priority: 6, secondary: 'test-3' },
-        { primary: 'whole', priority: 7, secondary: 'test-4' }
-      ],
-      even: [
-        { primary: 'more', priority: 8, secondary: 'test-5' },
-        { primary: 'more', priority: 9, secondary: 'test-6' }
-      ],
-      'rootfs-image': [
-        { primary: 'System filesystem', priority: 0, secondary: 'stablev1-beta-final-v0' },
-        { primary: 'checksum', priority: 1, secondary: '12341143' }
-      ],
-      test: [{ primary: 'test.version', priority: 3, secondary: 'test-2' }]
     });
   });
 });
