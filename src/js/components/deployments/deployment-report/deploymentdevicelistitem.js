@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button, LinearProgress, TableCell, TableRow } from '@mui/material';
 
 import { formatTime } from '../../../helpers';
+import { rootfsImageVersion as rootfsImageVersionAttribute } from '../../../constants/releaseConstants';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import Time from '../../common/time';
 
@@ -27,7 +28,7 @@ const determinedStateMap = {
 const DeploymentDeviceListItem = ({ device, idAttribute, viewLog }) => {
   const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status } = device;
 
-  const { artifact_name, device_type: deviceTypes = [], ['rootfs-image.version']: rootfsImageVersion } = attributes;
+  const { artifact_name, device_type: deviceTypes = [], [rootfsImageVersionAttribute]: rootfsImageVersion } = attributes;
   const softwareName = rootfsImageVersion || artifact_name;
   const encodedArtifactName = encodeURIComponent(softwareName);
   const currentArtifactLink = softwareName ? (

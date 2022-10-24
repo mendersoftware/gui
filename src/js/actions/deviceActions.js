@@ -11,6 +11,7 @@ import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
 import AppConstants from '../constants/appConstants';
 import DeviceConstants from '../constants/deviceConstants';
+import { rootfsImageVersion } from '../constants/releaseConstants';
 
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
@@ -33,7 +34,7 @@ const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
   { scope: 'inventory', attribute: 'artifact_name' },
   { scope: 'inventory', attribute: 'device_type' },
-  { scope: 'inventory', attribute: 'rootfs-image.version' },
+  { scope: 'inventory', attribute: rootfsImageVersion },
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },

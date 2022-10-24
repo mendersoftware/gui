@@ -2,10 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Launch as LaunchIcon } from '@mui/icons-material';
-import DeviceIdentityDisplay from '../../common/deviceidentity';
-import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { makeStyles } from 'tss-react/mui';
+
+import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
+import { rootfsImageVersion } from '../../../constants/releaseConstants';
 import { TwoColumns } from '../../common/configurationobject';
+import DeviceIdentityDisplay from '../../common/deviceidentity';
 
 const useStyles = makeStyles()(theme => ({
   eventDetails: { gridTemplateColumns: 'minmax(max-content, 150px) max-content', rowGap: theme.spacing(2.5) },
@@ -36,7 +38,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
       </Link>
     ),
     'Device type': deviceTypes,
-    'System software version': device['rootfs-image.version'] || artifact_name || '-',
+    'System software version': device[rootfsImageVersion] || artifact_name || '-',
     ' ': (
       <Link to={`/auditlog?object_type=device&object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`} onClick={onClose}>
         List all log entries for this device

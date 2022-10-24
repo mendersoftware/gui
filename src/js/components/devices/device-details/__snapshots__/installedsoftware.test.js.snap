@@ -115,12 +115,16 @@ exports[`DeviceInventory Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-3 .key>b {
+.emotion-3 {
+  padding-left: 16px;
+}
+
+.emotion-4 .key>b {
   background-color: #f7f7f7;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-4 {
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -138,7 +142,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
   color: #337a87;
 }
 
-.emotion-4 iconButton {
+.emotion-5 iconButton {
   margin-right: 8px;
 }
 
@@ -163,7 +167,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
     <h4
       class="margin-bottom-small"
     >
-      Device inventory
+      Installed software
     </h4>
     <div
       class="flexbox centered"
@@ -192,80 +196,82 @@ exports[`DeviceInventory Component renders correctly 1`] = `
   </div>
   <div>
     <div
-      class="two-columns-multiple "
-      style="margin-bottom: 5px;"
+      class="margin-top-small emotion-3"
     >
       <div
-        class="break-all two-columns emotion-3 compact column-data multiple"
+        class="muted"
       >
-        <div
-          class="align-right key muted"
-        >
-          <b>
-            device_type
-          </b>
-        </div>
-        <div
-          class="flexbox clickable"
-        >
-          <div
-            title="raspberrypi4"
-          >
-            raspberrypi4
-          </div>
-          <svg
-            aria-hidden="true"
-            aria-label="Copy to clipboard"
-            class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-4"
-            data-mui-internal-clone-element="true"
-            data-testid="FileCopyOutlinedIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-            />
-          </svg>
-        </div>
+        System filesystem
       </div>
       <div
-        class="break-all two-columns emotion-3 compact column-data multiple"
+        class=""
       >
         <div
-          class="align-right key muted"
-        >
-          <b>
-            artifact_name
-          </b>
-        </div>
-        <div
-          class="flexbox clickable"
+          class="break-all two-columns emotion-4 compact column-data margin-bottom-small margin-left-small margin-top-small"
         >
           <div
-            title="myapp"
+            class="align-right key muted"
           >
-            myapp
+            <b>
+              version
+            </b>
           </div>
-          <svg
-            aria-hidden="true"
-            aria-label="Copy to clipboard"
-            class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-4"
-            data-mui-internal-clone-element="true"
-            data-testid="FileCopyOutlinedIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
+          <div
+            class="flexbox clickable"
           >
-            <path
-              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-            />
-          </svg>
+            <div
+              title="stablev1-beta-final-v0"
+            >
+              stablev1-beta-final-v0
+            </div>
+            <svg
+              aria-hidden="true"
+              aria-label="Copy to clipboard"
+              class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-5"
+              data-mui-internal-clone-element="true"
+              data-testid="FileCopyOutlinedIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </div>
+          <div
+            class="align-right key muted"
+          >
+            <b>
+              checksum
+            </b>
+          </div>
+          <div
+            class="flexbox clickable"
+          >
+            <div
+              title="12341143"
+            >
+              12341143
+            </div>
+            <svg
+              aria-hidden="true"
+              aria-label="Copy to clipboard"
+              class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-5"
+              data-mui-internal-clone-element="true"
+              data-testid="FileCopyOutlinedIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
     <a>
-      show 
-      1
-       more
+      show more
     </a>
   </div>
   <hr

@@ -9,26 +9,26 @@ export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
   const [open, setOpen] = useState(false);
   const { attributes = {} } = device;
 
-  const { device_type, artifact_name, ...remainingAttributes } = attributes;
+  const { device_type, ...remainingAttributes } = attributes;
 
-  const softwareInfo = extractSoftware(attributes);
+  const { nonSoftware } = extractSoftware(attributes);
   const keyAttributeCount = Object.keys(attributes).length - Object.keys(remainingAttributes).length;
-  const { deviceInventory, keyContent } = Object.entries(remainingAttributes)
+  const { deviceInventory, keyContent } = nonSoftware
     .sort((a, b) => a[0].localeCompare(b[0]))
     .reduce(
       (accu, attribute, index) => {
-        const softwareAttribute = softwareInfo.find(info => attribute[0].startsWith(info));
-        if (!softwareAttribute) {
-          const attributeValue = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
-          if (index < keyAttributeCount) {
-            accu.keyContent[attribute[0]] = attributeValue;
-          } else {
-            accu.deviceInventory[attribute[0]] = attributeValue;
-          }
+        if (attribute[0] === 'device_type') {
+          return accu;
+        }
+        const attributeValue = Array.isArray(attribute[1]) ? attribute[1].join(',') : attribute[1];
+        if (index < keyAttributeCount) {
+          accu.keyContent[attribute[0]] = attributeValue;
+        } else {
+          accu.deviceInventory[attribute[0]] = attributeValue;
         }
         return accu;
       },
-      { deviceInventory: {}, keyContent: { artifact_name, device_type } }
+      { deviceInventory: {}, keyContent: { device_type } }
     );
 
   const waiting = !Object.values(attributes).some(i => i);

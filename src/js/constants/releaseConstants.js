@@ -15,5 +15,6 @@ module.exports = {
   SELECTED_ARTIFACT: 'SELECTED_ARTIFACT',
   SELECTED_RELEASE: 'SELECTED_RELEASE',
   SET_RELEASES_LIST_STATE: 'SET_RELEASES_LIST_STATE',
-  defaultVisibleSection
+  defaultVisibleSection,
+  rootfsImageVersion: 'rootfs-image.version'
 };
