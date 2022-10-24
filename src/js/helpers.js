@@ -436,13 +436,11 @@ const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, isE
   menderSetupArgs = isHosted || isEnterprise ? `${menderSetupArgs} --tenant-token $TENANT_TOKEN` : menderSetupArgs;
   // in production we use polling intervals from the client examples: https://github.com/mendersoftware/mender/blob/master/examples/mender.conf.production
   menderSetupArgs = isDemoMode || isOnboarding ? `${menderSetupArgs} --demo` : `${menderSetupArgs} --retry-poll 300 --update-poll 1800 --inventory-poll 28800`;
-  if (isHosted) {
-    menderSetupArgs = `${menderSetupArgs} --hosted-mender`;
-  } else if (isDemoMode) {
+  if (isDemoMode) {
     // Demo installation, either OS os Enterprise. Install demo cert and add IP to /etc/hosts
     menderSetupArgs = `${menderSetupArgs}${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;
   } else {
-    // Production installation, either OS or Enterprise
+    // Production installation, either OS, HM, or Enterprise
     menderSetupArgs = `${menderSetupArgs} --server-url https://${window.location.hostname} --server-cert=""`;
   }
   return menderSetupArgs;
