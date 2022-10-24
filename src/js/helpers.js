@@ -431,9 +431,9 @@ const getInstallScriptArgs = ({ isHosted, isPreRelease }) => {
   return installScriptArgs;
 };
 
-const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, isEnterprise, isHosted, isOnboarding }) => {
+const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, tenantToken, isOnboarding }) => {
   let menderSetupArgs = `--quiet --device-type "${deviceType}"`;
-  menderSetupArgs = isHosted || isEnterprise ? `${menderSetupArgs} --tenant-token $TENANT_TOKEN` : menderSetupArgs;
+  menderSetupArgs = tenantToken ? `${menderSetupArgs} --tenant-token $TENANT_TOKEN` : menderSetupArgs;
   // in production we use polling intervals from the client examples: https://github.com/mendersoftware/mender/blob/master/examples/mender.conf.production
   menderSetupArgs = isDemoMode || isOnboarding ? `${menderSetupArgs} --demo` : `${menderSetupArgs} --retry-poll 300 --update-poll 1800 --inventory-poll 28800`;
   if (isDemoMode) {
@@ -447,8 +447,8 @@ const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, isE
 };
 
 export const getDebConfigurationCode = props => {
-  const { isHosted, isEnterprise, tenantToken, isPreRelease } = props;
-  const envVars = isHosted || isEnterprise ? `JWT_TOKEN="${getToken()}"\nTENANT_TOKEN="${tenantToken}"\n` : '';
+  const { tenantToken, isPreRelease } = props;
+  const envVars = tenantToken ? `JWT_TOKEN="${getToken()}"\nTENANT_TOKEN="${tenantToken}"\n` : '';
   const installScriptArgs = getInstallScriptArgs(props);
   const scriptUrl = isPreRelease ? 'https://get.mender.io/staging' : 'https://get.mender.io';
   const menderSetupArgs = getSetupArgs(props);
