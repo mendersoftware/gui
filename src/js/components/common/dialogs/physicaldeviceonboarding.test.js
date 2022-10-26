@@ -15,10 +15,22 @@ import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 
 const mockStore = configureStore([thunk]);
 
+const oldHostname = window.location.hostname;
+
 describe('PhysicalDeviceOnboarding Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
+    window.location = {
+      ...window.location,
+      hostname: 'hosted.mender.io'
+    };
+  });
+  afterEach(() => {
+    window.location = {
+      ...window.location,
+      hostname: oldHostname
+    };
   });
 
   describe('tiny onboarding tips', () => {
