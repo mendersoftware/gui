@@ -141,7 +141,7 @@ describe('getDebConfigurationCode function', () => {
       expect(code).toMatch(
         `JWT_TOKEN="omnomnom"
 TENANT_TOKEN="token"
-wget -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token $JWT_TOKEN -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --hosted-mender`
+wget -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token $JWT_TOKEN -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --server-url https://hosted.mender.io --server-cert=""`
       );
     });
   });
@@ -163,7 +163,7 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token
       expect(code).toMatch(
         `JWT_TOKEN="omnomnom"
 TENANT_TOKEN="token"
-wget -O- https://get.mender.io/staging | sudo bash -s -- --demo -c experimental --commercial --jwt-token $JWT_TOKEN -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --hosted-mender`
+wget -O- https://get.mender.io/staging | sudo bash -s -- --demo -c experimental --commercial --jwt-token $JWT_TOKEN -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --server-url https://staging.hosted.mender.io --server-cert=""`
       );
     });
   });
@@ -181,14 +181,14 @@ wget -O- https://get.mender.io/staging | sudo bash -s -- --demo -c experimental 
     afterEach(postTestCleanUp);
 
     it('should contain sane information for enterprise demo on-prem calls', async () => {
-      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isEnterprise: true, isDemoMode: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `TENANT_TOKEN="token"
 wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --server-ip 1.2.3.4`
       );
     });
     it('should contain sane information for enterprise production on-prem calls', async () => {
-      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isEnterprise: true, isDemoMode: false, tenantToken: 'token', deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: false, tenantToken: 'token', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `TENANT_TOKEN="token"
 wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --retry-poll 300 --update-poll 1800 --inventory-poll 28800 --server-url https://fancy.enterprise.on.prem --server-cert=""`
@@ -206,12 +206,14 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type
 
     it('should contain sane information for OS demo on-prem calls', async () => {
       code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
-      expect(code).toMatch(`wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --demo --server-ip 1.2.3.4`);
+      expect(code).toMatch(
+        `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --server-ip 1.2.3.4`
+      );
     });
     it('should contain sane information for OS production on-prem calls', async () => {
       code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: false, tenantToken: 'token', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
-        `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --retry-poll 300 --update-poll 1800 --inventory-poll 28800 --server-url https://fancy.opensource.on.prem --server-cert=""`
+        `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --retry-poll 300 --update-poll 1800 --inventory-poll 28800 --server-url https://fancy.opensource.on.prem --server-cert=""`
       );
     });
   });
