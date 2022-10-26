@@ -497,10 +497,6 @@ ul.link-list {
     margin-top: 0;
     font-size: 1.25em;
   }
-
-  &.widget p {
-    font-size: inherit;
-  }
 }
 
 // tooltips
@@ -658,36 +654,24 @@ ul.link-list {
 }
 
 .dashboard {
-  .hint {
-    font-size: small;
-  }
-  .tiny {
-    font-size: 10px;
-  }
   .widget {
-    display: flex;
+    border-radius: @dotSize * 0.5;
+    border: 1px solid @placeholder;
     cursor: pointer;
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    margin: 0 3vw 3vw 0;
     height: 180px;
+    justify-content: center;
+    margin: 0 @defaultGutterWidth 2 * @defaultGutterWidth;
     max-width: 15vw;
-    min-width: 200px;
+    min-height: 175px;
+    min-width: 250px;
+    padding: @defaultGutterWidth;
     position: relative;
-    padding: 1vw;
-    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-    &.notActive:hover {
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px, rgba(0, 0, 0, 0.1) 0px 1px 3px;
-    }
-    &.onboard:hover {
-      border-color: darken(@placeholder, 10%);
-    }
     &:hover .widgetRemover {
       opacity: 1;
     }
     &.chart-widget {
-      border-radius: @dotSize * 0.5;
-      border: 1px solid @placeholder;
       width: 19vw;
       max-width: initial;
       min-width: 315px;
@@ -700,10 +684,7 @@ ul.link-list {
   }
   .widgetHeader,
   .widgetFooter {
-    color: @darkgrey;
-    border-color: @placeholder;
     border-width: 1px;
-    justify-content: center;
   }
   .widgetHeader {
     padding-bottom: 10px;
@@ -771,18 +752,6 @@ ul.link-list {
   .rotate(-45deg);
   &.ninety {
     .rotate(90deg);
-  }
-}
-
-.widget {
-  width: 50%;
-  min-height: 175px;
-  float: left;
-  padding: 22px 4% 22px;
-  margin: 0 @defaultGutterWidth 2 * @defaultGutterWidth;
-
-  &.small {
-    width: 20%;
   }
 }
 

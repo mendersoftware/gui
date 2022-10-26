@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { getActiveDevices, getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
@@ -12,7 +13,6 @@ import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
-import LinedHeader from '../common/lined-header';
 
 export const Devices = props => {
   const [deltaActivity, setDeltaActivity] = useState(0);
@@ -21,6 +21,7 @@ export const Devices = props => {
   const size = useWindowSize();
   const anchor = useRef();
   const pendingsRef = useRef();
+  const navigate = useNavigate();
 
   const {
     acceptedDevicesCount,
@@ -34,7 +35,6 @@ export const Devices = props => {
     getDeviceCount,
     hasFullFiltering,
     inactiveDevicesCount,
-    itemsClassName,
     offlineThreshold,
     offlineThresholdSetting,
     onboardingState,
@@ -66,6 +66,11 @@ export const Devices = props => {
         setDeltaActivity(deltaActivity);
       })
       .finally(() => setLoading(false));
+  };
+
+  const onConnectClick = () => {
+    setShowConnectingDialog(true);
+    navigate('/devices/accepted');
   };
 
   const updateDeviceActivityHistory = deviceCount => {
@@ -102,7 +107,6 @@ export const Devices = props => {
     return deviceCount - previousCount;
   };
 
-  const noDevicesAvailable = acceptedDevicesCount + pendingDevicesCount <= 0;
   let onboardingComponent = null;
   if (anchor.current) {
     const element = anchor.current.children[anchor.current.children.length - 1];
@@ -118,39 +122,30 @@ export const Devices = props => {
     }
   }
   return (
-    <div>
-      <LinedHeader heading="Devices" />
-      <div className={`margin-bottom ${itemsClassName}`} ref={anchor}>
-        {!!pendingDevicesCount && (
-          <PendingDevices
-            advanceOnboarding={advanceOnboarding}
-            innerRef={pendingsRef}
-            isActive={pendingDevicesCount > 0}
-            onboardingState={onboardingState}
-            onClick={clickHandle}
-            pendingDevicesCount={pendingDevicesCount}
-            showHelptips={showHelptips}
-          />
-        )}
-        <AcceptedDevices
-          deviceLimit={deploymentDeviceLimit}
-          devicesCount={acceptedDevicesCount}
-          inactiveCount={inactiveDevicesCount}
-          delta={deltaActivity}
-          offlineThreshold={offlineThresholdSetting}
+    <div className="margin-bottom flexbox row" ref={anchor} style={{ flexWrap: 'wrap' }}>
+      {!!pendingDevicesCount && (
+        <PendingDevices
+          advanceOnboarding={advanceOnboarding}
+          innerRef={pendingsRef}
+          isActive={pendingDevicesCount > 0}
+          onboardingState={onboardingState}
           onClick={clickHandle}
+          pendingDevicesCount={pendingDevicesCount}
+          showHelptips={showHelptips}
         />
-        {canManageDevices && (
-          <RedirectionWidget
-            target="/devices/accepted"
-            content="Learn how to connect a device"
-            buttonContent="Connect a device"
-            onClick={() => setShowConnectingDialog(true)}
-            isActive={noDevicesAvailable}
-          />
-        )}
-      </div>
-      {onboardingComponent ? onboardingComponent : null}
+      )}
+      <AcceptedDevices
+        deviceLimit={deploymentDeviceLimit}
+        devicesCount={acceptedDevicesCount}
+        inactiveCount={inactiveDevicesCount}
+        delta={deltaActivity}
+        offlineThreshold={offlineThresholdSetting}
+        onClick={clickHandle}
+      />
+      {canManageDevices && (
+        <RedirectionWidget content={acceptedDevicesCount || pendingDevicesCount ? '+ connect more devices' : 'Connect a device'} onClick={onConnectClick} />
+      )}
+      {onboardingComponent}
     </div>
   );
 };

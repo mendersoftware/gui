@@ -140,22 +140,6 @@ exports[`PendingDevices Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-3 {
-  background: #f7f7f7;
-}
-
-.emotion-4 {
-  height: 100%;
-  width: 100%;
-}
-
-.emotion-5 {
-  -webkit-align-items: flex-end;
-  -webkit-box-align: flex-end;
-  -ms-flex-align: flex-end;
-  align-items: flex-end;
-}
-
 <body>
   <div>
     <div
@@ -183,29 +167,25 @@ exports[`PendingDevices Component renders correctly 1`] = `
         />
       </a>
       <div
-        class="widget emotion-3 "
+        class="widget flexbox column "
       >
         <div
-          class="flexbox column emotion-4"
+          class="flexbox column widgetMainContent"
         >
           <div
-            class="flexbox column widgetMainContent align-right emotion-5"
+            class="header"
           >
-            <div
-              class="header"
-            >
-              Pending devices
-            </div>
-            <div
-              class="counter"
-            />
+            Pending devices
           </div>
-          <span
-            class="link"
-          >
-            View details
-          </span>
+          <div
+            class="counter"
+          />
         </div>
+        <span
+          class="link"
+        >
+          View details
+        </span>
       </div>
     </div>
   </div>

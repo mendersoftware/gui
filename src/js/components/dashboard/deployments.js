@@ -18,7 +18,6 @@ import { BaseWidget } from './widgets/baseWidget';
 import RedirectionWidget from './widgets/redirectionwidget';
 import CompletedDeployments from './widgets/completeddeployments';
 import useWindowSize from '../../utils/resizehook';
-import LinedHeader from '../common/lined-header';
 
 const refreshDeploymentsLength = 30000;
 
@@ -28,7 +27,17 @@ const iconStyles = {
   marginRight: '30px'
 };
 
-export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressCount, itemsClassName, onboardingState, pendingCount, setSnackbar }) => {
+export const Deployments = ({
+  canDeploy,
+  className,
+  clickHandle,
+  finishedCount,
+  inprogressCount,
+  itemsClassName,
+  onboardingState,
+  pendingCount,
+  setSnackbar
+}) => {
   const [lastDeploymentCheck, setLastDeploymentCheck] = useState();
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
@@ -103,37 +112,31 @@ export const Deployments = ({ canDeploy, clickHandle, finishedCount, inprogressC
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor });
   }
   return (
-    <div>
-      <LinedHeader heading="Deployments" />
-      <div className="deployments margin-bottom-large">
-        {loading ? (
-          <Loader show={loading} fade={true} />
-        ) : (
-          <div className={itemsClassName}>
-            <BaseWidget
-              className={inprogressCount ? 'current-widget active' : 'current-widget'}
-              main={activeWidgetMain}
-              onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
+    <div className={`${className} deployments margin-bottom-large`}>
+      {loading ? (
+        <Loader show={loading} fade={true} />
+      ) : (
+        <div className={itemsClassName}>
+          <BaseWidget
+            className={inprogressCount ? 'current-widget active' : 'current-widget'}
+            main={activeWidgetMain}
+            onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
+          />
+          <BaseWidget
+            className={pendingCount ? 'current-widget pending' : 'current-widget'}
+            main={pendingWidgetMain}
+            onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
+          />
+          <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
+          {canDeploy && (
+            <RedirectionWidget
+              content="Create a new deployment to update a group of devices"
+              onClick={() => clickHandle({ route: `${DEPLOYMENT_ROUTES.active.route}?open=true` })}
             />
-            <BaseWidget
-              className={pendingCount ? 'current-widget pending' : 'current-widget'}
-              main={pendingWidgetMain}
-              onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
-            />
-            <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
-            {canDeploy && (
-              <RedirectionWidget
-                target={`${DEPLOYMENT_ROUTES.active.route}?open=true`}
-                content="Create a new deployment to update a group of devices"
-                buttonContent="Create a deployment"
-                onClick={() => clickHandle({ route: `${DEPLOYMENT_ROUTES.active.route}?open=true` })}
-                isActive={false}
-              />
-            )}
-          </div>
-        )}
-        {onboardingComponent}
-      </div>
+          )}
+        </div>
+      )}
+      {onboardingComponent}
     </div>
   );
 };

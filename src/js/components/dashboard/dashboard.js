@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,28 +15,39 @@ import SoftwareDistribution from './software-distribution';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 
-const useStyles = makeStyles()(() => ({
+const useStyles = makeStyles()(theme => ({
+  board: {
+    columnGap: theme.spacing(6),
+    display: 'flex',
+    flexWrap: 'wrap',
+    minHeight: '80vh'
+  },
+  left: { flexGrow: 1, flexBasis: 0, minWidth: '60vw', display: 'flex', rowGap: theme.spacing(6), flexDirection: 'column' },
+  right: { flexGrow: 1, minWidth: 400 },
   row: { flexWrap: 'wrap', maxWidth: '85vw' }
 }));
-
-var timeoutID = null;
 
 export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit, onboardingState, setSnackbar }) => {
   const navigate = useNavigate();
   const { classes } = useStyles();
+  const timer = useRef();
 
   useEffect(() => {
     if (!currentUser || !onboardingState.showTips) {
       return;
     }
-    if (timeoutID !== null) {
-      clearTimeout(timeoutID);
-    }
-    timeoutID = setTimeout(() => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
       const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState, { setSnackbar });
       !!notification && setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
     }, 400);
   }, [currentUser, JSON.stringify(onboardingState)]);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
 
   const handleClick = params => {
     let redirect;
@@ -50,18 +61,23 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
     navigate(redirect);
   };
 
-  return currentUser ? (
-    <div className="dashboard flexbox column">
-      <Devices className={`flexbox ${classes.row}`} clickHandle={handleClick} />
-      <div className="two-columns" style={{ gridTemplateColumns: '4fr 5fr' }}>
-        <Deployments itemsClassName={`flexbox ${classes.row}`} clickHandle={handleClick} />
-        {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
-      </div>
-    </div>
-  ) : (
-    <div className="flexbox centered" style={{ height: '75%' }}>
-      <Loader show={true} />
-    </div>
+  return (
+    <>
+      <h4 className="margin-left-small">Dashboard</h4>
+      {currentUser ? (
+        <div className={`dashboard ${classes.board}`}>
+          <div className={classes.left}>
+            <Devices className="flexbox column" clickHandle={handleClick} />
+            {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
+          </div>
+          <Deployments className={classes.right} itemsClassName="flexbox column" clickHandle={handleClick} />
+        </div>
+      ) : (
+        <div className="flexbox centered" style={{ height: '75%' }}>
+          <Loader show={true} />
+        </div>
+      )}
+    </>
   );
 };
 
