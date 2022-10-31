@@ -29,6 +29,16 @@ describe('Dashboard Component', () => {
   });
 
   it('allows navigating to pending devices', async () => {
+    store = mockStore({
+      ...defaultState,
+      devices: {
+        ...defaultState.devices,
+        byStatus: {
+          ...defaultState.devices.byStatus,
+          accepted: { deviceIds: [], total: 0 }
+        }
+      }
+    });
     render(
       <Provider store={store}>
         <Dashboard />

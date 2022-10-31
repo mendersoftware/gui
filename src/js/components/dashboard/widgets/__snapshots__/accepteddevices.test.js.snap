@@ -1,29 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AcceptedDevices Component renders correctly 1`] = `
-.emotion-0 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  fill: currentColor;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.3929rem;
-}
-
-.emotion-0 iconButton {
-  margin-right: 8px;
-}
-
 <div
-  class="widget flexbox column "
+  class="widget "
 >
   <div
     class="flexbox widgetHeader"
@@ -32,31 +11,14 @@ exports[`AcceptedDevices Component renders correctly 1`] = `
       class="flexbox center-aligned"
     >
       Accepted devices 
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium margin-left-small green emotion-0"
-        data-testid="CheckCircleIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-        />
-      </svg>
     </div>
   </div>
   <div
     class="flexbox column widgetMainContent"
   >
     <div
-      class="header"
-    />
-    <div
       class="counter"
     />
   </div>
-  <span
-    class="link"
-  />
 </div>
 `;

@@ -2,6 +2,11 @@
 
 exports[`ChartAdditionWidget Component renders correctly 1`] = `
 .emotion-0 {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -18,39 +23,35 @@ exports[`ChartAdditionWidget Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-0 iconButton {
+.emotion-1 iconButton {
   margin-right: 8px;
 }
 
 <body>
   <div>
     <div
-      class="margin-right margin-bottom widget chart-widget"
+      class="widget chart-widget"
     >
+      <div />
       <div
-        class="flexbox centered"
-        style="cursor: pointer; height: 100%;"
+        class="flexbox centered muted emotion-0"
       >
-        <div
-          class="flexbox centered muted"
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+          data-testid="AddIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
         >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
-            data-testid="AddIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-            />
-          </svg>
-          <span
-            style="font-size: 1rem; cursor: pointer;"
-          >
-            Add a chart
-          </span>
-        </div>
+          <path
+            d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+          />
+        </svg>
+        <span
+          class="emotion-0"
+        >
+          Add a chart
+        </span>
       </div>
     </div>
   </div>

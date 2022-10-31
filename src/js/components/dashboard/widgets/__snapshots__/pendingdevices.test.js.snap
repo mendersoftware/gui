@@ -53,6 +53,9 @@ exports[`PendingDevices Component renders correctly 1`] = `
   background-color: #e6f2f1;
   color: #fff;
   background-color: #337a87;
+  top: -28px;
+  right: 16px;
+  z-index: 1;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -143,12 +146,11 @@ exports[`PendingDevices Component renders correctly 1`] = `
 <body>
   <div>
     <div
-      style="position: relative;"
+      class="relative"
     >
       <a
-        class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary emotion-0"
+        class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary absolute emotion-0"
         href="/devices/pending"
-        style="position: absolute; top: -28px; left: 15px; z-index: 1;"
         tabindex="0"
       >
         <svg
@@ -167,25 +169,25 @@ exports[`PendingDevices Component renders correctly 1`] = `
         />
       </a>
       <div
-        class="widget flexbox column "
+        class="widget "
       >
+        <div
+          class="flexbox widgetHeader"
+        >
+          Pending devices
+        </div>
         <div
           class="flexbox column widgetMainContent"
         >
           <div
-            class="header"
-          >
-            Pending devices
-          </div>
-          <div
             class="counter"
           />
+          <span
+            class="link"
+          >
+            View details
+          </span>
         </div>
-        <span
-          class="link"
-        >
-          View details
-        </span>
       </div>
     </div>
   </div>

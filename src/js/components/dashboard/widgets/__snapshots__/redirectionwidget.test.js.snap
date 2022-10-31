@@ -4,10 +4,10 @@ exports[`RedirectionWidget Component renders correctly 1`] = `
 <body>
   <div>
     <div
-      class="widget"
+      class="widget flexbox centered"
     >
       <p
-        class="muted flexbox centered"
+        class="muted"
         style="max-width: 200px;"
       >
         testlocation
