@@ -27,17 +27,7 @@ const iconStyles = {
   marginRight: '30px'
 };
 
-export const Deployments = ({
-  canDeploy,
-  className,
-  clickHandle,
-  finishedCount,
-  inprogressCount,
-  itemsClassName,
-  onboardingState,
-  pendingCount,
-  setSnackbar
-}) => {
+export const Deployments = ({ canDeploy, className, clickHandle, finishedCount, inprogressCount, onboardingState, pendingCount, setSnackbar }) => {
   const [lastDeploymentCheck, setLastDeploymentCheck] = useState();
   const [loading, setLoading] = useState(true);
   // eslint-disable-next-line no-unused-vars
@@ -92,7 +82,7 @@ export const Deployments = ({
     ),
     main: {
       counter: pendingCount,
-    targetLabel: 'View details'
+      targetLabel: 'View details'
     }
   };
   const activeWidget = {
@@ -104,7 +94,7 @@ export const Deployments = ({
     ),
     main: {
       counter: inprogressCount,
-    targetLabel: 'View progress'
+      targetLabel: 'View progress'
     }
   };
   let onboardingComponent;
@@ -120,7 +110,7 @@ export const Deployments = ({
       {loading ? (
         <Loader show={loading} fade={true} />
       ) : (
-        <div className={itemsClassName}>
+        <div className="dashboard flexbox column">
           <BaseWidget
             className={inprogressCount ? 'current-widget active' : 'current-widget'}
             header={activeWidget.header}

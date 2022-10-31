@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const RedirectionWidget = ({ content, onClick }) => (
-  <div className="widget" onClick={onClick}>
-    <p className="muted flexbox centered" style={{ maxWidth: 200 }}>
+  <div className="widget flexbox centered" onClick={onClick}>
+    <p className="muted" style={{ maxWidth: 200 }}>
       {content}
     </p>
   </div>

@@ -72,7 +72,7 @@ export const SoftwareDistribution = ({
     );
   }
   return hasDevices ? (
-    <div className="flexbox" style={{ flexWrap: 'wrap' }}>
+    <div className="dashboard flexbox" style={{ flexWrap: 'wrap' }}>
       {reports.map((report, index) => {
         const Component = reportTypes[report.type];
         return (
@@ -91,7 +91,7 @@ export const SoftwareDistribution = ({
       <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} style={defaultChartStyle} />
     </div>
   ) : (
-    <div className="dashboard-placeholder">
+    <div className="dashboard-placeholder margin-top-large">
       <BarChartIcon style={{ transform: 'scale(5)' }} />
       <p className="margin-top-large">Software distribution charts will appear here once you connected a device. </p>
     </div>

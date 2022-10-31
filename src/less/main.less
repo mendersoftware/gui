@@ -654,19 +654,21 @@ ul.link-list {
 }
 
 .dashboard {
+  display: grid;
+  column-gap: 2 * @defaultGutterWidth;
+  row-gap: 2 * @defaultGutterWidth;
+  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
   .widget {
     border-radius: @dotSize * 0.5;
     border: 1px solid @placeholder;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: max-content 1fr;
     height: 180px;
-    justify-content: center;
-    margin: 0 @defaultGutterWidth 2 * @defaultGutterWidth;
+    min-width: 250px;
     max-width: 15vw;
     min-height: 175px;
-    min-width: 250px;
-    padding: @defaultGutterWidth;
+    padding: @defaultGutterWidth 1.5 * @defaultGutterWidth;
     position: relative;
     &:hover .widgetRemover {
       opacity: 1;
@@ -675,6 +677,9 @@ ul.link-list {
       width: 19vw;
       max-width: initial;
       min-width: 315px;
+    }
+    &.flexbox {
+      display: flex;
     }
   }
   .widgetHeader,
