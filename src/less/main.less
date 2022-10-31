@@ -678,24 +678,13 @@ ul.link-list {
     }
   }
   .widgetHeader,
-  .widgetMainContent,
-  .widgetFooter {
+  .widgetMainContent {
     width: 100%;
   }
-  .widgetHeader,
-  .widgetFooter {
-    border-width: 1px;
-  }
-  .widgetHeader {
-    padding-bottom: 10px;
-  }
-  .widgetFooter {
-    padding-top: 10px;
-    font-weight: normal;
-  }
   .widgetMainContent {
-    padding: 10px @defaultGutterWidth;
-    flex-grow: 1;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
     .header {
       margin-bottom: 1pt;
     }

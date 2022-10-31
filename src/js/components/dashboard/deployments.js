@@ -83,25 +83,29 @@ export const Deployments = ({
     return lastCheck;
   };
 
-  const pendingWidgetMain = {
-    counter: pendingCount,
+  const pendingWidget = {
     header: (
       <div className="flexbox center-aligned">
         <UpdateIcon className="flip-horizontal" style={iconStyles} />
         <div>Pending {pluralize('deployment', pendingCount)}</div>
       </div>
     ),
+    main: {
+      counter: pendingCount,
     targetLabel: 'View details'
+    }
   };
-  const activeWidgetMain = {
-    counter: inprogressCount,
+  const activeWidget = {
     header: (
       <div className="flexbox center-aligned">
         <RefreshIcon className="flip-horizontal" style={iconStyles} />
         <div>{pluralize('Deployment', inprogressCount)} in progress</div>
       </div>
     ),
+    main: {
+      counter: inprogressCount,
     targetLabel: 'View progress'
+    }
   };
   let onboardingComponent;
   if (deploymentsRef.current) {
@@ -119,12 +123,14 @@ export const Deployments = ({
         <div className={itemsClassName}>
           <BaseWidget
             className={inprogressCount ? 'current-widget active' : 'current-widget'}
-            main={activeWidgetMain}
+            header={activeWidget.header}
+            main={activeWidget.main}
             onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
           />
           <BaseWidget
             className={pendingCount ? 'current-widget pending' : 'current-widget'}
-            main={pendingWidgetMain}
+            header={pendingWidget.header}
+            main={pendingWidget.main}
             onClick={() => clickHandle({ route: DEPLOYMENT_ROUTES.active.route })}
           />
           <CompletedDeployments onClick={clickHandle} finishedCount={finishedCount} cutoffDate={lastDeploymentCheck} innerRef={deploymentsRef} />
