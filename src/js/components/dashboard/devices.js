@@ -7,10 +7,12 @@ import { setShowConnectingDialog } from '../../actions/userActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOfflineThresholdSettings, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getAvailableIssueOptionsByType, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { getIssueCountsByType } from '../../actions/monitorActions';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
+import ActionableDevices from './widgets/actionabledevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 
@@ -25,9 +27,11 @@ export const Devices = props => {
   const {
     acceptedDevicesCount,
     advanceOnboarding,
+    availableIssueOptions,
     canManageDevices,
     clickHandle,
     getDeviceCount,
+    getIssueCountsByType,
     onboardingState,
     pendingDevicesCount,
     setShowConnectingDialog,
@@ -40,12 +44,17 @@ export const Devices = props => {
     refreshDevices();
   }, []);
 
+  useEffect(() => {
+    refreshDevices();
+  }, [JSON.stringify(availableIssueOptions)]);
+
   const refreshDevices = () => {
     if (loading) {
       return;
     }
+    const issueRequests = Object.keys(availableIssueOptions).map(key => getIssueCountsByType(key, { filters: [], selectedIssues: [key] }));
     setLoading(true);
-    return Promise.all([getDeviceCount(DEVICE_STATES.accepted), getDeviceCount(DEVICE_STATES.pending)]).finally(() => setLoading(false));
+    return Promise.all([getDeviceCount(DEVICE_STATES.accepted), getDeviceCount(DEVICE_STATES.pending), ...issueRequests]).finally(() => setLoading(false));
   };
 
   const onConnectClick = () => {
@@ -68,34 +77,38 @@ export const Devices = props => {
     }
   }
   return (
-    <div className="dashboard margin-bottom-large" ref={anchor}>
-      <AcceptedDevices devicesCount={acceptedDevicesCount} onClick={clickHandle} />
-      {!!pendingDevicesCount && !acceptedDevicesCount && (
-        <PendingDevices
-          advanceOnboarding={advanceOnboarding}
-          innerRef={pendingsRef}
-          isActive={pendingDevicesCount > 0}
-          onboardingState={onboardingState}
-          onClick={clickHandle}
-          pendingDevicesCount={pendingDevicesCount}
-          showHelptips={showHelptips}
-        />
-      )}
-      {canManageDevices && (
-        <RedirectionWidget content={acceptedDevicesCount || pendingDevicesCount ? '+ connect more devices' : 'Connect a device'} onClick={onConnectClick} />
-      )}
+    <>
+      <div className="dashboard" ref={anchor}>
+        <AcceptedDevices devicesCount={acceptedDevicesCount} onClick={clickHandle} />
+        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} />}
+        {!!pendingDevicesCount && !acceptedDevicesCount && (
+          <PendingDevices
+            advanceOnboarding={advanceOnboarding}
+            innerRef={pendingsRef}
+            isActive={pendingDevicesCount > 0}
+            onboardingState={onboardingState}
+            onClick={clickHandle}
+            pendingDevicesCount={pendingDevicesCount}
+            showHelptips={showHelptips}
+          />
+        )}
+        {canManageDevices && (
+          <RedirectionWidget content={acceptedDevicesCount || pendingDevicesCount ? '+ connect more devices' : 'Connect a device'} onClick={onConnectClick} />
+        )}
+      </div>
       {onboardingComponent}
-    </div>
+    </>
   );
 };
 
-const actionCreators = { advanceOnboarding, getDeviceCount, setShowConnectingDialog };
+const actionCreators = { advanceOnboarding, getDeviceCount, getIssueCountsByType, setShowConnectingDialog };
 
 const mapStateToProps = state => {
   const { canManageDevices } = getUserCapabilities(state);
   return {
     canManageDevices,
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
+    availableIssueOptions: getAvailableIssueOptionsByType(state),
     onboardingState: getOnboardingState(state),
     pendingDevicesCount: state.devices.byStatus.pending.total,
     showHelptips: state.users.showHelptips

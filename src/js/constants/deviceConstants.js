@@ -183,6 +183,14 @@ module.exports = {
       },
       title: 'Offline devices'
     },
+    failedLastUpdate: {
+      key: 'failedLastUpdate',
+      needsFullFiltering: false,
+      needsMonitor: false,
+      needsReporting: true,
+      filterRule: { scope: 'monitor', key: 'failed_last_update', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: true },
+      title: 'Devices that failed to install their last update'
+    },
     monitoring: {
       key: 'monitoring',
       needsFullFiltering: false,
