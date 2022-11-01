@@ -72,7 +72,7 @@ export const SoftwareDistribution = ({
     );
   }
   return hasDevices ? (
-    <div className="dashboard flexbox" style={{ flexWrap: 'wrap' }}>
+    <div className="dashboard">
       {reports.map((report, index) => {
         const Component = reportTypes[report.type];
         return (

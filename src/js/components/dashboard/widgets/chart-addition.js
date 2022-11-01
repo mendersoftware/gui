@@ -4,18 +4,19 @@ import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material
 import { Add as AddIcon } from '@mui/icons-material';
 
 import { defaultReports } from '../software-distribution';
+import { makeStyles } from 'tss-react/mui';
 
-const styles = {
-  additionButtonWrapper: { cursor: 'pointer', height: '100%' },
+const useStyles = makeStyles()(theme => ({
   additionButton: { fontSize: '1rem', cursor: 'pointer' },
-  button: { marginRight: 15, marginBottom: 15 },
-  buttonWrapper: { alignSelf: 'flex-end' },
+  button: { marginRight: theme.spacing(2), marginBottom: theme.spacing(2) },
+  buttonWrapper: { display: 'flex', alignSelf: 'flex-end' },
   formWrapper: { flexGrow: 1 }
-};
+}));
 
 export const ChartAdditionWidget = ({ groups, onAdditionClick, style }) => {
   const [adding, setAdding] = useState(false);
   const [selection, setSelection] = useState('');
+  const { classes } = useStyles();
 
   const addCurrentSelection = () => {
     onAdditionClick({ ...defaultReports[0], group: typeof selection === 'string' ? selection : null });
@@ -24,10 +25,10 @@ export const ChartAdditionWidget = ({ groups, onAdditionClick, style }) => {
   };
 
   return (
-    <div className="margin-right margin-bottom widget chart-widget" style={style}>
+    <div className="widget chart-widget" style={style}>
       {adding ? (
         <>
-          <div className="flexbox centered" style={styles.formWrapper}>
+          <div className={`flexbox centered ${classes.formWrapper}`}>
             <FormControl>
               <InputLabel id="group-select-label">Device group</InputLabel>
               <Select labelId="group-select-label" value={selection} onChange={e => setSelection(e.target.value)}>
@@ -42,22 +43,23 @@ export const ChartAdditionWidget = ({ groups, onAdditionClick, style }) => {
               </Select>
             </FormControl>
           </div>
-          <div className="flexbox" style={styles.buttonWrapper}>
-            <Button onClick={() => setAdding(false)} style={styles.button}>
+          <div className={classes.buttonWrapper}>
+            <Button className={classes.button} onClick={() => setAdding(false)}>
               Cancel
             </Button>
-            <Button variant="contained" disabled={!selection} onClick={addCurrentSelection} style={styles.button}>
+            <Button className={classes.button} variant="contained" disabled={!selection} onClick={addCurrentSelection}>
               Save
             </Button>
           </div>
         </>
       ) : (
-        <div className="flexbox centered" style={styles.additionButtonWrapper} onClick={() => setAdding(true)}>
-          <div className="flexbox centered muted">
+        <>
+          <div></div>
+          <div className={`flexbox centered muted ${classes.additionButton}`} onClick={() => setAdding(true)}>
             <AddIcon />
-            <span style={styles.additionButton}>Add a chart</span>
+            <span className={classes.additionButton}>Add a chart</span>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
