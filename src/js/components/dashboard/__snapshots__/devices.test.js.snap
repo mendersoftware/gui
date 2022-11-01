@@ -303,7 +303,7 @@ exports[`Devices Component renders correctly 1`] = `
       style="position: relative;"
     >
       <a
-        class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary emotion-1"
+        class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary emotion-1"
         href="/devices/pending"
         style="position: absolute; top: -28px; left: 15px; z-index: 1;"
         tabindex="0"

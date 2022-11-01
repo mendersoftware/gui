@@ -671,9 +671,9 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
 }
 
 .emotion-11 .MuiChip-icon {
-  color: #616161;
   margin-left: 5px;
   margin-right: -6px;
+  color: #616161;
 }
 
 .emotion-11 .MuiChip-deleteIcon {
@@ -881,9 +881,9 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
 }
 
 .emotion-91 .MuiChip-icon {
-  color: #616161;
   margin-left: 5px;
   margin-right: -6px;
+  color: #616161;
 }
 
 .emotion-91 .MuiChip-deleteIcon {
