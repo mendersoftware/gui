@@ -40,7 +40,7 @@
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.3.0",
     "react-virtualized-auto-sizer": "^1.0.7",
-    "react-window": "^1.8.7",
+    "react-window": "^1.8.8",
     "react-window-infinite-loader": "^1.0.8",
     "stream-browserify": "^3.0.0",
     "tss-react": "^4.4.2",
