@@ -42,6 +42,10 @@ exports[`PhaseProgress Component renders correctly 1`] = `
   margin-top: -4px;
 }
 
+.emotion-0.minimal {
+  padding: initial;
+}
+
 .emotion-0.no-background {
   background: none;
 }
@@ -112,7 +116,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
     class="flexbox column "
   >
     <div
-      class="relative emotion-0 flexbox column stepped-progress no-background "
+      class="relative emotion-0  flexbox column stepped-progress no-background "
     >
       Phase 1: 
       100
@@ -325,6 +329,10 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
   margin-top: -4px;
 }
 
+.emotion-0.minimal {
+  padding: initial;
+}
+
 .emotion-0.no-background {
   background: none;
 }
@@ -421,7 +429,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
 
 <div>
   <div
-    class="relative emotion-0 flexbox column stepped-progress  "
+    class="relative emotion-0  flexbox column stepped-progress  "
   >
     <div
       class="flexbox space-between emotion-1"

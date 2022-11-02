@@ -35,15 +35,15 @@ export const DeploymentDeviceGroup = ({ deployment: { name, type = DEPLOYMENT_TY
 };
 export const DeploymentEndTime = ({ deployment }) => <RelativeTime key="DeploymentEndTime" updateTime={deployment.finished} shouldCount="none" />;
 export const DeploymentPhases = ({ deployment }) => <div key="DeploymentPhases">{deployment.phases ? deployment.phases.length : '-'}</div>;
-export const DeploymentProgress = ({ deployment }) => {
+export const DeploymentProgress = ({ deployment, minimal = false }) => {
   const { phases = [], update_control_map } = deployment;
   const status = getDeploymentState(deployment);
   if (status === 'queued') {
     return <DeploymentStatusNotification status={status} />;
   } else if (phases.length > 1 || !update_control_map) {
-    return <ProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} />;
+    return <ProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} minimal={minimal} />;
   }
-  return <PhaseProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} />;
+  return <PhaseProgressDisplay key="DeploymentProgress" deployment={deployment} status={status} minimal={minimal} />;
 };
 export const DeploymentRelease = ({ deployment: { artifact_name, type = DEPLOYMENT_TYPES.software }, wrappingClass }) => {
   const deploymentRelease = type === DEPLOYMENT_TYPES.configuration ? type : artifact_name;

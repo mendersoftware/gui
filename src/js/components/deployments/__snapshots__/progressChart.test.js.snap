@@ -42,6 +42,10 @@ exports[`ProgressChart Component renders correctly 1`] = `
   margin-top: -4px;
 }
 
+.emotion-0.minimal {
+  padding: initial;
+}
+
 .emotion-0.no-background {
   background: none;
 }
@@ -78,7 +82,7 @@ exports[`ProgressChart Component renders correctly 1`] = `
 
 <div>
   <div
-    class="relative emotion-0 "
+    class="relative emotion-0  "
   >
     <div
       class="emotion-1"

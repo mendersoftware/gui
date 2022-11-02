@@ -78,6 +78,10 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   margin-top: -4px;
 }
 
+.emotion-4.minimal {
+  padding: initial;
+}
+
 .emotion-4.no-background {
   background: none;
 }
@@ -286,7 +290,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="relative emotion-4 margin-top no-background"
+    class="relative emotion-4  margin-top no-background"
   >
     <div
       class="chart-container"

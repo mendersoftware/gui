@@ -43,6 +43,7 @@ const useStyles = makeStyles()(theme => ({
     },
     '.progress-step-total .progress-bar': { backgroundColor: theme.palette.grey[50] },
     '.progress-step-number': { alignSelf: 'flex-start', marginTop: theme.spacing(-0.5) },
+    '&.minimal': { padding: 'initial' },
     '&.no-background': { background: 'none' },
     '&.stepped-progress .progress-step-total': { marginLeft: '-0.25%', width: '100.5%' },
     '&.stepped-progress .progress-step-total .progress-bar': {
@@ -83,6 +84,7 @@ export const ProgressChartComponent = ({
   footerProps,
   Header,
   headerProps,
+  minimal,
   PhaseDelimiter,
   PhaseLabel,
   phases,
@@ -93,16 +95,16 @@ export const ProgressChartComponent = ({
 }) => {
   const { classes } = useStyles();
   return (
-    <div className={`relative ${classes.container} ${className}`}>
-      {Header && <Header {...headerProps} />}
-      <div className={Side ? classes.dualPanel : 'chart-container'}>
+    <div className={`relative ${classes.container} ${minimal ? 'minimal' : ''} ${className}`}>
+      {!minimal && Header && <Header {...headerProps} />}
+      <div className={!minimal && Side ? classes.dualPanel : 'chart-container'}>
         <div className={`progress-chart relative ${compact ? 'compact' : 'detailed'}`}>
           {phases.map((phase, index) => {
             const commonProps = { ...remainder, compact, index, phase, classes };
             return (
               <React.Fragment key={phase.id ?? `deployment-phase-${index}`}>
                 <div className="progress-step" style={{ left: `${phase.offset}%`, width: `${phase.width}%` }}>
-                  {PhaseLabel && <PhaseLabel {...commonProps} />}
+                  {!minimal && PhaseLabel && <PhaseLabel {...commonProps} />}
                   {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
                   <div style={{ display: 'contents' }}>
                     <div className="progress-bar green" style={{ width: `${phase.successWidth}%` }} />
@@ -125,9 +127,9 @@ export const ProgressChartComponent = ({
             <div className="progress-bar"></div>
           </div>
         </div>
-        {Side && <Side compact={compact} {...remainder} {...sideProps} />}
+        {!minimal && Side && <Side compact={compact} {...remainder} {...sideProps} />}
       </div>
-      {Footer && <Footer {...footerProps} />}
+      {!minimal && Footer && <Footer {...footerProps} />}
     </div>
   );
 };
@@ -231,7 +233,7 @@ export const getDeploymentPhasesInfo = deployment => {
   };
 };
 
-export const ProgressDisplay = ({ className = '', deployment, status }) => {
+export const ProgressDisplay = ({ className = '', deployment, minimal = false, status }) => {
   const [time, setTime] = useState(new Date());
   const timer = useRef();
 
@@ -263,13 +265,14 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
   return (
     <ProgressChartComponent
       className={className}
-      phases={displayablePhases}
       Footer={Footer}
       footerProps={{ currentPhaseIndex, duration, nextPhaseStart, phasesCount: phases.length }}
-      Side={Side}
-      sideProps={{ totalFailureCount }}
       Header={Header}
       headerProps={{ status }}
+      minimal={minimal}
+      phases={displayablePhases}
+      Side={Side}
+      sideProps={{ totalFailureCount }}
     />
   );
 };

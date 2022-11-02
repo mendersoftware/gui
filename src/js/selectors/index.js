@@ -2,6 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
+import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { ATTRIBUTE_SCOPES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_ONLINE_CUTOFF, EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
 import { attributeDuplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
@@ -25,6 +26,8 @@ const getIssueCountsByType = state => state.monitor.issueCounts.byType;
 const getReleasesById = state => state.releases.byId;
 const getListedReleases = state => state.releases.releasesList.releaseIds;
 const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
+const getDeploymentsById = state => state.deployments.byId;
+const getDeploymentsByStatus = state => state.deployments.byStatus;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.userSettings;
@@ -229,3 +232,19 @@ export const getDeviceTypes = createSelector([getAcceptedDevices, getDevicesById
 
 const getReleaseMappingDefaults = () => ({});
 export const getReleasesList = createSelector([getReleasesById, getListedReleases, getReleaseMappingDefaults], listItemMapper);
+
+const relevantDeploymentStates = [DEPLOYMENT_STATES.pending, DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.finished];
+export const DEPLOYMENT_CUTOFF = 3;
+export const getRecentDeployments = createSelector([getDeploymentsById, getDeploymentsByStatus], (deploymentsById, deploymentsByStatus) =>
+  Object.entries(deploymentsByStatus).reduce(
+    (accu, [state, byStatus]) => {
+      if (!relevantDeploymentStates.includes(state) || !byStatus.deploymentIds.length) {
+        return accu;
+      }
+      accu[state] = byStatus.deploymentIds.map(id => deploymentsById[id]).slice(0, DEPLOYMENT_CUTOFF);
+      accu.total += byStatus.total;
+      return accu;
+    },
+    { total: 0 }
+  )
+);

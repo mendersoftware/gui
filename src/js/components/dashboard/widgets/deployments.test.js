@@ -2,7 +2,7 @@ import React from 'react';
 
 import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import CompletedDeployments from './completeddeployments';
+import { CompletedDeployments } from './deployments';
 
 describe('CompletedDeployments Component', () => {
   it('renders correctly', async () => {

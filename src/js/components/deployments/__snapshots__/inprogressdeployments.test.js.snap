@@ -54,6 +54,10 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
   margin-top: -4px;
 }
 
+.emotion-3.minimal {
+  padding: initial;
+}
+
 .emotion-3.no-background {
   background: none;
 }
@@ -486,7 +490,7 @@ exports[`InProgressDeployments Component renders correctly 1`] = `
               Status
             </span>
             <div
-              class="relative emotion-3 "
+              class="relative emotion-3  "
             >
               <div
                 class="emotion-4"

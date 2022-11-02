@@ -75,9 +75,9 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
   const handleClick = params => {
     let redirect;
     if (params.route === 'deployments') {
-      let URIParams = params.open;
-      URIParams = params.id ? `${URIParams}&id=${params.id}` : URIParams;
-      redirect = `/deployments/${params.tab || DEPLOYMENT_ROUTES.active.key}/open=${encodeURIComponent(URIParams)}`;
+      let query = params.open ? ['open=true'] : [];
+      params.id ? query.push(`id=${params.id}`) : undefined;
+      redirect = `/deployments/${params.tab || DEPLOYMENT_ROUTES.active.key}?${query.join('&')}`;
     } else {
       redirect = params.route;
     }
