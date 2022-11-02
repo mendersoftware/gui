@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { Tooltip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import successImage from '../../../assets/img/success_status.png';
 import errorImage from '../../../assets/img/error_status.png';
@@ -17,23 +19,35 @@ const phases = {
   failures: { title: 'Failed', image: errorImage }
 };
 
-export const DeploymentStatus = ({ className, deployment = {}, vertical }) => {
+const useStyles = makeStyles()(theme => ({
+  resultsStatus: {
+    columnGap: theme.spacing(),
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, 32px)',
+    '> div': {
+      columnGap: theme.spacing(0.5)
+    },
+    '.disabled': {
+      opacity: '0.1'
+    }
+  }
+}));
+
+export const DeploymentStats = ({ deployment = {} }) => {
+  const { classes } = useStyles();
   const phaseStats = groupDeploymentStats(deployment, true);
   return (
-    <div className={className}>
-      <div className={vertical ? 'flexbox results-status column' : 'flexbox results-status'}>
-        {Object.entries(phases).map(([key, phase]) => (
-          <Tooltip key={key} title={phase.title}>
-            <div className={phaseStats[key] ? '' : 'disabled'}>
-              <img src={phase.image} />
-              <span className="status">{phaseStats[key].toLocaleString()}</span>
-              {vertical && <span className="label">{phase.title}</span>}
-            </div>
-          </Tooltip>
-        ))}
-      </div>
+    <div className={`flexbox ${classes.resultsStatus} `}>
+      {Object.entries(phases).map(([key, phase]) => (
+        <Tooltip key={key} title={phase.title}>
+          <div className={`flexbox centered ${phaseStats[key] ? '' : 'disabled'}`}>
+            <img src={phase.image} />
+            <div className="status">{phaseStats[key]}</div>
+          </div>
+        </Tooltip>
+      ))}
     </div>
   );
 };
 
-export default DeploymentStatus;
+export default DeploymentStats;

@@ -55,7 +55,7 @@ export const DeploymentRelease = ({ deployment: { artifact_name, type = DEPLOYME
 };
 export const DeploymentStartTime = ({ direction = 'both', started }) => <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />;
 
-export const DeploymentStatus = ({ deployment }) => <DeploymentStats key="DeploymentStatus" vertical={false} deployment={deployment} />;
+export const DeploymentStatus = ({ deployment }) => <DeploymentStats key="DeploymentStatus" deployment={deployment} />;
 
 const useStyles = makeStyles()(theme => ({
   detailsButton: {
