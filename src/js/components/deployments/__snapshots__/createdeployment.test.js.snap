@@ -5466,6 +5466,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
   opacity: 0;
+  pointer-events: none;
 }
 
 .emotion-27:hover {
@@ -6667,6 +6668,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
   opacity: 0;
+  pointer-events: none;
 }
 
 .emotion-27:hover {
