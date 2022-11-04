@@ -10,7 +10,7 @@ import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
 import { getToken } from '../auth';
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
-import { iotManagerBaseURL } from './deviceActions';
+import { deviceAuthV2, iotManagerBaseURL } from './deviceActions';
 
 const cookies = new Cookies();
 export const auditLogsApiUrl = `${apiUrl.v1}/auditlogs`;
@@ -171,6 +171,11 @@ export const requestPlanChange = (tenantId, content) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/plan`, content)
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
     .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
+
+export const downloadLicenseReport = () => dispatch =>
+  Api.get(`${deviceAuthV2}/reports/devices`)
+    .catch(err => commonErrorHandler(err, 'There was an error downloading the report', dispatch, commonErrorFallback))
+    .then(res => res.data);
 
 export const createIntegration = integration => dispatch => {
   // eslint-disable-next-line no-unused-vars

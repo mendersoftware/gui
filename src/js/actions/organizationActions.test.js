@@ -16,6 +16,7 @@ import {
   createOrganizationTrial,
   deleteIntegration,
   deleteSamlConfig,
+  downloadLicenseReport,
   getAuditLogs,
   getAuditLogsCsvLink,
   getCurrentCard,
@@ -162,6 +163,15 @@ describe('organization actions', () => {
         expect(storeActions).toHaveLength(expectedActions.length);
         expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
       });
+  });
+
+  it('should handle license report downloads', async () => {
+    const store = mockStore({ ...defaultState });
+    expect(store.getActions()).toHaveLength(0);
+    const result = await store.dispatch(downloadLicenseReport());
+    const storeActions = store.getActions();
+    expect(storeActions).toHaveLength(0);
+    expect(result).toEqual('test,report');
   });
 
   it('should handle account upgrade init', async () => {

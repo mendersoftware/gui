@@ -24,7 +24,8 @@ describe('MyOrganization Component', () => {
         features: {
           ...defaultState.app.features,
           isHosted: true
-        }
+        },
+        versionInformation: { Integration: '1.2.3' }
       },
       devices: {
         ...defaultState.devices,
