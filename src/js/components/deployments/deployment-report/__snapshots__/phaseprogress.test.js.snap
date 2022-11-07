@@ -3,53 +3,90 @@
 exports[`PhaseProgress Component renders correctly 1`] = `
 .emotion-0 {
   background-color: #f7f7f7;
+  padding: 10px 20px;
+  border-radius: 4px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  min-height: 70px;
 }
 
-.emotion-0.progress-chart-container .progress-step {
-  border: none;
+.emotion-0 .chart-container {
+  min-height: 70px;
+}
+
+.emotion-0 .progress-chart {
+  min-height: 45px;
+}
+
+.emotion-0 .compact .progress-step,
+.emotion-0 .detailed .progress-step {
+  min-height: 45px;
+}
+
+.emotion-0 .progress-step,
+.emotion-0 .detailed .progress-step-total {
   position: absolute;
+  border-right-style: none;
 }
 
 .emotion-0 .progress-step-total .progress-bar {
   background-color: #d4e9e7;
 }
 
+.emotion-0 .progress-step-number {
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: flex-start;
+  align-self: flex-start;
+  margin-top: -4px;
+}
+
+.emotion-0.no-background {
+  background: none;
+}
+
+.emotion-0.stepped-progress .progress-step-total {
+  margin-left: -0.25%;
+  width: 100.5%;
+}
+
 .emotion-0.stepped-progress .progress-step-total .progress-bar {
   background-color: #fff;
-  border-color: #a9a9a9;
+  border: 1px solid #a9a9a9;
+  border-radius: 2px;
+  height: 12px;
+}
+
+.emotion-0.stepped-progress .detailed .progress-step {
+  min-height: 20px;
 }
 
 .emotion-1 {
-  -webkit-align-self: flex-end;
-  -ms-flex-item-align: flex-end;
-  align-self: flex-end;
-  margin-bottom: -20px;
-}
-
-.emotion-2 {
   display: grid;
   row-gap: 4px;
   place-items: center;
   position: absolute;
   grid-template-rows: 20px 1.25rem min-content;
+  z-index: 2;
 }
 
-.emotion-2.compact {
+.emotion-1.compact {
   grid-template-rows: 45px 1.25rem min-content;
 }
 
-.emotion-3 {
+.emotion-2 {
   border-left-style: solid;
   border-left-width: 1px;
   height: 100%;
   z-index: 1;
 }
 
-.emotion-4 {
+.emotion-3 {
   border-left-color: #e9e9e9;
 }
 
-.emotion-5 {
+.emotion-4 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -66,13 +103,8 @@ exports[`PhaseProgress Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-5 iconButton {
+.emotion-4 iconButton {
   margin-right: 8px;
-}
-
-.emotion-15 {
-  position: initial;
-  width: 110%;
 }
 
 <div>
@@ -80,8 +112,7 @@ exports[`PhaseProgress Component renders correctly 1`] = `
     class="flexbox column "
   >
     <div
-      class="progress-chart-container stepped-progress emotion-0"
-      style="background: none;"
+      class="relative emotion-0 flexbox column stepped-progress no-background "
     >
       Phase 1: 
       100
@@ -91,147 +122,146 @@ exports[`PhaseProgress Component renders correctly 1`] = `
       device
       )
       <div
-        class="progress-chart detailed"
+        class="chart-container"
       >
         <div
-          class="progress-step"
-          style="width: 25%; height: 100%; left: 0%;"
+          class="progress-chart relative compact"
         >
           <div
-            class="flexbox"
-            style="width: 100%;"
+            class="progress-step"
+            style="left: 0%; width: 25%;"
           >
             <div
-              class="progress-bar green"
-              style="width: 100%;"
-            />
+              class="capitalized progress-step-number undefined"
+            >
+              download
+            </div>
             <div
-              class="progress-bar warning"
-              style="width: 0%;"
-            />
+              style="display: contents;"
+            >
+              <div
+                class="progress-bar green"
+                style="width: 100%;"
+              />
+              <div
+                class="progress-bar warning"
+                style="left: 100%; width: 0%;"
+              />
+            </div>
           </div>
           <div
-            class="progress-step-number emotion-1"
-          >
-            download
-          </div>
-        </div>
-        <div
-          class="emotion-2 compact"
-          style="left: 12.5%; width: 25%;"
-        >
-          <div
-            class="emotion-3 emotion-4"
-          />
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-5"
-            data-testid="CheckCircleIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-            />
-          </svg>
-          <div />
-        </div>
-        <div
-          class="progress-step"
-          style="width: 25%; height: 100%; left: 25%;"
-        >
-          <div
-            class="flexbox"
-            style="width: 100%;"
+            class="emotion-1 compact"
+            style="left: 12.5%; width: 25%;"
           >
             <div
-              class="progress-bar green"
-              style="width: 0%;"
+              class="emotion-2 emotion-3"
             />
-            <div
-              class="progress-bar warning"
-              style="width: 0%;"
-            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-4"
+              data-testid="CheckCircleIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+            <div />
           </div>
           <div
-            class="progress-step-number emotion-1"
-          >
-            install
-          </div>
-        </div>
-        <div
-          class="emotion-2 compact"
-          style="left: 37.5%; width: 25%;"
-        >
-          <div
-            class="emotion-3 emotion-4"
-          />
-          <div />
-          <div />
-        </div>
-        <div
-          class="progress-step"
-          style="width: 25%; height: 100%; left: 50%;"
-        >
-          <div
-            class="flexbox"
-            style="width: 100%;"
+            class="progress-step"
+            style="left: 25%; width: 25%;"
           >
             <div
-              class="progress-bar green"
-              style="width: 0%;"
-            />
+              class="capitalized progress-step-number undefined"
+            >
+              install
+            </div>
             <div
-              class="progress-bar warning"
-              style="width: 0%;"
-            />
+              style="display: contents;"
+            >
+              <div
+                class="progress-bar green"
+                style="width: 0%;"
+              />
+              <div
+                class="progress-bar warning"
+                style="left: 0%; width: 0%;"
+              />
+            </div>
           </div>
           <div
-            class="progress-step-number emotion-1"
-          >
-            reboot
-          </div>
-        </div>
-        <div
-          class="emotion-2 compact"
-          style="left: 62.5%; width: 25%;"
-        >
-          <div
-            class="emotion-3 emotion-4"
-          />
-          <div />
-          <div />
-        </div>
-        <div
-          class="progress-step"
-          style="width: 25%; height: 100%; left: 75%;"
-        >
-          <div
-            class="flexbox"
-            style="width: 100%;"
+            class="emotion-1 compact"
+            style="left: 37.5%; width: 25%;"
           >
             <div
-              class="progress-bar green"
-              style="width: 0%;"
+              class="emotion-2 emotion-3"
             />
-            <div
-              class="progress-bar warning"
-              style="width: 0%;"
-            />
+            <div />
+            <div />
           </div>
           <div
-            class="progress-step-number emotion-1"
+            class="progress-step"
+            style="left: 50%; width: 25%;"
           >
-            commit
+            <div
+              class="capitalized progress-step-number undefined"
+            >
+              reboot
+            </div>
+            <div
+              style="display: contents;"
+            >
+              <div
+                class="progress-bar green"
+                style="width: 0%;"
+              />
+              <div
+                class="progress-bar warning"
+                style="left: 0%; width: 0%;"
+              />
+            </div>
           </div>
-        </div>
-        <div
-          class="progress-step progress-step-total"
-          style="height: 100%;"
-        >
           <div
-            class="progress-bar emotion-15"
-          />
+            class="emotion-1 compact"
+            style="left: 62.5%; width: 25%;"
+          >
+            <div
+              class="emotion-2 emotion-3"
+            />
+            <div />
+            <div />
+          </div>
+          <div
+            class="progress-step"
+            style="left: 75%; width: 25%;"
+          >
+            <div
+              class="capitalized progress-step-number undefined"
+            >
+              commit
+            </div>
+            <div
+              style="display: contents;"
+            >
+              <div
+                class="progress-bar green"
+                style="width: 0%;"
+              />
+              <div
+                class="progress-bar warning"
+                style="left: 0%; width: 0%;"
+              />
+            </div>
+          </div>
+          <div
+            class="progress-step relative flexbox progress-step-total"
+          >
+            <div
+              class="progress-bar"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -256,20 +286,63 @@ exports[`PhaseProgress Component renders correctly 1`] = `
 exports[`PhaseProgress Component renders correctly for list usage 1`] = `
 .emotion-0 {
   background-color: #f7f7f7;
+  padding: 10px 20px;
+  border-radius: 4px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  min-height: 70px;
 }
 
-.emotion-0.progress-chart-container .progress-step {
-  border: none;
+.emotion-0 .chart-container {
+  min-height: 70px;
+}
+
+.emotion-0 .progress-chart {
+  min-height: 45px;
+}
+
+.emotion-0 .compact .progress-step,
+.emotion-0 .detailed .progress-step {
+  min-height: 45px;
+}
+
+.emotion-0 .progress-step,
+.emotion-0 .detailed .progress-step-total {
   position: absolute;
+  border-right-style: none;
 }
 
 .emotion-0 .progress-step-total .progress-bar {
   background-color: #d4e9e7;
 }
 
+.emotion-0 .progress-step-number {
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: flex-start;
+  align-self: flex-start;
+  margin-top: -4px;
+}
+
+.emotion-0.no-background {
+  background: none;
+}
+
+.emotion-0.stepped-progress .progress-step-total {
+  margin-left: -0.25%;
+  width: 100.5%;
+}
+
 .emotion-0.stepped-progress .progress-step-total .progress-bar {
   background-color: #fff;
-  border-color: #a9a9a9;
+  border: 1px solid #a9a9a9;
+  border-radius: 2px;
+  height: 12px;
+}
+
+.emotion-0.stepped-progress .detailed .progress-step {
+  min-height: 20px;
 }
 
 .emotion-1 {
@@ -307,6 +380,7 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
   place-items: center;
   position: absolute;
   grid-template-rows: 20px 1.25rem min-content;
+  z-index: 2;
 }
 
 .emotion-4.compact {
@@ -345,14 +419,9 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
   margin-right: 8px;
 }
 
-.emotion-14 {
-  position: initial;
-  width: 110%;
-}
-
 <div>
   <div
-    class="progress-chart-container flexbox column stepped-progress  emotion-0"
+    class="relative emotion-0 flexbox column stepped-progress  "
   >
     <div
       class="flexbox space-between emotion-1"
@@ -380,139 +449,138 @@ exports[`PhaseProgress Component renders correctly for list usage 1`] = `
       Phase 1 of 1
     </div>
     <div
-      class="progress-chart "
-      style="max-width: 90%; min-height: 65px;"
+      class="chart-container"
     >
       <div
-        class="progress-step"
-        style="width: 25%; left: 0%;"
+        class="progress-chart relative detailed"
       >
         <div
-          class="flexbox"
-          style="width: 100%;"
+          class="progress-step"
+          style="left: 0%; width: 25%;"
         >
           <div
-            class="progress-bar green"
-            style="width: 100%;"
-          />
+            style="display: contents;"
+          >
+            <div
+              class="progress-bar green"
+              style="width: 100%;"
+            />
+            <div
+              class="progress-bar warning"
+              style="left: 100%; width: 0%;"
+            />
+          </div>
+        </div>
+        <div
+          class="emotion-4 "
+          style="left: 12.5%; width: 25%;"
+        >
           <div
-            class="progress-bar warning"
-            style="width: 0%;"
+            class="emotion-5 emotion-6"
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-7"
+            data-testid="CheckCircleIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            />
+          </svg>
+          <div
+            class="capitalized slightly-smaller"
+          >
+            downloaded
+          </div>
+        </div>
+        <div
+          class="progress-step"
+          style="left: 25%; width: 25%;"
+        >
+          <div
+            style="display: contents;"
+          >
+            <div
+              class="progress-bar green"
+              style="width: 0%;"
+            />
+            <div
+              class="progress-bar warning"
+              style="left: 0%; width: 0%;"
+            />
+          </div>
+        </div>
+        <div
+          class="emotion-4 "
+          style="left: 37.5%; width: 25%;"
+        >
+          <div
+            class="emotion-5 emotion-6"
+          />
+          <div />
+          <div
+            class="capitalized slightly-smaller"
+          >
+            installed
+          </div>
+        </div>
+        <div
+          class="progress-step"
+          style="left: 50%; width: 25%;"
+        >
+          <div
+            style="display: contents;"
+          >
+            <div
+              class="progress-bar green"
+              style="width: 0%;"
+            />
+            <div
+              class="progress-bar warning"
+              style="left: 0%; width: 0%;"
+            />
+          </div>
+        </div>
+        <div
+          class="emotion-4 "
+          style="left: 62.5%; width: 25%;"
+        >
+          <div
+            class="emotion-5 emotion-6"
+          />
+          <div />
+          <div
+            class="capitalized slightly-smaller"
+          >
+            rebooted
+          </div>
+        </div>
+        <div
+          class="progress-step"
+          style="left: 75%; width: 25%;"
+        >
+          <div
+            style="display: contents;"
+          >
+            <div
+              class="progress-bar green"
+              style="width: 0%;"
+            />
+            <div
+              class="progress-bar warning"
+              style="left: 0%; width: 0%;"
+            />
+          </div>
+        </div>
+        <div
+          class="progress-step relative flexbox progress-step-total"
+        >
+          <div
+            class="progress-bar"
           />
         </div>
-      </div>
-      <div
-        class="emotion-4 "
-        style="left: 12.5%; width: 25%;"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        />
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-7"
-          data-testid="CheckCircleIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-          />
-        </svg>
-        <div
-          class="capitalized slightly-smaller"
-        >
-          downloaded
-        </div>
-      </div>
-      <div
-        class="progress-step"
-        style="width: 25%; left: 25%;"
-      >
-        <div
-          class="flexbox"
-          style="width: 100%;"
-        >
-          <div
-            class="progress-bar green"
-            style="width: 0%;"
-          />
-          <div
-            class="progress-bar warning"
-            style="width: 0%;"
-          />
-        </div>
-      </div>
-      <div
-        class="emotion-4 "
-        style="left: 37.5%; width: 25%;"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        />
-        <div />
-        <div
-          class="capitalized slightly-smaller"
-        >
-          installed
-        </div>
-      </div>
-      <div
-        class="progress-step"
-        style="width: 25%; left: 50%;"
-      >
-        <div
-          class="flexbox"
-          style="width: 100%;"
-        >
-          <div
-            class="progress-bar green"
-            style="width: 0%;"
-          />
-          <div
-            class="progress-bar warning"
-            style="width: 0%;"
-          />
-        </div>
-      </div>
-      <div
-        class="emotion-4 "
-        style="left: 62.5%; width: 25%;"
-      >
-        <div
-          class="emotion-5 emotion-6"
-        />
-        <div />
-        <div
-          class="capitalized slightly-smaller"
-        >
-          rebooted
-        </div>
-      </div>
-      <div
-        class="progress-step"
-        style="width: 25%; left: 75%;"
-      >
-        <div
-          class="flexbox"
-          style="width: 100%;"
-        >
-          <div
-            class="progress-bar green"
-            style="width: 0%;"
-          />
-          <div
-            class="progress-bar warning"
-            style="width: 0%;"
-          />
-        </div>
-      </div>
-      <div
-        class="progress-step progress-step-total"
-      >
-        <div
-          class="progress-bar emotion-14"
-        />
       </div>
     </div>
   </div>

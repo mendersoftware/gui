@@ -39,20 +39,63 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
 
 .emotion-4 {
   background-color: #f7f7f7;
+  padding: 10px 20px;
+  border-radius: 4px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  min-height: 70px;
 }
 
-.emotion-4.progress-chart-container .progress-step {
-  border: none;
+.emotion-4 .chart-container {
+  min-height: 70px;
+}
+
+.emotion-4 .progress-chart {
+  min-height: 45px;
+}
+
+.emotion-4 .compact .progress-step,
+.emotion-4 .detailed .progress-step {
+  min-height: 45px;
+}
+
+.emotion-4 .progress-step,
+.emotion-4 .detailed .progress-step-total {
   position: absolute;
+  border-right-style: none;
 }
 
 .emotion-4 .progress-step-total .progress-bar {
   background-color: #d4e9e7;
 }
 
+.emotion-4 .progress-step-number {
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: flex-start;
+  align-self: flex-start;
+  margin-top: -4px;
+}
+
+.emotion-4.no-background {
+  background: none;
+}
+
+.emotion-4.stepped-progress .progress-step-total {
+  margin-left: -0.25%;
+  width: 100.5%;
+}
+
 .emotion-4.stepped-progress .progress-step-total .progress-bar {
   background-color: #fff;
-  border-color: #a9a9a9;
+  border: 1px solid #a9a9a9;
+  border-radius: 2px;
+  height: 12px;
+}
+
+.emotion-4.stepped-progress .detailed .progress-step {
+  min-height: 20px;
 }
 
 .emotion-5 {
@@ -243,37 +286,42 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="progress-chart-container margin-top emotion-4"
+    class="relative emotion-4 margin-top no-background"
   >
     <div
-      class="progress-chart detailed"
+      class="chart-container"
     >
       <div
-        class="progress-step progress-step-total"
+        class="progress-chart relative detailed"
       >
         <div
-          class="progress-bar"
-        />
-      </div>
-      <div
-        class="progress-step"
-        style="flex-grow: 1;"
-      >
-        <div
-          class="progress-step-number muted"
+          class="progress-step"
+          style="left: 0%; width: 100%;"
         >
-          Phase 1
+          <div
+            class="capitalized progress-step-number muted"
+          >
+            Phase 
+            1
+          </div>
+          <div
+            style="display: contents;"
+          >
+            <div
+              class="progress-bar green"
+              style="width: 0%;"
+            />
+            <div
+              class="progress-bar warning"
+              style="left: 0%; width: 0%;"
+            />
+          </div>
         </div>
         <div
-          class="flexbox progress-bar"
+          class="progress-step relative flexbox progress-step-total"
         >
           <div
-            class="progress-bar green"
-            style="width: 0%;"
-          />
-          <div
-            class="progress-bar warning"
-            style="width: 0%;"
+            class="progress-bar"
           />
         </div>
       </div>
@@ -333,7 +381,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
           <div
             class="muted"
           >
-            100% (1 device)
+            1% (1 device)
           </div>
         </div>
       </div>
