@@ -19,7 +19,7 @@ export const DeviceIdentity = ({ device, setSnackbar }) => {
   let keyContent = {
     ID: id || '-',
     ...name,
-    mac
+    ...(mac ? { mac } : {})
   };
 
   let extendedContent = remainingIdentity;
