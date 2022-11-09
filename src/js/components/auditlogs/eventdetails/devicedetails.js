@@ -5,7 +5,9 @@ import { Launch as LaunchIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
+import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
 import { rootfsImageVersion } from '../../../constants/releaseConstants';
+import { formatAuditlogs } from '../../../utils/locationutils';
 import { TwoColumns } from '../../common/configurationobject';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 
@@ -24,6 +26,8 @@ export const DetailInformation = ({ title, details }) => {
   );
 };
 
+const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device');
+
 export const DeviceDetails = ({ device, idAttribute, onClose }) => {
   const { classes } = useStyles();
   const { name, device_type: deviceTypes, artifact_name } = device.attributes;
@@ -40,7 +44,10 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
     'Device type': deviceTypes,
     'System software version': device[rootfsImageVersion] || artifact_name || '-',
     ' ': (
-      <Link to={`/auditlog?object_type=device&object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`} onClick={onClose}>
+      <Link
+        to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
+        onClick={onClose}
+      >
         List all log entries for this device
       </Link>
     )

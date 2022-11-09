@@ -8,6 +8,8 @@ import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
+import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
+import { formatAuditlogs } from '../../../utils/locationutils';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
@@ -94,6 +96,8 @@ const troubleshootingTools = [
   { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
 ];
 
+const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device');
+
 export const DeviceConnection = ({ className = '', device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
 
@@ -127,7 +131,10 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
               return <Component key={item.key} docsVersion={docsVersion} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
             })}
           {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
-            <Link className="flexbox center-aligned margin-left" to={`/auditlog?object_type=device&object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`}>
+            <Link
+              className="flexbox center-aligned margin-left"
+              to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
+            >
               List all log entries for this device
             </Link>
           )}
