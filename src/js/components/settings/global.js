@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { getDeviceAttributes } from '../../actions/deviceActions';
@@ -103,7 +103,8 @@ export const GlobalSettingsDialog = ({
   onCloseClick,
   onSaveClick,
   saveGlobalSettings,
-  selectedAttribute
+  selectedAttribute,
+  settings
 }) => {
   const [channelSettings, setChannelSettings] = useState(notificationChannelSettings);
   const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
@@ -112,8 +113,8 @@ export const GlobalSettingsDialog = ({
   const debouncedInterval = useDebounce(currentInterval, TIMEOUTS.debounceShort);
   const debouncedIntervalUnit = useDebounce(currentIntervalUnit, TIMEOUTS.debounceShort);
   const timer = useRef(false);
-
   const { classes } = useStyles();
+  const { needsDeploymentConfirmation = false } = settings;
 
   useEffect(() => {
     setChannelSettings(notificationChannelSettings);
@@ -152,6 +153,10 @@ export const GlobalSettingsDialog = ({
     setIntervalErrorText('Please enter a valid number between 1 and 1000.');
   };
 
+  const toggleDeploymentConfirmation = () => {
+    saveGlobalSettings({ needsDeploymentConfirmation: !needsDeploymentConfirmation });
+  };
+
   return (
     <div style={{ maxWidth }} className="margin-top-small">
       <h2 className="margin-top-small">Global settings</h2>
@@ -163,6 +168,10 @@ export const GlobalSettingsDialog = ({
         onSaveClick={onSaveClick}
         selectedAttribute={selectedAttribute}
       />
+      <div className="clickable flexbox center-aligned space-between" onClick={toggleDeploymentConfirmation}>
+        <p className="help-content">Require confirmation on deployment creation</p>
+        <Switch checked={needsDeploymentConfirmation} />
+      </div>
       {isAdmin &&
         hasMonitor &&
         Object.keys(alertChannels).map(channel => (
@@ -279,6 +288,7 @@ export const GlobalSettingsContainer = ({
       onCloseClick={onCloseClick}
       onSaveClick={saveAttributeSetting}
       saveGlobalSettings={saveGlobalSettings}
+      settings={settings}
       selectedAttribute={selectedAttribute}
     />
   );
