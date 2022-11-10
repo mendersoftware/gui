@@ -16,7 +16,7 @@ describe('tiny DeviceConnection components', () => {
 });
 
 describe('DeviceConnection Component', () => {
-  const userCapabilities = { canTroubleshoot: true, canWriteDevices: true };
+  const userCapabilities = { canAuditlog: true, canTroubleshoot: true, canWriteDevices: true };
   it('renders correctly', async () => {
     const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} />);
     const view = baseElement.firstChild;
@@ -33,7 +33,11 @@ describe('DeviceConnection Component', () => {
   });
   it('renders correctly when connected', async () => {
     const { baseElement } = render(
-      <DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }} userCapabilities={userCapabilities} />
+      <DeviceConnection
+        device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }}
+        hasAuditlogs
+        userCapabilities={userCapabilities}
+      />
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
