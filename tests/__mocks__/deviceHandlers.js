@@ -264,5 +264,6 @@ export const deviceHandlers = [
       return res(ctx.status(200));
     }
     return res(ctx.status(517));
-  })
+  }),
+  rest.get(`${deviceAuthV2}/reports/devices`, (req, res, ctx) => res(ctx.text('test,report')))
 ];

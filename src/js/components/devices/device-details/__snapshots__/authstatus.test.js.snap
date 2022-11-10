@@ -88,10 +88,10 @@ exports[`AuthStatus Component renders correctly 1`] = `
 }
 
 .emotion-1 .MuiChip-icon {
-  color: inherit;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
+  color: inherit;
 }
 
 .emotion-1 .MuiChip-deleteIcon {

@@ -96,10 +96,10 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
 }
 
 .emotion-3 .MuiChip-icon {
-  color: #bcbcbc;
   margin-left: 4px;
   margin-right: -4px;
   font-size: 18px;
+  color: #bcbcbc;
 }
 
 .emotion-3 .MuiChip-deleteIcon {

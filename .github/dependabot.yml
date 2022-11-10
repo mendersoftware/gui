@@ -3,6 +3,7 @@ updates:
   - commit-message:
       prefix: chore
     directory: /
+    open-pull-requests-limit: 20
     package-ecosystem: npm
     schedule:
       interval: monthly
@@ -17,6 +18,7 @@ updates:
   - commit-message:
       prefix: chore
     directory: /tests/e2e_tests
+    open-pull-requests-limit: 10
     package-ecosystem: npm
     schedule:
       interval: monthly

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import moment from 'moment';
 
 // material ui
 import { Button, Checkbox, Collapse, FormControlLabel, List } from '@mui/material';
@@ -8,14 +9,22 @@ import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@mui/icons-material
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
-import { changeSamlConfig, deleteSamlConfig, getSamlConfigs, getUserOrganization, storeSamlConfig } from '../../../actions/organizationActions';
+import {
+  changeSamlConfig,
+  deleteSamlConfig,
+  downloadLicenseReport,
+  getSamlConfigs,
+  getUserOrganization,
+  storeSamlConfig
+} from '../../../actions/organizationActions';
 import { MenderTooltipClickable } from '../../common/mendertooltip';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import Billing from './billing';
 import { SAMLConfig } from './samlconfig';
-import { getTenantCapabilities } from '../../../selectors';
+import { getTenantCapabilities, getUserRoles } from '../../../selectors';
 import { TIMEOUTS } from '../../../constants/appConstants';
+import { createFileDownload, versionCompare } from '../../../helpers';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
@@ -69,10 +78,13 @@ export const CopyTextToClipboard = ({ token }) => {
 };
 
 export const Organization = ({
+  canPreview,
   changeSamlConfig,
   deleteSamlConfig,
+  downloadLicenseReport,
   getSamlConfigs,
   getUserOrganization,
+  isAdmin,
   isEnterprise,
   isHosted,
   org,
@@ -127,6 +139,9 @@ export const Organization = ({
     [isResettingSSO, changeSamlConfig, deleteSamlConfig, storeSamlConfig]
   );
 
+  const onDownloadReportClick = () =>
+    downloadLicenseReport().then(report => createFileDownload(report, `Mender-license-report-${moment().format(moment.HTML5_FMT.DATE)}`));
+
   return (
     <div className="margin-top-small">
       <h2 className="margin-top-small">Organization and billing</h2>
@@ -170,15 +185,23 @@ export const Organization = ({
         <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={setSnackbar} />
       </Collapse>
       {isHosted && <Billing />}
+      {(canPreview || !isHosted) && isEnterprise && isAdmin && (
+        <Button className="margin-top" onClick={onDownloadReportClick} variant="contained">
+          Download license report
+        </Button>
+      )}
     </div>
   );
 };
 
-const actionCreators = { changeSamlConfig, deleteSamlConfig, getSamlConfigs, getUserOrganization, setSnackbar, storeSamlConfig };
+const actionCreators = { changeSamlConfig, deleteSamlConfig, downloadLicenseReport, getSamlConfigs, getUserOrganization, setSnackbar, storeSamlConfig };
 
 const mapStateToProps = state => {
   const { isEnterprise } = getTenantCapabilities(state);
+  const { isAdmin } = getUserRoles(state);
   return {
+    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
+    isAdmin,
     isEnterprise,
     isHosted: state.app.features.isHosted,
     org: state.organization.organization,

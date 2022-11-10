@@ -70,9 +70,9 @@ exports[`RolloutSteps Component renders correctly 1`] = `
 }
 
 .emotion-0 .MuiChip-icon {
-  color: #bcbcbc;
   margin-left: 5px;
   margin-right: -6px;
+  color: #bcbcbc;
 }
 
 .emotion-0 .MuiChip-deleteIcon {
@@ -298,9 +298,9 @@ exports[`RolloutSteps Component renders correctly 1`] = `
 }
 
 .emotion-7 .MuiChip-icon {
-  color: inherit;
   margin-left: 5px;
   margin-right: -6px;
+  color: inherit;
 }
 
 .emotion-7 .MuiChip-deleteIcon {
@@ -667,9 +667,9 @@ exports[`RolloutSteps Component renders correctly 2`] = `
 }
 
 .emotion-0 .MuiChip-icon {
-  color: #bcbcbc;
   margin-left: 5px;
   margin-right: -6px;
+  color: #bcbcbc;
 }
 
 .emotion-0 .MuiChip-deleteIcon {
@@ -895,9 +895,9 @@ exports[`RolloutSteps Component renders correctly 2`] = `
 }
 
 .emotion-7 .MuiChip-icon {
-  color: inherit;
   margin-left: 5px;
   margin-right: -6px;
+  color: inherit;
 }
 
 .emotion-7 .MuiChip-deleteIcon {
@@ -1264,9 +1264,9 @@ exports[`RolloutSteps Component renders correctly 3`] = `
 }
 
 .emotion-0 .MuiChip-icon {
-  color: #bcbcbc;
   margin-left: 5px;
   margin-right: -6px;
+  color: #bcbcbc;
 }
 
 .emotion-0 .MuiChip-deleteIcon {
@@ -1492,9 +1492,9 @@ exports[`RolloutSteps Component renders correctly 3`] = `
 }
 
 .emotion-7 .MuiChip-icon {
-  color: inherit;
   margin-left: 5px;
   margin-right: -6px;
+  color: inherit;
 }
 
 .emotion-7 .MuiChip-deleteIcon {

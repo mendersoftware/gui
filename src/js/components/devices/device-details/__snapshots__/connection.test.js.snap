@@ -591,6 +591,12 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
             />
           </svg>
         </a>
+        <a
+          class="flexbox center-aligned margin-left"
+          href="/auditlog?objectId=a1&objectType=device&startDate=2016-01-01"
+        >
+          List all log entries for this device
+        </a>
       </div>
     </div>
   </div>

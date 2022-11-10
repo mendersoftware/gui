@@ -126,7 +126,7 @@ exports[`DeviceConfiguration Component renders correctly 1`] = `
         class="flexbox "
       >
         <a
-          href="/auditlog?object_type=device&object_id=a1&start_date=2016-01-01T00:00:00.000Z"
+          href="/auditlog?objectId=a1&objectType=device&startDate=2016-01-01"
         >
           List all log entries for this device
         </a>

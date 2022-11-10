@@ -219,9 +219,9 @@ exports[`Roles Component renders correctly 1`] = `
 }
 
 .emotion-37 .MuiChip-icon {
-  color: inherit;
   margin-left: 5px;
   margin-right: -6px;
+  color: inherit;
 }
 
 .emotion-37 .MuiChip-deleteIcon {
