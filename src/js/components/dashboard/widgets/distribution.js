@@ -68,20 +68,20 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
   const theme = useTheme();
 
   return (
-    <div className="margin-right margin-bottom widget chart-widget" style={style}>
+    <div className="widget chart-widget" style={style}>
       {removing ? (
         <Confirm
           classes="flexbox centered confirmation-overlay"
           cancel={toggleRemoving}
           action={onClick}
-          style={{ height: '100%', justifyContent: 'center' }}
+          style={{ justifyContent: 'center' }}
           type="chartRemoval"
         />
       ) : (
         <>
-          <div className="flexbox space-between margin-left-small">
-            <h4>{group || ALL_DEVICES}</h4>
-            <IconButton className="widgetRemover" onClick={toggleRemoving} style={{ alignSelf: 'flex-end' }} size="large">
+          <div className="flexbox space-between center-aligned margin-left margin-right-small" style={{ zIndex: 1 }}>
+            <h4 className="margin-top-none margin-bottom-none">{group || ALL_DEVICES}</h4>
+            <IconButton className="widgetRemover" onClick={toggleRemoving} size="large">
               <ClearIcon fontSize="small" />
             </IconButton>
           </div>
@@ -90,7 +90,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
               style={{
                 data: { fill: ({ datum }) => datum.fill },
                 labels: { fill: theme.palette.text.primary },
-                parent: { display: 'flex', alignSelf: 'center', height: 'initial', width: 'initial' }
+                parent: { marginTop: -15, height: '95%' }
               }}
               data={distribution}
               width={360}
@@ -110,7 +110,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
                 radius={75}
                 startAngle={-90}
               />
-              <VictoryLegend x={30} y={150} width={320} height={65} orientation="horizontal" itemsPerRow={2} gutter={15} rowGutter={-10} />
+              <VictoryLegend x={30} y={125} width={320} height={65} orientation="horizontal" itemsPerRow={2} gutter={15} rowGutter={-10} />
             </VictoryGroup>
           ) : groups[group]?.filters.length && !groups[group]?.deviceIds.length ? (
             <p className="muted flexbox centered" style={{ height: '100%' }}>

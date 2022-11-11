@@ -118,17 +118,19 @@ exports[`PendingDevices Component renders correctly 1`] = `
 <body>
   <div>
     <div
-      class="margin-right margin-bottom widget chart-widget"
+      class="widget chart-widget"
     >
       <div
-        class="flexbox space-between margin-left-small"
+        class="flexbox space-between center-aligned margin-left margin-right-small"
+        style="z-index: 1;"
       >
-        <h4>
+        <h4
+          class="margin-top-none margin-bottom-none"
+        >
           test
         </h4>
         <button
           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge widgetRemover emotion-0"
-          style="align-self: flex-end;"
           tabindex="0"
           type="button"
         >

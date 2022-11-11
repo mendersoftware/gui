@@ -30,35 +30,116 @@ const statusMap = {
 const useStyles = makeStyles()(theme => ({
   container: {
     backgroundColor: theme.palette.grey[400],
-    ['&.progress-chart-container .progress-step']: {
-      border: 'none',
-      position: 'absolute'
+    padding: '10px 20px',
+    borderRadius: theme.spacing(0.5),
+    justifyContent: 'center',
+    minHeight: 70,
+    '.chart-container': { minHeight: 70 },
+    '.progress-chart': { minHeight: 45 },
+    '.compact .progress-step, .detailed .progress-step': { minHeight: 45 },
+    '.progress-step, .detailed .progress-step-total': {
+      position: 'absolute',
+      borderRightStyle: 'none'
     },
-    ['.progress-step-total .progress-bar']: {
-      backgroundColor: theme.palette.grey[50]
-    },
-    ['&.stepped-progress .progress-step-total .progress-bar']: {
+    '.progress-step-total .progress-bar': { backgroundColor: theme.palette.grey[50] },
+    '.progress-step-number': { alignSelf: 'flex-start', marginTop: theme.spacing(-0.5) },
+    '&.minimal': { padding: 'initial' },
+    '&.no-background': { background: 'none' },
+    '&.stepped-progress .progress-step-total': { marginLeft: '-0.25%', width: '100.5%' },
+    '&.stepped-progress .progress-step-total .progress-bar': {
       backgroundColor: theme.palette.background.default,
-      borderColor: theme.palette.grey[800]
+      border: `1px solid ${theme.palette.grey[800]}`,
+      borderRadius: 2,
+      height: 12
+    },
+    '&.stepped-progress .detailed .progress-step': { minHeight: 20 }
+  },
+  dualPanel: {
+    display: 'grid',
+    gridTemplateColumns: '2fr 1fr',
+    gridColumnGap: theme.spacing(2),
+    '.progress-chart.detailed': {
+      minHeight: 20,
+      alignItems: 'center'
+    }
+  },
+  defaultDelimiter: { borderRight: '1px dashed', zIndex: 10 },
+  phaseDelimiter: {
+    display: 'grid',
+    rowGap: 4,
+    placeItems: 'center',
+    position: 'absolute',
+    gridTemplateRows: `20px 1.25rem min-content`,
+    zIndex: 2,
+    ['&.compact']: {
+      gridTemplateRows: '45px 1.25rem min-content'
     }
   }
 }));
 
-export const ProgressChartContainer = ({ children, className = '', style = {} }) => {
+export const ProgressChartComponent = ({
+  className,
+  compact,
+  Footer,
+  footerProps,
+  Header,
+  headerProps,
+  minimal,
+  PhaseDelimiter,
+  PhaseLabel,
+  phases,
+  showDelimiter,
+  Side,
+  sideProps,
+  ...remainder
+}) => {
   const { classes } = useStyles();
   return (
-    <div className={`progress-chart-container ${className} ${classes.container}`} style={style}>
-      {children}
+    <div className={`relative ${classes.container} ${minimal ? 'minimal' : ''} ${className}`}>
+      {!minimal && Header && <Header {...headerProps} />}
+      <div className={!minimal && Side ? classes.dualPanel : 'chart-container'}>
+        <div className={`progress-chart relative ${compact ? 'compact' : 'detailed'}`}>
+          {phases.map((phase, index) => {
+            const commonProps = { ...remainder, compact, index, phase, classes };
+            return (
+              <React.Fragment key={phase.id ?? `deployment-phase-${index}`}>
+                <div className="progress-step" style={{ left: `${phase.offset}%`, width: `${phase.width}%` }}>
+                  {!minimal && PhaseLabel && <PhaseLabel {...commonProps} />}
+                  {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
+                  <div style={{ display: 'contents' }}>
+                    <div className="progress-bar green" style={{ width: `${phase.successWidth}%` }} />
+                    <div className="progress-bar warning" style={{ left: `${phase.successWidth}%`, width: `${phase.failureWidth}%` }} />
+                  </div>
+                </div>
+                {(showDelimiter || PhaseDelimiter) && index !== phases.length - 1 && (
+                  <>
+                    {PhaseDelimiter ? (
+                      <PhaseDelimiter {...commonProps} />
+                    ) : (
+                      <div className={`absolute ${classes.defaultDelimiter}`} style={{ left: `${phase.offset}%` }}></div>
+                    )}
+                  </>
+                )}
+              </React.Fragment>
+            );
+          })}
+          <div className="progress-step relative flexbox progress-step-total">
+            <div className="progress-bar"></div>
+          </div>
+        </div>
+        {!minimal && Side && <Side compact={compact} {...remainder} {...sideProps} />}
+      </div>
+      {!minimal && Footer && <Footer {...footerProps} />}
     </div>
   );
 };
 
-export const ProgressChart = ({ currentPhase, currentProgressCount, phases, showPhaseNumber, totalDeviceCount, totalFailureCount, totalSuccessCount }) => {
-  // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
-  // deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
-  // 3 successful deployments -> the 3rd phase should end up with 1 failure so far
-  const displayablePhases = phases.reduce(
-    (accu, phase) => {
+// to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
+// deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
+// 3 successful deployments -> the 3rd phase should end up with 1 failure so far
+export const getDisplayablePhases = ({ currentPhase, currentProgressCount, phases, totalDeviceCount, totalFailureCount, totalSuccessCount }) =>
+  phases.reduce(
+    (accu, phase, index) => {
       let displayablePhase = { ...phase };
       // ongoing phases might not have a device_count yet - so we calculate it
       let expectedDeviceCountInPhase = Math.floor((totalDeviceCount / 100) * displayablePhase.batch_size) || displayablePhase.batch_size;
@@ -79,38 +160,17 @@ export const ProgressChart = ({ currentPhase, currentProgressCount, phases, show
         displayablePhase.progressWidth = (possiblePhaseProgress / expectedDeviceCountInPhase) * 100;
         accu.countedProgress += possiblePhaseProgress;
       }
+      displayablePhase.offset = accu.countedBatch;
+      const remainingWidth = 100 - (100 / totalDeviceCount) * accu.countedBatch;
+      displayablePhase.width = index === phases.length - 1 ? remainingWidth : displayablePhase.batch_size;
+      accu.countedBatch += displayablePhase.batch_size;
       accu.countedFailures += possiblePhaseFailures;
       accu.countedSuccesses += possiblePhaseSuccesses;
       accu.displayablePhases.push(displayablePhase);
       return accu;
     },
-    { countedFailures: 0, countedSuccesses: 0, countedProgress: 0, displayablePhases: [] }
+    { countedBatch: 0, countedFailures: 0, countedSuccesses: 0, countedProgress: 0, displayablePhases: [] }
   ).displayablePhases;
-
-  return (
-    <div className={`progress-chart ${showPhaseNumber ? 'detailed' : ''}`}>
-      <div className="progress-step progress-step-total">
-        <div className="progress-bar"></div>
-      </div>
-      {displayablePhases.map((phase, index) => {
-        let style = { width: `${phase.batch_size}%` };
-        if (index === phases.length - 1) {
-          style = { flexGrow: 1, borderRight: 'none' };
-        }
-        return (
-          <div key={`deployment-phase-${index}`} className="progress-step" style={style}>
-            {showPhaseNumber && <div className="progress-step-number muted">{`Phase ${index + 1}`}</div>}
-            {!!phase.progressWidth && <div className="progress-bar" style={{ width: `${phase.progressWidth}%`, backgroundColor: '#aaa' }} />}
-            <div className="flexbox progress-bar" style={{ backgroundColor: 'initial' }}>
-              <div className="progress-bar green" style={{ width: `${phase.successWidth}%` }} />
-              <div className="progress-bar warning" style={{ width: `${phase.failureWidth}%` }} />
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
 
 export const DeploymentStatusNotification = ({ status }) => (
   <div className="flexbox center-aligned">
@@ -119,13 +179,63 @@ export const DeploymentStatusNotification = ({ status }) => (
   </div>
 );
 
-export const ProgressDisplay = ({ className = '', deployment, status }) => {
+const Header = ({ status }) => (
+  <>
+    {statusMap[status] && (
+      <span className="flexbox center-aligned small muted">
+        {statusMap[status].icon}
+        <span className="margin-left-small">{statusMap[status].description()}</span>
+      </span>
+    )}
+  </>
+);
+
+const Footer = ({ currentPhaseIndex, duration, nextPhaseStart, phasesCount }) => (
+  <div className="flexbox space-between muted">
+    <div>Devices in progress</div>
+    {phasesCount > 1 && phasesCount > currentPhaseIndex + 1 ? (
+      <div>
+        <span>Time until next phase: </span>
+        <Tooltip title={<Time value={nextPhaseStart.toDate()} />} placement="top">
+          <span>{duration}</span>
+        </Tooltip>
+      </div>
+    ) : (
+      <div>{`Current phase: ${currentPhaseIndex + 1} of ${phasesCount}`}</div>
+    )}
+  </div>
+);
+
+const Side = ({ totalFailureCount }) => (
+  <div className={`flexbox center-aligned ${totalFailureCount ? 'warning' : 'muted'}`} style={{ justifyContent: 'flex-end' }}>
+    {!!totalFailureCount && <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />}
+    {`${totalFailureCount} ${pluralize('failure', totalFailureCount)}`}
+  </div>
+);
+
+export const getDeploymentPhasesInfo = deployment => {
+  const { created, device_count = 0, id, phases: deploymentPhases = [], max_devices = 0 } = deployment;
+  const {
+    inprogress: currentProgressCount,
+    successes: totalSuccessCount,
+    failures: totalFailureCount
+  } = groupDeploymentStats(deployment, deploymentPhases.length < 2);
+  const totalDeviceCount = Math.max(device_count, max_devices);
+
+  let phases = deploymentPhases.length ? deploymentPhases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
+  return {
+    currentProgressCount,
+    phases,
+    reversedPhases: phases.slice().reverse(),
+    totalDeviceCount,
+    totalFailureCount,
+    totalSuccessCount
+  };
+};
+
+export const ProgressDisplay = ({ className = '', deployment, minimal = false, status }) => {
   const [time, setTime] = useState(new Date());
   const timer = useRef();
-
-  const { created, device_count, id, phases: deploymentPhases = [], max_devices } = deployment;
-  const { inprogress: currentProgressCount, successes: totalSuccessCount, failures: totalFailureCount } = groupDeploymentStats(deployment);
-  const totalDeviceCount = Math.max(device_count, max_devices || 0);
 
   useEffect(() => {
     timer.current = setInterval(updateTime, TIMEOUTS.oneSecond);
@@ -136,54 +246,34 @@ export const ProgressDisplay = ({ className = '', deployment, status }) => {
 
   const updateTime = () => setTime(new Date());
 
-  let phases = deploymentPhases.length ? deploymentPhases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
+  const { reversedPhases, totalFailureCount, phases, ...remainder } = getDeploymentPhasesInfo(deployment);
 
-  const currentPhase =
-    phases
-      .slice()
-      .reverse()
-      .find(phase => new Date(phase.start_ts) < time) || phases[0];
+  const currentPhase = reversedPhases.find(phase => new Date(phase.start_ts) < time) || phases[0];
   const currentPhaseIndex = phases.findIndex(phase => phase.id === currentPhase.id);
   const nextPhaseStart = phases.length > currentPhaseIndex + 1 ? moment(phases[currentPhaseIndex + 1].start_ts) : moment(time);
+
+  const displayablePhases = getDisplayablePhases({
+    currentPhase,
+    totalFailureCount,
+    phases,
+    ...remainder
+  });
+
   const momentaryTime = moment(time);
-  const duration = moment.duration(nextPhaseStart.diff(momentaryTime));
+  const duration = moment.duration(nextPhaseStart.diff(momentaryTime)).format('d [days] hh [h] mm [m] ss [s]');
 
   return (
-    <ProgressChartContainer className={`flexbox column ${className}`}>
-      {statusMap[status] && (
-        <span className="flexbox center-aligned small muted">
-          {statusMap[status].icon}
-          <span className="margin-left-small">{statusMap[status].description()}</span>
-        </span>
-      )}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridColumnGap: 15 }}>
-        <ProgressChart
-          currentPhase={currentPhase}
-          currentProgressCount={currentProgressCount}
-          phases={phases}
-          totalDeviceCount={totalDeviceCount}
-          totalFailureCount={totalFailureCount}
-          totalSuccessCount={totalSuccessCount}
-        />
-        <div className={`flexbox center-aligned ${totalFailureCount ? 'warning' : 'muted'}`} style={{ justifyContent: 'flex-end' }}>
-          {!!totalFailureCount && <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />}
-          {`${totalFailureCount} ${pluralize('failure', totalFailureCount)}`}
-        </div>
-      </div>
-      <div className="flexbox space-between muted">
-        <div>Devices in progress</div>
-        {phases.length > 1 && phases.length > currentPhaseIndex + 1 ? (
-          <div>
-            <span>Time until next phase: </span>
-            <Tooltip title={<Time value={nextPhaseStart.toDate()} />} placement="top">
-              <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]')}`}</span>
-            </Tooltip>
-          </div>
-        ) : (
-          <div>{`Current phase: ${currentPhaseIndex + 1} of ${phases.length}`}</div>
-        )}
-      </div>
-    </ProgressChartContainer>
+    <ProgressChartComponent
+      className={className}
+      Footer={Footer}
+      footerProps={{ currentPhaseIndex, duration, nextPhaseStart, phasesCount: phases.length }}
+      Header={Header}
+      headerProps={{ status }}
+      minimal={minimal}
+      phases={displayablePhases}
+      Side={Side}
+      sideProps={{ totalFailureCount }}
+    />
   );
 };
 

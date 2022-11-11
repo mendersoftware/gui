@@ -29,10 +29,20 @@ describe('Dashboard Component', () => {
   });
 
   it('allows navigating to pending devices', async () => {
+    store = mockStore({
+      ...defaultState,
+      devices: {
+        ...defaultState.devices,
+        byStatus: {
+          ...defaultState.devices.byStatus,
+          accepted: { deviceIds: [], total: 0 }
+        }
+      }
+    });
     render(
       <Provider store={store}>
-        <Dashboard />
         <Routes>
+          <Route path="/" element={<Dashboard />} />
           <Route path="/devices/pending" element={<div>pendings route</div>} />
         </Routes>
       </Provider>
@@ -45,8 +55,8 @@ describe('Dashboard Component', () => {
   it('allows navigating to accepted devices', async () => {
     render(
       <Provider store={store}>
-        <Dashboard />
         <Routes>
+          <Route path="/" element={<Dashboard />} />
           <Route path="/devices/*" element={<div>accepted devices route</div>} />
         </Routes>
       </Provider>
@@ -57,19 +67,27 @@ describe('Dashboard Component', () => {
   });
 
   it('allows navigating to deployments', async () => {
-    const ui = (
+    store = mockStore({
+      ...defaultState,
+      deployments: {
+        ...defaultState.deployments,
+        byStatus: {
+          ...defaultState.deployments.byStatus,
+          inprogress: { deploymentIds: ['d2'], total: 1 }
+        }
+      }
+    });
+    render(
       <Provider store={store}>
-        <Dashboard />
         <Routes>
+          <Route path="/" element={<Dashboard />} />
           <Route path="/deployments/*" element={<div>deployments route</div>} />
         </Routes>
       </Provider>
     );
-    const { rerender } = render(ui);
-    await waitFor(() => rerender(ui));
-    await waitFor(() => screen.getByText(/View progress/i));
-    userEvent.click(screen.getByText(/View progress/i));
-    await waitFor(() => screen.getByText(/deployments route/i));
+    await waitFor(() => screen.findByText(/In progress/i));
+    userEvent.click(screen.getAllByText('test deployment 2')[0]);
+    await waitFor(() => screen.findByText(/deployments route/i));
     expect(screen.getByText(/deployments route/i)).toBeVisible();
   });
 });

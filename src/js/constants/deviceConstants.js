@@ -169,6 +169,7 @@ module.exports = {
     offline: {
       key: 'offline',
       needsFullFiltering: true,
+      needsMonitor: false,
       needsReporting: false,
       filterRule: {
         scope: 'system',
@@ -182,9 +183,18 @@ module.exports = {
       },
       title: 'Offline devices'
     },
+    failedLastUpdate: {
+      key: 'failedLastUpdate',
+      needsFullFiltering: false,
+      needsMonitor: false,
+      needsReporting: true,
+      filterRule: { scope: 'monitor', key: 'failed_last_update', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: true },
+      title: 'Devices that failed to install their last update'
+    },
     monitoring: {
       key: 'monitoring',
       needsFullFiltering: false,
+      needsMonitor: true,
       needsReporting: false,
       filterRule: { scope: 'monitor', key: 'alerts', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: true },
       title: 'Devices reporting monitoring issues'
@@ -192,6 +202,7 @@ module.exports = {
     authRequests: {
       key: 'authRequests',
       needsFullFiltering: false,
+      needsMonitor: false,
       needsReporting: true,
       filterRule: { scope: 'monitor', key: 'auth_requests', operator: DEVICE_FILTERING_OPTIONS.$gt.key, value: 1 },
       title: 'Devices with new authentication requests'

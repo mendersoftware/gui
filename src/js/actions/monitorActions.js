@@ -64,8 +64,9 @@ export const getIssueCountsByType =
   (type, options = {}) =>
   (dispatch, getState) => {
     const state = getState();
-    const { filters = state.devices.filters, group, status } = options;
+    const { filters = state.devices.filters, group, status, ...remainder } = options;
     const { applicableFilters: nonMonitorFilters, filterTerms } = convertDeviceListStateToFilters({
+      ...remainder,
       filters,
       group,
       selectedIssues: [type],

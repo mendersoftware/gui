@@ -10,7 +10,6 @@ import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../.
 import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { getIsEnterprise, getUserSettings } from '../../selectors';
-import LinedHeader from '../common/lined-header';
 
 export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
 
@@ -65,38 +64,36 @@ export const SoftwareDistribution = ({
     saveUserSettings({ reports: reports.filter(report => report !== removedReport) });
   };
 
-  return !isEnterprise ? (
-    <div className="flexbox centered">
-      <EnterpriseNotification isEnterprise={isEnterprise} benefit="actionable insights into the devices you are updating with Mender" />
+  if (!isEnterprise) {
+    return (
+      <div className="flexbox centered">
+        <EnterpriseNotification isEnterprise={isEnterprise} benefit="actionable insights into the devices you are updating with Mender" />
+      </div>
+    );
+  }
+  return hasDevices ? (
+    <div className="dashboard">
+      {reports.map((report, index) => {
+        const Component = reportTypes[report.type];
+        return (
+          <Component
+            attribute={report.attribute}
+            devices={devices}
+            groups={groups}
+            group={report.group}
+            key={`report-${report.group}-${index}`}
+            onClick={() => removeReport(report)}
+            selectGroup={selectGroup}
+            style={defaultChartStyle}
+          />
+        );
+      })}
+      <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} style={defaultChartStyle} />
     </div>
   ) : (
-    <div>
-      <LinedHeader heading="Software distribution" />
-      {hasDevices ? (
-        <div className="flexbox" style={{ flexWrap: 'wrap' }}>
-          {reports.map((report, index) => {
-            const Component = reportTypes[report.type];
-            return (
-              <Component
-                attribute={report.attribute}
-                devices={devices}
-                groups={groups}
-                group={report.group}
-                key={`report-${report.group}-${index}`}
-                onClick={() => removeReport(report)}
-                selectGroup={selectGroup}
-                style={defaultChartStyle}
-              />
-            );
-          })}
-          <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} style={defaultChartStyle} />
-        </div>
-      ) : (
-        <div className="dashboard-placeholder">
-          <BarChartIcon style={{ transform: 'scale(5)' }} />
-          <p className="margin-top-large">Software distribution charts will appear here once you connected a device. </p>
-        </div>
-      )}
+    <div className="dashboard-placeholder margin-top-large">
+      <BarChartIcon style={{ transform: 'scale(5)' }} />
+      <p className="margin-top-large">Software distribution charts will appear here once you connected a device. </p>
     </div>
   );
 };

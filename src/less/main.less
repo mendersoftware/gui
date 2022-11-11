@@ -497,10 +497,6 @@ ul.link-list {
     margin-top: 0;
     font-size: 1.25em;
   }
-
-  &.widget p {
-    font-size: inherit;
-  }
 }
 
 // tooltips
@@ -658,63 +654,42 @@ ul.link-list {
 }
 
 .dashboard {
-  .hint {
-    font-size: small;
-  }
-  .tiny {
-    font-size: 10px;
-  }
+  display: grid;
+  column-gap: 2 * @defaultGutterWidth;
+  row-gap: 2 * @defaultGutterWidth;
+  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
   .widget {
-    display: flex;
+    border-radius: @dotSize * 0.5;
+    border: 1px solid @placeholder;
     cursor: pointer;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0 3vw 3vw 0;
+    display: grid;
+    grid-template-rows: max-content 1fr;
     height: 180px;
+    min-width: 250px;
     max-width: 15vw;
-    min-width: 200px;
+    min-height: 175px;
+    padding: @defaultGutterWidth 1.5 * @defaultGutterWidth;
     position: relative;
-    padding: 1vw;
-    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-    &.notActive:hover {
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 3px, rgba(0, 0, 0, 0.1) 0px 1px 3px;
-    }
-    &.onboard:hover {
-      border-color: darken(@placeholder, 10%);
-    }
     &:hover .widgetRemover {
       opacity: 1;
     }
     &.chart-widget {
-      border-radius: @dotSize * 0.5;
-      border: 1px solid @placeholder;
       width: 19vw;
       max-width: initial;
       min-width: 315px;
     }
+    &.flexbox {
+      display: flex;
+    }
   }
   .widgetHeader,
-  .widgetMainContent,
-  .widgetFooter {
+  .widgetMainContent {
     width: 100%;
   }
-  .widgetHeader,
-  .widgetFooter {
-    color: @darkgrey;
-    border-color: @placeholder;
-    border-width: 1px;
-    justify-content: center;
-  }
-  .widgetHeader {
-    padding-bottom: 10px;
-  }
-  .widgetFooter {
-    padding-top: 10px;
-    font-weight: normal;
-  }
   .widgetMainContent {
-    padding: 10px @defaultGutterWidth;
-    flex-grow: 1;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
     .header {
       margin-bottom: 1pt;
     }
@@ -771,18 +746,6 @@ ul.link-list {
   .rotate(-45deg);
   &.ninety {
     .rotate(90deg);
-  }
-}
-
-.widget {
-  width: 50%;
-  min-height: 175px;
-  float: left;
-  padding: 22px 4% 22px;
-  margin: 0 @defaultGutterWidth 2 * @defaultGutterWidth;
-
-  &.small {
-    width: 20%;
   }
 }
 
@@ -882,27 +845,6 @@ table thead.clickable tr > th:first-child {
   grid-template-rows: repeat(3, 70px) 1fr;
   .info {
     grid-area: ~'4 / 1 / 5 / 3';
-  }
-}
-
-.results-status {
-  padding-top: 4px;
-  margin-bottom: 5px;
-
-  .disabled {
-    .opacity(0.1);
-  }
-
-  span.status {
-    margin-right: 10px;
-  }
-  img {
-    display: inline-block;
-    width: 23px;
-    height: 23px;
-    vertical-align: middle;
-    background-position-y: -2px;
-    margin-right: 8px;
   }
 }
 
@@ -1479,64 +1421,31 @@ div.waiting-inventory {
   justify-content: flex-end;
 }
 
-.progress-chart-container {
-  padding: 10px 20px;
-  min-height: 70px;
-  border-radius: @dotSize * 0.5;
-  justify-content: center;
-  .progress-chart,
-  .progress-step-total,
-  .progress-step {
-    display: flex;
-    min-height: 20px;
-    position: relative;
-  }
-  .progress-chart.detailed {
-    min-height: 3 * @defaultGutterWidth;
-    .progress-step-total {
-      min-height: inherit;
-    }
-  }
-  .progress-step {
-    align-items: center;
-    border-right-style: dashed;
-    border-right-width: 1px;
-    z-index: 1;
-    > .progress-bar {
-      position: absolute;
-      width: 100%;
-    }
-  }
-  .progress-bar {
-    height: 5px;
-    background-color: currentColor;
-  }
-  .progress-step-total {
-    border: none;
-    position: absolute;
-    z-index: 0;
-    width: 100%;
-  }
-  .progress-step-number {
-    align-self: flex-start;
-    position: absolute;
-    text-align: center;
-    text-transform: capitalize;
-    width: 100%;
-  }
-  &.stepped-progress {
-    .progress-bar {
-      height: 8px;
-    }
-    .progress-step-total .progress-bar {
-      border-style: solid;
-      border-radius: 2px;
-      border-width: 1px;
-      height: 12px;
-      margin: -2px;
-      padding: 2px;
-    }
-  }
+.progress-chart,
+.progress-step-total,
+.progress-step {
+  display: flex;
+  min-height: 20px;
+}
+.progress-step {
+  align-items: center;
+  z-index: 1;
+}
+.progress-bar {
+  position: absolute;
+  width: 100%;
+  height: 8px;
+  background-color: currentColor;
+}
+.progress-step-number {
+  text-align: center;
+  width: 100%;
+}
+.progress-step-total {
+  border: none;
+  position: absolute;
+  z-index: 0;
+  width: 100%;
 }
 
 .deployment-phases-report {

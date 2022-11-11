@@ -53,6 +53,9 @@ exports[`PendingDevices Component renders correctly 1`] = `
   background-color: #e6f2f1;
   color: #fff;
   background-color: #337a87;
+  top: -28px;
+  right: 16px;
+  z-index: 1;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -140,31 +143,14 @@ exports[`PendingDevices Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-3 {
-  background: #f7f7f7;
-}
-
-.emotion-4 {
-  height: 100%;
-  width: 100%;
-}
-
-.emotion-5 {
-  -webkit-align-items: flex-end;
-  -webkit-box-align: flex-end;
-  -ms-flex-align: flex-end;
-  align-items: flex-end;
-}
-
 <body>
   <div>
     <div
-      style="position: relative;"
+      class="relative"
     >
       <a
-        class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary emotion-0"
+        class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary absolute emotion-0"
         href="/devices/pending"
-        style="position: absolute; top: -28px; left: 15px; z-index: 1;"
         tabindex="0"
       >
         <svg
@@ -183,23 +169,19 @@ exports[`PendingDevices Component renders correctly 1`] = `
         />
       </a>
       <div
-        class="widget emotion-3 "
+        class="widget "
       >
         <div
-          class="flexbox column emotion-4"
+          class="flexbox widgetHeader"
+        >
+          Pending devices
+        </div>
+        <div
+          class="flexbox column widgetMainContent"
         >
           <div
-            class="flexbox column widgetMainContent align-right emotion-5"
-          >
-            <div
-              class="header"
-            >
-              Pending devices
-            </div>
-            <div
-              class="counter"
-            />
-          </div>
+            class="counter"
+          />
           <span
             class="link"
           >

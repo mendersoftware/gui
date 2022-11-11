@@ -146,11 +146,9 @@ module.exports = {
   },
   deploymentStatesToSubstates,
   deploymentStatesToSubstatesWithSkipped: {
-    inprogress: deploymentStatesToSubstates.inprogress,
-    paused: deploymentStatesToSubstates.paused,
+    ...deploymentStatesToSubstates,
     failures: [deploymentSubstates.failure],
     skipped: [deploymentSubstates.aborted, deploymentSubstates.noartifact, deploymentSubstates.alreadyInstalled, deploymentSubstates.decommissioned],
-    pending: [deploymentSubstates.pending],
     successes: [deploymentSubstates.success]
   },
   deploymentSubstates,
