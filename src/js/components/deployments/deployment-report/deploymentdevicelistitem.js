@@ -28,16 +28,21 @@ const determinedStateMap = {
 
 const undefinedStates = [deploymentSubstates.pending, deploymentSubstates.decommissioned, deploymentSubstates.alreadyInstalled];
 
-const DeploymentDeviceListItem = ({ device, idAttribute, viewLog }) => {
+const DeploymentDeviceListItem = ({ device, idAttribute, userCapabilities, viewLog }) => {
   const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status = '' } = device;
+  const { canReadReleases } = userCapabilities;
 
   const { artifact_name, device_type: deviceTypes = [], [rootfsImageVersionAttribute]: rootfsImageVersion } = attributes;
   const softwareName = rootfsImageVersion || artifact_name;
   const encodedArtifactName = encodeURIComponent(softwareName);
   const currentArtifactLink = softwareName ? (
-    <Link style={{ fontWeight: 'initial' }} to={`/releases/${encodedArtifactName}`}>
-      {softwareName}
-    </Link>
+    canReadReleases ? (
+      <Link style={{ fontWeight: 'initial' }} to={`/releases/${encodedArtifactName}`}>
+        {softwareName}
+      </Link>
+    ) : (
+      softwareName
+    )
   ) : (
     '-'
   );

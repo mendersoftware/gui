@@ -125,7 +125,6 @@ export const Authorized = props => {
     allCount,
     attributes,
     availableIssueOptions,
-    canManageDevices,
     columnSelection,
     customColumnSizes,
     deleteAuthset,
@@ -156,10 +155,12 @@ export const Authorized = props => {
     showsDialog,
     tenantCapabilities,
     updateDevicesAuth,
-    updateUserColumnSettings
+    updateUserColumnSettings,
+    userCapabilities
   } = props;
   const { refreshTrigger, selectedId, selectedIssues = [], isLoading: pageLoading, selection: selectedRows, sort = {}, state: selectedState } = deviceListState;
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
+  const { canManageDevices } = userCapabilities;
 
   const { hasReporting } = features;
   const { hasMonitor } = tenantCapabilities;
@@ -511,6 +512,7 @@ export const Authorized = props => {
           selectedRows={selectedRows}
           ref={authorizeRef}
           tenantCapabilities={tenantCapabilities}
+          userCapabilities={userCapabilities}
         />
       )}
       <ColumnCustomizationDialog
@@ -551,13 +553,11 @@ const mapStateToProps = state => {
     deviceCount = 1;
   }
   const { columnSelection = [] } = getUserSettings(state);
-  const { canManageDevices } = getUserCapabilities(state);
   return {
     attributes: getFilterAttributes(state),
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
     availableIssueOptions: getAvailableIssueOptionsByType(state),
-    canManageDevices,
     columnSelection,
     customColumnSizes: state.users.customColumns,
     devices,
@@ -572,7 +572,8 @@ const mapStateToProps = state => {
     selectedGroup,
     settingsInitialized: state.users.settingsInitialized,
     showHelptips: state.users.showHelptips,
-    tenantCapabilities: getTenantCapabilities(state)
+    tenantCapabilities: getTenantCapabilities(state),
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

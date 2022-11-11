@@ -44,7 +44,6 @@ export const defaultRefreshDeploymentsLength = 30000;
 export const Deployments = ({
   abortDeployment,
   advanceOnboarding,
-  canDeploy,
   devicesById,
   getDynamicGroups,
   getGroups,
@@ -55,7 +54,8 @@ export const Deployments = ({
   releases,
   selectionState,
   setDeploymentsState,
-  setSnackbar
+  setSnackbar,
+  userCapabilities
 }) => {
   const [deploymentObject, setDeploymentObject] = useState({});
   // eslint-disable-next-line no-unused-vars
@@ -63,6 +63,7 @@ export const Deployments = ({
   const tabsRef = useRef();
   const navigate = useNavigate();
   const { reportType, showCreationDialog: createDialog, showReportDialog: reportDialog, state } = selectionState.general;
+  const { canDeploy, canReadReleases } = userCapabilities;
 
   const [date] = useState(getISOStringBoundaries(new Date()));
   const { start: today, end: tonight } = date;
@@ -186,7 +187,7 @@ export const Deployments = ({
               <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.key} />
             ))}
           </Tabs>
-          {canDeploy && (
+          {canDeploy && canReadReleases && (
             <Button color="secondary" variant="contained" onClick={onCreationShow} style={{ height: '100%' }}>
               Create a deployment
             </Button>
@@ -219,9 +220,7 @@ const actionCreators = {
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  const { canDeploy } = getUserCapabilities(state);
   return {
-    canDeploy,
     devicesById: state.devices.byId,
     groupsById: groups,
     isEnterprise: getIsEnterprise(state),
@@ -229,7 +228,8 @@ const mapStateToProps = state => {
     pastCount: state.deployments.byStatus.finished.total,
     releases: state.releases.byId,
     selectionState: state.deployments.selectionState,
-    settings: state.users.globalSettings
+    settings: state.users.globalSettings,
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

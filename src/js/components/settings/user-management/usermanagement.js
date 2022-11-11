@@ -17,7 +17,7 @@ const actions = {
 };
 
 export const UserManagement = props => {
-  const { canManageUsers, currentUser, getUserList, isEnterprise, passwordResetStart, roles, setSnackbar, users } = props;
+  const { currentUser, getUserList, isEnterprise, passwordResetStart, roles, setSnackbar, users } = props;
   const [showCreate, setShowCreate] = useState(false);
   const [removeDialog, setRemoveDialog] = useState(false);
   const [user, setUser] = useState({});
@@ -80,7 +80,6 @@ export const UserManagement = props => {
       <UserList {...props} editUser={openEdit} />
       {showCreate && <UserForm {...props} closeDialog={dialogDismiss} submit={submit} />}
       <UserDefinition
-        canManageUsers={canManageUsers}
         currentUser={currentUser}
         isEnterprise={isEnterprise}
         onRemove={openRemove}

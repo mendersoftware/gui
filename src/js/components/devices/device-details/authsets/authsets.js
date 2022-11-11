@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
-import { getLimitMaxed } from '../../../../selectors';
+import { getLimitMaxed, getUserCapabilities } from '../../../../selectors';
 import Confirm from './../../../common/confirm';
 import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
 import Authsetlist from './authsetlist';
@@ -35,7 +35,8 @@ export const Authsets = ({
   deviceListRefresh,
   limitMaxed,
   showHelptips,
-  updateDeviceAuth
+  updateDeviceAuth,
+  userCapabilities
 }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,6 +65,7 @@ export const Authsets = ({
     }
   };
 
+  const { canManageDevices } = userCapabilities;
   const { classes } = useStyles();
   return (
     <div className={classes.wrapper}>
@@ -77,9 +79,10 @@ export const Authsets = ({
         loading={loading}
         device={device}
         showHelptips={showHelptips}
+        userCapabilities={userCapabilities}
       />
       {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedDevices} deviceLimit={deviceLimit} hasContactInfo />}
-      {![DEVICE_STATES.preauth, DEVICE_STATES.pending].includes(device.status) && (
+      {![DEVICE_STATES.preauth, DEVICE_STATES.pending].includes(device.status) && canManageDevices && (
         <div className={`flexbox ${classes.decommission}`}>
           {confirmDecommission ? (
             <Confirm action={() => decommission(device.id)} cancel={() => setConfirmDecomission(false)} type="decommissioning" />
@@ -102,7 +105,8 @@ const mapStateToProps = (state, ownProps) => {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     device,
     deviceLimit: state.devices.limit,
-    limitMaxed: getLimitMaxed(state)
+    limitMaxed: getLimitMaxed(state),
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

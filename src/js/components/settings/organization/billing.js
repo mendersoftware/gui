@@ -13,7 +13,7 @@ import CancelRequestDialog from '../dialogs/cancelrequest';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
 import { connect } from 'react-redux';
-import { getIsEnterprise } from '../../../selectors';
+import { getIsEnterprise, getUserRoles } from '../../../selectors';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
@@ -72,7 +72,7 @@ export const CancelSubscriptionButton = ({ handleCancelSubscription, isTrial }) 
   </p>
 );
 
-export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLimit, isEnterprise, organization }) => {
+export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLimit, isAdmin, isEnterprise, organization }) => {
   const [cancelSubscription, setCancelSubscription] = useState(false);
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
   const navigate = useNavigate();
@@ -145,9 +145,8 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
         />
         {!organization.trial && !isEnterprise && <OrganizationPaymentSettings />}
       </List>
-      {cancelSubscriptionConfirmation ? (
-        <CancelSubscriptionAlert />
-      ) : (
+      {cancelSubscriptionConfirmation && <CancelSubscriptionAlert />}
+      {isAdmin && !cancelSubscriptionConfirmation && (
         <CancelSubscriptionButton handleCancelSubscription={handleCancelSubscription} isTrial={organization.trial} />
       )}
       {cancelSubscription && <CancelRequestDialog onCancel={() => setCancelSubscription(false)} onSubmit={cancelSubscriptionSubmit} />}
@@ -159,10 +158,12 @@ const actionCreators = { cancelRequest };
 
 const mapStateToProps = state => {
   const currentPlan = state.organization.organization.plan || 'os';
+  const { isAdmin } = getUserRoles(state);
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
     currentPlan,
     deviceLimit: state.devices.limit,
+    isAdmin,
     isEnterprise: getIsEnterprise(state),
     organization: state.organization.organization
   };

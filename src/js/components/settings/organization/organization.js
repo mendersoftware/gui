@@ -164,7 +164,7 @@ export const Organization = ({
           sideBarContent={<CopyTextToClipboard token={org.tenant_token} />}
         />
       </List>
-      {isEnterprise && (
+      {isEnterprise && isAdmin && (
         <div className="flexbox center-aligned">
           <FormControlLabel
             className={`margin-bottom-small ${classes.ssoToggle}`}

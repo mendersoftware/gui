@@ -5,7 +5,7 @@ import configureStore from 'redux-mock-store';
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { adminUserCapabilities, defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import Authorized, { Authorized as AuthorizedDevices } from './authorized-devices';
 import { routes } from './base-devices';
@@ -93,6 +93,7 @@ describe('AuthorizedDevices Component', () => {
           tenantCapabilities={{ hasMonitor: true }}
           updateDevicesAuth={jest.fn}
           updateUserColumnSettings={submitMock}
+          userCapabilities={adminUserCapabilities}
         />
       </Provider>
     );

@@ -75,6 +75,22 @@ export const webhookEvents = [
   }
 ];
 
+export const adminUserCapabilities = {
+  canAuditlog: true,
+  canConfigure: true,
+  canDeploy: true,
+  canManageDevices: true,
+  canManageReleases: true,
+  canManageUsers: true,
+  canReadDeployments: true,
+  canReadDevices: true,
+  canReadReleases: true,
+  canReadUsers: true,
+  canTroubleshoot: true,
+  canUploadReleases: true,
+  canWriteDevices: true
+};
+
 export const userId = 'a30a780b-b843-5344-80e3-0fd95a4f6fc3';
 export const defaultState = {
   app: {
@@ -446,7 +462,7 @@ export const defaultState = {
   users: {
     byId: {
       a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin], verified: true },
-      [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z', tfa_status: twoFAStates.enabled }
+      [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z', roles: [rolesByName.admin], tfa_status: twoFAStates.enabled }
     },
     currentUser: 'a1',
     customColumns: [],
