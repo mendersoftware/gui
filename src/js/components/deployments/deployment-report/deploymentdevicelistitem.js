@@ -8,6 +8,7 @@ import { formatTime } from '../../../helpers';
 import { rootfsImageVersion as rootfsImageVersionAttribute } from '../../../constants/releaseConstants';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import Time from '../../common/time';
+import { deploymentSubstates } from '../../../constants/deploymentConstants';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',
@@ -25,8 +26,10 @@ const determinedStateMap = {
   'success': 100
 };
 
+const undefinedStates = [deploymentSubstates.pending, deploymentSubstates.decommissioned, deploymentSubstates.alreadyInstalled];
+
 const DeploymentDeviceListItem = ({ device, idAttribute, viewLog }) => {
-  const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status } = device;
+  const { attempts, attributes = {}, created, finished, id = 'id', log, retries, substate, status = '' } = device;
 
   const { artifact_name, device_type: deviceTypes = [], [rootfsImageVersionAttribute]: rootfsImageVersion } = attributes;
   const softwareName = rootfsImageVersion || artifact_name;
@@ -70,7 +73,7 @@ const DeploymentDeviceListItem = ({ device, idAttribute, viewLog }) => {
         ) : (
           statusTitle
         )}
-        {!['pending', 'decommissioned', 'already-installed'].includes(status.toLowerCase()) && (
+        {!undefinedStates.includes(status.toLowerCase()) && (
           <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
             <LinearProgress color={progressColor} value={devicePercentage} variant={devicePercentage !== undefined ? 'determinate' : 'indeterminate'} />
           </div>

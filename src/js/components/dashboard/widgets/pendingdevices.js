@@ -8,9 +8,17 @@ import ContentAddIcon from '@mui/icons-material/Add';
 
 import { BaseWidget } from './baseWidget';
 import { onboardingSteps } from '../../../utils/onboardingmanager';
+import { makeStyles } from 'tss-react/mui';
+
+const useStyles = makeStyles()(theme => ({
+  fab: { top: '-28px', right: theme.spacing(2), zIndex: 1 }
+}));
 
 export const PendingDevices = props => {
   const { advanceOnboarding, isActive: hasPending, innerRef, onboardingState, onClick, pendingDevicesCount } = props;
+
+  const { classes } = useStyles();
+
   const onWidgetClick = () => {
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING);
@@ -21,17 +29,16 @@ export const PendingDevices = props => {
   const pendingNotification = `Pending ${pluralize('devices', hasPending)}`;
 
   const widgetMain = {
-    header: pendingNotification,
     counter: pendingDevicesCount,
     targetLabel: 'View details'
   };
 
   return (
-    <div style={{ position: 'relative' }} ref={ref => (innerRef ? (innerRef.current = ref) : null)}>
-      <Fab color="primary" component={Link} to="/devices/pending" style={{ position: 'absolute', top: '-28px', left: '15px', zIndex: '1' }}>
+    <div className="relative" ref={ref => (innerRef ? (innerRef.current = ref) : null)}>
+      <Fab className={`absolute ${classes.fab}`} color="primary" component={Link} to="/devices/pending">
         <ContentAddIcon />
       </Fab>
-      <BaseWidget {...props} main={widgetMain} onClick={onWidgetClick} />
+      <BaseWidget {...props} header={pendingNotification} main={widgetMain} onClick={onWidgetClick} />
     </div>
   );
 };

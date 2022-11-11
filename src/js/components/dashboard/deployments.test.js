@@ -12,19 +12,13 @@ const mockStore = configureStore([thunk]);
 describe('Deployments Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      deployments: {
-        ...defaultState.deployments,
-        byId: {}
-      }
-    });
+    store = mockStore({ ...defaultState });
   });
 
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <Deployments getDeployments={() => Promise.resolve()} setSnackbar={jest.fn()} />
+        <Deployments clickHandle={jest.fn} />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

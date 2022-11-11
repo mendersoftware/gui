@@ -11,30 +11,16 @@ import { deploymentDisplayStates, deploymentSubstates, installationSubstatesMap,
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import inprogressImage from '../../../../assets/img/pending_status.png';
-import { ProgressChartContainer } from '../progressChart';
-
-const fullWidthStyle = { width: '100%' };
-const stepHeight = { compact: 20, default: '100%' };
+import { ProgressChartComponent } from '../progressChart';
 
 const useStyles = makeStyles()(theme => ({
   active: { borderLeftColor: theme.palette.text.primary },
   borderColor: { borderLeftStyle: 'solid', borderLeftWidth: 1, height: '100%', zIndex: 1 },
   continueButton: { marginRight: theme.spacing(2) },
+  failureIcon: { fontSize: 16, marginRight: 10 },
   inactive: { borderLeftColor: theme.palette.grey[500] },
   phaseInfo: { marginBottom: theme.spacing() },
-  phaseIndex: { margin: theme.spacing(0.5) },
-  phaseDelimiter: {
-    display: 'grid',
-    rowGap: 4,
-    placeItems: 'center',
-    position: 'absolute',
-    gridTemplateRows: `${stepHeight.compact}px 1.25rem min-content`,
-    ['&.compact']: {
-      gridTemplateRows: '45px 1.25rem min-content'
-    }
-  },
-  progressBarBackground: { position: 'initial', width: '110%' },
-  progressStepNumber: { alignSelf: 'flex-end', marginBottom: -20 }
+  phaseIndex: { margin: theme.spacing(0.5) }
 }));
 
 momentDurationFormatSetup(moment);
@@ -49,46 +35,46 @@ const substateIconMap = {
   pendingPause: { state: 'pendingPause', icon: <Pause fontSize="small" color="disabled" /> }
 };
 
-const PhaseDelimiter = ({ compact, index, isActive, status, substate, stepTotalWidth }) => {
+const stepTotalWidth = 100 / Object.keys(installationSubstatesMap).length;
+
+const PhaseDelimiter = ({ classes, compact, index, phase = {} }) => {
+  const { classes: localClasses } = useStyles();
+  const { status, substate: phaseSubstate } = phase;
+  const isActive = status === substateIconMap.inprogress.state;
+  const substate = phaseSubstate.done;
+
   const offset = `${stepTotalWidth * (index + 1) - stepTotalWidth / 2}%`;
-  const width = `${stepTotalWidth}%`;
-  const { classes } = useStyles();
-  const border = <div className={`${classes.borderColor} ${isActive ? classes.active : classes.inactive}`} />;
-  const icon = substateIconMap[status] ? substateIconMap[status].icon : <div />;
   return (
-    <div className={`${classes.phaseDelimiter} ${compact ? 'compact' : ''}`} style={{ left: offset, width }}>
-      {border}
-      {icon}
+    <div className={`${classes.phaseDelimiter} ${compact ? 'compact' : ''}`} style={{ left: offset, width: `${stepTotalWidth}%` }}>
+      <div className={`${localClasses.borderColor} ${isActive ? localClasses.active : localClasses.inactive}`} />
+      {substateIconMap[status] ? substateIconMap[status].icon : <div />}
       {compact ? <div /> : <div className="capitalized slightly-smaller">{substate}</div>}
     </div>
   );
 };
 
-const ProgressChart = ({ deployment = {}, showDetails, style }) => {
-  const { device_count = 0, max_devices = 0, stats, update_control_map = {} } = deployment;
-  const totalDeviceCount = Math.max(device_count, max_devices);
-  const { classes } = useStyles();
+const determineSubstateStatus = (successes, failures, totalDeviceCount, pauseIndicator, hasPauseDefined) => {
+  let status;
+  if (successes === totalDeviceCount) {
+    status = substateIconMap.finished.state;
+  } else if (failures === totalDeviceCount) {
+    status = substateIconMap.failed.state;
+  } else if (pauseIndicator) {
+    status = substateIconMap.paused.state;
+  } else if (successes || failures) {
+    status = substateIconMap.inprogress.state;
+  } else if (hasPauseDefined) {
+    status = substateIconMap.pendingPause.state;
+  }
+  return status;
+};
 
-  const determineSubstateStatus = (successes, failures, totalDeviceCount, pauseIndicator, hasPauseDefined) => {
-    let status;
-    if (successes === totalDeviceCount) {
-      status = substateIconMap.finished.state;
-    } else if (failures === totalDeviceCount) {
-      status = substateIconMap.failed.state;
-    } else if (pauseIndicator) {
-      status = substateIconMap.paused.state;
-    } else if (successes || failures) {
-      status = substateIconMap.inprogress.state;
-    } else if (hasPauseDefined) {
-      status = substateIconMap.pendingPause.state;
-    }
-    return status;
-  };
-
+const getDisplayablePhases = ({ pauseMap, deployment, stepWidth, substatesMap, totalDeviceCount }) => {
+  const { stats, update_control_map = {} } = deployment;
   const currentPauseState = Object.keys(pauseMap)
     .reverse()
     .find(key => stats[key] > 0);
-  const { displayablePhases } = Object.values(installationSubstatesMap).reduce(
+  return Object.values(substatesMap).reduce(
     (accu, substate, index) => {
       let successes = statCollector(substate.successIndicators, stats);
       let failures = statCollector(substate.failureIndicators, stats);
@@ -102,57 +88,16 @@ const ProgressChart = ({ deployment = {}, showDetails, style }) => {
       }
       successes = Math.min(totalDeviceCount, successes);
       failures = Math.min(totalDeviceCount - successes, failures);
-      const successWidth = `${(successes / totalDeviceCount) * 100 || 0}%`;
-      const failureWidth = `${(failures / totalDeviceCount) * 100 || 0}%`;
+      const successWidth = (successes / totalDeviceCount) * 100 || 0;
+      const failureWidth = (failures / totalDeviceCount) * 100 || 0;
       const { states = {} } = update_control_map;
       const hasPauseDefined = states[substate.pauseConfigurationIndicator]?.action === 'pause';
       const status = determineSubstateStatus(successes, failures, totalDeviceCount, !!stats[substate.pauseIndicator], hasPauseDefined);
-      accu.displayablePhases.push({ substate, successes, failures, successWidth, failureWidth, status });
+      accu.displayablePhases.push({ substate, successes, failures, offset: stepWidth * index, width: stepWidth, successWidth, failureWidth, status });
       return accu;
     },
     { displayablePhases: [], shortCutSuccesses: statCollector(shortCircuitIndicators, stats) }
-  );
-
-  const stepTotalWidth = 100 / Object.keys(installationSubstatesMap).length;
-  const stepWidth = `${stepTotalWidth}%`;
-  const height = showDetails ? stepHeight.details : stepHeight.default;
-  return (
-    <>
-      {!showDetails && (
-        <>
-          Phase 1: {Math.round((device_count / totalDeviceCount || 0) * 100)}% ({device_count} {pluralize('device', device_count)})
-        </>
-      )}
-      <div className={`progress-chart ${!showDetails ? 'detailed' : ''}`} style={style}>
-        {displayablePhases.map((phase, index) => {
-          return (
-            <React.Fragment key={`deployment-progress-phase-${index}`}>
-              <div className="progress-step" style={{ width: stepWidth, height, left: `${stepTotalWidth * index}%` }}>
-                <div className="flexbox" style={fullWidthStyle}>
-                  <div className="progress-bar green" style={{ width: phase.successWidth }} />
-                  <div className="progress-bar warning" style={{ width: phase.failureWidth }} />
-                </div>
-                {!showDetails && <div className={`progress-step-number ${classes.progressStepNumber}`}>{phase.substate.title}</div>}
-              </div>
-              {index !== displayablePhases.length - 1 && (
-                <PhaseDelimiter
-                  compact={!showDetails}
-                  isActive={phase.status === substateIconMap.inprogress.state}
-                  substate={phase.substate.done}
-                  status={phase.status}
-                  stepTotalWidth={stepTotalWidth}
-                  index={index}
-                />
-              )}
-            </React.Fragment>
-          );
-        })}
-        <div className="progress-step progress-step-total" style={{ height }}>
-          <div className={`progress-bar ${classes.progressBarBackground}`} />
-        </div>
-      </div>
-    </>
-  );
+  ).displayablePhases;
 };
 
 const statusMap = {
@@ -160,21 +105,43 @@ const statusMap = {
   paused: <Pause fontSize="inherit" />
 };
 
-export const PhaseProgressDisplay = ({ className = '', deployment, status }) => {
+const Header = ({ device_count, failures, totalDeviceCount, showDetails, status }) => {
   const { classes } = useStyles();
-  const { failures } = groupDeploymentStats(deployment);
-  return (
-    <ProgressChartContainer className={`flexbox column stepped-progress ${className}`}>
+  return showDetails ? (
+    <>
       <div className={`flexbox space-between ${classes.phaseInfo}`}>
         {statusMap[status] ? statusMap[status] : <div />}
         <div className="flexbox center-aligned">
-          {!!failures && <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />}
+          {!!failures && <WarningIcon className={classes.failureIcon} />}
           {`${failures} ${pluralize('failure', failures)}`}
         </div>
       </div>
       <div className={`muted slightly-smaller ${classes.phaseIndex}`}>Phase 1 of 1</div>
-      <ProgressChart deployment={deployment} showDetails style={{ maxWidth: '90%', minHeight: 65 }} />
-    </ProgressChartContainer>
+    </>
+  ) : (
+    <>
+      Phase 1: {Math.round((device_count / totalDeviceCount || 0) * 100)}% ({device_count} {pluralize('device', device_count)})
+    </>
+  );
+};
+
+export const PhaseProgressDisplay = ({ className = '', deployment, showDetails = true, status, ...remainder }) => {
+  const { failures } = groupDeploymentStats(deployment);
+
+  const { device_count = 0, max_devices = 0 } = deployment;
+  const totalDeviceCount = Math.max(device_count, max_devices);
+
+  const displayablePhases = getDisplayablePhases({ deployment, pauseMap, stepWidth: stepTotalWidth, substatesMap: installationSubstatesMap, totalDeviceCount });
+
+  return (
+    <ProgressChartComponent
+      className={`flexbox column stepped-progress ${showDetails ? '' : 'no-background'} ${className}`}
+      phases={displayablePhases}
+      PhaseDelimiter={PhaseDelimiter}
+      Header={Header}
+      headerProps={{ device_count, failures, showDetails, status, totalDeviceCount }}
+      {...remainder}
+    />
   );
 };
 
@@ -182,6 +149,8 @@ const confirmationStyle = {
   justifyContent: 'flex-start',
   paddingLeft: 100
 };
+
+const PhaseLabel = ({ classes, phase }) => <div className={`capitalized progress-step-number ${classes.progressStepNumber}`}>{phase.substate.title}</div>;
 
 export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpdateControlChange }) => {
   const { classes } = useStyles();
@@ -221,9 +190,7 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
   const disableContinuationButtons = isLoading || (canContinue && states[pauseMap[currentPauseState].followUp].action !== 'pause');
   return (
     <div className={`flexbox column ${className}`}>
-      <ProgressChartContainer className="stepped-progress" style={{ background: 'none' }}>
-        <ProgressChart deployment={deployment} />
-      </ProgressChartContainer>
+      <PhaseProgressDisplay compact deployment={deployment} PhaseLabel={PhaseLabel} showDetails={false} status={status} />
       <div className="margin-top">
         Deployment is <span className="uppercased">{status}</span> with {totalFailureCount} {pluralize('failure', totalFailureCount)}
         {isPaused && !canContinue && ` - waiting for an action on the ${pluralize('device', totalPausedCount)} to continue`}

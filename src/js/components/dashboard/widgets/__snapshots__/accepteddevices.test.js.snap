@@ -1,42 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AcceptedDevices Component renders correctly 1`] = `
-.emotion-0 {
-  background: #f7f7f7;
-}
-
-.emotion-1 {
-  height: 100%;
-  width: 100%;
-}
-
-.emotion-2 {
-  -webkit-align-items: flex-end;
-  -webkit-box-align: flex-end;
-  -ms-flex-align: flex-end;
-  align-items: flex-end;
-}
-
 <div
-  class="widget emotion-0 "
+  class="widget "
 >
   <div
-    class="flexbox column emotion-1"
+    class="flexbox widgetHeader"
   >
     <div
-      class="flexbox column widgetMainContent align-right emotion-2"
+      class="flexbox center-aligned"
     >
-      <div
-        class="header"
-      >
-        Accepted devices
-      </div>
-      <div
-        class="counter"
-      />
+      Accepted devices 
     </div>
-    <span
-      class="link"
+  </div>
+  <div
+    class="flexbox column widgetMainContent"
+  >
+    <div
+      class="counter"
     />
   </div>
 </div>

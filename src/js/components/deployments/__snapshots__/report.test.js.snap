@@ -747,37 +747,46 @@ Devices that are in the middle of the deployment at the time of abort will finis
           </div>
         </div>
         <div
-          class="progress-chart-container margin-top css-14dhdt2-container"
+          class="relative css-f0yq8v-container  margin-top no-background"
         >
           <div
-            class="progress-chart detailed"
+            class="chart-container"
           >
             <div
-              class="progress-step progress-step-total"
+              class="progress-chart relative detailed"
             >
               <div
-                class="progress-bar"
-              />
-            </div>
-            <div
-              class="progress-step"
-              style="flex-grow: 1;"
-            >
-              <div
-                class="progress-step-number muted"
-              >
-                Phase 1
-              </div>
-              <div
-                class="flexbox progress-bar"
+                class="progress-step"
+                style="left: 0%; width: 100%;"
               >
                 <div
-                  class="progress-bar green"
-                  style="width: 0%;"
+                  class="capitalized progress-step-number muted"
+                >
+                  Phase 
+                  1
+                </div>
+                <div
+                  class="progress-bar"
+                  style="width: 100%; background-color: rgb(170, 170, 170);"
                 />
                 <div
-                  class="progress-bar warning"
-                  style="width: 0%;"
+                  style="display: contents;"
+                >
+                  <div
+                    class="progress-bar green"
+                    style="width: 0%;"
+                  />
+                  <div
+                    class="progress-bar warning"
+                    style="left: 0%; width: 0%;"
+                  />
+                </div>
+              </div>
+              <div
+                class="progress-step relative flexbox progress-step-total"
+              >
+                <div
+                  class="progress-bar"
                 />
               </div>
             </div>
@@ -837,7 +846,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                 <div
                   class="muted"
                 >
-                  100% (1 device)
+                  1% (1 device)
                 </div>
               </div>
             </div>

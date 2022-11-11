@@ -679,34 +679,6 @@ export const getDevicesByStatus =
       .catch(err => commonErrorHandler(err, `${status} devices couldn't be loaded.`, dispatch, commonErrorFallback));
   };
 
-export const getActiveDevices = currentTime => dispatch =>
-  Promise.all([
-    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
-      page: 1,
-      per_page: 1,
-      filters: mapFiltersToTerms([
-        { key: 'status', value: DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
-        { key: 'updated_ts', value: currentTime, operator: '$gte', scope: 'system' }
-      ])
-    }),
-    GeneralApi.post(`${inventoryApiUrlV2}/filters/search`, {
-      page: 1,
-      per_page: 1,
-      filters: mapFiltersToTerms([
-        { key: 'status', value: DEVICE_STATES.accepted, operator: '$eq', scope: 'identity' },
-        { key: 'updated_ts', value: currentTime, operator: '$lt', scope: 'system' }
-      ])
-    })
-  ]).then(results => {
-    const activeDeviceTotal = Number(results[0].headers[headerNames.total]);
-    const inactiveDeviceTotal = Number(results[1].headers[headerNames.total]);
-    return dispatch({
-      type: DeviceConstants.SET_INACTIVE_DEVICES,
-      inactiveDeviceTotal,
-      activeDeviceTotal
-    });
-  });
-
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = 1, devices = []) =>

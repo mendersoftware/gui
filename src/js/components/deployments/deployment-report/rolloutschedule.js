@@ -7,15 +7,15 @@ import { Chip } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import { formatTime, getPhaseDeviceCount, getRemainderPercent, groupDeploymentStats } from '../../../helpers';
+import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
+import { formatTime, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
+import LinedHeader from '../../common/lined-header';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
-import { ProgressChart, ProgressChartContainer } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
-import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
+import { getDeploymentPhasesInfo, getDisplayablePhases, ProgressChartComponent } from '../progressChart';
 import PhaseProgress from './phaseprogress';
-import LinedHeader from '../../common/lined-header';
 
 const useStyles = makeStyles()(theme => ({
   currentPhaseInfo: { backgroundColor: theme.palette.grey[400] },
@@ -28,29 +28,18 @@ momentDurationFormatSetup(moment);
 
 const maxPhaseWidth = 270;
 
+const PhaseLabel = ({ index }) => <div className="capitalized progress-step-number muted">Phase {index + 1}</div>;
+
 export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, onUpdateControlChange }) => {
   const { classes } = useStyles();
   const now = moment();
-  const {
-    created: creationTime = now.toISOString(),
-    device_count: deploymentDeviceCount,
-    filter = {},
-    finished,
-    max_devices,
-    phases = [{ batch_size: 100 }],
-    status,
-    update_control_map
-  } = deployment;
+  const { created: creationTime = now.toISOString(), filter = {}, finished, status, update_control_map } = deployment;
   const { id: filterId } = filter;
-  const { inprogress: currentProgressCount, successes: totalSuccessCount, failures: totalFailureCount } = groupDeploymentStats(deployment);
-  const totalDeviceCount = Math.max(deploymentDeviceCount, max_devices || 0);
+
+  const { phases, reversedPhases, totalDeviceCount, ...remainder } = getDeploymentPhasesInfo(deployment);
 
   const start_time = phases[0].start_ts || creationTime;
-  const currentPhase =
-    phases
-      .slice()
-      .reverse()
-      .find(phase => now.isAfter(phase.start_ts)) || phases[0];
+  const currentPhase = reversedPhases.find(phase => now.isAfter(phase.start_ts)) || phases[0];
   const currentPhaseIndex = phases.findIndex(phase => phase.id === currentPhase.id);
   const currentPhaseStartTime = getPhaseStartTime(phases, currentPhaseIndex, start_time);
   let currentPhaseTime = 'N/A';
@@ -58,6 +47,8 @@ export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, on
     currentPhaseTime = currentPhaseIndex + 1;
   }
   const endTime = finished ? <Time value={formatTime(finished)} /> : filterId ? 'N/A' : '-';
+
+  const displayablePhases = getDisplayablePhases({ currentPhase, phases, totalDeviceCount, ...remainder });
   return (
     <>
       <LinedHeader className={`margin-top-large ${headerClass}`} heading="Schedule details" innerRef={innerRef} />
@@ -74,17 +65,7 @@ export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, on
             <ArrowForward className={classes.phasesOverviewArrow} />
             <TwoColumnData {...defaultColumnDataProps} config={{ 'End time': endTime }} />
           </div>
-          <ProgressChartContainer className="margin-top" style={{ background: 'initial' }}>
-            <ProgressChart
-              currentPhase={currentPhase}
-              currentProgressCount={currentProgressCount}
-              phases={phases}
-              showPhaseNumber
-              totalDeviceCount={totalDeviceCount}
-              totalFailureCount={totalFailureCount}
-              totalSuccessCount={totalSuccessCount}
-            />
-          </ProgressChartContainer>
+          <ProgressChartComponent className="margin-top no-background" phases={displayablePhases} PhaseLabel={PhaseLabel} />
         </>
       ) : (
         <PhaseProgress deployment={deployment} onAbort={onAbort} onUpdateControlChange={onUpdateControlChange} />
@@ -92,12 +73,7 @@ export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, on
       <div className="deployment-phases-report margin-top margin-bottom" style={{ gridTemplateColumns: `repeat(auto-fit, ${maxPhaseWidth}px)` }}>
         {phases.map((phase, index) => {
           phase.batch_size = phase.batch_size || getRemainderPercent(phases);
-          const deviceCount = getPhaseDeviceCount(
-            deployment.max_devices || deploymentDeviceCount,
-            phase.batch_size,
-            phase.batch_size,
-            index === phases.length - 1
-          );
+          const deviceCount = getPhaseDeviceCount(totalDeviceCount, phase.batch_size, phase.batch_size, index === phases.length - 1);
           const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
           const startTime = phase.start_ts ?? getPhaseStartTime(phases, index, start_time);
           const phaseObject = {

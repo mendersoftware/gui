@@ -1001,6 +1001,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
       <div
         class="rightFluid container"
       >
+        <h4
+          class="margin-left-small"
+        >
+          Dashboard
+        </h4>
         <div
           class="flexbox centered"
           style="height: 75%;"

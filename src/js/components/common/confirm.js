@@ -41,7 +41,7 @@ const confirmationType = {
   }
 };
 
-export const Confirm = ({ action, cancel, classes = '', style = {}, type }) => {
+export const Confirm = ({ action, cancel, classes = '', message = '', style = {}, type }) => {
   const [className, setClassName] = useState('fadeIn');
   const [loading, setLoading] = useState(false);
 
@@ -54,9 +54,13 @@ export const Confirm = ({ action, cancel, classes = '', style = {}, type }) => {
     action();
   };
 
+  let notification = message;
+  if (confirmationType[type]) {
+    notification = loading ? confirmationType[type].loading : confirmationType[type].message;
+  }
   return (
     <div className={`flexbox center-aligned ${className} ${classes}`} style={{ marginRight: '12px', justifyContent: 'flex-end', ...style }}>
-      <span className="bold">{loading ? confirmationType[type].loading : confirmationType[type].message}</span>
+      <span className="bold">{notification}</span>
       <IconButton id="confirmAbort" onClick={handleConfirm} size="large">
         <CheckCircleIcon className="green" />
       </IconButton>
