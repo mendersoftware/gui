@@ -45,7 +45,9 @@ const useStyles = makeStyles()(theme => ({
     borderRadius: '50%',
     fontSize: '2rem',
     height: '5vh',
-    width: '5vh'
+    width: '5vh',
+    maxWidth: '3em',
+    maxHeight: '3em'
   },
   issueType: {
     maxWidth: '6vh',
@@ -82,7 +84,8 @@ const useStyles = makeStyles()(theme => ({
     '&.widget': { maxWidth: 'initial !important' },
     '.widgetMainContent': {
       columnGap: theme.spacing(2),
-      display: 'flex'
+      display: 'flex',
+      justifyContent: 'space-evenly'
     }
   }
 }));
