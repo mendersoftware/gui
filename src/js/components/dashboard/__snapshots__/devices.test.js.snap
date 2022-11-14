@@ -33,6 +33,10 @@ exports[`Devices Component renders correctly 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: space-evenly;
+  -ms-flex-pack: space-evenly;
+  -webkit-justify-content: space-evenly;
+  justify-content: space-evenly;
 }
 
 .emotion-2 {
@@ -53,6 +57,8 @@ exports[`Devices Component renders correctly 1`] = `
   font-size: 2rem;
   height: 5vh;
   width: 5vh;
+  max-width: 3em;
+  max-height: 3em;
 }
 
 .emotion-4 {
