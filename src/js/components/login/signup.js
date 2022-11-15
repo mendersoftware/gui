@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 
 import { Button } from '@mui/material';
 
+import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
@@ -15,9 +16,35 @@ import Loader from '../common/loader';
 import UserDataEntry from './signup-steps/userdata-entry';
 import OrgDataEntry from './signup-steps/orgdata-entry';
 import { OAuth2Providers } from './oauth2providers';
-import { EntryLink } from './login';
+import { makeStyles } from 'tss-react/mui';
 
 const cookies = new Cookies();
+const useStyles = makeStyles()(theme => ({
+  background: {
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
+    width: '100%',
+    marginTop: -(50 + 45),
+    '&#signup-box': {
+      maxWidth: 'initial'
+    }
+  },
+  locationSelect: { minWidth: 150 },
+  locationIcon: { marginLeft: theme.spacing(1.5), transform: 'scale(0.75)' },
+  fullHeight: { height: '100%' },
+  userData: {
+    display: 'grid',
+    gridTemplateColumns: 'min-content',
+    justifyContent: 'center',
+    alignContent: 'center',
+    '&.right': {
+      background: theme.palette.grey[400],
+      rowGap: 20,
+      gridTemplateRows: 'min-content min-content min-content'
+    }
+  },
+  orgData: { maxWidth: 400 },
+  logo: { marginLeft: '5vw', marginTop: 45, maxHeight: 50 }
+}));
 
 export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setFirstLoginAfterSignup, recaptchaSiteKey, setSnackbar }) => {
   const [step, setStep] = useState(1);
@@ -59,7 +86,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
     setStep(2);
   };
 
-  const handleSignup = (formData, recaptcha) => {
+  const handleSignup = (formData, recaptcha, location) => {
     setLoading(true);
     const actualEmail = formData.email != null ? formData.email : email;
     const credentials = oauthProvider ? { email: actualEmail, login: { [oauthProvider]: oauthId } } : { email: actualEmail, password };
@@ -69,6 +96,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
       organization: formData.name,
       plan: 'enterprise',
       tos: formData.tos,
+      location,
       marketing: formData.marketing == 'true',
       'g-recaptcha-response': recaptcha || 'empty',
       campaign
@@ -102,11 +130,14 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   if (redirectOnLogin) {
     return <Navigate to="/" replace />;
   }
+  const { classes } = useStyles();
+
   const provider = OAuth2Providers.find(item => item.id === oauthProvider) || { id: '' };
   const steps = {
-    1: <UserDataEntry setSnackbar={setSnackbar} data={{ email, password, password_confirmation: password }} onSubmit={handleStep1} />,
+    1: <UserDataEntry classes={classes} setSnackbar={setSnackbar} data={{ email, password, password_confirmation: password }} onSubmit={handleStep1} />,
     2: (
       <OrgDataEntry
+        classes={classes}
         setSnackbar={setSnackbar}
         data={{ name: organization, email, emailVerified, tos, marketing }}
         onSubmit={handleSignup}
@@ -114,7 +145,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
       />
     ),
     3: (
-      <div className="align-center" style={{ minHeight: '50vh' }}>
+      <div className="align-center flexbox column centered full-height">
         <h1>Sign up completed</h1>
         <h2 className="margin-bottom-large">
           Your account has been created,
@@ -128,16 +159,12 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
     )
   };
   return (
-    <div className="flexbox column padding-top padding-bottom" id="signup-box">
-      {loading ? (
-        <Loader show={true} style={{ display: 'flex' }} />
-      ) : (
-        <>
-          {steps[step]}
-          {step !== 3 && <EntryLink target="login" />}
-        </>
-      )}
-    </div>
+    <>
+      <LoginLogo className={classes.logo} />
+      <div className={`content ${classes.background}`} id="signup-box">
+        {loading ? <Loader show={true} style={{ display: 'flex' }} /> : steps[step]}
+      </div>
+    </>
   );
 };
 

@@ -1,3 +1,6 @@
+const FlagEU = require('../../assets/img/flag-eu.svg');
+const FlagUS = require('../../assets/img/flag-us.svg');
+
 const startingDeviceCount = {
   os: 'for first 50 devices',
   professional: 'for first 250 devices'
@@ -29,6 +32,10 @@ module.exports = {
     threeSeconds: 3 * oneSecond,
     fiveSeconds: 5 * oneSecond,
     refreshDefault: 10 * oneSecond
+  },
+  locations: {
+    eu: { key: 'eu', title: 'EU', location: 'localhost' || 'eu.hosted.mender.io', icon: FlagEU.default },
+    us: { key: 'us', title: 'US', location: 'docker.mender.io' || 'hosted.mender.io', icon: FlagUS.default }
   },
   PLANS: {
     os: {

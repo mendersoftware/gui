@@ -31,7 +31,7 @@ describe('Login Component', () => {
         <Login location={{ state: { from: '' } }} />
       </Provider>
     );
-    const view = baseElement.firstChild.firstChild;
+    const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

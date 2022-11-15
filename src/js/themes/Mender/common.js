@@ -32,7 +32,8 @@ export const palette = {
     hint: secondaryText
   },
   brand: {
-    mender: '#015969'
+    mender: '#015969',
+    northernTech: '#0099C3'
   }
 };
 
