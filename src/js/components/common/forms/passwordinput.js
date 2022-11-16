@@ -82,7 +82,7 @@ export default class PasswordInput extends React.Component {
     const { className, create, defaultValue, disabled, edit, generate, handleKeyPress, id, InputLabelProps = {}, label, placeholder, required } = this.props;
     const { copied, errortext, feedback, score, visible, value } = this.state;
     const feedbackMessages = Boolean(errortext) && (
-      <p>
+      <p className="help-text">
         {feedback.map((message, index) => (
           <React.Fragment key={`feedback-${index}`}>
             <span>{message}</span>
