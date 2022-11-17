@@ -192,8 +192,9 @@ const actionCreators = { getDeploymentsByStatus, setDeploymentsState, setSnackba
 const mapStateToProps = state => {
   const progress = state.deployments.selectionState.inprogress.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const pending = state.deployments.selectionState.pending.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const { canDeploy } = getUserCapabilities(state);
+  const { canConfigure, canDeploy } = getUserCapabilities(state);
   return {
+    canConfigure,
     canDeploy,
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,

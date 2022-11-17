@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { adminUserCapabilities, defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import AuthStatus from './authstatus';
 
@@ -29,7 +29,7 @@ describe('AuthStatus Component', () => {
               }
             ]
           }}
-          toggleAuthsets={jest.fn}
+          userCapabilities={adminUserCapabilities}
         />
       </Provider>
     );

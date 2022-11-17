@@ -16,9 +16,9 @@ import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 const listItems = [
   { route: '/', text: 'Dashboard', canAccess: () => true },
-  { route: '/devices', text: 'Devices', canAccess: () => true },
-  { route: '/releases', text: 'Releases', canAccess: () => true },
-  { route: '/deployments', text: 'Deployments', canAccess: () => true },
+  { route: '/devices', text: 'Devices', canAccess: ({ userCapabilities: { canReadDevices } }) => canReadDevices },
+  { route: '/releases', text: 'Releases', canAccess: ({ userCapabilities: { canReadReleases, canUploadReleases } }) => canReadReleases || canUploadReleases },
+  { route: '/deployments', text: 'Deployments', canAccess: ({ userCapabilities: { canDeploy, canReadDeployments } }) => canReadDeployments || canDeploy },
   {
     route: '/auditlog',
     text: 'Audit log',

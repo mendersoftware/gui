@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { adminUserCapabilities, defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import DeviceTags from './devicetags';
 
@@ -17,7 +17,13 @@ describe('DeviceTags Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <DeviceTags device={{ ...defaultState.devices.byId.a1 }} setDeviceTags={jest.fn} setSnackbar={jest.fn} showHelptips />
+        <DeviceTags
+          device={{ ...defaultState.devices.byId.a1 }}
+          setDeviceTags={jest.fn}
+          setSnackbar={jest.fn}
+          showHelptips
+          userCapabilities={adminUserCapabilities}
+        />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

@@ -137,6 +137,7 @@ export const getUserRoles = createSelector(
 
 export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissions }) => {
   const canManageReleases = uiPermissions.releases.includes(uiPermissionsById.manage.value);
+  const canReadReleases = canManageReleases || uiPermissions.releases.includes(uiPermissionsById.read.value);
   const canUploadReleases = canManageReleases || uiPermissions.releases.includes(uiPermissionsById.upload.value);
 
   const canAuditlog = uiPermissions.auditlog.includes(uiPermissionsById.read.value);
@@ -155,6 +156,7 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
   const canDeploy =
     uiPermissions.deployments.includes(uiPermissionsById.deploy.value) ||
     Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.deploy.value));
+  const canReadDeployments = uiPermissions.deployments.includes(uiPermissionsById.read.value);
 
   return {
     canAuditlog,
@@ -163,7 +165,9 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
     canManageDevices,
     canManageReleases,
     canManageUsers,
+    canReadDeployments,
     canReadDevices,
+    canReadReleases,
     canReadUsers,
     canTroubleshoot,
     canUploadReleases,

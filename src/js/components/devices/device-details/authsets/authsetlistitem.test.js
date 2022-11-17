@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { undefineds } from '../../../../../../tests/mockData';
+import { adminUserCapabilities, undefineds } from '../../../../../../tests/mockData';
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { render } from '../../../../../../tests/setupTests';
 import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
@@ -46,6 +46,7 @@ gnr0OSIDwEL31l+12DbAQ9+ANv6TLpWNfLpX0E6IStkZAgMBAAE=
         limitMaxed={false}
         loading={false}
         total={10}
+        userCapabilities={adminUserCapabilities}
       />
     );
     const view = baseElement.firstChild.firstChild;

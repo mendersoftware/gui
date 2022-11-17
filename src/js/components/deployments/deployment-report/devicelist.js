@@ -11,6 +11,8 @@ import DeploymentDeviceListItem from './deploymentdevicelistitem';
 
 const { page: defaultPage } = DEVICE_LIST_DEFAULTS;
 
+const deviceListColumns = ['Device type', 'Current software', 'Started', 'Finished', 'Attempts', 'Deployment status', ''];
+
 export const DeploymentDeviceList = ({
   deployment,
   getDeploymentDevices,
@@ -19,12 +21,13 @@ export const DeploymentDeviceList = ({
   idAttribute,
   selectedDeviceIds,
   selectedDevices,
+  userCapabilities,
   viewLog
 }) => {
   const [currentPage, setCurrentPage] = useState(defaultPage);
   const [loadingDone, setLoadingDone] = useState(false);
   const [perPage, setPerPage] = useState(10);
-  const { created = new Date().toISOString(), device_count = 0, retries, totalDeviceCount: totalDevices } = deployment;
+  const { device_count = 0, retries, totalDeviceCount: totalDevices } = deployment;
   const totalDeviceCount = totalDevices ?? device_count;
 
   useEffect(() => {
@@ -63,7 +66,7 @@ export const DeploymentDeviceList = ({
             <TableHead>
               <TableRow>
                 <TableCell tooltip={idAttribute}>{idAttribute}</TableCell>
-                {['Device type', 'Current software', 'Started', 'Finished', 'Attempts', 'Deployment status', ''].map((content, index) =>
+                {deviceListColumns.map((content, index) =>
                   content != 'Attempts' || retries ? (
                     <TableCell key={`device-list-header-${index + 1}`} tooltip={content}>
                       {content}
@@ -74,7 +77,7 @@ export const DeploymentDeviceList = ({
             </TableHead>
             <TableBody>
               {selectedDevices.map(device => (
-                <DeploymentDeviceListItem key={device.id} created={created} device={device} idAttribute={idAttribute} viewLog={viewLog} retries={retries} />
+                <DeploymentDeviceListItem key={device.id} device={device} idAttribute={idAttribute} userCapabilities={userCapabilities} viewLog={viewLog} />
               ))}
             </TableBody>
           </Table>

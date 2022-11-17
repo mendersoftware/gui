@@ -16,7 +16,7 @@ import { onboardingSteps } from '../../constants/onboardingConstants';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
-import { getOnboardingState } from '../../selectors';
+import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -258,7 +258,10 @@ const mapStateToProps = state => {
   const past = state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+  const { canConfigure, canDeploy } = getUserCapabilities(state);
   return {
+    canConfigure,
+    canDeploy,
     groups: [ALL_DEVICES, ...Object.keys(groups)],
     onboardingState: getOnboardingState(state),
     past,

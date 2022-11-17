@@ -13,6 +13,8 @@ const mockStore = configureStore([thunk]);
 
 describe('UserManagement Component', () => {
   let store;
+  // eslint-disable-next-line no-unused-vars
+  const { roles, ...user } = defaultState.users.byId[userId];
   beforeEach(() => {
     store = mockStore({
       ...defaultState,
@@ -21,6 +23,13 @@ describe('UserManagement Component', () => {
         features: {
           ...defaultState.app.features,
           isEnterprise: true
+        }
+      },
+      users: {
+        ...defaultState.users,
+        byId: {
+          ...defaultState.users.byId,
+          [userId]: user
         }
       }
     });

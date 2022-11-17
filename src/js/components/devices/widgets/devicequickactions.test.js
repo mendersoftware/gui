@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { adminUserCapabilities, defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import DeviceQuickActions from './devicequickactions';
 
@@ -24,6 +24,7 @@ describe('DeviceQuickActions Component', () => {
         selectedGroup=""
         selectedRows={[3]}
         tenantCapabilities={{ isEnterprise: true }}
+        userCapabilities={adminUserCapabilities}
       />
     );
     const view = baseElement.firstChild.firstChild;
