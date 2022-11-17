@@ -186,8 +186,9 @@ const actionCreators = { getDeploymentsByStatus, setSnackbar, setDeploymentsStat
 const mapStateToProps = state => {
   const scheduled = state.deployments.selectionState.scheduled.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
   const { plan = 'os' } = state.organization.organization;
-  const { canDeploy } = getUserCapabilities(state);
+  const { canConfigure, canDeploy } = getUserCapabilities(state);
   return {
+    canConfigure,
     canDeploy,
     count: state.deployments.byStatus.scheduled.total,
     // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed

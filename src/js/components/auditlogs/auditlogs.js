@@ -248,6 +248,7 @@ const mapStateToProps = state => {
     events: state.organization.auditlog.events,
     groups: [ALL_DEVICES, ...Object.keys(groups).sort()],
     selectionState: state.organization.auditlog.selectionState,
+    userCapabilities: getUserCapabilities(state),
     users: state.users.byId
   };
 };

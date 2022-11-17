@@ -39,15 +39,20 @@ const fallbackFormatter = data => {
   return result;
 };
 
+const defaultAccess = () => true;
 const changeMap = {
-  default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle' },
-  artifact: { actionFormatter: data => decodeURIComponent(data.artifact.name), component: ArtifactLink },
-  deployment: { actionFormatter: data => decodeURIComponent(data.deployment.name), component: DeploymentLink },
-  deviceDecommissioned: { actionFormatter: data => decodeURIComponent(data.id), component: 'div' },
-  deviceRejected: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceRejectedLink },
-  deviceGeneral: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceLink },
-  deviceTerminalSession: { actionFormatter: data => decodeURIComponent(data.id), component: TerminalSessionLink },
-  user: { component: UserChange, actionFormatter: data => data.user.email }
+  default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle', accessCheck: defaultAccess },
+  artifact: { actionFormatter: data => decodeURIComponent(data.artifact.name), component: ArtifactLink, accessCheck: ({ canReadReleases }) => canReadReleases },
+  deployment: {
+    actionFormatter: data => decodeURIComponent(data.deployment.name),
+    component: DeploymentLink,
+    accessCheck: ({ canReadDeployments }) => canReadDeployments
+  },
+  deviceDecommissioned: { actionFormatter: data => decodeURIComponent(data.id), component: 'div', accessCheck: defaultAccess },
+  deviceRejected: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceRejectedLink, accessCheck: ({ canReadDevices }) => canReadDevices },
+  deviceGeneral: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceLink, accessCheck: ({ canReadDevices }) => canReadDevices },
+  deviceTerminalSession: { actionFormatter: data => decodeURIComponent(data.id), component: TerminalSessionLink, accessCheck: defaultAccess },
+  user: { component: UserChange, actionFormatter: data => data.user.email, accessCheck: defaultAccess }
 };
 
 const mapChangeToContent = item => {
@@ -85,9 +90,10 @@ const TypeDescriptor = (item, index) => (
   </div>
 );
 const ChangeDescriptor = (item, index) => <div key={`${item.time}-${index}`}>{mapChangeToContent(item).actionFormatter(item.object)}</div>;
-const ChangeDetailsDescriptor = (item, index) => {
-  const Comp = mapChangeToContent(item).component;
-  return <Comp key={`${item.time}-${index}`} item={item} />;
+const ChangeDetailsDescriptor = (item, index, userCapabilities) => {
+  const { component: Comp, accessCheck } = mapChangeToContent(item);
+  const key = `${item.time}-${index}`;
+  return accessCheck(userCapabilities) ? <Comp key={key} item={item} /> : <div key={key} />;
 };
 const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} />;
 
@@ -100,7 +106,7 @@ const auditLogColumns = [
   { title: 'Time', sortable: true, render: TimeWrapper }
 ];
 
-export const AuditLogsList = ({ items, loading, onChangePage, onChangeRowsPerPage, onChangeSorting, selectionState, setAuditlogsState }) => {
+export const AuditLogsList = ({ items, loading, onChangePage, onChangeRowsPerPage, onChangeSorting, selectionState, setAuditlogsState, userCapabilities }) => {
   const { page, perPage, selectedId, sort = {}, total: count } = selectionState;
 
   const onIssueSelection = selectedIssue =>
@@ -140,7 +146,7 @@ export const AuditLogsList = ({ items, loading, onChangePage, onChangeRowsPerPag
                 key={`event-${item.time}`}
                 onClick={() => onIssueSelection(allowsExpansion ? item : undefined)}
               >
-                {auditLogColumns.map((column, index) => column.render(item, index))}
+                {auditLogColumns.map((column, index) => column.render(item, index, userCapabilities))}
                 {allowsExpansion ? (
                   <div className="uppercased link-color bold">
                     view details <ArrowRightAltIcon />

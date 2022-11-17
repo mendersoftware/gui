@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { adminUserCapabilities, defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import AuditLogsList from './auditlogslist';
 
@@ -27,6 +27,7 @@ describe('Auditlogs Component', () => {
           onChangeSorting={jest.fn}
           selectionState={defaultState.organization.auditlog.selectionState}
           setAuditlogsState={jest.fn}
+          userCapabilities={adminUserCapabilities}
         />
       </Provider>
     );

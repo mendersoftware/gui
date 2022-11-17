@@ -17,10 +17,11 @@ const configHelpTipsMap = {
   }
 };
 
-export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips }) => {
+export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, userCapabilities }) => {
+  const { canWriteDevices } = userCapabilities;
   const theme = useTheme();
   const [changedTags, setChangedTags] = useState({});
-  const [isEditDisabled, setIsEditDisabled] = useState(false);
+  const [isEditDisabled, setIsEditDisabled] = useState(!canWriteDevices);
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [shouldUpdateEditor, setShouldUpdateEditor] = useState(false);
@@ -36,10 +37,10 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips })
   }, [isEditing]);
 
   useEffect(() => {
-    if (open && !isEditing && !hasTags) {
+    if (open && !isEditing && !hasTags && canWriteDevices) {
       setIsEditing(true);
     }
-  }, [open, hasTags]);
+  }, [open, hasTags, canWriteDevices]);
 
   const onCancel = () => {
     setIsEditing(false);
@@ -86,7 +87,7 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips })
         <div className="two-columns">
           <div className="flexbox center-aligned">
             <h4 className="margin-right">Tags</h4>
-            {!isEditing && (
+            {!isEditing && canWriteDevices && (
               <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
                 Edit
               </Button>

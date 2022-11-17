@@ -27,7 +27,7 @@ export const getUserSSOState = user => {
   return { isOAuth2, provider };
 };
 
-export const UserDefinition = ({ canManageUsers, currentUser, isEnterprise, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
+export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
   const { email = '', id } = selectedUser;
 
   const { classes } = useStyles();
@@ -101,7 +101,7 @@ export const UserDefinition = ({ canManageUsers, currentUser, isEnterprise, onCa
       <div className="flexbox margin-bottom-small space-between">
         <h3>Edit user</h3>
         <div className="flexbox center-aligned">
-          {currentUser.id !== id && canManageUsers && (
+          {currentUser.id !== id && (
             <Button className={`flexbox center-aligned ${classes.leftButton}`} color="secondary" onClick={onRemoveClick}>
               delete user
             </Button>

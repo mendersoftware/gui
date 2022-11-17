@@ -219,7 +219,7 @@ export const ExpandedDevice = ({
         disableBottomBorder={!isAcceptedDevice}
         showHelptips={showHelptips}
       />
-      <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} />
+      <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} userCapabilities={userCapabilities} />
       {!!integrations.length &&
         [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) &&
         integrations.map(integration => (
@@ -289,6 +289,7 @@ export const ExpandedDevice = ({
         selectedGroup={selectedStaticGroup}
         selectedRows={[0]}
         tenantCapabilities={tenantCapabilities}
+        userCapabilities={userCapabilities}
       />
     </Drawer>
   );

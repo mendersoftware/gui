@@ -72,7 +72,6 @@ export const DeploymentAbortButton = ({ abort, deployment }) => {
 export const DeploymentReport = props => {
   const {
     abort,
-    canAuditlog,
     creator,
     deployment,
     devicesById,
@@ -88,8 +87,10 @@ export const DeploymentReport = props => {
     retry,
     release,
     type,
-    updateDeploymentControlMap
+    updateDeploymentControlMap,
+    userCapabilities
   } = props;
+  const { canAuditlog } = userCapabilities;
   const { classes } = useStyles();
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
@@ -262,10 +263,8 @@ const mapStateToProps = state => {
   const { actor = {} } =
     state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectionState.selectedId && event.action === 'create') || {};
   const { hasAuditlogs } = getTenantCapabilities(state);
-  const { canAuditlog } = getUserCapabilities(state);
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
-    canAuditlog,
     creator: actor.email,
     deployment,
     devicesById: state.devices.byId,
@@ -277,7 +276,8 @@ const mapStateToProps = state => {
         ? state.releases.byId[deployment.artifact_name]
         : { device_types_compatible: [] },
     selectedDeviceIds: state.deployments.selectedDeviceIds,
-    selectedDevices
+    selectedDevices,
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

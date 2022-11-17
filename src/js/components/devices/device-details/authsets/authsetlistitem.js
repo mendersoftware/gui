@@ -70,7 +70,7 @@ export const getConfirmationMessage = (status, device, authset) => {
 
 const LF = '\n';
 
-const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total }) => {
+const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total, userCapabilities }) => {
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
@@ -78,6 +78,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
   const [keyHash, setKeyHash] = useState('');
   const [endKey, setEndKey] = useState('');
   const { classes } = useStyles();
+  const { canManageDevices } = userCapabilities;
 
   useEffect(() => {
     if (!isExpanded) {
@@ -174,23 +175,26 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     key = <a onClick={() => onShowKey(false)}>hide key</a>;
   }
 
-  const actionButtons = confirmMessage.length ? (
-    `Set to: ${newStatus}?`
-  ) : (
-    <div className="action-buttons flexbox">
-      {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !limitMaxed ? (
-        <a onClick={onAcceptClick}>Accept</a>
-      ) : (
-        <div>Accept</div>
-      )}
-      {authset.status !== DEVICE_STATES.rejected && authset.status !== DEVICE_STATES.preauth ? (
-        <a onClick={() => onRequestConfirm(DEVICE_STATES.rejected)}>Reject</a>
-      ) : (
-        <div>Reject</div>
-      )}
-      <a onClick={onDismissClick}>Dismiss</a>
-    </div>
-  );
+  let actionButtons = <div />;
+  if (canManageDevices) {
+    actionButtons = confirmMessage.length ? (
+      `Set to: ${newStatus}?`
+    ) : (
+      <div className="action-buttons flexbox">
+        {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !limitMaxed ? (
+          <a onClick={onAcceptClick}>Accept</a>
+        ) : (
+          <div>Accept</div>
+        )}
+        {authset.status !== DEVICE_STATES.rejected && authset.status !== DEVICE_STATES.preauth ? (
+          <a onClick={() => onRequestConfirm(DEVICE_STATES.rejected)}>Reject</a>
+        ) : (
+          <div>Reject</div>
+        )}
+        <a onClick={onDismissClick}>Dismiss</a>
+      </div>
+    );
+  }
 
   let authsetStatus = <div />;
   if (authset.status === device.status) {

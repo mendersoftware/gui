@@ -6,7 +6,7 @@ import { SET_SHOW_HELP } from '../constants/userConstants';
 
 import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingmanager';
 import { getDemoDeviceAddress } from '../helpers';
-import { getUserSettings } from '../selectors';
+import { getUserCapabilities, getUserSettings } from '../selectors';
 import Tracking from '../tracking';
 import { saveUserSettings } from './userActions';
 
@@ -21,6 +21,7 @@ const getCurrentOnboardingState = state => {
 export const getOnboardingState = () => (dispatch, getState) => {
   const store = getState();
   let onboardingState = getCurrentOnboardingState(store);
+  const { canDeploy, canManageDevices, canReadDeployments, canReadDevices, canReadReleases, canUploadReleases } = getUserCapabilities(store);
   if (!onboardingState.complete) {
     const userId = getState().users.currentUser;
     const userCookie = cookies.get(`${userId}-onboarded`);
@@ -42,7 +43,8 @@ export const getOnboardingState = () => (dispatch, getState) => {
         (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
         (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
         Object.keys(onboardingSteps).findIndex(step => step === progress) >= Object.keys(onboardingSteps).length - 1 ||
-        store.onboarding.disable
+        store.onboarding.disable ||
+        ![canDeploy, canManageDevices, canReadDeployments, canReadDevices, canReadReleases, canUploadReleases].every(i => i)
       ),
       showTips: onboardingState.showTips != null ? onboardingState.showTips : true,
       deviceType,

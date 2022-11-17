@@ -71,7 +71,7 @@ const useStyles = makeStyles()(theme => ({
   textWrapping: { whiteSpace: 'initial' }
 }));
 
-export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployment, isEnterprise, openReport, type }) => {
+export const DeploymentItem = ({ abort: abortDeployment, canConfigure, canDeploy, columnHeaders, deployment, isEnterprise, openReport, type }) => {
   const [abort, setAbort] = useState(null);
   const { classes } = useStyles();
 
@@ -101,7 +101,7 @@ export const DeploymentItem = ({ abort: abortDeployment, columnHeaders, deployme
       <Button className={classes.detailsButton} variant="contained" onClick={() => openReport(type, deployment.id)}>
         View details
       </Button>
-      {type !== DEPLOYMENT_STATES.finished && (
+      {(canDeploy || (canConfigure && deployment.type === DEPLOYMENT_TYPES.configuration)) && type !== DEPLOYMENT_STATES.finished && (
         <Tooltip className="columnHeader" title="Abort" placement="top-start">
           <IconButton onClick={() => toggleConfirm(id)} size="large">
             <CancelOutlinedIcon className="cancelButton muted" />

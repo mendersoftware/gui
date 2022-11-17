@@ -24,6 +24,8 @@ const defaultRowsPerPage = 20;
 
 export const DeploymentsList = ({
   abort,
+  canDeploy,
+  canConfigure,
   componentClass = '',
   count,
   headers = defaultHeaders,
@@ -52,6 +54,8 @@ export const DeploymentsList = ({
         {items.map(deployment => (
           <DeploymentItem
             abort={abort}
+            canConfigure={canConfigure}
+            canDeploy={canDeploy}
             columnHeaders={headers}
             deployment={deployment}
             key={`${type}-deployment-${deployment.created}`}

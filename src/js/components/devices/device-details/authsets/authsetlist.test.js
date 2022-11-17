@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
-import { undefineds } from '../../../../../../tests/mockData';
+import { adminUserCapabilities, undefineds } from '../../../../../../tests/mockData';
 import { render } from '../../../../../../tests/setupTests';
 import AuthsetList from './authsetlist';
 
@@ -33,7 +33,7 @@ MIIBoj
       auth_sets: authSets
     };
 
-    const { baseElement } = render(<AuthsetList device={device} />);
+    const { baseElement } = render(<AuthsetList device={device} userCapabilities={adminUserCapabilities} />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

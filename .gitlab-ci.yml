@@ -114,7 +114,7 @@ test:unit:
       junit: junit.xml
     when: always
   tags:
-    - mender-qa-slave-highcpu
+    - mender-qa-worker-gui-tests
 
 test:docs-links:
   stage: test

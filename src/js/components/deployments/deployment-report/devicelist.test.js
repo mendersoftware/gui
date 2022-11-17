@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { adminUserCapabilities, defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import ProgressDeviceList from './devicelist';
 
@@ -28,6 +28,7 @@ describe('ProgressDeviceList Component', () => {
           getDeploymentDevices={jest.fn}
           getDeviceById={jest.fn}
           getDeviceAuth={jest.fn}
+          userCapabilities={adminUserCapabilities}
         />
       </Provider>
     );
