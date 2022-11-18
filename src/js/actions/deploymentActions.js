@@ -233,11 +233,11 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
         dispatch(setSnackbar('The deployment was successfully aborted'))
       ]);
     })
-    .catch(err => commonErrorHandler(err, 'There was wan error while aborting the deployment:', dispatch));
+    .catch(err => commonErrorHandler(err, 'There was an error while aborting the deployment:', dispatch));
 
 export const updateDeploymentControlMap = (deploymentId, update_control_map) => dispatch =>
   GeneralApi.patch(`${deploymentsApiUrl}/deployments/${deploymentId}`, { update_control_map })
-    .catch(err => commonErrorHandler(err, 'There was wan error while updating the deployment status:', dispatch))
+    .catch(err => commonErrorHandler(err, 'There was an error while updating the deployment status:', dispatch))
     .then(() => Promise.resolve(dispatch(getSingleDeployment(deploymentId))));
 
 export const setDeploymentsState = selection => (dispatch, getState) => {
