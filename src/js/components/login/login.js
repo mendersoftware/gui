@@ -99,7 +99,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
   }, [noExpiry]);
 
   const onLoginClick = loginData =>
-    loginUser(loginData).catch(err => {
+    loginUser({ stayLoggedIn: noExpiry, ...loginData }).catch(err => {
       // don't reset the state once it was set - thus not setting `has2FA` solely based on the existence of 2fa in the error
       if (err?.error?.includes('2fa')) {
         setHas2FA(true);
