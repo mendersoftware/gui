@@ -52,7 +52,8 @@ export const initializeAppData = () => (dispatch, getState) => {
     dispatch(getIntegrations()),
     dispatch(getReleases()),
     dispatch(getDeviceLimit()),
-    dispatch(getRoles())
+    dispatch(getRoles()),
+    dispatch(setFirstLoginAfterSignup(cookies.get('firstLoginAfterSignup')))
   ];
   const multitenancy = getState().app.features.hasMultitenancy || getState().app.features.isEnterprise || getState().app.features.isHosted;
   if (multitenancy) {
@@ -137,11 +138,10 @@ export const setSnackbar = (message, autoHideDuration, action, children, onClick
     }
   });
 
-export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch =>
-  dispatch({
-    type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
-    firstLoginAfterSignup: firstLoginAfterSignup
-  });
+export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch => {
+  cookies.set('firstLoginAfterSignup', !!firstLoginAfterSignup, { maxAge: 60, path: '/', domain: '.mender.io', sameSite: false });
+  dispatch({ type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: !!firstLoginAfterSignup });
+};
 
 const dateFunctionMap = {
   getDays: 'getDate',

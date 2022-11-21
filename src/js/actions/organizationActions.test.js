@@ -68,22 +68,23 @@ describe('organization actions', () => {
   it('should handle trial creation', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [];
-    await store
-      .dispatch(
-        createOrganizationTrial({
-          email: 'test@test.com',
-          organization: 'test',
-          plan: 'os',
-          tos: true,
-          marketing: true,
-          'g-recaptcha-response': 'test'
-        })
-      )
-      .then(token => {
-        expect(token).toBeTruthy();
-        expect(store.getActions()).toHaveLength(expectedActions.length);
-      });
+    const expectedActions = [{ type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: true }];
+    const result = store.dispatch(
+      createOrganizationTrial({
+        'g-recaptcha-response': 'test',
+        email: 'test@test.com',
+        location: 'us',
+        marketing: true,
+        organization: 'test',
+        plan: 'os',
+        tos: true
+      })
+    );
+    jest.advanceTimersByTime(6000);
+    result.then(token => {
+      expect(token).toBeTruthy();
+      expect(store.getActions()).toHaveLength(expectedActions.length);
+    });
   });
 
   it('should handle credit card details retrieval', async () => {

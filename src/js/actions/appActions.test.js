@@ -70,6 +70,7 @@ describe('app actions', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
+      { type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
       { type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },

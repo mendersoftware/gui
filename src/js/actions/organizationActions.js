@@ -3,13 +3,13 @@ import jwtDecode from 'jwt-decode';
 import hashString from 'md5';
 
 import Api, { apiUrl, headerNames } from '../api/general-api';
-import { SET_ANNOUNCEMENT, SORTING_OPTIONS } from '../constants/appConstants';
+import { locations, SET_ANNOUNCEMENT, SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import OrganizationConstants from '../constants/organizationConstants';
 import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
 import { getToken } from '../auth';
-import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
+import { commonErrorFallback, commonErrorHandler, setFirstLoginAfterSignup, setSnackbar } from './appActions';
 import { deviceAuthV2, iotManagerBaseURL } from './deviceActions';
 
 const cookies = new Cookies();
@@ -22,26 +22,32 @@ const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const cancelRequest = (tenantId, reason) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/cancel`, { reason: reason }).then(() =>
-    Promise.resolve(dispatch(setSnackbar('Deactivation request was sent successfully', 5000, '')))
+    Promise.resolve(dispatch(setSnackbar('Deactivation request was sent successfully', TIMEOUTS.fiveSeconds, '')))
   );
 
-export const createOrganizationTrial = data => dispatch =>
-  Api.postUnauthorized(`${tenantadmApiUrlv2}/tenants/trial`, data)
+export const createOrganizationTrial = data => dispatch => {
+  const { location } = locations[data.location];
+  const target = `https://${location}${tenantadmApiUrlv2}/tenants/trial`;
+  return Api.postUnauthorized(target, data)
     .catch(err => {
       if (err.response.status >= 400 && err.response.status < 500) {
-        dispatch(setSnackbar(err.response.data.error, 5000, ''));
+        dispatch(setSnackbar(err.response.data.error, TIMEOUTS.fiveSeconds, ''));
         return Promise.reject(err);
       }
     })
-    .then(res => {
-      if (res.text) {
-        cookies.set('JWT', res.text, { maxAge: 900, sameSite: 'strict', secure: true, path: '/' });
-      }
+    .then(({ headers }) => {
       cookies.remove('oauth');
       cookies.remove('externalID');
       cookies.remove('email');
-      return Promise.resolve(res);
+      dispatch(setFirstLoginAfterSignup(true));
+      return new Promise(resolve =>
+        setTimeout(() => {
+          window.location.assign(`https://${location}${headers.location}`);
+          return resolve();
+        }, TIMEOUTS.fiveSeconds)
+      );
     });
+};
 
 export const startCardUpdate = () => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/billing/card`)
