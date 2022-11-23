@@ -1,5 +1,5 @@
 import reducer, { initialState } from './monitorReducer';
-import MonitorConstants from '../constants/monitorConstants';
+import * as MonitorConstants from '../constants/monitorConstants';
 import { defaultState } from '../../../tests/mockData';
 import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
 

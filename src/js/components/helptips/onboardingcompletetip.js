@@ -9,7 +9,7 @@ import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/onboardingActions';
 import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
-import DeviceConstants from '../../constants/deviceConstants';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress, getDocsVersion } from '../../selectors';
 import { CompletionButton } from './deploymentcompletetip';

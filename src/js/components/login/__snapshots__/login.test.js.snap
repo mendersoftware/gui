@@ -757,7 +757,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
   <div
     class="flexbox centered margin-top-large"
   >
-    <flag-us.svg />
+    <svg
+      id="Flagus"
+    />
     <div
       class="margin-left-small"
     >
@@ -796,10 +798,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
     <div
       class="flexbox column centered emotion-2"
     >
-      <loginlogo.svg
+      <svg
         alt="mender-logo"
         class="margin-bottom"
-        id="login-logo"
+        id="Loginlogo"
       />
       <div
         class="flexbox column"
@@ -1090,8 +1092,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
       </div>
     </div>
   </div>
-  <verymuch.svg
+  <svg
     class="absolute emotion-41"
+    id="Verymuch"
   />
 </div>
 `;

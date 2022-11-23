@@ -611,8 +611,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
 }
 
 <div>
-  <loginlogo.svg
+  <svg
     class="emotion-0"
+    id="Loginlogo"
   />
   <div
     class="content emotion-1"
@@ -947,7 +948,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
         <p>
           Mender provides a complete over-the-air update infrastructure for all device software. Whether in the field or the factory, you can remotely and easily manage device software without the need for manual labor.
         </p>
-        <signuphero.svg />
+        <svg
+          id="Signuphero"
+        />
       </div>
     </div>
   </div>

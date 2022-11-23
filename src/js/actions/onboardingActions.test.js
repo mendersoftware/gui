@@ -14,8 +14,8 @@ import {
   setShowOnboardingHelp
 } from './onboardingActions';
 import { onboardingSteps } from '../utils/onboardingmanager';
-import OnboardingConstants from '../constants/onboardingConstants';
-import UserConstants from '../constants/userConstants';
+import * as OnboardingConstants from '../constants/onboardingConstants';
+import * as UserConstants from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

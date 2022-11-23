@@ -1,4 +1,4 @@
-import UserConstants from '../constants/userConstants';
+import * as UserConstants from '../constants/userConstants';
 
 export const initialState = {
   byId: {},

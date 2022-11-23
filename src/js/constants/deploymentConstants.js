@@ -1,9 +1,9 @@
-const { SORTING_OPTIONS } = require('./appConstants');
-const { DEVICE_LIST_DEFAULTS } = require('./deviceConstants');
+import { SORTING_OPTIONS } from './appConstants';
+import { DEVICE_LIST_DEFAULTS } from './deviceConstants';
 
 const alreadyInstalled = 'already-installed';
 
-const deploymentSubstates = {
+export const deploymentSubstates = {
   aborted: 'aborted',
   alreadyInstalled,
   decommissioned: 'decommissioned',
@@ -19,14 +19,21 @@ const deploymentSubstates = {
   success: 'success'
 };
 
-const deploymentStatesToSubstates = {
+export const deploymentStatesToSubstates = {
   failures: [deploymentSubstates.failure, deploymentSubstates.aborted, deploymentSubstates.decommissioned],
   inprogress: [deploymentSubstates.downloading, deploymentSubstates.installing, deploymentSubstates.rebooting],
   paused: [deploymentSubstates.pause_before_installing, deploymentSubstates.pause_before_rebooting, deploymentSubstates.pause_before_committing],
   pending: [deploymentSubstates.pending],
   successes: [deploymentSubstates.success, deploymentSubstates.alreadyInstalled, deploymentSubstates.noartifact]
 };
-const installationSubstatesMap = {
+
+export const deploymentStatesToSubstatesWithSkipped = {
+  ...deploymentStatesToSubstates,
+  failures: [deploymentSubstates.failure],
+  skipped: [deploymentSubstates.aborted, deploymentSubstates.noartifact, deploymentSubstates.alreadyInstalled, deploymentSubstates.decommissioned],
+  successes: [deploymentSubstates.success]
+};
+export const installationSubstatesMap = {
   download: {
     title: 'download',
     done: 'downloaded',
@@ -62,14 +69,14 @@ const installationSubstatesMap = {
   }
 };
 
-const DEPLOYMENT_STATES = {
+export const DEPLOYMENT_STATES = {
   finished: 'finished',
   inprogress: 'inprogress',
   pending: 'pending',
   scheduled: 'scheduled'
 };
 
-const listDefaultsByState = {
+export const listDefaultsByState = {
   [DEPLOYMENT_STATES.inprogress]: { page: 1, perPage: 10 },
   [DEPLOYMENT_STATES.pending]: { page: 1, perPage: 10 },
   [DEPLOYMENT_STATES.scheduled]: { ...DEVICE_LIST_DEFAULTS },
@@ -77,100 +84,89 @@ const listDefaultsByState = {
   sort: { direction: SORTING_OPTIONS.desc }
 };
 
-module.exports = {
-  CREATE_DEPLOYMENT: 'CREATE_DEPLOYMENT',
-  REMOVE_DEPLOYMENT: 'REMOVE_DEPLOYMENT',
-  RECEIVE_DEPLOYMENT: 'RECEIVE_DEPLOYMENT',
-  RECEIVE_DEPLOYMENT_DEVICE_LOG: 'RECEIVE_DEPLOYMENT_DEVICE_LOG',
-  RECEIVE_DEPLOYMENT_DEVICES: 'RECEIVE_DEPLOYMENT_DEVICES',
-  RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
-  RECEIVE_PENDING_DEPLOYMENTS: 'RECEIVE_PENDING_DEPLOYMENTS',
-  RECEIVE_INPROGRESS_DEPLOYMENTS: 'RECEIVE_INPROGRESS_DEPLOYMENTS',
-  RECEIVE_SCHEDULED_DEPLOYMENTS: 'RECEIVE_SCHEDULED_DEPLOYMENTS',
-  RECEIVE_FINISHED_DEPLOYMENTS: 'RECEIVE_FINISHED_DEPLOYMENTS',
-  SELECT_INPROGRESS_DEPLOYMENTS: 'SELECT_INPROGRESS_DEPLOYMENTS',
-  SELECT_PENDING_DEPLOYMENTS: 'SELECT_PENDING_DEPLOYMENTS',
-  SELECT_SCHEDULED_DEPLOYMENTS: 'SELECT_SCHEDULED_DEPLOYMENTS',
-  SELECT_FINISHED_DEPLOYMENTS: 'SELECT_FINISHED_DEPLOYMENTS',
-  SELECT_DEPLOYMENT: 'SELECT_DEPLOYMENT',
-  SET_DEPLOYMENTS_STATE: 'SET_DEPLOYMENTS_STATE',
-  DEFAULT_PENDING_INPROGRESS_COUNT: 10,
-  DEPLOYMENT_ROUTES: {
-    active: {
-      key: 'active',
-      route: '/deployments/active',
-      title: 'Active'
-    },
-    finished: {
-      key: 'finished',
-      route: '/deployments/finished',
-      title: 'Finished'
-    },
-    scheduled: {
-      key: 'scheduled',
-      route: '/deployments/scheduled',
-      title: 'Scheduled'
-    }
+export const CREATE_DEPLOYMENT = 'CREATE_DEPLOYMENT';
+export const REMOVE_DEPLOYMENT = 'REMOVE_DEPLOYMENT';
+export const RECEIVE_DEPLOYMENT = 'RECEIVE_DEPLOYMENT';
+export const RECEIVE_DEPLOYMENT_DEVICE_LOG = 'RECEIVE_DEPLOYMENT_DEVICE_LOG';
+export const RECEIVE_DEPLOYMENT_DEVICES = 'RECEIVE_DEPLOYMENT_DEVICES';
+export const RECEIVE_DEPLOYMENTS = 'RECEIVE_DEPLOYMENTS';
+export const RECEIVE_PENDING_DEPLOYMENTS = 'RECEIVE_PENDING_DEPLOYMENTS';
+export const RECEIVE_INPROGRESS_DEPLOYMENTS = 'RECEIVE_INPROGRESS_DEPLOYMENTS';
+export const RECEIVE_SCHEDULED_DEPLOYMENTS = 'RECEIVE_SCHEDULED_DEPLOYMENTS';
+export const RECEIVE_FINISHED_DEPLOYMENTS = 'RECEIVE_FINISHED_DEPLOYMENTS';
+export const SELECT_INPROGRESS_DEPLOYMENTS = 'SELECT_INPROGRESS_DEPLOYMENTS';
+export const SELECT_PENDING_DEPLOYMENTS = 'SELECT_PENDING_DEPLOYMENTS';
+export const SELECT_SCHEDULED_DEPLOYMENTS = 'SELECT_SCHEDULED_DEPLOYMENTS';
+export const SELECT_FINISHED_DEPLOYMENTS = 'SELECT_FINISHED_DEPLOYMENTS';
+export const SELECT_DEPLOYMENT = 'SELECT_DEPLOYMENT';
+export const SET_DEPLOYMENTS_STATE = 'SET_DEPLOYMENTS_STATE';
+export const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
+export const DEPLOYMENT_ROUTES = {
+  active: {
+    key: 'active',
+    route: '/deployments/active',
+    title: 'Active'
   },
-  DEPLOYMENT_STATES,
-  DEPLOYMENT_TYPES: {
-    software: 'software',
-    configuration: 'configuration'
+  finished: {
+    key: 'finished',
+    route: '/deployments/finished',
+    title: 'Finished'
   },
-  defaultStats: {
-    [deploymentSubstates.aborted]: 0,
-    [deploymentSubstates.alreadyInstalled]: 0,
-    [deploymentSubstates.decommissioned]: 0,
-    [deploymentSubstates.downloading]: 0,
-    [deploymentSubstates.failure]: 0,
-    [deploymentSubstates.installing]: 0,
-    [deploymentSubstates.noartifact]: 0,
-    [deploymentSubstates.pause_before_committing]: 0,
-    [deploymentSubstates.pause_before_installing]: 0,
-    [deploymentSubstates.pause_before_rebooting]: 0,
-    [deploymentSubstates.pending]: 0,
-    [deploymentSubstates.rebooting]: 0,
-    [deploymentSubstates.success]: 0
+  scheduled: {
+    key: 'scheduled',
+    route: '/deployments/scheduled',
+    title: 'Scheduled'
+  }
+};
+export const DEPLOYMENT_TYPES = {
+  software: 'software',
+  configuration: 'configuration'
+};
+export const defaultStats = {
+  [deploymentSubstates.aborted]: 0,
+  [deploymentSubstates.alreadyInstalled]: 0,
+  [deploymentSubstates.decommissioned]: 0,
+  [deploymentSubstates.downloading]: 0,
+  [deploymentSubstates.failure]: 0,
+  [deploymentSubstates.installing]: 0,
+  [deploymentSubstates.noartifact]: 0,
+  [deploymentSubstates.pause_before_committing]: 0,
+  [deploymentSubstates.pause_before_installing]: 0,
+  [deploymentSubstates.pause_before_rebooting]: 0,
+  [deploymentSubstates.pending]: 0,
+  [deploymentSubstates.rebooting]: 0,
+  [deploymentSubstates.success]: 0
+};
+export const deploymentDisplayStates = {
+  finished: 'Finished',
+  scheduled: 'Scheduled',
+  skipped: 'Skipped',
+  paused: 'Paused',
+  pending: 'Pending',
+  inprogress: 'In Progress',
+  success: 'Success',
+  successes: 'Success',
+  failure: 'Fail',
+  failures: 'Fail'
+};
+
+export const deploymentPrototype = {
+  devices: {},
+  name: undefined,
+  stats: {}
+};
+
+export const pauseMap = {
+  [deploymentSubstates.pause_before_installing]: {
+    title: installationSubstatesMap.download.done,
+    followUp: installationSubstatesMap.download.pauseConfigurationIndicator
   },
-  deploymentDisplayStates: {
-    finished: 'Finished',
-    scheduled: 'Scheduled',
-    skipped: 'Skipped',
-    paused: 'Paused',
-    pending: 'Pending',
-    inprogress: 'In Progress',
-    success: 'Success',
-    successes: 'Success',
-    failure: 'Fail',
-    failures: 'Fail'
+  [deploymentSubstates.pause_before_rebooting]: {
+    title: installationSubstatesMap.install.done,
+    followUp: installationSubstatesMap.install.pauseConfigurationIndicator
   },
-  deploymentStatesToSubstates,
-  deploymentStatesToSubstatesWithSkipped: {
-    ...deploymentStatesToSubstates,
-    failures: [deploymentSubstates.failure],
-    skipped: [deploymentSubstates.aborted, deploymentSubstates.noartifact, deploymentSubstates.alreadyInstalled, deploymentSubstates.decommissioned],
-    successes: [deploymentSubstates.success]
-  },
-  deploymentSubstates,
-  deploymentPrototype: {
-    devices: {},
-    name: undefined,
-    stats: {}
-  },
-  installationSubstatesMap,
-  listDefaultsByState,
-  pauseMap: {
-    [deploymentSubstates.pause_before_installing]: {
-      title: installationSubstatesMap.download.done,
-      followUp: installationSubstatesMap.download.pauseConfigurationIndicator
-    },
-    [deploymentSubstates.pause_before_rebooting]: {
-      title: installationSubstatesMap.install.done,
-      followUp: installationSubstatesMap.install.pauseConfigurationIndicator
-    },
-    [deploymentSubstates.pause_before_committing]: {
-      title: installationSubstatesMap.reboot.done,
-      followUp: installationSubstatesMap.reboot.pauseConfigurationIndicator
-    }
+  [deploymentSubstates.pause_before_committing]: {
+    title: installationSubstatesMap.reboot.done,
+    followUp: installationSubstatesMap.reboot.pauseConfigurationIndicator
   }
 };

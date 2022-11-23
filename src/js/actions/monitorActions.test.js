@@ -2,9 +2,9 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState } from '../../../tests/mockData';
-import AppConstants from '../constants/appConstants';
+import * as AppConstants from '../constants/appConstants';
 import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
-import MonitorConstants from '../constants/monitorConstants';
+import * as MonitorConstants from '../constants/monitorConstants';
 import { changeNotificationSetting, getDeviceAlerts, getDeviceMonitorConfig, getIssueCountsByType, getLatestDeviceAlerts } from './monitorActions';
 
 const middlewares = [thunk];

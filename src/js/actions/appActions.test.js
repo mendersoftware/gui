@@ -14,13 +14,41 @@ import {
   setVersionInfo
 } from './appActions';
 import { tenantDataDivergedMessage } from './organizationActions';
-import AppConstants from '../constants/appConstants';
-import DeploymentConstants from '../constants/deploymentConstants';
-import DeviceConstants, { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
-import ReleaseConstants from '../constants/releaseConstants';
-import OnboardingConstants from '../constants/onboardingConstants';
-import OrganizationConstants from '../constants/organizationConstants';
-import UserConstants from '../constants/userConstants';
+import {
+  SET_ANNOUNCEMENT,
+  SET_FIRST_LOGIN_AFTER_SIGNUP,
+  SET_OFFLINE_THRESHOLD,
+  SET_SEARCH_STATE,
+  SET_SNACKBAR,
+  SET_VERSION_INFORMATION,
+  SORTING_OPTIONS
+} from '../constants/appConstants';
+import {
+  RECEIVE_DEPLOYMENTS,
+  RECEIVE_FINISHED_DEPLOYMENTS,
+  RECEIVE_INPROGRESS_DEPLOYMENTS,
+  SELECT_INPROGRESS_DEPLOYMENTS
+} from '../constants/deploymentConstants';
+import {
+  ADD_DYNAMIC_GROUP,
+  DEVICE_LIST_DEFAULTS,
+  EXTERNAL_PROVIDER,
+  RECEIVE_DEVICES,
+  RECEIVE_DYNAMIC_GROUPS,
+  RECEIVE_GROUPS,
+  SET_ACCEPTED_DEVICES,
+  SET_DEVICE_LIMIT,
+  SET_DEVICE_LIST_STATE,
+  SET_FILTER_ATTRIBUTES,
+  SET_PENDING_DEVICES,
+  SET_PREAUTHORIZED_DEVICES,
+  SET_REJECTED_DEVICES,
+  UNGROUPED_GROUP
+} from '../constants/deviceConstants';
+import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
+import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
+import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, SET_ORGANIZATION } from '../constants/organizationConstants';
+import { RECEIVED_PERMISSION_SETS, RECEIVED_ROLES, SET_SHOW_HELP, SET_GLOBAL_SETTINGS, SET_USER_SETTINGS } from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -33,7 +61,7 @@ describe('app actions', () => {
     await expect(commonErrorHandler(err, 'testContext', store.dispatch)).rejects.toEqual(err);
     const expectedActions = [
       {
-        type: AppConstants.SET_SNACKBAR,
+        type: SET_SNACKBAR,
         snackbar: {
           open: true,
           message: `testContext ${err.response.data.error.message}`,
@@ -70,12 +98,12 @@ describe('app actions', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
-      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
-      { type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
+      { type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+      { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
       {
-        type: DeviceConstants.SET_FILTER_ATTRIBUTES,
+        type: SET_FILTER_ATTRIBUTES,
         attributes: {
           identityAttributes: ['status', 'mac'],
           inventoryAttributes: [
@@ -99,27 +127,27 @@ describe('app actions', () => {
           tagAttributes: []
         }
       },
-      { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+      { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
       {
-        type: DeploymentConstants.RECEIVE_FINISHED_DEPLOYMENTS,
+        type: RECEIVE_FINISHED_DEPLOYMENTS,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         status: 'finished',
         total: Object.keys(defaultState.deployments.byId).length
       },
-      { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+      { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
       {
-        type: DeploymentConstants.RECEIVE_INPROGRESS_DEPLOYMENTS,
+        type: RECEIVE_INPROGRESS_DEPLOYMENTS,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         status: 'inprogress',
         total: Object.keys(defaultState.deployments.byId).length
       },
       {
-        type: DeploymentConstants.SELECT_INPROGRESS_DEPLOYMENTS,
+        type: SELECT_INPROGRESS_DEPLOYMENTS,
         deploymentIds: Object.keys(defaultState.deployments.byId),
         status: 'inprogress'
       },
       {
-        type: DeviceConstants.RECEIVE_DEVICES,
+        type: RECEIVE_DEVICES,
         devicesById: {
           a1: {
             ...defaultState.devices.byId.a1,
@@ -133,13 +161,13 @@ describe('app actions', () => {
         }
       },
       {
-        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        type: SET_ACCEPTED_DEVICES,
         deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
         status: 'accepted',
         total: defaultState.devices.byStatus.accepted.deviceIds.length
       },
       {
-        type: DeviceConstants.RECEIVE_DEVICES,
+        type: RECEIVE_DEVICES,
         devicesById: {
           a1: {
             ...defaultState.devices.byId.a1,
@@ -154,17 +182,17 @@ describe('app actions', () => {
         }
       },
       {
-        type: DeviceConstants.SET_PENDING_DEVICES,
+        type: SET_PENDING_DEVICES,
         deviceIds: Array.from({ length: defaultState.devices.byStatus.pending.total }, () => defaultState.devices.byId.a1.id),
         status: 'pending',
         total: defaultState.devices.byStatus.pending.deviceIds.length
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
-      { type: DeviceConstants.SET_PREAUTHORIZED_DEVICES, deviceIds: [], status: 'preauthorized', total: 0 },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
-      { type: DeviceConstants.SET_REJECTED_DEVICES, deviceIds: [], status: 'rejected', total: 0 },
+      { type: RECEIVE_DEVICES, devicesById: {} },
+      { type: SET_PREAUTHORIZED_DEVICES, deviceIds: [], status: 'preauthorized', total: 0 },
+      { type: RECEIVE_DEVICES, devicesById: {} },
+      { type: SET_REJECTED_DEVICES, deviceIds: [], status: 'rejected', total: 0 },
       {
-        type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
+        type: RECEIVE_DYNAMIC_GROUPS,
         groups: {
           testGroupDynamic: {
             deviceIds: [],
@@ -178,53 +206,53 @@ describe('app actions', () => {
           }
         }
       },
-      { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
+      { type: RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
-        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+        type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [
           { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
           { id: 2, provider: 'aws', something: 'new' }
         ]
       },
-      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
       {
-        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        type: SET_RELEASES_LIST_STATE,
         value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42 }
       },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+      { type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
-        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        type: SET_RELEASES_LIST_STATE,
         value: { ...defaultState.releases.releasesList, searchAttribute: 'name', page: 42 }
       },
-      { type: DeviceConstants.SET_DEVICE_LIMIT, limit: 500 },
-      { type: UserConstants.RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
-      { type: UserConstants.RECEIVED_ROLES, value: receivedRoles },
-      { type: OrganizationConstants.SET_ORGANIZATION, organization: defaultState.organization.organization },
-      { type: AppConstants.SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage },
+      { type: SET_DEVICE_LIMIT, limit: 500 },
+      { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+      { type: RECEIVED_ROLES, value: receivedRoles },
+      { type: SET_ORGANIZATION, organization: defaultState.organization.organization },
+      { type: SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage },
       {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENTS,
+        type: RECEIVE_DEPLOYMENTS,
         deployments: {
           [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: { ...defaultState.deployments.byId.d1.stats } },
           [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: { ...defaultState.deployments.byId.d2.stats } }
         }
       },
       {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENTS,
+        type: RECEIVE_DEPLOYMENTS,
         deployments: {
           [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: { ...defaultState.deployments.byId.d1.stats } },
           [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: { ...defaultState.deployments.byId.d2.stats } }
         }
       },
       {
-        type: DeviceConstants.RECEIVE_DEVICES,
+        type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } }
       },
       {
-        type: DeviceConstants.RECEIVE_DEVICES,
+        type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } }
       },
       {
-        type: DeviceConstants.RECEIVE_DEVICES,
+        type: RECEIVE_DEVICES,
         devicesById: {
           [expectedDevice.id]: {
             ...defaultState.devices.byId.a1,
@@ -237,29 +265,29 @@ describe('app actions', () => {
           }
         }
       },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } } },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } } },
       {
-        type: DeviceConstants.ADD_DYNAMIC_GROUP,
-        groupName: DeviceConstants.UNGROUPED_GROUP.id,
+        type: ADD_DYNAMIC_GROUP,
+        groupName: UNGROUPED_GROUP.id,
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
       },
       {
-        type: DeviceConstants.SET_DEVICE_LIST_STATE,
+        type: SET_DEVICE_LIST_STATE,
         state: {
-          ...DeviceConstants.DEVICE_LIST_DEFAULTS,
+          ...DEVICE_LIST_DEFAULTS,
           deviceIds: [],
           isLoading: false,
           selectedAttributes: [],
           selectedIssues: [],
           selection: [],
-          sort: { direction: AppConstants.SORTING_OPTIONS.desc },
+          sort: { direction: SORTING_OPTIONS.desc },
           state: 'accepted',
           total: 0
         }
       },
-      { type: UserConstants.SET_SHOW_HELP, show: true },
-      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } }
+      { type: SET_SHOW_HELP, show: true },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } }
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();
@@ -270,7 +298,7 @@ describe('app actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
-        type: AppConstants.SET_SNACKBAR,
+        type: SET_SNACKBAR,
         snackbar: {
           open: true,
           message: 'test',
@@ -290,7 +318,7 @@ describe('app actions', () => {
   });
   it('should set version information', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: AppConstants.SET_VERSION_INFORMATION, value: { Integration: 'next' } }];
+    const expectedActions = [{ type: SET_VERSION_INFORMATION, value: { Integration: 'next' } }];
     await store.dispatch(setVersionInfo({ Integration: 'next' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
@@ -315,7 +343,7 @@ describe('app actions', () => {
     });
     const expectedActions = [
       {
-        type: AppConstants.SET_VERSION_INFORMATION,
+        type: SET_VERSION_INFORMATION,
         value: { backend: 'saas-v2022.03.10', GUI: 'saas-v2022.03.10', Integration: '1.2.3', 'Mender-Client': '3.2.1', 'Mender-Artifact': '1.3.7' }
       }
     ];
@@ -329,7 +357,7 @@ describe('app actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       {
-        type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
+        type: SET_FIRST_LOGIN_AFTER_SIGNUP,
         firstLoginAfterSignup: true
       }
     ];
@@ -340,7 +368,7 @@ describe('app actions', () => {
   });
   it('should calculate yesterdays timestamp', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' }];
+    const expectedActions = [{ type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' }];
     await store.dispatch(setOfflineThreshold());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
@@ -349,9 +377,9 @@ describe('app actions', () => {
   it('should handle searching', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
-      { type: AppConstants.SET_SEARCH_STATE, state: { ...defaultState.app.searchState, isSearching: true, searchTerm: 'next!' } },
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
-      { type: AppConstants.SET_SEARCH_STATE, state: { ...defaultState.app.searchState, isSearching: false, searchTerm: '' } }
+      { type: SET_SEARCH_STATE, state: { ...defaultState.app.searchState, isSearching: true, searchTerm: 'next!' } },
+      { type: RECEIVE_DEVICES, devicesById: {} },
+      { type: SET_SEARCH_STATE, state: { ...defaultState.app.searchState, isSearching: false, searchTerm: '' } }
     ];
     await store.dispatch(setSearchState({ searchTerm: 'next!' }));
     const storeActions = store.getActions();

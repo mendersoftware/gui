@@ -1,7 +1,7 @@
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import Api, { apiUrl, headerNames } from '../api/general-api';
-import DeviceConstants from '../constants/deviceConstants';
-import MonitorConstants from '../constants/monitorConstants';
+import * as DeviceConstants from '../constants/deviceConstants';
+import * as MonitorConstants from '../constants/monitorConstants';
 import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
 export const monitorApiUrlv1 = `${apiUrl.v1}/devicemonitor`;

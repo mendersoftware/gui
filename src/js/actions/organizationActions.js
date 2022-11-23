@@ -5,7 +5,16 @@ import hashString from 'md5';
 import Api, { apiUrl, headerNames } from '../api/general-api';
 import { locations, SET_ANNOUNCEMENT, SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
-import OrganizationConstants from '../constants/organizationConstants';
+import {
+  RECEIVE_AUDIT_LOGS,
+  RECEIVE_CURRENT_CARD,
+  RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+  RECEIVE_SAML_CONFIGS,
+  RECEIVE_SETUP_INTENT,
+  RECEIVE_WEBHOOK_EVENTS,
+  SET_AUDITLOG_STATE,
+  SET_ORGANIZATION
+} from '../constants/organizationConstants';
 import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
 import { getToken } from '../auth';
@@ -53,7 +62,7 @@ export const startCardUpdate = () => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/billing/card`)
     .then(res => {
       dispatch({
-        type: OrganizationConstants.RECEIVE_SETUP_INTENT,
+        type: RECEIVE_SETUP_INTENT,
         intentId: res.data.intent_id
       });
       return Promise.resolve(res.data.secret);
@@ -66,7 +75,7 @@ export const confirmCardUpdate = () => (dispatch, getState) =>
       Promise.all([
         dispatch(setSnackbar('Payment card was updated successfully')),
         dispatch({
-          type: OrganizationConstants.RECEIVE_SETUP_INTENT,
+          type: RECEIVE_SETUP_INTENT,
           intentId: null
         })
       ])
@@ -78,7 +87,7 @@ export const getCurrentCard = () => dispatch =>
     const { last4, exp_month, exp_year, brand } = res.data.card || {};
     return Promise.resolve(
       dispatch({
-        type: OrganizationConstants.RECEIVE_CURRENT_CARD,
+        type: RECEIVE_CURRENT_CARD,
         card: {
           brand,
           last4,
@@ -122,7 +131,7 @@ export const getAuditLogs = selectionState => (dispatch, getState) => {
     .then(res => {
       let total = res.headers[headerNames.total];
       total = Number(total || res.data.length);
-      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_AUDIT_LOGS, events: res.data, total }));
+      return Promise.resolve(dispatch({ type: RECEIVE_AUDIT_LOGS, events: res.data, total }));
     })
     .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
 };
@@ -146,7 +155,7 @@ export const setAuditlogsState = selectionState => (dispatch, getState) => {
     nextState.isLoading = true;
     tasks.push(dispatch(getAuditLogs(nextState)).finally(() => dispatch(setAuditlogsState({ isLoading: false }))));
   }
-  tasks.push(dispatch({ type: OrganizationConstants.SET_AUDITLOG_STATE, state: nextState }));
+  tasks.push(dispatch({ type: SET_AUDITLOG_STATE, state: nextState }));
   return Promise.all(tasks);
 };
 
@@ -156,7 +165,7 @@ export const setAuditlogsState = selectionState => (dispatch, getState) => {
 export const tenantDataDivergedMessage = 'The system detected there is a change in your plan or purchased add-ons. Please log out and log in again';
 export const getUserOrganization = () => dispatch =>
   Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => {
-    let tasks = [dispatch({ type: OrganizationConstants.SET_ORGANIZATION, organization: res.data })];
+    let tasks = [dispatch({ type: SET_ORGANIZATION, organization: res.data })];
     const { addons, plan, trial } = res.data;
     const jwt = jwtDecode(getToken());
     const jwtData = { addons: jwt['mender.addons'], plan: jwt['mender.plan'], trial: jwt['mender.trial'] };
@@ -171,12 +180,12 @@ export const getUserOrganization = () => dispatch =>
 export const sendSupportMessage = content => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/contact/support`, content)
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
-    .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
+    .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', TIMEOUTS.fiveSeconds, ''))));
 
 export const requestPlanChange = (tenantId, content) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/plan`, content)
     .catch(err => commonErrorHandler(err, 'There was an error sending your request', dispatch, commonErrorFallback))
-    .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', 5000, ''))));
+    .then(() => Promise.resolve(dispatch(setSnackbar('Your request was sent successfully', TIMEOUTS.fiveSeconds, ''))));
 
 export const downloadLicenseReport = () => dispatch =>
   Api.get(`${deviceAuthV2}/reports/devices`)
@@ -203,7 +212,7 @@ export const deleteIntegration = integration => (dispatch, getState) =>
       const integrations = getState().organization.externalDeviceIntegrations.filter(item => integration.provider !== item.provider);
       return Promise.all([
         dispatch(setSnackbar('The integration was removed successfully')),
-        dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations })
+        dispatch({ type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations })
       ]);
     });
 
@@ -218,7 +227,7 @@ export const getIntegrations = () => (dispatch, getState) =>
         accu.push(integration);
         return accu;
       }, []);
-      return Promise.resolve(dispatch({ type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
+      return Promise.resolve(dispatch({ type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: integrations }));
     });
 
 export const getWebhookEvents =
@@ -230,7 +239,7 @@ export const getWebhookEvents =
       .then(({ data }) => {
         let tasks = [
           dispatch({
-            type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
+            type: RECEIVE_WEBHOOK_EVENTS,
             value: isFollowUp ? getState().organization.webhooks.events : data,
             total: (page - 1) * perPage + data.length
           })
@@ -273,10 +282,7 @@ export const deleteSamlConfig =
       .catch(err => dispatch(samlConfigActionErrorHandler(err, 'remove')))
       .then(() => {
         const configs = getState().organization.samlConfigs.filter(item => id !== item.id);
-        return Promise.all([
-          dispatch(samlConfigActionSuccessHandler('remove')),
-          dispatch({ type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: configs })
-        ]);
+        return Promise.all([dispatch(samlConfigActionSuccessHandler('remove')), dispatch({ type: RECEIVE_SAML_CONFIGS, value: configs })]);
       });
 
 const getSamlConfigById = config => dispatch =>
@@ -289,6 +295,6 @@ export const getSamlConfigs = () => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error retrieving SAML configurations', dispatch, commonErrorFallback))
     .then(({ data }) =>
       Promise.all(data.map(config => Promise.resolve(dispatch(getSamlConfigById(config))))).then(configs => {
-        return dispatch({ type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: configs });
+        return dispatch({ type: RECEIVE_SAML_CONFIGS, value: configs });
       })
     );

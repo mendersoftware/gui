@@ -1,5 +1,5 @@
 import * as AppConstants from '../constants/appConstants';
-import UserConstants from '../constants/userConstants';
+import * as UserConstants from '../constants/userConstants';
 import { stringToBoolean } from '../helpers';
 
 const menderEnvironment = {

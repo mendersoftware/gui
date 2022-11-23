@@ -1,6 +1,6 @@
 import { SORTING_OPTIONS } from '../constants/appConstants';
-import DeviceConstants from '../constants/deviceConstants';
-import ReleaseConstants from '../constants/releaseConstants';
+import * as DeviceConstants from '../constants/deviceConstants';
+import * as ReleaseConstants from '../constants/releaseConstants';
 
 export const initialState = {
   /*

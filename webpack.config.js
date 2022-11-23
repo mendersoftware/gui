@@ -1,13 +1,20 @@
-const path = require('path');
-const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
-const ESLintPlugin = require('eslint-webpack-plugin');
+import { createRequire } from 'module';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import webpack from 'webpack';
+import autoprefixer from 'autoprefixer';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import HtmlWebPackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import { ESBuildMinifyPlugin } from 'esbuild-loader';
+import ESLintPlugin from 'eslint-webpack-plugin';
 
-module.exports = (env, argv) => {
+const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default (env, argv) => {
   const devPlugins = argv.mode === 'production' ? [] : [new ESLintPlugin()];
   return {
     devtool: 'source-map',
@@ -16,6 +23,10 @@ module.exports = (env, argv) => {
     },
     module: {
       rules: [
+        {
+          test: /\.m?js[x]?$/,
+          resolve: { fullySpecified: false }
+        },
         {
           test: /\.m?js[x]?$/,
           exclude: [/node_modules/, /\.test\./, /__snapshots__/],
@@ -39,7 +50,7 @@ module.exports = (env, argv) => {
             {
               loader: 'postcss-loader',
               options: {
-                postcssOptions: { plugins: [require('autoprefixer')({})] },
+                postcssOptions: { plugins: [autoprefixer({})] },
                 sourceMap: true
               }
             },

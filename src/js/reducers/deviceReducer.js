@@ -1,6 +1,6 @@
 import { SORTING_OPTIONS } from '../constants/appConstants';
-import DeviceConstants from '../constants/deviceConstants';
-import MonitorConstants from '../constants/monitorConstants';
+import * as DeviceConstants from '../constants/deviceConstants';
+import * as MonitorConstants from '../constants/monitorConstants';
 import { duplicateFilter } from '../helpers';
 
 export const initialState = {

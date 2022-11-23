@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 // material ui
-import Fab from '@mui/material/Fab';
-import ContentAddIcon from '@mui/icons-material/Add';
+import { Fab } from '@mui/material';
+import { Add as ContentAddIcon } from '@mui/icons-material';
 
 import { BaseWidget } from './baseWidget';
 import { onboardingSteps } from '../../../utils/onboardingmanager';
