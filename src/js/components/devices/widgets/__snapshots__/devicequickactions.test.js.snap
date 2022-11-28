@@ -2,6 +2,38 @@
 
 exports[`DeviceQuickActions Component renders correctly 1`] = `
 .emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: fixed;
+  bottom: 52px;
+  right: 52px;
+  z-index: 10;
+  min-width: 400px;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.emotion-0 .MuiSpeedDialAction-staticTooltipLabel {
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+
+.emotion-1 {
+  margin-right: 16px;
+  margin-bottom: 32px;
+}
+
+.emotion-2 {
   z-index: 1050;
   display: -webkit-box;
   display: -webkit-flex;
@@ -15,9 +47,10 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   -webkit-flex-direction: column-reverse;
   -ms-flex-direction: column-reverse;
   flex-direction: column-reverse;
+  margin: 16px;
 }
 
-.emotion-0 .MuiSpeedDial-actions {
+.emotion-2 .MuiSpeedDial-actions {
   -webkit-flex-direction: column-reverse;
   -ms-flex-direction: column-reverse;
   flex-direction: column-reverse;
@@ -25,7 +58,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   padding-bottom: 48px;
 }
 
-.emotion-1 {
+.emotion-3 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -80,68 +113,68 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   pointer-events: auto;
 }
 
-.emotion-1::-moz-focus-inner {
+.emotion-3::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-1.Mui-disabled {
+.emotion-3.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-1 {
+  .emotion-3 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-1:active {
+.emotion-3:active {
   box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
 }
 
-.emotion-1:hover {
+.emotion-3:hover {
   background-color: #f5f5f5;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media (hover: none) {
-  .emotion-1:hover {
+  .emotion-3:hover {
     background-color: #e6f2f1;
   }
 }
 
-.emotion-1.Mui-focusVisible {
+.emotion-3.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-1.Mui-disabled {
+.emotion-3.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-1:hover {
+.emotion-3:hover {
   background-color: rgb(35, 85, 94);
 }
 
 @media (hover: none) {
-  .emotion-1:hover {
+  .emotion-3:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-2 {
+.emotion-4 {
   height: 24px;
 }
 
-.emotion-2 .MuiSpeedDialIcon-icon {
+.emotion-4 .MuiSpeedDialIcon-icon {
   -webkit-transition: -webkit-transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-2 .MuiSpeedDialIcon-openIcon {
+.emotion-4 .MuiSpeedDialIcon-openIcon {
   position: absolute;
   -webkit-transition: -webkit-transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -152,7 +185,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   transform: rotate(-45deg);
 }
 
-.emotion-3 {
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -169,11 +202,11 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-3 iconButton {
+.emotion-5 iconButton {
   margin-right: 8px;
 }
 
-.emotion-4 {
+.emotion-6 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -185,7 +218,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-5 {
+.emotion-7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -195,7 +228,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   transition: top 0s linear 0.2s;
 }
 
-.emotion-6 {
+.emotion-8 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -207,7 +240,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   align-items: center;
 }
 
-.emotion-6 .MuiSpeedDialAction-staticTooltipLabel {
+.emotion-8 .MuiSpeedDialAction-staticTooltipLabel {
   -webkit-transition: -webkit-transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   opacity: 0;
@@ -220,7 +253,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   margin-right: 8px;
 }
 
-.emotion-7 {
+.emotion-9 {
   position: absolute;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -234,7 +267,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   word-break: keep-all;
 }
 
-.emotion-8 {
+.emotion-10 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -296,62 +329,62 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   transform: scale(0);
 }
 
-.emotion-8::-moz-focus-inner {
+.emotion-10::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-8.Mui-disabled {
+.emotion-10.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-8 {
+  .emotion-10 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-8:active {
+.emotion-10:active {
   box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
 }
 
-.emotion-8:hover {
+.emotion-10:hover {
   background-color: #f5f5f5;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media (hover: none) {
-  .emotion-8:hover {
+  .emotion-10:hover {
     background-color: #e6f2f1;
   }
 }
 
-.emotion-8.Mui-focusVisible {
+.emotion-10.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-8.Mui-disabled {
+.emotion-10.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-8:hover {
+.emotion-10:hover {
   background-color: rgb(216, 216, 216);
 }
 
 <div
-  class="flexbox fixedButtons"
+  class="emotion-0"
 >
   <div
-    class="margin-right"
+    class="emotion-1"
   >
     1 device selected
   </div>
   <div
-    class="MuiSpeedDial-root MuiSpeedDial-directionUp margin-small emotion-0"
+    class="MuiSpeedDial-root MuiSpeedDial-directionUp emotion-2"
     role="presentation"
   >
     <button
@@ -359,17 +392,17 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
       aria-expanded="false"
       aria-haspopup="true"
       aria-label="device-actions"
-      class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiSpeedDial-fab emotion-1"
+      class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiSpeedDial-fab emotion-3"
       style="transform: none; webkit-transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
       tabindex="0"
       type="button"
     >
       <span
-        class="MuiSpeedDialIcon-root emotion-2"
+        class="MuiSpeedDialIcon-root emotion-4"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSpeedDialIcon-icon emotion-3"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSpeedDialIcon-icon emotion-5"
           data-testid="AddIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -380,22 +413,22 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         </svg>
       </span>
       <span
-        class="MuiTouchRipple-root emotion-4"
+        class="MuiTouchRipple-root emotion-6"
       />
     </button>
     <div
       aria-orientation="vertical"
-      class="MuiSpeedDial-actions MuiSpeedDial-actionsClosed emotion-5"
+      class="MuiSpeedDial-actions MuiSpeedDial-actionsClosed emotion-7"
       id="device-actions-actions"
       role="menu"
     >
       <span
         aria-label="accept"
-        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-6"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-8"
         id="device-actions-action-0"
       >
         <span
-          class="MuiSpeedDialAction-staticTooltipLabel emotion-7"
+          class="MuiSpeedDialAction-staticTooltipLabel emotion-9"
           id="device-actions-action-0-label"
           style="transition-delay: 120ms;"
         >
@@ -403,7 +436,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         </span>
         <button
           aria-labelledby="device-actions-action-0-label"
-          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-8"
+          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-10"
           role="menuitem"
           style="transition-delay: 120ms;"
           tabindex="-1"
@@ -411,7 +444,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-3"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-5"
             data-testid="CheckCircleIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -421,17 +454,17 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
             />
           </svg>
           <span
-            class="MuiTouchRipple-root emotion-4"
+            class="MuiTouchRipple-root emotion-6"
           />
         </button>
       </span>
       <span
         aria-label="dismiss"
-        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-6"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-8"
         id="device-actions-action-1"
       >
         <span
-          class="MuiSpeedDialAction-staticTooltipLabel emotion-7"
+          class="MuiSpeedDialAction-staticTooltipLabel emotion-9"
           id="device-actions-action-1-label"
           style="transition-delay: 90ms;"
         >
@@ -439,7 +472,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         </span>
         <button
           aria-labelledby="device-actions-action-1-label"
-          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-8"
+          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-10"
           role="menuitem"
           style="transition-delay: 90ms;"
           tabindex="-1"
@@ -447,7 +480,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-3"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-5"
             data-testid="RemoveCircleOutlineIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -457,17 +490,17 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
             />
           </svg>
           <span
-            class="MuiTouchRipple-root emotion-4"
+            class="MuiTouchRipple-root emotion-6"
           />
         </button>
       </span>
       <span
         aria-label="reject"
-        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-6"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-8"
         id="device-actions-action-2"
       >
         <span
-          class="MuiSpeedDialAction-staticTooltipLabel emotion-7"
+          class="MuiSpeedDialAction-staticTooltipLabel emotion-9"
           id="device-actions-action-2-label"
           style="transition-delay: 60ms;"
         >
@@ -475,7 +508,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         </span>
         <button
           aria-labelledby="device-actions-action-2-label"
-          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-8"
+          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-10"
           role="menuitem"
           style="transition-delay: 60ms;"
           tabindex="-1"
@@ -483,7 +516,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-3"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-5"
             data-testid="HighlightOffOutlinedIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -493,17 +526,17 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
             />
           </svg>
           <span
-            class="MuiTouchRipple-root emotion-4"
+            class="MuiTouchRipple-root emotion-6"
           />
         </button>
       </span>
       <span
         aria-label="group-add"
-        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-6"
+        class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-8"
         id="device-actions-action-3"
       >
         <span
-          class="MuiSpeedDialAction-staticTooltipLabel emotion-7"
+          class="MuiSpeedDialAction-staticTooltipLabel emotion-9"
           id="device-actions-action-3-label"
           style="transition-delay: 30ms;"
         >
@@ -511,7 +544,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         </span>
         <button
           aria-labelledby="device-actions-action-3-label"
-          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-8"
+          class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-10"
           role="menuitem"
           style="transition-delay: 30ms;"
           tabindex="-1"
@@ -519,7 +552,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-3"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-5"
             data-testid="AddCircleIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -529,7 +562,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
             />
           </svg>
           <span
-            class="MuiTouchRipple-root emotion-4"
+            class="MuiTouchRipple-root emotion-6"
           />
         </button>
       </span>

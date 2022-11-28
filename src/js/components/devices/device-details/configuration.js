@@ -139,7 +139,6 @@ export const DeviceConfiguration = ({
   const [isEditingConfig, setIsEditingConfig] = useState(false);
   const [isSetAsDefault, setIsSetAsDefault] = useState(false);
   const [isUpdatingConfig, setIsUpdatingConfig] = useState(false);
-  const [open, setOpen] = useState(false);
   const [shouldUpdateEditor, setShouldUpdateEditor] = useState(false);
   const [showConfigImport, setShowConfigImport] = useState(false);
   const [showLog, setShowLog] = useState(false);
@@ -154,7 +153,6 @@ export const DeviceConfiguration = ({
     if (device.config || changedConfig) {
       setIsEditDisabled(isUpdatingConfig);
       setIsEditingConfig(isUpdatingConfig || updateFailed);
-      setOpen(isUpdatingConfig || updateFailed);
     }
   }, [isUpdatingConfig, updateFailed]);
 
@@ -259,7 +257,6 @@ export const DeviceConfiguration = ({
   const onStartEdit = e => {
     e.stopPropagation();
     setChangedConfig(configured || reported);
-    setOpen(true);
     setIsEditingConfig(true);
   };
 
@@ -323,23 +320,9 @@ export const DeviceConfiguration = ({
     return accu;
   }, {});
 
-  const visibleConfigKey = Object.keys(reported).length ? Object.keys(reported)[0] : '';
-  const { [visibleConfigKey]: visibleConfig, ...remainderReported } = reported;
-  const extendedContentLength = Object.keys(remainderReported).length;
   return (
     <DeviceDataCollapse
-      header={
-        visibleConfig &&
-        !isEditingConfig && (
-          <>
-            <ConfigurationObject className="margin-top" config={{ [visibleConfigKey]: visibleConfig }} setSnackbar={setSnackbar} style={{ marginBottom: 10 }} />
-            {!open && !!extendedContentLength && <a onClick={setOpen}>show more</a>}
-          </>
-        )
-      }
       isAddOn
-      isOpen={open}
-      onClick={setOpen}
       title={
         <div className="two-columns">
           <div className="flexbox center-aligned">
@@ -350,7 +333,7 @@ export const DeviceConfiguration = ({
               </Button>
             )}
           </div>
-          {open && isEditingConfig ? (
+          {isEditingConfig ? (
             <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
               Import configuration
             </Button>
@@ -370,11 +353,10 @@ export const DeviceConfiguration = ({
             showHelptips={showHelptips}
           />
         ) : (
-          hasDeviceConfig && <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
+          hasDeviceConfig && <ConfigurationObject config={reported} setSnackbar={setSnackbar} />
         )}
         {showHelptips && <ConfigureAddOnTip />}
         <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
-        {hasDeviceConfig && !isEditingConfig && <a onClick={() => setOpen(false)}>show less</a>}
         {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
         {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} setSnackbar={setSnackbar} />}
       </div>

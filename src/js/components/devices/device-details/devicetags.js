@@ -23,13 +23,9 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, u
   const [changedTags, setChangedTags] = useState({});
   const [isEditDisabled, setIsEditDisabled] = useState(!canWriteDevices);
   const [isEditing, setIsEditing] = useState(false);
-  const [open, setOpen] = useState(false);
   const [shouldUpdateEditor, setShouldUpdateEditor] = useState(false);
 
   const { tags = {} } = device;
-  const visibleSectionKey = Object.keys(tags).length ? Object.keys(tags)[0] : '';
-  const { [visibleSectionKey]: visibleSection, ...remainderReported } = tags;
-  const extendedContentLength = Object.keys(remainderReported).length;
   const hasTags = !!Object.keys(tags).length;
 
   useEffect(() => {
@@ -37,21 +33,19 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, u
   }, [isEditing]);
 
   useEffect(() => {
-    if (open && !isEditing && !hasTags && canWriteDevices) {
-      setIsEditing(true);
+    if (canWriteDevices) {
+      setIsEditing(!hasTags);
     }
-  }, [open, hasTags, canWriteDevices]);
+  }, [hasTags, canWriteDevices]);
 
   const onCancel = () => {
     setIsEditing(false);
-    setOpen(false);
     setChangedTags(tags);
   };
 
   const onStartEdit = e => {
     e.stopPropagation();
     setChangedTags(tags);
-    setOpen(true);
     setIsEditing(true);
   };
 
@@ -72,17 +66,6 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, u
   }, {});
   return (
     <DeviceDataCollapse
-      header={
-        visibleSection &&
-        !isEditing && (
-          <>
-            <ConfigurationObject config={{ [visibleSectionKey]: visibleSection }} setSnackbar={setSnackbar} style={{ marginBottom: 10 }} />
-            {!open && !!extendedContentLength && <a onClick={setOpen}>show more</a>}
-          </>
-        )
-      }
-      isOpen={open}
-      onClick={setOpen}
       title={
         <div className="two-columns">
           <div className="flexbox center-aligned">
@@ -116,12 +99,7 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, u
             </div>
           </>
         ) : (
-          hasTags && (
-            <>
-              <ConfigurationObject config={remainderReported} setSnackbar={setSnackbar} />
-              <a onClick={() => setOpen(false)}>show less</a>
-            </>
-          )
+          hasTags && <ConfigurationObject config={tags} setSnackbar={setSnackbar} />
         )}
       </div>
     </DeviceDataCollapse>

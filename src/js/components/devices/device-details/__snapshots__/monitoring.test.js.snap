@@ -5,14 +5,14 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
   class="margin-bottom "
 >
   <div
-    class="clickable flexbox space-between"
+    class="flexbox space-between"
     style="align-items: flex-start;"
   >
     <div
       class="flexbox center-aligned"
     >
       <h4
-        class="margin-right"
+        class="margin-bottom-small margin-right"
       >
         Monitoring
       </h4>
@@ -21,33 +21,12 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       class="flexbox centered"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1ef84cu-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-fsedue-MuiButtonBase-root-MuiButton-root-addOnPill"
         disabled=""
-        style="margin-right: 16px; font-weight: 900; font-size: smaller;"
         tabindex="-1"
         type="button"
       >
         Add-on
-      </button>
-      <button
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
-        tabindex="0"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
-          data-testid="KeyboardArrowUpIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-          />
-        </svg>
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
       </button>
     </div>
   </div>
@@ -87,208 +66,153 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
         details
       </a>
     </div>
-    <div
-      class="flexbox center-aligned padding-small css-jvqv7m-deviceDetailNotification  red column-data "
+  </div>
+  <div>
+    <h4
+      class="muted"
     >
-      <span>
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red css-1lqc678-MuiSvgIcon-root"
-          data-testid="ErrorIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-          />
-        </svg>
-      </span>
-      <div
-        class="flexbox center-aligned"
+      Alert history
+    </h4>
+    <div
+      class="monitoring-alert column-data"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red css-1lqc678-MuiSvgIcon-root"
+        data-testid="ErrorIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
       >
-        <div
-          class="key muted margin-right-small"
-        >
-          <b>
-            Device offline
-          </b>
-        </div>
-        Last check-in over 
-        24
-         
-        hours
-         ago
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+        />
+      </svg>
+      <div
+        class="key muted"
+      >
+        <b>
+          SSH Daemon is not running
+        </b>
       </div>
+      <div>
+        CRITICAL
+      </div>
+      <time
+        datetime="2021-07-23T12:22:36+00:00"
+      >
+        2021-07-23 12:22
+      </time>
+      <a>
+        view 
+        details
+      </a>
     </div>
   </div>
   <div
-    class="MuiCollapse-root MuiCollapse-vertical fadeIn css-1fkrdiv-MuiCollapse-root"
-    style="min-height: 0px; height: 0px; transition-duration: 0ms;"
+    class="flexbox margin-top"
   >
     <div
-      class="MuiCollapse-wrapper MuiCollapse-vertical css-smkl36-MuiCollapse-wrapper"
+      class="MuiTablePagination-root flexbox margin-top margin-top-none css-1s8wd9s-MuiTablePagination-root"
     >
       <div
-        class="MuiCollapse-wrapperInner MuiCollapse-vertical css-9l5vo-MuiCollapse-wrapperInner"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar"
       >
-        <div>
-          <h4
-            class="muted"
-          >
-            Alert history
-          </h4>
+        <div
+          class="MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer"
+        />
+        <p
+          class="MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel"
+          
+        >
+          Rows
+        </p>
+        <div
+          class="MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
+        >
           <div
-            class="monitoring-alert column-data"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            
+            class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
+            
+            role="button"
+            tabindex="0"
+          >
+            20
+          </div>
+          <input
+            aria-hidden="true"
+            class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+            tabindex="-1"
+            value="20"
+          />
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon"
+            data-testid="ArrowDropDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+        <p
+          class="MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows"
+        />
+        <div
+          class="flexbox center-aligned"
+        >
+          <div>
+            21-40 of 9001
+          </div>
+          <button
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+            tabindex="0"
+            type="button"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red css-1lqc678-MuiSvgIcon-root"
-              data-testid="ErrorIcon"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+              data-testid="KeyboardArrowLeftIcon"
               focusable="false"
               viewBox="0 0 24 24"
             >
               <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
               />
             </svg>
-            <div
-              class="key muted"
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+          <div>
+            <button
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
+              tabindex="0"
+              type="button"
             >
-              <b>
-                SSH Daemon is not running
-              </b>
-            </div>
-            <div>
-              CRITICAL
-            </div>
-            <time
-              datetime="2021-07-23T12:22:36+00:00"
-            >
-              2021-07-23 12:22
-            </time>
-            <a>
-              view 
-              details
-            </a>
-          </div>
-        </div>
-        <div
-          class="flexbox margin-top"
-        >
-          <div
-            class="MuiTablePagination-root flexbox margin-top margin-top-none css-1s8wd9s-MuiTablePagination-root"
-          >
-            <div
-              class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar"
-            >
-              <div
-                class="MuiTablePagination-spacer flexbox no-basis css-1psng7p-MuiTablePagination-spacer"
-              />
-              <p
-                class="MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel"
-                
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                data-testid="KeyboardArrowRightIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                Rows
-              </p>
-              <div
-                class="MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
-              >
-                <div
-                  aria-expanded="false"
-                  aria-haspopup="listbox"
-                  
-                  class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
-                  
-                  role="button"
-                  tabindex="0"
-                >
-                  20
-                </div>
-                <input
-                  aria-hidden="true"
-                  class="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
-                  tabindex="-1"
-                  value="20"
+                <path
+                  d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
                 />
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard css-dwvfc1-MuiSvgIcon-root-MuiSelect-icon"
-                  data-testid="ArrowDropDownIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M7 10l5 5 5-5z"
-                  />
-                </svg>
-              </div>
-              <p
-                class="MuiTablePagination-displayedRows css-cmytl3-MuiTablePagination-displayedRows"
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
-              <div
-                class="flexbox center-aligned"
-              >
-                <div>
-                  21-40 of 9001
-                </div>
-                <button
-                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
-                  tabindex="0"
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
-                    data-testid="KeyboardArrowLeftIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
-                    />
-                  </svg>
-                  <span
-                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                  />
-                </button>
-                <div>
-                  <button
-                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-13hun5h-MuiButtonBase-root-MuiIconButton-root"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
-                      data-testid="KeyboardArrowRightIcon"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
-                      />
-                    </svg>
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
+            </button>
           </div>
         </div>
-        <a
-          class="margin-top"
-        >
-          Hide alert history
-        </a>
       </div>
     </div>
   </div>
-  <hr
-    class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
-    style="margin-top: 24px;"
-  />
 </div>"
 `;
 

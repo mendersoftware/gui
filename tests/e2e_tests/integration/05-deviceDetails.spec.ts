@@ -15,7 +15,7 @@ test.describe('Device details', () => {
   test('has basic inventory', async ({ demoDeviceName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem div:last-child`);
-    await page.click(`text=/show 1\\d+ more/i`);
+    await page.click(`text=/inventory/i`);
     expect(await page.isVisible(`css=.expandedDevice >> text=Linux`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=mac`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
@@ -24,6 +24,7 @@ test.describe('Device details', () => {
   test('can open a terminal', async ({ browserName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem div:last-child`);
+    await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
     const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: 10000 });
     await terminalLaunchButton.scrollIntoViewIfNeeded();

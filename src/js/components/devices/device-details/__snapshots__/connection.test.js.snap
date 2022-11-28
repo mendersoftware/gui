@@ -50,6 +50,9 @@ exports[`DeviceConnection Component renders correctly 1`] = `
   border-radius: 2px;
   font-size: 14px;
   font-weight: bold;
+  margin-right: 16px;
+  font-weight: 900;
+  font-size: smaller;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -137,7 +140,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
     class="margin-bottom "
   >
     <div
-      class=" flexbox space-between"
+      class="flexbox space-between"
       style="align-items: flex-start;"
     >
       <h4
@@ -151,15 +154,11 @@ exports[`DeviceConnection Component renders correctly 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
           disabled=""
-          style="margin-right: 16px; font-weight: 900; font-size: smaller;"
           tabindex="-1"
           type="button"
         >
           Add-on
         </button>
-        <div
-          style="height: 48px; width: 48px;"
-        />
       </div>
     </div>
     <div>
@@ -256,6 +255,9 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   border-radius: 2px;
   font-size: 14px;
   font-weight: bold;
+  margin-right: 16px;
+  font-weight: 900;
+  font-size: smaller;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -485,7 +487,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
     class="margin-bottom "
   >
     <div
-      class=" flexbox space-between"
+      class="flexbox space-between"
       style="align-items: flex-start;"
     >
       <h4
@@ -499,15 +501,11 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
           disabled=""
-          style="margin-right: 16px; font-weight: 900; font-size: smaller;"
           tabindex="-1"
           type="button"
         >
           Add-on
         </button>
-        <div
-          style="height: 48px; width: 48px;"
-        />
       </div>
     </div>
     <div>
@@ -653,6 +651,9 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
   border-radius: 2px;
   font-size: 14px;
   font-weight: bold;
+  margin-right: 16px;
+  font-weight: 900;
+  font-size: smaller;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -740,7 +741,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
     class="margin-bottom "
   >
     <div
-      class=" flexbox space-between"
+      class="flexbox space-between"
       style="align-items: flex-start;"
     >
       <h4
@@ -754,15 +755,11 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
           disabled=""
-          style="margin-right: 16px; font-weight: 900; font-size: smaller;"
           tabindex="-1"
           type="button"
         >
           Add-on
         </button>
-        <div
-          style="height: 48px; width: 48px;"
-        />
       </div>
     </div>
     <div>

@@ -94,6 +94,7 @@ test.describe('RBAC functionality', () => {
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem div:last-child`);
     // the created role does have permission to configure devices, so the section should be visible
+    await page.click(`text=/configuration/i`);
     await page.waitForSelector('text=/Device configuration/i', { timeout: 10000 });
   });
 });
