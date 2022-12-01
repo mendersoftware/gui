@@ -16,7 +16,7 @@ and comprises several repositories.
 The GUI exposes the entirety of Mender's functionality to the user, including
 deployment definition, scheduling and monitoring, device listing and admission, etc.
 
-![Mender logo](https://vgy.me/0tXIM6.png)
+<img src="src/assets/img/loginlogo.svg" alt="Mender" width="33%" />
 
 ## Getting started
 
