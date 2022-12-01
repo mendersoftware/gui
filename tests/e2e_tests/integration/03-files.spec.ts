@@ -57,6 +57,7 @@ test.describe('Files', () => {
     test.skip(!['enterprise', 'staging'].includes(environment) || ['webkit'].includes(browserName));
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem div:last-child`);
+    await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
     await page.waitForSelector('text=/file transfer/i', { timeout: 10000 });
     await page.click(`css=.expandedDevice >> text=file transfer`);
@@ -64,11 +65,10 @@ test.describe('Files', () => {
     await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
     await page.click(selectors.placeholderExample, { clickCount: 3 });
     await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
-    await page.click('css=button >> text=Upload');
-    await page.click('css=.navLink >> text=Download');
+    await page.click(`button:text("Upload"):below(:text("Destination directory"))`);
+    await page.click('css=button >> text=Download');
     await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
-    expect(await page.isVisible(`css=button >> text=Download`)).toBeTruthy();
-    const [download] = await Promise.all([page.waitForEvent('download'), page.click(`css=button >> text=Download`)]);
+    const [download] = await Promise.all([page.waitForEvent('download'), page.click('button:text("Download"):below(:text("file on the device"))')]);
     const downloadTargetPath = await download.path();
     const newFile = await fs.readFileSync(downloadTargetPath);
     const testFile = await fs.readFileSync(`fixtures/${fileName}`);
