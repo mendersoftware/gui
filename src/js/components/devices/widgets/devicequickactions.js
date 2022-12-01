@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useMemo, useState } from 'react';
 import pluralize from 'pluralize';
 
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@mui/material';
+import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import {
   AddCircle as AddCircleIcon,
   CheckCircle as CheckCircleIcon,
@@ -10,6 +11,7 @@ import {
   RemoveCircleOutline as RemoveCircleOutlineIcon,
   Replay as ReplayIcon
 } from '@mui/icons-material';
+import { makeStyles } from 'tss-react/mui';
 import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 
 import GatewayIcon from '../../../../assets/img/gateway.svg';
@@ -81,11 +83,34 @@ const defaultActions = {
   }
 };
 
+const useStyles = makeStyles()(theme => ({
+  container: {
+    display: 'flex',
+    position: 'fixed',
+    bottom: theme.spacing(6.5),
+    right: theme.spacing(6.5),
+    zIndex: 10,
+    minWidth: 400,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    pointerEvents: 'none',
+    [`.${speedDialActionClasses.staticTooltipLabel}`]: {
+      minWidth: 'max-content'
+    }
+  },
+  fab: { margin: theme.spacing(2) },
+  label: {
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(4)
+  }
+}));
+
 export const DeviceQuickActions = (
   { actionCallbacks, devices, features, isSingleDevice = false, selectedGroup, selectedRows, tenantCapabilities, userCapabilities },
   ref
 ) => {
   const [showActions, setShowActions] = useState(false);
+  const { classes } = useStyles();
 
   const { actions, selectedDevices } = useMemo(() => {
     const selectedDevices = selectedRows.map(row => devices[row]);
@@ -104,11 +129,11 @@ export const DeviceQuickActions = (
 
   const pluralized = pluralize('devices', selectedDevices.length);
   return (
-    <div className="flexbox fixedButtons" ref={ref}>
-      <div className="margin-right">{isSingleDevice ? 'Device actions' : `${selectedDevices.length} ${pluralized} selected`}</div>
+    <div className={classes.container} ref={ref}>
+      <div className={classes.label}>{isSingleDevice ? 'Device actions' : `${selectedDevices.length} ${pluralized} selected`}</div>
       <SpeedDial
+        className={classes.fab}
         ariaLabel="device-actions"
-        className="margin-small"
         icon={<SpeedDialIcon />}
         onClose={() => setShowActions(false)}
         onOpen={setShowActions}

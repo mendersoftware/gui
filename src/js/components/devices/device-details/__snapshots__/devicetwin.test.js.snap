@@ -34,21 +34,22 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  text-align: center;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
-  overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
-  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.625rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #5d0f43;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -68,42 +69,41 @@ exports[`DeviceTwin Component renders correctly 1`] = `
 }
 
 .emotion-0:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(65, 10, 46);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 
 @media (hover: none) {
   .emotion-0:hover {
-    background-color: transparent;
+    background-color: #5d0f43;
   }
 }
 
+.emotion-0:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-0.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
 .emotion-0.Mui-disabled {
-  background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-0:hover {
+  colors: #337a87;
+}
+
+.emotion-0.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-1 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  fill: currentColor;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.3929rem;
-}
-
-.emotion-1 iconButton {
-  margin-right: 8px;
-}
-
-.emotion-2 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -115,129 +115,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-3 {
-  height: 0;
-  overflow: hidden;
-  -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  visibility: hidden;
-}
-
-.emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-}
-
-.emotion-5 {
-  width: 100%;
-}
-
-.emotion-6 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  font-family: Lato,sans-serif;
-  font-weight: 500;
-  font-size: 0.8125rem;
-  line-height: 1.75;
-  text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #5d0f43;
-  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.emotion-6::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-6.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-6 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-6:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  background-color: rgb(65, 10, 46);
-  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
-}
-
-@media (hover: none) {
-  .emotion-6:hover {
-    background-color: #5d0f43;
-  }
-}
-
-.emotion-6:active {
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
-}
-
-.emotion-6.Mui-focusVisible {
-  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-}
-
-.emotion-6.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  box-shadow: none;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.emotion-6:hover {
-  colors: #337a87;
-}
-
-.emotion-6.MuiButton-text {
-  color: rgba(10, 10, 11, 0.78);
-}
-
-.emotion-8 {
+.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -287,72 +165,82 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-8::-moz-focus-inner {
+.emotion-2::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-8.Mui-disabled {
+.emotion-2.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-8 {
+  .emotion-2 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-8:hover {
+.emotion-2:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-8:hover {
+  .emotion-2:hover {
     background-color: transparent;
   }
 }
 
-.emotion-8.Mui-disabled {
+.emotion-2.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-8:hover {
+.emotion-2:hover {
   colors: #337a87;
 }
 
-.emotion-8.MuiButton-text {
+.emotion-2.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-9 {
+.emotion-3 {
   display: inherit;
   margin-right: 8px;
   margin-left: -4px;
 }
 
-.emotion-9>*:nth-of-type(1) {
+.emotion-3>*:nth-of-type(1) {
   font-size: 20px;
 }
 
-.emotion-12 {
-  margin: 0;
+.emotion-4 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  border-width: 0;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.12);
-  border-bottom-width: thin;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+}
+
+.emotion-4 iconButton {
+  margin-right: 8px;
 }
 
 <div
   class="margin-bottom "
 >
   <div
-    class="clickable flexbox space-between"
+    class="flexbox space-between"
     style="align-items: flex-start;"
   >
     <div
@@ -373,28 +261,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
     </div>
     <div
       class="flexbox centered"
-    >
-      <button
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-0"
-        tabindex="0"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
-          data-testid="KeyboardArrowDownIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-          />
-        </svg>
-        <span
-          class="MuiTouchRipple-root emotion-2"
-        />
-      </button>
-    </div>
+    />
   </div>
   <div>
     <div
@@ -423,141 +290,124 @@ exports[`DeviceTwin Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="MuiCollapse-root MuiCollapse-vertical fadeOut MuiCollapse-hidden emotion-3"
-    style="min-height: 0px;"
+    class="flexbox column "
   >
     <div
-      class="MuiCollapse-wrapper MuiCollapse-vertical emotion-4"
+      style="max-width: 800px;"
     >
       <div
-        class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-5"
+        class="two-columns"
+      >
+        <h4>
+          Desired configuration
+        </h4>
+        <h4>
+          Reported configuration
+        </h4>
+      </div>
+      <section
+        style="display: flex; position: relative; text-align: initial; width: 100%; height: 500px;"
       >
         <div
-          class="flexbox column "
+          style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center;"
         >
           <div
-            style="max-width: 800px;"
+            class="loaderContainer"
           >
             <div
-              class="two-columns"
+              class="  loader"
             >
-              <h4>
-                Desired configuration
-              </h4>
-              <h4>
-                Reported configuration
-              </h4>
-            </div>
-            <section
-              style="display: flex; position: relative; text-align: initial; width: 100%; height: 500px;"
-            >
-              <div
-                style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center;"
-              >
-                <div
-                  class="loaderContainer"
-                >
-                  <div
-                    class="  loader"
-                  >
-                    <span
-                      class="dot dot_1"
-                    />
-                    <span
-                      class="dot dot_2"
-                    />
-                    <span
-                      class="dot dot_3"
-                    />
-                    <span
-                      class="dot dot_4"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                style="width: 100%; display: none;"
+              <span
+                class="dot dot_1"
               />
-            </section>
-          </div>
-          <div
-            class="two-columns margin-top"
-            style="grid-template-columns: 800px 1fr;"
-          >
-            <div
-              class="flexbox"
-              style="align-items: flex-start; justify-content: flex-end;"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-6"
-                tabindex="0"
-                type="button"
-              >
-                Edit desired configuration
-                <span
-                  class="MuiTouchRipple-root emotion-2"
-                />
-              </button>
-            </div>
-            <div
-              class="flexbox"
-              style="justify-content: flex-end;"
-            >
-              <div
-                class="loaderContainer shrunk"
-              >
-                <div
-                  class="small  loader"
-                >
-                  <span
-                    class="dot dot_1"
-                  />
-                  <span
-                    class="dot dot_2"
-                  />
-                  <span
-                    class="dot dot_3"
-                  />
-                  <span
-                    class="dot dot_4"
-                  />
-                </div>
-              </div>
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-8"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-9"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
-                    data-testid="RefreshIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
-                    />
-                  </svg>
-                </span>
-                Refresh
-                <span
-                  class="MuiTouchRipple-root emotion-2"
-                />
-              </button>
+              <span
+                class="dot dot_2"
+              />
+              <span
+                class="dot dot_3"
+              />
+              <span
+                class="dot dot_4"
+              />
             </div>
           </div>
         </div>
+        <div
+          style="width: 100%; display: none;"
+        />
+      </section>
+    </div>
+    <div
+      class="two-columns margin-top"
+      style="grid-template-columns: 800px 1fr;"
+    >
+      <div
+        class="flexbox"
+        style="align-items: flex-start; justify-content: flex-end;"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
+          tabindex="0"
+          type="button"
+        >
+          Edit desired configuration
+          <span
+            class="MuiTouchRipple-root emotion-1"
+          />
+        </button>
+      </div>
+      <div
+        class="flexbox"
+        style="justify-content: flex-end;"
+      >
+        <div
+          class="loaderContainer shrunk"
+        >
+          <div
+            class="small  loader"
+          >
+            <span
+              class="dot dot_1"
+            />
+            <span
+              class="dot dot_2"
+            />
+            <span
+              class="dot dot_3"
+            />
+            <span
+              class="dot dot_4"
+            />
+          </div>
+        </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-2"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-3"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+              data-testid="RefreshIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+              />
+            </svg>
+          </span>
+          Refresh
+          <span
+            class="MuiTouchRipple-root emotion-1"
+          />
+        </button>
       </div>
     </div>
   </div>
-  <hr
-    class="MuiDivider-root MuiDivider-fullWidth emotion-12"
-    style="margin-top: 24px;"
-  />
 </div>
 `;
 

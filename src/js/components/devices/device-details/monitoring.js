@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
@@ -7,6 +7,7 @@ import { DeviceConnectionNote } from './connection';
 import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
+import MonitorDetailsDialog from '../dialogs/monitordetailsdialog';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -39,33 +40,9 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
 };
 
 const paginationCutoff = defaultPerPage;
-export const DeviceMonitoring = ({
-  alertListState = {},
-  alerts,
-  device,
-  docsVersion,
-  getAlerts,
-  innerRef,
-  isOffline,
-  latestAlerts,
-  onDetailsClick,
-  setAlertListState
-}) => {
+export const DeviceMonitoring = ({ alertListState = {}, alerts, device, docsVersion, getAlerts, latestAlerts, onDetailsClick, setAlertListState }) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(!!latestAlerts.length);
-  }, [latestAlerts.length]);
-
-  useEffect(() => {
-    if (open) {
-      getAlerts(device.id, alertListState);
-    } else {
-      setAlertListState({ perPage: defaultPerPage, page: 1, total: 0 });
-    }
-  }, [open]);
 
   useEffect(() => {
     getAlerts(device.id, alertListState);
@@ -75,10 +52,8 @@ export const DeviceMonitoring = ({
 
   const onChangeRowsPerPage = perPage => setAlertListState({ page: 1, perPage });
 
-  const { monitors = [], updated_ts = '' } = device;
+  const { monitors = [], isOffline, updated_ts = '' } = device;
   const hasMonitorsDefined = !!(monitors.length || alerts.length || latestAlerts.length);
-
-  const toggleOpen = hasMonitorsDefined ? () => setOpen(!open) : undefined;
 
   return (
     <DeviceDataCollapse
@@ -90,18 +65,15 @@ export const DeviceMonitoring = ({
               <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} style={{ marginBottom: theme.spacing() }} />
             ))}
             {isOffline && <DeviceOfflineHeaderNotification />}
-            {!!(!isOffline || alerts.length || latestAlerts.length) && !open && <a onClick={toggleOpen}>Show alert history</a>}
           </>
         ) : (
           <DeviceMonitorsMissingNote docsVersion={docsVersion} />
         )
       }
       isAddOn
-      isOpen={open}
-      onClick={toggleOpen}
       title={
-        <div className="flexbox center-aligned" ref={innerRef}>
-          <h4 className="margin-right">Monitoring</h4>
+        <div className="flexbox center-aligned">
+          <h4 className="margin-bottom-small margin-right">Monitoring</h4>
           {!!monitors.length && <Time className="muted" value={updated_ts} />}
         </div>
       }
@@ -128,15 +100,40 @@ export const DeviceMonitoring = ({
           </div>
         </>
       ) : (
-        <p className="muted margin-left-large" style={{ fontSize: 'larger' }}>
-          There are currently no issues reported
-        </p>
+        hasMonitorsDefined && (
+          <p className="muted margin-left-large" style={{ fontSize: 'larger' }}>
+            There are currently no issues reported
+          </p>
+        )
       )}
-      <a className="margin-top" onClick={toggleOpen}>
-        Hide alert history
-      </a>
     </DeviceDataCollapse>
   );
 };
 
 export default DeviceMonitoring;
+
+export const MonitoringTab = ({
+  alertListState,
+  alerts,
+  device,
+  docsVersion,
+  getDeviceAlerts,
+  monitorDetails,
+  latestAlerts,
+  setMonitorDetails,
+  setAlertListState
+}) => (
+  <>
+    <DeviceMonitoring
+      alertListState={alertListState}
+      alerts={alerts}
+      device={device}
+      docsVersion={docsVersion}
+      getAlerts={getDeviceAlerts}
+      latestAlerts={latestAlerts}
+      onDetailsClick={setMonitorDetails}
+      setAlertListState={setAlertListState}
+    />
+    <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />
+  </>
+);

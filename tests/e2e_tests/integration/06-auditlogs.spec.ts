@@ -14,7 +14,7 @@ test.describe('Auditlogs', () => {
     test.skip(!['enterprise', 'staging'].includes(environment));
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem div:last-child`);
-    await page.mouse.wheel(0, 300);
+    await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
     const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: 10000 });
     await terminalLaunchButton.scrollIntoViewIfNeeded();
