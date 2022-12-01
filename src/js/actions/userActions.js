@@ -9,7 +9,7 @@ import AppConstants from '../constants/appConstants';
 import OnboardingConstants from '../constants/onboardingConstants';
 import UserConstants from '../constants/userConstants';
 import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
-import { cleanUp, logout } from '../auth';
+import { cleanUp, expirySet, logout } from '../auth';
 import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 import { ALL_DEVICES } from '../constants/deviceConstants';
@@ -56,10 +56,8 @@ export const loginUser = userData => dispatch =>
       if (!token) {
         return;
       }
-      // save token as cookie
-      // set maxAge if noexpiry checkbox not checked
-      const options = { sameSite: 'strict', secure: true, path: '/', maxAge: cookies.get('noExpiry') ? undefined : 900 };
-      cookies.set('JWT', token, options);
+      // save token as cookie & set maxAge if noexpiry checkbox not checked
+      cookies.set('JWT', token, { sameSite: 'strict', secure: true, path: '/', maxAge: expirySet() ? 900 : undefined });
 
       window.sessionStorage.removeItem('pendings-redirect');
       window.location.replace('/ui/');

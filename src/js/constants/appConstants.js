@@ -6,6 +6,7 @@ const startingDeviceCount = {
 const oneSecond = 1000;
 
 module.exports = {
+  noExpiryKey: 'noExpiry',
   RECEIVED_HOSTED_LINKS: 'RECEIVED_HOSTED_LINKS',
   SET_ANNOUNCEMENT: 'SET_ANNOUNCEMENT',
   SET_FIRST_LOGIN_AFTER_SIGNUP: 'SET_FIRST_LOGIN_AFTER_SIGNUP',

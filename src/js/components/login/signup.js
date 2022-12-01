@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 import { setFirstLoginAfterSignup, setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { loginUser } from '../../actions/userActions';
-import { TIMEOUTS } from '../../constants/appConstants';
+import { noExpiryKey, TIMEOUTS } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
 import { stringToBoolean } from '../../helpers';
 import Loader from '../common/loader';
@@ -34,8 +34,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, loginUser, setF
   const { campaign = '' } = useParams();
 
   useEffect(() => {
-    cookies.remove('noExpiry', { path: '/' });
-    cookies.remove('noExpiry', { path: '/ui' });
+    window.localStorage.removeItem(noExpiryKey);
     const usedOauthProvider = cookies.get('oauth');
     if (usedOauthProvider) {
       setOauthProvider(usedOauthProvider);

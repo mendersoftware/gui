@@ -1,13 +1,12 @@
 import Cookies from 'universal-cookie';
-import { TIMEOUTS } from './constants/appConstants';
+import { noExpiryKey, TIMEOUTS } from './constants/appConstants';
 
 const cookies = new Cookies();
 
 export const getToken = () => cookies.get('JWT', { doNotParse: true });
 
 export const cleanUp = () => {
-  cookies.remove('noExpiry', { path: '/' });
-  cookies.remove('noExpiry', { path: '/ui' });
+  window.localStorage.removeItem(noExpiryKey);
   cookies.remove('JWT', { path: '/' });
   cookies.remove('JWT', { path: '/ui' });
   window.localStorage.removeItem('oauth');
@@ -36,4 +35,4 @@ export const updateMaxAge = () => {
   }
 };
 
-export const expirySet = () => cookies.get('noExpiry') !== 'true';
+export const expirySet = () => window.localStorage.getItem(noExpiryKey) !== 'true';
