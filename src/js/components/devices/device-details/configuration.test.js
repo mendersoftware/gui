@@ -139,7 +139,6 @@ describe('Configuration Component', () => {
     jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(document.querySelector('.loaderContainer')).not.toBeInTheDocument());
-    await waitFor(() => expect(screen.getByText(/show less/i)).toBeInTheDocument(), { timeout: 3000 });
 
     expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
     act(() => userEvent.click(screen.getByRole('button', { name: /edit/i })));

@@ -104,41 +104,39 @@ const detailTypes = {
   }
 };
 
+const exportLog = (name, lines) => {
+  const max = lines.reduce((accu, item) => Math.max(accu, item.line_number), 0);
+  const length = `${max}`.length;
+  const logData = lines
+    .reduce((accu, item) => {
+      const paddedLineNumber = `${item.line_number}`.padStart(length, '0');
+      accu.push(`${paddedLineNumber}   ${item.data}`);
+      return accu;
+    }, [])
+    .join('\n');
+  const uriContent = `data:application/octet-stream,${encodeURIComponent(logData)}`;
+  window.open(uriContent, `Mender-Monitor-${name.replace(/ /g, '_')}.log`);
+};
+
 export const MonitorDetailsDialog = ({ alert, onClose }) => {
+  const { name, subject = { details: {} } } = alert ?? {};
   const {
-    name,
-    subject: {
-      details: { lines_before = [], lines_after = [], line_matching = '' }
-    }
-  } = alert;
+    details: { lines_before = [], lines_after = [], line_matching = '' }
+  } = subject;
 
   const lines = [...lines_before, line_matching, ...lines_after].filter(i => i);
 
-  const exportLog = () => {
-    const max = lines.reduce((accu, item) => Math.max(accu, item.line_number), 0);
-    const length = `${max}`.length;
-    const logData = lines
-      .reduce((accu, item) => {
-        const paddedLineNumber = `${item.line_number}`.padStart(length, '0');
-        accu.push(`${paddedLineNumber}   ${item.data}`);
-        return accu;
-      }, [])
-      .join('\n');
-    const uriContent = `data:application/octet-stream,${encodeURIComponent(logData)}`;
-    window.open(uriContent, `Mender-Monitor-${name.replace(/ /g, '_')}.log`);
-  };
-
   const { component: Component, title } = lines.length ? detailTypes.log : detailTypes.description;
   return (
-    <Dialog open maxWidth="md">
+    <Dialog open={!!alert} maxWidth="md">
       <DialogTitle>{`${title} for ${name}`}</DialogTitle>
       <DialogContent style={{ minWidth: 600 }}>
-        <Component {...alert.subject.details} />
+        <Component {...subject.details} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
         {!!lines.length && (
-          <Button variant="contained" color="primary" onClick={exportLog}>
+          <Button variant="contained" color="primary" onClick={() => exportLog(name, lines)}>
             Export log
           </Button>
         )}

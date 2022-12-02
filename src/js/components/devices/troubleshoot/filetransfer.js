@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, IconButton, List, ListItem, ListItemText, TextField, Tooltip } from '@mui/material';
+import { Button, IconButton, Tab, Tabs, TextField, Tooltip } from '@mui/material';
 import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import FileUpload from '../../common/forms/fileupload';
 import InfoText from '../../common/infotext';
 
 const tabs = ['upload', 'download'];
 
-const columnStyle = { maxWidth: 400 };
+const maxWidth = 400;
+
+const useStyles = makeStyles()(theme => ({
+  column: { maxWidth },
+  inputWrapper: { display: 'grid', gridTemplateColumns: `${maxWidth}px max-content` },
+  tab: {
+    alignItems: 'flex-start'
+  },
+  fileDestination: { marginTop: theme.spacing(2) }
+}));
 
 export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUpload, setFile, setDownloadPath, setSnackbar, setUploadPath, uploadPath }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const [isValidDestination, setIsValidDestination] = useState(true);
 
@@ -45,17 +54,15 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
 
   return (
     <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
-      <List className="leftFixed">
+      <Tabs orientation="vertical" className="leftFixed" onChange={(e, item) => setCurrentTab(item)} value={currentTab}>
         {tabs.map(item => (
-          <ListItem className={`navLink settingsNav capitalized ${item === currentTab ? 'active' : ''}`} key={item} onClick={() => setCurrentTab(item)}>
-            <ListItemText>{item}</ListItemText>
-          </ListItem>
+          <Tab className={`${classes.tab} capitalized`} key={item} label={item} value={item} />
         ))}
-      </List>
+      </Tabs>
       <div className="rightFluid padding-right">
         {currentTab === 'upload' ? (
           <>
-            <InfoText style={columnStyle}>Upload a file to the device</InfoText>
+            <InfoText className={classes.column}>Upload a file to the device</InfoText>
             <FileUpload
               enableContentReading={false}
               fileNameSelection={file?.name}
@@ -67,9 +74,9 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 </>
               }
               setSnackbar={setSnackbar}
-              style={columnStyle}
+              style={{ maxWidth }}
             />
-            <div style={{ display: 'grid', gridTemplateColumns: `${columnStyle.maxWidth}px max-content` }}>
+            <div className={classes.inputWrapper}>
               <TextField
                 autoFocus={true}
                 error={!isValidDestination}
@@ -88,7 +95,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 </IconButton>
               </Tooltip>
             </div>
-            <div className="flexbox margin-top" style={{ ...columnStyle, justifyContent: 'flex-end' }}>
+            <div className={`flexbox margin-top ${classes.column}`} style={{ justifyContent: 'flex-end' }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -102,19 +109,19 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
         ) : (
           <>
             <InfoText>Download a file from the device</InfoText>
-            <div style={{ display: 'grid', gridTemplateColumns: `${columnStyle.maxWidth}px max-content` }}>
+            <div className={classes.inputWrapper}>
               <TextField
                 autoFocus={true}
+                className={classes.column}
                 error={!isValidDestination}
                 fullWidth
                 helperText={!isValidDestination && <div className="warning">Destination has to be an absolute path</div>}
-                inputProps={{ style: { marginTop: theme.spacing(2) } }}
+                inputProps={{ className: classes.fileDestination }}
                 InputLabelProps={{ shrink: true }}
                 label="Path to the file on the device"
                 onChange={e => setDownloadPath(e.target.value)}
                 placeholder="Example: /home/mender/"
                 value={downloadPath}
-                style={columnStyle}
               />
               <Tooltip title="Paste" placement="top">
                 <IconButton style={{ alignSelf: 'flex-end' }} onClick={onPasteDownloadClick} size="large">
@@ -122,7 +129,7 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
                 </IconButton>
               </Tooltip>
             </div>
-            <div className="flexbox margin-top" style={{ ...columnStyle, justifyContent: 'flex-end' }}>
+            <div className={`flexbox margin-top ${classes.column}`} style={{ justifyContent: 'flex-end' }}>
               <Button
                 variant="contained"
                 color="primary"

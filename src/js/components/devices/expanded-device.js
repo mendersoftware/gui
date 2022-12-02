@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
-import { Chip, Divider, Drawer, IconButton } from '@mui/material';
+import { Chip, Divider, Drawer, IconButton, Tab, Tabs } from '@mui/material';
 import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
@@ -22,24 +22,20 @@ import {
 import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import { getDeviceTwinIntegrations, getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
-import TroubleshootDialog from './dialogs/troubleshootdialog';
-import AuthStatus from './device-details/authstatus';
 import DeviceConfiguration from './device-details/configuration';
+import { IdentityTab } from './device-details/identity';
 import DeviceInventory from './device-details/deviceinventory';
-import DeviceTags from './device-details/devicetags';
-import DeviceIdentity from './device-details/identity';
-import DeviceConnection from './device-details/connection';
+import { TroubleshootTab } from './device-details/connection';
 import InstalledSoftware from './device-details/installedsoftware';
-import DeviceMonitoring from './device-details/monitoring';
-import MonitorDetailsDialog from './device-details/monitordetailsdialog';
+import { MonitoringTab } from './device-details/monitoring';
 import DeviceNotifications from './device-details/notifications';
-import DeviceTwin from './device-details/devicetwin';
+import { IntegrationTab } from './device-details/devicetwin';
 import DeviceQuickActions from './widgets/devicequickactions';
 
 const useStyles = makeStyles()(theme => ({
@@ -56,10 +52,6 @@ const useStyles = makeStyles()(theme => ({
   dividerTop: {
     marginBottom: theme.spacing(3),
     marginTop: theme.spacing(2)
-  },
-  dividerBottom: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2)
   }
 }));
 
@@ -85,6 +77,63 @@ const GatewayNotification = ({ device, docsVersion }) => {
     </MenderTooltipClickable>
   );
 };
+
+const DeviceSystemTab = () => <div />;
+
+const tabs = [
+  { component: IdentityTab, title: () => 'Identity', value: 'identity', isApplicable: () => true },
+  {
+    component: DeviceInventory,
+    title: () => 'Inventory',
+    value: 'inventory',
+    isApplicable: ({ device: { status = DEVICE_STATES.accepted } }) => status === DEVICE_STATES.accepted
+  },
+  {
+    component: InstalledSoftware,
+    title: () => 'Software',
+    value: 'software',
+    isApplicable: ({ device: { status = DEVICE_STATES.accepted } }) => status === DEVICE_STATES.accepted
+  },
+  {
+    component: DeviceConfiguration,
+    title: () => 'Configuration',
+    value: 'configuration',
+    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, tenantCapabilities: { hasDeviceConfig }, userCapabilities: { canConfigure } }) =>
+      hasDeviceConfig && canConfigure && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status)
+  },
+  {
+    component: MonitoringTab,
+    title: () => 'Monitoring',
+    value: 'monitor',
+    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, tenantCapabilities: { hasMonitor } }) => status === DEVICE_STATES.accepted && hasMonitor
+  },
+  {
+    component: TroubleshootTab,
+    title: () => 'Troubleshooting',
+    value: 'troubleshoot',
+    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, tenantCapabilities: { hasDeviceConnect } }) =>
+      status === DEVICE_STATES.accepted && hasDeviceConnect
+  },
+  {
+    component: IntegrationTab,
+    title: ({ integrations }) => {
+      if (integrations.length > 1) {
+        return 'Device Twin';
+      }
+      const { title, twinTitle } = EXTERNAL_PROVIDER[integrations[0].provider];
+      return `${title} ${twinTitle}`;
+    },
+    value: 'device-twin',
+    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, integrations }) =>
+      !!integrations.length && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status)
+  },
+  {
+    component: DeviceSystemTab,
+    title: () => 'Device System',
+    value: 'device-system',
+    isApplicable: ({ device: { attributes } }) => attributes?.mender_is_gateway
+  }
+];
 
 export const ExpandedDevice = ({
   abortDeployment,
@@ -124,17 +173,16 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userCapabilities
 }) => {
-  const { attributes = {}, isOffline, status = DEVICE_STATES.accepted } = device;
+  const { attributes = {}, isOffline } = device;
   const [socketClosed, setSocketClosed] = useState(true);
+  const [selectedTab, setSelectedTab] = useState(tabs[0].value);
   const [troubleshootType, setTroubleshootType] = useState();
   const [monitorDetails, setMonitorDetails] = useState();
-  const monitoring = useRef();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
 
-  const { hasAuditlogs, hasDeviceConfig, hasDeviceConnect, hasMonitor } = tenantCapabilities;
-  const { canConfigure } = userCapabilities;
+  const { hasAuditlogs } = tenantCapabilities;
 
   useEffect(() => {
     if (!deviceId) {
@@ -170,12 +218,11 @@ export const ExpandedDevice = ({
     setSnackbar('Link copied to clipboard');
   };
 
-  const scrollToMonitor = () => monitoring.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToMonitor = () => setSelectedTab('monitor');
 
   const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${deviceId}`);
 
   const deviceIdentifier = attributes.name ?? deviceId ?? '-';
-  const isAcceptedDevice = status === DEVICE_STATES.accepted;
   const isGateway = stringToBoolean(attributes.mender_is_gateway);
   const actionCallbacks = {
     onAddDevicesToGroup,
@@ -193,94 +240,77 @@ export const ExpandedDevice = ({
     }
   }, [deviceId, onClose]);
 
+  const availableTabs = tabs.reduce((accu, tab) => {
+    if (tab.isApplicable({ device, integrations, tenantCapabilities, userCapabilities })) {
+      accu.push(tab);
+    }
+    return accu;
+  }, []);
+
+  const SelectedTab = useMemo(() => availableTabs.find(tab => tab.value === selectedTab).component, [selectedTab]);
+  const commonProps = {
+    abortDeployment,
+    alertListState,
+    alerts,
+    applyDeviceConfig,
+    classes,
+    defaultConfig,
+    device,
+    deviceConfigDeployment,
+    docsVersion,
+    getDeviceAlerts,
+    getDeviceLog,
+    getDeviceTwin,
+    getSingleDeployment,
+    integrations,
+    latestAlerts,
+    launchTroubleshoot,
+    monitorDetails,
+    onDecommissionDevice,
+    refreshDevices,
+    saveGlobalSettings,
+    setAlertListState,
+    setDeviceConfig,
+    setDeviceTags,
+    setDeviceTwin,
+    setMonitorDetails,
+    setSnackbar,
+    setSocketClosed,
+    setTroubleshootType,
+    showHelptips,
+    socketClosed,
+    tenantCapabilities: { hasAuditlogs },
+    troubleshootType,
+    userCapabilities
+  };
   return (
     <Drawer anchor="right" className="expandedDevice" open={!!deviceId} onClose={onCloseClick} PaperProps={{ style: { minWidth: '67vw' } }}>
-      <div className="flexbox center-aligned">
-        <h3>Device information for {deviceIdentifier}</h3>
-        <IconButton onClick={copyLinkToClipboard} size="large">
-          <LinkIcon />
-        </IconButton>
-        <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right flexbox`}>
-          <div className="margin-right-small">Last check-in:</div>
-          <RelativeTime updateTime={device.updated_ts} />
+      <div className="flexbox center-aligned space-between">
+        <div className="flexbox center-aligned">
+          <h3>Device information for {deviceIdentifier}</h3>
+          <IconButton onClick={copyLinkToClipboard} size="large">
+            <LinkIcon />
+          </IconButton>
         </div>
-        {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} />}
-        <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">
-          <CloseIcon />
-        </IconButton>
+        <div className="flexbox center-aligned">
+          <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right flexbox`}>
+            <div className="margin-right-small">Last check-in:</div>
+            <RelativeTime updateTime={device.updated_ts} />
+          </div>
+          {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} />}
+          <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">
+            <CloseIcon />
+          </IconButton>
+        </div>
       </div>
       <DeviceNotifications alerts={latestAlerts} device={device} isOffline={isOffline} onClick={scrollToMonitor} />
       <Divider className={classes.dividerTop} />
-      <DeviceIdentity device={device} setSnackbar={setSnackbar} />
-      <AuthStatus
-        device={device}
-        decommission={onDecommissionDevice}
-        deviceListRefresh={refreshDevices}
-        disableBottomBorder={!isAcceptedDevice}
-        showHelptips={showHelptips}
-      />
-      <DeviceTags device={device} setSnackbar={setSnackbar} setDeviceTags={setDeviceTags} showHelptips={showHelptips} userCapabilities={userCapabilities} />
-      {!!integrations.length &&
-        [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) &&
-        integrations.map(integration => (
-          <DeviceTwin key={integration.id} device={device} integration={integration} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />
+      <Tabs value={selectedTab} onChange={(e, tab) => setSelectedTab(tab)} textColor="primary">
+        {availableTabs.map(item => (
+          <Tab key={item.value} label={item.title({ integrations })} value={item.value} />
         ))}
-      {isAcceptedDevice && (
-        <>
-          <InstalledSoftware device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
-          <DeviceInventory device={device} docsVersion={docsVersion} setSnackbar={setSnackbar} />
-        </>
-      )}
-      {hasDeviceConfig && canConfigure && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status) && (
-        <DeviceConfiguration
-          abortDeployment={abortDeployment}
-          applyDeviceConfig={applyDeviceConfig}
-          defaultConfig={defaultConfig}
-          deployment={deviceConfigDeployment}
-          device={device}
-          getDeviceLog={getDeviceLog}
-          getSingleDeployment={getSingleDeployment}
-          saveGlobalSettings={saveGlobalSettings}
-          setSnackbar={setSnackbar}
-          setDeviceConfig={setDeviceConfig}
-          showHelptips={showHelptips}
-        />
-      )}
-      {isAcceptedDevice && hasMonitor && (
-        <DeviceMonitoring
-          alertListState={alertListState}
-          alerts={alerts}
-          device={device}
-          docsVersion={docsVersion}
-          getAlerts={getDeviceAlerts}
-          innerRef={monitoring}
-          isOffline={isOffline}
-          latestAlerts={latestAlerts}
-          onDetailsClick={setMonitorDetails}
-          setAlertListState={setAlertListState}
-        />
-      )}
-      {isAcceptedDevice && hasDeviceConnect && (
-        <DeviceConnection
-          className={classes.deviceConnection}
-          device={device}
-          docsVersion={docsVersion}
-          hasAuditlogs={hasAuditlogs}
-          socketClosed={socketClosed}
-          startTroubleshoot={launchTroubleshoot}
-          userCapabilities={userCapabilities}
-        />
-      )}
-      <Divider className={classes.dividerBottom} />
-      <TroubleshootDialog
-        device={device}
-        open={Boolean(troubleshootType)}
-        onCancel={() => setTroubleshootType()}
-        setSocketClosed={setSocketClosed}
-        type={troubleshootType}
-        userCapabilities={userCapabilities}
-      />
-      {monitorDetails && <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />}
+      </Tabs>
+      <SelectedTab {...commonProps} />
       <DeviceQuickActions
         actionCallbacks={actionCallbacks}
         devices={[device]}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { deepmerge } from '@mui/utils';
 import { makeStyles } from 'tss-react/mui';
@@ -115,7 +115,6 @@ const SoftwareLayer = ({ classes, layer, isNested, overviewOnly, setSnackbar }) 
 );
 
 export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
-  const [open, setOpen] = useState(false);
   const { classes } = useStyles();
 
   const { attributes = {} } = device;
@@ -133,31 +132,13 @@ export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
   }
 
   const waiting = !Object.values(attributes).some(i => i);
-  const keyInfo = !waiting && softwareInformation.length ? softwareInformation[0] : {};
   return (
-    <DeviceDataCollapse
-      header={
-        waiting ? (
-          <DeviceInventoryLoader docsVersion={docsVersion} />
-        ) : (
-          !open && (
-            <>
-              <SoftwareLayer classes={classes} layer={keyInfo} setSnackbar={setSnackbar} overviewOnly />
-              {(!!keyInfo.children.length || softwareInformation.length > 1) && <a onClick={setOpen}>show more</a>}
-            </>
-          )
-        )
-      }
-      isOpen={open}
-      onClick={setOpen}
-      title="Installed software"
-    >
+    <DeviceDataCollapse header={waiting && <DeviceInventoryLoader docsVersion={docsVersion} />} title="Installed software">
       <div className={classes.nestingBorders}>
         {softwareInformation.map(layer => (
           <SoftwareLayer classes={classes} key={layer.key} layer={layer} setSnackbar={setSnackbar} />
         ))}
       </div>
-      <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
 };

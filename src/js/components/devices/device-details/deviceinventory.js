@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { extractSoftware } from '../../../helpers';
 import { TwoColumnDataMultiple } from '../../common/configurationobject';
@@ -6,7 +6,6 @@ import DeviceInventoryLoader from './deviceinventoryloader';
 import DeviceDataCollapse from './devicedatacollapse';
 
 export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
-  const [open, setOpen] = useState(false);
   const { attributes = {} } = device;
 
   const { device_type, ...remainingAttributes } = attributes;
@@ -32,25 +31,18 @@ export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
     );
 
   const waiting = !Object.values(attributes).some(i => i);
-  const attributeCount = Object.keys(deviceInventory).length;
   return (
     <DeviceDataCollapse
       header={
         waiting ? (
           <DeviceInventoryLoader docsVersion={docsVersion} />
         ) : (
-          <>
-            <TwoColumnDataMultiple config={keyContent} setSnackbar={setSnackbar} style={{ marginBottom: 5 }} />
-            {!open && !!attributeCount && <a onClick={setOpen}>show {attributeCount} more</a>}
-          </>
+          <TwoColumnDataMultiple config={keyContent} setSnackbar={setSnackbar} style={{ marginBottom: 5 }} />
         )
       }
-      isOpen={open}
-      onClick={setOpen}
       title="Device inventory"
     >
       <TwoColumnDataMultiple config={deviceInventory} setSnackbar={setSnackbar} />
-      <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
 };

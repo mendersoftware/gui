@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Chip, Icon } from '@mui/material';
 import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
@@ -19,7 +19,7 @@ const states = {
   preauthorized: <CheckIcon style={iconStyle} />
 };
 
-export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBottomBorder, showHelptips }) => {
+export const AuthStatus = ({ decommission, device, deviceListRefresh, showHelptips }) => {
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
   let hasPending = '';
@@ -29,16 +29,11 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
     }, hasPending);
   }
 
-  const [open, setOpen] = useState(status === 'pending' || hasPending);
   const statusIcon = states[status] ? states[status] : states.default;
   const requestNotification = !!hasPending && <Chip size="small" label="new request" color="primary" />;
 
   return (
     <DeviceDataCollapse
-      disableBottomBorder={disableBottomBorder}
-      header={!open && <a onClick={setOpen}>show more</a>}
-      isOpen={open}
-      onClick={setOpen}
       title={
         <div className="flexbox center-aligned">
           <h4>Authentication status</h4>
@@ -54,7 +49,6 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, disableBot
       }
     >
       <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
-      <a onClick={() => setOpen(false)}>show less</a>
     </DeviceDataCollapse>
   );
 };

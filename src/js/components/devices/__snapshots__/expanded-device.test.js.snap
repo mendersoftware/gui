@@ -190,12 +190,136 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
   margin-top: 16px;
 }
 
-.emotion-13 .key>b {
+.emotion-10 {
+  overflow: hidden;
+  min-height: 48px;
+  -webkit-overflow-scrolling: touch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@media (max-width:599.95px) {
+  .emotion-10 .MuiTabs-scrollButtons {
+    display: none;
+  }
+}
+
+.emotion-11 {
+  position: relative;
+  display: inline-block;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.emotion-12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.emotion-13 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.25;
+  text-transform: uppercase;
+  max-width: 360px;
+  min-width: 90px;
+  position: relative;
+  min-height: 48px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  padding: 12px 16px;
+  overflow: hidden;
+  white-space: normal;
+  text-align: center;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  color: rgba(0, 0, 0, 0.54);
+  text-transform: none;
+}
+
+.emotion-13::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-13.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-13 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-13.Mui-selected {
+  color: #337a87;
+}
+
+.emotion-13.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-27 {
+  position: absolute;
+  height: 2px;
+  bottom: 0;
+  width: 100%;
+  -webkit-transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: #337a87;
+}
+
+.emotion-28 .key>b {
   background-color: #f7f7f7;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-14 {
+.emotion-29 {
   line-height: 1.4375em;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -217,12 +341,12 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
   font-size: 0.8125rem;
 }
 
-.emotion-14.Mui-disabled {
+.emotion-29.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
 }
 
-.emotion-14:after {
+.emotion-29:after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -238,14 +362,14 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
   pointer-events: none;
 }
 
-.emotion-14.Mui-focused:after {
+.emotion-29.Mui-focused:after {
   -webkit-transform: scaleX(1) translateX(0);
   -moz-transform: scaleX(1) translateX(0);
   -ms-transform: scaleX(1) translateX(0);
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-14.Mui-error:after {
+.emotion-29.Mui-error:after {
   border-bottom-color: #ab1000;
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
@@ -253,7 +377,7 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
   transform: scaleX(1);
 }
 
-.emotion-14:before {
+.emotion-29:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -265,33 +389,33 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
   pointer-events: none;
 }
 
-.emotion-14:hover:not(.Mui-disabled):before {
+.emotion-29:hover:not(.Mui-disabled):before {
   border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-14:hover:not(.Mui-disabled):before {
+  .emotion-29:hover:not(.Mui-disabled):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
 
-.emotion-14.Mui-disabled:before {
+.emotion-29.Mui-disabled:before {
   border-bottom-style: dotted;
 }
 
-.emotion-14:before {
+.emotion-29:before {
   border-bottom: 1px solid rgb(224, 224, 224);
 }
 
-.emotion-14:hover:not($disabled):before {
+.emotion-29:hover:not($disabled):before {
   border-bottom: 2px solid #337a87!important;
 }
 
-.emotion-14:after {
+.emotion-29:after {
   border-bottom: 2px solid #337a87;
 }
 
-.emotion-15 {
+.emotion-30 {
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
@@ -311,91 +435,91 @@ exports[`ExpandedDevice Component renders correctly 1`] = `
   animation-duration: 10ms;
 }
 
-.emotion-15::-webkit-input-placeholder {
+.emotion-30::-webkit-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-15::-moz-placeholder {
+.emotion-30::-moz-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-15:-ms-input-placeholder {
+.emotion-30:-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-15::-ms-input-placeholder {
+.emotion-30::-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-15:focus {
+.emotion-30:focus {
   outline: 0;
 }
 
-.emotion-15:invalid {
+.emotion-30:invalid {
   box-shadow: none;
 }
 
-.emotion-15::-webkit-search-decoration {
+.emotion-30::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30::-webkit-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30::-moz-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30:-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30::-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30:focus::-webkit-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30:focus::-moz-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30:focus:-ms-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-30:focus::-ms-input-placeholder {
   opacity: 0.42;
 }
 
-.emotion-15.Mui-disabled {
+.emotion-30.Mui-disabled {
   opacity: 1;
   -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-15:-webkit-autofill {
+.emotion-30:-webkit-autofill {
   -webkit-animation-duration: 5000s;
   animation-duration: 5000s;
   -webkit-animation-name: mui-auto-fill;
   animation-name: mui-auto-fill;
 }
 
-.emotion-16 {
+.emotion-31 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -411,7 +535,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   margin-left: 8px;
 }
 
-.emotion-17 {
+.emotion-32 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -461,38 +585,38 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-17::-moz-focus-inner {
+.emotion-32::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-17.Mui-disabled {
+.emotion-32.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-17 {
+  .emotion-32 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-17:hover {
+.emotion-32:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-17:hover {
+  .emotion-32:hover {
     background-color: transparent;
   }
 }
 
-.emotion-17.Mui-disabled {
+.emotion-32.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-18 {
+.emotion-33 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -510,11 +634,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   font-size: 1.25rem;
 }
 
-.emotion-18 iconButton {
+.emotion-33 iconButton {
   margin-right: 8px;
 }
 
-.emotion-21 {
+.emotion-36 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -532,22 +656,242 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   color: #337a87;
 }
 
-.emotion-21 iconButton {
+.emotion-36 iconButton {
   margin-right: 8px;
 }
 
-.emotion-23 {
-  margin: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-width: 0;
+.emotion-40 {
+  background-color: #f7f7f7;
+  border-color: #e9e9e9;
   border-style: solid;
-  border-color: rgba(0, 0, 0, 0.12);
-  border-bottom-width: thin;
+  border-width: 1px;
+  margin-bottom: 16px;
+  min-width: 700px;
+  padding: 16px;
 }
 
-.emotion-29 {
+.emotion-42 {
+  background-color: #fff;
+  color: rgba(10, 10, 11, 0.78);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+  position: relative;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  overflow-anchor: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  background-color: #d4e9e7;
+}
+
+.emotion-42:before {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  right: 0;
+  height: 1px;
+  content: "";
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.12);
+  -webkit-transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-42:first-of-type:before {
+  display: none;
+}
+
+.emotion-42.Mui-expanded:before {
+  opacity: 0;
+}
+
+.emotion-42.Mui-expanded:first-of-type {
+  margin-top: 0;
+}
+
+.emotion-42.Mui-expanded:last-of-type {
+  margin-bottom: 0;
+}
+
+.emotion-42.Mui-expanded+.emotion-42.Mui-expanded:before {
+  display: none;
+}
+
+.emotion-42.Mui-disabled {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-42.Mui-expanded {
+  margin: 16px 0;
+}
+
+.emotion-42:before {
+  display: none;
+}
+
+.emotion-42.Mui-expanded {
+  margin: auto;
+  background-color: #f7f7f7;
+}
+
+.emotion-42:before {
+  display: none;
+}
+
+.emotion-42$expanded {
+  margin: auto;
+}
+
+.emotion-43 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 48px;
+  padding: 0px 16px;
+  -webkit-transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  margin-bottom: 0;
+  height: 48px;
+}
+
+.emotion-43::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-43.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-43 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-43.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-43.Mui-disabled {
+  opacity: 0.38;
+}
+
+.emotion-43:hover:not(.Mui-disabled) {
+  cursor: pointer;
+}
+
+.emotion-43.Mui-expanded {
+  min-height: 64px;
+}
+
+.emotion-43.Mui-expanded {
+  height: 48px;
+  min-height: 48px;
+}
+
+.emotion-44 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  margin: 12px 0;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-44.Mui-expanded {
+  margin: 20px 0;
+}
+
+.emotion-44.Mui-expanded {
+  margin: 0;
+}
+
+.emotion-44>:last-child {
+  padding-right: 12px;
+}
+
+.emotion-45 {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  visibility: hidden;
+}
+
+.emotion-46 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.emotion-47 {
+  width: 100%;
+}
+
+.emotion-48 {
+  padding: 8px 16px 16px;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.emotion-49 {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.emotion-50 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -582,11 +926,425 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   color: inherit;
   font-family: Lato,sans-serif;
   font-weight: 500;
-  font-size: 0.7545rem;
+  font-size: 0.8125rem;
   line-height: 1.75;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 4px 5px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #5d0f43;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
+}
+
+.emotion-50::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-50.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-50 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-50:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(93, 15, 67, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-50:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-50.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-50:hover {
+  colors: #337a87;
+}
+
+.emotion-50.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-52 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  margin-top: 18px;
+  min-width: 240px;
+}
+
+.emotion-53 {
+  line-height: 1.4375em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
+  color: rgba(10, 10, 11, 0.78);
+  box-sizing: border-box;
+  position: relative;
+  cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+}
+
+.emotion-53.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+  cursor: default;
+}
+
+label+.emotion-53 {
+  margin-top: 16px;
+}
+
+.emotion-53:after {
+  border-bottom: 2px solid #337a87;
+  left: 0;
+  bottom: 0;
+  content: "";
+  position: absolute;
+  right: 0;
+  -webkit-transform: scaleX(0);
+  -moz-transform: scaleX(0);
+  -ms-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-53.Mui-focused:after {
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
+}
+
+.emotion-53.Mui-error:after {
+  border-bottom-color: #ab1000;
+  -webkit-transform: scaleX(1);
+  -moz-transform: scaleX(1);
+  -ms-transform: scaleX(1);
+  transform: scaleX(1);
+}
+
+.emotion-53:before {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  left: 0;
+  bottom: 0;
+  content: "\\00a0";
+  position: absolute;
+  right: 0;
+  -webkit-transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-53:hover:not(.Mui-disabled):before {
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+}
+
+@media (hover: none) {
+  .emotion-53:hover:not(.Mui-disabled):before {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  }
+}
+
+.emotion-53.Mui-disabled:before {
+  border-bottom-style: dotted;
+}
+
+.emotion-53:before {
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+.emotion-53:hover:not($disabled):before {
+  border-bottom: 2px solid #337a87!important;
+}
+
+.emotion-53:after {
+  border-bottom: 2px solid #337a87;
+}
+
+.emotion-58 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  text-transform: uppercase;
+  min-height: 36px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 50%;
+  padding: 0;
+  min-width: 0;
+  width: 40px;
+  height: 40px;
+  z-index: 1050;
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #e6f2f1;
+  color: #fff;
+  background-color: #5d0f43;
+}
+
+.emotion-58::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-58.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-58 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-58:active {
+  box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
+}
+
+.emotion-58:hover {
+  background-color: #f5f5f5;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+@media (hover: none) {
+  .emotion-58:hover {
+    background-color: #e6f2f1;
+  }
+}
+
+.emotion-58.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-58.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-58:hover {
+  background-color: rgb(65, 10, 46);
+}
+
+@media (hover: none) {
+  .emotion-58:hover {
+    background-color: #5d0f43;
+  }
+}
+
+.emotion-60 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #337a87;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.emotion-60::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-60.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-60 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-60:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(35, 85, 94);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-60:hover {
+    background-color: #337a87;
+  }
+}
+
+.emotion-60:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-60.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-60.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-60:hover {
+  colors: #337a87;
+}
+
+.emotion-60.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-62 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
   border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -597,74 +1355,79 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   padding: 10px 15px;
 }
 
-.emotion-29::-moz-focus-inner {
+.emotion-62::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-29.Mui-disabled {
+.emotion-62.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-29 {
+  .emotion-62 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-29:hover {
+.emotion-62:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-29:hover {
+  .emotion-62:hover {
     background-color: transparent;
   }
 }
 
-.emotion-29.Mui-disabled {
+.emotion-62.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-29:hover {
+.emotion-62:hover {
   colors: #337a87;
 }
 
-.emotion-29.MuiButton-text {
+.emotion-62.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-30 {
-  display: inherit;
-  margin-right: 8px;
-  margin-left: -2px;
+.emotion-64 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: fixed;
+  bottom: 52px;
+  right: 52px;
+  z-index: 10;
+  min-width: 400px;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
 }
 
-.emotion-30>*:nth-of-type(1) {
-  font-size: 18px;
+.emotion-64 .MuiSpeedDialAction-staticTooltipLabel {
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
 }
 
-.emotion-40 {
-  padding-left: 16px;
+.emotion-65 {
+  margin-right: 16px;
+  margin-bottom: 32px;
 }
 
-.emotion-50 {
-  margin: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-width: 0;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.12);
-  border-bottom-width: thin;
-  margin-top: 24px;
-  margin-bottom: 16px;
-}
-
-.emotion-51 {
+.emotion-66 {
   z-index: 1050;
   display: -webkit-box;
   display: -webkit-flex;
@@ -678,9 +1441,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -webkit-flex-direction: column-reverse;
   -ms-flex-direction: column-reverse;
   flex-direction: column-reverse;
+  margin: 16px;
 }
 
-.emotion-51 .MuiSpeedDial-actions {
+.emotion-66 .MuiSpeedDial-actions {
   -webkit-flex-direction: column-reverse;
   -ms-flex-direction: column-reverse;
   flex-direction: column-reverse;
@@ -688,7 +1452,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   padding-bottom: 48px;
 }
 
-.emotion-52 {
+.emotion-67 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -743,68 +1507,68 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   pointer-events: auto;
 }
 
-.emotion-52::-moz-focus-inner {
+.emotion-67::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-52.Mui-disabled {
+.emotion-67.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-52 {
+  .emotion-67 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-52:active {
+.emotion-67:active {
   box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
 }
 
-.emotion-52:hover {
+.emotion-67:hover {
   background-color: #f5f5f5;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media (hover: none) {
-  .emotion-52:hover {
+  .emotion-67:hover {
     background-color: #e6f2f1;
   }
 }
 
-.emotion-52.Mui-focusVisible {
+.emotion-67.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-52.Mui-disabled {
+.emotion-67.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-52:hover {
+.emotion-67:hover {
   background-color: rgb(35, 85, 94);
 }
 
 @media (hover: none) {
-  .emotion-52:hover {
+  .emotion-67:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-53 {
+.emotion-68 {
   height: 24px;
 }
 
-.emotion-53 .MuiSpeedDialIcon-icon {
+.emotion-68 .MuiSpeedDialIcon-icon {
   -webkit-transition: -webkit-transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-53 .MuiSpeedDialIcon-openIcon {
+.emotion-68 .MuiSpeedDialIcon-openIcon {
   position: absolute;
   -webkit-transition: -webkit-transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -815,7 +1579,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   transform: rotate(-45deg);
 }
 
-.emotion-56 {
+.emotion-71 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -825,7 +1589,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   transition: top 0s linear 0.2s;
 }
 
-.emotion-57 {
+.emotion-72 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -837,7 +1601,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   align-items: center;
 }
 
-.emotion-57 .MuiSpeedDialAction-staticTooltipLabel {
+.emotion-72 .MuiSpeedDialAction-staticTooltipLabel {
   -webkit-transition: -webkit-transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   opacity: 0;
@@ -850,7 +1614,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   margin-right: 8px;
 }
 
-.emotion-58 {
+.emotion-73 {
   position: absolute;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -864,7 +1628,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   word-break: keep-all;
 }
 
-.emotion-59 {
+.emotion-74 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -926,50 +1690,71 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   transform: scale(0);
 }
 
-.emotion-59::-moz-focus-inner {
+.emotion-74::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-59.Mui-disabled {
+.emotion-74.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-59 {
+  .emotion-74 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-59:active {
+.emotion-74:active {
   box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
 }
 
-.emotion-59:hover {
+.emotion-74:hover {
   background-color: #f5f5f5;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media (hover: none) {
-  .emotion-59:hover {
+  .emotion-74:hover {
     background-color: #e6f2f1;
   }
 }
 
-.emotion-59.Mui-focusVisible {
+.emotion-74.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-59.Mui-disabled {
+.emotion-74.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-59:hover {
+.emotion-74:hover {
   background-color: rgb(216, 216, 216);
+}
+
+.emotion-90 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: inherit;
+}
+
+.emotion-90 iconButton {
+  margin-right: 8px;
 }
 
 <body
@@ -997,83 +1782,193 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
       tabindex="-1"
     >
       <div
-        class="flexbox center-aligned"
+        class="flexbox center-aligned space-between"
       >
-        <h3>
-          Device information for 
-          a1
-        </h3>
-        <button
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
-          tabindex="0"
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-            data-testid="LinkIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
-            />
-          </svg>
-          <span
-            class="MuiTouchRipple-root emotion-5"
-          />
-        </button>
         <div
-          class="muted margin-left margin-right flexbox"
+          class="flexbox center-aligned"
+        >
+          <h3>
+            Device information for 
+            a1
+          </h3>
+          <button
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
+            tabindex="0"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+              data-testid="LinkIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root emotion-5"
+            />
+          </button>
+        </div>
+        <div
+          class="flexbox center-aligned"
         >
           <div
-            class="margin-right-small"
+            class="muted margin-left margin-right flexbox"
           >
-            Last check-in:
-          </div>
-          <span
-            aria-label="Tue Jan 01 2019 09:25:00 GMT+0000"
-            class=""
-            data-mui-internal-clone-element="true"
-          >
-            <time
-              datetime="2019-01-01T09:25:00+00:00"
+            <div
+              class="margin-right-small"
             >
-              2019-01-01 09:25
-            </time>
-          </span>
-        </div>
-        <button
-          aria-label="close"
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
-          style="margin-left: auto;"
-          tabindex="0"
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-            data-testid="CloseIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
+              Last check-in:
+            </div>
+            <span
+              aria-label="Tue Jan 01 2019 09:25:00 GMT+0000"
+              class=""
+              data-mui-internal-clone-element="true"
+            >
+              <time
+                datetime="2019-01-01T09:25:00+00:00"
+              >
+                2019-01-01 09:25
+              </time>
+            </span>
+          </div>
+          <button
+            aria-label="close"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
+            style="margin-left: auto;"
+            tabindex="0"
+            type="button"
           >
-            <path
-              d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+              data-testid="CloseIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+            <span
+              class="MuiTouchRipple-root emotion-5"
             />
-          </svg>
-          <span
-            class="MuiTouchRipple-root emotion-5"
-          />
-        </button>
+          </button>
+        </div>
       </div>
       <hr
         class="MuiDivider-root MuiDivider-fullWidth emotion-9"
       />
       <div
+        class="MuiTabs-root emotion-10"
+      >
+        <div
+          class="MuiTabs-scroller MuiTabs-fixed emotion-11"
+          style="overflow: hidden; margin-bottom: 0px;"
+        >
+          <div
+            class="MuiTabs-flexContainer emotion-12"
+            role="tablist"
+          >
+            <button
+              aria-selected="true"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected emotion-13"
+              role="tab"
+              tabindex="0"
+              type="button"
+            >
+              Identity
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+            <button
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-13"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Inventory
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+            <button
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-13"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Software
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+            <button
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-13"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Configuration
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+            <button
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-13"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Monitoring
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+            <button
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-13"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Troubleshooting
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+            <button
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-13"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              Azure IoT Hub Device Twin
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+          </div>
+          <span
+            class="MuiTabs-indicator emotion-27"
+            style="left: 0px; width: 0px;"
+          />
+        </div>
+      </div>
+      <div
         class="margin-bottom "
       >
         <div
-          class="clickable flexbox space-between"
+          class="flexbox space-between"
           style="align-items: flex-start;"
         >
           <h4
@@ -1083,32 +1978,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
           </h4>
           <div
             class="flexbox centered"
-          >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-                data-testid="KeyboardArrowDownIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-5"
-              />
-            </button>
-          </div>
+          />
         </div>
         <div>
           <div
-            class="break-all two-columns emotion-13 compact column-data "
+            class="break-all two-columns emotion-28 compact column-data "
             style="max-width: 80%; grid-template-columns: minmax(max-content, 150px) max-content; margin-bottom: 5px; align-items: center;"
           >
             <div
@@ -1119,10 +1993,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               </b>
             </div>
             <div
-              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-14"
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-adornedEnd emotion-29"
             >
               <input
-                class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-15"
+                class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-30"
                 disabled=""
                 id="a1-id-input"
                 placeholder="a1..."
@@ -1130,16 +2004,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
                 value=""
               />
               <div
-                class="MuiInputAdornment-root MuiInputAdornment-positionEnd emotion-16"
+                class="MuiInputAdornment-root MuiInputAdornment-positionEnd emotion-31"
               >
                 <button
-                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-17"
+                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-32"
                   tabindex="0"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-18"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-33"
                     data-testid="EditIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -1155,85 +2029,105 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               </div>
             </div>
           </div>
+        </div>
+        <div
+          class="break-all two-columns emotion-28 compact column-data "
+          style="max-width: 80%; grid-template-columns: minmax(max-content, 150px) auto;"
+        >
           <div
-            class="break-all two-columns emotion-13 compact column-data "
-            style="max-width: 80%; grid-template-columns: minmax(max-content, 150px) auto; margin-bottom: 5px;"
+            class="align-right key muted"
+          >
+            <b>
+              ID
+            </b>
+          </div>
+          <div
+            class="flexbox clickable"
           >
             <div
-              class="align-right key muted"
+              title="a1"
             >
-              <b>
-                ID
-              </b>
+              a1
             </div>
-            <div
-              class="flexbox clickable"
+            <svg
+              aria-hidden="true"
+              aria-label="Copy to clipboard"
+              class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-36"
+              data-mui-internal-clone-element="true"
+              data-testid="FileCopyOutlinedIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
-              <div
-                title="a1"
-              >
-                a1
-              </div>
-              <svg
-                aria-hidden="true"
-                aria-label="Copy to clipboard"
-                class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-21"
-                data-mui-internal-clone-element="true"
-                data-testid="FileCopyOutlinedIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </div>
-            <div
-              class="align-right key muted"
-            >
-              <b>
-                mac
-              </b>
-            </div>
-            <div
-              class="flexbox clickable"
-            >
-              <div
-                title="dc:a6:32:12:ad:bf"
-              >
-                dc:a6:32:12:ad:bf
-              </div>
-              <svg
-                aria-hidden="true"
-                aria-label="Copy to clipboard"
-                class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-21"
-                data-mui-internal-clone-element="true"
-                data-testid="FileCopyOutlinedIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                />
-              </svg>
-            </div>
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
           </div>
-          <a>
-            show 
-            1
-             more
-          </a>
+          <div
+            class="align-right key muted"
+          >
+            <b>
+              mac
+            </b>
+          </div>
+          <div
+            class="flexbox clickable"
+          >
+            <div
+              title="dc:a6:32:12:ad:bf"
+            >
+              dc:a6:32:12:ad:bf
+            </div>
+            <svg
+              aria-hidden="true"
+              aria-label="Copy to clipboard"
+              class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-36"
+              data-mui-internal-clone-element="true"
+              data-testid="FileCopyOutlinedIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </div>
+          <div
+            class="align-right key muted"
+          >
+            <b>
+              First request
+            </b>
+          </div>
+          <div
+            class="flexbox clickable"
+          >
+            <time
+              datetime="2019-01-13T06:25:00+00:00"
+            >
+              2019-01-13 06:25
+            </time>
+            <svg
+              aria-hidden="true"
+              aria-label="Copy to clipboard"
+              class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-36"
+              data-mui-internal-clone-element="true"
+              data-testid="FileCopyOutlinedIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+              />
+            </svg>
+          </div>
         </div>
-        <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-23"
-          style="margin-top: 24px;"
-        />
       </div>
       <div
         class="margin-bottom "
       >
         <div
-          class="clickable flexbox space-between"
+          class="flexbox space-between"
           style="align-items: flex-start;"
         >
           <div
@@ -1269,44 +2163,167 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
           </div>
           <div
             class="flexbox centered"
+          />
+        </div>
+        <div />
+        <div
+          class="emotion-40"
+        >
+          <div
+            class="margin-bottom-small"
+          >
+            Authorization sets
+          </div>
+          <div
+            class="authsets"
+          >
+            <div
+              class="header"
+            >
+              <div
+                class="columnHeader"
+              />
+              <div
+                class="columnHeader"
+              >
+                Status
+              </div>
+              <div
+                class="columnHeader"
+              >
+                Public key
+              </div>
+              <div
+                class="columnHeader"
+              >
+                Time of request
+              </div>
+              <div
+                class="columnHeader"
+              >
+                Actions
+              </div>
+            </div>
+            <div
+              class="body relative"
+            >
+              <div
+                class="absolute clickable"
+                data-mui-internal-clone-element="true"
+                style="right: 0px; top: -70px;"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+                  data-testid="InfoOutlinedIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 MuiAccordion-root MuiAccordion-gutters emotion-42"
+              >
+                <div
+                  aria-expanded="false"
+                  class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-43"
+                  role="button"
+                  style="cursor: default;"
+                  tabindex="0"
+                >
+                  <div
+                    class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-44"
+                  >
+                    <div
+                      class="capitalized"
+                    >
+                      Active
+                    </div>
+                    <div
+                      class="capitalized"
+                    >
+                      accepted
+                    </div>
+                    <a>
+                      show key
+                    </a>
+                    <time
+                      datetime="2019-01-13T06:25:00+00:00"
+                    >
+                      2019-01-13 06:25
+                    </time>
+                    <div
+                      class="action-buttons flexbox"
+                    >
+                      <div>
+                        Accept
+                      </div>
+                      <a>
+                        Reject
+                      </a>
+                      <a>
+                        Dismiss
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-45"
+                  style="min-height: 0px;"
+                >
+                  <div
+                    class="MuiCollapse-wrapper MuiCollapse-vertical emotion-46"
+                  >
+                    <div
+                      class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-47"
+                    >
+                      <div
+                        class="MuiAccordion-region"
+                        role="region"
+                      >
+                        <div
+                          class="MuiAccordionDetails-root emotion-48"
+                        >
+                          <div
+                            style="flex-grow: 1;"
+                          />
+                          <p
+                            class="bold expanded"
+                          >
+                             Are you sure you want to continue?
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flexbox emotion-49"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-50"
               tabindex="0"
               type="button"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-                data-testid="KeyboardArrowDownIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                />
-              </svg>
+              Decommission device
               <span
                 class="MuiTouchRipple-root emotion-5"
               />
             </button>
           </div>
         </div>
-        <div>
-          <a>
-            show more
-          </a>
-        </div>
-        <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-23"
-          style="margin-top: 24px;"
-        />
       </div>
       <div
         class="margin-bottom "
       >
         <div
-          class="clickable flexbox space-between"
+          class="flexbox space-between"
           style="align-items: flex-start;"
         >
           <div
@@ -1320,252 +2337,123 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               >
                 Tags
               </h4>
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-29"
-                tabindex="0"
-                type="button"
+            </div>
+          </div>
+          <div
+            class="flexbox centered"
+          />
+        </div>
+        <div />
+        <div
+          class="relative"
+          style="max-width: 700px;"
+        >
+          <div>
+            <div
+              class="key-value-container relative"
+            >
+              <div
+                class="MuiFormControl-root emotion-52"
               >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-30"
+                <div
+                  class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-53"
+                >
+                  <input
+                    aria-invalid="false"
+                    class="MuiInputBase-input MuiInput-input emotion-30"
+                    placeholder="Key"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                class="MuiFormControl-root emotion-52"
+              >
+                <div
+                  class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-53"
+                >
+                  <input
+                    aria-invalid="false"
+                    class="MuiInputBase-input MuiInput-input emotion-30"
+                    placeholder="Value"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+              <span />
+            </div>
+            <div
+              class="key-value-container"
+            >
+              <div
+                style="min-width: 240px;"
+              >
+                <button
+                  class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-secondary Mui-disabled MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-secondary emotion-58"
+                  disabled=""
+                  style="margin-bottom: 10px;"
+                  tabindex="-1"
+                  type="button"
                 >
                   <svg
                     aria-hidden="true"
                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-                    data-testid="EditIcon"
+                    data-testid="AddIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                      d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
                     />
                   </svg>
-                </span>
-                Edit
-                <span
-                  class="MuiTouchRipple-root emotion-5"
-                />
-              </button>
+                </button>
+              </div>
+              <div
+                style="min-width: 240px;"
+              />
+              <div />
             </div>
           </div>
           <div
-            class="flexbox centered"
+            class="flexbox center-aligned margin-bottom-small"
+            style="justify-content: flex-end;"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-60"
+              style="margin-right: 16px;"
               tabindex="0"
               type="button"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-                data-testid="KeyboardArrowDownIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                />
-              </svg>
+              Save
+              <span
+                class="MuiTouchRipple-root emotion-5"
+              />
+            </button>
+            <button
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-62"
+              tabindex="0"
+              type="button"
+            >
+              Cancel
               <span
                 class="MuiTouchRipple-root emotion-5"
               />
             </button>
           </div>
         </div>
-        <div />
-        <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-23"
-          style="margin-top: 24px;"
-        />
       </div>
       <div
-        class="margin-bottom "
+        class="emotion-64"
       >
         <div
-          class="clickable flexbox space-between"
-          style="align-items: flex-start;"
-        >
-          <h4
-            class="margin-bottom-small"
-          >
-            Installed software
-          </h4>
-          <div
-            class="flexbox centered"
-          >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-                data-testid="KeyboardArrowDownIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-5"
-              />
-            </button>
-          </div>
-        </div>
-        <div>
-          <div
-            class="margin-top-small emotion-40"
-          >
-            <div
-              class="muted"
-            >
-              System filesystem
-            </div>
-            <div
-              class=""
-            >
-              <div
-                class="break-all two-columns emotion-13 compact column-data margin-bottom-small margin-left-small margin-top-small"
-              >
-                <div
-                  class="align-right key muted"
-                >
-                  <b>
-                    System filesystem
-                  </b>
-                </div>
-                <div
-                  class="flexbox clickable"
-                >
-                  <div
-                    title=""
-                  />
-                  <svg
-                    aria-hidden="true"
-                    aria-label="Copy to clipboard"
-                    class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-21"
-                    data-mui-internal-clone-element="true"
-                    data-testid="FileCopyOutlinedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-23"
-          style="margin-top: 24px;"
-        />
-      </div>
-      <div
-        class="margin-bottom "
-      >
-        <div
-          class="clickable flexbox space-between"
-          style="align-items: flex-start;"
-        >
-          <h4
-            class="margin-bottom-small"
-          >
-            Device inventory
-          </h4>
-          <div
-            class="flexbox centered"
-          >
-            <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-                data-testid="KeyboardArrowDownIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-5"
-              />
-            </button>
-          </div>
-        </div>
-        <div>
-          <div
-            class="two-columns-multiple "
-            style="margin-bottom: 5px;"
-          >
-            <div
-              class="break-all two-columns emotion-13 compact column-data multiple"
-            >
-              <div
-                class="align-right key muted"
-              >
-                <b>
-                  device_type
-                </b>
-              </div>
-              <div
-                class="flexbox clickable"
-              >
-                <div
-                  title="raspberrypi4"
-                >
-                  raspberrypi4
-                </div>
-                <svg
-                  aria-hidden="true"
-                  aria-label="Copy to clipboard"
-                  class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-21"
-                  data-mui-internal-clone-element="true"
-                  data-testid="FileCopyOutlinedIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <a>
-            show 
-            1
-             more
-          </a>
-        </div>
-        <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-23"
-          style="margin-top: 24px;"
-        />
-      </div>
-      <hr
-        class="MuiDivider-root MuiDivider-fullWidth emotion-50"
-      />
-      <div
-        class="flexbox fixedButtons"
-      >
-        <div
-          class="margin-right"
+          class="emotion-65"
         >
           Device actions
         </div>
         <div
-          class="MuiSpeedDial-root MuiSpeedDial-directionUp margin-small emotion-51"
+          class="MuiSpeedDial-root MuiSpeedDial-directionUp emotion-66"
           role="presentation"
         >
           <button
@@ -1573,13 +2461,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             aria-expanded="false"
             aria-haspopup="true"
             aria-label="device-actions"
-            class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiSpeedDial-fab emotion-52"
+            class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiSpeedDial-fab emotion-67"
             style="transform: none; webkit-transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
             tabindex="0"
             type="button"
           >
             <span
-              class="MuiSpeedDialIcon-root emotion-53"
+              class="MuiSpeedDialIcon-root emotion-68"
             >
               <svg
                 aria-hidden="true"
@@ -1599,27 +2487,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
           </button>
           <div
             aria-orientation="vertical"
-            class="MuiSpeedDial-actions MuiSpeedDial-actionsClosed emotion-56"
+            class="MuiSpeedDial-actions MuiSpeedDial-actionsClosed emotion-71"
             id="device-actions-actions"
             role="menu"
           >
             <span
               aria-label="dismiss"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-57"
+              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-72"
               id="device-actions-action-0"
             >
               <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-58"
+                class="MuiSpeedDialAction-staticTooltipLabel emotion-73"
                 id="device-actions-action-0-label"
-                style="transition-delay: 120ms;"
+                style="transition-delay: 150ms;"
               >
                 Dismiss device
               </span>
               <button
                 aria-labelledby="device-actions-action-0-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-59"
+                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-74"
                 role="menuitem"
-                style="transition-delay: 120ms;"
+                style="transition-delay: 150ms;"
                 tabindex="-1"
                 type="button"
               >
@@ -1641,21 +2529,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             </span>
             <span
               aria-label="reject"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-57"
+              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-72"
               id="device-actions-action-1"
             >
               <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-58"
+                class="MuiSpeedDialAction-staticTooltipLabel emotion-73"
                 id="device-actions-action-1-label"
-                style="transition-delay: 90ms;"
+                style="transition-delay: 120ms;"
               >
                 Reject device
               </span>
               <button
                 aria-labelledby="device-actions-action-1-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-59"
+                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-74"
                 role="menuitem"
-                style="transition-delay: 90ms;"
+                style="transition-delay: 120ms;"
                 tabindex="-1"
                 type="button"
               >
@@ -1676,20 +2564,56 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               </button>
             </span>
             <span
-              aria-label="group-add"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-57"
+              aria-label="group-change"
+              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-72"
               id="device-actions-action-2"
             >
               <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-58"
+                class="MuiSpeedDialAction-staticTooltipLabel emotion-73"
                 id="device-actions-action-2-label"
-                style="transition-delay: 60ms;"
+                style="transition-delay: 90ms;"
               >
-                Add selected device to a group
+                Move selected device to another group
               </span>
               <button
                 aria-labelledby="device-actions-action-2-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-59"
+                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-74"
+                role="menuitem"
+                style="transition-delay: 90ms;"
+                tabindex="-1"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium rotated ninety emotion-4"
+                  data-testid="HeightOutlinedIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M13 6.99h3L12 3 8 6.99h3v10.02H8L12 21l4-3.99h-3z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-5"
+                />
+              </button>
+            </span>
+            <span
+              aria-label="group-remove"
+              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-72"
+              id="device-actions-action-3"
+            >
+              <span
+                class="MuiSpeedDialAction-staticTooltipLabel emotion-73"
+                id="device-actions-action-3-label"
+                style="transition-delay: 60ms;"
+              >
+                Remove selected device from this group
+              </span>
+              <button
+                aria-labelledby="device-actions-action-3-label"
+                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-74"
                 role="menuitem"
                 style="transition-delay: 60ms;"
                 tabindex="-1"
@@ -1697,13 +2621,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-4"
-                  data-testid="AddCircleIcon"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-90"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+                    d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
                   />
                 </svg>
                 <span
@@ -1713,19 +2636,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             </span>
             <span
               aria-label="create-deployment"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-57"
-              id="device-actions-action-3"
+              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-72"
+              id="device-actions-action-4"
             >
               <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-58"
-                id="device-actions-action-3-label"
+                class="MuiSpeedDialAction-staticTooltipLabel emotion-73"
+                id="device-actions-action-4-label"
                 style="transition-delay: 30ms;"
               >
                 Create deployment for this device
               </span>
               <button
-                aria-labelledby="device-actions-action-3-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-59"
+                aria-labelledby="device-actions-action-4-label"
+                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-74"
                 role="menuitem"
                 style="transition-delay: 30ms;"
                 tabindex="-1"

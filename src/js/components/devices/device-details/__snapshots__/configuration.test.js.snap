@@ -183,6 +183,9 @@ exports[`Configuration Component renders correctly 1`] = `
   border-radius: 2px;
   font-size: 14px;
   font-weight: bold;
+  margin-right: 16px;
+  font-weight: 900;
+  font-size: smaller;
 }
 
 .emotion-4::-moz-focus-inner {
@@ -236,108 +239,32 @@ exports[`Configuration Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-5 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  text-align: center;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
-  overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
-  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.625rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
-}
-
-.emotion-5::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-5.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-5 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-5:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-@media (hover: none) {
-  .emotion-5:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-5.Mui-disabled {
-  background-color: transparent;
-  color: rgba(0, 0, 0, 0.26);
-}
-
-.emotion-8 .key>b {
+.emotion-5 .key>b {
   background-color: #f7f7f7;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-9 {
+.emotion-7 {
   margin: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-width: 0;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.12);
-  border-bottom-width: thin;
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.57;
+}
+
+.emotion-8 {
+  margin: 0;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.6964rem;
+  line-height: 1.66;
 }
 
 <div
   class="margin-bottom "
 >
   <div
-    class="clickable flexbox space-between"
+    class="flexbox space-between"
     style="align-items: flex-start;"
   >
     <div
@@ -384,38 +311,19 @@ exports[`Configuration Component renders correctly 1`] = `
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-4"
         disabled=""
-        style="margin-right: 16px; font-weight: 900; font-size: smaller;"
         tabindex="-1"
         type="button"
       >
         Add-on
       </button>
-      <button
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-5"
-        tabindex="0"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-2"
-          data-testid="KeyboardArrowDownIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-          />
-        </svg>
-        <span
-          class="MuiTouchRipple-root emotion-3"
-        />
-      </button>
     </div>
   </div>
-  <div>
+  <div />
+  <div
+    class="relative"
+  >
     <div
-      class="break-all two-columns emotion-8  column-data margin-top"
-      style="margin-bottom: 10px;"
+      class="break-all two-columns emotion-5  column-data "
     >
       <div
         class="align-right key muted"
@@ -433,15 +341,79 @@ exports[`Configuration Component renders correctly 1`] = `
           true
         </div>
       </div>
+      <div
+        class="align-right key muted"
+      >
+        <b>
+          foo
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        <div
+          title="bar"
+        >
+          bar
+        </div>
+      </div>
+      <div
+        class="align-right key muted"
+      >
+        <b>
+          timezone
+        </b>
+      </div>
+      <div
+        class="flexbox "
+      >
+        <div
+          title="GMT+2"
+        >
+          GMT+2
+        </div>
+      </div>
     </div>
-    <a>
-      show more
-    </a>
+    <div
+      class="flexbox center-aligned margin-bottom margin-top"
+    >
+      <div
+        class="flexbox margin-small"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium green emotion-2"
+          data-testid="CheckCircleIcon"
+          focusable="false"
+          style="margin: 12px;"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+          />
+        </svg>
+        <div>
+          <h6
+            class="MuiTypography-root MuiTypography-subtitle2 emotion-7"
+            style="text-transform: capitalize; text-align: left;"
+          >
+            Configuration up-to-date on the device
+          </h6>
+          <span
+            class="MuiTypography-root MuiTypography-caption muted emotion-8"
+            style="text-transform: capitalize; text-align: left;"
+          >
+            Updated: 
+            <time
+              datetime="2019-01-01T09:25:01+00:00"
+            >
+              2019-01-01 09:25
+            </time>
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
-  <hr
-    class="MuiDivider-root MuiDivider-fullWidth emotion-9"
-    style="margin-top: 24px;"
-  />
 </div>
 `;
 

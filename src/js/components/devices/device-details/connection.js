@@ -14,6 +14,7 @@ import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
+import Troubleshootdialog from '../dialogs/troubleshootdialog';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 export const PortForwardLink = ({ docsVersion }) => (
@@ -117,7 +118,6 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
   const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
   return (
     <DeviceDataCollapse
-      disableBottomBorder
       header={
         <div className={`flexbox ${className}`}>
           {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} />}
@@ -147,3 +147,37 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
 };
 
 export default DeviceConnection;
+
+export const TroubleshootTab = ({
+  classes,
+  device,
+  docsVersion,
+  tenantCapabilities: { hasAuditlogs },
+  socketClosed,
+  launchTroubleshoot,
+  userCapabilities,
+  troubleshootType,
+  setTroubleshootType,
+  setSocketClosed
+}) => (
+  <>
+    <DeviceConnection
+      className={classes.deviceConnection}
+      device={device}
+      docsVersion={docsVersion}
+      hasAuditlogs={hasAuditlogs}
+      socketClosed={socketClosed}
+      startTroubleshoot={launchTroubleshoot}
+      userCapabilities={userCapabilities}
+    />
+    <Troubleshootdialog
+      device={device}
+      hasAuditlogs={hasAuditlogs}
+      open={Boolean(troubleshootType)}
+      onCancel={() => setTroubleshootType()}
+      setSocketClosed={setSocketClosed}
+      type={troubleshootType}
+      userCapabilities={userCapabilities}
+    />
+  </>
+);

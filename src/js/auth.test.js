@@ -13,10 +13,10 @@ describe('logout function', () => {
   it('redirects and removes the JWT token', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
-    cookies.remove.mockReturnValueOnce();
     logout();
     expect(window.location.replace).toHaveBeenCalledTimes(1);
-    expect(cookies.remove).toHaveBeenCalledTimes(4);
+    expect(window.localStorage.removeItem).toHaveBeenCalledTimes(2);
+    expect(cookies.remove).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -24,29 +24,28 @@ describe('updateMaxAge function', () => {
   it('extends the expiration date of the jwt token', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
-    cookies.get.mockReturnValue('false');
-    cookies.set.mockReturnValueOnce();
+    window.localStorage.getItem.mockReturnValue('false');
     updateMaxAge();
-    expect(cookies.get).toHaveBeenCalledTimes(2);
+    expect(window.localStorage.getItem).toHaveBeenCalledTimes(2);
+    expect(cookies.get).toHaveBeenCalledTimes(1);
     expect(cookies.set).toHaveBeenCalledTimes(1);
   });
-  it('should not extend when the staying logged in cookie is not set', async () => {
+  it('should keep any long expiration from the jwt cookie when the staying logged in setting is set', async () => {
     jest.clearAllMocks();
+    window.localStorage.getItem.mockReturnValue('true');
     const cookies = new Cookies();
-    cookies.get.mockReturnValue('true');
-    cookies.set.mockReturnValueOnce();
     updateMaxAge();
-    expect(cookies.get).toHaveBeenCalledTimes(2);
+    expect(window.localStorage.getItem).toHaveBeenCalledTimes(2);
+    expect(cookies.get).toHaveBeenCalledTimes(1);
     expect(cookies.set).toHaveBeenCalledTimes(0);
   });
 });
 
 describe('expirySet function', () => {
-  it('decide if the jwt token should expire based on cookie value', async () => {
+  it('decide if the jwt token should expire based on the related local storage value', async () => {
     jest.clearAllMocks();
-    const cookies = new Cookies();
-    cookies.get.mockReturnValueOnce('true');
+    window.localStorage.getItem.mockReturnValue('true');
     expect(expirySet()).toEqual(false);
-    expect(cookies.get).toHaveBeenCalledTimes(1);
+    expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
   });
 });

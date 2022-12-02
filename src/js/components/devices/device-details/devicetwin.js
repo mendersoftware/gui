@@ -126,7 +126,6 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [initialized, setInitialized] = useState(false);
-  const [open, setOpen] = useState(false);
   const [reported, setReported] = useState('');
   const [updated, setUpdated] = useState('');
   const [isSync, setIsSync] = useState(true);
@@ -202,8 +201,6 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
 
   const onEditClick = () => setIsEditing(true);
 
-  const onExpandClick = twinError ? undefined : () => setOpen(true);
-
   const widthStyle = { maxWidth: isSync ? maxWidth : 'initial' };
 
   return (
@@ -211,22 +208,12 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
       header={
         <div className="flexbox column">
           {initialized ? (
-            <>
-              <TwinSyncStatus diffCount={diffCount} providerTitle={externalProvider.title} twinError={twinError} updateTime={updateTime} />
-              {!twinError && !open && (
-                <a className="margin-top-small" onClick={setOpen}>
-                  show more
-                </a>
-              )}
-            </>
+            <TwinSyncStatus diffCount={diffCount} providerTitle={externalProvider.title} twinError={twinError} updateTime={updateTime} />
           ) : (
             <Loader show={!initialized} />
           )}
         </div>
       }
-      isOpen={open}
-      onClick={onExpandClick}
-      shouldUnmount={false}
       title={<Title providerTitle={externalProvider.title} twinTitle={externalProvider.twinTitle} />}
     >
       <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`}>
@@ -296,3 +283,11 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
 };
 
 export default DeviceTwin;
+
+export const IntegrationTab = ({ device, integrations, getDeviceTwin, setDeviceTwin }) => (
+  <div>
+    {integrations.map(integration => (
+      <DeviceTwin key={integration.id} device={device} integration={integration} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />
+    ))}
+  </div>
+);

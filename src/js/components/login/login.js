@@ -11,7 +11,7 @@ import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
-import { TIMEOUTS } from '../../constants/appConstants';
+import { noExpiryKey, TIMEOUTS } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { getCurrentUser } from '../../selectors';
@@ -36,8 +36,6 @@ const entryText = {
   signup: { linkText: 'Sign up here', question: `Don't have an account?`, target: '/signup' },
   login: { linkText: 'Log in', question: `Already have an account?`, target: '/login' }
 };
-
-const cookieOptions = { sameSite: 'strict', secure: true, path: '/', expires: new Date('2500-12-31') };
 
 export const EntryLink = ({ target = 'signup' }) => (
   <div className="margin-top flexbox centered">
@@ -81,7 +79,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
       setSnackbar(loginError, TIMEOUTS.refreshDefault);
       cookies.remove('error');
     }
-    cookies.remove('noExpiry', { path: '/' });
+    window.localStorage.removeItem(noExpiryKey);
     return () => {
       setSnackbar('');
     };
@@ -94,8 +92,8 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
   }, [currentUser]);
 
   useEffect(() => {
-    // set no expiry as cookie to remember checkbox value, even though this is set, maxAge takes precedent if present
-    cookies.set('noExpiry', noExpiry, cookieOptions);
+    // set no expiry in localstorage to remember checkbox value and avoid any influence of expiration time that might occur with cookies
+    window.localStorage.setItem(noExpiryKey, `${noExpiry}`);
   }, [noExpiry]);
 
   const onLoginClick = loginData =>

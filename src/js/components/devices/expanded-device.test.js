@@ -6,6 +6,7 @@ import configureStore from 'redux-mock-store';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import ExpandedDevice from './expanded-device';
+import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 
 const mockStore = configureStore([thunk]);
 
@@ -20,9 +21,20 @@ describe('ExpandedDevice Component', () => {
           ...defaultState.app.features,
           hasDeviceConfig: true,
           hasDeviceConnect: true,
-          hasMultitenancy: true,
-          isHosted: true
+          hasMonitor: true,
+          hasMultitenancy: true
         }
+      },
+      devices: {
+        ...defaultState.devices,
+        groups: {
+          ...defaultState.devices.groups,
+          selectedGroup: 'testGroup'
+        }
+      },
+      organization: {
+        ...defaultState.organization,
+        externalDeviceIntegrations: [{ ...EXTERNAL_PROVIDER['iot-hub'], id: 'test' }]
       },
       users: {
         ...defaultState.users,

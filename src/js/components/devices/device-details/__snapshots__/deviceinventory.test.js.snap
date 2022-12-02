@@ -1,126 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DeviceInventory Component renders correctly 1`] = `
-.emotion-0 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  text-align: center;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
-  overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
-  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.625rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
-}
-
-.emotion-0::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-0.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-0 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-0:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-@media (hover: none) {
-  .emotion-0:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-0.Mui-disabled {
-  background-color: transparent;
-  color: rgba(0, 0, 0, 0.26);
-}
-
-.emotion-1 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  fill: currentColor;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.3929rem;
-}
-
-.emotion-1 iconButton {
-  margin-right: 8px;
-}
-
-.emotion-2 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
-.emotion-3 .key>b {
+.emotion-0 .key>b {
   background-color: #f7f7f7;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-4 {
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -138,26 +24,15 @@ exports[`DeviceInventory Component renders correctly 1`] = `
   color: #337a87;
 }
 
-.emotion-4 iconButton {
+.emotion-1 iconButton {
   margin-right: 8px;
-}
-
-.emotion-7 {
-  margin: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-width: 0;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.12);
-  border-bottom-width: thin;
 }
 
 <div
   class="margin-bottom "
 >
   <div
-    class="clickable flexbox space-between"
+    class="flexbox space-between"
     style="align-items: flex-start;"
   >
     <h4
@@ -167,28 +42,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
     </h4>
     <div
       class="flexbox centered"
-    >
-      <button
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-0"
-        tabindex="0"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
-          data-testid="KeyboardArrowDownIcon"
-          focusable="false"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-          />
-        </svg>
-        <span
-          class="MuiTouchRipple-root emotion-2"
-        />
-      </button>
-    </div>
+    />
   </div>
   <div>
     <div
@@ -196,7 +50,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
       style="margin-bottom: 5px;"
     >
       <div
-        class="break-all two-columns emotion-3 compact column-data multiple"
+        class="break-all two-columns emotion-0 compact column-data multiple"
       >
         <div
           class="align-right key muted"
@@ -216,7 +70,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
           <svg
             aria-hidden="true"
             aria-label="Copy to clipboard"
-            class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-4"
+            class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-1"
             data-mui-internal-clone-element="true"
             data-testid="FileCopyOutlinedIcon"
             focusable="false"
@@ -229,7 +83,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="break-all two-columns emotion-3 compact column-data multiple"
+        class="break-all two-columns emotion-0 compact column-data multiple"
       >
         <div
           class="align-right key muted"
@@ -249,7 +103,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
           <svg
             aria-hidden="true"
             aria-label="Copy to clipboard"
-            class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-4"
+            class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-1"
             data-mui-internal-clone-element="true"
             data-testid="FileCopyOutlinedIcon"
             focusable="false"
@@ -262,15 +116,43 @@ exports[`DeviceInventory Component renders correctly 1`] = `
         </div>
       </div>
     </div>
-    <a>
-      show 
-      1
-       more
-    </a>
   </div>
-  <hr
-    class="MuiDivider-root MuiDivider-fullWidth emotion-7"
-    style="margin-top: 24px;"
-  />
+  <div
+    class="two-columns-multiple "
+  >
+    <div
+      class="break-all two-columns emotion-0 compact column-data multiple"
+    >
+      <div
+        class="align-right key muted"
+      >
+        <b>
+          ipv4_wlan0
+        </b>
+      </div>
+      <div
+        class="flexbox clickable"
+      >
+        <div
+          title="192.168.10.141/24"
+        >
+          192.168.10.141/24
+        </div>
+        <svg
+          aria-hidden="true"
+          aria-label="Copy to clipboard"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-1"
+          data-mui-internal-clone-element="true"
+          data-testid="FileCopyOutlinedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
 </div>
 `;
