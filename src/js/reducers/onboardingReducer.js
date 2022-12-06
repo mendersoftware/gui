@@ -1,15 +1,11 @@
 import * as OnboardingConstants from '../constants/onboardingConstants';
-import { stringToBoolean } from '../helpers';
 
 export const initialState = {
   approach: null,
   artifactIncluded: null,
-  complete:
-    (mender_environment && stringToBoolean(mender_environment.features.isEnterprise)) ||
-    (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) ||
-    !!JSON.parse(window.localStorage.getItem('onboardingComplete')),
+  complete: false,
   deviceType: null,
-  demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
+  demoArtifactPort: 85,
   progress: null,
   showCreateArtifactDialog: false,
   showTips: null,
@@ -18,6 +14,11 @@ export const initialState = {
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case OnboardingConstants.SET_DEMO_ARTIFACT_PORT:
+      return {
+        ...state,
+        demoArtifactPort: action.value
+      };
     case OnboardingConstants.SET_SHOW_CREATE_ARTIFACT:
       return {
         ...state,

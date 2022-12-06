@@ -14,20 +14,12 @@ import { MessageChannel } from 'worker_threads';
 
 import { light as lightTheme } from '../src/js/themes/Mender';
 import handlers from './__mocks__/requestHandlers';
-import { mockDate, token as mockToken } from './mockData';
+import { menderEnvironment, mockDate, token as mockToken } from './mockData';
 
 export const RETRY_TIMES = 3;
 export const TEST_LOCATION = 'localhost';
 
 export const mockAbortController = { signal: { addEventListener: () => {}, removeEventListener: () => {} } };
-
-window.RTCPeerConnection = () => {
-  return {
-    createOffer: () => {},
-    setLocalDescription: () => {},
-    createDataChannel: () => {}
-  };
-};
 
 // Setup requests interception
 let server;
@@ -77,6 +69,7 @@ beforeAll(async () => {
     setItem: jest.fn(),
     removeItem: jest.fn()
   };
+  window.mender_environment = menderEnvironment;
   window.ENV = 'test';
   global.AbortController = jest.fn().mockImplementation(() => mockAbortController);
   global.MessageChannel = MessageChannel;
@@ -86,6 +79,13 @@ beforeAll(async () => {
     unobserve: jest.fn(),
     disconnect: jest.fn()
   }));
+  window.RTCPeerConnection = () => {
+    return {
+      createOffer: () => {},
+      setLocalDescription: () => {},
+      createDataChannel: () => {}
+    };
+  };
   global.crypto = {
     subtle: {
       digest: (_, data) => Promise.resolve(crypto.createHash('sha256').update(data))

@@ -1,62 +1,31 @@
 import * as AppConstants from '../constants/appConstants';
 import * as UserConstants from '../constants/userConstants';
-import { stringToBoolean } from '../helpers';
-
-const menderEnvironment = {
-  hostAddress: null,
-  features: {
-    hasAddons: false,
-    hasAuditlogs: false,
-    hasMultitenancy: false,
-    isHosted: false,
-    isEnterprise: false,
-    isDemoMode: false
-  },
-  docsVersion: '',
-  hostedAnnouncement: '',
-  integrationVersion: '',
-  menderVersion: '',
-  menderArtifactVersion: '',
-  metaMenderVersion: '',
-  services: {
-    deploymentsVersion: '',
-    deviceauthVersion: '',
-    inventoryVersion: '',
-    guiVersion: ''
-  },
-  recaptchaSiteKey: '',
-  stripeAPIKey: '',
-  trackerCode: '',
-  ...mender_environment
-};
-
-const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && version !== 'next' ? 'master' : version);
 
 export const initialState = {
   cancelSource: undefined,
   demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
-  hostAddress: menderEnvironment.hostAddress,
+  hostAddress: null,
   snackbar: {
     open: false,
     message: ''
   },
   // return boolean rather than organization details
   features: {
-    hasAddons: stringToBoolean(menderEnvironment.features.hasAddons),
-    hasAuditlogs: stringToBoolean(menderEnvironment.features.hasAuditlogs),
-    hasMultitenancy: stringToBoolean(menderEnvironment.features.hasMultitenancy),
-    hasDeviceConfig: stringToBoolean(menderEnvironment.features.hasDeviceConfig),
-    hasDeviceConnect: stringToBoolean(menderEnvironment.features.hasDeviceConnect),
-    hasMonitor: stringToBoolean(menderEnvironment.features.hasMonitor),
-    hasReporting: stringToBoolean(menderEnvironment.features.hasReporting),
-    isHosted: stringToBoolean(menderEnvironment.features.isHosted) || window.location.hostname.includes('hosted.mender.io'),
-    isEnterprise: stringToBoolean(menderEnvironment.features.isEnterprise),
-    isDemoMode: stringToBoolean(menderEnvironment.isDemoMode)
+    hasAddons: false,
+    hasAuditlogs: false,
+    hasMultitenancy: false,
+    hasDeviceConfig: false,
+    hasDeviceConnect: false,
+    hasMonitor: false,
+    hasReporting: false,
+    isDemoMode: false,
+    isHosted: false,
+    isEnterprise: false
   },
   firstLoginAfterSignup: false,
-  hostedAnnouncement: menderEnvironment.hostedAnnouncement,
-  docsVersion: isNaN(menderEnvironment.integrationVersion.charAt(0)) ? '' : menderEnvironment.integrationVersion.split('.').slice(0, 2).join('.'),
-  recaptchaSiteKey: menderEnvironment.recaptchaSiteKey,
+  hostedAnnouncement: '',
+  docsVersion: '',
+  recaptchaSiteKey: '',
   searchState: {
     deviceIds: [],
     searchTerm: '',
@@ -67,20 +36,20 @@ export const initialState = {
       // scope: null
     }
   },
-  stripeAPIKey: menderEnvironment.stripeAPIKey,
-  trackerCode: menderEnvironment.trackerCode,
+  stripeAPIKey: '',
+  trackerCode: '',
   uploadsById: {
     // id: { uploading: false, uploadProgress: 0, cancelSource: undefined }
   },
   versionInformation: {
-    Integration: getComparisonCompatibleVersion(menderEnvironment.integrationVersion),
-    'Mender-Client': getComparisonCompatibleVersion(menderEnvironment.menderVersion),
-    'Mender-Artifact': menderEnvironment.menderArtifactVersion,
-    'Meta-Mender': menderEnvironment.metaMenderVersion,
-    Deployments: menderEnvironment.services.deploymentsVersion,
-    Deviceauth: menderEnvironment.services.deviceauthVersion,
-    Inventory: menderEnvironment.services.inventoryVersion,
-    GUI: menderEnvironment.services.guiVersion || 'latest'
+    Integration: '',
+    'Mender-Client': '',
+    'Mender-Artifact': '',
+    'Meta-Mender': '',
+    Deployments: '',
+    Deviceauth: '',
+    Inventory: '',
+    GUI: 'latest'
   },
   yesterday: undefined
 };
@@ -95,6 +64,14 @@ resetEnvironment();
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
+    case AppConstants.SET_FEATURES:
+      return {
+        ...state,
+        features: {
+          ...state.features,
+          ...action.value
+        }
+      };
     case AppConstants.SET_SNACKBAR:
       return {
         ...state,
@@ -120,19 +97,22 @@ const appReducer = (state = initialState, action) => {
         ...state,
         offlineThreshold: action.value
       };
-    case AppConstants.UPLOAD_PROGRESS: {
+    case AppConstants.UPLOAD_PROGRESS:
       return {
         ...state,
         uploadsById: action.uploads
       };
-    }
-    case AppConstants.SET_VERSION_INFORMATION: {
+    case AppConstants.SET_VERSION_INFORMATION:
       return {
         ...state,
         docsVersion: action.docsVersion,
         versionInformation: action.value
       };
-    }
+    case AppConstants.SET_ENVIRONMENT_DATA:
+      return {
+        ...state,
+        ...action.value
+      };
     default:
       return state;
   }

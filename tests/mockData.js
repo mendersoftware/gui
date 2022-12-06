@@ -9,10 +9,18 @@ import {
   twoFAStates,
   uiPermissionsById
 } from '../src/js/constants/userConstants';
+import { initialState as initialAppState } from '../src/js/reducers/appReducer';
+import { initialState as initialDeploymentsState } from '../src/js/reducers/deploymentReducer';
+import { initialState as initialDevicesState } from '../src/js/reducers/deviceReducer';
+import { initialState as initialMonitorState } from '../src/js/reducers/monitorReducer';
+import { initialState as initialOnboardingState } from '../src/js/reducers/onboardingReducer';
+import { initialState as initialOrganizationState } from '../src/js/reducers/organizationReducer';
+import { initialState as initialReleasesState } from '../src/js/reducers/releaseReducer';
+import { initialState as initialUsersState } from '../src/js/reducers/userReducer';
 import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
 
 export const undefineds = /undefined|\[object Object\]/;
-window.mender_environment = {
+export const menderEnvironment = {
   features: {
     hasMultitenancy: true
   },
@@ -25,7 +33,6 @@ window.mender_environment = {
     inventoryVersion: null
   }
 };
-
 export const TEST_SESSION_DATETIME = '2019-01-13T13:00:00.000Z';
 const testDate = new Date(TEST_SESSION_DATETIME);
 export const mockDate = new Date(testDate.setMilliseconds(testDate.getMilliseconds() + 900));
@@ -94,11 +101,7 @@ export const adminUserCapabilities = {
 export const userId = 'a30a780b-b843-5344-80e3-0fd95a4f6fc3';
 export const defaultState = {
   app: {
-    hostedAnnouncement: null,
-    docsVersion: null,
-    features: {
-      isDemoMode: false
-    },
+    ...initialAppState,
     searchState: {
       deviceIds: [],
       searchTerm: '',
@@ -110,6 +113,7 @@ export const defaultState = {
     versionInformation: {}
   },
   deployments: {
+    ...initialDeploymentsState,
     byId: {
       d1: {
         id: 'd1',
@@ -194,6 +198,7 @@ export const defaultState = {
     }
   },
   devices: {
+    ...initialDevicesState,
     byId: {
       a1: {
         id: 'a1',
@@ -294,6 +299,8 @@ export const defaultState = {
     limit: 500
   },
   onboarding: {
+    ...initialOnboardingState,
+    progress: undefined,
     complete: false,
     demoArtifactPort: 85,
     showCreateArtifactDialog: false,
@@ -301,6 +308,7 @@ export const defaultState = {
     showTipsDialog: false
   },
   monitor: {
+    ...initialMonitorState,
     alerts: {
       alertList: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, total: 0 },
       byDeviceId: {
@@ -339,6 +347,7 @@ export const defaultState = {
     }
   },
   organization: {
+    ...initialOrganizationState,
     card: {
       brand: 'testCorp',
       last4: '7890',
@@ -406,19 +415,16 @@ export const defaultState = {
         total: 3
       }
     },
-    externalDeviceIntegrations: [],
     intentId: 'testIntent',
     organization: {
       id: 1,
       name: 'test',
       plan: 'os',
       trial: false
-    },
-    samlConfigs: [],
-    webhooks: {}
+    }
   },
   releases: {
-    artifactProgress: 0,
+    ...initialReleasesState,
     byId: {
       r1: {
         Name: 'r1',
@@ -456,22 +462,16 @@ export const defaultState = {
       searchTerm: '',
       searchTotal: 0,
       total: 1
-    },
-    selectedArtifact: null,
-    selectedRelease: null,
-    showRemoveDialog: false,
-    uploading: false
+    }
   },
   users: {
+    ...initialUsersState,
     byId: {
       a1: { email: 'a@b.com', id: 'a1', created_ts: '2019-01-01T10:30:00.000Z', roles: [rolesByName.admin], verified: true },
       [userId]: { email: 'a2@b.com', id: userId, created_ts: '2019-01-01T12:30:00.000Z', roles: [rolesByName.admin], tfa_status: twoFAStates.enabled }
     },
     currentUser: 'a1',
-    customColumns: [],
     globalSettings: { '2fa': 'enabled', id_attribute: undefined, previousFilters: [] },
-    jwtToken: null,
-    qrCode: null,
     rolesById: {
       ...rolesById,
       test: {
@@ -486,7 +486,6 @@ export const defaultState = {
       }
     },
     settingsInitialized: true,
-    showHelptips: true,
     userSettings: { columnSelection: [], onboarding: { something: 'here' } }
   }
 };

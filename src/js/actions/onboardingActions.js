@@ -2,6 +2,7 @@ import Cookies from 'universal-cookie';
 
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import {
+  SET_DEMO_ARTIFACT_PORT,
   SET_ONBOARDING_APPROACH,
   SET_ONBOARDING_ARTIFACT_INCLUDED,
   SET_ONBOARDING_COMPLETE,
@@ -121,6 +122,8 @@ const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: SET_
 export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: SET_SHOW_CREATE_ARTIFACT, show });
 
 export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({ type: SET_SHOW_ONBOARDING_HELP_DIALOG, show });
+
+export const setDemoArtifactPort = port => dispatch => dispatch({ type: SET_DEMO_ARTIFACT_PORT, value: port });
 
 export const setOnboardingComplete = val => dispatch =>
   Promise.resolve(dispatch({ type: SET_ONBOARDING_COMPLETE, complete: val })).then(() => {

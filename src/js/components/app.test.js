@@ -46,6 +46,7 @@ describe('App Component', () => {
       writable: true,
       value: 'JWT=omnomnom'
     });
+    window.localStorage.getItem.mockReturnValueOnce('false');
     const { baseElement } = render(
       <Provider store={store}>
         <App />
@@ -57,6 +58,7 @@ describe('App Component', () => {
   });
 
   it('works as intended', async () => {
+    window.localStorage.getItem.mockReturnValueOnce('false');
     Object.defineProperty(window.document, 'cookie', {
       writable: true,
       value: 'JWT=omnomnom'

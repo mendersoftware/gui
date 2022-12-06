@@ -3,6 +3,8 @@ import Cookies from 'universal-cookie';
 import GeneralApi from '../api/general-api';
 import { getToken } from '../auth';
 import {
+  SET_ENVIRONMENT_DATA,
+  SET_FEATURES,
   SET_FIRST_LOGIN_AFTER_SIGNUP,
   SET_OFFLINE_THRESHOLD,
   SET_SEARCH_STATE,
@@ -14,7 +16,7 @@ import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
-import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
 import { getCurrentUser, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeploymentsByStatus } from './deploymentActions';
@@ -28,6 +30,7 @@ import {
   searchDevices,
   setDeviceListState
 } from './deviceActions';
+import { setDemoArtifactPort, setOnboardingComplete } from './onboardingActions';
 import { getIntegrations, getUserOrganization } from './organizationActions';
 import { getReleases } from './releaseActions';
 import { getGlobalSettings, getRoles, getUserSettings, saveGlobalSettings, saveUserSettings } from './userActions';
@@ -43,8 +46,79 @@ export const commonErrorHandler = (err, errorContext, dispatch, fallback, mightB
   return Promise.reject(err);
 };
 
+const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && version !== 'next' ? 'master' : version);
+
+export const parseEnvironmentInfo = () => (dispatch, getState) => {
+  const state = getState();
+  let onboardingComplete = state.onboarding.complete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
+  let demoArtifactPort = 85;
+  let environmentData = {};
+  let environmentFeatures = {};
+  let versionInfo = {};
+  if (mender_environment) {
+    const {
+      features = {},
+      demoArtifactPort: port,
+      disableOnboarding,
+      hostAddress,
+      hostedAnnouncement,
+      integrationVersion,
+      isDemoMode,
+      menderVersion,
+      menderArtifactVersion,
+      metaMenderVersion,
+      recaptchaSiteKey,
+      services = {},
+      stripeAPIKey,
+      trackerCode
+    } = mender_environment;
+    onboardingComplete = stringToBoolean(features.isEnterprise) || stringToBoolean(disableOnboarding) || onboardingComplete;
+    demoArtifactPort = port || demoArtifactPort;
+    environmentData = {
+      hostedAnnouncement: hostedAnnouncement || state.app.hostedAnnouncement,
+      hostAddress: hostAddress || state.app.hostAddress,
+      recaptchaSiteKey: recaptchaSiteKey || state.app.recaptchaSiteKey,
+      stripeAPIKey: stripeAPIKey || state.app.stripeAPIKey,
+      trackerCode: trackerCode || state.app.trackerCode
+    };
+    environmentFeatures = {
+      hasAddons: stringToBoolean(features.hasAddons),
+      hasAuditlogs: stringToBoolean(features.hasAuditlogs),
+      hasMultitenancy: stringToBoolean(features.hasMultitenancy),
+      hasDeviceConfig: stringToBoolean(features.hasDeviceConfig),
+      hasDeviceConnect: stringToBoolean(features.hasDeviceConnect),
+      hasMonitor: stringToBoolean(features.hasMonitor),
+      hasReporting: stringToBoolean(features.hasReporting),
+      isHosted: stringToBoolean(features.isHosted) || window.location.hostname.includes('hosted.mender.io'),
+      isEnterprise: stringToBoolean(features.isEnterprise),
+      isDemoMode: stringToBoolean(isDemoMode || features.isDemoMode)
+    };
+    versionInfo = {
+      docs: isNaN(integrationVersion.charAt(0)) ? '' : integrationVersion.split('.').slice(0, 2).join('.'),
+      remainder: {
+        Integration: getComparisonCompatibleVersion(integrationVersion),
+        'Mender-Client': getComparisonCompatibleVersion(menderVersion),
+        'Mender-Artifact': menderArtifactVersion,
+        'Meta-Mender': metaMenderVersion,
+        Deployments: services.deploymentsVersion,
+        Deviceauth: services.deviceauthVersion,
+        Inventory: services.inventoryVersion,
+        GUI: services.guiVersion
+      }
+    };
+  }
+  return Promise.all([
+    dispatch(setOnboardingComplete(onboardingComplete)),
+    dispatch(setDemoArtifactPort(demoArtifactPort)),
+    dispatch({ type: SET_FEATURES, value: environmentFeatures }),
+    dispatch({ type: SET_VERSION_INFORMATION, docsVersion: versionInfo.docs, value: versionInfo.remainder }),
+    dispatch({ type: SET_ENVIRONMENT_DATA, value: environmentData })
+  ]);
+};
+
 export const initializeAppData = () => (dispatch, getState) => {
   let tasks = [
+    dispatch(parseEnvironmentInfo()),
     dispatch(getUserSettings()),
     dispatch(getGlobalSettings()),
     dispatch(getDeviceAttributes()),

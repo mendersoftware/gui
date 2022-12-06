@@ -5,6 +5,8 @@ import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState, receivedPermissionSets, receivedRoles } from '../../../tests/mockData';
 import {
   SET_ANNOUNCEMENT,
+  SET_ENVIRONMENT_DATA,
+  SET_FEATURES,
   SET_FIRST_LOGIN_AFTER_SIGNUP,
   SET_OFFLINE_THRESHOLD,
   SET_SEARCH_STATE,
@@ -34,7 +36,7 @@ import {
   SET_REJECTED_DEVICES,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
-import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
+import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_ARTIFACT_INCLUDED, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, SET_ORGANIZATION } from '../constants/organizationConstants';
 import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
 import { RECEIVED_PERMISSION_SETS, RECEIVED_ROLES, SET_GLOBAL_SETTINGS, SET_SHOW_HELP, SET_USER_SETTINGS } from '../constants/userConstants';
@@ -80,6 +82,7 @@ describe('app actions', () => {
   });
 
   it('should try to get all required app information', async () => {
+    window.localStorage.getItem.mockReturnValueOnce('false');
     const attributeReducer = (accu, item) => {
       if (item.scope === 'inventory') {
         accu[item.name] = item.value;
@@ -98,6 +101,24 @@ describe('app actions', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
+      { type: SET_ONBOARDING_COMPLETE, complete: false },
+      { type: SET_DEMO_ARTIFACT_PORT, port: undefined },
+      { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
+      {
+        type: SET_VERSION_INFORMATION,
+        docsVersion: '',
+        value: {
+          Deployments: '1.2.3',
+          Deviceauth: null,
+          GUI: undefined,
+          Integration: 'master',
+          Inventory: null,
+          'Mender-Artifact': undefined,
+          'Mender-Client': 'next',
+          'Meta-Mender': 'saas-123.34'
+        }
+      },
+      { type: SET_ENVIRONMENT_DATA, value: { hostAddress: null, hostedAnnouncement: '', recaptchaSiteKey: '', stripeAPIKey: '', trackerCode: '' } },
       { type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       { type: SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },

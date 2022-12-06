@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import Cookies from 'universal-cookie';
 
-import { setSnackbar } from '../actions/appActions';
+import { parseEnvironmentInfo, setSnackbar } from '../actions/appActions';
 import { cancelFileUpload } from '../actions/releaseActions';
 import { logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
 import { expirySet, getToken, updateMaxAge } from '../auth';
@@ -51,6 +51,7 @@ export const AppRoot = ({
   logoutUser,
   mode,
   onboardingState,
+  parseEnvironmentInfo,
   setAccountActivationCode,
   setShowConnectingDialog,
   showDeviceConnectionDialog,
@@ -64,6 +65,7 @@ export const AppRoot = ({
   const { pathname = '', hash } = useLocation();
 
   useEffect(() => {
+    parseEnvironmentInfo();
     if (!trackingCode) {
       return;
     }
@@ -78,7 +80,7 @@ export const AppRoot = ({
       Tracking.initialize(trackingCode);
     }
     trackLocationChange(pathname);
-  }, []);
+  }, [trackingCode]);
 
   useEffect(() => {
     trackLocationChange(pathname);
@@ -150,7 +152,7 @@ export const AppRoot = ({
   );
 };
 
-const actionCreators = { cancelFileUpload, logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog, setSnackbar };
+const actionCreators = { cancelFileUpload, logoutUser, parseEnvironmentInfo, saveUserSettings, setAccountActivationCode, setShowConnectingDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {
