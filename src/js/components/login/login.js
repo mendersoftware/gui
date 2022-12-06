@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
-import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { ChevronRight, Help as HelpIcon } from '@mui/icons-material';
+import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import LoginLogo from '../../../assets/img/loginlogo.svg';
@@ -14,16 +14,16 @@ import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { locations, noExpiryKey, TIMEOUTS } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { getCurrentUser } from '../../selectors';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
 
 import Form from '../common/forms/form';
-import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
+import TextInput from '../common/forms/textinput';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
-import { OAuth2Providers } from './oauth2providers';
 import LinedHeader from '../common/lined-header';
+import { OAuth2Providers } from './oauth2providers';
 
 const cookies = new Cookies();
 
@@ -60,6 +60,8 @@ const useStyles = makeStyles()(theme => {
       padding: '40px 65px',
       borderTopLeftRadius: backgroundRadius,
       borderBottomRightRadius: backgroundRadius,
+      marginBottom: 30,
+      marginTop: 30,
       transform: `skew(0, -${skew}deg)`
     },
     link: { marginLeft: theme.spacing(-0.5) },
