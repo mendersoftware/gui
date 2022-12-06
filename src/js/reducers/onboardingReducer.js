@@ -1,4 +1,4 @@
-import OnboardingConstants from '../constants/onboardingConstants';
+import * as OnboardingConstants from '../constants/onboardingConstants';
 import { stringToBoolean } from '../helpers';
 
 export const initialState = {

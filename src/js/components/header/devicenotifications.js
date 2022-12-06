@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 
 // material ui
-import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
+import { DeveloperBoard as DeveloperBoardIcon } from '@mui/icons-material';
 
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
@@ -16,10 +16,10 @@ const DeviceNotifications = ({ total, limit, pending }) => {
         <span>{total.toLocaleString()}</span>
         {limit ? <span id="limit">/{limit.toLocaleString()}</span> : null}
 
-        <DeveloperBoardIcon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} />
+        <DeveloperBoardIcon style={{ margin: '0 7px 0 10px', fontSize: 20 }} />
       </Link>
       {pending ? (
-        <Link to="/devices/pending" style={{ marginLeft: '7px' }} className={limit && limit < pending + total ? 'warning' : null}>
+        <Link to="/devices/pending" style={{ marginLeft: '7px' }} className={limit && limit < pending + total ? 'warning' : undefined}>
           {pending.toLocaleString()} pending
         </Link>
       ) : null}

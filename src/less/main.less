@@ -563,7 +563,7 @@ ul.link-list {
   min-height: 30vh;
 }
 
-.xterm-fullscreen {
+.full-height, .xterm-fullscreen {
   height: 100%;
 }
 .xterm-min-screen {
@@ -952,35 +952,20 @@ div:focus {
   .animation(fadein 1s 1);
   position: relative;
   overflow: visible;
-  margin-left: 25px;
-  max-width: 400px;
-  h3 {
-    text-transform: uppercase;
-    color: @grey;
-    font-weight: normal;
-    text-align: center;
-  }
-
-  img {
-    max-width: 100%;
-  }
-
-  #signupLogo {
-    align-self: center;
-    width: 50%;
-  }
 
   .MuiButton-contained.oauth-provider {
     background-color: @defaultBackground;
     color: @text;
     margin: 0 10px;
   }
-
   .help-text,
-  .help-text p {
+  p.help-text {
     color: rgba(66, 66, 66, 0.6);
     text-align: left;
     font-size: 12px;
+  }
+  .flexbox:has(>#login_button), .flexbox:has(>#password_button) {
+    justify-content: left !important;
   }
 }
 
@@ -1002,20 +987,9 @@ div:focus {
 }
 
 /* sign up */
-#signup-box {
-  h1,
-  h2,
-  h3 {
-    text-transform: none;
-    color: black;
-    font-weight: normal;
-    text-align: center;
-  }
-
-  .MuiFormControl-root {
-    margin-top: 0;
-    margin-bottom: 15px;
-  }
+#signup-box .MuiFormControl-root {
+  margin-top: 0;
+  margin-bottom: 15px;
 }
 
 // Settings

@@ -1,5 +1,5 @@
-import DeploymentConstants from '../constants/deploymentConstants';
-import DeviceConstants from '../constants/deviceConstants';
+import * as DeploymentConstants from '../constants/deploymentConstants';
+import * as DeviceConstants from '../constants/deviceConstants';
 
 export const initialState = {
   byId: {

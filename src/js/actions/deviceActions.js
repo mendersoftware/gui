@@ -1,3 +1,4 @@
+/*eslint import/namespace: ['error', { allowComputed: true }]*/
 import React from 'react';
 import axios from 'axios';
 import pluralize from 'pluralize';
@@ -9,8 +10,8 @@ import { auditLogsApiUrl } from '../actions/organizationActions';
 import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
-import AppConstants from '../constants/appConstants';
-import DeviceConstants from '../constants/deviceConstants';
+import { SORTING_OPTIONS, UPLOAD_PROGRESS } from '../constants/appConstants';
+import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
@@ -579,7 +580,7 @@ export const setDeviceListState =
     // eslint-disable-next-line no-unused-vars
     const { isLoading: nextLoading, deviceIds: nextDevices, selection: nextSelection, ...nextRequestState } = nextState;
     if (!deepCompare(currentRequestState, nextRequestState)) {
-      const { direction: sortDown = AppConstants.SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = nextState.sort ?? {};
+      const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = nextState.sort ?? {};
       const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
       if (sortCol && sortingAlternatives[sortCol]) {
         sortBy.push({ ...sortBy[0], attribute: sortingAlternatives[sortCol] });
@@ -817,7 +818,7 @@ export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) =
   const uploads = { ...getState().app.uploads, [uploadId]: { inprogress: true, uploadProgress: 0, cancelSource } };
   return Promise.all([
     dispatch(setSnackbar('Uploading file')),
-    dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads }),
+    dispatch({ type: UPLOAD_PROGRESS, uploads }),
     GeneralApi.uploadPut(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))

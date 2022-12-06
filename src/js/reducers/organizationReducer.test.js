@@ -1,5 +1,5 @@
 import reducer, { initialState } from './organizationReducer';
-import OrganizationConstants from '../constants/organizationConstants';
+import * as OrganizationConstants from '../constants/organizationConstants';
 import { defaultState } from '../../../tests/mockData';
 
 describe('organization reducer', () => {

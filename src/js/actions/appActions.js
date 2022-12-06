@@ -2,7 +2,14 @@ import Cookies from 'universal-cookie';
 
 import GeneralApi from '../api/general-api';
 import { getToken } from '../auth';
-import AppConstants, { TIMEOUTS } from '../constants/appConstants';
+import {
+  SET_FIRST_LOGIN_AFTER_SIGNUP,
+  SET_OFFLINE_THRESHOLD,
+  SET_SEARCH_STATE,
+  SET_SNACKBAR,
+  SET_VERSION_INFORMATION,
+  TIMEOUTS
+} from '../constants/appConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
@@ -52,7 +59,8 @@ export const initializeAppData = () => (dispatch, getState) => {
     dispatch(getIntegrations()),
     dispatch(getReleases()),
     dispatch(getDeviceLimit()),
-    dispatch(getRoles())
+    dispatch(getRoles()),
+    dispatch(setFirstLoginAfterSignup(cookies.get('firstLoginAfterSignup')))
   ];
   const multitenancy = getState().app.features.hasMultitenancy || getState().app.features.isEnterprise || getState().app.features.isHosted;
   if (multitenancy) {
@@ -124,7 +132,7 @@ export const initializeAppData = () => (dispatch, getState) => {
 */
 export const setSnackbar = (message, autoHideDuration, action, children, onClick, onClose) => dispatch =>
   dispatch({
-    type: AppConstants.SET_SNACKBAR,
+    type: SET_SNACKBAR,
     snackbar: {
       open: message ? true : false,
       message,
@@ -137,11 +145,10 @@ export const setSnackbar = (message, autoHideDuration, action, children, onClick
     }
   });
 
-export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch =>
-  dispatch({
-    type: AppConstants.SET_FIRST_LOGIN_AFTER_SIGNUP,
-    firstLoginAfterSignup: firstLoginAfterSignup
-  });
+export const setFirstLoginAfterSignup = firstLoginAfterSignup => dispatch => {
+  cookies.set('firstLoginAfterSignup', !!firstLoginAfterSignup, { maxAge: 60, path: '/', domain: '.mender.io', sameSite: false });
+  dispatch({ type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: !!firstLoginAfterSignup });
+};
 
 const dateFunctionMap = {
   getDays: 'getDate',
@@ -160,13 +167,13 @@ export const setOfflineThreshold = () => (dispatch, getState) => {
   } catch {
     return Promise.resolve(dispatch(setSnackbar('There was an error saving the offline threshold, please check your settings.')));
   }
-  return Promise.resolve(dispatch({ type: AppConstants.SET_OFFLINE_THRESHOLD, value }));
+  return Promise.resolve(dispatch({ type: SET_OFFLINE_THRESHOLD, value }));
 };
 
 export const setVersionInfo = info => (dispatch, getState) =>
   Promise.resolve(
     dispatch({
-      type: AppConstants.SET_VERSION_INFORMATION,
+      type: SET_VERSION_INFORMATION,
       docsVersion: getState().app.docsVersion,
       value: {
         ...getState().app.versionInformation,
@@ -211,7 +218,7 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
     const info = latestSaasRelease.date > latestRelease.release_date ? latestSaasRelease.tag : latestRelease.release;
     return Promise.resolve(
       dispatch({
-        type: AppConstants.SET_VERSION_INFORMATION,
+        type: SET_VERSION_INFORMATION,
         docsVersion: latestVersions.Integration.split('.').slice(0, 2).join('.'),
         value: {
           ...getState().app.versionInformation,
@@ -254,6 +261,6 @@ export const setSearchState = searchState => (dispatch, getState) => {
         .catch(() => dispatch(setSearchState({ isSearching: false, searchTotal: 0 })))
     );
   }
-  tasks.push(dispatch({ type: AppConstants.SET_SEARCH_STATE, state: nextState }));
+  tasks.push(dispatch({ type: SET_SEARCH_STATE, state: nextState }));
   return Promise.all(tasks);
 };

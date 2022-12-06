@@ -1,6 +1,15 @@
 import { SORTING_OPTIONS } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
-import OrganizationConstants from '../constants/organizationConstants';
+import {
+  RECEIVE_AUDIT_LOGS,
+  RECEIVE_CURRENT_CARD,
+  RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+  RECEIVE_SAML_CONFIGS,
+  RECEIVE_SETUP_INTENT,
+  RECEIVE_WEBHOOK_EVENTS,
+  SET_AUDITLOG_STATE,
+  SET_ORGANIZATION
+} from '../constants/organizationConstants';
 
 export const initialState = {
   card: {
@@ -41,7 +50,7 @@ export const initialState = {
 
 const organizationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case OrganizationConstants.RECEIVE_AUDIT_LOGS:
+    case RECEIVE_AUDIT_LOGS:
       return {
         ...state,
         auditlog: {
@@ -53,7 +62,7 @@ const organizationReducer = (state = initialState, action) => {
           }
         }
       };
-    case OrganizationConstants.SET_AUDITLOG_STATE:
+    case SET_AUDITLOG_STATE:
       return {
         ...state,
         auditlog: {
@@ -61,34 +70,34 @@ const organizationReducer = (state = initialState, action) => {
           selectionState: action.state
         }
       };
-    case OrganizationConstants.RECEIVE_CURRENT_CARD:
+    case RECEIVE_CURRENT_CARD:
       return {
         ...state,
         card: action.card
       };
-    case OrganizationConstants.RECEIVE_SETUP_INTENT:
+    case RECEIVE_SETUP_INTENT:
       return {
         ...state,
         intentId: action.intentId
       };
-    case OrganizationConstants.SET_ORGANIZATION:
+    case SET_ORGANIZATION:
       return {
         ...state,
         organization: {
           ...action.organization
         }
       };
-    case OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS:
+    case RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS:
       return {
         ...state,
         externalDeviceIntegrations: action.value
       };
-    case OrganizationConstants.RECEIVE_SAML_CONFIGS:
+    case RECEIVE_SAML_CONFIGS:
       return {
         ...state,
         samlConfigs: action.value
       };
-    case OrganizationConstants.RECEIVE_WEBHOOK_EVENTS:
+    case RECEIVE_WEBHOOK_EVENTS:
       return {
         ...state,
         webhooks: {

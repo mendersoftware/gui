@@ -1,7 +1,17 @@
 import Cookies from 'universal-cookie';
 
 import { DEVICE_STATES } from '../constants/deviceConstants';
-import OnboardingConstants, { onboardingSteps as onboardingStepNames } from '../constants/onboardingConstants';
+import {
+  onboardingSteps as onboardingStepNames,
+  SET_ONBOARDING_PROGRESS,
+  SET_SHOW_ONBOARDING_HELP,
+  SET_ONBOARDING_DEVICE_TYPE,
+  SET_ONBOARDING_APPROACH,
+  SET_ONBOARDING_ARTIFACT_INCLUDED,
+  SET_SHOW_CREATE_ARTIFACT,
+  SET_SHOW_ONBOARDING_HELP_DIALOG,
+  SET_ONBOARDING_COMPLETE
+} from '../constants/onboardingConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 
 import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingmanager';
@@ -54,7 +64,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
     };
     onboardingState = state;
   }
-  onboardingState.progress = onboardingState.progress || OnboardingConstants.onboardingSteps.ONBOARDING_START;
+  onboardingState.progress = onboardingState.progress || onboardingSteps.ONBOARDING_START;
   onboardingState.address = getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach, store.onboarding.demoArtifactPort);
   const progress = Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ARTIFACT_CREATION_DIALOG);
   const currentProgress = Object.keys(onboardingSteps).findIndex(step => step === onboardingState.progress);
@@ -74,7 +84,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
 export const setShowOnboardingHelp =
   (show, update = true) =>
   (dispatch, getState) => {
-    let tasks = [dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show })];
+    let tasks = [dispatch({ type: SET_SHOW_ONBOARDING_HELP, show })];
     if (update) {
       const { onboarding = {} } = getUserSettings(getState());
       tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, showTips: show }, showHelptips: show })));
@@ -83,12 +93,12 @@ export const setShowOnboardingHelp =
     return Promise.all(tasks);
   };
 
-const setOnboardingProgress = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value });
+const setOnboardingProgress = value => dispatch => dispatch({ type: SET_ONBOARDING_PROGRESS, value });
 
 export const setOnboardingDeviceType =
   (value, update = true) =>
   (dispatch, getState) => {
-    let tasks = [dispatch({ type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value })];
+    let tasks = [dispatch({ type: SET_ONBOARDING_DEVICE_TYPE, value })];
     if (update) {
       const { onboarding = {} } = getUserSettings(getState());
       tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, deviceType: value } })));
@@ -99,7 +109,7 @@ export const setOnboardingDeviceType =
 export const setOnboardingApproach =
   (value, update = true) =>
   (dispatch, getState) => {
-    let tasks = [dispatch({ type: OnboardingConstants.SET_ONBOARDING_APPROACH, value })];
+    let tasks = [dispatch({ type: SET_ONBOARDING_APPROACH, value })];
     if (update) {
       const { onboarding = {} } = getUserSettings(getState());
       tasks.push(dispatch(saveUserSettings({ onboarding: { ...onboarding, approach: value } })));
@@ -107,17 +117,17 @@ export const setOnboardingApproach =
     return Promise.all(tasks);
   };
 
-const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value });
+const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: SET_ONBOARDING_ARTIFACT_INCLUDED, value });
 
-export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show });
+export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: SET_SHOW_CREATE_ARTIFACT, show });
 
-export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show });
+export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({ type: SET_SHOW_ONBOARDING_HELP_DIALOG, show });
 
 export const setOnboardingComplete = val => dispatch =>
-  Promise.resolve(dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: val })).then(() => {
+  Promise.resolve(dispatch({ type: SET_ONBOARDING_COMPLETE, complete: val })).then(() => {
     if (val) {
       return Promise.all([
-        Promise.resolve(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false })),
+        Promise.resolve(dispatch({ type: SET_SHOW_ONBOARDING_HELP, show: false })),
         Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED)))
       ]);
     }
@@ -128,7 +138,7 @@ export const setOnboardingCanceled = () => dispatch =>
   Promise.all([
     Promise.resolve(dispatch(setShowOnboardingHelp(false))),
     Promise.resolve(dispatch(setShowDismissOnboardingTipsDialog(false))),
-    Promise.resolve(dispatch({ type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true }))
+    Promise.resolve(dispatch({ type: SET_ONBOARDING_COMPLETE, complete: true }))
   ])
     // using ONBOARDING_FINISHED_NOTIFICATION to ensure we get the intended onboarding state set after
     // _advancing_ the onboarding progress

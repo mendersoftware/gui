@@ -2,9 +2,18 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, webhookEvents } from '../../../tests/mockData';
-import AppConstants from '../constants/appConstants';
+import { SET_ANNOUNCEMENT, SET_FIRST_LOGIN_AFTER_SIGNUP, SET_SNACKBAR } from '../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
-import OrganizationConstants from '../constants/organizationConstants';
+import {
+  RECEIVE_AUDIT_LOGS,
+  RECEIVE_CURRENT_CARD,
+  RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+  RECEIVE_SAML_CONFIGS,
+  RECEIVE_SETUP_INTENT,
+  RECEIVE_WEBHOOK_EVENTS,
+  SET_AUDITLOG_STATE,
+  SET_ORGANIZATION
+} from '../constants/organizationConstants';
 import {
   cancelRequest,
   cancelUpgrade,
@@ -50,14 +59,7 @@ const expectedSamlConfigs = [
 describe('organization actions', () => {
   it('should handle different error message formats', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [
-      {
-        type: AppConstants.SET_SNACKBAR,
-        snackbar: {
-          message: 'Deactivation request was sent successfully'
-        }
-      }
-    ];
+    const expectedActions = [{ type: SET_SNACKBAR, snackbar: { message: 'Deactivation request was sent successfully' } }];
     await store.dispatch(cancelRequest(defaultState.organization.organization.id, 'testReason')).then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
@@ -68,33 +70,29 @@ describe('organization actions', () => {
   it('should handle trial creation', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [];
-    await store
-      .dispatch(
-        createOrganizationTrial({
-          email: 'test@test.com',
-          organization: 'test',
-          plan: 'os',
-          tos: true,
-          marketing: true,
-          'g-recaptcha-response': 'test'
-        })
-      )
-      .then(token => {
-        expect(token).toBeTruthy();
-        expect(store.getActions()).toHaveLength(expectedActions.length);
-      });
+    const expectedActions = [{ type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: true }];
+    const result = store.dispatch(
+      createOrganizationTrial({
+        'g-recaptcha-response': 'test',
+        email: 'test@test.com',
+        location: 'us',
+        marketing: true,
+        organization: 'test',
+        plan: 'os',
+        tos: true
+      })
+    );
+    jest.advanceTimersByTime(6000);
+    result.then(token => {
+      expect(token).toBeTruthy();
+      expect(store.getActions()).toHaveLength(expectedActions.length);
+    });
   });
 
   it('should handle credit card details retrieval', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [
-      {
-        type: OrganizationConstants.RECEIVE_CURRENT_CARD,
-        card: defaultState.organization.card
-      }
-    ];
+    const expectedActions = [{ type: RECEIVE_CURRENT_CARD, card: defaultState.organization.card }];
     await store.dispatch(getCurrentCard()).then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
@@ -106,11 +104,8 @@ describe('organization actions', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      {
-        type: OrganizationConstants.SET_ORGANIZATION,
-        organization: defaultState.organization.organization
-      },
-      { type: AppConstants.SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage }
+      { type: SET_ORGANIZATION, organization: defaultState.organization.organization },
+      { type: SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage }
     ];
     await store.dispatch(getUserOrganization()).then(() => {
       const storeActions = store.getActions();
@@ -122,14 +117,7 @@ describe('organization actions', () => {
   it('should handle support request sending', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [
-      {
-        type: AppConstants.SET_SNACKBAR,
-        snackbar: {
-          message: 'Your request was sent successfully'
-        }
-      }
-    ];
+    const expectedActions = [{ type: SET_SNACKBAR, snackbar: { message: 'Your request was sent successfully' } }];
     await store.dispatch(sendSupportMessage({ body: 'test', subject: 'testsubject' })).then(() => {
       const storeActions = store.getActions();
       expect(storeActions).toHaveLength(expectedActions.length);
@@ -140,14 +128,7 @@ describe('organization actions', () => {
   it('should handle schema based support request sending', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [
-      {
-        type: AppConstants.SET_SNACKBAR,
-        snackbar: {
-          message: 'Your request was sent successfully'
-        }
-      }
-    ];
+    const expectedActions = [{ type: SET_SNACKBAR, snackbar: { message: 'Your request was sent successfully' } }];
     await store
       .dispatch(
         requestPlanChange(defaultState.organization.organization.id, {
@@ -191,11 +172,8 @@ describe('organization actions', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      {
-        organization: defaultState.organization.organization,
-        type: OrganizationConstants.SET_ORGANIZATION
-      },
-      { type: AppConstants.SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage }
+      { organization: defaultState.organization.organization, type: SET_ORGANIZATION },
+      { type: SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage }
     ];
     await store.dispatch(completeUpgrade(defaultState.organization.organization.id, 'enterprise')).then(() => {
       const storeActions = store.getActions();
@@ -207,12 +185,7 @@ describe('organization actions', () => {
   it('should handle confirm card update initialization', async () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [
-      {
-        intentId: 'testIntent',
-        type: OrganizationConstants.RECEIVE_SETUP_INTENT
-      }
-    ];
+    const expectedActions = [{ intentId: 'testIntent', type: RECEIVE_SETUP_INTENT }];
     await store.dispatch(startCardUpdate()).then(secret => {
       const storeActions = store.getActions();
       expect(secret).toEqual('testSecret');
@@ -225,16 +198,8 @@ describe('organization actions', () => {
     const store = mockStore({ ...defaultState });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      {
-        type: AppConstants.SET_SNACKBAR,
-        snackbar: {
-          message: 'Payment card was updated successfully'
-        }
-      },
-      {
-        type: OrganizationConstants.RECEIVE_SETUP_INTENT,
-        intentId: null
-      }
+      { type: SET_SNACKBAR, snackbar: { message: 'Payment card was updated successfully' } },
+      { type: RECEIVE_SETUP_INTENT, intentId: null }
     ];
     const request = store.dispatch(confirmCardUpdate());
     expect(request).resolves.toBeTruthy();
@@ -260,7 +225,7 @@ describe('organization actions', () => {
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
       {
-        type: OrganizationConstants.RECEIVE_AUDIT_LOGS,
+        type: RECEIVE_AUDIT_LOGS,
         events: defaultState.organization.auditlog.events,
         total: defaultState.organization.auditlog.selectionState.total
       }
@@ -277,21 +242,8 @@ describe('organization actions', () => {
     const store = mockStore({ ...defaultState });
     await store.dispatch(setAuditlogsState({ page: 1, sort: { direction: 'something' } }));
     const expectedActions = [
-      {
-        type: OrganizationConstants.SET_AUDITLOG_STATE,
-        state: {
-          ...defaultState.organization.auditlog.selectionState,
-          isLoading: true,
-          sort: { direction: 'something' }
-        }
-      },
-      {
-        type: OrganizationConstants.SET_AUDITLOG_STATE,
-        state: {
-          ...defaultState.organization.auditlog.selectionState,
-          isLoading: false
-        }
-      }
+      { type: SET_AUDITLOG_STATE, state: { ...defaultState.organization.auditlog.selectionState, isLoading: true, sort: { direction: 'something' } } },
+      { type: SET_AUDITLOG_STATE, state: { ...defaultState.organization.auditlog.selectionState, isLoading: false } }
     ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
@@ -321,11 +273,8 @@ describe('organization actions', () => {
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was set up successfully' } },
-      {
-        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-        value: expectedDeviceProviders
-      }
+      { type: SET_SNACKBAR, snackbar: { message: 'The integration was set up successfully' } },
+      { type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: expectedDeviceProviders }
     ];
     const request = store.dispatch(createIntegration({ connection_string: 'testString', provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
@@ -348,11 +297,8 @@ describe('organization actions', () => {
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was updated successfully' } },
-      {
-        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-        value: expectedDeviceProviders
-      }
+      { type: SET_SNACKBAR, snackbar: { message: 'The integration was updated successfully' } },
+      { type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: expectedDeviceProviders }
     ];
     const request = store.dispatch(changeIntegration({ connection_string: 'testString2', id: 1, provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
@@ -376,7 +322,7 @@ describe('organization actions', () => {
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
       {
-        type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+        type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: expectedDeviceProviders
       }
     ];
@@ -392,8 +338,8 @@ describe('organization actions', () => {
     const store = mockStore({ ...defaultState, externalDeviceIntegrations: [{ id: 1, something: 'something' }] });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The integration was removed successfully' } },
-      { type: OrganizationConstants.RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }
+      { type: SET_SNACKBAR, snackbar: { message: 'The integration was removed successfully' } },
+      { type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, value: [] }
     ];
     const request = store.dispatch(deleteIntegration({ id: 1 }));
     expect(request).resolves.toBeTruthy();
@@ -418,13 +364,7 @@ describe('organization actions', () => {
       }
     });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [
-      {
-        type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
-        value: webhookEvents,
-        total: 2
-      }
-    ];
+    const expectedActions = [{ type: RECEIVE_WEBHOOK_EVENTS, value: webhookEvents, total: 2 }];
     const request = store.dispatch(getWebhookEvents());
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
@@ -452,16 +392,8 @@ describe('organization actions', () => {
     expect(store.getActions()).toHaveLength(0);
     const defaultEvent = webhookEvents[0];
     const expectedActions = [
-      {
-        type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
-        value: [defaultEvent],
-        total: 1
-      },
-      {
-        type: OrganizationConstants.RECEIVE_WEBHOOK_EVENTS,
-        value: existingEvents,
-        total: 2
-      }
+      { type: RECEIVE_WEBHOOK_EVENTS, value: [defaultEvent], total: 1 },
+      { type: RECEIVE_WEBHOOK_EVENTS, value: existingEvents, total: 2 }
     ];
     const request = store.dispatch(getWebhookEvents({ page: 1, perPage: 1 }));
     expect(request).resolves.toBeTruthy();
@@ -481,8 +413,8 @@ describe('organization actions', () => {
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The SAML configuration was stored successfully' } },
-      { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }
+      { type: SET_SNACKBAR, snackbar: { message: 'The SAML configuration was stored successfully' } },
+      { type: RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }
     ];
     const request = store.dispatch(storeSamlConfig({ connection_string: 'testString', provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
@@ -505,8 +437,8 @@ describe('organization actions', () => {
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The SAML configuration was updated successfully' } },
-      { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }
+      { type: SET_SNACKBAR, snackbar: { message: 'The SAML configuration was updated successfully' } },
+      { type: RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }
     ];
     const request = store.dispatch(changeSamlConfig({ connection_string: 'testString2', id: 1, provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
@@ -528,7 +460,7 @@ describe('organization actions', () => {
       }
     });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [{ type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }];
+    const expectedActions = [{ type: RECEIVE_SAML_CONFIGS, value: expectedSamlConfigs }];
     const request = store.dispatch(getSamlConfigs());
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
@@ -541,8 +473,8 @@ describe('organization actions', () => {
     const store = mockStore({ ...defaultState, organization: { ...defaultState.organization, samlConfigs: [...expectedSamlConfigs] } });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The SAML configuration was removed successfully' } },
-      { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: [expectedSamlConfigs[1]] }
+      { type: SET_SNACKBAR, snackbar: { message: 'The SAML configuration was removed successfully' } },
+      { type: RECEIVE_SAML_CONFIGS, value: [expectedSamlConfigs[1]] }
     ];
     const request = store.dispatch(deleteSamlConfig({ id: '1' }));
     expect(request).resolves.toBeTruthy();

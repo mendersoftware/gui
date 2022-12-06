@@ -1,10 +1,11 @@
 'use strict';
 
-const { apiUrl } = require('../api/general-api');
-const { ALL_DEVICES } = require('./deviceConstants');
+import { apiUrl } from '../api/general-api';
+import { ALL_DEVICES } from './deviceConstants';
 
-const useradmApiUrlv1 = `${apiUrl.v1}/useradm`;
-const useradmApiUrlv2 = `${apiUrl.v2}/useradm`;
+export const useradmApiUrlv1 = `${apiUrl.v1}/useradm`;
+export const useradmApiUrlv2 = `${apiUrl.v2}/useradm`;
+export { useradmApiUrlv1 as useradmApiUrl };
 
 const staticRolesByName = {
   admin: 'RBAC_ROLE_PERMIT_ALL',
@@ -14,7 +15,7 @@ const staticRolesByName = {
   terminalAccess: 'RBAC_ROLE_REMOTE_TERMINAL'
 };
 
-const PermissionTypes = {
+export const PermissionTypes = {
   Any: 'any',
   Get: 'GET',
   Post: 'POST',
@@ -41,7 +42,7 @@ const permissionSetIds = {
   UploadArtifacts: 'UploadArtifacts'
 };
 
-const uiPermissionsById = {
+export const uiPermissionsById = {
   configure: {
     explanations: { groups: `'Configure' allows the user to use mender-configure features and apply configurations.` },
     permissionLevel: 2,
@@ -104,7 +105,7 @@ const uiPermissionsById = {
   }
 };
 
-const defaultPermissionSets = {
+export const defaultPermissionSets = {
   [permissionSetIds.Basic]: { value: permissionSetIds.Basic },
   [permissionSetIds.SuperUser]: { value: permissionSetIds.SuperUser },
   [permissionSetIds.ManageUsers]: {
@@ -180,7 +181,7 @@ const defaultPermissionSets = {
  *              functionality might be affected
  *
  */
-const uiPermissionsByArea = {
+export const uiPermissionsByArea = {
   auditlog: {
     endpoints: [{ path: /\/(auditlog)/i, types: [PermissionTypes.Get], uiPermissions: [uiPermissionsById.read] }],
     explanation:
@@ -243,7 +244,7 @@ const uiPermissionsByArea = {
   }
 };
 
-const emptyUiPermissions = Object.freeze({
+export const emptyUiPermissions = Object.freeze({
   auditlog: [],
   deployments: [],
   groups: Object.freeze({}),
@@ -251,7 +252,7 @@ const emptyUiPermissions = Object.freeze({
   userManagement: []
 });
 
-const emptyRole = Object.freeze({
+export const emptyRole = Object.freeze({
   name: undefined,
   description: '',
   permissions: [],
@@ -260,7 +261,7 @@ const emptyRole = Object.freeze({
 
 const permissionMapper = permission => permission.value;
 
-const rolesById = Object.freeze({
+export const rolesById = Object.freeze({
   [staticRolesByName.admin]: {
     name: 'Admin',
     value: staticRolesByName.admin,
@@ -322,53 +323,40 @@ const rolesById = Object.freeze({
   }
 });
 
-module.exports = {
-  RECEIVED_QR_CODE: 'RECEIVED_QR_CODE',
+export const RECEIVED_QR_CODE = 'RECEIVED_QR_CODE';
 
-  SUCCESSFULLY_LOGGED_IN: 'SUCCESSFULLY_LOGGED_IN',
-  USER_LOGOUT: 'USER_LOGOUT',
-  RECEIVED_ACTIVATION_CODE: 'RECEIVED_ACTIVATION_CODE',
-  RECEIVED_USER_LIST: 'RECEIVED_USER_LIST',
-  RECEIVED_USER: 'RECEIVED_USER',
-  CREATED_USER: 'CREATED_USER',
-  REMOVED_USER: 'REMOVED_USER',
-  UPDATED_USER: 'UPDATED_USER',
+export const SUCCESSFULLY_LOGGED_IN = 'SUCCESSFULLY_LOGGED_IN';
+export const USER_LOGOUT = 'USER_LOGOUT';
+export const RECEIVED_ACTIVATION_CODE = 'RECEIVED_ACTIVATION_CODE';
+export const RECEIVED_USER_LIST = 'RECEIVED_USER_LIST';
+export const RECEIVED_USER = 'RECEIVED_USER';
+export const CREATED_USER = 'CREATED_USER';
+export const REMOVED_USER = 'REMOVED_USER';
+export const UPDATED_USER = 'UPDATED_USER';
 
-  RECEIVED_PERMISSION_SETS: 'RECEIVED_PERMISSION_SETS',
-  RECEIVED_ROLES: 'RECEIVED_ROLES',
-  CREATED_ROLE: 'CREATED_ROLE',
-  UPDATED_ROLE: 'UPDATED_ROLE',
-  REMOVED_ROLE: 'REMOVED_ROLE',
+export const RECEIVED_PERMISSION_SETS = 'RECEIVED_PERMISSION_SETS';
+export const RECEIVED_ROLES = 'RECEIVED_ROLES';
+export const CREATED_ROLE = 'CREATED_ROLE';
+export const UPDATED_ROLE = 'UPDATED_ROLE';
+export const REMOVED_ROLE = 'REMOVED_ROLE';
 
-  SET_CUSTOM_COLUMNS: 'SET_CUSTOM_COLUMNS',
-  SET_GLOBAL_SETTINGS: 'SET_GLOBAL_SETTINGS',
-  SET_USER_SETTINGS: 'SET_USER_SETTINGS',
-  SET_SHOW_HELP: 'SET_SHOW_HELP',
-  SET_SHOW_CONNECT_DEVICE: 'SET_SHOW_CONNECT_DEVICE',
+export const SET_CUSTOM_COLUMNS = 'SET_CUSTOM_COLUMNS';
+export const SET_GLOBAL_SETTINGS = 'SET_GLOBAL_SETTINGS';
+export const SET_USER_SETTINGS = 'SET_USER_SETTINGS';
+export const SET_SHOW_HELP = 'SET_SHOW_HELP';
+export const SET_SHOW_CONNECT_DEVICE = 'SET_SHOW_CONNECT_DEVICE';
 
-  OWN_USER_ID: 'me',
+export const OWN_USER_ID = 'me';
 
-  defaultPermissionSets,
-  emptyUiPermissions,
-  emptyRole,
-  PermissionTypes,
-  rolesById,
-  rolesByName: {
-    ...staticRolesByName,
-    deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
-    groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } },
-    userManagement: { action: 'http', object: { type: 'any', value: `${useradmApiUrlv1}/.*` } }
-  },
-  twoFAStates: {
-    enabled: 'enabled',
-    disabled: 'disabled',
-    unverified: 'unverified'
-  },
-  settingsKeys: {
-    initialized: 'settings-initialized'
-  },
-  uiPermissionsByArea,
-  uiPermissionsById,
-  useradmApiUrl: useradmApiUrlv1,
-  useradmApiUrlv2
+export const rolesByName = {
+  ...staticRolesByName,
+  deploymentCreation: { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: undefined } },
+  groupAccess: { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: undefined } },
+  userManagement: { action: 'http', object: { type: 'any', value: `${useradmApiUrlv1}/.*` } }
 };
+export const twoFAStates = {
+  enabled: 'enabled',
+  disabled: 'disabled',
+  unverified: 'unverified'
+};
+export const settingsKeys = { initialized: 'settings-initialized' };

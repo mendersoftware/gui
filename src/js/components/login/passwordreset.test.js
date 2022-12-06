@@ -57,7 +57,7 @@ describe('PasswordReset Component', () => {
     await waitFor(() => rerender(ui));
     act(() => userEvent.paste(passwordInput, goodPassword));
     await waitFor(() => rerender(ui));
-    submitCheck.mockResolvedValue();
+    submitCheck.mockResolvedValue(true);
     act(() => userEvent.click(screen.getByRole('button', { name: /Save password/i })));
     await waitFor(() => rerender(ui));
     expect(submitCheck).toHaveBeenCalledWith(secretHash, goodPassword);

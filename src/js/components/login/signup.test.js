@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
 import Cookies from 'universal-cookie';
 import Signup from './signup';
-import { defaultState, token, undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
@@ -24,7 +24,7 @@ describe('Signup Component', () => {
         <Signup match={{ params: { campaign: '' } }} />
       </Provider>
     );
-    const view = baseElement.firstChild.firstChild;
+    const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
@@ -63,7 +63,8 @@ describe('Signup Component', () => {
       return waitFor(() => expect(container.querySelector('.loaderContainer')).toBeVisible());
     });
     await waitFor(() => rerender(ui));
-    await waitFor(() => expect(cookies.set).toHaveBeenLastCalledWith('JWT', token, { maxAge: 900, path: '/', sameSite: 'strict', secure: true }));
-    await waitFor(() => screen.getByText(/signed up/i));
+    await waitFor(() =>
+      expect(cookies.set).toHaveBeenLastCalledWith('firstLoginAfterSignup', true, { domain: '.mender.io', maxAge: 60, path: '/', sameSite: false })
+    );
   }, 10000);
 });
