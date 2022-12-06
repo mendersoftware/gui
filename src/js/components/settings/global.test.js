@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
+import { screen, waitFor } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -19,8 +20,21 @@ describe('GlobalSettings Component', () => {
         ...defaultState.app,
         features: {
           ...defaultState.app.features,
+          hasReporting: true,
           hasMultitenancy: true,
+          isEnterprise: true,
           isHosted: true
+        }
+      },
+      deployments: {
+        ...defaultState.deployments,
+        config: {
+          ...defaultState.deployments.config,
+          binaryDelta: {
+            ...defaultState.deployments.config.binaryDelta,
+            timeout: 5
+          },
+          hasDelta: true
         }
       }
     });
@@ -32,6 +46,7 @@ describe('GlobalSettings Component', () => {
         <Global />
       </Provider>
     );
+    await waitFor(() => expect(screen.getByText(/xDelta3/i)).toBeVisible());
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
