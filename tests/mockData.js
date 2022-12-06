@@ -7,7 +7,7 @@ import {
   twoFAStates,
   uiPermissionsById
 } from '../src/js/constants/userConstants';
-import DeviceConstants from '../src/js/constants/deviceConstants';
+import * as DeviceConstants from '../src/js/constants/deviceConstants';
 import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
 import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
 

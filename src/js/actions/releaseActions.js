@@ -3,9 +3,9 @@ import { v4 as uuid } from 'uuid';
 
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
-import AppConstants from '../constants/appConstants';
-import OnboardingConstants from '../constants/onboardingConstants';
-import ReleaseConstants from '../constants/releaseConstants';
+import { SORTING_OPTIONS, UPLOAD_PROGRESS } from '../constants/appConstants';
+import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
+import * as ReleaseConstants from '../constants/releaseConstants';
 import { customSort, duplicateFilter } from '../helpers';
 import { deploymentsApiUrl } from './deploymentActions';
 
@@ -69,7 +69,7 @@ export const getArtifactUrl = id => (dispatch, getState) =>
 export const cleanUpUpload = uploadId => (dispatch, getState) => {
   // eslint-disable-next-line no-unused-vars
   const { [uploadId]: current, ...remainder } = getState().app.uploadsById;
-  return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
+  return Promise.resolve(dispatch({ type: UPLOAD_PROGRESS, uploads: remainder }));
 };
 
 export const createArtifact = (meta, file) => (dispatch, getState) => {
@@ -90,7 +90,7 @@ export const createArtifact = (meta, file) => (dispatch, getState) => {
   const uploads = { ...getState().app.uploadsById, [uploadId]: { name: file.name, size: file.size, uploadProgress: 0, cancelSource } };
   return Promise.all([
     dispatch(setSnackbar('Generating artifact')),
-    dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads }),
+    dispatch({ type: UPLOAD_PROGRESS, uploads }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
@@ -113,7 +113,7 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
   const uploads = { ...getState().app.uploadsById, [uploadId]: { name: file.name, size: file.size, uploadProgress: 0, cancelSource } };
   return Promise.all([
     dispatch(setSnackbar('Uploading artifact')),
-    dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads }),
+    dispatch({ type: UPLOAD_PROGRESS, uploads }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
@@ -130,13 +130,13 @@ export const progress = (e, uploadId) => (dispatch, getState) => {
   let uploadProgress = (e.loaded / e.total) * 100;
   uploadProgress = uploadProgress < 50 ? Math.ceil(uploadProgress) : Math.round(uploadProgress);
   const uploads = { ...getState().app.uploadsById, [uploadId]: { ...getState().app.uploadsById[uploadId], uploadProgress } };
-  return dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads });
+  return dispatch({ type: UPLOAD_PROGRESS, uploads });
 };
 
 export const cancelFileUpload = id => (dispatch, getState) => {
   const { [id]: current, ...remainder } = getState().app.uploadsById;
   current.cancelSource.abort();
-  return Promise.resolve(dispatch({ type: AppConstants.UPLOAD_PROGRESS, uploads: remainder }));
+  return Promise.resolve(dispatch({ type: UPLOAD_PROGRESS, uploads: remainder }));
 };
 
 export const editArtifact = (id, body) => (dispatch, getState) =>
@@ -257,7 +257,7 @@ export const getReleases =
     if (passedConfig.visibleSection?.start && searchAttribute) {
       return Promise.resolve(dispatch(refreshReleases(passedConfig)));
     }
-    config = searchOnly ? { ...config, sort: { key: 'Name', direction: AppConstants.SORTING_OPTIONS.asc } } : config;
+    config = searchOnly ? { ...config, sort: { key: 'Name', direction: SORTING_OPTIONS.asc } } : config;
     const queryGenerator = generateReleaseSearchQuery(searchTerm, passedConfig.searchAttribute);
 
     const releaseListProcessing = props => {
@@ -269,7 +269,7 @@ export const getReleases =
       const total = Number(headers[headerNames.total]);
       const flatReleases = reduceReceivedReleases(releases, state.byId);
       const combinedReleases = { ...state.byId, ...flatReleases };
-      const flattenedReleases = Object.values(flatReleases).sort(customSort(config.sort.direction === AppConstants.SORTING_OPTIONS.desc, config.sort.key));
+      const flattenedReleases = Object.values(flatReleases).sort(customSort(config.sort.direction === SORTING_OPTIONS.desc, config.sort.key));
       let tasks = [dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases })];
       if (searchOnly) {
         tasks.push(dispatch(setReleasesListState({ searchedIds: flattenedReleases.map(item => item.Name) })));
@@ -285,7 +285,7 @@ export const getReleases =
         );
       }
       if (!getState().onboarding.complete) {
-        tasks.push(dispatch({ type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(combinedReleases).length }));
+        tasks.push(dispatch({ type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(combinedReleases).length }));
       }
       tasks.push(flatReleases);
       return Promise.all(tasks);

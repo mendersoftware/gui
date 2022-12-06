@@ -24,11 +24,25 @@ import LeftNav from './leftnav';
 import { WrappedBaseline } from '../main';
 import { light as lightTheme, dark as darkTheme } from '../themes/Mender';
 import SearchResult from './search-result';
+import Footer from './footer';
 import Uploads from './uploads';
+import { makeStyles } from 'tss-react/mui';
 
 const activationPath = '/activate';
 const timeout = 900000; // 15 minutes idle time
 const cookies = new Cookies();
+
+const useStyles = makeStyles()(() => ({
+  public: {
+    display: 'grid',
+    gridTemplateRows: 'max-content 1fr max-content',
+    height: '100vh',
+    '.content': {
+      alignSelf: 'center',
+      justifySelf: 'center'
+    }
+  }
+}));
 
 export const AppRoot = ({
   currentUser,
@@ -99,14 +113,16 @@ export const AppRoot = ({
   const onToggleSearchResult = () => setShowSearchResult(!showSearchResult);
 
   const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
-  const containerProps = getToken() ? { id: 'app' } : { className: 'flexbox centered', style: { minHeight: '100vh' } };
   const theme = createTheme(mode === 'dark' ? darkTheme : lightTheme);
+
+  const { classes } = useStyles();
+
   return (
     <ThemeProvider theme={theme}>
       <WrappedBaseline enableColorScheme />
-      <div {...containerProps}>
+      <>
         {getToken() ? (
-          <>
+          <div id="app">
             <Header mode={mode} history={history} />
             <LeftNav />
             <div className="rightFluid container">
@@ -118,13 +134,16 @@ export const AppRoot = ({
             {onboardingComponent ? onboardingComponent : null}
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
             {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
-          </>
+          </div>
         ) : (
-          <PublicRoutes />
+          <div className={classes.public}>
+            <PublicRoutes />
+            <Footer />
+          </div>
         )}
         <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
         <Uploads />
-      </div>
+      </>
     </ThemeProvider>
   );
 };

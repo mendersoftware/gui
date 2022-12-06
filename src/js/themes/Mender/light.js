@@ -27,7 +27,8 @@ const palette = {
     light: '#fdfdfd',
     lightgrey: grey[400],
     default: '#fff',
-    dark: 'rgb(50, 50, 50)'
+    dark: 'rgb(50, 50, 50)',
+    darkBlue: '#284d68'
   },
   secondary: {
     ...commonPalette.secondary,
@@ -40,7 +41,8 @@ const palette = {
   },
   text: {
     ...commonPalette.text,
-    primary: 'rgba(10, 10, 11, 0.78)'
+    primary: 'rgba(10, 10, 11, 0.78)',
+    entryLink: '#7adce6'
   }
 };
 

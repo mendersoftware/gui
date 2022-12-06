@@ -124,6 +124,7 @@
     "type": "git",
     "url": "git+https://github.com/mendersoftware/gui.git"
   },
+  "type": "module",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",

@@ -1,3 +1,4 @@
+/*eslint import/namespace: ['error', { allowComputed: true }]*/
 import React from 'react';
 import { Link } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
@@ -5,9 +6,9 @@ import thunk from 'redux-thunk';
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultCreationDate, defaultState } from '../../../tests/mockData';
 import { mockAbortController } from '../../../tests/setupTests';
-import AppConstants from '../constants/appConstants';
-import DeploymentConstants from '../constants/deploymentConstants';
-import DeviceConstants from '../constants/deviceConstants';
+import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
+import * as DeploymentConstants from '../constants/deploymentConstants';
+import * as DeviceConstants from '../constants/deviceConstants';
 import {
   addDevicesToGroup,
   addDynamicGroup,
@@ -251,7 +252,7 @@ describe('device auth handling', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
+      { type: SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: expectedDevice } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
@@ -272,7 +273,7 @@ describe('device auth handling', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
+      { type: SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: expectedDevice } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
@@ -281,7 +282,7 @@ describe('device auth handling', () => {
         total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
       },
       {
-        type: AppConstants.SET_SNACKBAR,
+        type: SET_SNACKBAR,
         snackbar: {
           message:
             '1 device was updated successfully. 1 device has more than one pending authset. Expand this device to individually adjust its authorization status. '
@@ -296,7 +297,7 @@ describe('device auth handling', () => {
   it('should allow preauthorizing devices', async () => {
     const store = mockStore({ ...defaultState });
     // eslint-disable-next-line no-unused-vars
-    const expectedActions = [{ type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device was successfully added to the preauthorization list' } }];
+    const expectedActions = [{ type: SET_SNACKBAR, snackbar: { message: 'Device was successfully added to the preauthorization list' } }];
     await store.dispatch(
       preauthDevice({
         ...defaultState.devices.byId.a1.auth_sets[0],
@@ -319,7 +320,7 @@ describe('device auth handling', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
+      { type: SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
@@ -337,7 +338,7 @@ describe('device auth handling', () => {
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Device was decommissioned successfully' } },
+      { type: SET_SNACKBAR, snackbar: { message: 'Device was decommissioned successfully' } },
       {
         type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
@@ -384,7 +385,7 @@ describe('static grouping related actions', () => {
       { type: DeviceConstants.ADD_TO_GROUP, group: groupName, deviceIds: [defaultState.devices.byId.a1.id] },
       { type: DeviceConstants.ADD_STATIC_GROUP, group: { deviceIds: [], total: 0, filters: [] }, groupName },
       { type: DeviceConstants.SELECT_DEVICE, deviceId: undefined },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } },
+      { type: SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -420,7 +421,7 @@ describe('static grouping related actions', () => {
     const groupName = 'testGroup';
     const expectedActions = [
       { type: DeviceConstants.REMOVE_FROM_GROUP, group: groupName, deviceIds: [defaultState.devices.byId.b1.id] },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'The device was removed from the group' } }
+      { type: SET_SNACKBAR, snackbar: { message: 'The device was removed from the group' } }
     ];
     await store.dispatch(removeDevicesFromGroup(groupName, [defaultState.devices.byId.b1.id]));
     const storeActions = store.getActions();
@@ -432,7 +433,7 @@ describe('static grouping related actions', () => {
     const groupName = 'testGroup';
     const expectedActions = [
       { type: DeviceConstants.REMOVE_STATIC_GROUP, groups: {} },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Group was removed successfully' } },
+      { type: SET_SNACKBAR, snackbar: { message: 'Group was removed successfully' } },
       { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
       {
         type: DeviceConstants.RECEIVE_DEVICES,
@@ -536,7 +537,7 @@ describe('dynamic grouping related actions', () => {
         groupName,
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
       },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } }
+      { type: SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } }
     ];
     await store.dispatch(addDynamicGroup(groupName, [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }]));
     const storeActions = store.getActions();
@@ -572,7 +573,7 @@ describe('dynamic grouping related actions', () => {
     const expectedActions = [
       { type: DeviceConstants.ADD_DYNAMIC_GROUP, groupName, group: { deviceIds: [], total: 0, filters: [] } },
       { type: DeviceConstants.SET_DEVICE_FILTERS, filters: defaultState.devices.groups.byId.testGroupDynamic.filters },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } }
+      { type: SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } }
     ];
     await store.dispatch(updateDynamicGroup(groupName, []));
     const storeActions = store.getActions();
@@ -585,7 +586,7 @@ describe('dynamic grouping related actions', () => {
     const { testGroup } = defaultState.devices.groups.byId;
     const expectedActions = [
       { type: DeviceConstants.REMOVE_DYNAMIC_GROUP, groups: { testGroup } },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Group was removed successfully' } }
+      { type: SET_SNACKBAR, snackbar: { message: 'Group was removed successfully' } }
     ];
     await store.dispatch(removeDynamicGroup(groupName));
     const storeActions = store.getActions();
@@ -816,14 +817,14 @@ describe('troubleshooting related actions', () => {
     expect(link).toBe('/api/management/v1/deviceconnect/devices/aDeviceId/download?path=%2Ftmp%2Ffile');
     const store = mockStore({ ...defaultState });
     const expectedActions = [
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Uploading file' } },
+      { type: SET_SNACKBAR, snackbar: { message: 'Uploading file' } },
       {
-        type: AppConstants.UPLOAD_PROGRESS,
+        type: UPLOAD_PROGRESS,
         uploads: { 'mock-uuid': { cancelSource: mockAbortController, uploadProgress: 0 } }
       },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
+      { type: SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
       {
-        type: AppConstants.UPLOAD_PROGRESS,
+        type: UPLOAD_PROGRESS,
         uploads: {}
       }
     ];

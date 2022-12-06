@@ -1,4 +1,5 @@
-import DeploymentConstants from '../constants/deploymentConstants';
+/*eslint import/namespace: ['error', { allowComputed: true }]*/
+import * as DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
@@ -10,6 +11,19 @@ import { saveGlobalSettings } from './userActions';
 export const deploymentsApiUrl = `${apiUrl.v1}/deployments`;
 export const deploymentsApiUrlV2 = `${apiUrl.v2}/deployments`;
 
+const {
+  CREATE_DEPLOYMENT,
+  DEPLOYMENT_STATES,
+  DEPLOYMENT_TYPES,
+  deploymentPrototype,
+  RECEIVE_DEPLOYMENT_DEVICE_LOG,
+  RECEIVE_DEPLOYMENT_DEVICES,
+  RECEIVE_DEPLOYMENT,
+  RECEIVE_DEPLOYMENTS,
+  REMOVE_DEPLOYMENT,
+  SET_DEPLOYMENTS_STATE
+} = DeploymentConstants;
+
 // default per page until pagination and counting integrated
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -17,7 +31,7 @@ const transformDeployments = (deployments, deploymentsById) =>
   deployments.sort(startTimeSort).reduce(
     (accu, item) => {
       accu.deployments[item.id] = {
-        ...DeploymentConstants.deploymentPrototype,
+        ...deploymentPrototype,
         ...deploymentsById[item.id],
         ...item,
         name: decodeURIComponent(item.name)
@@ -42,7 +56,7 @@ export const getDeploymentsByStatus =
       const { deployments, deploymentIds } = transformDeployments(res.data, getState().deployments.byId);
       const total = Number(res.headers[headerNames.total]);
       let tasks = [
-        dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }),
+        dispatch({ type: RECEIVE_DEPLOYMENTS, deployments }),
         dispatch({
           type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`],
           deploymentIds,
@@ -54,7 +68,7 @@ export const getDeploymentsByStatus =
         tasks.push(dispatch(getDeploymentsStats(deploymentIds)));
       }
       tasks = deploymentIds.reduce((accu, deploymentId) => {
-        if (deployments[deploymentId].type === DeploymentConstants.DEPLOYMENT_TYPES.configuration) {
+        if (deployments[deploymentId].type === DEPLOYMENT_TYPES.configuration) {
           accu.push(dispatch(getSingleDeployment(deploymentId)));
         }
         return accu;
@@ -100,7 +114,7 @@ export const createDeployment = newDeployment => (dispatch, getState) => {
       };
       let tasks = [
         dispatch({
-          type: DeploymentConstants.CREATE_DEPLOYMENT,
+          type: CREATE_DEPLOYMENT,
           deployment,
           deploymentId
         }),
@@ -128,7 +142,7 @@ export const getDeploymentsStats = ids => (dispatch, getState) =>
       accu[item.id] = { ...byIdState[item.id], stats: item.stats };
       return accu;
     }, {});
-    return Promise.resolve(dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }));
+    return Promise.resolve(dispatch({ type: RECEIVE_DEPLOYMENTS, deployments }));
   });
 
 export const getDeploymentDevices =
@@ -147,7 +161,7 @@ export const getDeploymentDevices =
       }, {});
       return Promise.resolve(
         dispatch({
-          type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
+          type: RECEIVE_DEPLOYMENT_DEVICES,
           deploymentId: id,
           devices,
           selectedDeviceIds: Object.keys(devices),
@@ -162,9 +176,9 @@ export const getSingleDeployment = id => (dispatch, getState) =>
     const storedDeployment = getState().deployments.byId[id] || {};
     return Promise.all([
       dispatch({
-        type: DeploymentConstants.RECEIVE_DEPLOYMENT,
+        type: RECEIVE_DEPLOYMENT,
         deployment: {
-          ...DeploymentConstants.deploymentPrototype,
+          ...deploymentPrototype,
           ...storedDeployment,
           ...data,
           name: decodeURIComponent(data.name)
@@ -196,7 +210,7 @@ export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
       return Promise.all([
         Promise.resolve(
           dispatch({
-            type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG,
+            type: RECEIVE_DEPLOYMENT_DEVICE_LOG,
             deployment
           })
         ),
@@ -208,10 +222,10 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
   GeneralApi.put(`${deploymentsApiUrl}/deployments/${deploymentId}/status`, { status: 'aborted' })
     .then(() => {
       const state = getState();
-      let status = DeploymentConstants.DEPLOYMENT_STATES.pending;
+      let status = DEPLOYMENT_STATES.pending;
       let index = state.deployments.byStatus.pending.deploymentIds.findIndex(id => id === deploymentId);
       if (index < 0) {
-        status = DeploymentConstants.DEPLOYMENT_STATES.inprogress;
+        status = DEPLOYMENT_STATES.inprogress;
         index = state.deployments.byStatus.inprogress.deploymentIds.findIndex(id => id === deploymentId);
       }
       const deploymentIds = [
@@ -224,10 +238,10 @@ export const abortDeployment = deploymentId => (dispatch, getState) =>
       }, {});
       const total = Math.max(state.deployments.byStatus[status].total - 1, 0);
       return Promise.all([
-        dispatch({ type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments }),
+        dispatch({ type: RECEIVE_DEPLOYMENTS, deployments }),
         dispatch({ type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds, status, total }),
         dispatch({
-          type: DeploymentConstants.REMOVE_DEPLOYMENT,
+          type: REMOVE_DEPLOYMENT,
           deploymentId
         }),
         dispatch(setSnackbar('The deployment was successfully aborted'))
@@ -247,7 +261,7 @@ export const setDeploymentsState = selection => (dispatch, getState) => {
   let nextState = {
     ...currentState,
     ...selectionState,
-    ...Object.keys(DeploymentConstants.DEPLOYMENT_STATES).reduce((accu, item) => {
+    ...Object.keys(DEPLOYMENT_STATES).reduce((accu, item) => {
       accu[item] = {
         ...currentState[item],
         ...selectionState[item]
@@ -259,7 +273,7 @@ export const setDeploymentsState = selection => (dispatch, getState) => {
       ...selectionState.general
     }
   };
-  let tasks = [dispatch({ type: DeploymentConstants.SET_DEPLOYMENTS_STATE, state: nextState })];
+  let tasks = [dispatch({ type: SET_DEPLOYMENTS_STATE, state: nextState })];
   if (nextState.selectedId && currentState.selectedId !== nextState.selectedId) {
     tasks.push(dispatch(getSingleDeployment(nextState.selectedId)));
   }

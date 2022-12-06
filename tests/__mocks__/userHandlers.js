@@ -74,6 +74,12 @@ export const userHandlers = [
     }
     return res(ctx.status(200), ctx.json(token));
   }),
+  rest.get(`https://hosted.mender.io${useradmApiUrl}/auth/magic/:id`, ({ params: { id } }, res, ctx) => {
+    if (id) {
+      return res(ctx.text('test'), ctx.cookie('JWT', 'test'));
+    }
+    return res(ctx.status(400));
+  }),
   rest.post(`${useradmApiUrl}/auth/logout`, (req, res, ctx) => res(ctx.status(200))),
   rest.post(`${useradmApiUrl}/auth/password-reset/:status`, ({ params: { status }, body: { email, secret_hash, password } }, res, ctx) => {
     if (!['start', 'complete'].includes(status) && ![email, secret_hash, password].some(item => item)) {

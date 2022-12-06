@@ -1,4 +1,4 @@
-import MonitorConstants from '../constants/monitorConstants';
+import * as MonitorConstants from '../constants/monitorConstants';
 import { DEVICE_LIST_DEFAULTS, DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
 
 export const initialState = {

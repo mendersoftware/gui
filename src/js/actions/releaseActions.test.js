@@ -15,9 +15,9 @@ import {
   selectRelease,
   uploadArtifact
 } from './releaseActions';
-import AppConstants from '../constants/appConstants';
-import OnboardingConstants from '../constants/onboardingConstants';
-import ReleaseConstants from '../constants/releaseConstants';
+import * as AppConstants from '../constants/appConstants';
+import * as OnboardingConstants from '../constants/onboardingConstants';
+import * as ReleaseConstants from '../constants/releaseConstants';
 import { mockAbortController } from '../../../tests/setupTests';
 
 const middlewares = [thunk];

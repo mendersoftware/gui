@@ -1,6 +1,18 @@
+/*eslint import/namespace: ['error', { allowComputed: true }]*/
 import reducer, { initialState } from './deploymentReducer';
-import DeploymentConstants from '../constants/deploymentConstants';
+import * as DeploymentConstants from '../constants/deploymentConstants';
 import { defaultState } from '../../../tests/mockData';
+
+const {
+  RECEIVE_DEPLOYMENT,
+  RECEIVE_DEPLOYMENTS,
+  RECEIVE_DEPLOYMENT_DEVICE_LOG,
+  RECEIVE_DEPLOYMENT_DEVICES,
+  DEPLOYMENT_STATES,
+  SET_DEPLOYMENTS_STATE,
+  REMOVE_DEPLOYMENT,
+  CREATE_DEPLOYMENT
+} = DeploymentConstants;
 
 describe('deployment reducer', () => {
   it('should return the initial state', async () => {
@@ -8,34 +20,28 @@ describe('deployment reducer', () => {
   });
 
   it('should handle RECEIVE_DEPLOYMENT', async () => {
-    expect(reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 }).byId.d1).toEqual(
-      defaultState.deployments.byId.d1
-    );
-    expect(reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 }).byId.d1).toEqual(
-      defaultState.deployments.byId.d1
-    );
+    expect(reducer(undefined, { type: RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 }).byId.d1).toEqual(defaultState.deployments.byId.d1);
+    expect(reducer(initialState, { type: RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 }).byId.d1).toEqual(defaultState.deployments.byId.d1);
   });
   it('should handle RECEIVE_DEPLOYMENTS', async () => {
     const { stats } = defaultState.deployments.byId.d1;
-    expect(reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: { plain: 'passing' } }).byId.plain).toBeTruthy();
-    expect(
-      reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENTS, deployments: { [defaultState.deployments.byId.d1.id]: { stats } } }).byId.d1.stats
-    ).toBeTruthy();
+    expect(reducer(undefined, { type: RECEIVE_DEPLOYMENTS, deployments: { plain: 'passing' } }).byId.plain).toBeTruthy();
+    expect(reducer(initialState, { type: RECEIVE_DEPLOYMENTS, deployments: { [defaultState.deployments.byId.d1.id]: { stats } } }).byId.d1.stats).toBeTruthy();
   });
   it('should handle RECEIVE_DEPLOYMENT_DEVICE_LOG', async () => {
     const { devices } = defaultState.deployments.byId.d1;
-    expect(
-      reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG, deployment: defaultState.deployments.byId.d1 }).byId.d1.devices.a1.id
-    ).toEqual(devices.a1.id);
-    expect(
-      reducer(initialState, { type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICE_LOG, deployment: defaultState.deployments.byId.d1 }).byId.d1.devices.a1.id
-    ).toEqual(devices.a1.id);
+    expect(reducer(undefined, { type: RECEIVE_DEPLOYMENT_DEVICE_LOG, deployment: defaultState.deployments.byId.d1 }).byId.d1.devices.a1.id).toEqual(
+      devices.a1.id
+    );
+    expect(reducer(initialState, { type: RECEIVE_DEPLOYMENT_DEVICE_LOG, deployment: defaultState.deployments.byId.d1 }).byId.d1.devices.a1.id).toEqual(
+      devices.a1.id
+    );
   });
   it('should handle RECEIVE_DEPLOYMENT_DEVICES', async () => {
     const { devices, id } = defaultState.deployments.byId.d1;
     expect(
       reducer(undefined, {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
+        type: RECEIVE_DEPLOYMENT_DEVICES,
         deploymentId: id,
         devices,
         selectedDeviceIds: [devices.a1.id],
@@ -44,7 +50,7 @@ describe('deployment reducer', () => {
     ).toEqual(500);
     expect(
       reducer(defaultState.deployments, {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENT_DEVICES,
+        type: RECEIVE_DEPLOYMENT_DEVICES,
         deploymentId: id,
         devices,
         selectedDeviceIds: [devices.a1.id],
@@ -53,7 +59,7 @@ describe('deployment reducer', () => {
     ).toEqual(defaultState.deployments.byId.d1.stats);
   });
   it('should handle RECEIVE_<deploymentstatus>_DEPLOYMENTS', async () => {
-    Object.values(DeploymentConstants.DEPLOYMENT_STATES).forEach(status => {
+    Object.values(DEPLOYMENT_STATES).forEach(status => {
       expect(
         reducer(undefined, { type: DeploymentConstants[`RECEIVE_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds: ['a1'], total: 1, status }).byStatus[
           status
@@ -67,7 +73,7 @@ describe('deployment reducer', () => {
     });
   });
   it('should handle SELECT_<deploymentstatus>_DEPLOYMENTS', async () => {
-    Object.values(DeploymentConstants.DEPLOYMENT_STATES).forEach(status => {
+    Object.values(DEPLOYMENT_STATES).forEach(status => {
       expect(
         reducer(undefined, { type: DeploymentConstants[`SELECT_${status.toUpperCase()}_DEPLOYMENTS`], deploymentIds: ['a1'], status }).selectionState[status]
           .selection
@@ -80,20 +86,16 @@ describe('deployment reducer', () => {
   });
   it('should handle SET_DEPLOYMENTS_STATE', async () => {
     const newState = { something: 'new' };
-    expect(reducer(undefined, { type: DeploymentConstants.SET_DEPLOYMENTS_STATE, state: newState }).selectionState).toEqual(newState);
-    expect(reducer(initialState, { type: DeploymentConstants.SET_DEPLOYMENTS_STATE, state: newState }).selectionState).toEqual(newState);
+    expect(reducer(undefined, { type: SET_DEPLOYMENTS_STATE, state: newState }).selectionState).toEqual(newState);
+    expect(reducer(initialState, { type: SET_DEPLOYMENTS_STATE, state: newState }).selectionState).toEqual(newState);
   });
   it('should handle REMOVE_DEPLOYMENT', async () => {
-    let state = reducer(undefined, { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 });
-    expect(reducer(state, { type: DeploymentConstants.REMOVE_DEPLOYMENT, deploymentId: defaultState.deployments.byId.d1.id }).byId).toEqual({});
-    expect(reducer(initialState, { type: DeploymentConstants.REMOVE_DEPLOYMENT, deploymentId: 'a1' }).byId).toEqual({});
+    let state = reducer(undefined, { type: RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 });
+    expect(reducer(state, { type: REMOVE_DEPLOYMENT, deploymentId: defaultState.deployments.byId.d1.id }).byId).toEqual({});
+    expect(reducer(initialState, { type: REMOVE_DEPLOYMENT, deploymentId: 'a1' }).byId).toEqual({});
   });
   it('should handle CREATE_DEPLOYMENT', async () => {
-    expect(reducer(undefined, { type: DeploymentConstants.CREATE_DEPLOYMENT, deployment: { name: 'test' }, deploymentId: 'test' }).byId.test.devices).toEqual(
-      {}
-    );
-    expect(
-      reducer(initialState, { type: DeploymentConstants.CREATE_DEPLOYMENT, deployment: { name: 'test' }, deploymentId: 'a1' }).byStatus.pending.deploymentIds
-    ).toContain('a1');
+    expect(reducer(undefined, { type: CREATE_DEPLOYMENT, deployment: { name: 'test' }, deploymentId: 'test' }).byId.test.devices).toEqual({});
+    expect(reducer(initialState, { type: CREATE_DEPLOYMENT, deployment: { name: 'test' }, deploymentId: 'a1' }).byStatus.pending.deploymentIds).toContain('a1');
   });
 });

@@ -7,8 +7,8 @@ import configureStore from 'redux-mock-store';
 import Header from './header';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import AppConstants from '../../constants/appConstants';
-import UserConstants from '../../constants/userConstants';
+import * as AppConstants from '../../constants/appConstants';
+import * as UserConstants from '../../constants/userConstants';
 
 const mockStore = configureStore([thunk]);
 

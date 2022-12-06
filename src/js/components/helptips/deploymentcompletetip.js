@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Button from '@mui/material/Button';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Button } from '@mui/material';
+import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { withStyles } from 'tss-react/mui';
 
 import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
-import DeviceConstants from '../../constants/deviceConstants';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
 import Tracking from '../../tracking';

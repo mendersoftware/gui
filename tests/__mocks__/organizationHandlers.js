@@ -66,9 +66,9 @@ export const organizationHandlers = [
   rest.get('/versions.json', (req, res, ctx) => res(ctx.json(releasesSample))),
   rest.get(`${tenantadmApiUrlv1}/user/tenant`, (req, res, ctx) => res(ctx.json(defaultState.organization.organization))),
   rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/cancel`, (req, res, ctx) => res(ctx.status(200))),
-  rest.post(`${tenantadmApiUrlv2}/tenants/trial`, ({ body: signup }, res, ctx) => {
+  rest.post(`https://hosted.mender.io${tenantadmApiUrlv2}/tenants/trial`, ({ body: signup }, res, ctx) => {
     if (['email', 'organization', 'plan', 'tos'].every(item => !!signup[item])) {
-      return res(ctx.text('test'));
+      return res(ctx.text('test'), ctx.cookie('JWT', 'test'));
     }
     return res(ctx.status(400));
   }),

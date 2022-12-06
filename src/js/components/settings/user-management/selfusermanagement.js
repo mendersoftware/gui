@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../../actions/userActions';
-import UserConstants from '../../../constants/userConstants';
+import * as UserConstants from '../../../constants/userConstants';
 import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../../selectors';
 import Form from '../../common/forms/form';
 import TextInput from '../../common/forms/textinput';

@@ -11,9 +11,9 @@ import {
   setDeploymentsState,
   updateDeploymentControlMap
 } from './deploymentActions';
-import AppConstants from '../constants/appConstants';
-import DeploymentConstants from '../constants/deploymentConstants';
-import UserConstants from '../constants/userConstants';
+import * as AppConstants from '../constants/appConstants';
+import * as DeploymentConstants from '../constants/deploymentConstants';
+import * as UserConstants from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

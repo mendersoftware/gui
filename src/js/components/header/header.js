@@ -31,7 +31,7 @@ import logo from '../../../assets/img/headerlogo.png';
 import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
-import UserConstants from '../../constants/userConstants';
+import * as UserConstants from '../../constants/userConstants';
 import Search from '../common/search';
 
 // Change this when a new feature/offer is introduced

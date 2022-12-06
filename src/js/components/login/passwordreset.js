@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import headerLogo from '../../../assets/img/headerlogo.png';
 import { passwordResetComplete } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
+import { PasswordScreenContainer } from './password';
+import { TIMEOUTS } from '../../constants/appConstants';
 
 export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
   const [confirm, setConfirm] = useState(false);
@@ -17,7 +18,7 @@ export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
       return;
     }
     if (formData.password_new != formData.password_confirmation) {
-      setSnackbar('The passwords you provided do not match, please check again.', 5000, '');
+      setSnackbar('The passwords you provided do not match, please check again.', TIMEOUTS.fiveSeconds, '');
       return;
     }
 
@@ -25,9 +26,7 @@ export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
   };
 
   return (
-    <div className="flexbox column" id="login-box">
-      <img src={headerLogo} alt="mender-logo" id="signupLogo" />
-      <h1 className="align-center">Change your password</h1>
+    <PasswordScreenContainer title="Change your password">
       {confirm ? (
         <p className="margin-bottom align-center">Your password has been updated.</p>
       ) : (
@@ -49,14 +48,7 @@ export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
           </Form>
         </>
       )}
-      <div className="margin-top-large muted">
-        <div className="flexbox centered">
-          <Link style={{ marginLeft: '4px' }} to="/login">
-            Back to the login page
-          </Link>
-        </div>
-      </div>
-    </div>
+    </PasswordScreenContainer>
   );
 };
 
