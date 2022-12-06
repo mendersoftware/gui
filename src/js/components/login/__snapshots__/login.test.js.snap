@@ -27,6 +27,8 @@ exports[`Login Component renders correctly 1`] = `
   padding: 40px 65px;
   border-top-left-radius: 100px;
   border-bottom-right-radius: 100px;
+  margin-bottom: 30px;
+  margin-top: 30px;
   -webkit-transform: skew(0, -3deg);
   -moz-transform: skew(0, -3deg);
   -ms-transform: skew(0, -3deg);
