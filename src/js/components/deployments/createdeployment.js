@@ -3,12 +3,26 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon, ExpandMore } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Divider, Drawer, IconButton, Typography, accordionClasses } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Checkbox,
+  Divider,
+  Drawer,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  Typography,
+  accordionClasses
+} from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import moment from 'moment';
 import pluralize from 'pluralize';
 
+import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { createDeployment } from '../../actions/deploymentActions';
 import { getGroupDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
@@ -169,16 +183,19 @@ export const CreateDeployment = props => {
     onDismiss();
   };
 
+  const onDeltaToggle = ({ target: { checked } }) => setDeploymentSettings({ delta: checked });
+
   const onScheduleSubmitClick = settings => {
     if (needsCheck && !isChecking) {
       return setIsChecking(true);
     }
     isCreating.current = true;
-    const { deploymentDeviceIds, device, filterId, forceDeploy = false, group, phases, release, retries, update_control_map } = settings;
+    const { delta, deploymentDeviceIds, device, filterId, forceDeploy = false, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts : undefined;
     const retrySetting = canRetry && retries ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
+      autogenerate_delta: delta,
       devices: (filterId || group) && !device ? undefined : deploymentDeviceIds,
       filter_id: filterId,
       all_devices: !filterId && group === ALL_DEVICES,
@@ -221,7 +238,7 @@ export const CreateDeployment = props => {
       });
   };
 
-  const { deploymentDeviceCount, device, group, phases, release: deploymentRelease = null } = deploymentObject;
+  const { delta, deploymentDeviceCount, device, group, phases, release: deploymentRelease = null } = deploymentObject;
 
   let onboardingComponent = null;
   if (releaseRef.current && groupRef.current && deploymentAnchor.current) {
@@ -284,7 +301,7 @@ export const CreateDeployment = props => {
         </IconButton>
       </div>
       <Divider className="margin-bottom" />
-      <form>
+      <FormGroup>
         {!hasReleases ? (
           <ReleasesWarning />
         ) : (
@@ -305,9 +322,17 @@ export const CreateDeployment = props => {
             <RolloutOptions {...sharedProps} />
             <Retries {...sharedProps} />
             <ForceDeploy {...sharedProps} />
+            <FormControlLabel
+              control={<Checkbox color="primary" checked={delta} onChange={onDeltaToggle} size="small" />}
+              label={
+                <>
+                  Generate and deploy Delta Artifacts (where available) <DeltaIcon />
+                </>
+              }
+            />
           </AccordionDetails>
         </Accordion>
-      </form>
+      </FormGroup>
       <div className="margin-top">
         {isChecking && (
           <Confirm
