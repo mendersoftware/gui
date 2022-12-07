@@ -5,25 +5,31 @@ import { MenuItem, Select } from '@mui/material';
 
 import { locations, TIMEOUTS } from '../../../constants/appConstants';
 import Form from '../../common/forms/form';
-import TextInput from '../../common/forms/textinput';
 import FormCheckbox from '../../common/forms/formcheckbox';
+import TextInput from '../../common/forms/textinput';
 import { EntryLink } from '../login';
 
 export const OrgDataEntry = ({ classes, data: { name, email, emailVerified, tos, marketing }, onSubmit, recaptchaSiteKey = '', setSnackbar }) => {
   const [recaptcha, setRecaptcha] = useState('');
   const [location, setLocation] = useState(locations.us.key);
+  const [captchaTimestamp, setCaptchaTimestamp] = useState(0);
 
   const handleSubmit = useCallback(
     formData => {
       if (recaptchaSiteKey !== '' && recaptcha === '') {
         return setSnackbar('Please complete the reCAPTCHA test before proceeding!', TIMEOUTS.fiveSeconds, '');
       }
-      return onSubmit(formData, recaptcha, location);
+      return onSubmit(formData, recaptcha, location, captchaTimestamp);
     },
-    [location, recaptchaSiteKey, recaptcha]
+    [captchaTimestamp, location, recaptchaSiteKey, recaptcha]
   );
 
   const handleLocationChange = ({ target: { value } }) => setLocation(value);
+
+  const handleCaptchaChange = value => {
+    setCaptchaTimestamp(new Date().getTime());
+    setRecaptcha(value);
+  };
 
   return (
     <div className="flexbox centered full-height">
@@ -103,7 +109,7 @@ export const OrgDataEntry = ({ classes, data: { name, email, emailVerified, tos,
           />
           {recaptchaSiteKey && (
             <div className="margin-top">
-              <ReCAPTCHA sitekey={recaptchaSiteKey} onChange={setRecaptcha} />
+              <ReCAPTCHA sitekey={recaptchaSiteKey} onChange={handleCaptchaChange} />
             </div>
           )}
         </Form>
