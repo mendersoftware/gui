@@ -3,15 +3,16 @@ import { connect } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
+import { makeStyles } from 'tss-react/mui';
+
 import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
 import { noExpiryKey } from '../../constants/appConstants';
 import { stringToBoolean } from '../../helpers';
 import Loader from '../common/loader';
-import UserDataEntry from './signup-steps/userdata-entry';
 import OrgDataEntry from './signup-steps/orgdata-entry';
-import { makeStyles } from 'tss-react/mui';
+import UserDataEntry from './signup-steps/userdata-entry';
 
 const cookies = new Cookies();
 const useStyles = makeStyles()(theme => ({
@@ -81,7 +82,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
     setStep(2);
   };
 
-  const handleSignup = (formData, recaptcha, location) => {
+  const handleSignup = (formData, recaptcha, location, captchaTimestamp) => {
     setLoading(true);
     const actualEmail = formData.email != null ? formData.email : email;
     const credentials = oauthProvider ? { email: actualEmail, login: { [oauthProvider]: oauthId } } : { email: actualEmail, password };
@@ -94,6 +95,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
       location,
       marketing: formData.marketing == 'true',
       'g-recaptcha-response': recaptcha || 'empty',
+      ts: captchaTimestamp,
       campaign
     };
     return createOrganizationTrial(signup).catch(() => {
