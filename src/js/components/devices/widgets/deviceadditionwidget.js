@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { Button, ButtonGroup, Menu, MenuItem } from '@mui/material';
 import { ArrowDropDown as ArrowDropDownIcon, Launch as LaunchIcon } from '@mui/icons-material';
+import { Button, ButtonGroup, Menu, MenuItem } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(() => ({
@@ -61,7 +61,7 @@ export const DeviceAdditionWidget = ({ docsVersion, features, onConnectClick, on
           // eslint-disable-next-line no-unused-vars
           const { canAccess, href, title, value, ...optionProps } = option;
           const item = href ? (
-            <MenuItem {...optionProps} key={value} LinkComponent="a">
+            <MenuItem {...optionProps} key={value} href={href} component="a">
               {title}
               <LaunchIcon style={{ fontSize: '10pt' }} />
             </MenuItem>

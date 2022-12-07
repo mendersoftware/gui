@@ -1,11 +1,12 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@mui/material';
 
 import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
+import { getDocsVersion } from '../../../selectors';
 import GroupDefinition from './group-definition';
 
-export const CreateGroup = ({ addListOfDevices, groups, isCreation, isCreationDynamic, onClose, selectedDevices, selectedGroup }) => {
+export const CreateGroup = ({ addListOfDevices, docsVersion, groups, isCreation, isCreationDynamic, onClose, selectedDevices, selectedGroup }) => {
   const [invalid, setInvalid] = useState(true);
   const [isModification, setIsModification] = useState(!isCreation);
   const [newGroup, setNewGroup] = useState('');
@@ -24,6 +25,7 @@ export const CreateGroup = ({ addListOfDevices, groups, isCreation, isCreationDy
       <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{title}</DialogTitle>
       <DialogContent className="dialog">
         <GroupDefinition
+          docsVersion={docsVersion}
           groups={groups}
           isCreationDynamic={isCreationDynamic}
           isModification={isModification}
@@ -50,6 +52,7 @@ const mapStateToProps = (state, ownProps) => {
     ownProps.fromFilters ? group !== UNGROUPED_GROUP.id : !state.devices.groups.byId[group].filters.length
   );
   return {
+    docsVersion: getDocsVersion(state),
     groups,
     isCreationDynamic: ownProps.isCreation && ownProps.fromFilters,
     selectedGroup: state.devices.groups.selectedGroup

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import validator from 'validator';
 
-import { FormHelperText, TextField, Autocomplete } from '@mui/material';
+import { Autocomplete, FormHelperText, TextField } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 
-import { fullyDecodeURI } from '../../../helpers';
 import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
+import { fullyDecodeURI } from '../../../helpers';
 import InfoText from '../../common/infotext';
 
 const filter = createFilterOptions();
@@ -36,7 +35,7 @@ export const validateGroupName = (encodedName, groups = [], selectedGroup, isCre
 
 const GroupOption = (props, option) => <li {...props}>{option.title}</li>;
 
-export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputChange, selectedGroup }) => {
+export const GroupDefinition = ({ docsVersion = '', isCreationDynamic, groups, newGroup, onInputChange, selectedGroup }) => {
   const [errortext, setErrorText] = useState('');
 
   const validateName = encodedName => {
@@ -89,7 +88,9 @@ export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputCh
         <InfoText>
           Note: individual devices can&apos;t be added to dynamic groups.
           <br />
-          <Link to="/help/devices">Learn more about static vs. dynamic groups</Link>
+          <a href={`https://docs.mender.io/${docsVersion}overview/device-group`} target="_blank" rel="noopener noreferrer">
+            Learn more about static vs. dynamic groups
+          </a>
         </InfoText>
       )}
     </>
