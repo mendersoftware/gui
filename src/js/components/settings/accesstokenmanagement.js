@@ -23,7 +23,7 @@ import {
 import { makeStyles } from 'tss-react/mui';
 
 import { generateToken, getTokens, revokeToken } from '../../actions/userActions';
-import { customSort } from '../../helpers';
+import { customSort, toggle } from '../../helpers';
 import { getCurrentUser, getTenantCapabilities } from '../../selectors';
 import CopyCode from '../common/copy-code';
 import Time, { RelativeTime } from '../common/time';
@@ -170,12 +170,12 @@ export const AccessTokenManagement = ({ generateToken, getTokens, revokeToken, i
 
   const toggleGenerateClick = () => {
     setCurrentToken(null);
-    setShowGeneration(!showGeneration);
+    setShowGeneration(toggle);
   };
 
   const toggleRevocationClick = () => {
     setCurrentToken(null);
-    setShowRevocation(!showRevocation);
+    setShowRevocation(toggle);
   };
 
   const onRevokeClick = token => revokeToken(token).then(() => toggleRevocationClick());

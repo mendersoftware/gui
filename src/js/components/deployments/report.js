@@ -24,7 +24,7 @@ import { getRelease } from '../../actions/releaseActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
-import { statCollector } from '../../helpers';
+import { statCollector, toggle } from '../../helpers';
 import { getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import Confirm from '../common/confirm';
@@ -55,14 +55,16 @@ export const defaultColumnDataProps = {
 export const DeploymentAbortButton = ({ abort, deployment }) => {
   const [aborting, setAborting] = useState(false);
 
+  const toggleAborting = () => setAborting(toggle);
+
   return aborting ? (
-    <Confirm cancel={() => setAborting(!aborting)} action={() => abort(deployment.id)} type="abort" />
+    <Confirm cancel={toggleAborting} action={() => abort(deployment.id)} type="abort" />
   ) : (
     <Tooltip
       title="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
       placement="bottom"
     >
-      <Button color="secondary" startIcon={<BlockIcon fontSize="small" />} onClick={() => setAborting(!aborting)}>
+      <Button color="secondary" startIcon={<BlockIcon fontSize="small" />} onClick={toggleAborting}>
         {deployment.filters?.length ? 'Stop' : 'Abort'} deployment
       </Button>
     </Tooltip>

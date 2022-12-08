@@ -4,6 +4,7 @@ import { Edit as EditIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
+import { toggle } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
@@ -29,7 +30,7 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, u
   const hasTags = !!Object.keys(tags).length;
 
   useEffect(() => {
-    setShouldUpdateEditor(!shouldUpdateEditor);
+    setShouldUpdateEditor(toggle);
   }, [isEditing]);
 
   useEffect(() => {

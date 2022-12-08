@@ -19,7 +19,7 @@ import {
   storeSamlConfig
 } from '../../../actions/organizationActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
-import { createFileDownload, versionCompare } from '../../../helpers';
+import { createFileDownload, toggle, versionCompare } from '../../../helpers';
 import { getTenantCapabilities, getUserRoles } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { MenderTooltipClickable } from '../../common/mendertooltip';
@@ -119,7 +119,7 @@ export const Organization = ({
       setIsConfiguringSSO(false);
       return setIsResettingSSO(true);
     }
-    setIsConfiguringSSO(current => !current);
+    setIsConfiguringSSO(toggle);
   };
 
   const onCancelSSOSettings = () => {

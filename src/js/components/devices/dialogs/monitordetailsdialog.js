@@ -11,6 +11,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, Collapse, Dialog
 import withStyles from '@mui/styles/withStyles';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
+import { toggle } from '../../../helpers';
 
 const CopyButton = ({ text, onCopy }) => (
   <CopyToClipboard text={text} onCopy={onCopy}>
@@ -29,7 +30,7 @@ const LogLine = ({ beExplicit, line, prefix }) => {
     setTimeout(() => setCopied(false), TIMEOUTS.threeSeconds);
   };
 
-  const toggleHovering = () => setHovering(!hovering);
+  const toggleHovering = () => setHovering(toggle);
 
   const { line_number, data } = line;
 
@@ -63,7 +64,7 @@ const CustomAccordion = withStyles({
 
 const LogSection = ({ section = 'previous', lines }) => {
   const [expanded, setExpanded] = useState(false);
-  const onToggle = () => setExpanded(!expanded);
+  const onToggle = () => setExpanded(toggle);
   return (
     !!lines.length && (
       <CustomAccordion square expanded={expanded} onChange={onToggle}>

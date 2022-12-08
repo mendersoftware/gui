@@ -8,6 +8,7 @@ import { listItemTextClasses } from '@mui/material/ListItemText';
 import { makeStyles } from 'tss-react/mui';
 
 import { useradmApiUrl } from '../../../constants/userConstants';
+import { toggle } from '../../../helpers';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import InfoHint from '../../common/info-hint';
 import { maxWidth } from './organizationsettingsitem';
@@ -89,7 +90,7 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar }) => {
     reader.readAsBinaryString(acceptedFiles[0]);
   };
 
-  const onOpenEditorClick = () => setIsEditing(current => !current);
+  const onOpenEditorClick = () => setIsEditing(toggle);
 
   return (
     <>

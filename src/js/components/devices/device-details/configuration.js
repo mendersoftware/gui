@@ -13,7 +13,7 @@ import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 
 import { DEPLOYMENT_ROUTES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty } from '../../../helpers';
+import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
@@ -146,7 +146,7 @@ export const DeviceConfiguration = ({
   const [updateLog, setUpdateLog] = useState();
 
   useEffect(() => {
-    setShouldUpdateEditor(!shouldUpdateEditor);
+    setShouldUpdateEditor(toggle);
   }, [isEditingConfig, isUpdatingConfig]);
 
   useEffect(() => {
@@ -199,14 +199,12 @@ export const DeviceConfiguration = ({
     if (importType === 'default') {
       updatedConfig = defaultConfig.current;
     }
-    setShouldUpdateEditor(!shouldUpdateEditor);
+    setShouldUpdateEditor(toggle);
     setChangedConfig(updatedConfig);
     setShowConfigImport(false);
   };
 
-  const onSetAsDefaultChange = () => {
-    setIsSetAsDefault(!isSetAsDefault);
-  };
+  const onSetAsDefaultChange = () => setIsSetAsDefault(toggle);
 
   const onShowLog = () => {
     getDeviceLog(deployment_id, device.id).then(result => {
@@ -265,7 +263,7 @@ export const DeviceConfiguration = ({
     setShowConfigImport(true);
   };
 
-  const onAbortClick = () => setIsAborting(!isAborting);
+  const onAbortClick = () => setIsAborting(toggle);
 
   const hasDeviceConfig = !isEmpty(reported);
   let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;

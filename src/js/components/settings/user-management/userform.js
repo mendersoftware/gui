@@ -20,6 +20,7 @@ import {
 import pluralize from 'pluralize';
 
 import { rolesById, rolesByName, uiPermissionsById } from '../../../constants/userConstants';
+import { toggle } from '../../../helpers';
 import Form from '../../common/forms/form';
 import PasswordInput from '../../common/forms/passwordinput';
 import TextInput from '../../common/forms/textinput';
@@ -136,7 +137,7 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
     return submit({ ...remainder, ...roleData, password }, 'create');
   };
 
-  const togglePasswordReset = () => setShouldResetPassword(current => !current);
+  const togglePasswordReset = () => setShouldResetPassword(toggle);
 
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">

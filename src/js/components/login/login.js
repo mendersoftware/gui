@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -157,10 +157,13 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
       }
     });
 
-  const onSetRef = ref => {
-    twoFARef.current = ref;
-    setRefresh(!refresh);
-  };
+  const onSetRef = useCallback(
+    ref => {
+      twoFARef.current = ref;
+      setRefresh(!refresh);
+    },
+    [refresh]
+  );
 
   const onOAuthClick = ({ target: { textContent } }) => {
     const providerId = OAuth2Providers.find(provider => provider.name === textContent).id;

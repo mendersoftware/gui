@@ -8,6 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
+import { toggle } from '../../../helpers';
 import { chartColorPalette } from '../../../themes/Mender';
 import Confirm from '../../common/confirm';
 import Loader from '../../common/loader';
@@ -62,7 +63,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
     }
   };
 
-  const toggleRemoving = () => setRemoving(!removing);
+  const toggleRemoving = () => setRemoving(toggle);
 
   const formatLabel = ({ datum }) => `${datum.y.toString()} (${(Math.round((datum.y * 1000) / (total || 1)) / 10.0).toString()}%)`;
 

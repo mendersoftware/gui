@@ -26,7 +26,7 @@ import {
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
-import { versionCompare } from '../../helpers';
+import { toggle, versionCompare } from '../../helpers';
 import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import Global from '../settings/global';
@@ -168,7 +168,7 @@ export const DeviceGroups = ({
   const addDevicesToGroup = tmpDevices => {
     // (save selected devices in state, open dialog)
     setTmpDevices(tmpDevices);
-    setModifyGroupDialog(!modifyGroupDialog);
+    setModifyGroupDialog(toggle);
   };
 
   const createGroupFromDialog = (devices, group) => {
@@ -203,7 +203,7 @@ export const DeviceGroups = ({
 
   const openSettingsDialog = e => {
     e.preventDefault();
-    setOpenIdDialog(!openIdDialog);
+    setOpenIdDialog(toggle);
   };
 
   const onCreateGroupClose = () => {
@@ -232,9 +232,9 @@ export const DeviceGroups = ({
     setDeviceListState({ selectedIssues: [DEVICE_ISSUE_OPTIONS.authRequests.key], page: 1 });
   };
 
-  const toggleGroupRemoval = () => setRemoveGroup(!removeGroup);
+  const toggleGroupRemoval = () => setRemoveGroup(toggle);
 
-  const toggleMakeGatewayClick = () => setShowMakeGateway(!showMakeGateway);
+  const toggleMakeGatewayClick = () => setShowMakeGateway(toggle);
 
   return (
     <>

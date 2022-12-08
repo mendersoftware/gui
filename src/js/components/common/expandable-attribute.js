@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
 // material ui
+import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
 import { ListItem, ListItemText, Tooltip } from '@mui/material';
 
 import copy from 'copy-to-clipboard';
+
+import { toggle } from '../../helpers';
 
 const defaultClasses = { root: 'attributes' };
 
@@ -46,7 +48,7 @@ export const ExpandableAttribute = ({
       }
       setSnackbar('Value copied to clipboard');
     }
-    setExpanded(!expanded);
+    setExpanded(toggle);
   };
 
   const currentTextClasses = `${textClasses ? textClasses.secondary : 'inventory-text'}${expanded && overflowActive ? ' expanded-attribute' : ''}`;

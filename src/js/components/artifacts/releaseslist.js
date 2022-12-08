@@ -11,6 +11,7 @@ import pluralize from 'pluralize';
 
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { defaultVisibleSection } from '../../constants/releaseConstants';
+import { toggle } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 import useWindowSize from '../../utils/resizehook';
 import Loader from '../common/loader';
@@ -94,7 +95,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
     handleToggle();
   };
 
-  const loadMoreItems = () => setRefreshTrigger(!refreshTrigger);
+  const loadMoreItems = () => setRefreshTrigger(toggle);
 
   const onScroll = ({ scrollOffset }, height) => {
     if (!outerRef.current) {

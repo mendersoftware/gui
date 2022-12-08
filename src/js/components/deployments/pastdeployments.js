@@ -51,7 +51,6 @@ export const Past = props => {
   } = props;
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
-  const [timeRangeToggle, setTimeRangeToggle] = useState(false);
   const [tonight] = useState(getISOStringBoundaries(new Date()).end);
   const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
@@ -76,7 +75,6 @@ export const Past = props => {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
           const { start: startDate } = getISOStringBoundaries(newStartDate);
           setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate } });
-          setTimeRangeToggle(!timeRangeToggle);
         }
       })
       .finally(() => setLoading(false));

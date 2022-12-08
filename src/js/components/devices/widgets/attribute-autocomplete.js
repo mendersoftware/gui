@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 // material ui
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
@@ -80,12 +80,12 @@ export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFi
     setScope(selectedScope || fallbackScope);
   };
 
-  const removeFilter = () => {
+  const removeFilter = useCallback(() => {
     if (key) {
       onRemove({ key, scope });
     }
     setReset(!reset);
-  };
+  }, [key, onRemove, reset, setReset, scope]);
 
   return (
     <Autocomplete

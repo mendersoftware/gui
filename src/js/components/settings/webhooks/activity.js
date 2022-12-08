@@ -7,6 +7,7 @@ import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
 import { makeStyles } from 'tss-react/mui';
 
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
+import { toggle } from '../../../helpers';
 import Pagination from '../../common/pagination';
 import Time from '../../common/time';
 
@@ -85,7 +86,7 @@ const ListItem = ({ entry = {}, webhook }) => {
 
   return (
     <Accordion square expanded={isExpanded}>
-      <AccordionSummary onClick={() => setIsExpanded(current => !current)}>
+      <AccordionSummary onClick={() => setIsExpanded(toggle)}>
         {columns.map(({ key, render: Column }) => (
           <Column key={key} entry={entry} isExpanded={isExpanded} webhook={webhook} />
         ))}

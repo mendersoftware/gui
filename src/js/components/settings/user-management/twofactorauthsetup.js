@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Collapse, Switch } from '@mui/material';
@@ -75,7 +75,7 @@ export const TwoFactorAuthSetup = ({
     });
   };
 
-  const onToggle2FAClick = () => {
+  const onToggle2FAClick = useCallback(() => {
     if (!(currentUser.verified || currentUser.email?.endsWith('@example.com'))) {
       setShowEmailVerification(!showEmailVerification);
       setIs2FAEnabled(!showEmailVerification);
@@ -88,7 +88,7 @@ export const TwoFactorAuthSetup = ({
       setQrExpanded(!is2FAEnabled);
       setIs2FAEnabled(!is2FAEnabled);
     }
-  };
+  }, [has2FA, is2FAEnabled, showEmailVerification]);
 
   return (
     <div className="margin-top">

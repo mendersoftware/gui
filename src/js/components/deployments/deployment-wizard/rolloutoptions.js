@@ -4,6 +4,7 @@ import { Autocomplete, Checkbox, Collapse, FormControl, FormControlLabel, FormGr
 import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
+import { toggle } from '../../../helpers';
 import { useDebounce } from '../../../utils/debouncehook';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import RolloutSteps from './rolloutsteps';
@@ -27,7 +28,7 @@ export const RolloutOptions = ({ deploymentObject, docsVersion, isEnterprise, se
     setDeploymentSettings({ update_control_map: { states: { ...states, [step.state]: { action } } } });
   };
 
-  const onIsPausedClick = () => setIsPaused(current => !current);
+  const onIsPausedClick = () => setIsPaused(toggle);
 
   return (
     <>

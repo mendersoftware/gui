@@ -11,6 +11,7 @@ import moment from 'moment';
 
 import { cancelRequest } from '../../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../../constants/appConstants';
+import { toggle } from '../../../helpers';
 import { getIsEnterprise, getUserRoles } from '../../../selectors';
 import Alert from '../../common/alert';
 import CancelRequestDialog from '../dialogs/cancelrequest';
@@ -105,7 +106,7 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
     if (e !== undefined) {
       e.preventDefault();
     }
-    setCancelSubscription(!cancelSubscription);
+    setCancelSubscription(toggle);
   };
 
   return (

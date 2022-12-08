@@ -13,7 +13,7 @@ import { getUserList } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
-import { createDownload, getISOStringBoundaries } from '../../helpers';
+import { createDownload, getISOStringBoundaries, toggle } from '../../helpers';
 import { getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
@@ -101,7 +101,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
       type: '',
       user: ''
     });
-    setFilterReset(!filterReset);
+    setFilterReset(toggle);
     navigate('/auditlog');
   };
 

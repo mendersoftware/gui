@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Add as AddIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import {
@@ -232,12 +232,12 @@ export const RolloutPatternSelection = props => {
     setDeploymentSettings({ phases: updatedPhases });
   };
 
-  const onUsesPatternClick = () => {
+  const onUsesPatternClick = useCallback(() => {
     if (usesPattern) {
       setDeploymentSettings({ phases: phases.slice(0, 1) });
     }
     setUsesPattern(!usesPattern);
-  };
+  }, [usesPattern, JSON.stringify(phases), setDeploymentSettings, setUsesPattern]);
 
   const numberDevices = deploymentDeviceCount ? deploymentDeviceCount : deploymentDeviceIds ? deploymentDeviceIds.length : 0;
   const customPattern = phases && phases.length > 1 ? 1 : 0;

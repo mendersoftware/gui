@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
 import { Button } from '@mui/material';
@@ -223,7 +223,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     setBufferIndex(0);
   };
 
-  const onTogglePlayClick = () => {
+  const onTogglePlayClick = useCallback(() => {
     if (!wasStarted) {
       setWasStarted(true);
       return setTimeout(() => {
@@ -234,7 +234,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     }
     setIsPaused(isPlaying);
     setIsPlaying(!isPlaying);
-  };
+  }, [isPlaying, wasStarted]);
 
   const onReplayClick = () => {
     resetPlayer();

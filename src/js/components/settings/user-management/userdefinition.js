@@ -9,6 +9,7 @@ import validator from 'validator';
 
 import { mapUserRolesToUiPermissions } from '../../../actions/userActions';
 import { uiPermissionsByArea, uiPermissionsById } from '../../../constants/userConstants';
+import { toggle } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import { OAuth2Providers, genericProvider } from '../../login/oauth2providers';
 import { UserRolesSelect } from './userform';
@@ -70,9 +71,7 @@ export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, 
     return onSubmit(submissionData, 'edit', id, shouldResetPassword ? currentEmail : null);
   };
 
-  const togglePasswordReset = () => {
-    setShouldResetPassword(!shouldResetPassword);
-  };
+  const togglePasswordReset = () => setShouldResetPassword(toggle);
 
   const { areas, groups } = useMemo(() => {
     const things = { areas: {}, groups: {} };

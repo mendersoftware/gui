@@ -256,6 +256,8 @@ export const stringToBoolean = content => {
   }
 };
 
+export const toggle = current => !current;
+
 export const formatTime = date => {
   if (date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
     return date.toISOString().slice(0, -1);

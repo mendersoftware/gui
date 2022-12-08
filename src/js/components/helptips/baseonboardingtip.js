@@ -11,6 +11,7 @@ import {
 import { bindActionCreators } from 'redux';
 
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
+import { toggle } from '../../helpers';
 import Tracking from '../../tracking';
 import { OnboardingTooltip } from '../common/mendertooltip';
 
@@ -76,7 +77,7 @@ const BaseOnboardingTipComponent = ({
     setOpen(true);
   }, []);
 
-  const toggle = () => setOpen(!open);
+  const toggleVisibility = () => setOpen(toggle);
 
   const hide = () => setOpen(false);
 
@@ -113,7 +114,7 @@ const BaseOnboardingTipComponent = ({
         </div>
       }
     >
-      <OnboardingIndicator className="onboard-tip" orientation={orientation} style={style} toggle={toggle} />
+      <OnboardingIndicator className="onboard-tip" orientation={orientation} style={style} toggle={toggleVisibility} />
     </OnboardingTooltip>
   );
 };

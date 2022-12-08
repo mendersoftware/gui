@@ -16,6 +16,7 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import ErrorBoundary from '../errorboundary';
+import { toggle } from '../helpers';
 import { WrappedBaseline } from '../main';
 import { getOnboardingState, getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
@@ -111,7 +112,7 @@ export const AppRoot = ({
 
   useIdleTimer({ crossTab: true, onAction: updateMaxAge, onActive: updateMaxAge, onIdle, syncTimers: 400, timeout, timers: workerTimers });
 
-  const onToggleSearchResult = () => setShowSearchResult(!showSearchResult);
+  const onToggleSearchResult = () => setShowSearchResult(toggle);
 
   const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
   const theme = createTheme(mode === 'dark' ? darkTheme : lightTheme);

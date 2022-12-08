@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -16,7 +16,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton, Inpu
 import { makeStyles } from 'tss-react/mui';
 
 import { getArtifactUrl } from '../../actions/releaseActions';
-import { extractSoftware } from '../../helpers';
+import { extractSoftware, toggle } from '../../helpers';
 import { getUserCapabilities } from '../../selectors';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
@@ -122,16 +122,19 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
     }
   }, [gettingUrl]);
 
-  const onToggleEditing = event => {
-    event.stopPropagation();
-    if (event.keyCode === 13 || !event.keyCode) {
-      if (descEdit) {
-        // save change
-        editArtifact(artifact.id, description);
+  const onToggleEditing = useCallback(
+    event => {
+      event.stopPropagation();
+      if (event.keyCode === 13 || !event.keyCode) {
+        if (descEdit) {
+          // save change
+          editArtifact(artifact.id, description);
+        }
+        setDescEdit(!descEdit);
       }
-      setDescEdit(!descEdit);
-    }
-  };
+    },
+    [descEdit, description, editArtifact, setDescEdit]
+  );
 
   const softwareItem = extractSoftwareItem(artifact.artifact_provides);
   const softwareInformation = softwareItem
@@ -190,7 +193,7 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
       <Accordion
         square
         expanded={showPayloads}
-        onChange={() => setShowPayloads(!showPayloads)}
+        onChange={() => setShowPayloads(toggle)}
         TransitionProps={{ onEntered: onExpansion, onExited: onExpansion }}
         className={classes.accordPanel1}
       >

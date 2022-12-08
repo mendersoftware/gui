@@ -9,7 +9,7 @@ import Cookies from 'universal-cookie';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getToken } from '../../auth';
-import { detectOsIdentifier } from '../../helpers';
+import { detectOsIdentifier, toggle } from '../../helpers';
 import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import Time from '../common/time';
@@ -259,7 +259,7 @@ const DownloadSection = ({ docsVersion, item, isEnterprise, onMenuClick, os, ver
   const { locations, ...extraLocations } = getLocations({ isEnterprise, tool: item, versionInfo: versionInformation.repos, os });
 
   return (
-    <Accordion className="margin-bottom-small" square expanded={open} onChange={() => setOpen(!open)}>
+    <Accordion className="margin-bottom-small" square expanded={open} onChange={() => setOpen(toggle)}>
       <AccordionSummary expandIcon={<ExpandMore />}>
         <div>
           <Typography variant="subtitle2">{title}</Typography>

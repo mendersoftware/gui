@@ -12,7 +12,7 @@ import { editArtifact, removeArtifact, selectArtifact, selectRelease, uploadArti
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { customSort } from '../../helpers';
+import { customSort, toggle } from '../../helpers';
 import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -118,7 +118,7 @@ export const ReleaseRepository = ({
       return;
     }
     // sort table
-    setSortDown(!sortDown);
+    setSortDown(toggle);
     setSortCol(col);
   };
 

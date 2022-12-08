@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
 // material ui
@@ -90,10 +90,10 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
     setValue(value);
   };
 
-  const removeFilter = () => {
+  const removeFilter = useCallback(() => {
     onRemove({ key, operator, scope, value });
     setReset(!reset);
-  };
+  }, [key, onRemove, operator, reset, scope, setReset, value]);
 
   const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
   const operatorHelpMessage = (DEVICE_FILTERING_OPTIONS[operator] || {}).help || '';

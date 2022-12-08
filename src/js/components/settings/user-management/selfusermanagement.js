@@ -8,6 +8,7 @@ import { setSnackbar } from '../../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../../actions/userActions';
 import { getToken } from '../../../auth';
 import * as UserConstants from '../../../constants/userConstants';
+import { toggle } from '../../../helpers';
 import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Form from '../../common/forms/form';
@@ -61,7 +62,7 @@ export const SelfUserManagement = ({
       // changing unique id will reset form values
       uniqueId = new Date();
     }
-    setEditEmail(!editEmail);
+    setEditEmail(toggle);
     setEmailFormId(uniqueId);
   };
 
@@ -70,7 +71,7 @@ export const SelfUserManagement = ({
     saveUserSettings({ mode: newMode });
   };
 
-  const handlePass = () => setEditPass(!editPass);
+  const handlePass = () => setEditPass(toggle);
   const email = currentUser.email;
   const { isOAuth2, provider } = getUserSSOState(currentUser);
   return (
