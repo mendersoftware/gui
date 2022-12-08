@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+
 import { useTheme } from '@mui/material/styles';
 
+import { getDeviceAlerts, setAlertListState } from '../../../actions/monitorActions';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
+import { getDocsVersion, getOfflineThresholdSettings } from '../../../selectors';
 import Pagination from '../../common/pagination';
-import { DeviceConnectionNote } from './connection';
 import Time from '../../common/time';
+import MonitorDetailsDialog from '../dialogs/monitordetailsdialog';
+import { DeviceConnectionNote } from './connection';
 import DeviceDataCollapse from './devicedatacollapse';
 import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
-import MonitorDetailsDialog from '../dialogs/monitordetailsdialog';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -40,7 +44,17 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
 };
 
 const paginationCutoff = defaultPerPage;
-export const DeviceMonitoring = ({ alertListState = {}, alerts, device, docsVersion, getAlerts, latestAlerts, onDetailsClick, setAlertListState }) => {
+export const DeviceMonitoring = ({
+  alertListState = {},
+  alerts,
+  device,
+  docsVersion,
+  getAlerts,
+  latestAlerts,
+  offlineThresholdSettings,
+  onDetailsClick,
+  setAlertListState
+}) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
   const theme = useTheme();
 
@@ -64,7 +78,7 @@ export const DeviceMonitoring = ({ alertListState = {}, alerts, device, docsVers
             {latestAlerts.map(alert => (
               <MonitoringAlert alert={alert} key={alert.id} onDetailsClick={onDetailsClick} style={{ marginBottom: theme.spacing() }} />
             ))}
-            {isOffline && <DeviceOfflineHeaderNotification />}
+            {isOffline && <DeviceOfflineHeaderNotification offlineThresholdSettings={offlineThresholdSettings} />}
           </>
         ) : (
           <DeviceMonitorsMissingNote docsVersion={docsVersion} />
@@ -110,30 +124,38 @@ export const DeviceMonitoring = ({ alertListState = {}, alerts, device, docsVers
   );
 };
 
-export default DeviceMonitoring;
+export const MonitoringTab = ({ alertListState, alerts, device, docsVersion, getDeviceAlerts, latestAlerts, offlineThresholdSettings, setAlertListState }) => {
+  const [monitorDetails, setMonitorDetails] = useState();
 
-export const MonitoringTab = ({
-  alertListState,
-  alerts,
-  device,
-  docsVersion,
-  getDeviceAlerts,
-  monitorDetails,
-  latestAlerts,
-  setMonitorDetails,
-  setAlertListState
-}) => (
-  <>
-    <DeviceMonitoring
-      alertListState={alertListState}
-      alerts={alerts}
-      device={device}
-      docsVersion={docsVersion}
-      getAlerts={getDeviceAlerts}
-      latestAlerts={latestAlerts}
-      onDetailsClick={setMonitorDetails}
-      setAlertListState={setAlertListState}
-    />
-    <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />
-  </>
-);
+  return (
+    <>
+      <DeviceMonitoring
+        alertListState={alertListState}
+        alerts={alerts}
+        device={device}
+        docsVersion={docsVersion}
+        getAlerts={getDeviceAlerts}
+        latestAlerts={latestAlerts}
+        onDetailsClick={setMonitorDetails}
+        setAlertListState={setAlertListState}
+        offlineThresholdSettings={offlineThresholdSettings}
+      />
+      <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />
+    </>
+  );
+};
+
+const actionCreators = { getDeviceAlerts, setAlertListState };
+
+const mapStateToProps = (state, ownProps) => {
+  const { alerts = [], latest = [] } = state.monitor.alerts.byDeviceId[ownProps.device.id] || {};
+  return {
+    alertListState: state.monitor.alerts.alertList,
+    alerts,
+    docsVersion: getDocsVersion(state),
+    latestAlerts: latest,
+    offlineThresholdSettings: getOfflineThresholdSettings(state)
+  };
+};
+
+export default connect(mapStateToProps, actionCreators)(MonitoringTab);

@@ -1,10 +1,9 @@
-import React from 'react';
 import pluralize from 'pluralize';
+import React from 'react';
 
 import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
 import Time from '../../common/time';
 
 const errorIcon = <ErrorIcon className="red" />;
@@ -99,12 +98,12 @@ export const NoAlertsHeaderNotification = () => (
   </BaseNotification>
 );
 
-export const DeviceOfflineHeaderNotification = () => (
+export const DeviceOfflineHeaderNotification = ({ offlineThresholdSettings }) => (
   <BaseNotification className="column-data" bordered={false} severity={monitoringSeverities.CRITICAL}>
     <div className="key muted margin-right-small">
       <b>Device offline</b>
     </div>
-    Last check-in over {DEVICE_ONLINE_CUTOFF.interval} {pluralize(DEVICE_ONLINE_CUTOFF.intervalName, DEVICE_ONLINE_CUTOFF.interval)} ago
+    Last check-in over {offlineThresholdSettings.interval} {pluralize(offlineThresholdSettings.intervalUnit, offlineThresholdSettings.interval)} ago
   </BaseNotification>
 );
 
