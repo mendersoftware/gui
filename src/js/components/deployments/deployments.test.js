@@ -311,7 +311,6 @@ describe('Deployments Component', () => {
       retries: 1,
       update_control_map: undefined
     });
-    console.log(post.mock.calls);
     expect(post).toHaveBeenCalledWith(
       '/api/management/v1/useradm/settings',
       {
