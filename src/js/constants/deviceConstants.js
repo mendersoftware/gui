@@ -173,11 +173,7 @@ export const DEVICE_ISSUE_OPTIONS = {
       scope: 'system',
       key: 'updated_ts',
       operator: '$lt',
-      value: () => {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        return yesterday.toISOString();
-      }
+      value: ({ offlineThreshold }) => offlineThreshold
     },
     title: 'Offline devices'
   },
