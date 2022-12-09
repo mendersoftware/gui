@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import copy from 'copy-to-clipboard';
 
-import { Chip, Divider, Drawer, IconButton, Tab, Tabs } from '@mui/material';
 import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
+import { Chip, Divider, Drawer, IconButton, Tab, Tabs } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+
+import copy from 'copy-to-clipboard';
 
 import GatewayIcon from '../../../assets/img/gateway.svg';
 import { setSnackbar } from '../../actions/appActions';
@@ -19,23 +20,22 @@ import {
   setDeviceTags,
   setDeviceTwin
 } from '../../actions/deviceActions';
-import { getDeviceAlerts, setAlertListState } from '../../actions/monitorActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
-import { MenderTooltipClickable } from '../common/mendertooltip';
-import { RelativeTime } from '../common/time';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import { getDeviceTwinIntegrations, getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
+import { MenderTooltipClickable } from '../common/mendertooltip';
+import { RelativeTime } from '../common/time';
 import DeviceConfiguration from './device-details/configuration';
-import { IdentityTab } from './device-details/identity';
-import DeviceInventory from './device-details/deviceinventory';
 import { TroubleshootTab } from './device-details/connection';
-import InstalledSoftware from './device-details/installedsoftware';
-import { MonitoringTab } from './device-details/monitoring';
-import DeviceNotifications from './device-details/notifications';
+import DeviceInventory from './device-details/deviceinventory';
 import { IntegrationTab } from './device-details/devicetwin';
+import { IdentityTab } from './device-details/identity';
+import InstalledSoftware from './device-details/installedsoftware';
+import MonitoringTab from './device-details/monitoring';
+import DeviceNotifications from './device-details/notifications';
 import DeviceQuickActions from './widgets/devicequickactions';
 
 const useStyles = makeStyles()(theme => ({
@@ -137,8 +137,6 @@ const tabs = [
 
 export const ExpandedDevice = ({
   abortDeployment,
-  alertListState,
-  alerts,
   applyDeviceConfig,
   decommissionDevice,
   defaultConfig,
@@ -147,7 +145,6 @@ export const ExpandedDevice = ({
   deviceId,
   docsVersion,
   features,
-  getDeviceAlerts,
   getDeviceInfo,
   getDeviceLog,
   getDeviceTwin,
@@ -164,7 +161,6 @@ export const ExpandedDevice = ({
   refreshDevices,
   saveGlobalSettings,
   selectedGroup,
-  setAlertListState,
   setDeviceConfig,
   setDeviceTags,
   setDeviceTwin,
@@ -177,7 +173,6 @@ export const ExpandedDevice = ({
   const [socketClosed, setSocketClosed] = useState(true);
   const [selectedTab, setSelectedTab] = useState(tabs[0].value);
   const [troubleshootType, setTroubleshootType] = useState();
-  const [monitorDetails, setMonitorDetails] = useState();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -250,30 +245,24 @@ export const ExpandedDevice = ({
   const SelectedTab = useMemo(() => availableTabs.find(tab => tab.value === selectedTab).component, [selectedTab]);
   const commonProps = {
     abortDeployment,
-    alertListState,
-    alerts,
     applyDeviceConfig,
     classes,
     defaultConfig,
     device,
     deviceConfigDeployment,
     docsVersion,
-    getDeviceAlerts,
     getDeviceLog,
     getDeviceTwin,
     getSingleDeployment,
     integrations,
     latestAlerts,
     launchTroubleshoot,
-    monitorDetails,
     onDecommissionDevice,
     refreshDevices,
     saveGlobalSettings,
-    setAlertListState,
     setDeviceConfig,
     setDeviceTags,
     setDeviceTwin,
-    setMonitorDetails,
     setSnackbar,
     setSocketClosed,
     setTroubleshootType,
@@ -329,13 +318,11 @@ const actionCreators = {
   abortDeployment,
   applyDeviceConfig,
   decommissionDevice,
-  getDeviceAlerts,
   getDeviceLog,
   getDeviceInfo,
   getDeviceTwin,
   getSingleDeployment,
   saveGlobalSettings,
-  setAlertListState,
   setDeviceConfig,
   setDeviceTags,
   setDeviceTwin,
@@ -346,7 +333,7 @@ const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.deviceId] || {};
   const { config = {} } = device;
   const { deployment_id: configDeploymentId } = config;
-  const { alerts = [], latest = [] } = state.monitor.alerts.byDeviceId[ownProps.deviceId] || {};
+  const { latest = [] } = state.monitor.alerts.byDeviceId[ownProps.deviceId] || {};
   let selectedGroup;
   let groupFilters = [];
   if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
@@ -355,7 +342,6 @@ const mapStateToProps = (state, ownProps) => {
   }
   return {
     alertListState: state.monitor.alerts.alertList,
-    alerts: alerts,
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
