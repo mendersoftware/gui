@@ -1,7 +1,8 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
-import React from 'react';
 import axios from 'axios';
 import pluralize from 'pluralize';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from '../actions/appActions';
@@ -10,15 +11,13 @@ import { auditLogsApiUrl } from '../actions/organizationActions';
 import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
+import { routes, sortingAlternatives } from '../components/devices/base-devices';
 import { SORTING_OPTIONS, UPLOAD_PROGRESS } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
-
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
-import { Link } from 'react-router-dom';
-import { routes, sortingAlternatives } from '../components/devices/base-devices';
 
 const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -376,6 +375,7 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
   const { filterTerms } = convertDeviceListStateToFilters({
     filters: [],
     group,
+    offlineThreshold: getState().app.offlineThreshold,
     status: shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted
   });
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
@@ -417,6 +417,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   }
   const { filterTerms: filters } = convertDeviceListStateToFilters({
     filters: getState().devices.groups.byId[group].filters,
+    offlineThreshold: getState().app.offlineThreshold,
     status: DEVICE_STATES.accepted
   });
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
@@ -604,15 +605,15 @@ export const setDeviceListState =
     return Promise.all(tasks);
   };
 
-const convertIssueOptionsToFilters = issuesSelection =>
+const convertIssueOptionsToFilters = (issuesSelection, filtersState = {}) =>
   issuesSelection.map(item => {
     if (typeof DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule.value === 'function') {
-      return { ...DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule, value: DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule.value() };
+      return { ...DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule, value: DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule.value(filtersState) };
     }
     return DeviceConstants.DEVICE_ISSUE_OPTIONS[item].filterRule;
   });
 
-export const convertDeviceListStateToFilters = ({ filters = [], group, groups = { byId: {} }, selectedIssues = [], status }) => {
+export const convertDeviceListStateToFilters = ({ filters = [], group, groups = { byId: {} }, offlineThreshold, selectedIssues = [], status }) => {
   let applicableFilters = [...filters];
   if (typeof group === 'string' && !(groups.byId[group]?.filters || applicableFilters).length) {
     applicableFilters.push({ key: 'group', value: group, operator: '$eq', scope: 'system' });
@@ -620,7 +621,7 @@ export const convertDeviceListStateToFilters = ({ filters = [], group, groups = 
   const nonMonitorFilters = applicableFilters.filter(
     filter => !Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
   );
-  const deviceIssueFilters = convertIssueOptionsToFilters(selectedIssues);
+  const deviceIssueFilters = convertIssueOptionsToFilters(selectedIssues, { offlineThreshold });
   applicableFilters = [...nonMonitorFilters, ...deviceIssueFilters];
   const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
   return { applicableFilters: nonMonitorFilters, filterTerms: mapFiltersToTerms(effectiveFilters) };
@@ -635,6 +636,7 @@ export const getDevicesByStatus =
       filters: filterSelection ?? getState().devices.filters,
       group: group ?? getState().devices.groups.selectedGroup,
       groups: getState().devices.groups,
+      offlineThreshold: getState().app.offlineThreshold,
       selectedIssues,
       status
     });

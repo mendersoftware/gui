@@ -1,7 +1,7 @@
-import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import Api, { apiUrl, headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
 import * as MonitorConstants from '../constants/monitorConstants';
+import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
 export const monitorApiUrlv1 = `${apiUrl.v1}/devicemonitor`;
@@ -69,6 +69,7 @@ export const getIssueCountsByType =
       ...remainder,
       filters,
       group,
+      offlineThreshold: getState().app.offlineThreshold,
       selectedIssues: [type],
       status
     });

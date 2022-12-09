@@ -1,3 +1,5 @@
+import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
+import * as DeviceConstants from '../src/js/constants/deviceConstants';
 import {
   defaultPermissionSets,
   emptyRole,
@@ -7,8 +9,6 @@ import {
   twoFAStates,
   uiPermissionsById
 } from '../src/js/constants/userConstants';
-import * as DeviceConstants from '../src/js/constants/deviceConstants';
-import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
 import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
 
 export const undefineds = /undefined|\[object Object\]/;
@@ -304,22 +304,25 @@ export const defaultState = {
     alerts: {
       alertList: { ...DeviceConstants.DEVICE_LIST_DEFAULTS, total: 0 },
       byDeviceId: {
-        a1: [
-          {
-            description: 'something',
-            id: '31346239-3839-6262-2d63-3365622d3437',
-            name: 'SSH Daemon is not running',
-            device_id: 'a1',
-            level: 'CRITICAL',
-            subject: {
-              name: 'sshd',
-              type: 'systemd',
-              status: 'not-running',
-              details: { description: 'Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root' }
-            },
-            timestamp: '2021-07-23T12:22:36Z'
-          }
-        ]
+        a1: {
+          alerts: [
+            {
+              description: 'something',
+              id: '31346239-3839-6262-2d63-3365622d3437',
+              name: 'SSH Daemon is not running',
+              device_id: 'a1',
+              level: 'CRITICAL',
+              subject: {
+                name: 'sshd',
+                type: 'systemd',
+                status: 'not-running',
+                details: { description: 'Jul 22 10:40:56 raspberrypi sshd[32031]: pam_unix(sshd:session): session closed for user root' }
+              },
+              timestamp: '2021-07-23T12:22:36Z'
+            }
+          ],
+          latest: []
+        }
       }
     },
     issueCounts: {

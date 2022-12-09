@@ -1,9 +1,15 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import { prettyDOM } from '@testing-library/dom';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import DeviceMonitoring, { DeviceMonitorsMissingNote } from './monitoring';
+
+const mockStore = configureStore([thunk]);
 
 describe('tiny components', () => {
   [DeviceMonitorsMissingNote].forEach(async Component => {
@@ -18,16 +24,27 @@ describe('tiny components', () => {
 
 describe('DeviceMonitoring Component', () => {
   it('renders correctly', async () => {
+    const store = mockStore({
+      ...defaultState,
+      monitor: {
+        ...defaultState.monitor,
+        alerts: {
+          ...defaultState.monitor.alerts,
+          alertList: { page: 2, perPage: 20, total: 9001 },
+          byDeviceId: {
+            ...defaultState.monitor.alerts.byDeviceId,
+            a1: {
+              ...defaultState.monitor.alerts.byDeviceId.a1,
+              latest: defaultState.monitor.alerts.byDeviceId.a1.alerts
+            }
+          }
+        }
+      }
+    });
     const { baseElement } = render(
-      <DeviceMonitoring
-        alerts={defaultState.monitor.alerts.byDeviceId.a1}
-        alertListState={{ page: 2, perPage: 20, total: 9001 }}
-        device={defaultState.devices.byId.a1}
-        getAlerts={jest.fn}
-        isOffline
-        latestAlerts={defaultState.monitor.alerts.byDeviceId.a1}
-        setAlertListState={jest.fn}
-      />
+      <Provider store={store}>
+        <DeviceMonitoring device={defaultState.devices.byId.a1} isOffline />
+      </Provider>
     );
     // special snapshot handling here to work around unstable ids in mui code...
     const view = prettyDOM(baseElement.firstChild.firstChild, 100000, { highlight: false })
