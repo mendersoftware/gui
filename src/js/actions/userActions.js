@@ -2,17 +2,17 @@
 import hashString from 'md5';
 import Cookies from 'universal-cookie';
 
-import { commonErrorFallback, commonErrorHandler, setOfflineThreshold, setSnackbar } from './appActions';
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
+import { cleanUp, expirySet, logout } from '../auth';
 import * as AppConstants from '../constants/appConstants';
+import { ALL_DEVICES } from '../constants/deviceConstants';
 import * as OnboardingConstants from '../constants/onboardingConstants';
 import * as UserConstants from '../constants/userConstants';
-import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
-import { cleanUp, expirySet, logout } from '../auth';
 import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
-import { ALL_DEVICES } from '../constants/deviceConstants';
+import { commonErrorFallback, commonErrorHandler, setOfflineThreshold, setSnackbar } from './appActions';
 
 const cookies = new Cookies();
 const {
@@ -85,13 +85,13 @@ export const passwordResetStart = email => dispatch =>
   );
 
 export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword }).catch(err => {
-    let status = ((err || {}).res || {}).status,
-      errorMsg;
-    if (status == 400) {
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword }).catch((err = {}) => {
+    const { error, response = {} } = err;
+    let errorMsg = '';
+    if (response.status == 400) {
       errorMsg = 'the link you are using expired or the request is not valid, please try again.';
     } else {
-      errorMsg = (err || {}).error;
+      errorMsg = error;
     }
     dispatch(setSnackbar('The password reset request cannot be processed: ' + errorMsg));
     return Promise.reject(err);
