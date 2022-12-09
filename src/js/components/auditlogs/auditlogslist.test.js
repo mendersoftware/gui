@@ -1,8 +1,9 @@
 import React from 'react';
-import { prettyDOM } from '@testing-library/dom';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+
+import { prettyDOM } from '@testing-library/dom';
 import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import { adminUserCapabilities, defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';

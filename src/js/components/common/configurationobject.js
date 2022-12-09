@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
 
-import copy from 'copy-to-clipboard';
-
 // material ui
-import { Tooltip } from '@mui/material';
 import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+
+import copy from 'copy-to-clipboard';
 
 const useStyles = makeStyles()(theme => ({
   root: {

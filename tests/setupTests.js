@@ -1,18 +1,20 @@
 import React from 'react';
 import { createMocks } from 'react-idle-timer';
 import { MemoryRouter } from 'react-router-dom';
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import '@testing-library/jest-dom/extend-expect';
+import { cleanup, queryByRole, render, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import crypto from 'crypto';
+import { setupServer } from 'msw/node';
 import { TextEncoder } from 'util';
 import { MessageChannel } from 'worker_threads';
-import '@testing-library/jest-dom/extend-expect';
-import { cleanup, render, queryByRole, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { setupServer } from 'msw/node';
-import crypto from 'crypto';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { light as lightTheme } from '../src/js/themes/Mender';
 import handlers from './__mocks__/requestHandlers';
 import { mockDate, token as mockToken } from './mockData';
-import { light as lightTheme } from '../src/js/themes/Mender';
 
 export const RETRY_TIMES = 3;
 export const TEST_LOCATION = 'localhost';
@@ -148,7 +150,6 @@ const customRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...
 // re-export everything
 // eslint-disable-next-line import/export
 export * from '@testing-library/react';
-
 // override render method
 // eslint-disable-next-line import/export
 export { customRender as render };

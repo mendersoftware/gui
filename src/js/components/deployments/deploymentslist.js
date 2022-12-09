@@ -2,13 +2,13 @@ import React from 'react';
 
 import Pagination from '../common/pagination';
 import DeploymentItem, {
-  deploymentTypeClasses,
   DeploymentDeviceCount,
   DeploymentDeviceGroup,
   DeploymentEndTime,
-  DeploymentStartTime,
   DeploymentProgress,
-  DeploymentRelease
+  DeploymentRelease,
+  DeploymentStartTime,
+  deploymentTypeClasses
 } from './deploymentitem';
 
 export const defaultHeaders = [

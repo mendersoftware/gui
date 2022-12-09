@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import pluralize from 'pluralize';
 
 // material ui
 import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import pluralize from 'pluralize';
+
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { getLimitMaxed, getUserCapabilities } from '../../../../selectors';
-import Confirm from './../../../common/confirm';
 import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
+import Confirm from './../../../common/confirm';
 import Authsetlist from './authsetlist';
 
 const useStyles = makeStyles()(theme => ({

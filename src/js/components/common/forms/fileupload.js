@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 
 // material ui
-import { IconButton, TextField } from '@mui/material';
 import { Clear as ClearIcon, CloudUpload as FileIcon } from '@mui/icons-material';
+import { IconButton, TextField } from '@mui/material';
 
 export const FileUpload = ({
   enableContentReading = true,

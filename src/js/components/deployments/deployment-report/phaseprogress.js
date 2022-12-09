@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
+
+import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
 
-import { Button } from '@mui/material';
-import { CheckCircle, ErrorRounded, Pause, PlayArrow, Warning as WarningIcon } from '@mui/icons-material';
-import { makeStyles } from 'tss-react/mui';
-
+import inprogressImage from '../../../../assets/img/pending_status.png';
 import { deploymentDisplayStates, deploymentSubstates, installationSubstatesMap, pauseMap } from '../../../constants/deploymentConstants';
 import { getDeploymentState, groupDeploymentStats, statCollector } from '../../../helpers';
 import Confirm from '../../common/confirm';
-import inprogressImage from '../../../../assets/img/pending_status.png';
 import { ProgressChartComponent } from '../progressChart';
 
 const useStyles = makeStyles()(theme => ({

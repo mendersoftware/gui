@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
-import { accessTokens, defaultPassword, defaultState, permissionSets, token, userId as defaultUserId } from '../mockData';
 import { defaultPermissionSets, useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
+import { accessTokens, defaultPassword, defaultState, userId as defaultUserId, permissionSets, token } from '../mockData';
 
 export const roles = [
   {

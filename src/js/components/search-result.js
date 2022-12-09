@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import pluralize from 'pluralize';
 
+import { Close as CloseIcon } from '@mui/icons-material';
 // material ui
 import { Drawer, IconButton, Typography } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
+
+import pluralize from 'pluralize';
 
 import { setSearchState, setSnackbar, setVersionInfo } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';

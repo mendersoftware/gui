@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Form from '../../common/forms/form';
-import TextInput from '../../common/forms/textinput';
-import PasswordInput from '../../common/forms/passwordinput';
-import { EntryLink, OAuthHeader } from '../login';
 import SignupHero from '../../../../assets/img/signuphero.svg';
 import { TIMEOUTS } from '../../../constants/appConstants';
+import Form from '../../common/forms/form';
+import PasswordInput from '../../common/forms/passwordinput';
+import TextInput from '../../common/forms/textinput';
+import { EntryLink, OAuthHeader } from '../login';
 
 export const UserDataEntry = ({ classes, data = {}, setSnackbar, onSubmit }) => {
   const { email = '', password = '', password_confirmation = '' } = data;

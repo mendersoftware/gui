@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { adminUserCapabilities, undefineds } from '../../../../../../tests/mockData';
 import { render } from '../../../../../../tests/setupTests';
+import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import AuthsetList from './authsetlist';
 
 describe('AuthsetList Component', () => {

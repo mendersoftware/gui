@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import validator from 'validator';
 
 // material ui
-import { Button, Divider, Drawer, IconButton, TextField } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { Button, Divider, Drawer, IconButton, TextField } from '@mui/material';
 
-import { emptyWebhook } from '../../../constants/organizationConstants';
-import MenderTooltip from '../../common/mendertooltip';
-import InfoHint from '../../common/info-hint';
+import validator from 'validator';
+
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
+import { emptyWebhook } from '../../../constants/organizationConstants';
+import InfoHint from '../../common/info-hint';
+import MenderTooltip from '../../common/mendertooltip';
 
 const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = { ...emptyWebhook } }) => {
   const [description, setDescription] = useState('');

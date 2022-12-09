@@ -1,6 +1,6 @@
-import { listItemClasses } from '@mui/material/ListItem';
 import { accordionClasses } from '@mui/material/Accordion';
 import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+import { listItemClasses } from '@mui/material/ListItem';
 
 const secondaryText = 'rgba(0, 0, 0, 0.54)';
 

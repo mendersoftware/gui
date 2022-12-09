@@ -1,7 +1,7 @@
 import { accordionClasses } from '@mui/material/Accordion';
 import { buttonClasses } from '@mui/material/Button';
 
-import { palette as commonPalette, typography, overrides } from './common';
+import { palette as commonPalette, overrides, typography } from './common';
 
 const grey = {
   'A400': '#1d1f20',

@@ -1,9 +1,9 @@
-import * as fs from 'fs';
 import { expect } from '@playwright/test';
+import * as fs from 'fs';
 
+import test from '../fixtures/fixtures';
 import { baseUrlToDomain, login, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors } from '../utils/constants';
-import test from '../fixtures/fixtures';
 
 test.describe('Test setup', () => {
   test.describe('basic window checks', () => {

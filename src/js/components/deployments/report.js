@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import copy from 'copy-to-clipboard';
-
-import moment from 'moment';
-import momentDurationFormatSetup from 'moment-duration-format';
 
 // material ui
-import { Button, Divider, Drawer, IconButton, Tooltip } from '@mui/material';
 import {
   Block as BlockIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
@@ -14,26 +9,31 @@ import {
   Link as LinkIcon,
   Refresh as RefreshIcon
 } from '@mui/icons-material';
+import { Button, Divider, Drawer, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import copy from 'copy-to-clipboard';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
+
 import { setSnackbar } from '../../actions/appActions';
-import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
+import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
+import { statCollector } from '../../helpers';
 import { getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
+import Confirm from '../common/confirm';
 import LogDialog from '../common/dialogs/log';
+import LinedHeader from '../common/lined-header';
+import DeploymentStatus, { DeploymentPhaseNotification } from './deployment-report/deploymentstatus';
+import DeviceList from './deployment-report/devicelist';
 import DeploymentOverview from './deployment-report/overview';
 import RolloutSchedule from './deployment-report/rolloutschedule';
-import { statCollector } from '../../helpers';
-import Confirm from '../common/confirm';
-import DeviceList from './deployment-report/devicelist';
-import DeploymentStatus, { DeploymentPhaseNotification } from './deployment-report/deploymentstatus';
-import LinedHeader from '../common/lined-header';
 
 momentDurationFormatSetup(moment);
 

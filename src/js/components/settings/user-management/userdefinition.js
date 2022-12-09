@@ -1,16 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import validator from 'validator';
 
 // material ui
-import { Button, Checkbox, Divider, Drawer, FormControl, FormControlLabel, FormHelperText, IconButton, InputLabel, TextField } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { Button, Checkbox, Divider, Drawer, FormControl, FormControlLabel, FormHelperText, IconButton, InputLabel, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { UserRolesSelect } from './userform';
-import { uiPermissionsById, uiPermissionsByArea } from '../../../constants/userConstants';
-import { TwoColumnData } from '../../common/configurationobject';
-import { genericProvider, OAuth2Providers } from '../../login/oauth2providers';
+import validator from 'validator';
+
 import { mapUserRolesToUiPermissions } from '../../../actions/userActions';
+import { uiPermissionsByArea, uiPermissionsById } from '../../../constants/userConstants';
+import { TwoColumnData } from '../../common/configurationobject';
+import { OAuth2Providers, genericProvider } from '../../login/oauth2providers';
+import { UserRolesSelect } from './userform';
 
 const useStyles = makeStyles()(theme => ({
   actionButtons: { justifyContent: 'flex-end' },

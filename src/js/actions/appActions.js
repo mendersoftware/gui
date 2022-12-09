@@ -10,27 +10,27 @@ import {
   SET_VERSION_INFORMATION,
   TIMEOUTS
 } from '../constants/appConstants';
-import { DEVICE_STATES } from '../constants/deviceConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
-import { SET_SHOW_HELP } from '../constants/userConstants';
+import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
+import { SET_SHOW_HELP } from '../constants/userConstants';
 import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import { getDeploymentsByStatus } from './deploymentActions';
 import {
   getDeviceAttributes,
   getDeviceById,
-  getDevicesByStatus,
   getDeviceLimit,
+  getDevicesByStatus,
   getDynamicGroups,
   getGroups,
-  setDeviceListState,
-  searchDevices
+  searchDevices,
+  setDeviceListState
 } from './deviceActions';
-import { getDeploymentsByStatus } from './deploymentActions';
-import { getReleases } from './releaseActions';
-import { saveUserSettings, getGlobalSettings, getRoles, saveGlobalSettings, getUserSettings } from './userActions';
 import { getIntegrations, getUserOrganization } from './organizationActions';
+import { getReleases } from './releaseActions';
+import { getGlobalSettings, getRoles, getUserSettings, saveGlobalSettings, saveUserSettings } from './userActions';
 
 const cookies = new Cookies();
 

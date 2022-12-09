@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 // material ui
-import { CancelOutlined as FailureIcon, VpnKeyOutlined as KeyIcon, WarningAmber as WarningIcon, WifiOff as OfflineIcon } from '@mui/icons-material';
+import { CancelOutlined as FailureIcon, VpnKeyOutlined as KeyIcon, WifiOff as OfflineIcon, WarningAmber as WarningIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import { BaseWidget } from './baseWidget';
 import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
+import { BaseWidget } from './baseWidget';
 
 const issueTypes = [
   {

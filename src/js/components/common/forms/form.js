@@ -1,7 +1,8 @@
 import React from 'react';
-import validator from 'validator';
 
 import { Button } from '@mui/material';
+
+import validator from 'validator';
 
 export default class Form extends React.Component {
   constructor(props, context) {

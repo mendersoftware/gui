@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 
-import 'xterm/css/xterm.css';
-
 import { Terminal } from 'xterm';
-import { SearchAddon } from 'xterm-addon-search';
 import { CanvasAddon } from 'xterm-addon-canvas';
+import { SearchAddon } from 'xterm-addon-search';
+import 'xterm/css/xterm.css';
 
 const searchAddon = new SearchAddon();
 

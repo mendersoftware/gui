@@ -3,5 +3,13 @@
   "singleQuote": true,
   "trailingComma": "none",
   "arrowParens": "avoid",
-  "quoteProps": "preserve"
+  "quoteProps": "preserve",
+  "importOrder": [
+    "^react*",
+    "@emotion/*|@mui/*|tss-react/*",
+    "<THIRD_PARTY_MODULES>",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

@@ -1,9 +1,9 @@
 import { rest } from 'msw';
 
-import { defaultCreationDate, defaultMacAddress, defaultState } from '../mockData';
 import { deviceAuthV2, deviceConfig, deviceConnect, inventoryApiUrl, inventoryApiUrlV2, iotManagerBaseURL } from '../../src/js/actions/deviceActions';
 import { headerNames } from '../../src/js/api/general-api';
 import * as DeviceConstants from '../../src/js/constants/deviceConstants';
+import { defaultCreationDate, defaultMacAddress, defaultState } from '../mockData';
 
 const deviceAuthDevice = {
   id: defaultState.devices.byId.a1.id,

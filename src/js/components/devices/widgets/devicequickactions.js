@@ -1,8 +1,5 @@
 import React, { forwardRef, memo, useMemo, useState } from 'react';
-import pluralize from 'pluralize';
 
-import { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@mui/material';
-import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import {
   AddCircle as AddCircleIcon,
   CheckCircle as CheckCircleIcon,
@@ -11,13 +8,17 @@ import {
   RemoveCircleOutline as RemoveCircleOutlineIcon,
   Replay as ReplayIcon
 } from '@mui/icons-material';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
+import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import { makeStyles } from 'tss-react/mui';
+
 import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
+import pluralize from 'pluralize';
 
 import GatewayIcon from '../../../../assets/img/gateway.svg';
-import MaterialDesignIcon from '../../common/materialdesignicon';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { deepCompare, stringToBoolean } from '../../../helpers';
+import MaterialDesignIcon from '../../common/materialdesignicon';
 
 const defaultActions = {
   accept: {

@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import { useIdleTimer, workerTimers } from 'react-idle-timer';
 import { connect } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useIdleTimer, workerTimers } from 'react-idle-timer';
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+
 import Cookies from 'universal-cookie';
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-import { getToken, updateMaxAge, expirySet } from '../auth';
 import { setSnackbar } from '../actions/appActions';
 import { cancelFileUpload } from '../actions/releaseActions';
 import { logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
+import { expirySet, getToken, updateMaxAge } from '../auth';
+import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import SharedSnackbar from '../components/common/sharedsnackbar';
 import ErrorBoundary from '../errorboundary';
+import { WrappedBaseline } from '../main';
 import { getOnboardingState, getUserSettings } from '../selectors';
+import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
+import Footer from './footer';
 import Header from './header/header';
 import LeftNav from './leftnav';
-import { WrappedBaseline } from '../main';
-import { light as lightTheme, dark as darkTheme } from '../themes/Mender';
 import SearchResult from './search-result';
-import Footer from './footer';
 import Uploads from './uploads';
-import { makeStyles } from 'tss-react/mui';
 
 const activationPath = '/activate';
 const timeout = 900000; // 15 minutes idle time

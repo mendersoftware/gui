@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import Alert from './alert';

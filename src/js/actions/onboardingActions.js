@@ -2,22 +2,21 @@ import Cookies from 'universal-cookie';
 
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import {
-  onboardingSteps as onboardingStepNames,
-  SET_ONBOARDING_PROGRESS,
-  SET_SHOW_ONBOARDING_HELP,
-  SET_ONBOARDING_DEVICE_TYPE,
   SET_ONBOARDING_APPROACH,
   SET_ONBOARDING_ARTIFACT_INCLUDED,
+  SET_ONBOARDING_COMPLETE,
+  SET_ONBOARDING_DEVICE_TYPE,
+  SET_ONBOARDING_PROGRESS,
   SET_SHOW_CREATE_ARTIFACT,
+  SET_SHOW_ONBOARDING_HELP,
   SET_SHOW_ONBOARDING_HELP_DIALOG,
-  SET_ONBOARDING_COMPLETE
+  onboardingSteps as onboardingStepNames
 } from '../constants/onboardingConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
-
-import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingmanager';
 import { getDemoDeviceAddress } from '../helpers';
 import { getUserCapabilities, getUserSettings } from '../selectors';
 import Tracking from '../tracking';
+import { applyOnboardingFallbacks, onboardingSteps } from '../utils/onboardingmanager';
 import { saveUserSettings } from './userActions';
 
 const cookies = new Cookies();

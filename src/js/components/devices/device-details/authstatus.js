@@ -1,13 +1,13 @@
 import React from 'react';
 
+import { Block as BlockIcon, CheckCircle as CheckCircleIcon, Check as CheckIcon } from '@mui/icons-material';
 import { Chip, Icon } from '@mui/material';
-import { Block as BlockIcon, Check as CheckIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 
 import pendingIcon from '../../../../assets/img/pending_status.png';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import DeviceDataCollapse from './devicedatacollapse';
-import Authsets from './authsets/authsets';
 import { AuthButton } from '../../helptips/helptooltips';
+import Authsets from './authsets/authsets';
+import DeviceDataCollapse from './devicedatacollapse';
 
 const iconStyle = { margin: 12 };
 

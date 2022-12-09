@@ -7,10 +7,9 @@ import { setSnackbar } from '../../../actions/appActions';
 import { disableUser2fa, enableUser2fa, get2FAQRCode, verify2FA, verifyEmailComplete, verifyEmailStart } from '../../../actions/userActions';
 import { twoFAStates } from '../../../constants/userConstants';
 import { getCurrentUser, getHas2FA } from '../../../selectors';
-
+import InfoText from '../../common/infotext';
 import AuthSetup from './twofactorauth-steps/authsetup';
 import EmailVerification from './twofactorauth-steps/emailverification';
-import InfoText from '../../common/infotext';
 
 export const TwoFactorAuthSetup = ({
   activationCode,

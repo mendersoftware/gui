@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-import { getToken, logout, updateMaxAge, expirySet } from './auth';
+import { expirySet, getToken, logout, updateMaxAge } from './auth';
 
 describe('getToken function', () => {
   it('returns the jwt token if set in a cookie', async () => {

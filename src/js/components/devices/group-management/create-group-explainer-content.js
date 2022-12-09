@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { Autorenew, LockOutlined } from '@mui/icons-material';
-
-import staticImage from '../../../../assets/img/static-group-creation.gif';
-import dynamicImage from '../../../../assets/img/dynamic-group-creation.gif';
-import InfoText from '../../common/infotext';
 import { makeStyles } from 'tss-react/mui';
+
+import dynamicImage from '../../../../assets/img/dynamic-group-creation.gif';
+import staticImage from '../../../../assets/img/static-group-creation.gif';
+import InfoText from '../../common/infotext';
 
 const useStyles = makeStyles()(theme => ({
   groupType: {

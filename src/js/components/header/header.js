@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Cookies from 'universal-cookie';
-import moment from 'moment';
 
-import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@mui/material';
 import {
   AccountCircle as AccountCircleIcon,
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
   ExitToApp as ExitIcon
 } from '@mui/icons-material';
+import { Button, IconButton, ListItemSecondaryAction, ListItemText, Menu, MenuItem, Toolbar } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import moment from 'moment';
+import Cookies from 'universal-cookie';
+
+import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
+import logo from '../../../assets/img/headerlogo.png';
+import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
+import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { initializeAppData, setFirstLoginAfterSignup, setSearchState, setSnackbar } from '../../actions/appActions';
 import { getOnboardingState } from '../../actions/onboardingActions';
-import { getUser, setHideAnnouncement, logoutUser, toggleHelptips } from '../../actions/userActions';
+import { getUser, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
+import * as UserConstants from '../../constants/userConstants';
 import { decodeSessionToken, extractErrorMessage, isEmpty } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getUserCapabilities, getUserSettings } from '../../selectors';
 import Tracking from '../../tracking';
+import Search from '../common/search';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
-import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
-import TrialNotification from './trialnotification';
+import DeviceNotifications from './devicenotifications';
 import OfferHeader from './offerheader';
-
-import logo from '../../../assets/img/headerlogo.png';
-import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
-import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
-import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
-import * as UserConstants from '../../constants/userConstants';
-import Search from '../common/search';
+import TrialNotification from './trialnotification';
 
 // Change this when a new feature/offer is introduced
 const currentOffer = {

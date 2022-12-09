@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
+import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 // material ui
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton } from '@mui/material';
-import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../../../constants/appConstants';

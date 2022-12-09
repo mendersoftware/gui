@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Button, Divider, Drawer, IconButton, Tab, Tabs } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { Button, Divider, Drawer, IconButton, Tab, Tabs } from '@mui/material';
 
 import { emptyWebhook } from '../../../constants/organizationConstants';
-import WebhookConfiguration from './configuration';
 import WebhookActivity from './activity';
+import WebhookConfiguration from './configuration';
 
 const tabs = ['settings', 'activity'];
 

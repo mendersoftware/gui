@@ -6,18 +6,18 @@ import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { editUser, saveGlobalSettings, saveUserSettings } from '../../../actions/userActions';
+import { getToken } from '../../../auth';
 import * as UserConstants from '../../../constants/userConstants';
 import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../../selectors';
-import Form from '../../common/forms/form';
-import TextInput from '../../common/forms/textinput';
-import PasswordInput from '../../common/forms/passwordinput';
-import TwoFactorAuthSetup from './twofactorauthsetup';
-import AccessTokenManagement from '../accesstokenmanagement';
-import InfoText from '../../common/infotext';
-import { getUserSSOState } from './userdefinition';
-import { getToken } from '../../../auth';
-import { CopyTextToClipboard } from '../organization/organization';
 import ExpandableAttribute from '../../common/expandable-attribute';
+import Form from '../../common/forms/form';
+import PasswordInput from '../../common/forms/passwordinput';
+import TextInput from '../../common/forms/textinput';
+import InfoText from '../../common/infotext';
+import AccessTokenManagement from '../accesstokenmanagement';
+import { CopyTextToClipboard } from '../organization/organization';
+import TwoFactorAuthSetup from './twofactorauthsetup';
+import { getUserSSOState } from './userdefinition';
 
 const useStyles = makeStyles()(() => ({
   formField: { width: 400, maxWidth: '100%' },

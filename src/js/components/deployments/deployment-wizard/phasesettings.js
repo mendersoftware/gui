@@ -1,31 +1,32 @@
 import React, { useState } from 'react';
-import pluralize from 'pluralize';
 
 import { Add as AddIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import {
+  Checkbox,
   Chip,
+  Collapse,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  Input,
+  InputAdornment,
+  ListSubheader,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
-  Select,
-  MenuItem,
-  Input,
-  InputAdornment,
-  IconButton,
-  FormControlLabel,
-  Checkbox,
-  Collapse,
-  FormControl,
-  ListSubheader
+  TableRow
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import pluralize from 'pluralize';
+
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
-import EnterpriseNotification from '../../common/enterpriseNotification';
 
 const useStyles = makeStyles()(theme => ({
   chip: { marginTop: theme.spacing(2) },

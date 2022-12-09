@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
-import moment from 'moment';
 
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import moment from 'moment';
 
 const renderInput = params => <TextField className="margin-top-none margin-left-small" {...params} />;
 

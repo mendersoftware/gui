@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
+import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
+import { Button, MenuItem, Select } from '@mui/material';
 // material ui
 import { useTheme } from '@mui/material/styles';
-import { Button, MenuItem, Select } from '@mui/material';
-import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -33,14 +33,14 @@ import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import { ExpandDevice } from '../helptips/helptooltips';
+import { defaultHeaders, defaultTextRender, getDeviceIdentityText, routes as states } from './base-devices';
+import DeviceList, { minCellWidth } from './devicelist';
+import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
+import ExpandedDevice from './expanded-device';
 import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
-import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
 import ListOptions from './widgets/listoptions';
-import { defaultHeaders, routes as states, defaultTextRender, getDeviceIdentityText } from './base-devices';
-import DeviceList, { minCellWidth } from './devicelist';
-import ExpandedDevice from './expanded-device';
 
 const refreshDeviceLength = TIMEOUTS.refreshDefault;
 

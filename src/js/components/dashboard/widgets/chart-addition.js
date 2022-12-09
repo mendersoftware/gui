@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { defaultReports } from '../software-distribution';
-import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
   additionButton: { fontSize: '1rem', cursor: 'pointer' },

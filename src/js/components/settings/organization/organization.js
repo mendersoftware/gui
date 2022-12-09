@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import moment from 'moment';
+import { connect } from 'react-redux';
 
 // material ui
-import { Button, Checkbox, Collapse, FormControlLabel, List } from '@mui/material';
 import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@mui/icons-material';
+import { Button, Checkbox, Collapse, FormControlLabel, List } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+
+import moment from 'moment';
 
 import { setSnackbar } from '../../../actions/appActions';
 import {
@@ -17,14 +18,14 @@ import {
   getUserOrganization,
   storeSamlConfig
 } from '../../../actions/organizationActions';
-import { MenderTooltipClickable } from '../../common/mendertooltip';
-import ExpandableAttribute from '../../common/expandable-attribute';
-import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
-import Billing from './billing';
-import { SAMLConfig } from './samlconfig';
-import { getTenantCapabilities, getUserRoles } from '../../../selectors';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { createFileDownload, versionCompare } from '../../../helpers';
+import { getTenantCapabilities, getUserRoles } from '../../../selectors';
+import ExpandableAttribute from '../../common/expandable-attribute';
+import { MenderTooltipClickable } from '../../common/mendertooltip';
+import Billing from './billing';
+import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
+import { SAMLConfig } from './samlconfig';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },

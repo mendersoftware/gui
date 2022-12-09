@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
 // material ui
+import { CloudUpload } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { listItemTextClasses } from '@mui/material/ListItemText';
-import { CloudUpload } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import InfoHint from '../../common/info-hint';
-import { maxWidth } from './organizationsettingsitem';
 import { useradmApiUrl } from '../../../constants/userConstants';
 import ExpandableAttribute from '../../common/expandable-attribute';
+import InfoHint from '../../common/info-hint';
+import { maxWidth } from './organizationsettingsitem';
 import SSOEditor from './ssoeditor';
 
 const useStyles = makeStyles()(theme => ({

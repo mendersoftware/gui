@@ -1,7 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+
 import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
+import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import PhysicalDeviceOnboarding, {
   ConvertedImageNote,
   DeviceTypeSelectionStep,
@@ -9,9 +14,6 @@ import PhysicalDeviceOnboarding, {
   ExternalProviderTip,
   InstallationStep
 } from './physicaldeviceonboarding';
-import { defaultState, undefineds } from '../../../../../tests/mockData';
-import { render } from '../../../../../tests/setupTests';
-import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 
 const mockStore = configureStore([thunk]);
 

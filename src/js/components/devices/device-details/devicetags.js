@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+import { Edit as EditIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Edit as EditIcon } from '@mui/icons-material';
 
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { render } from '../../../../tests/setupTests';
 import { undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import InfoHint from './info-hint';
 
 describe('InfoHint Component', () => {

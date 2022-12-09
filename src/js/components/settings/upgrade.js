@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
 
 import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '@mui/icons-material';
+
+import moment from 'moment';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { cancelUpgrade, completeUpgrade, getUserOrganization, requestPlanChange, startUpgrade } from '../../actions/organizationActions';
-import Loader from '../common/loader';
 import { PLANS, TIMEOUTS } from '../../constants/appConstants';
-import AddOnSelection from './addonselection';
-import PlanSelection from './planselection';
-import CardSection from './cardsection';
-import QuoteRequestForm from './quoterequestform';
 import InfoText from '../common/infotext';
+import Loader from '../common/loader';
+import AddOnSelection from './addonselection';
+import CardSection from './cardsection';
+import PlanSelection from './planselection';
+import QuoteRequestForm from './quoterequestform';
 
 const offerTag = (
   <span className="offerTag">

@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 
 // material ui
-import { Chip } from '@mui/material';
 import { ArrowRightAlt as ArrowRightAltIcon, Check as CheckIcon } from '@mui/icons-material';
+import { Chip } from '@mui/material';
 
-import Time, { RelativeTime } from '../../common/time';
 import { twoFAStates } from '../../../constants/userConstants';
 import DetailsTable from '../../common/detailstable';
+import Time, { RelativeTime } from '../../common/time';
 
 const columnData = [
   {

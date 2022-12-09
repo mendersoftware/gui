@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import { Accordion, AccordionDetails, AccordionSummary, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
 import {
   ArrowDropDown as ArrowDropDownIcon,
   ArrowDropUp as ArrowDropUpIcon,
   FileCopy as CopyPasteIcon,
   ReportProblemOutlined as WarningIcon
 } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 

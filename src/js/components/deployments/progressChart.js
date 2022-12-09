@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+
+import { RotateLeftOutlined, Warning as WarningIcon } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
+import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
-
-import { Tooltip } from '@mui/material';
-import { RotateLeftOutlined, Warning as WarningIcon } from '@mui/icons-material';
-import { mdiDotsHorizontalCircleOutline as QueuedIcon, mdiSleep as SleepIcon } from '@mdi/js';
-import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../constants/appConstants';
 import { groupDeploymentStats } from '../../helpers';

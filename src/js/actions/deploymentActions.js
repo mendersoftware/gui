@@ -1,10 +1,10 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
+import { commonErrorHandler, setSnackbar } from '../actions/appActions';
+import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
+import { SORTING_OPTIONS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
-import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
-import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import { startTimeSort } from '../helpers';
-import { SORTING_OPTIONS } from '../constants/appConstants';
 import Tracking from '../tracking';
 import { saveGlobalSettings } from './userActions';
 

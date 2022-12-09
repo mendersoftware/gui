@@ -6,20 +6,18 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import { makeStyles } from 'tss-react/mui';
 
 import docker from '../../../../assets/img/docker.png';
-import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.png';
-
+import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import { setDeviceListState } from '../../../actions/deviceActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDocsVersion, getTenantCapabilities } from '../../../selectors';
+import InfoText from '../../common/infotext';
 import { DeviceSupportTip } from '../../helptips/helptooltips';
-
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
-import InfoText from '../../common/infotext';
 
 const useStyles = makeStyles()(theme => ({
   rpiQuickstart: {

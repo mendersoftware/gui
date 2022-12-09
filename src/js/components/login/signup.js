@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 
 import { makeStyles } from 'tss-react/mui';
+
+import Cookies from 'universal-cookie';
 
 import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';

@@ -15,8 +15,8 @@ import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import LinedHeader from '../common/lined-header';
 import Loader from '../common/loader';
-import DeploymentsList from './deploymentslist';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
+import DeploymentsList from './deploymentslist';
 
 export const minimalRefreshDeploymentsLength = 2000;
 

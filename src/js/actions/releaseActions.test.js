@@ -2,7 +2,10 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, releasesList } from '../../../tests/mockData';
-
+import { mockAbortController } from '../../../tests/setupTests';
+import * as AppConstants from '../constants/appConstants';
+import * as OnboardingConstants from '../constants/onboardingConstants';
+import * as ReleaseConstants from '../constants/releaseConstants';
 import {
   createArtifact,
   editArtifact,
@@ -15,10 +18,6 @@ import {
   selectRelease,
   uploadArtifact
 } from './releaseActions';
-import * as AppConstants from '../constants/appConstants';
-import * as OnboardingConstants from '../constants/onboardingConstants';
-import * as ReleaseConstants from '../constants/releaseConstants';
-import { mockAbortController } from '../../../tests/setupTests';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

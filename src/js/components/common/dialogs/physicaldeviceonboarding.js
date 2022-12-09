@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { TextField, Autocomplete } from '@mui/material';
 import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { Autocomplete, TextField } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 
-import CopyCode from '../copy-code';
 import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
 import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../../selectors';
+import CopyCode from '../copy-code';
 import { MenderTooltipClickable } from '../mendertooltip';
 
 const filter = createFilterOptions();

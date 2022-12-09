@@ -1,19 +1,8 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState, receivedPermissionSets, receivedRoles } from '../../../tests/mockData';
-
-import {
-  commonErrorHandler,
-  getLatestReleaseInfo,
-  initializeAppData,
-  setSearchState,
-  setSnackbar,
-  setFirstLoginAfterSignup,
-  setOfflineThreshold,
-  setVersionInfo
-} from './appActions';
-import { tenantDataDivergedMessage } from './organizationActions';
 import {
   SET_ANNOUNCEMENT,
   SET_FIRST_LOGIN_AFTER_SIGNUP,
@@ -45,10 +34,21 @@ import {
   SET_REJECTED_DEVICES,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
-import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
 import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, SET_ORGANIZATION } from '../constants/organizationConstants';
-import { RECEIVED_PERMISSION_SETS, RECEIVED_ROLES, SET_SHOW_HELP, SET_GLOBAL_SETTINGS, SET_USER_SETTINGS } from '../constants/userConstants';
+import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
+import { RECEIVED_PERMISSION_SETS, RECEIVED_ROLES, SET_GLOBAL_SETTINGS, SET_SHOW_HELP, SET_USER_SETTINGS } from '../constants/userConstants';
+import {
+  commonErrorHandler,
+  getLatestReleaseInfo,
+  initializeAppData,
+  setFirstLoginAfterSignup,
+  setOfflineThreshold,
+  setSearchState,
+  setSnackbar,
+  setVersionInfo
+} from './appActions';
+import { tenantDataDivergedMessage } from './organizationActions';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

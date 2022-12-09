@@ -1,17 +1,18 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
+
+import { ArrowDropDown, ExpandMore, FileDownloadOutlined as FileDownloadIcon, Launch } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Chip, Menu, MenuItem, Typography } from '@mui/material';
+
 import copy from 'copy-to-clipboard';
 import Cookies from 'universal-cookie';
 
-import { Accordion, AccordionDetails, AccordionSummary, Chip, Menu, MenuItem, Typography } from '@mui/material';
-import { ArrowDropDown, ExpandMore, FileDownloadOutlined as FileDownloadIcon, Launch } from '@mui/icons-material';
-
 import { setSnackbar } from '../../actions/appActions';
-import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
-import Time from '../common/time';
 import { getToken } from '../../auth';
 import { detectOsIdentifier } from '../../helpers';
+import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
+import Time from '../common/time';
 
 const cookies = new Cookies();
 

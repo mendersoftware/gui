@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Announcement as AnnouncmentIcon, Close as CloseIcon } from '@mui/icons-material';
 
 const OfferHeader = ({ docsVersion, onHide }) => (

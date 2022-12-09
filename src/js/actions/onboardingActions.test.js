@@ -1,7 +1,10 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { defaultState } from '../../../tests/mockData';
 
+import { defaultState } from '../../../tests/mockData';
+import * as OnboardingConstants from '../constants/onboardingConstants';
+import * as UserConstants from '../constants/userConstants';
+import { onboardingSteps } from '../utils/onboardingmanager';
 import {
   advanceOnboarding,
   getOnboardingState,
@@ -13,9 +16,6 @@ import {
   setShowDismissOnboardingTipsDialog,
   setShowOnboardingHelp
 } from './onboardingActions';
-import { onboardingSteps } from '../utils/onboardingmanager';
-import * as OnboardingConstants from '../constants/onboardingConstants';
-import * as UserConstants from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

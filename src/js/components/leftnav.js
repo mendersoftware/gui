@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
-import copy from 'copy-to-clipboard';
 
 // material ui
 import { List, ListItem, ListItemText, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
+import copy from 'copy-to-clipboard';
 
+import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../selectors';

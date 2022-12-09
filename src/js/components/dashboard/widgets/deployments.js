@@ -1,7 +1,8 @@
 import React from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 
+import { makeStyles } from 'tss-react/mui';
+
+import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import Time from '../../common/time';
 import { DeploymentProgress } from '../../deployments/deploymentitem';
 import DeploymentStats from '../../deployments/deploymentstatus';

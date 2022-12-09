@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
+
 import { TIMEOUTS } from '../constants/appConstants';
 
 export const useWindowSize = () => {

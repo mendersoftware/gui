@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -25,8 +25,8 @@ import { makeStyles } from 'tss-react/mui';
 import { generateToken, getTokens, revokeToken } from '../../actions/userActions';
 import { customSort } from '../../helpers';
 import { getCurrentUser, getTenantCapabilities } from '../../selectors';
-import Time, { RelativeTime } from '../common/time';
 import CopyCode from '../common/copy-code';
+import Time, { RelativeTime } from '../common/time';
 
 const useStyles = makeStyles()(() => ({
   accessTokens: {

@@ -1,11 +1,11 @@
 import { rest } from 'msw';
 
-import { defaultState, webhookEvents } from '../mockData';
-import { PLANS } from '../../src/js/constants/appConstants';
 import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
 import { auditLogsApiUrl, samlIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { headerNames } from '../../src/js/api/general-api';
+import { PLANS } from '../../src/js/constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../../src/js/constants/deviceConstants';
+import { defaultState, webhookEvents } from '../mockData';
 
 const releasesSample = {
   lts: ['3.3'],

@@ -1,5 +1,6 @@
 import Cookies from 'universal-cookie';
-import { noExpiryKey, TIMEOUTS } from './constants/appConstants';
+
+import { TIMEOUTS, noExpiryKey } from './constants/appConstants';
 
 const cookies = new Cookies();
 

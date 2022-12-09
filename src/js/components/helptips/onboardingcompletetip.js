@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Button } from '@mui/material';
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+
+import { bindActionCreators } from 'redux';
 
 import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/onboardingActions';
-import Loader from '../common/loader';
-import { MenderTooltipClickable } from '../common/mendertooltip';
 import * as DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress, getDocsVersion } from '../../selectors';
+import Loader from '../common/loader';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 import { CompletionButton } from './deploymentcompletetip';
 
 export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getDevicesByStatus, setOnboardingComplete, url }) => {

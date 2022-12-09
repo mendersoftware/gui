@@ -1,19 +1,18 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 // material ui
-import { Checkbox } from '@mui/material';
-
 import { Settings as SettingsIcon, Sort as SortIcon } from '@mui/icons-material';
+import { Checkbox } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
+import { deepCompare } from '../../helpers';
+import useWindowSize from '../../utils/resizehook';
 import Loader from '../common/loader';
+import MenderTooltip from '../common/mendertooltip';
 import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
-import { deepCompare } from '../../helpers';
-import MenderTooltip from '../common/mendertooltip';
-import useWindowSize from '../../utils/resizehook';
-import { makeStyles } from 'tss-react/mui';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 
-import { IconButton, TextField } from '@mui/material';
 import { CloudUpload, Delete as DeleteIcon } from '@mui/icons-material';
+import { IconButton, TextField } from '@mui/material';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { FileSize } from '../../../helpers';

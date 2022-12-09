@@ -1,14 +1,16 @@
 import React from 'react';
-import { screen, within, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
-import Header from './header';
+import thunk from 'redux-thunk';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import * as AppConstants from '../../constants/appConstants';
 import * as UserConstants from '../../constants/userConstants';
+import Header from './header';
 
 const mockStore = configureStore([thunk]);
 

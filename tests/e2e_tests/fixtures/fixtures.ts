@@ -1,6 +1,7 @@
+import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
+
 import { baseUrlToDomain, getPeristentLoginInfo, login } from '../utils/commands';
-import { expect, test as coveredTest } from '@bgotink/playwright-coverage';
 
 type TestFixtures = {
   baseUrl: string;

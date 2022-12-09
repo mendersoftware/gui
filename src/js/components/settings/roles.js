@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Chip } from '@mui/material';
 import { Add as AddIcon, ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
+import { Chip } from '@mui/material';
 
-import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
+import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { emptyRole } from '../../constants/userConstants';
-import RoleDefinition from './roledefinition';
 import DetailsTable from '../common/detailstable';
+import RoleDefinition from './roledefinition';
 
 const columns = [
   { key: 'name', title: 'Role', render: ({ name }) => name },

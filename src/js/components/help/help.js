@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 
-import { useTheme, ListItemIcon } from '@mui/material';
 import { Launch as LaunchIcon } from '@mui/icons-material';
+import { ListItemIcon, useTheme } from '@mui/material';
 
 import { getDocsVersion } from '../../selectors';
 import LeftNav from '../common/left-nav';

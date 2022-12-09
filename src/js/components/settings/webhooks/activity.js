@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 // material ui
-import { Accordion, accordionClasses, AccordionDetails, AccordionSummary } from '@mui/material';
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon, Circle as CircleIcon } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, accordionClasses } from '@mui/material';
 import { accordionSummaryClasses } from '@mui/material/AccordionSummary';
 import { makeStyles } from 'tss-react/mui';
 
-import Time from '../../common/time';
-import Pagination from '../../common/pagination';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
+import Pagination from '../../common/pagination';
+import Time from '../../common/time';
 
 const useStyles = makeStyles()(theme => ({
   activityList: {

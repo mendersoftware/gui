@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { Button, Accordion, AccordionDetails, AccordionSummary, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@mui/material';
 import {
   Add as AddIcon,
-  Remove as RemoveIcon,
   Cancel as CancelIcon,
-  CheckCircleOutline as CheckCircleOutlineIcon,
   CancelOutlined as CancelOutlinedIcon,
+  CheckCircleOutline as CheckCircleOutlineIcon,
   Check as CheckIcon,
   Edit as EditIcon,
-  ExitToApp as ExitToAppIcon
+  ExitToApp as ExitToAppIcon,
+  Remove as RemoveIcon
 } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { getArtifactUrl } from '../../actions/releaseActions';

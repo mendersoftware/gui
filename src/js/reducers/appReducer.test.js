@@ -1,5 +1,5 @@
-import reducer, { initialState } from './appReducer';
 import * as AppConstants from '../constants/appConstants';
+import reducer, { initialState } from './appReducer';
 
 const snackbarMessage = 'Run the tests';
 

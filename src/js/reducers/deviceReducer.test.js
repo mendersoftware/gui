@@ -1,7 +1,7 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
-import reducer, { initialState } from './deviceReducer';
-import * as DeviceConstants from '../constants/deviceConstants';
 import { defaultState } from '../../../tests/mockData';
+import * as DeviceConstants from '../constants/deviceConstants';
+import reducer, { initialState } from './deviceReducer';
 
 const {
   ADD_DYNAMIC_GROUP,

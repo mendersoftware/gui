@@ -1,9 +1,10 @@
-import React, { lazy, Suspense, useRef, useState } from 'react';
+import React, { Suspense, lazy, useRef, useState } from 'react';
 
 // material ui
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 import Loader from '../../common/loader';
+
 const Content = lazy(() => import('./custom-columns-dialog-content'));
 
 export const ColumnCustomizationDialog = ({ customColumnSizes, open, onCancel, onSubmit, ...props }) => {

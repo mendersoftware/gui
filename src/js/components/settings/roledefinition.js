@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import validator from 'validator';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // material ui
-import { Button, Checkbox, Divider, Drawer, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material';
 import { Close as CloseIcon, InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
+import { Button, Checkbox, Divider, Drawer, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material';
 import { useTheme } from '@mui/styles';
 
+import validator from 'validator';
+
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { emptyUiPermissions, emptyRole, uiPermissionsById, uiPermissionsByArea, rolesById } from '../../constants/userConstants';
+import { emptyRole, emptyUiPermissions, rolesById, uiPermissionsByArea, uiPermissionsById } from '../../constants/userConstants';
 import { deepCompare, isEmpty } from '../../helpers';
 
 const menuProps = {

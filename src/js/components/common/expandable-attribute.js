@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
 // material ui
 import { ListItem, ListItemText, Tooltip } from '@mui/material';
-
-import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
 
 import copy from 'copy-to-clipboard';
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import pluralize from 'pluralize';
 
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { AddCircle as AddIcon } from '@mui/icons-material';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+
+import pluralize from 'pluralize';
 
 import { setOfflineThreshold, setSnackbar } from '../../actions/appActions';
 import {
@@ -25,19 +26,19 @@ import {
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
+import { versionCompare } from '../../helpers';
 import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { useLocationParams } from '../../utils/liststatehook';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
-import CreateGroup from './group-management/create-group';
-import RemoveGroup from './group-management/remove-group';
-import CreateGroupExplainer from './group-management/create-group-explainer';
+import DeviceStatusNotification from './devicestatusnotification';
 import MakeGatewayDialog from './dialogs/make-gateway-dialog';
 import PreauthDialog, { DeviceLimitWarning } from './dialogs/preauth-dialog';
-import DeviceAdditionWidget from './widgets/deviceadditionwidget';
+import CreateGroup from './group-management/create-group';
+import CreateGroupExplainer from './group-management/create-group-explainer';
+import RemoveGroup from './group-management/remove-group';
 import Groups from './groups';
-import DeviceStatusNotification from './devicestatusnotification';
-import { versionCompare } from '../../helpers';
-import { useLocationParams } from '../../utils/liststatehook';
+import DeviceAdditionWidget from './widgets/deviceadditionwidget';
 
 const refreshLength = TIMEOUTS.refreshDefault;
 

@@ -1,23 +1,24 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import { connect } from 'react-redux';
-import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { connect } from 'react-redux';
 
-import { Button } from '@mui/material';
 import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
+import moment from 'moment';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
 import { getIsEnterprise, getUserCapabilities } from '../../selectors';
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
-import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
-import { makeStyles } from 'tss-react/mui';
+import DeploymentsList, { defaultHeaders } from './deploymentslist';
 
 const useStyles = makeStyles()(theme => ({
   inactive: { color: theme.palette.text.disabled },

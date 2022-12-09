@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // material ui
-import { Autocomplete, createFilterOptions, TextField } from '@mui/material';
+import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { getFilterLabelByKey } from './filters';

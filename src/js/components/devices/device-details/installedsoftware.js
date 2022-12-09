@@ -4,10 +4,10 @@ import { deepmerge } from '@mui/utils';
 import { makeStyles } from 'tss-react/mui';
 
 import { rootfsImageVersion } from '../../../constants/releaseConstants';
-import { TwoColumnData } from '../../common/configurationobject';
-import DeviceInventoryLoader from './deviceinventoryloader';
-import DeviceDataCollapse from './devicedatacollapse';
 import { extractSoftware, isEmpty } from '../../../helpers';
+import { TwoColumnData } from '../../common/configurationobject';
+import DeviceDataCollapse from './devicedatacollapse';
+import DeviceInventoryLoader from './deviceinventoryloader';
 
 const borderStyle = theme => ({ borderLeft: 'solid 1px', borderLeftColor: theme.palette.grey[500] });
 

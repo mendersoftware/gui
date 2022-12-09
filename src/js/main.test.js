@@ -1,7 +1,8 @@
 import React from 'react';
-import 'jsdom-worker';
 import * as router from 'react-router-dom';
+
 import { render } from '@testing-library/react';
+import 'jsdom-worker';
 
 import { undefineds } from '../../tests/mockData';
 import { AppProviders } from './main';

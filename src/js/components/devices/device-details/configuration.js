@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import {
   Block as BlockIcon,
   CheckCircle as CheckCircleIcon,
@@ -10,9 +9,11 @@ import {
   Refresh as RefreshIcon,
   SaveAlt as SaveAltIcon
 } from '@mui/icons-material';
+import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 
+import { DEPLOYMENT_ROUTES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { deepCompare, groupDeploymentStats, groupDeploymentDevicesStats, isEmpty } from '../../../helpers';
+import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
@@ -23,7 +24,6 @@ import Time from '../../common/time';
 import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
-import { DEPLOYMENT_ROUTES } from '../../../constants/deploymentConstants';
 
 const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };

@@ -1,5 +1,5 @@
-import * as path from 'path';
 import { PlaywrightTestConfig } from '@playwright/test';
+import * as path from 'path';
 
 const contextArgs = {
   acceptDownloads: true,

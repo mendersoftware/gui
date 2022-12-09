@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@mui/material';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import CreateGroupExplainerContent from './create-group-explainer-content';
 

@@ -1,7 +1,8 @@
 import React from 'react';
-import DeviceInventoryLoader from './deviceinventoryloader';
+
 import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import DeviceInventoryLoader from './deviceinventoryloader';
 
 describe('CreateGroup Component', () => {
   it('renders correctly', async () => {

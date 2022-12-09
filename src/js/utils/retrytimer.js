@@ -1,6 +1,6 @@
 import { TIMEOUTS } from '../constants/appConstants';
-import store from '../reducers';
 import { extractErrorMessage, preformatWithRequestID } from '../helpers';
+import store from '../reducers';
 
 var timerArr = {};
 
