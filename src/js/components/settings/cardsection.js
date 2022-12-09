@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+
 import { Button } from '@mui/material';
-import Loader from '../common/loader';
+
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import stripeImage from '../../../assets/img/powered_by_stripe.png';
 import InfoText from '../common/infotext';
+import Loader from '../common/loader';
 
 const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) => {
   const stripe = useStripe();

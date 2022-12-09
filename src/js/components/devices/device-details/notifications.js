@@ -1,8 +1,9 @@
-import pluralize from 'pluralize';
 import React from 'react';
 
-import { ArrowDropDownCircleOutlined as ScrollDownIcon, CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon } from '@mui/icons-material';
+import { CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
+
+import pluralize from 'pluralize';
 
 import Time from '../../common/time';
 

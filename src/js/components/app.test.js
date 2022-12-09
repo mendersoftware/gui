@@ -1,12 +1,14 @@
 import React from 'react';
-import 'jsdom-worker';
-import { act } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+
+import { act } from '@testing-library/react';
+import 'jsdom-worker';
 import configureStore from 'redux-mock-store';
-import App from './app';
+import thunk from 'redux-thunk';
+
 import { defaultState, undefineds } from '../../../tests/mockData';
 import { render } from '../../../tests/setupTests';
+import App from './app';
 
 const mockStore = configureStore([thunk]);
 
@@ -44,6 +46,7 @@ describe('App Component', () => {
       writable: true,
       value: 'JWT=omnomnom'
     });
+    window.localStorage.getItem.mockReturnValueOnce('false');
     const { baseElement } = render(
       <Provider store={store}>
         <App />
@@ -55,6 +58,7 @@ describe('App Component', () => {
   });
 
   it('works as intended', async () => {
+    window.localStorage.getItem.mockReturnValueOnce('false');
     Object.defineProperty(window.document, 'cookie', {
       writable: true,
       value: 'JWT=omnomnom'

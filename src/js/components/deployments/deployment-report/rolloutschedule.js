@@ -1,11 +1,12 @@
 import React from 'react';
-import pluralize from 'pluralize';
+
+import { ArrowForward } from '@mui/icons-material';
+import { Chip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
-
-import { Chip } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
-import { makeStyles } from 'tss-react/mui';
+import pluralize from 'pluralize';
 
 import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { formatTime, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
@@ -13,8 +14,8 @@ import { TwoColumnData } from '../../common/configurationobject';
 import LinedHeader from '../../common/lined-header';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
+import { ProgressChartComponent, getDeploymentPhasesInfo, getDisplayablePhases } from '../progressChart';
 import { defaultColumnDataProps } from '../report';
-import { getDeploymentPhasesInfo, getDisplayablePhases, ProgressChartComponent } from '../progressChart';
 import PhaseProgress from './phaseprogress';
 
 const useStyles = makeStyles()(theme => ({

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
 import { Button, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
+
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
@@ -13,8 +14,8 @@ import { formatAuditlogs } from '../../../utils/locationutils';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
-import DeviceDataCollapse from './devicedatacollapse';
 import Troubleshootdialog from '../dialogs/troubleshootdialog';
+import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 export const PortForwardLink = ({ docsVersion }) => (

@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { getDeviceCount } from '../../actions/deviceActions';
-import { setShowConnectingDialog } from '../../actions/userActions';
+import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
+import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getAvailableIssueOptionsByType, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-import { getIssueCountsByType } from '../../actions/monitorActions';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
 import ActionableDevices from './widgets/actionabledevices';

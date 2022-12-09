@@ -1,14 +1,14 @@
+import { getToken } from '../auth';
 import { TIMEOUTS } from '../constants/appConstants';
-import store from '../reducers';
 import { extractErrorMessage, preformatWithRequestID } from '../helpers';
 
-var timerArr = {};
+let timers = {};
 
 export function setRetryTimer(err, service, errorContext, timeLeft, setSnackbar) {
   // check if logged in and if service not already retrying
-  if (!timerArr[service] && (store.getState().users.byId[store.getState().users.currentUser] || {}).hasOwnProperty('email')) {
-    var remaining = timeLeft - TIMEOUTS.oneSecond;
-    timerArr[service] = setInterval(() => {
+  if (!timers[service] && getToken()) {
+    let remaining = timeLeft - TIMEOUTS.oneSecond;
+    timers[service] = setInterval(() => {
       remaining -= TIMEOUTS.oneSecond;
       const errMsg = extractErrorMessage(err, 'Please check your connection.');
       remaining > 0
@@ -19,16 +19,14 @@ export function setRetryTimer(err, service, errorContext, timeLeft, setSnackbar)
 }
 
 export function clearRetryTimer(service, setSnackbar) {
-  if (timerArr[service]) {
-    clearInterval(timerArr[service]);
-    delete timerArr[service];
+  if (timers[service]) {
+    clearInterval(timers[service]);
+    delete timers[service];
     setSnackbar('');
   }
 }
 
 export function clearAllRetryTimers(setSnackbar) {
-  for (var service in timerArr) {
-    clearRetryTimer(service, setSnackbar);
-  }
+  Object.keys(timers).map(service => clearRetryTimer(service, setSnackbar));
   setSnackbar('');
 }

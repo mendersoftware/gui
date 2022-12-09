@@ -1,5 +1,6 @@
-import reducer, { initialState } from './releaseReducer';
 import * as ReleaseConstants from '../constants/releaseConstants';
+import reducer, { initialState } from './releaseReducer';
+
 const testRelease = {
   Artifacts: [
     {

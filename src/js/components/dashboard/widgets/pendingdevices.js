@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import pluralize from 'pluralize';
 
 // material ui
-import { Fab } from '@mui/material';
 import { Add as ContentAddIcon } from '@mui/icons-material';
-
-import { BaseWidget } from './baseWidget';
-import { onboardingSteps } from '../../../utils/onboardingmanager';
+import { Fab } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+
+import pluralize from 'pluralize';
+
+import { onboardingSteps } from '../../../utils/onboardingmanager';
+import { BaseWidget } from './baseWidget';
 
 const useStyles = makeStyles()(theme => ({
   fab: { top: '-28px', right: theme.spacing(2), zIndex: 1 }

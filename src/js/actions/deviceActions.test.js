@@ -1,8 +1,10 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultCreationDate, defaultState } from '../../../tests/mockData';
 import { mockAbortController } from '../../../tests/setupTests';
@@ -29,9 +31,9 @@ import {
   getDeviceFileDownloadLink,
   getDeviceInfo,
   getDeviceLimit,
+  getDeviceTwin,
   getDevicesByStatus,
   getDevicesWithAuth,
-  getDeviceTwin,
   getDynamicGroups,
   getGroupDevices,
   getGroups,

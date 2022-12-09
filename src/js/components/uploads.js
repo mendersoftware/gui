@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { connect } from 'react-redux';
-import pluralize from 'pluralize';
 
-import { LinearProgress, IconButton, Tooltip, Drawer, drawerClasses } from '@mui/material';
 import { Cancel as CancelIcon } from '@mui/icons-material';
+import { Drawer, IconButton, LinearProgress, Tooltip, drawerClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+
+import pluralize from 'pluralize';
 
 import { cancelFileUpload } from '../actions/releaseActions';
 import { FileSize } from '../helpers';

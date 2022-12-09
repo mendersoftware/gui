@@ -1,6 +1,7 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { getDocsVersion } from '../../../selectors';

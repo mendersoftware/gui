@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
-import InfoText from './infotext';
 import { makeStyles } from 'tss-react/mui';
+
+import InfoText from './infotext';
 
 const useStyles = makeStyles()(theme => ({
   default: { gap: theme.spacing() }

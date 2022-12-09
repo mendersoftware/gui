@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Autocomplete } from '@mui/material';
+
+import { Autocomplete, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import { TIMEOUTS } from '../../constants/appConstants';

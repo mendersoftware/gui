@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { InputAdornment, TextField } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
+import { InputAdornment, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../constants/appConstants';
-import Loader from './loader';
 import { useDebounce } from '../../utils/debouncehook';
+import Loader from './loader';
 
 const useStyles = makeStyles()(() => ({
   root: {

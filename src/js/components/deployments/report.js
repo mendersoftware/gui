@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import copy from 'copy-to-clipboard';
-
-import moment from 'moment';
-import momentDurationFormatSetup from 'moment-duration-format';
 
 // material ui
-import { Button, Divider, Drawer, IconButton, Tooltip } from '@mui/material';
 import {
   Block as BlockIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
@@ -14,26 +9,31 @@ import {
   Link as LinkIcon,
   Refresh as RefreshIcon
 } from '@mui/icons-material';
+import { Button, Divider, Drawer, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import copy from 'copy-to-clipboard';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
+
 import { setSnackbar } from '../../actions/appActions';
-import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
+import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { deploymentStatesToSubstates, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
+import { statCollector, toggle } from '../../helpers';
 import { getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
+import Confirm from '../common/confirm';
 import LogDialog from '../common/dialogs/log';
+import LinedHeader from '../common/lined-header';
+import DeploymentStatus, { DeploymentPhaseNotification } from './deployment-report/deploymentstatus';
+import DeviceList from './deployment-report/devicelist';
 import DeploymentOverview from './deployment-report/overview';
 import RolloutSchedule from './deployment-report/rolloutschedule';
-import { statCollector } from '../../helpers';
-import Confirm from '../common/confirm';
-import DeviceList from './deployment-report/devicelist';
-import DeploymentStatus, { DeploymentPhaseNotification } from './deployment-report/deploymentstatus';
-import LinedHeader from '../common/lined-header';
 
 momentDurationFormatSetup(moment);
 
@@ -55,14 +55,16 @@ export const defaultColumnDataProps = {
 export const DeploymentAbortButton = ({ abort, deployment }) => {
   const [aborting, setAborting] = useState(false);
 
+  const toggleAborting = () => setAborting(toggle);
+
   return aborting ? (
-    <Confirm cancel={() => setAborting(!aborting)} action={() => abort(deployment.id)} type="abort" />
+    <Confirm cancel={toggleAborting} action={() => abort(deployment.id)} type="abort" />
   ) : (
     <Tooltip
       title="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback."
       placement="bottom"
     >
-      <Button color="secondary" startIcon={<BlockIcon fontSize="small" />} onClick={() => setAborting(!aborting)}>
+      <Button color="secondary" startIcon={<BlockIcon fontSize="small" />} onClick={toggleAborting}>
         {deployment.filters?.length ? 'Stop' : 'Abort'} deployment
       </Button>
     </Tooltip>

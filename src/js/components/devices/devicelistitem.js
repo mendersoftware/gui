@@ -4,9 +4,9 @@ import React, { memo, useCallback, useState } from 'react';
 import { Checkbox } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import DeviceIdentityDisplay from '../common/deviceidentity';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { deepCompare } from '../../helpers';
+import DeviceIdentityDisplay from '../common/deviceidentity';
 import { DefaultAttributeRenderer } from './base-devices';
 
 const useStyles = makeStyles()(theme => ({

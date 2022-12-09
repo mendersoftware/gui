@@ -1,18 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react';
-import pluralize from 'pluralize';
-import { FixedSizeList } from 'react-window';
+import React, { useEffect, useRef, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 
 // material ui
-import { Button, ButtonGroup, ListItem, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import { ArrowDropDown as ArrowDropDownIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@mui/icons-material';
+import { Button, ButtonGroup, ListItem, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 
-import Loader from '../common/loader';
+import pluralize from 'pluralize';
+
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { defaultVisibleSection } from '../../constants/releaseConstants';
+import { toggle } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 import useWindowSize from '../../utils/resizehook';
+import Loader from '../common/loader';
 import Search from '../common/search';
 
 const sortingOptions = {
@@ -93,7 +95,7 @@ export const ReleasesList = ({ loading, onSelect, releasesListState, releases, s
     handleToggle();
   };
 
-  const loadMoreItems = () => setRefreshTrigger(!refreshTrigger);
+  const loadMoreItems = () => setRefreshTrigger(toggle);
 
   const onScroll = ({ scrollOffset }, height) => {
     if (!outerRef.current) {

@@ -1,8 +1,9 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
-import axios from 'axios';
-import pluralize from 'pluralize';
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import axios from 'axios';
+import pluralize from 'pluralize';
 import { v4 as uuid } from 'uuid';
 
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from '../actions/appActions';
@@ -10,7 +11,7 @@ import { getSingleDeployment } from '../actions/deploymentActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
 import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
-import GeneralApi, { apiUrl, headerNames, MAX_PAGE_SIZE } from '../api/general-api';
+import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
 import { SORTING_OPTIONS, UPLOAD_PROGRESS } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';

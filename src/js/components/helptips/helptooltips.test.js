@@ -1,7 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+
 import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { defaultState } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import {
   AddGroup,
   AuthButton,
@@ -12,8 +16,6 @@ import {
   ExpandArtifact,
   ExpandDevice
 } from './helptooltips';
-import { defaultState } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
 
 const mockStore = configureStore([thunk]);
 

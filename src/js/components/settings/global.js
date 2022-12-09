@@ -11,7 +11,7 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
-import { getDocsVersion, getIdAttribute, getUserRoles, getTenantCapabilities, getOfflineThresholdSettings } from '../../selectors';
+import { getDocsVersion, getIdAttribute, getOfflineThresholdSettings, getTenantCapabilities, getUserRoles } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import InfoHint from '../common/info-hint';
 

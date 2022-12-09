@@ -1,6 +1,8 @@
 import React from 'react';
-import pluralize from 'pluralize';
+
 import { makeStyles } from 'tss-react/mui';
+
+import pluralize from 'pluralize';
 
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import InfoText from '../common/infotext';

@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { Button } from '@mui/material';
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { withStyles } from 'tss-react/mui';
+
+import { bindActionCreators } from 'redux';
 
 import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
@@ -14,7 +16,6 @@ import { getDemoDeviceAddress } from '../../selectors';
 import Tracking from '../../tracking';
 import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
-import { useNavigate } from 'react-router-dom';
 
 export const CompletionButton = withStyles(Button, ({ palette }) => ({
   root: {

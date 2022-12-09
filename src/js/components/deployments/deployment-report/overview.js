@@ -1,19 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import { Launch as LaunchIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@mui/icons-material';
+import { Chip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
 import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
-import { Chip } from '@mui/material';
-import { ArrowDropDownCircleOutlined as ScrollDownIcon, Launch as LaunchIcon } from '@mui/icons-material';
-import { makeStyles } from 'tss-react/mui';
-
-import successImage from '../../../../assets/img/largeSuccess.png';
 import failImage from '../../../../assets/img/largeFail.png';
+import successImage from '../../../../assets/img/largeSuccess.png';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { TwoColumnData } from '../../common/configurationobject';
+import DeviceIdentityDisplay from '../../common/deviceidentity';
 import Time from '../../common/time';
 import { defaultColumnDataProps } from '../report';
-import DeviceIdentityDisplay from '../../common/deviceidentity';
 
 const useStyles = makeStyles()(theme => ({
   chip: {

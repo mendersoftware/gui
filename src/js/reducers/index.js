@@ -1,16 +1,16 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
+import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
+import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
+import { USER_LOGOUT } from '../constants/userConstants';
 import appReducer from './appReducer';
 import deploymentReducer from './deploymentReducer';
 import deviceReducer from './deviceReducer';
 import monitorReducer from './monitorReducer';
-import organizationReducer from './organizationReducer';
 import onboardingReducer from './onboardingReducer';
+import organizationReducer from './organizationReducer';
 import releaseReducer from './releaseReducer';
 import userReducer from './userReducer';
-import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
-import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
-import { USER_LOGOUT } from '../constants/userConstants';
 
 const rootReducer = combineReducers({
   app: appReducer,

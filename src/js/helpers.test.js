@@ -1,13 +1,17 @@
 import React from 'react';
+
+import Cookies from 'universal-cookie';
+
+import { defaultState, token, undefineds, userId } from '../../tests/mockData';
 import { render } from '../../tests/setupTests';
 import {
+  FileSize,
   customSort,
   decodeSessionToken,
   deepCompare,
   detectOsIdentifier,
   duplicateFilter,
   extractSoftware,
-  FileSize,
   formatTime,
   fullyDecodeURI,
   generateDeploymentGroupDetails,
@@ -28,8 +32,6 @@ import {
   validatePhases,
   versionCompare
 } from './helpers';
-import { defaultState, token, undefineds, userId } from '../../tests/mockData';
-import Cookies from 'universal-cookie';
 
 const deploymentCreationTime = defaultState.deployments.byId.d1.created;
 

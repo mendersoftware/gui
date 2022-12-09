@@ -3,17 +3,17 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { CacheProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import './../less/main.less';
 import App from './components/app';
-import store from './reducers';
 import ErrorBoundary from './errorboundary';
+import store from './reducers';
 
 const cache = createCache({
   key: 'mui',

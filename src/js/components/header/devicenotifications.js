@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import pluralize from 'pluralize';
 
 // material ui
 import { DeveloperBoard as DeveloperBoardIcon } from '@mui/icons-material';
+
+import pluralize from 'pluralize';
 
 import { MenderTooltipClickable } from '../common/mendertooltip';
 

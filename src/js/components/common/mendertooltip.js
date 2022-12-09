@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { ClickAwayListener, Tooltip } from '@mui/material';
 import { withStyles } from 'tss-react/mui';
 
+import { toggle } from '../../helpers';
+
 export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
   arrow: {
     color: palette.secondary.main
@@ -24,7 +26,7 @@ export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
 export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
   const [open, setOpen] = useState(startOpen || false);
 
-  const toggle = () => setOpen(!open);
+  const toggleVisibility = () => setOpen(toggle);
 
   const hide = () => setOpen(false);
 
@@ -55,7 +57,7 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
         {...extraProps}
         {...remainingProps}
       >
-        <div onClick={toggle}>{children}</div>
+        <div onClick={toggleVisibility}>{children}</div>
       </Component>
     </ClickAwayListener>
   );

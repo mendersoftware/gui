@@ -1,6 +1,6 @@
-import reducer, { initialState } from './userReducer';
-import * as UserConstants from '../constants/userConstants';
 import { defaultState } from '../../../tests/mockData';
+import * as UserConstants from '../constants/userConstants';
+import reducer, { initialState } from './userReducer';
 
 const testUser = {
   created_ts: '',

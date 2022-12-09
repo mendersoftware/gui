@@ -1,7 +1,10 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { defaultState } from '../../../tests/mockData';
 
+import { defaultState } from '../../../tests/mockData';
+import * as OnboardingConstants from '../constants/onboardingConstants';
+import * as UserConstants from '../constants/userConstants';
+import { onboardingSteps } from '../utils/onboardingmanager';
 import {
   advanceOnboarding,
   getOnboardingState,
@@ -13,12 +16,19 @@ import {
   setShowDismissOnboardingTipsDialog,
   setShowOnboardingHelp
 } from './onboardingActions';
-import { onboardingSteps } from '../utils/onboardingmanager';
-import * as OnboardingConstants from '../constants/onboardingConstants';
-import * as UserConstants from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+
+const defaultOnboardingState = {
+  approach: null,
+  artifactIncluded: null,
+  demoArtifactPort: 85,
+  deviceType: null,
+  showConnectDeviceDialog: false,
+  showTips: null,
+  something: 'here'
+};
 
 describe('onboarding actions', () => {
   it('should pass on onboarding completion', async () => {
@@ -34,11 +44,9 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.userSettings,
           onboarding: {
+            ...defaultOnboardingState,
             complete: true,
-            demoArtifactPort: 85,
-            progress: 'onboarding-finished-notification',
-            showConnectDeviceDialog: false,
-            something: 'here'
+            progress: 'onboarding-finished-notification'
           }
         }
       }
@@ -143,10 +151,9 @@ describe('onboarding actions', () => {
         settings: {
           columnSelection: [],
           onboarding: {
+            ...defaultOnboardingState,
             complete: false,
-            demoArtifactPort: 85,
             progress: stepNames[1],
-            showConnectDeviceDialog: false,
             something: 'here'
           }
         }
@@ -182,7 +189,11 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.userSettings,
           columnSelection: [],
-          onboarding: { complete: true, demoArtifactPort: 85, progress: 'onboarding-canceled', showConnectDeviceDialog: false, something: 'here' }
+          onboarding: {
+            ...defaultOnboardingState,
+            complete: true,
+            progress: 'onboarding-canceled'
+          }
         }
       }
     ];
@@ -198,7 +209,7 @@ describe('onboarding actions', () => {
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: false },
       { type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value: ['raspberrypi4'] },
       { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: undefined },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: null },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'application-update-reminder-tip' },
       { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false },
@@ -210,7 +221,7 @@ describe('onboarding actions', () => {
           onboarding: {
             address: 'http://192.168.10.141:85',
             approach: 'physical',
-            artifactIncluded: undefined,
+            artifactIncluded: null,
             complete: false,
             deviceType: ['raspberrypi4'],
             progress: 'application-update-reminder-tip',

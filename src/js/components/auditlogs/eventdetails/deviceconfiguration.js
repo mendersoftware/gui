@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
+import { useTheme } from '@mui/material/styles';
+
 import { getDeviceById } from '../../../actions/deviceActions';
 import { getIdAttribute, getUserCapabilities } from '../../../selectors';
-import { useTheme } from '@mui/material/styles';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 

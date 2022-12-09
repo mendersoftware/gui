@@ -2,28 +2,28 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
+import { mdiConsole as ConsoleIcon } from '@mdi/js';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
-import { mdiConsole as ConsoleIcon } from '@mdi/js';
-import { makeStyles } from 'tss-react/mui';
-
 import { setSnackbar } from '../../../actions/appActions';
-import { getDeviceFileDownloadLink, deviceFileUpload } from '../../../actions/deviceActions';
+import { deviceFileUpload, getDeviceFileDownloadLink } from '../../../actions/deviceActions';
 import { BEGINNING_OF_TIME, TIMEOUTS } from '../../../constants/appConstants';
-
-import MaterialDesignIcon from '../../common/materialdesignicon';
-import Time from '../../common/time';
-import Terminal from '../troubleshoot/terminal';
-import FileTransfer from '../troubleshoot/filetransfer';
 import { createDownload, versionCompare } from '../../../helpers';
-import ListOptions from '../widgets/listoptions';
-import { getCode } from './make-gateway-dialog';
 import { getFeatures, getIdAttribute, getIsEnterprise, getUserRoles } from '../../../selectors';
-import DeviceIdentityDisplay from './../../common/deviceidentity';
 import { useSession } from '../../../utils/sockethook';
 import { TwoColumns } from '../../common/configurationobject';
+import MaterialDesignIcon from '../../common/materialdesignicon';
+import Time from '../../common/time';
+import FileTransfer from '../troubleshoot/filetransfer';
+import Terminal from '../troubleshoot/terminal';
+import ListOptions from '../widgets/listoptions';
+import DeviceIdentityDisplay from './../../common/deviceidentity';
+import { getCode } from './make-gateway-dialog';
 
 momentDurationFormatSetup(moment);
 

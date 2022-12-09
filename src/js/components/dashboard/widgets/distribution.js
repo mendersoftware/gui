@@ -1,15 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { IconButton } from '@mui/material';
 import { Clear as ClearIcon } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 import { VictoryGroup, VictoryLabel, VictoryLegend, VictoryPie } from 'victory';
 
-import Loader from '../../common/loader';
-import Confirm from '../../common/confirm';
-import { chartColorPalette } from '../../../themes/Mender';
-import { useTheme } from '@mui/material/styles';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
-import { useNavigate } from 'react-router-dom';
+import { toggle } from '../../../helpers';
+import { chartColorPalette } from '../../../themes/Mender';
+import Confirm from '../../common/confirm';
+import Loader from '../../common/loader';
 
 const seriesOther = '__OTHER__';
 
@@ -61,7 +63,7 @@ export const DistributionReport = ({ attribute, devices, group, groups, onClick,
     }
   };
 
-  const toggleRemoving = () => setRemoving(!removing);
+  const toggleRemoving = () => setRemoving(toggle);
 
   const formatLabel = ({ datum }) => `${datum.y.toString()} (${(Math.round((datum.y * 1000) / (total || 1)) / 10.0).toString()}%)`;
 

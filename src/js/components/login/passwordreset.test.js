@@ -1,15 +1,16 @@
 import React from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
-import { act, render as testingLibRender, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+import { act, screen, render as testingLibRender, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import PasswordReset, { PasswordReset as PasswordResetComponent } from './passwordreset';
 import { Password } from './password';
+import PasswordReset, { PasswordReset as PasswordResetComponent } from './passwordreset';
 
 const mockStore = configureStore([thunk]);
 

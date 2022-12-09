@@ -1,10 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+
 import configureStore from 'redux-mock-store';
-import BaseOnboardingTip, { orientations } from './baseonboardingtip';
+import thunk from 'redux-thunk';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import BaseOnboardingTip, { orientations } from './baseonboardingtip';
 
 const mockStore = configureStore([thunk]);
 

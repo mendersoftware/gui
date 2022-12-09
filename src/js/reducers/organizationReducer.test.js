@@ -1,6 +1,6 @@
-import reducer, { initialState } from './organizationReducer';
-import * as OrganizationConstants from '../constants/organizationConstants';
 import { defaultState } from '../../../tests/mockData';
+import * as OrganizationConstants from '../constants/organizationConstants';
+import reducer, { initialState } from './organizationReducer';
 
 describe('organization reducer', () => {
   it('should return the initial state', async () => {

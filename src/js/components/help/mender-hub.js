@@ -1,6 +1,8 @@
 import React from 'react';
-import hubLogo from '../../../assets/img/mender-hub-logo.png';
+
 import { Launch as LaunchIcon } from '@mui/icons-material';
+
+import hubLogo from '../../../assets/img/mender-hub-logo.png';
 
 const MenderHub = () => (
   <div>

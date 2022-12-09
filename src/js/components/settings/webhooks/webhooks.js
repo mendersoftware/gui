@@ -5,12 +5,12 @@ import { connect } from 'react-redux';
 import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations, getWebhookEvents } from '../../../actions/organizationActions';
+import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { emptyWebhook } from '../../../constants/organizationConstants';
 import { getDocsVersion } from '../../../selectors';
-import Time from '../../common/time';
 import DetailsTable from '../../common/detailstable';
+import Time from '../../common/time';
 import WebhookManagement from './management';
-import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 
 const columns = [
   { key: 'url', title: 'URL', render: ({ url }) => url },

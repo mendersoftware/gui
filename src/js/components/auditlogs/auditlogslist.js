@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
 
+import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import Time from '../common/time';
 import EventDetailsDrawer from './eventdetailsdrawer';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 
 export const defaultRowsPerPage = 20;
 

@@ -2,8 +2,8 @@ import React from 'react';
 
 import { extractSoftware } from '../../../helpers';
 import { TwoColumnDataMultiple } from '../../common/configurationobject';
-import DeviceInventoryLoader from './deviceinventoryloader';
 import DeviceDataCollapse from './devicedatacollapse';
+import DeviceInventoryLoader from './deviceinventoryloader';
 
 export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
   const { attributes = {} } = device;

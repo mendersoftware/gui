@@ -2,8 +2,8 @@ import React from 'react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import RoleDefinition from './roledefinition';
 import { emptyRole } from '../../constants/userConstants';
+import RoleDefinition from './roledefinition';
 
 describe('Roles Component', () => {
   it('renders correctly', async () => {

@@ -1,7 +1,7 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
-import reducer, { initialState } from './deploymentReducer';
-import * as DeploymentConstants from '../constants/deploymentConstants';
 import { defaultState } from '../../../tests/mockData';
+import * as DeploymentConstants from '../constants/deploymentConstants';
+import reducer, { initialState } from './deploymentReducer';
 
 const {
   RECEIVE_DEPLOYMENT,

@@ -1,18 +1,20 @@
 import React from 'react';
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import configureStore from 'redux-mock-store';
+
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import Deployments from './deployments';
-import GeneralApi from '../../api/general-api';
-import { getConfiguredStore } from './../../reducers';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
+import GeneralApi from '../../api/general-api';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
+import { getConfiguredStore } from './../../reducers';
+import Deployments from './deployments';
 
 const mockStore = configureStore([thunk]);
 const defaultLocationProps = { location: { search: 'startDate=2019-01-01' }, match: {} };
@@ -309,7 +311,6 @@ describe('Deployments Component', () => {
       retries: 1,
       update_control_map: undefined
     });
-    console.log(post.mock.calls);
     expect(post).toHaveBeenCalledWith(
       '/api/management/v1/useradm/settings',
       {

@@ -1,28 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 
 import { ChevronRight, Help as HelpIcon } from '@mui/icons-material';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+
+import Cookies from 'universal-cookie';
 
 import LoginLogo from '../../../assets/img/loginlogo.svg';
 import VeryMuch from '../../../assets/img/verymuch.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
-import { locations, noExpiryKey, TIMEOUTS } from '../../constants/appConstants';
+import { TIMEOUTS, locations, noExpiryKey } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
 import { getCurrentUser } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
-
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 import TextInput from '../common/forms/textinput';
-import { MenderTooltipClickable } from '../common/mendertooltip';
-
 import LinedHeader from '../common/lined-header';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 import { OAuth2Providers } from './oauth2providers';
 
 const cookies = new Cookies();
@@ -158,10 +157,13 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
       }
     });
 
-  const onSetRef = ref => {
-    twoFARef.current = ref;
-    setRefresh(!refresh);
-  };
+  const onSetRef = useCallback(
+    ref => {
+      twoFARef.current = ref;
+      setRefresh(!refresh);
+    },
+    [refresh]
+  );
 
   const onOAuthClick = ({ target: { textContent } }) => {
     const providerId = OAuth2Providers.find(provider => provider.name === textContent).id;

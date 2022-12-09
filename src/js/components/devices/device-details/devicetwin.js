@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button } from '@mui/material';
 import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
-
 import pluralize from 'pluralize';
 
 import { TIMEOUTS } from '../../../constants/appConstants';

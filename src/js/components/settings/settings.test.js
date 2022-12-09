@@ -1,9 +1,10 @@
 import React from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import configureStore from 'redux-mock-store';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
 import { render as testingLibRender } from '@testing-library/react';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import Settings from './settings';

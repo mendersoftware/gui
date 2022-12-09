@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
+import { Check as CheckIcon, Clear as ClearIcon, Edit as EditIcon } from '@mui/icons-material';
 import { IconButton, Input, InputAdornment } from '@mui/material';
-import { Clear as ClearIcon, Check as CheckIcon, Edit as EditIcon } from '@mui/icons-material';
-
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';

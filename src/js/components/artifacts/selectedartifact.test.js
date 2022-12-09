@@ -1,10 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+
 import configureStore from 'redux-mock-store';
-import SelectedArtifact, { transformArtifactCapabilities, transformArtifactMetadata } from './selectedartifact';
+import thunk from 'redux-thunk';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import SelectedArtifact, { transformArtifactCapabilities, transformArtifactMetadata } from './selectedartifact';
 
 const mockStore = configureStore([thunk]);
 

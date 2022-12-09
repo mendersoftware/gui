@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Tracking from './tracking';
 
 export default class ErrorBoundary extends React.Component {

@@ -1,7 +1,8 @@
 import React from 'react';
-import DeviceNotifications from './devicenotifications';
+
 import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import DeviceNotifications from './devicenotifications';
 
 describe('DeviceNotifications Component', () => {
   it('renders correctly', async () => {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import validator from 'validator';
 
 import { Autocomplete, FormHelperText, TextField } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+
+import validator from 'validator';
 
 import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { fullyDecodeURI } from '../../../helpers';

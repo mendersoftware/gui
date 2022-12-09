@@ -7,17 +7,17 @@ import { Payment as PaymentIcon } from '@mui/icons-material';
 
 import { Elements } from '@stripe/react-stripe-js';
 
+import { TIMEOUTS } from '../../constants/appConstants';
 import { versionCompare } from '../../helpers';
 import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
 import LeftNav from '../common/left-nav';
 import SelfUserManagement from '../settings/user-management/selfusermanagement';
 import UserManagement from '../settings/user-management/usermanagement';
-import Organization from './organization/organization';
 import Global from './global';
 import Integrations from './integrations';
+import Organization from './organization/organization';
 import Roles from './roles';
 import Upgrade from './upgrade';
-import { TIMEOUTS } from '../../constants/appConstants';
 
 let stripePromise = null;
 

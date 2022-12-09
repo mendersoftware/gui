@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
+import { Add as AddIcon } from '@mui/icons-material';
 // material ui
 import { Button, Chip, Collapse } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
 
 import { getDeviceAttributes, selectDevice as resetIdFilter, setDeviceFilters } from '../../../actions/deviceActions';
 import { saveGlobalSettings } from '../../../actions/userActions';
-import EnterpriseNotification from '../../common/enterpriseNotification';
-import MenderTooltip from '../../common/mendertooltip';
-import FilterItem from './filteritem';
-
 import { DEVICE_FILTERING_OPTIONS } from '../../../constants/deviceConstants';
 import { deepCompare } from '../../../helpers';
 import { getFilterAttributes } from '../../../selectors';
+import EnterpriseNotification from '../../common/enterpriseNotification';
+import MenderTooltip from '../../common/mendertooltip';
+import FilterItem from './filteritem';
 
 export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inventory' };
 

@@ -1,18 +1,19 @@
 'use strict';
+
 import hashString from 'md5';
 import Cookies from 'universal-cookie';
 
-import { commonErrorFallback, commonErrorHandler, setOfflineThreshold, setSnackbar } from './appActions';
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
+import { cleanUp, expirySet, logout } from '../auth';
 import * as AppConstants from '../constants/appConstants';
+import { ALL_DEVICES } from '../constants/deviceConstants';
 import * as OnboardingConstants from '../constants/onboardingConstants';
 import * as UserConstants from '../constants/userConstants';
-import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
-import { cleanUp, expirySet, logout } from '../auth';
 import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
-import { ALL_DEVICES } from '../constants/deviceConstants';
+import { commonErrorFallback, commonErrorHandler, setOfflineThreshold, setSnackbar } from './appActions';
 
 const cookies = new Cookies();
 const {

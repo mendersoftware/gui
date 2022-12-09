@@ -1,7 +1,7 @@
-import reducer, { initialState } from './monitorReducer';
-import * as MonitorConstants from '../constants/monitorConstants';
 import { defaultState } from '../../../tests/mockData';
 import { DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
+import * as MonitorConstants from '../constants/monitorConstants';
+import reducer, { initialState } from './monitorReducer';
 
 describe('monitor reducer', () => {
   it('should return the initial state', async () => {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import { Button, IconButton } from '@mui/material';
 import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
+import { Button, IconButton } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../constants/appConstants';

@@ -1,19 +1,19 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { defaultState } from '../../../tests/mockData';
 
+import { defaultState } from '../../../tests/mockData';
+import * as AppConstants from '../constants/appConstants';
+import * as DeploymentConstants from '../constants/deploymentConstants';
+import * as UserConstants from '../constants/userConstants';
 import {
   abortDeployment,
   createDeployment,
-  getDeploymentsByStatus,
   getDeploymentDevices,
+  getDeploymentsByStatus,
   getDeviceLog,
   setDeploymentsState,
   updateDeploymentControlMap
 } from './deploymentActions';
-import * as AppConstants from '../constants/appConstants';
-import * as DeploymentConstants from '../constants/deploymentConstants';
-import * as UserConstants from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

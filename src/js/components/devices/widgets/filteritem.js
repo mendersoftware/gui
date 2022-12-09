@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-// material ui
-import { IconButton, MenuItem, Select, TextField, FormHelperText } from '@mui/material';
 import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
+// material ui
+import { FormHelperText, IconButton, MenuItem, Select, TextField } from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS } from '../../../constants/deviceConstants';
 import MenderTooltip from '../../common/mendertooltip';
-import { emptyFilter } from './filters';
 import AttributeAutoComplete from './attribute-autocomplete';
+import { emptyFilter } from './filters';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
 
@@ -90,10 +90,10 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
     setValue(value);
   };
 
-  const removeFilter = () => {
+  const removeFilter = useCallback(() => {
     onRemove({ key, operator, scope, value });
     setReset(!reset);
-  };
+  }, [key, onRemove, operator, reset, scope, setReset, value]);
 
   const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
   const operatorHelpMessage = (DEVICE_FILTERING_OPTIONS[operator] || {}).help || '';

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
 import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
 import DeviceIssuesSelection, { EmptySelection } from './issueselection';
 
 describe('DeviceIssuesSelection Component', () => {

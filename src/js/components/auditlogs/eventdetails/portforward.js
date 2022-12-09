@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+
+import { useTheme } from '@mui/material/styles';
+
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
 import { getIdAttribute, getUserCapabilities } from '../../../selectors';
-import { useTheme } from '@mui/material/styles';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
 import DeviceDetails, { DetailInformation } from './devicedetails';

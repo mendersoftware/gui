@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import copy from 'copy-to-clipboard';
 
 // material ui
-import { Button, Divider, Drawer, IconButton } from '@mui/material';
 import { Close as CloseIcon, CloudUpload, FileCopyOutlined as CopyPasteIcon } from '@mui/icons-material';
+import { Button, Divider, Drawer, IconButton } from '@mui/material';
 
 import Editor, { loader } from '@monaco-editor/react';
+import copy from 'copy-to-clipboard';
 
 import { createFileDownload } from '../../../helpers';
 import Loader from '../../common/loader';

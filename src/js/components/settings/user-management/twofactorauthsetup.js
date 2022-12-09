@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Collapse, Switch } from '@mui/material';
@@ -7,10 +7,9 @@ import { setSnackbar } from '../../../actions/appActions';
 import { disableUser2fa, enableUser2fa, get2FAQRCode, verify2FA, verifyEmailComplete, verifyEmailStart } from '../../../actions/userActions';
 import { twoFAStates } from '../../../constants/userConstants';
 import { getCurrentUser, getHas2FA } from '../../../selectors';
-
+import InfoText from '../../common/infotext';
 import AuthSetup from './twofactorauth-steps/authsetup';
 import EmailVerification from './twofactorauth-steps/emailverification';
-import InfoText from '../../common/infotext';
 
 export const TwoFactorAuthSetup = ({
   activationCode,
@@ -76,7 +75,7 @@ export const TwoFactorAuthSetup = ({
     });
   };
 
-  const onToggle2FAClick = () => {
+  const onToggle2FAClick = useCallback(() => {
     if (!(currentUser.verified || currentUser.email?.endsWith('@example.com'))) {
       setShowEmailVerification(!showEmailVerification);
       setIs2FAEnabled(!showEmailVerification);
@@ -89,7 +88,7 @@ export const TwoFactorAuthSetup = ({
       setQrExpanded(!is2FAEnabled);
       setIs2FAEnabled(!is2FAEnabled);
     }
-  };
+  }, [has2FA, is2FAEnabled, showEmailVerification]);
 
   return (
     <div className="margin-top">

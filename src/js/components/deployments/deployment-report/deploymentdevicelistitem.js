@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 // material ui
 import { Button, LinearProgress, TableCell, TableRow } from '@mui/material';
 
-import { formatTime } from '../../../helpers';
+import { deploymentSubstates } from '../../../constants/deploymentConstants';
 import { rootfsImageVersion as rootfsImageVersionAttribute } from '../../../constants/releaseConstants';
+import { formatTime } from '../../../helpers';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import Time from '../../common/time';
-import { deploymentSubstates } from '../../../constants/deploymentConstants';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',

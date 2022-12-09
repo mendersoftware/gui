@@ -1,7 +1,8 @@
 import React from 'react';
-import 'jsdom-worker';
 import * as router from 'react-router-dom';
+
 import { render } from '@testing-library/react';
+import 'jsdom-worker';
 
 import { undefineds } from '../../tests/mockData';
 import { AppProviders } from './main';
@@ -9,6 +10,7 @@ import { AppProviders } from './main';
 describe('Main Component', () => {
   it('renders correctly', async () => {
     const { MemoryRouter } = router;
+    window.localStorage.getItem.mockReturnValueOnce('false');
     const MockBrowserRouter = ({ children }) => <MemoryRouter initialEntries={['/ui']}>{children}</MemoryRouter>;
     // eslint-disable-next-line
     router.BrowserRouter = MockBrowserRouter;

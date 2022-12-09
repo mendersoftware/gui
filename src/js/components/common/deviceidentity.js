@@ -1,6 +1,6 @@
 import React from 'react';
-import { getDeviceIdentityText } from '../devices/base-devices';
 
+import { getDeviceIdentityText } from '../devices/base-devices';
 import DeviceNameInput from './devicenameinput';
 
 const DeviceIdComponent = ({ style = {}, value }) => <div style={style}>{value}</div>;

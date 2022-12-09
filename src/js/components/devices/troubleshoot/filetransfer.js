@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, IconButton, Tab, Tabs, TextField, Tooltip } from '@mui/material';
 import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
+import { Button, IconButton, Tab, Tabs, TextField, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import FileUpload from '../../common/forms/fileupload';

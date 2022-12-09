@@ -13,18 +13,18 @@ import { BEGINNING_OF_TIME, SORTING_OPTIONS, TIMEOUTS } from '../../constants/ap
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import { getISOStringBoundaries, tryMapDeployments } from '../../helpers';
+import { getOnboardingState, getUserCapabilities } from '../../selectors';
+import { useDebounce } from '../../utils/debouncehook';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
+import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
-import { getOnboardingState, getUserCapabilities } from '../../selectors';
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-import useWindowSize from '../../utils/resizehook';
-import DeploymentsList, { defaultHeaders } from './deploymentslist';
 import { DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
-import { getISOStringBoundaries, tryMapDeployments } from '../../helpers';
-import { useDebounce } from '../../utils/debouncehook';
+import DeploymentsList, { defaultHeaders } from './deploymentslist';
 
 const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
 
@@ -51,7 +51,6 @@ export const Past = props => {
   } = props;
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
-  const [timeRangeToggle, setTimeRangeToggle] = useState(false);
   const [tonight] = useState(getISOStringBoundaries(new Date()).end);
   const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
@@ -76,7 +75,6 @@ export const Past = props => {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
           const { start: startDate } = getISOStringBoundaries(newStartDate);
           setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate } });
-          setTimeRangeToggle(!timeRangeToggle);
         }
       })
       .finally(() => setLoading(false));

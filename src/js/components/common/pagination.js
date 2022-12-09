@@ -5,8 +5,8 @@ import { IconButton, TablePagination } from '@mui/material';
 
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS, DEVICE_LIST_MAXIMUM_LENGTH } from '../../constants/deviceConstants';
-import MenderTooltip from '../common/mendertooltip';
 import { useDebounce } from '../../utils/debouncehook';
+import MenderTooltip from '../common/mendertooltip';
 
 const defaultRowsPerPageOptions = [10, 20, DEVICE_LIST_MAXIMUM_LENGTH];
 const { perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;

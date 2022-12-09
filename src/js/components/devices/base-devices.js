@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import pluralize from 'pluralize';
 
 import preauthImage from '../../../assets/img/preauthorize.png';
-
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { rootfsImageVersion } from '../../constants/releaseConstants';
 import Time, { RelativeTime } from '../common/time';

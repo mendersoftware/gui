@@ -1,5 +1,5 @@
-import reducer, { initialState } from './onboardingReducer';
 import * as OnboardingConstants from '../constants/onboardingConstants';
+import reducer, { initialState } from './onboardingReducer';
 
 describe('organization reducer', () => {
   it('should return the initial state', async () => {

@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { adminUserCapabilities, undefineds } from '../../../../../../tests/mockData';
-import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { render } from '../../../../../../tests/setupTests';
+import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
 
 describe('AuthsetListItem Component', () => {

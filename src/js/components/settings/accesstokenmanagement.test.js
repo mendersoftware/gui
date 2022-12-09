@@ -1,16 +1,17 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import { accessTokens, defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import AccessTokenManagement, {
-  AccessTokenManagement as DisconnectedAccessTokenManagement,
   AccessTokenCreationDialog,
-  AccessTokenRevocationDialog
+  AccessTokenRevocationDialog,
+  AccessTokenManagement as DisconnectedAccessTokenManagement
 } from './accesstokenmanagement';
 
 const mockStore = configureStore([thunk]);

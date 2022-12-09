@@ -1,9 +1,9 @@
 import React from 'react';
+
 import jwtDecode from 'jwt-decode';
 import pluralize from 'pluralize';
-import { getToken } from './auth';
 
-import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+import { getToken } from './auth';
 import {
   DEPLOYMENT_STATES,
   defaultStats,
@@ -11,6 +11,7 @@ import {
   deploymentStatesToSubstates,
   deploymentStatesToSubstatesWithSkipped
 } from './constants/deploymentConstants';
+import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
 
 const isEncoded = uri => {
   uri = uri || '';
@@ -254,6 +255,8 @@ export const stringToBoolean = content => {
       return Boolean(string);
   }
 };
+
+export const toggle = current => !current;
 
 export const formatTime = date => {
   if (date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {

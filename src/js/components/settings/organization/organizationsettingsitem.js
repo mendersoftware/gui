@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Divider, ListItem, ListItemText } from '@mui/material';
-
 import { makeStyles } from 'tss-react/mui';
 
 const defaultItemProps = { alignItems: 'flex-start' };

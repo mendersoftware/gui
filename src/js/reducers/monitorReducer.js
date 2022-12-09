@@ -1,5 +1,5 @@
+import { DEVICE_ISSUE_OPTIONS, DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import * as MonitorConstants from '../constants/monitorConstants';
-import { DEVICE_LIST_DEFAULTS, DEVICE_ISSUE_OPTIONS } from '../constants/deviceConstants';
 
 export const initialState = {
   alerts: {

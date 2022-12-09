@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Autocomplete, Checkbox, Collapse, FormControl, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import RolloutSteps from './rolloutsteps';
 import { TIMEOUTS } from '../../../constants/appConstants';
+import { toggle } from '../../../helpers';
 import { useDebounce } from '../../../utils/debouncehook';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import RolloutSteps from './rolloutsteps';
 
 const useStyles = makeStyles()(() => ({
   defaultBox: { marginTop: 0, marginBottom: -15 },
@@ -27,7 +28,7 @@ export const RolloutOptions = ({ deploymentObject, docsVersion, isEnterprise, se
     setDeploymentSettings({ update_control_map: { states: { ...states, [step.state]: { action } } } });
   };
 
-  const onIsPausedClick = () => setIsPaused(current => !current);
+  const onIsPausedClick = () => setIsPaused(toggle);
 
   return (
     <>
