@@ -1,9 +1,9 @@
-import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP } from '../constants/deviceConstants';
-import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import { routes } from '../components/devices/base-devices';
 import { emptyFilter } from '../components/devices/widgets/filters';
-import { deepCompare, getISOStringBoundaries } from '../helpers';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../constants/deploymentConstants';
+import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP } from '../constants/deviceConstants';
+import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
+import { deepCompare, getISOStringBoundaries } from '../helpers';
 
 const SEPARATOR = ':';
 

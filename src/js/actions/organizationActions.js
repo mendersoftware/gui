@@ -1,9 +1,10 @@
-import Cookies from 'universal-cookie';
 import jwtDecode from 'jwt-decode';
 import hashString from 'md5';
+import Cookies from 'universal-cookie';
 
 import Api, { apiUrl, headerNames } from '../api/general-api';
-import { locations, SET_ANNOUNCEMENT, SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
+import { getToken } from '../auth';
+import { SET_ANNOUNCEMENT, SORTING_OPTIONS, TIMEOUTS, locations } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import {
   RECEIVE_AUDIT_LOGS,
@@ -17,7 +18,6 @@ import {
 } from '../constants/organizationConstants';
 import { deepCompare } from '../helpers';
 import { getTenantCapabilities } from '../selectors';
-import { getToken } from '../auth';
 import { commonErrorFallback, commonErrorHandler, setFirstLoginAfterSignup, setSnackbar } from './appActions';
 import { deviceAuthV2, iotManagerBaseURL } from './deviceActions';
 

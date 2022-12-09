@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Launch as LaunchIcon } from '@mui/icons-material';
 
 const InlineLaunchIcon = () => <LaunchIcon style={{ 'verticalAlign': 'text-bottom' }} fontSize="small" />;

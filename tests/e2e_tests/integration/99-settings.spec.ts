@@ -1,5 +1,5 @@
-import * as fs from 'fs';
 import { Decoder } from '@nuintun/qrcode';
+import * as fs from 'fs';
 import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';

@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { deploymentDisplayStates, DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, deploymentDisplayStates } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { DEPLOYMENT_CUTOFF, getOnboardingState, getRecentDeployments, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import useWindowSize from '../../utils/resizehook';
+import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import RedirectionWidget from './widgets/redirectionwidget';
 import { BaseDeploymentsWidget, CompletedDeployments } from './widgets/deployments';
+import RedirectionWidget from './widgets/redirectionwidget';
 
 const refreshDeploymentsLength = 30000;
 

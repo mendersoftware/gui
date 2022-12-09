@@ -1,5 +1,6 @@
-import Api, { authenticatedRequest } from './general-api';
 import MockAdapter from 'axios-mock-adapter';
+
+import Api, { authenticatedRequest } from './general-api';
 
 const testLocation = '/test';
 

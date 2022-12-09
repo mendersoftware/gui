@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 
 // material ui
-import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@mui/material';
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { formatTime, FileSize } from '../../helpers';
+import { FileSize, formatTime } from '../../helpers';
 import Time from '../common/time';
 import SelectedArtifact from './selectedartifact';
 

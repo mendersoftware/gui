@@ -3,10 +3,10 @@ import React from 'react';
 import { Pause as PauseIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import { TwoColumnData } from '../../common/configurationobject';
-import { defaultColumnDataProps } from '../report';
 import { deploymentDisplayStates, pauseMap } from '../../../constants/deploymentConstants';
 import { groupDeploymentStats } from '../../../helpers';
+import { TwoColumnData } from '../../common/configurationobject';
+import { defaultColumnDataProps } from '../report';
 
 const useStyles = makeStyles()(theme => ({
   progressStatus: {

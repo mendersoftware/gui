@@ -1,15 +1,16 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { IconButton } from '@mui/material';
 import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+
+import { bindActionCreators } from 'redux';
 
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { MenderTooltipClickable } from '../common/mendertooltip';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
+import { MenderTooltipClickable } from '../common/mendertooltip';
 
 export const WelcomeSnackTip = React.forwardRef(({ progress, setSnackbar }, ref) => {
   const onClose = () => setSnackbar('');

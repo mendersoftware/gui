@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@mui/icons-material';
 
-import ChartAdditionWidget from './widgets/chart-addition';
-import DistributionReport from './widgets/distribution';
-import EnterpriseNotification from '../common/enterpriseNotification';
 import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { getIsEnterprise, getUserSettings } from '../../selectors';
+import EnterpriseNotification from '../common/enterpriseNotification';
+import ChartAdditionWidget from './widgets/chart-addition';
+import DistributionReport from './widgets/distribution';
 
 export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
 

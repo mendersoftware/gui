@@ -1,7 +1,8 @@
 import React from 'react';
-import Tooltip from './mendertooltip';
+
 import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import Tooltip from './mendertooltip';
 
 describe('Loader Component', () => {
   it('renders correctly', async () => {

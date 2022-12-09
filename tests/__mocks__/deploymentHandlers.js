@@ -1,8 +1,8 @@
 import { rest } from 'msw';
 
-import { defaultState } from '../mockData';
 import { deploymentsApiUrl, deploymentsApiUrlV2 } from '../../src/js/actions/deploymentActions';
 import { headerNames } from '../../src/js/api/general-api';
+import { defaultState } from '../mockData';
 
 const createdDeployment = {
   ...defaultState.deployments.byId.d1,

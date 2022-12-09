@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Button } from '@mui/material';
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
 
 import { twoFAStates } from '../../../../constants/userConstants';
 import Form from '../../../common/forms/form';

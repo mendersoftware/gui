@@ -1,9 +1,9 @@
 import { accordionClasses } from '@mui/material/Accordion';
-import { formLabelClasses } from '@mui/material/FormLabel';
 import { buttonClasses } from '@mui/material/Button';
+import { formLabelClasses } from '@mui/material/FormLabel';
 import { listItemTextClasses } from '@mui/material/ListItemText';
 
-import { palette as commonPalette, typography, overrides } from './common';
+import { palette as commonPalette, overrides, typography } from './common';
 
 const grey = {
   '900': '#969696',

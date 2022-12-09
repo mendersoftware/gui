@@ -3,6 +3,31 @@ import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
 import { accessTokens, defaultPassword, defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
+import { SET_ANNOUNCEMENT, SET_OFFLINE_THRESHOLD, SET_SNACKBAR } from '../constants/appConstants';
+import * as OnboardingConstants from '../constants/onboardingConstants';
+import {
+  CREATED_ROLE,
+  CREATED_USER,
+  RECEIVED_ACTIVATION_CODE,
+  RECEIVED_PERMISSION_SETS,
+  RECEIVED_QR_CODE,
+  RECEIVED_ROLES,
+  RECEIVED_USER,
+  RECEIVED_USER_LIST,
+  REMOVED_ROLE,
+  REMOVED_USER,
+  SET_CUSTOM_COLUMNS,
+  SET_GLOBAL_SETTINGS,
+  SET_SHOW_CONNECT_DEVICE,
+  SET_SHOW_HELP,
+  SET_USER_SETTINGS,
+  SUCCESSFULLY_LOGGED_IN,
+  UPDATED_ROLE,
+  UPDATED_USER,
+  USER_LOGOUT,
+  emptyRole,
+  uiPermissionsById
+} from '../constants/userConstants';
 import {
   createRole,
   createUser,
@@ -34,31 +59,6 @@ import {
   verifyEmailComplete,
   verifyEmailStart
 } from './userActions';
-import * as OnboardingConstants from '../constants/onboardingConstants';
-import { SET_SNACKBAR, SET_ANNOUNCEMENT, SET_OFFLINE_THRESHOLD } from '../constants/appConstants';
-import {
-  CREATED_ROLE,
-  CREATED_USER,
-  emptyRole,
-  RECEIVED_ACTIVATION_CODE,
-  RECEIVED_PERMISSION_SETS,
-  RECEIVED_QR_CODE,
-  RECEIVED_ROLES,
-  RECEIVED_USER_LIST,
-  RECEIVED_USER,
-  REMOVED_ROLE,
-  REMOVED_USER,
-  SET_CUSTOM_COLUMNS,
-  SET_GLOBAL_SETTINGS,
-  SET_SHOW_CONNECT_DEVICE,
-  SET_SHOW_HELP,
-  SET_USER_SETTINGS,
-  SUCCESSFULLY_LOGGED_IN,
-  uiPermissionsById,
-  UPDATED_ROLE,
-  UPDATED_USER,
-  USER_LOGOUT
-} from '../constants/userConstants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

@@ -1,31 +1,32 @@
-import React, { useState } from 'react';
-import pluralize from 'pluralize';
+import React, { useCallback, useState } from 'react';
 
 import { Add as AddIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import {
+  Checkbox,
   Chip,
+  Collapse,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  Input,
+  InputAdornment,
+  ListSubheader,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
-  Select,
-  MenuItem,
-  Input,
-  InputAdornment,
-  IconButton,
-  FormControlLabel,
-  Checkbox,
-  Collapse,
-  FormControl,
-  ListSubheader
+  TableRow
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import pluralize from 'pluralize';
+
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
-import EnterpriseNotification from '../../common/enterpriseNotification';
 
 const useStyles = makeStyles()(theme => ({
   chip: { marginTop: theme.spacing(2) },
@@ -231,12 +232,12 @@ export const RolloutPatternSelection = props => {
     setDeploymentSettings({ phases: updatedPhases });
   };
 
-  const onUsesPatternClick = () => {
+  const onUsesPatternClick = useCallback(() => {
     if (usesPattern) {
       setDeploymentSettings({ phases: phases.slice(0, 1) });
     }
     setUsesPattern(!usesPattern);
-  };
+  }, [usesPattern, JSON.stringify(phases), setDeploymentSettings, setUsesPattern]);
 
   const numberDevices = deploymentDeviceCount ? deploymentDeviceCount : deploymentDeviceIds ? deploymentDeviceIds.length : 0;
   const customPattern = phases && phases.length > 1 ? 1 : 0;

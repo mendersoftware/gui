@@ -7,10 +7,10 @@ import { makeStyles } from 'tss-react/mui';
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations } from '../../actions/organizationActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
+import { customSort, versionCompare } from '../../helpers';
+import { useDebounce } from '../../utils/debouncehook';
 import Confirm from '../common/confirm';
 import InfoHint from '../common/info-hint';
-import { useDebounce } from '../../utils/debouncehook';
-import { customSort, versionCompare } from '../../helpers';
 import { WebhookCreation } from './webhooks/configuration';
 import Webhooks from './webhooks/webhooks';
 

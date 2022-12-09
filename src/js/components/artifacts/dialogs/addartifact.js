@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import ArtifactUpload from './artifactupload';
-import ArtifactInformationForm from './artifactinformationform';
+
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { unionizeStrings } from '../../../helpers';
 import Tracking from '../../../tracking';
-import { TIMEOUTS } from '../../../constants/appConstants';
+import ArtifactInformationForm from './artifactinformationform';
+import ArtifactUpload from './artifactupload';
 
 const steps = [
   { title: 'File Upload', component: ArtifactUpload, validator: ({ fileSelected, isValidDestination }) => !(isValidDestination && fileSelected) },

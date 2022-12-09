@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
-import { useTheme } from '@mui/material/styles';
-import { Button, MenuItem, Select } from '@mui/material';
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
+import { Button, MenuItem, Select } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -15,7 +15,7 @@ import { saveUserSettings, updateUserColumnSettings } from '../../actions/userAc
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { duplicateFilter, isEmpty } from '../../helpers';
+import { duplicateFilter, isEmpty, toggle } from '../../helpers';
 import {
   getAvailableIssueOptionsByType,
   getFeatures,
@@ -33,14 +33,14 @@ import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import { ExpandDevice } from '../helptips/helptooltips';
+import { defaultHeaders, defaultTextRender, getDeviceIdentityText, routes as states } from './base-devices';
+import DeviceList, { minCellWidth } from './devicelist';
+import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
+import ExpandedDevice from './expanded-device';
 import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
-import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
 import ListOptions from './widgets/listoptions';
-import { defaultHeaders, routes as states, defaultTextRender, getDeviceIdentityText } from './base-devices';
-import DeviceList, { minCellWidth } from './devicelist';
-import ExpandedDevice from './expanded-device';
 
 const refreshDeviceLength = TIMEOUTS.refreshDefault;
 
@@ -341,7 +341,7 @@ export const Authorized = props => {
     setDeviceListState({ selection });
   };
 
-  const onToggleCustomizationClick = () => setShowCustomization(!showCustomization);
+  const onToggleCustomizationClick = () => setShowCustomization(toggle);
 
   const onChangeColumns = (changedColumns, customColumnSizes) => {
     const { columnSizes, selectedAttributes } = calculateColumnSelectionSize(changedColumns, customColumnSizes);
@@ -435,7 +435,7 @@ export const Authorized = props => {
               <Button
                 color="secondary"
                 disableRipple
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={() => setShowFilters(toggle)}
                 startIcon={<FilterListIcon />}
                 style={{ backgroundColor: 'transparent' }}
               >

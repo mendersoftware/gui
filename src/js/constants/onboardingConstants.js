@@ -31,6 +31,7 @@ export const onboardingSteps = {
   ONBOARDING_FINISHED_NOTIFICATION: 'onboarding-finished-notification',
   ONBOARDING_CANCELED: 'onboarding-canceled'
 };
+export const SET_DEMO_ARTIFACT_PORT = 'SET_DEMO_ARTIFACT_PORT';
 export const SET_ONBOARDING_COMPLETE = 'SET_ONBOARDING_COMPLETE';
 export const SET_ONBOARDING_PROGRESS = 'SET_ONBOARDING_PROGRESS';
 export const SET_ONBOARDING_DEVICE_TYPE = 'SET_ONBOARDING_DEVICE_TYPE';

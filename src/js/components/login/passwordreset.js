@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { passwordResetComplete } from '../../actions/userActions';
 import { setSnackbar } from '../../actions/appActions';
+import { passwordResetComplete } from '../../actions/userActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 import { PasswordScreenContainer } from './password';
-import { TIMEOUTS } from '../../constants/appConstants';
 
 export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
   const [confirm, setConfirm] = useState(false);

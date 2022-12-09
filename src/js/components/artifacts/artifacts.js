@@ -2,22 +2,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Button } from '@mui/material';
 import { CloudUpload } from '@mui/icons-material';
+import { Button } from '@mui/material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import { defaultVisibleSection } from '../../constants/releaseConstants';
 import { getDeviceTypes, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
+import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import InfoHint from '../common/info-hint';
 import AddArtifactDialog from './dialogs/addartifact';
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
-import { useDebounce } from '../../utils/debouncehook';
-import { defaultVisibleSection } from '../../constants/releaseConstants';
-import InfoHint from '../common/info-hint';
 
 const refreshArtifactsLength = 60000;
 

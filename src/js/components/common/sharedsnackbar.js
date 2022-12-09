@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
+
 import { Snackbar } from '@mui/material';
+
 import copy from 'copy-to-clipboard';
 
 export const SharedSnackbar = ({ setSnackbar, snackbar }) => {

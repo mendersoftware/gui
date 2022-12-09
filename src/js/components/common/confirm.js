@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { IconButton } from '@mui/material';
 import { Cancel as CancelIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 
 const defaultRemoving = 'Removing...';
 

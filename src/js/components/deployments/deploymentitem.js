@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 
 // material ui
-import { Button, IconButton, Tooltip } from '@mui/material';
 import { CancelOutlined as CancelOutlinedIcon } from '@mui/icons-material';
+import { Button, IconButton, Tooltip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
+import { getDeploymentState } from '../../helpers';
 import Confirm from '../common/confirm';
 import { RelativeTime } from '../common/time';
-import ProgressDisplay, { DeploymentStatusNotification } from './progressChart';
-import DeploymentStats from './deploymentstatus';
 import { PhaseProgressDisplay } from './deployment-report/phaseprogress';
-import { getDeploymentState } from '../../helpers';
-import { makeStyles } from 'tss-react/mui';
+import DeploymentStats from './deploymentstatus';
+import ProgressDisplay, { DeploymentStatusNotification } from './progressChart';
 
 export const deploymentTypeClasses = {
   [DEPLOYMENT_STATES.finished]: 'past-item',

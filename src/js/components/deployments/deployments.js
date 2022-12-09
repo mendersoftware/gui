@@ -4,25 +4,23 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@mui/material';
 
-import { getGroups, getDynamicGroups } from '../../actions/deviceActions';
-import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, setDeploymentsState } from '../../actions/deploymentActions';
+import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
+import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, listDefaultsByState } from '../../constants/deploymentConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import { getISOStringBoundaries } from '../../helpers';
 import { getIsEnterprise, getOnboardingState, getUserCapabilities } from '../../selectors';
-
+import { useLocationParams } from '../../utils/liststatehook';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import useWindowSize from '../../utils/resizehook';
 import CreateDeployment from './createdeployment';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
 import Scheduled from './scheduleddeployments';
-
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
-import useWindowSize from '../../utils/resizehook';
-import { useLocationParams } from '../../utils/liststatehook';
-import { getISOStringBoundaries } from '../../helpers';
 
 const routes = {
   [DEPLOYMENT_ROUTES.active.key]: {

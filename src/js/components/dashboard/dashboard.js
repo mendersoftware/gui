@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
-import { onboardingSteps } from '../../constants/onboardingConstants';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';

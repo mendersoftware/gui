@@ -1,18 +1,18 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
+import { Autocomplete, TextField, Tooltip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { TextField, Tooltip, Autocomplete } from '@mui/material';
-import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
-import { makeStyles } from 'tss-react/mui';
-
+import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import useWindowSize from '../../../utils/resizehook';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
-import { ALL_DEVICES } from '../../../constants/deviceConstants';
-import { getDeviceIdentityText } from '../../devices/base-devices';
 import InfoText from '../../common/infotext';
+import { getDeviceIdentityText } from '../../devices/base-devices';
 
 const useStyles = makeStyles()(theme => ({
   infoStyle: {

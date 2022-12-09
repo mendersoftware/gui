@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import msgpack5 from 'msgpack5';
 
 import { apiUrl } from '../api/general-api';
 import { TIMEOUTS } from '../constants/appConstants';
-import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../constants/deviceConstants';
+import { DEVICE_MESSAGE_PROTOCOLS as MessageProtocols, DEVICE_MESSAGE_TYPES as MessageTypes } from '../constants/deviceConstants';
 
 const MessagePack = msgpack5();
 

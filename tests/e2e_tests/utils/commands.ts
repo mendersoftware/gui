@@ -1,15 +1,14 @@
+import { Page } from '@playwright/test';
 import axios from 'axios';
+import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as https from 'https';
-import * as path from 'path';
-import { v4 as uuid } from 'uuid';
 import jwtDecode from 'jwt-decode';
-import { spawn } from 'child_process';
-import { Page } from '@playwright/test';
-import { PNG } from 'pngjs';
-import pixelmatch from 'pixelmatch';
-
 import { authenticator } from 'otplib';
+import * as path from 'path';
+import pixelmatch from 'pixelmatch';
+import { PNG } from 'pngjs';
+import { v4 as uuid } from 'uuid';
 
 export const getPeristentLoginInfo = () => {
   let loginInfo;

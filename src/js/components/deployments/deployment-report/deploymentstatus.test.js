@@ -2,7 +2,6 @@ import React from 'react';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-
 import DeploymentStatus, { DeploymentPhaseNotification } from './deploymentstatus';
 
 describe('DeploymentStatus Component', () => {

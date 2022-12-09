@@ -1,13 +1,14 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import configureStore from 'redux-mock-store';
+
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import Uploads from './uploads';
 import { defaultState, undefineds } from '../../../tests/mockData';
 import { render } from '../../../tests/setupTests';
+import Uploads from './uploads';
 
 const mockStore = configureStore([thunk]);
 

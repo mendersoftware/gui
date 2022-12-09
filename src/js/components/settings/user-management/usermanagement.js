@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+
 // material ui
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
 import { getCurrentUser, getFeatures, getIsEnterprise, getUserCapabilities } from '../../../selectors';
-import UserList from './userlist';
-import UserForm from './userform';
 import { UserDefinition } from './userdefinition';
+import UserForm from './userform';
+import UserList from './userlist';
 
 const actions = {
   create: 'createUser',

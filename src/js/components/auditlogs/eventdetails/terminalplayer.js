@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Button } from '@mui/material';
 import { CloudDownload, Pause, PlayArrow, Refresh } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { FitAddon } from 'xterm-addon-fit';
 import msgpack5 from 'msgpack5';
+import { FitAddon } from 'xterm-addon-fit';
 
 import { deviceConnect } from '../../../actions/deviceActions';
-import { blobToString, byteArrayToString } from '../../../utils/sockethook';
 import { TIMEOUTS } from '../../../constants/appConstants';
-import { DEVICE_MESSAGE_TYPES as MessageTypes, DEVICE_MESSAGE_PROTOCOLS as MessageProtocols } from '../../../constants/deviceConstants';
-import XTerm from '../../common/xterm';
+import { DEVICE_MESSAGE_PROTOCOLS as MessageProtocols, DEVICE_MESSAGE_TYPES as MessageTypes } from '../../../constants/deviceConstants';
 import { createFileDownload } from '../../../helpers';
+import { blobToString, byteArrayToString } from '../../../utils/sockethook';
+import XTerm from '../../common/xterm';
 
 const MessagePack = msgpack5();
 const fitAddon = new FitAddon();
@@ -223,7 +223,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     setBufferIndex(0);
   };
 
-  const onTogglePlayClick = () => {
+  const onTogglePlayClick = useCallback(() => {
     if (!wasStarted) {
       setWasStarted(true);
       return setTimeout(() => {
@@ -234,7 +234,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     }
     setIsPaused(isPlaying);
     setIsPlaying(!isPlaying);
-  };
+  }, [isPlaying, wasStarted]);
 
   const onReplayClick = () => {
     resetPlayer();

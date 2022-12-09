@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
+import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
 // material ui
 import { Button, Menu, MenuItem } from '@mui/material';
-import { ArrowDropUp as ArrowDropUpIcon, ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
 
 const ListOptions = ({ options, title = 'Table options' }) => {
   const [anchorEl, setAnchorEl] = useState(null);

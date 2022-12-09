@@ -1,5 +1,5 @@
-import reducer, { initialState } from './appReducer';
 import * as AppConstants from '../constants/appConstants';
+import reducer, { initialState } from './appReducer';
 
 const snackbarMessage = 'Run the tests';
 
@@ -7,20 +7,6 @@ describe('app reducer', () => {
   it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
-
-  it('should handle environment parsing', async () => {
-    expect(reducer(undefined, {}).versionInformation).toEqual({
-      Deployments: '1.2.3',
-      Deviceauth: null,
-      GUI: 'latest',
-      Integration: 'master',
-      Inventory: null,
-      'Mender-Artifact': '',
-      'Mender-Client': 'next',
-      'Meta-Mender': 'saas-123.34'
-    });
-  });
-
   it('should handle SET_SNACKBAR', async () => {
     expect(
       reducer(undefined, {

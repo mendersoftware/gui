@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
+import { connect } from 'react-redux';
 
 // material ui
-import { Button, Tooltip, Typography } from '@mui/material';
 import { Sort as SortIcon } from '@mui/icons-material';
+import { Button, Tooltip, Typography } from '@mui/material';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
@@ -12,14 +12,14 @@ import { editArtifact, removeArtifact, selectArtifact, selectRelease, uploadArti
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { customSort } from '../../helpers';
+import { customSort, toggle } from '../../helpers';
 import { getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
-import { ExpandArtifact } from '../helptips/helptooltips';
 import ForwardingLink from '../common/forwardlink';
-import RemoveArtifactDialog from './dialogs/removeartifact';
 import Loader from '../common/loader';
+import { ExpandArtifact } from '../helptips/helptooltips';
+import RemoveArtifactDialog from './dialogs/removeartifact';
 import ReleaseRepositoryItem from './releaserepositoryitem';
 
 const columnHeaders = [
@@ -118,7 +118,7 @@ export const ReleaseRepository = ({
       return;
     }
     // sort table
-    setSortDown(!sortDown);
+    setSortDown(toggle);
     setSortCol(col);
   };
 

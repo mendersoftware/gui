@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FormControl, Input, InputLabel, TextField, Tooltip, Autocomplete } from '@mui/material';
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { Autocomplete, FormControl, Input, InputLabel, TextField, Tooltip } from '@mui/material';
 
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { duplicateFilter, unionizeStrings } from '../../../helpers';

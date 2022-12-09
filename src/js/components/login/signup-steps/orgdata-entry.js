@@ -3,7 +3,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 
 import { MenuItem, Select } from '@mui/material';
 
-import { locations, TIMEOUTS } from '../../../constants/appConstants';
+import { TIMEOUTS, locations } from '../../../constants/appConstants';
 import Form from '../../common/forms/form';
 import FormCheckbox from '../../common/forms/formcheckbox';
 import TextInput from '../../common/forms/textinput';

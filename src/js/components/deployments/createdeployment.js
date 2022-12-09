@@ -1,29 +1,30 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Button, Divider, Drawer, IconButton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
 import moment from 'moment';
 import pluralize from 'pluralize';
 
-import { Button, Divider, Drawer, IconButton, Typography } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
-import { makeStyles } from 'tss-react/mui';
-
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import { createDeployment } from '../../actions/deploymentActions';
 import { getGroupDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import Confirm from '../common/confirm';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
 import { getDocsVersion, getIdAttribute, getIsEnterprise, getOnboardingState, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
-import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
-import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
-import { ScheduleRollout } from './deployment-wizard/schedulerollout';
-import { Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import Confirm from '../common/confirm';
 import { RolloutPatternSelection } from './deployment-wizard/phasesettings';
+import { Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
+import { ScheduleRollout } from './deployment-wizard/schedulerollout';
+import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
 
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 

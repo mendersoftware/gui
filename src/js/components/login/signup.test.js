@@ -1,14 +1,16 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
-import { act, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+import { Route, Routes } from 'react-router-dom';
+
+import { act, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
-import Signup from './signup';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import Signup from './signup';
 
 const mockStore = configureStore([thunk]);
 

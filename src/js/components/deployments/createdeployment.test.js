@@ -1,17 +1,19 @@
 import React from 'react';
-import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
 
-import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
-import { ScheduleRollout } from './deployment-wizard/schedulerollout';
-import { Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
-import { RolloutPatternSelection } from './deployment-wizard/phasesettings';
-import CreateDeployment from './createdeployment';
-import { defaultState, undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import CreateDeployment from './createdeployment';
+import { RolloutPatternSelection } from './deployment-wizard/phasesettings';
+import { Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
+import { ScheduleRollout } from './deployment-wizard/schedulerollout';
+import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
 
 const mockStore = configureStore([thunk]);
 

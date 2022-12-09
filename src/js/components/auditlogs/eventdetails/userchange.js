@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Code } from '../../common/copy-code';
 
 const getDiffLineStyle = line => {

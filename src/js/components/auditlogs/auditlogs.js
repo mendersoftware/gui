@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import { Autocomplete, Button, TextField } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
 import moment from 'moment';
-import { Button, TextField, Autocomplete } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
-
 import { getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
+import { createDownload, getISOStringBoundaries, toggle } from '../../helpers';
+import { getUserCapabilities } from '../../selectors';
+import { useDebounce } from '../../utils/debouncehook';
+import { useLocationParams } from '../../utils/liststatehook';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
 import AuditLogsList from './auditlogslist';
-import { createDownload, getISOStringBoundaries } from '../../helpers';
-import { useDebounce } from '../../utils/debouncehook';
-import { getUserCapabilities } from '../../selectors';
-import { useLocationParams } from '../../utils/liststatehook';
-import { makeStyles } from 'tss-react/mui';
 
 const detailsMap = {
   Deployment: 'to device group',
@@ -100,7 +101,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
       type: '',
       user: ''
     });
-    setFilterReset(!filterReset);
+    setFilterReset(toggle);
     navigate('/auditlog');
   };
 

@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import moment from 'moment';
+import { connect } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 // material ui
-import { List, LinearProgress } from '@mui/material';
 import { Error as ErrorIcon, OpenInNew as OpenInNewIcon } from '@mui/icons-material';
+import { LinearProgress, List } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
+import moment from 'moment';
 
 import { cancelRequest } from '../../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../../constants/appConstants';
+import { toggle } from '../../../helpers';
+import { getIsEnterprise, getUserRoles } from '../../../selectors';
 import Alert from '../../common/alert';
 import CancelRequestDialog from '../dialogs/cancelrequest';
-import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
-import { connect } from 'react-redux';
-import { getIsEnterprise, getUserRoles } from '../../../selectors';
-import { makeStyles } from 'tss-react/mui';
+import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 
 const useStyles = makeStyles()(theme => ({
   deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
@@ -104,7 +106,7 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
     if (e !== undefined) {
       e.preventDefault();
     }
-    setCancelSubscription(!cancelSubscription);
+    setCancelSubscription(toggle);
   };
 
   return (

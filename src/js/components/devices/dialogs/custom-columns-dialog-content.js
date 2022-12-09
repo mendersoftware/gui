@@ -2,12 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 // material ui
-import { DialogContent, FormControl, FormHelperText, IconButton, ListItem } from '@mui/material';
 import { Clear as ClearIcon, DragHandle as DragHandleIcon } from '@mui/icons-material';
+import { DialogContent, FormControl, FormHelperText, IconButton, ListItem } from '@mui/material';
 
-import AttributeAutoComplete from '../widgets/attribute-autocomplete';
-import { defaultHeaders } from '../base-devices';
 import { ATTRIBUTE_SCOPES } from '../../../constants/deviceConstants';
+import { defaultHeaders } from '../base-devices';
+import AttributeAutoComplete from '../widgets/attribute-autocomplete';
 
 const DraggableListItem = ({ item, index, onRemove }) => {
   const title = useMemo(() => {

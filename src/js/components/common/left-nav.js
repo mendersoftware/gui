@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 // material ui
-import { List, ListItem, ListItemIcon, ListSubheader, ListItemText } from '@mui/material';
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import { listItemTextClasses } from '@mui/material/ListItemText';
 import { makeStyles } from 'tss-react/mui';
 

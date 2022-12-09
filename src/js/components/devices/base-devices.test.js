@@ -5,16 +5,16 @@ import { render } from '../../../../tests/setupTests';
 import {
   AcceptedEmptyState,
   DefaultAttributeRenderer,
-  defaultTextRender,
   DeviceCreationTime,
   DeviceSoftware,
   DeviceStatusRenderer,
   DeviceTypes,
-  getDeviceIdentityText,
   PendingEmptyState,
   PreauthorizedEmptyState,
   RejectedEmptyState,
-  RelativeDeviceTime
+  RelativeDeviceTime,
+  defaultTextRender,
+  getDeviceIdentityText
 } from './base-devices';
 
 describe('smaller components', () => {

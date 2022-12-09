@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import pluralize from 'pluralize';
+import React, { useMemo, useState } from 'react';
+
+import { InfoOutlined } from '@mui/icons-material';
 import {
   Checkbox,
   Dialog,
@@ -7,20 +8,22 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   FormHelperText,
-  ListItemText,
   InputLabel,
+  ListItemText,
   MenuItem,
   Select,
-  FormControlLabel,
   Tooltip
 } from '@mui/material';
-import { InfoOutlined } from '@mui/icons-material';
 
-import Form from '../../common/forms/form';
-import TextInput from '../../common/forms/textinput';
-import PasswordInput from '../../common/forms/passwordinput';
+import pluralize from 'pluralize';
+
 import { rolesById, rolesByName, uiPermissionsById } from '../../../constants/userConstants';
+import { toggle } from '../../../helpers';
+import Form from '../../common/forms/form';
+import PasswordInput from '../../common/forms/passwordinput';
+import TextInput from '../../common/forms/textinput';
 
 export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
   const [selectedRoleIds, setSelectedRoleIds] = useState(
@@ -134,7 +137,7 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
     return submit({ ...remainder, ...roleData, password }, 'create');
   };
 
-  const togglePasswordReset = () => setShouldResetPassword(current => !current);
+  const togglePasswordReset = () => setShouldResetPassword(toggle);
 
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">
