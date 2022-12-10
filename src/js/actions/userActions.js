@@ -86,13 +86,13 @@ export const passwordResetStart = email => dispatch =>
   );
 
 export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword }).catch(err => {
-    let status = ((err || {}).res || {}).status,
-      errorMsg;
-    if (status == 400) {
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword }).catch((err = {}) => {
+    const { error, response = {} } = err;
+    let errorMsg = '';
+    if (response.status == 400) {
       errorMsg = 'the link you are using expired or the request is not valid, please try again.';
     } else {
-      errorMsg = (err || {}).error;
+      errorMsg = error;
     }
     dispatch(setSnackbar('The password reset request cannot be processed: ' + errorMsg));
     return Promise.reject(err);
