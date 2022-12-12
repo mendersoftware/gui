@@ -36,7 +36,7 @@ export const cancelRequest = (tenantId, reason) => dispatch =>
 
 export const createOrganizationTrial = data => dispatch => {
   const { location } = locations[data.location];
-  const target = `https://${location}${tenantadmApiUrlv2}/tenants/trial`;
+  const target = `https://${window.location.hostname.startsWith('staging') ? 'staging.' : ''}${location}${tenantadmApiUrlv2}/tenants/trial`;
   return Api.postUnauthorized(target, data)
     .catch(err => {
       if (err.response.status >= 400 && err.response.status < 500) {
