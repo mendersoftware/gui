@@ -84,7 +84,7 @@ export const EntryLink = ({ className = '', target = 'signup' }) => (
 );
 
 export const LocationWarning = () => {
-  const location = Object.entries(locations).reduce((accu, [key, value]) => (value.location === window.location.hostname ? key : accu), locations.us.key);
+  const location = Object.entries(locations).reduce((accu, [key, value]) => (window.location.hostname.includes(value.location) ? key : accu), locations.us.key);
   const { icon: Icon, title, fallback } = locationMap[location];
   return (
     <div className="flexbox centered margin-top-large">
