@@ -3,7 +3,7 @@ import React from 'react';
 import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
-import DeviceIssuesSelection, { EmptySelection } from './issueselection';
+import DeviceIssuesSelection from './issueselection';
 
 describe('DeviceIssuesSelection Component', () => {
   it('renders correctly', async () => {
@@ -16,13 +16,6 @@ describe('DeviceIssuesSelection Component', () => {
       <DeviceIssuesSelection onChange={jest.fn} onSelectAll={jest.fn} options={options} selection={[DEVICE_ISSUE_OPTIONS.offline.key]} />
     );
     const view = baseElement.firstChild;
-    expect(view).toMatchSnapshot();
-    expect(view).toEqual(expect.not.stringMatching(undefineds));
-  });
-
-  it('renders EmptySelection correctly', () => {
-    const { baseElement } = render(<EmptySelection allSelected={false} emptySelection={false} onToggleClick={jest.fn} />);
-    const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

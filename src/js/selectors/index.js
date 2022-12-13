@@ -210,8 +210,8 @@ export const getTenantCapabilities = createSelector(
 export const getAvailableIssueOptionsByType = createSelector(
   [getFeatures, getTenantCapabilities, getIssueCountsByType],
   ({ hasReporting }, { hasFullFiltering, hasMonitor }, issueCounts) =>
-    Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsFullFiltering, needsMonitor, needsReporting, title }) => {
-      if ((needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering) || (needsMonitor && !hasMonitor)) {
+    Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { isCategory, key, needsFullFiltering, needsMonitor, needsReporting, title }) => {
+      if (isCategory || (needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering) || (needsMonitor && !hasMonitor)) {
         return accu;
       }
       accu[key] = { count: issueCounts[key].filtered, key, title };

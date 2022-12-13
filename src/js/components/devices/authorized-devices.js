@@ -161,8 +161,6 @@ export const Authorized = props => {
   const { refreshTrigger, selectedId, selectedIssues = [], isLoading: pageLoading, selection: selectedRows, sort = {}, state: selectedState } = deviceListState;
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const { canManageDevices } = userCapabilities;
-
-  const { hasReporting } = features;
   const { hasMonitor } = tenantCapabilities;
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState([]);
@@ -321,19 +319,6 @@ export const Authorized = props => {
     setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
   };
 
-  const onSelectAllIssues = shouldSelectAll => {
-    const selectedIssues = shouldSelectAll
-      ? Object.entries(DEVICE_ISSUE_OPTIONS).reduce((accu, [key, { needsReporting }]) => {
-          if (needsReporting && !hasReporting) {
-            return accu;
-          }
-          accu.push(key);
-          return accu;
-        }, [])
-      : [];
-    setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
-  };
-
   const onSelectionChange = (selection = []) => {
     if (!onboardingState.complete && selection.length) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
@@ -408,12 +393,7 @@ export const Authorized = props => {
             <div className="flexbox">
               <DeviceStateSelection onStateChange={onDeviceStateSelectionChange} selectedState={selectedState} states={states} />
               {hasMonitor && (
-                <DeviceIssuesSelection
-                  onChange={onDeviceIssuesSelectionChange}
-                  onSelectAll={onSelectAllIssues}
-                  options={Object.values(availableIssueOptions)}
-                  selection={selectedIssues}
-                />
+                <DeviceIssuesSelection onChange={onDeviceIssuesSelectionChange} options={Object.values(availableIssueOptions)} selection={selectedIssues} />
               )}
               {selectedGroup && !isUngroupedGroup && (
                 <div className="margin-left muted flexbox centered">
