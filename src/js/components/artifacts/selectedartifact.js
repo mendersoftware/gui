@@ -103,7 +103,7 @@ const extractSoftwareItem = (artifactProvides = {}) => {
   );
 };
 
-export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, onExpansion, showRemoveArtifactDialog }) => {
+export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, onExpansion, open, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
@@ -112,10 +112,11 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
   const [showProvidesDepends, setShowProvidesDepends] = useState(false);
 
   useEffect(() => {
-    if (!artifact.url && !gettingUrl) {
+    if (!artifact.url && !gettingUrl && open) {
       setGettingUrl(true);
     }
-  }, [artifact.id]);
+  }, [artifact.id, open]);
+
   useEffect(() => {
     if (gettingUrl) {
       getArtifactUrl(artifact.id).then(() => setGettingUrl(false));
