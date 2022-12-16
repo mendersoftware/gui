@@ -72,7 +72,7 @@ const defaultActions = {
     title: () => 'Promote to gateway',
     action: ({ onPromoteGateway, selection }) => onPromoteGateway(selection),
     checkRelevance: ({ device, features, tenantCapabilities: { isEnterprise } }) =>
-      features.isHosted && isEnterprise && !stringToBoolean(device.attributes.mender_is_gateway) && device.status === DEVICE_STATES.accepted
+      features.isHosted && isEnterprise && !stringToBoolean(device.attributes?.mender_is_gateway) && device.status === DEVICE_STATES.accepted
   },
   createDeployment: {
     icon: <ReplayIcon />,
