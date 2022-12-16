@@ -36,7 +36,8 @@ export const cancelRequest = (tenantId, reason) => dispatch =>
 
 export const createOrganizationTrial = data => dispatch => {
   const { location } = locations[data.location];
-  const target = `https://${window.location.hostname.startsWith('staging') ? 'staging.' : ''}${location}${tenantadmApiUrlv2}/tenants/trial`;
+  const targetLocation = `https://${window.location.hostname.startsWith('staging') ? 'staging.' : ''}${location}`;
+  const target = `${targetLocation}${tenantadmApiUrlv2}/tenants/trial`;
   return Api.postUnauthorized(target, data)
     .catch(err => {
       if (err.response.status >= 400 && err.response.status < 500) {
@@ -51,7 +52,7 @@ export const createOrganizationTrial = data => dispatch => {
       dispatch(setFirstLoginAfterSignup(true));
       return new Promise(resolve =>
         setTimeout(() => {
-          window.location.assign(`https://${location}${headers.location}`);
+          window.location.assign(`${targetLocation}${headers.location || ''}`);
           return resolve();
         }, TIMEOUTS.fiveSeconds)
       );

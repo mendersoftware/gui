@@ -29,11 +29,11 @@ export const TwoFactorAuthSetup = ({
   const [showEmailVerification, setShowEmailVerification] = useState(false);
 
   useEffect(() => {
-    if (currentUser.verified && is2FAEnabled && !has2FA) {
+    if ((currentUser.verified || currentUser.email?.endsWith('@example.com')) && is2FAEnabled && !has2FA) {
       setShowEmailVerification(false);
       setQrExpanded(true);
     }
-  }, [currentUser.verified]);
+  }, [currentUser.email, currentUser.verified, is2FAEnabled, has2FA]);
 
   useEffect(() => {
     if (activationCode) {
@@ -88,7 +88,7 @@ export const TwoFactorAuthSetup = ({
       setQrExpanded(!is2FAEnabled);
       setIs2FAEnabled(!is2FAEnabled);
     }
-  }, [has2FA, is2FAEnabled, showEmailVerification]);
+  }, [currentUser.email, currentUser.verified, has2FA, is2FAEnabled, showEmailVerification]);
 
   return (
     <div className="margin-top">
