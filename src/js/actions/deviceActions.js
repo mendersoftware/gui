@@ -315,21 +315,25 @@ export const selectDevice = (deviceId, status) => dispatch => {
   );
 };
 
+const getEarliestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA < dateB ? dateA : dateB);
+const getLatestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA >= dateB ? dateA : dateB);
+
 const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
       const stateDevice = state.devices.byId[device.id] || {};
       const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, monitor: storedMonitor = {}, tags: storedTags = {} } = stateDevice;
       const { identity, inventory, monitor, system = {}, tags } = mapDeviceAttributes(device.attributes);
-      const { created_ts = device.created_ts || stateDevice.created_ts, updated_ts = device.updated_ts || stateDevice.updated_ts } = system;
-      device.attributes = { ...storedAttributes, ...inventory };
+      // all the other mapped attributes return as empty objects if there are no attributes to map, but identity will be initialized with an empty state
+      // for device_type and artifact_name, potentially overwriting existing info, so rely on stored information instead if there are no attributes
+      device.attributes = device.attributes ? { ...storedAttributes, ...inventory } : storedAttributes;
       device.tags = { ...storedTags, ...tags };
       device.monitor = { ...storedMonitor, ...monitor };
       device.identity_data = { ...storedIdentity, ...identity };
       device.status = status ? status : device.status || identity.status;
-      device.created_ts = created_ts;
-      device.updated_ts = updated_ts;
-      device.isOffline = new Date(updated_ts) < new Date(state.app.offlineThreshold);
+      device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
+      device.updated_ts = getLatestTs(getLatestTs(system.updated_ts, device.updated_ts), stateDevice.updated_ts);
+      device.isOffline = new Date(device.updated_ts) < new Date(state.app.offlineThreshold);
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;
@@ -846,20 +850,7 @@ export const getDevicesWithAuth = devices => (dispatch, getState) =>
   devices.length
     ? GeneralApi.get(`${deviceAuthV2}/devices?id=${devices.map(device => device.id).join('&id=')}`)
         .then(({ data: receivedDevices }) => {
-          const byIdState = getState().devices.byId;
-          const devicesById = receivedDevices.reduce((accu, device) => {
-            const existingDevice = byIdState[device.id] || {};
-            accu[device.id] = {
-              ...existingDevice,
-              identity_data: {
-                ...existingDevice.identity_data,
-                ...device.identity_data
-              },
-              auth_sets: device.auth_sets,
-              status: device.status
-            };
-            return accu;
-          }, {});
+          const { devicesById } = reduceReceivedDevices(receivedDevices, [], getState());
           return Promise.all([dispatch({ type: DeviceConstants.RECEIVE_DEVICES, devicesById }), Promise.resolve(receivedDevices)]);
         })
         .catch(err => commonErrorHandler(err, `Error: ${err}`, dispatch))
