@@ -63,7 +63,9 @@ test.describe('Test setup', () => {
       await page.waitForTimeout(2000);
       await page.click(`button:has-text('Complete')`);
       await page.waitForTimeout(5000);
+      await page.waitForSelector('text=/License information/i', { timeout: 15000 });
 
+      // the following sets the UI up for easier navigation by disabling onboarding
       const domain = baseUrlToDomain(baseUrl);
       const { token, userId } = await login(username, password, baseUrl);
       await context.addCookies([
@@ -71,9 +73,11 @@ test.describe('Test setup', () => {
         { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
         { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
       ]);
-      await page.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
+      const newPage = await context.newPage();
+      await newPage.goto(baseUrl);
+      await newPage.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
+      await newPage.waitForSelector('text=/License information/i');
       await context.storageState({ path: 'storage.json' });
-      await page.waitForSelector('text=/License information/i', { timeout: 15000 });
     });
   });
 

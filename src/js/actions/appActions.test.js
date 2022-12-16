@@ -266,11 +266,11 @@ describe('app actions', () => {
       },
       {
         type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } }
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: false, monitor: {}, tags: {} } }
       },
       {
         type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } }
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: false, monitor: {}, tags: {} } }
       },
       {
         type: RECEIVE_DEVICES,
@@ -286,7 +286,7 @@ describe('app actions', () => {
           }
         }
       },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1 } } },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: false, monitor: {}, tags: {} } } },
       {
         type: ADD_DYNAMIC_GROUP,
         groupName: UNGROUPED_GROUP.id,
