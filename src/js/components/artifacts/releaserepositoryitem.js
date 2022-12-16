@@ -48,7 +48,13 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
           </IconButton>
         </AccordionSummary>
         <AccordionDetails>
-          <SelectedArtifact artifact={artifact} editArtifact={onEdit} onExpansion={onExpanded} showRemoveArtifactDialog={showRemoveArtifactDialog} />
+          <SelectedArtifact
+            artifact={artifact}
+            editArtifact={onEdit}
+            open={expanded}
+            onExpansion={onExpanded}
+            showRemoveArtifactDialog={showRemoveArtifactDialog}
+          />
         </AccordionDetails>
       </Accordion>
     </div>
