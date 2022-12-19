@@ -37,6 +37,7 @@ export const DEVICE_FILTERING_OPTIONS = {
     help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
   },
   $in: {
+    key: '$in',
     title: 'in',
     shortform: 'in',
     help: 'The "in" operator accepts a list of comma-separated values. It matches if the selected field is equal to one of the specified values.'

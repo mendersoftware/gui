@@ -25,7 +25,7 @@ import {
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
 import { toggle, versionCompare } from '../../helpers';
 import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
@@ -129,6 +129,7 @@ export const DeviceGroups = ({
 
   useEffect(() => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
+    const { hasFullFiltering } = tenantCapabilities;
     if (groupName) {
       selectGroup(groupName, filters);
     } else if (filters.length) {
@@ -138,6 +139,8 @@ export const DeviceGroups = ({
     let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
     if (id.length === 1 && Boolean(locationParams.open)) {
       listState.selectedId = id[0];
+    } else if (id.length && hasFullFiltering) {
+      setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]);
     }
     setDeviceListState(listState);
     clearInterval(deviceTimer.current);
