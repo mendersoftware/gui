@@ -1795,9 +1795,19 @@ label+.emotion-53 {
         <div
           class="flexbox center-aligned"
         >
-          <h3>
+          <h3
+            class="flexbox"
+          >
             Device information for 
-            a1
+            <div
+              class="flexbox space-between"
+            >
+              <div
+                style="margin-left: 4px;"
+              >
+                dc:a6:32:12:ad:bf
+              </div>
+            </div>
           </h3>
           <button
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-3"

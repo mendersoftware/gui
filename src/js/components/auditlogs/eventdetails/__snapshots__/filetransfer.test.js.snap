@@ -67,8 +67,12 @@ exports[`FileTransfer Component renders correctly 1`] = `
           class="flexbox center-aligned emotion-2"
           href="/devices?id=a1"
         >
-          <div>
-            a1
+          <div
+            class="flexbox space-between"
+          >
+            <div>
+              a1
+            </div>
           </div>
           <svg
             aria-hidden="true"

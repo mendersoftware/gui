@@ -565,8 +565,12 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
         >
           Troubleshoot -
         </div>
-        <div>
-          dc:a6:32:12:ad:bf
+        <div
+          class="flexbox space-between"
+        >
+          <div>
+            dc:a6:32:12:ad:bf
+          </div>
         </div>
       </h2>
       <div
