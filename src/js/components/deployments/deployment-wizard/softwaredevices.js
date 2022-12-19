@@ -8,6 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 import pluralize from 'pluralize';
 
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
+import { stringToBoolean } from '../../../helpers';
 import useWindowSize from '../../../utils/resizehook';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
@@ -38,36 +39,65 @@ export const ReleasesWarning = ({ lacksReleases }) => (
   </div>
 );
 
-export const Devices = ({ deploymentObject, groupRef, groups, hasDevices, hasDynamicGroups, hasPending, idAttribute, setDeploymentSettings }) => {
+export const Devices = ({
+  deploymentObject,
+  getSystemDevices,
+  groupRef,
+  groups,
+  hasDevices,
+  hasDynamicGroups,
+  hasPending,
+  idAttribute,
+  setDeploymentSettings
+}) => {
   const { classes } = useStyles();
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
 
-  const { deploymentDeviceIds = [], devices = [], group = null } = deploymentObject;
+  const { deploymentDeviceCount = 0, devices = [], group = null } = deploymentObject;
   const device = devices.length ? devices[0] : {};
+
+  useEffect(() => {
+    const { attributes = {} } = device;
+    const { mender_is_gateway } = attributes;
+    if (!device.id || !stringToBoolean(mender_is_gateway)) {
+      return;
+    }
+    getSystemDevices(device.id, { perPage: 500 });
+  }, [device.id]);
 
   const deploymentSettingsUpdate = (e, value) => setDeploymentSettings({ group: value });
 
   const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
-  const { deviceText, groupLink } = useMemo(() => {
-    let groupLink = '/devices';
+  const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
+    let devicesLink = '/devices';
     let deviceText = '';
-    const { attributes = {}, id } = device;
-    const { mender_is_gateway } = attributes;
-    if (id) {
-      deviceText = `${getDeviceIdentityText({ device, idAttribute })}${mender_is_gateway ? ' (Device system)' : ''}`;
-      groupLink = `${groupLink}?${devices.map(({ id }) => `id=${id}`).join('&')}`;
-    } else if (group && group !== ALL_DEVICES) {
-      groupLink = `${groupLink}?group=${group}`;
+    let targetDeviceCount = deploymentDeviceCount;
+    let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;
+    if (device?.id) {
+      const { attributes = {}, systemDeviceIds = [] } = device;
+      const { mender_is_gateway } = attributes;
+      deviceText = `${getDeviceIdentityText({ device, idAttribute })}${stringToBoolean(mender_is_gateway) ? ' (Device system)' : ''}`;
+      devicesLink = `${devicesLink}?${devices.map(({ id }) => `id=${id}`).join('&')}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
+      // here we hope the number of systemDeviceIds doesn't exceed the queried 500 and add the gateway device
+      targetDeviceCount = systemDeviceIds.length + 1;
+    } else if (group) {
+      targetDevicesText = 'All devices';
+      targetDeviceCount = 2;
+      if (group !== ALL_DEVICES) {
+        devicesLink = `${devicesLink}?group=${group}`;
+        targetDevicesText = `${targetDevicesText} in this group`;
+        targetDeviceCount = deploymentDeviceCount;
+      }
     }
-    return { deviceText, groupLink };
-  }, [devices, group, idAttribute]);
+    return { deviceText, devicesLink, targetDeviceCount, targetDevicesText };
+  }, [devices, group, idAttribute, deploymentDeviceCount]);
 
   return (
     <>
       <h4 className="margin-bottom-none margin-top-none">Select a device group to target</h4>
       <div ref={groupRef} className={classes.selection}>
-        {device ? (
+        {device.id ? (
           <TextField value={deviceText} label="Device" disabled={true} className={classes.infoStyle} />
         ) : (
           <div>
@@ -102,16 +132,9 @@ export const Devices = ({ deploymentObject, groupRef, groups, hasDevices, hasDyn
             )}
           </div>
         )}
-        {(deploymentDeviceIds.length > 0 || group) && (
+        {!!targetDeviceCount && (
           <InfoText>
-            {group ? (
-              <>All devices{group !== ALL_DEVICES ? ' in this group' : null}</>
-            ) : (
-              <>
-                {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)}
-              </>
-            )}{' '}
-            will be targeted. <Link to={groupLink}>View the {pluralize('devices', group === ALL_DEVICES ? 2 : deploymentDeviceIds.length)}</Link>
+            {targetDevicesText} will be targeted. <Link to={devicesLink}>View the {pluralize('devices', targetDeviceCount)}</Link>
           </InfoText>
         )}
       </div>

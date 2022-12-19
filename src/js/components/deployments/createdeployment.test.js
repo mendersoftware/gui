@@ -54,6 +54,7 @@ describe('CreateDeployment Component', () => {
         commonClasses: { columns: 'test' },
         deploymentObject: { phases: [{ batch_size: 0 }] },
         getReleases: getReleasesMock,
+        getSystemDevices: jest.fn,
         groups: defaultState.devices.groups.byId,
         hasDynamicGroups: true,
         open: true,

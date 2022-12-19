@@ -35,10 +35,12 @@ import {
   getDevicesByStatus,
   getDevicesWithAuth,
   getDynamicGroups,
+  getGatewayDevices,
   getGroupDevices,
   getGroups,
   getReportingLimits,
   getSessionDetails,
+  getSystemDevices,
   preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
@@ -262,6 +264,65 @@ describe('overall device information retrieval', () => {
       }
     ];
     await store.dispatch(getReportingLimits());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow system devices retrieval', async () => {
+    const store = mockStore({
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          isEnterprise: true
+        }
+      }
+    });
+    const expectedActions = [
+      {
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: {
+          [defaultState.devices.byId.a1.id]: {
+            ...defaultState.devices.byId.a1,
+            systemDeviceIds: [],
+            systemDeviceTotal: 0
+          }
+        }
+      }
+    ];
+    await store.dispatch(getSystemDevices(defaultState.devices.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow system devices retrieval', async () => {
+    const gatewayDevice = defaultState.devices.byId.a1;
+    const store = mockStore({
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          isEnterprise: true
+        }
+      },
+      devices: {
+        ...defaultState.devices,
+        byId: {
+          ...defaultState.devices.byId,
+          [gatewayDevice.id]: {
+            ...gatewayDevice,
+            attributes: {
+              ...gatewayDevice.attributes,
+              mender_gateway_system_id: 'gatewaySystem'
+            }
+          }
+        }
+      }
+    });
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: { ...gatewayDevice, gatewayIds: [] } }];
+    await store.dispatch(getGatewayDevices(defaultState.devices.byId.a1.id));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

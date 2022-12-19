@@ -20,7 +20,7 @@ import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbar
 import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
-const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
+const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, emptyFilter } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const deviceAuthV2 = `${apiUrl.v2}/devauth`;
@@ -376,11 +376,10 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
   if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
     return Promise.resolve();
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
-  const { filterTerms } = convertDeviceListStateToFilters({
+  const { attributes, filterTerms } = prepareSearchArguments({
     filters: [],
     group,
-    offlineThreshold: getState().app.offlineThreshold,
+    state: getState(),
     status: shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted
   });
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
@@ -420,12 +419,11 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   if (!!group && (!getState().devices.groups.byId[group] || !getState().devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
-  const { filterTerms: filters } = convertDeviceListStateToFilters({
+  const { attributes, filterTerms: filters } = prepareSearchArguments({
     filters: getState().devices.groups.byId[group].filters,
-    offlineThreshold: getState().app.offlineThreshold,
+    state: getState(),
     status: DEVICE_STATES.accepted
   });
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), { page, per_page: perPage, filters, attributes }).then(res => {
       const state = getState();
@@ -735,7 +733,7 @@ export const searchDevices =
     const { columnSelection = [] } = getUserSettings(state);
     const selectedAttributes = columnSelection.map(column => ({ attribute: column.key, scope: column.scope }));
     const attributes = attributeDuplicateFilter(
-      [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute || 'id' }, ...selectedAttributes],
+      [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute }, ...selectedAttributes],
       'attribute'
     );
     return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
@@ -1061,3 +1059,74 @@ export const setDeviceTwin = (deviceId, integration, settings) => (dispatch, get
         })
       );
     });
+
+const prepareSearchArguments = ({ filters, group, state, status }) => {
+  const { filterTerms } = convertDeviceListStateToFilters({ filters, group, offlineThreshold: state.app.offlineThreshold, selectedIssues: [], status });
+  const { columnSelection = [] } = getUserSettings(state);
+  const selectedAttributes = columnSelection.map(column => ({ attribute: column.key, scope: column.scope }));
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute }, ...selectedAttributes];
+  return { attributes, filterTerms };
+};
+
+export const getSystemDevices =
+  (id, options = {}) =>
+  (dispatch, getState) => {
+    const { page = defaultPage, perPage = defaultPerPage } = options;
+    const state = getState();
+    const { hasFullFiltering } = getTenantCapabilities(state);
+    if (!hasFullFiltering) {
+      return Promise.resolve();
+    }
+    const filters = [{ ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }];
+    const { attributes, filterTerms } = prepareSearchArguments({ filters, state, status: 'any' });
+
+    return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+      page,
+      per_page: perPage,
+      filters: filterTerms,
+      attributes
+    })
+      .catch(err => commonErrorHandler(err, `There was an error getting system devices device ${id}.`, dispatch, 'Please check your connection.'))
+      .then(({ data, headers }) => {
+        const state = getState();
+        const { devicesById, ids } = reduceReceivedDevices(data, [], state);
+        const device = {
+          ...state.devices.byId[id],
+          systemDeviceIds: ids,
+          systemDeviceTotal: Number(headers[headerNames.total])
+        };
+        return Promise.resolve(
+          dispatch({
+            type: DeviceConstants.RECEIVE_DEVICES,
+            devicesById: {
+              ...devicesById,
+              [id]: device
+            }
+          })
+        );
+      });
+  };
+
+export const getGatewayDevices = deviceId => (dispatch, getState) => {
+  const state = getState();
+  let device = state.devices.byId[deviceId];
+  const { attributes = {} } = device;
+  const { mender_gateway_system_id } = attributes;
+  const filters = [
+    { ...emptyFilter, key: 'mender_is_gateway', value: 'true', scope: 'inventory' },
+    { ...emptyFilter, key: 'mender_gateway_system_id', value: mender_gateway_system_id, scope: 'inventory' }
+  ];
+  const { attributes: attributeSelection, filterTerms } = prepareSearchArguments({ filters, state, status: 'any' });
+  return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+    page: 1,
+    per_page: MAX_PAGE_SIZE,
+    filters: filterTerms,
+    attributes: attributeSelection
+  }).then(({ data }) => {
+    let tasks = [];
+    const { ids } = reduceReceivedDevices(data, [], getState());
+    ids.map(deviceId => tasks.push(dispatch(getDeviceInfo(deviceId))));
+    tasks.push(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...getState().devices.byId[deviceId], gatewayIds: ids } }));
+    return Promise.all(tasks);
+  });
+};

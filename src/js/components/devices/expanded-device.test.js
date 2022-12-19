@@ -28,6 +28,16 @@ describe('ExpandedDevice Component', () => {
       },
       devices: {
         ...defaultState.devices,
+        byId: {
+          ...defaultState.devices.byId,
+          [defaultState.devices.byId.a1.id]: {
+            ...defaultState.devices.byId.a1,
+            attributes: {
+              ...defaultState.devices.byId.a1.attributes,
+              mender_is_gateway: true
+            }
+          }
+        },
         groups: {
           ...defaultState.devices.groups,
           selectedGroup: 'testGroup'

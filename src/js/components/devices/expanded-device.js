@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
-import { Chip, Divider, Drawer, IconButton, Tab, Tabs } from '@mui/material';
+import { Chip, Divider, Drawer, IconButton, Tab, Tabs, chipClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
 
+import GatewayConnectionIcon from '../../../assets/img/gateway-connection.svg';
 import GatewayIcon from '../../../assets/img/gateway.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
@@ -16,6 +17,7 @@ import {
   decommissionDevice,
   getDeviceInfo,
   getDeviceTwin,
+  getGatewayDevices,
   setDeviceConfig,
   setDeviceTags,
   setDeviceTwin
@@ -32,6 +34,7 @@ import { RelativeTime } from '../common/time';
 import DeviceConfiguration from './device-details/configuration';
 import { TroubleshootTab } from './device-details/connection';
 import DeviceInventory from './device-details/deviceinventory';
+import DeviceSystem from './device-details/devicesystem';
 import { IntegrationTab } from './device-details/devicetwin';
 import { IdentityTab } from './device-details/identity';
 import InstalledSoftware from './device-details/installedsoftware';
@@ -41,15 +44,23 @@ import DeviceQuickActions from './widgets/devicequickactions';
 
 const useStyles = makeStyles()(theme => ({
   gatewayChip: {
+    backgroundColor: theme.palette.grey[400],
     color: theme.palette.grey[900],
     path: {
       fill: theme.palette.grey[900]
+    },
+    [`.${chipClasses.icon}`]: {
+      marginLeft: 10,
+      width: 20
+    },
+    [`.${chipClasses.icon}.connected`]: {
+      transform: 'scale(1.3)',
+      width: 15
     }
   },
-  gatewayIcon: {
-    width: 20
+  deviceConnection: {
+    marginRight: theme.spacing(2)
   },
-  deviceConnection: { marginRight: theme.spacing(2) },
   dividerTop: {
     marginBottom: theme.spacing(3),
     marginTop: theme.spacing(2)
@@ -58,7 +69,32 @@ const useStyles = makeStyles()(theme => ({
 
 const refreshDeviceLength = TIMEOUTS.refreshDefault;
 
-const GatewayNotification = ({ device, docsVersion }) => {
+const GatewayConnectionNotification = ({ gatewayDevices, idAttribute, onClick }) => {
+  const { classes } = useStyles();
+
+  const onGatewayClick = () => {
+    const query =
+      gatewayDevices.length > 1 ? gatewayDevices.map(device => `id=${device.id}`).join('&') : `id=${gatewayDevices[0].id}&open=true&tab=device-system`;
+    onClick(query);
+  };
+
+  return (
+    <MenderTooltipClickable
+      placement="bottom"
+      title={
+        <div style={{ maxWidth: 350 }}>
+          Connected to{' '}
+          {gatewayDevices.length > 1 ? 'multiple devices' : <DeviceIdentityDisplay device={gatewayDevices[0]} idAttribute={idAttribute} isEditable={false} />}.
+          Click to view
+        </div>
+      }
+    >
+      <Chip className={classes.gatewayChip} icon={<GatewayConnectionIcon className="connected" />} label="Connected to gateway" onClick={onGatewayClick} />
+    </MenderTooltipClickable>
+  );
+};
+
+const GatewayNotification = ({ device, docsVersion, onClick }) => {
   const ipAddress = getDemoDeviceAddress([device]);
   const { classes } = useStyles();
   return (
@@ -74,12 +110,10 @@ const GatewayNotification = ({ device, docsVersion }) => {
         </div>
       }
     >
-      <Chip className={classes.gatewayChip} icon={<GatewayIcon className={classes.gatewayIcon} />} label="Gateway" />
+      <Chip className={classes.gatewayChip} icon={<GatewayIcon />} label="Gateway" onClick={onClick} />
     </MenderTooltipClickable>
   );
 };
-
-const DeviceSystemTab = () => <div />;
 
 const tabs = [
   { component: IdentityTab, title: () => 'Identity', value: 'identity', isApplicable: () => true },
@@ -129,10 +163,10 @@ const tabs = [
       !!integrations.length && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status)
   },
   {
-    component: DeviceSystemTab,
+    component: DeviceSystem,
     title: () => 'Device System',
     value: 'device-system',
-    isApplicable: ({ device: { attributes } }) => attributes?.mender_is_gateway
+    isApplicable: ({ device: { attributes = {} } }) => stringToBoolean(attributes?.mender_is_gateway ?? '')
   }
 ];
 
@@ -144,11 +178,13 @@ export const ExpandedDevice = ({
   device,
   deviceConfigDeployment,
   deviceId,
+  devicesById,
   docsVersion,
   features,
   getDeviceInfo,
   getDeviceLog,
   getDeviceTwin,
+  getGatewayDevices,
   getSingleDeployment,
   groupFilters,
   idAttribute,
@@ -173,13 +209,16 @@ export const ExpandedDevice = ({
   tenantCapabilities,
   userCapabilities
 }) => {
-  const { attributes = {}, isOffline } = device;
   const [socketClosed, setSocketClosed] = useState(true);
   const [selectedTab, setSelectedTab] = useState(tabSelection);
   const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
+
+  const { attributes = {}, isOffline, gatewayIds = [] } = device;
+  const { mender_is_gateway, mender_gateway_system_id } = attributes;
+  const isGateway = stringToBoolean(mender_is_gateway);
 
   const { hasAuditlogs } = tenantCapabilities;
 
@@ -202,6 +241,13 @@ export const ExpandedDevice = ({
     }
     setDetailsTab(selectedTab);
   }, [selectedTab]);
+
+  useEffect(() => {
+    if (!mender_gateway_system_id) {
+      return;
+    }
+    getGatewayDevices(device.id);
+  }, [mender_gateway_system_id]);
 
   const onDecommissionDevice = device_id => {
     // close dialog!
@@ -229,7 +275,6 @@ export const ExpandedDevice = ({
 
   const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${deviceId}`);
 
-  const isGateway = stringToBoolean(attributes.mender_is_gateway);
   const actionCallbacks = {
     onAddDevicesToGroup,
     onAuthorizationChange,
@@ -239,6 +284,13 @@ export const ExpandedDevice = ({
     onCreateDeployment: onCreateDeploymentClick
   };
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
+
+  const scrollToDeviceSystem = target => {
+    if (target) {
+      navigate(`/devices?${target}`);
+    }
+    return setSelectedTab('device-system');
+  };
 
   const onCloseClick = useCallback(() => {
     if (deviceId) {
@@ -253,7 +305,11 @@ export const ExpandedDevice = ({
     return accu;
   }, []);
 
-  const SelectedTab = useMemo(() => availableTabs.find(tab => tab.value === selectedTab).component, [selectedTab]);
+  const SelectedTab = useMemo(() => {
+    const tab = availableTabs.find(tab => tab.value === selectedTab) || tabs[0];
+    return tab.component;
+  }, [selectedTab]);
+
   const commonProps = {
     abortDeployment,
     applyDeviceConfig,
@@ -296,11 +352,18 @@ export const ExpandedDevice = ({
           </IconButton>
         </div>
         <div className="flexbox center-aligned">
+          {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} onClick={() => scrollToDeviceSystem()} />}
+          {!!gatewayIds.length && (
+            <GatewayConnectionNotification
+              gatewayDevices={gatewayIds.map(gatewayId => devicesById[gatewayId])}
+              idAttribute={idAttribute}
+              onClick={scrollToDeviceSystem}
+            />
+          )}
           <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right flexbox`}>
             <div className="margin-right-small">Last check-in:</div>
             <RelativeTime updateTime={device.updated_ts} />
           </div>
-          {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} />}
           <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">
             <CloseIcon />
           </IconButton>
@@ -335,6 +398,7 @@ const actionCreators = {
   getDeviceLog,
   getDeviceInfo,
   getDeviceTwin,
+  getGatewayDevices,
   getSingleDeployment,
   saveGlobalSettings,
   setDeviceConfig,
@@ -359,6 +423,7 @@ const mapStateToProps = (state, ownProps) => {
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
+    devicesById: state.devices.byId,
     docsVersion: getDocsVersion(state),
     features: getFeatures(state),
     groupFilters,

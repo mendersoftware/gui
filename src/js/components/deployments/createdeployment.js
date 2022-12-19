@@ -24,7 +24,7 @@ import pluralize from 'pluralize';
 
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { createDeployment } from '../../actions/deploymentActions';
-import { getGroupDevices } from '../../actions/deviceActions';
+import { getGroupDevices, getSystemDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
@@ -355,7 +355,7 @@ export const CreateDeployment = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, saveGlobalSettings };
+const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, getSystemDevices, saveGlobalSettings };
 
 export const mapStateToProps = state => {
   const { canRetry, canSchedule } = getTenantCapabilities(state);
