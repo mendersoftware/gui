@@ -7,11 +7,13 @@ import { deepCompare, getISOStringBoundaries } from '../helpers';
 
 const SEPARATOR = ':';
 
+const defaultSelector = result => result[0];
+
 const commonFields = {
-  ...Object.keys(DEVICE_LIST_DEFAULTS).reduce((accu, key) => ({ ...accu, [key]: Number }), {}),
-  id: String,
-  issues: undefined,
-  open: Boolean
+  ...Object.keys(DEVICE_LIST_DEFAULTS).reduce((accu, key) => ({ ...accu, [key]: { parse: Number, select: defaultSelector } }), {}),
+  id: { parse: String, select: i => i },
+  issues: { parse: undefined, select: defaultSelector },
+  open: { parse: Boolean, select: defaultSelector }
 };
 
 const scopes = {
@@ -24,7 +26,7 @@ const scopes = {
 
 export const commonProcessor = searchParams => {
   let params = new URLSearchParams(searchParams);
-  const pageState = Object.entries(commonFields).reduce((accu, [key, parse]) => {
+  const pageState = Object.entries(commonFields).reduce((accu, [key, { parse, select }]) => {
     const values = params.getAll(key);
     if (!values.length) {
       return accu;
@@ -33,7 +35,7 @@ export const commonProcessor = searchParams => {
       accu[key] = values;
     } else {
       try {
-        accu[key] = parse(values[0]);
+        accu[key] = select(values.map(parse));
       } catch (error) {
         console.log('encountered faulty url param, continue...', error);
       }
@@ -289,8 +291,8 @@ export const formatDeployments = ({ deploymentObject, pageState }, { defaults, t
     if (deploymentObject.release) {
       params.set('release', deploymentObject.release.Name);
     }
-    if (deploymentObject.device) {
-      params.set('device', deploymentObject.device.id);
+    if (deploymentObject.devices?.length) {
+      deploymentObject.devices.map(({ id }) => params.append('deviceId', id));
     }
   }
   let pageStateQuery;
@@ -326,10 +328,15 @@ const parseActiveDeployments = params =>
     return accu;
   }, {});
 
+const deploymentFields = {
+  deviceId: { attribute: 'devices', parse: id => ({ id }), select: i => i },
+  release: { attribute: 'release', parse: String, select: defaultSelector }
+};
+
 export const parseDeploymentsQuery = (params, { pageState, location, today, tonight }) => {
   const { endDate, startDate } = parseDateParams(params, today, tonight);
-  const deploymentObject = Object.entries({ deviceId: 'device', release: 'release' }).reduce(
-    (accu, [key, attribute]) => (params.has(key) ? { ...accu, [attribute]: params.get(key) } : accu),
+  const deploymentObject = Object.entries(deploymentFields).reduce(
+    (accu, [key, { attribute, parse, select }]) => (params.has(key) ? { ...accu, [attribute]: select(params.getAll(key).map(parse)) } : accu),
     {}
   );
   const { state: selectedState, id, open, ...remainingPageState } = pageState;

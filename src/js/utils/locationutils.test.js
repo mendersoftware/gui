@@ -25,7 +25,7 @@ describe('locationutils', () => {
       const startParams = new URLSearchParams('?perPage=234&id=123-324&open=true&sort=asc&issues=issueType1&issues=issueType2');
       const { pageState, params, sort } = commonProcessor(startParams);
       expect(sort).toEqual({ direction: 'asc' });
-      expect(pageState).toEqual({ id: '123-324', issues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
+      expect(pageState).toEqual({ id: ['123-324'], issues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
       expect(params.has('page')).not.toBeTruthy();
     });
     it('uses working utilities - formatPageState', () => {
@@ -137,7 +137,7 @@ describe('locationutils', () => {
           ...defaultArgs
         });
         expect(result).toEqual({
-          deploymentObject: { device: 'someDevice' },
+          deploymentObject: { devices: [{ id: 'someDevice' }] },
           general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.active.key }
         });
       });

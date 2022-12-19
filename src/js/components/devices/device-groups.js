@@ -128,16 +128,16 @@ export const DeviceGroups = ({
   }, [locationParams.groupName]);
 
   useEffect(() => {
-    const { groupName, filters, ...remainder } = locationParams;
+    const { groupName, filters = [], id = [], ...remainder } = locationParams;
     if (groupName) {
       selectGroup(groupName, filters);
-    } else if (filters?.length) {
+    } else if (filters.length) {
       setDeviceFilters(filters);
     }
     const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
     let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
-    if (locationParams.id && Boolean(locationParams.open)) {
-      listState.selectedId = locationParams.id;
+    if (id.length === 1 && Boolean(locationParams.open)) {
+      listState.selectedId = id[0];
     }
     setDeviceListState(listState);
     clearInterval(deviceTimer.current);

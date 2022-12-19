@@ -43,28 +43,32 @@ export const Devices = ({ deploymentObject, groupRef, groups, hasDevices, hasDyn
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
 
+  const { deploymentDeviceIds = [], devices = [], group = null } = deploymentObject;
+  const device = devices.length ? devices[0] : {};
+
   const deploymentSettingsUpdate = (e, value) => setDeploymentSettings({ group: value });
 
-  const { deploymentDeviceIds = [], device, group = null } = deploymentObject;
-
   const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
-  const groupLink = useMemo(() => {
+  const { deviceText, groupLink } = useMemo(() => {
     let groupLink = '/devices';
-    if (device && device.attributes) {
-      // If single device, don't show incompatible releases
-      groupLink = `${groupLink}?id=${device.id}`;
-    } else {
-      groupLink = group && group !== ALL_DEVICES ? `${groupLink}?group=${group}` : groupLink;
+    let deviceText = '';
+    const { attributes = {}, id } = device;
+    const { mender_is_gateway } = attributes;
+    if (id) {
+      deviceText = `${getDeviceIdentityText({ device, idAttribute })}${mender_is_gateway ? ' (Device system)' : ''}`;
+      groupLink = `${groupLink}?${devices.map(({ id }) => `id=${id}`).join('&')}`;
+    } else if (group && group !== ALL_DEVICES) {
+      groupLink = `${groupLink}?group=${group}`;
     }
-    return groupLink;
-  }, [device, group]);
+    return { deviceText, groupLink };
+  }, [devices, group, idAttribute]);
 
   return (
     <>
       <h4 className="margin-bottom-none margin-top-none">Select a device group to target</h4>
       <div ref={groupRef} className={classes.selection}>
         {device ? (
-          <TextField value={getDeviceIdentityText({ device, idAttribute })} label="Device" disabled={true} className={classes.infoStyle} />
+          <TextField value={deviceText} label="Device" disabled={true} className={classes.infoStyle} />
         ) : (
           <div>
             <Autocomplete
@@ -127,7 +131,8 @@ export const Software = ({
 }) => {
   const [isLoadingReleases, setIsLoadingReleases] = useState(!releases.length);
   const { classes } = useStyles();
-  const { device, release: deploymentRelease = null } = deploymentObject;
+  const { devices = [], release: deploymentRelease = null } = deploymentObject;
+  const device = devices.length ? devices[0] : undefined;
 
   useEffect(() => {
     setIsLoadingReleases(!releases.length);
