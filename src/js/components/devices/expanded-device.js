@@ -24,8 +24,9 @@ import { saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
-import { getDeviceTwinIntegrations, getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getDeviceTwinIntegrations, getDocsVersion, getFeatures, getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
+import DeviceIdentityDisplay from '../common/deviceidentity';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import DeviceConfiguration from './device-details/configuration';
@@ -150,6 +151,7 @@ export const ExpandedDevice = ({
   getDeviceTwin,
   getSingleDeployment,
   groupFilters,
+  idAttribute,
   integrations,
   latestAlerts,
   onAddDevicesToGroup,
@@ -217,7 +219,6 @@ export const ExpandedDevice = ({
 
   const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${deviceId}`);
 
-  const deviceIdentifier = attributes.name ?? deviceId ?? '-';
   const isGateway = stringToBoolean(attributes.mender_is_gateway);
   const actionCallbacks = {
     onAddDevicesToGroup,
@@ -276,7 +277,9 @@ export const ExpandedDevice = ({
     <Drawer anchor="right" className="expandedDevice" open={!!deviceId} onClose={onCloseClick} PaperProps={{ style: { minWidth: '67vw' } }}>
       <div className="flexbox center-aligned space-between">
         <div className="flexbox center-aligned">
-          <h3>Device information for {deviceIdentifier}</h3>
+          <h3 className="flexbox">
+            Device information for {<DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} style={{ marginLeft: 4 }} />}
+          </h3>
           <IconButton onClick={copyLinkToClipboard} size="large">
             <LinkIcon />
           </IconButton>
@@ -348,6 +351,7 @@ const mapStateToProps = (state, ownProps) => {
     docsVersion: getDocsVersion(state),
     features: getFeatures(state),
     groupFilters,
+    idAttribute: getIdAttribute(state),
     integrations: getDeviceTwinIntegrations(state),
     latestAlerts: latest,
     onboardingComplete: state.onboarding.complete,
