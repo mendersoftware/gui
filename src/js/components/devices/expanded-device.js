@@ -163,17 +163,19 @@ export const ExpandedDevice = ({
   refreshDevices,
   saveGlobalSettings,
   selectedGroup,
+  setDetailsTab,
   setDeviceConfig,
   setDeviceTags,
   setDeviceTwin,
   setSnackbar,
   showHelptips,
+  tabSelection = tabs[0].value,
   tenantCapabilities,
   userCapabilities
 }) => {
   const { attributes = {}, isOffline } = device;
   const [socketClosed, setSocketClosed] = useState(true);
-  const [selectedTab, setSelectedTab] = useState(tabs[0].value);
+  const [selectedTab, setSelectedTab] = useState(tabSelection);
   const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
   const navigate = useNavigate();
@@ -188,10 +190,18 @@ export const ExpandedDevice = ({
     clearInterval(timer.current);
     timer.current = setInterval(() => getDeviceInfo(deviceId), refreshDeviceLength);
     getDeviceInfo(deviceId);
+    setSelectedTab(tabSelection || tabs[0].value);
     return () => {
       clearInterval(timer.current);
     };
   }, [deviceId, device.status]);
+
+  useEffect(() => {
+    if (!timer.current) {
+      return;
+    }
+    setDetailsTab(selectedTab);
+  }, [selectedTab]);
 
   const onDecommissionDevice = device_id => {
     // close dialog!
@@ -237,7 +247,7 @@ export const ExpandedDevice = ({
   }, [deviceId, onClose]);
 
   const availableTabs = tabs.reduce((accu, tab) => {
-    if (tab.isApplicable({ device, integrations, tenantCapabilities, userCapabilities })) {
+    if (tab.isApplicable({ device, integrations, tenantCapabilities, userCapabilities }) || tab.value === selectedTab) {
       accu.push(tab);
     }
     return accu;
@@ -261,6 +271,7 @@ export const ExpandedDevice = ({
     onDecommissionDevice,
     refreshDevices,
     saveGlobalSettings,
+    setDetailsTab,
     setDeviceConfig,
     setDeviceTags,
     setDeviceTwin,

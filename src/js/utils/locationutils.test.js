@@ -244,6 +244,7 @@ describe('locationutils', () => {
     it('uses working utilties - formatDeviceSearch - with ungrouped selected', () => {
       const search = formatDeviceSearch({
         filters: [{ key: 'some', value: 'thing' }],
+        pageState: {},
         selectedGroup: UNGROUPED_GROUP.id
       });
       expect(search).toEqual('inventory=some:eq:thing&inventory=group:eq:Unassigned');

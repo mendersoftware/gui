@@ -128,7 +128,9 @@ export const parseDeviceQuery = (searchParams, extraProps = {}) => {
     groupName = scopedFilters.inventory[groupFilterIndex].value;
     scopedFilters.inventory.splice(groupFilterIndex, 1);
   }
-  return { filters: Object.values(scopedFilters).flat(), groupName, ...pageStateExtension };
+
+  const detailsTab = queryParams.has('tab') ? queryParams.get('tab') : '';
+  return { detailsTab, filters: Object.values(scopedFilters).flat(), groupName, ...pageStateExtension };
 };
 
 const formatSorting = (sort, { sort: sortDefault }) => {
@@ -182,7 +184,7 @@ const formatFilters = filters => {
     .flat();
 };
 
-export const formatDeviceSearch = ({ filters, selectedGroup }) => {
+export const formatDeviceSearch = ({ pageState, filters, selectedGroup }) => {
   let activeFilters = [...filters];
   if (selectedGroup) {
     const isUngroupedGroup = selectedGroup === UNGROUPED_GROUP.id;
@@ -194,10 +196,11 @@ export const formatDeviceSearch = ({ filters, selectedGroup }) => {
     const groupName = isUngroupedGroup ? UNGROUPED_GROUP.name : selectedGroup;
     activeFilters.push({ scope: ATTRIBUTE_SCOPES.inventory, key: 'group', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: groupName });
   }
-
-  return formatFilters(activeFilters)
-    .filter(i => i)
-    .join('&');
+  const formattedFilters = formatFilters(activeFilters).filter(i => i);
+  if (pageState.detailsTab && pageState.selectedId) {
+    formattedFilters.push(`tab=${pageState.detailsTab}`);
+  }
+  return formattedFilters.join('&');
 };
 
 export const generateDevicePath = ({ pageState }) => {

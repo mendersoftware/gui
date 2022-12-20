@@ -111,6 +111,7 @@ export const DeviceGroups = ({
     }
     setLocationParams({ pageState: deviceListState, filters, selectedGroup });
   }, [
+    deviceListState.detailsTab,
     deviceListState.page,
     deviceListState.perPage,
     deviceListState.selectedIssues,

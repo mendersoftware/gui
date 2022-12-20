@@ -50,7 +50,7 @@ describe('ExpandedDevice Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <ExpandedDevice deviceId={defaultState.devices.byId.a1.id} />
+        <ExpandedDevice deviceId={defaultState.devices.byId.a1.id} setDetailsTab={jest.fn} />
       </Provider>
     );
     const view = baseElement;

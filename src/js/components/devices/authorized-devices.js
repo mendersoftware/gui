@@ -158,7 +158,16 @@ export const Authorized = props => {
     updateUserColumnSettings,
     userCapabilities
   } = props;
-  const { refreshTrigger, selectedId, selectedIssues = [], isLoading: pageLoading, selection: selectedRows, sort = {}, state: selectedState } = deviceListState;
+  const {
+    refreshTrigger,
+    selectedId,
+    selectedIssues = [],
+    isLoading: pageLoading,
+    selection: selectedRows,
+    sort = {},
+    state: selectedState,
+    detailsTab: tabSelection
+  } = deviceListState;
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const { canManageDevices } = userCapabilities;
   const { hasMonitor } = tenantCapabilities;
@@ -314,6 +323,8 @@ export const Authorized = props => {
   const onDeviceStateSelectionChange = newState => {
     setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger });
   };
+
+  const setDetailsTab = detailsTab => setDeviceListState({ detailsTab });
 
   const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) => {
     setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
@@ -481,6 +492,8 @@ export const Authorized = props => {
         onMakeGatewayClick={onMakeGatewayClick}
         onRemoveDevicesFromGroup={onRemoveDevicesFromGroup}
         refreshDevices={refreshDevices}
+        setDetailsTab={setDetailsTab}
+        tabSelection={tabSelection}
       />
       {!selectedId && onboardingComponent ? onboardingComponent : null}
       {canManageDevices && !!selectedRows.length && (
