@@ -65,6 +65,7 @@ export const DEVICE_FILTERING_OPTIONS = {
     help: `The "regular expression" operator matches the selected field's value with a Perl compatible regular expression (PCRE), automatically anchored by ^. If the regular expression is not valid, the filter will produce no results. If you need to specify options and flags, you can provide the full regex in the format of /regex/flags, for example.`
   }
 };
+export const emptyFilter = { key: null, value: '', operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'inventory' };
 
 export const SELECT_GROUP = 'SELECT_GROUP';
 export const SELECT_DEVICE = 'SELECT_DEVICE';

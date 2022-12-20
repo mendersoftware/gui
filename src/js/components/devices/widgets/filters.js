@@ -7,14 +7,12 @@ import { Button, Chip, Collapse } from '@mui/material';
 
 import { getDeviceAttributes, selectDevice as resetIdFilter, setDeviceFilters } from '../../../actions/deviceActions';
 import { saveGlobalSettings } from '../../../actions/userActions';
-import { DEVICE_FILTERING_OPTIONS } from '../../../constants/deviceConstants';
+import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
 import { deepCompare } from '../../../helpers';
 import { getFilterAttributes } from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import MenderTooltip from '../../common/mendertooltip';
 import FilterItem from './filteritem';
-
-export const emptyFilter = { key: null, value: '', operator: '$eq', scope: 'inventory' };
 
 export const getFilterLabelByKey = (key, attributes) => {
   const attr = attributes.find(attr => attr.key === key);

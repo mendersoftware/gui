@@ -1,7 +1,6 @@
 import { routes } from '../components/devices/base-devices';
-import { emptyFilter } from '../components/devices/widgets/filters';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../constants/deploymentConstants';
-import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP } from '../constants/deviceConstants';
+import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP, emptyFilter } from '../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import { deepCompare, getISOStringBoundaries } from '../helpers';
 
