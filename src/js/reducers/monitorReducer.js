@@ -7,11 +7,7 @@ export const initialState = {
     byDeviceId: {}
   },
   issueCounts: {
-    byType: {
-      [DEVICE_ISSUE_OPTIONS.authRequests.key]: { filtered: 0, total: 0 },
-      [DEVICE_ISSUE_OPTIONS.monitoring.key]: { filtered: 0, total: 0 },
-      [DEVICE_ISSUE_OPTIONS.offline.key]: { filtered: 0, total: 0 }
-    }
+    byType: Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key }) => ({ ...accu, [key]: { filtered: 0, total: 0 } }), {})
   },
   settings: {
     global: {
