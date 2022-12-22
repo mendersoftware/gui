@@ -351,7 +351,434 @@ exports[`MyOrganization Component renders correctly 1`] = `
   padding: 15px;
 }
 
-.emotion-22 {
+.emotion-27 {
+  background-color: #fff;
+  color: rgba(10, 10, 11, 0.78);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+  position: relative;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  overflow-anchor: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.emotion-27:before {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  right: 0;
+  height: 1px;
+  content: "";
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.12);
+  -webkit-transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-27:first-of-type:before {
+  display: none;
+}
+
+.emotion-27.Mui-expanded:before {
+  opacity: 0;
+}
+
+.emotion-27.Mui-expanded:first-of-type {
+  margin-top: 0;
+}
+
+.emotion-27.Mui-expanded:last-of-type {
+  margin-bottom: 0;
+}
+
+.emotion-27.Mui-expanded+.emotion-27.Mui-expanded:before {
+  display: none;
+}
+
+.emotion-27.Mui-disabled {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-27.Mui-expanded {
+  margin: 16px 0;
+}
+
+.emotion-27:before {
+  display: none;
+}
+
+.emotion-27.Mui-expanded {
+  margin: auto;
+  background-color: #f7f7f7;
+}
+
+.emotion-27 ul {
+  -webkit-padding-start: 0;
+  padding-inline-start: 0;
+}
+
+.emotion-27.Mui-disabled,
+.emotion-27.Mui-expanded {
+  background-color: #fff;
+}
+
+.emotion-28 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 48px;
+  padding: 0px 16px;
+  -webkit-transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: min-height 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  margin-bottom: 0;
+  height: 48px;
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.emotion-28::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-28.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-28 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-28.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-28.Mui-disabled {
+  opacity: 0.38;
+}
+
+.emotion-28:hover:not(.Mui-disabled) {
+  cursor: pointer;
+}
+
+.emotion-28.Mui-expanded {
+  min-height: 64px;
+}
+
+.emotion-28.Mui-expanded {
+  height: 48px;
+  min-height: 48px;
+}
+
+.emotion-29 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  margin: 12px 0;
+  -webkit-transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-29.Mui-expanded {
+  margin: 20px 0;
+}
+
+.emotion-29.Mui-expanded {
+  margin: 0;
+}
+
+.emotion-29>:last-child {
+  padding-right: 12px;
+}
+
+.emotion-30 {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  height: 4px;
+  z-index: 0;
+  background-color: rgb(177, 204, 209);
+  background-color: #e9e9e9;
+  margin: 15px 0;
+}
+
+@media print {
+  .emotion-30 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-31 {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  -webkit-transition: -webkit-transform .4s linear;
+  transition: transform .4s linear;
+  transform-origin: left;
+  background-color: #337a87;
+}
+
+.emotion-32 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.3929rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.625rem;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.emotion-32::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-32.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-32 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-32:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-32:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-32.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-35 {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  visibility: hidden;
+}
+
+.emotion-36 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.emotion-37 {
+  width: 100%;
+}
+
+.emotion-38 {
+  padding: 8px 16px 16px;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.emotion-39 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  overflow: auto;
+  max-height: 250px;
+  background: white;
+  width: 100%;
+  position: relative;
+}
+
+.emotion-39 .MuiListSubheader-root {
+  top: -10px;
+}
+
+.emotion-39 li>ul {
+  overflow: initial;
+}
+
+.emotion-40 {
+  box-sizing: border-box;
+  line-height: 48px;
+  list-style: none;
+  color: rgba(0, 0, 0, 0.54);
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #fff;
+}
+
+.emotion-41 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.emotion-41.Mui-focusVisible {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-41.Mui-selected {
+  background-color: rgba(51, 122, 135, 0.08);
+}
+
+.emotion-41.Mui-selected.Mui-focusVisible {
+  background-color: rgba(51, 122, 135, 0.2);
+}
+
+.emotion-41.Mui-disabled {
+  opacity: 0.38;
+}
+
+.emotion-41.Mui-disabled {
+  opacity: 1;
+}
+
+.emotion-41.active {
+  background-color: #fff;
+}
+
+.emotion-41.leftNav.active {
+  border-top: 1px solid #d4e9e7;
+  border-bottom: 1px solid #d4e9e7;
+}
+
+.emotion-41.navLink,
+.emotion-41.navLink .MuiListItemText-root {
+  color: #969696;
+}
+
+.emotion-56 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -369,15 +796,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
   width: calc(500px + 32px);
 }
 
-.emotion-22.Mui-disabled {
+.emotion-56.Mui-disabled {
   cursor: default;
 }
 
-.emotion-22 .MuiFormControlLabel-label.Mui-disabled {
+.emotion-56 .MuiFormControlLabel-label.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-23 {
+.emotion-57 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -416,42 +843,42 @@ exports[`MyOrganization Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-23::-moz-focus-inner {
+.emotion-57::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-23.Mui-disabled {
+.emotion-57.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-23 {
+  .emotion-57 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-23:hover {
+.emotion-57:hover {
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-23:hover {
+  .emotion-57:hover {
     background-color: transparent;
   }
 }
 
-.emotion-23.Mui-checked,
-.emotion-23.MuiCheckbox-indeterminate {
+.emotion-57.Mui-checked,
+.emotion-57.MuiCheckbox-indeterminate {
   color: #337a87;
 }
 
-.emotion-23.Mui-disabled {
+.emotion-57.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-24 {
+.emotion-58 {
   cursor: inherit;
   position: absolute;
   opacity: 0;
@@ -464,7 +891,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   z-index: 1;
 }
 
-.emotion-27 {
+.emotion-61 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -472,27 +899,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   font-size: 0.9286rem;
 }
 
-.emotion-28 {
-  height: 0;
-  overflow: hidden;
-  -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  visibility: hidden;
-}
-
-.emotion-29 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-}
-
-.emotion-30 {
-  width: 100%;
-}
-
-.emotion-31 {
+.emotion-65 {
   -webkit-align-items: start;
   -webkit-box-align: start;
   -ms-flex-align: start;
@@ -503,11 +910,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
   grid-template-columns: minmax(max-content, 500px) max-content max-content;
 }
 
-.emotion-31.has-sso {
+.emotion-65.has-sso {
   grid-template-columns: 455px 1fr;
 }
 
-.emotion-32 {
+.emotion-66 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -526,16 +933,16 @@ exports[`MyOrganization Component renders correctly 1`] = `
   margin-right: 8px;
 }
 
-.emotion-32 iconButton {
+.emotion-66 iconButton {
   margin-right: 8px;
 }
 
-.emotion-33 {
+.emotion-67 {
   margin-left: 4px;
   margin-right: 4px;
 }
 
-.emotion-36 {
+.emotion-70 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -588,23 +995,23 @@ exports[`MyOrganization Component renders correctly 1`] = `
   margin-right: 4px;
 }
 
-.emotion-36::-moz-focus-inner {
+.emotion-70::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-36.Mui-disabled {
+.emotion-70.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-36 {
+  .emotion-70 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-36:hover {
+.emotion-70:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -612,43 +1019,43 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-36:hover {
+  .emotion-70:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-36:active {
+.emotion-70:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-36.Mui-focusVisible {
+.emotion-70.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-36.Mui-disabled {
+.emotion-70.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-36:hover {
+.emotion-70:hover {
   colors: #337a87;
 }
 
-.emotion-36.MuiButton-text {
+.emotion-70.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-37 {
+.emotion-71 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
 
-.emotion-38 {
+.emotion-72 {
   gap: 8px;
 }
 
-.emotion-39 {
+.emotion-73 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -665,17 +1072,17 @@ exports[`MyOrganization Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-39 iconButton {
+.emotion-73 iconButton {
   margin-right: 8px;
 }
 
-.emotion-40 {
+.emotion-74 {
   background-color: #f7f7f7;
   margin-top: 48px;
   padding: 16px;
 }
 
-.emotion-40>h5 {
+.emotion-74>h5 {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -822,18 +1229,219 @@ exports[`MyOrganization Component renders correctly 1`] = `
         />
       </div>
     </li>
+    <li
+      class="margin-top-small org-settings-item"
+    >
+      <div
+        class="MuiListItem-root flexbox column MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
+      >
+        <div
+          class="MuiListItemText-root MuiListItemText-multiline emotion-7"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+          >
+            <div
+              class="flexbox center-aligned"
+            >
+              <div
+                class="margin-right-small"
+              >
+                Filterable attributes usage & limit
+              </div>
+              <div
+                class="flexbox center-aligned"
+                data-mui-internal-clone-element="true"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
+                  data-testid="InfoIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </span>
+          <div
+            class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
+          >
+            <div
+              class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 MuiAccordion-root MuiAccordion-gutters emotion-27"
+            >
+              <div
+                aria-expanded="false"
+                class="MuiButtonBase-root MuiAccordionSummary-root MuiAccordionSummary-gutters emotion-28"
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="MuiAccordionSummary-content MuiAccordionSummary-contentGutters emotion-29"
+                >
+                  <span
+                    aria-valuemax="100"
+                    aria-valuemin="0"
+                    aria-valuenow="20"
+                    class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate emotion-30"
+                    role="progressbar"
+                    style="width: 100%;"
+                  >
+                    <span
+                      class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-31"
+                      style="transform: translateX(-80%);"
+                    />
+                  </span>
+                  <button
+                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge margin-left-small expandButton emotion-32"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
+                      data-testid="ArrowDropDownIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="m7 10 5 5 5-5z"
+                      />
+                    </svg>
+                    <span
+                      class="MuiTouchRipple-root emotion-20"
+                    />
+                  </button>
+                </div>
+              </div>
+              <div
+                class="MuiCollapse-root MuiCollapse-vertical MuiCollapse-hidden emotion-35"
+                style="min-height: 0px;"
+              >
+                <div
+                  class="MuiCollapse-wrapper MuiCollapse-vertical emotion-36"
+                >
+                  <div
+                    class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-37"
+                  >
+                    <div
+                      class="MuiAccordion-region"
+                      role="region"
+                    >
+                      <div
+                        class="MuiAccordionDetails-root emotion-38"
+                      >
+                        <ul
+                          class="MuiList-root MuiList-padding emotion-39"
+                        >
+                          <li>
+                            <ul>
+                              <li
+                                class="MuiListSubheader-root MuiListSubheader-gutters MuiListSubheader-sticky emotion-40"
+                              >
+                                identity
+                              </li>
+                              <li
+                                class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-41"
+                              >
+                                <div
+                                  class="MuiListItemText-root emotion-14"
+                                >
+                                  <span
+                                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+                                  >
+                                    something1
+                                  </span>
+                                </div>
+                              </li>
+                              <li
+                                class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-41"
+                              >
+                                <div
+                                  class="MuiListItemText-root emotion-14"
+                                >
+                                  <span
+                                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+                                  >
+                                    something2
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <ul>
+                              <li
+                                class="MuiListSubheader-root MuiListSubheader-gutters MuiListSubheader-sticky emotion-40"
+                              >
+                                inventory
+                              </li>
+                              <li
+                                class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-41"
+                              >
+                                <div
+                                  class="MuiListItemText-root emotion-14"
+                                >
+                                  <span
+                                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+                                  >
+                                    else1
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
+                            <ul>
+                              <li
+                                class="MuiListSubheader-root MuiListSubheader-gutters MuiListSubheader-sticky emotion-40"
+                              >
+                                system
+                              </li>
+                              <li
+                                class="MuiListItem-root MuiListItem-gutters MuiListItem-padding emotion-41"
+                              >
+                                <div
+                                  class="MuiListItemText-root emotion-14"
+                                >
+                                  <span
+                                    class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
+                                  >
+                                    entirely1
+                                  </span>
+                                </div>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr
+          class="MuiDivider-root MuiDivider-fullWidth emotion-5"
+        />
+      </div>
+    </li>
   </ul>
   <div
     class="flexbox center-aligned"
   >
     <label
-      class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd margin-bottom-small emotion-22"
+      class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd margin-bottom-small emotion-56"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-23"
+        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-57"
       >
         <input
-          class="PrivateSwitchBase-input emotion-24"
+          class="PrivateSwitchBase-input emotion-58"
           data-indeterminate="false"
           type="checkbox"
         />
@@ -853,24 +1461,24 @@ exports[`MyOrganization Component renders correctly 1`] = `
         />
       </span>
       <span
-        class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-27"
+        class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-61"
       >
         Enable SAML single sign-on
       </span>
     </label>
   </div>
   <div
-    class="MuiCollapse-root MuiCollapse-vertical margin-left-large MuiCollapse-hidden emotion-28"
+    class="MuiCollapse-root MuiCollapse-vertical margin-left-large MuiCollapse-hidden emotion-35"
     style="min-height: 0px;"
   >
     <div
-      class="MuiCollapse-wrapper MuiCollapse-vertical emotion-29"
+      class="MuiCollapse-wrapper MuiCollapse-vertical emotion-36"
     >
       <div
-        class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-30"
+        class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-37"
       >
         <div
-          class="flexbox center-aligned emotion-31 "
+          class="flexbox center-aligned emotion-65 "
         >
           <div
             class="dropzone onboard dashboard-placeholder flexbox centered"
@@ -884,7 +1492,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-32"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-66"
               data-testid="CloudUploadIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -895,7 +1503,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </svg>
              Drag here or 
             <a
-              class="emotion-33"
+              class="emotion-67"
             >
               browse
             </a>
@@ -921,7 +1529,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               />
             </button>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-36"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-70"
               disabled=""
               tabindex="-1"
               type="button"
@@ -931,11 +1539,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <p
-          class="emotion-37 icon flexbox center-aligned emotion-38 "
+          class="emotion-71 icon flexbox center-aligned emotion-72 "
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-73"
             data-testid="InfoOutlinedIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -950,7 +1558,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="emotion-40"
+    class="emotion-74"
   >
     <h5>
       Billing
@@ -996,7 +1604,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-73"
               data-testid="ErrorIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1055,7 +1663,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-73"
               data-testid="ErrorIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1094,7 +1702,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </div>
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-73"
               data-testid="OpenInNewIcon"
               focusable="false"
               viewBox="0 0 24 24"

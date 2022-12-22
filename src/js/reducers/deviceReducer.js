@@ -38,6 +38,13 @@ export const initialState = {
   ],
   filteringAttributes: { identityAttributes: [], inventoryAttributes: [], systemAttributes: [], tagAttributes: [] },
   filteringAttributesLimit: 10,
+  filteringAttributesConfig: {
+    attributes: {
+      // inventory: ['some_attribute']
+    },
+    count: 0,
+    limit: 100
+  },
   total: 0,
   limit: 0,
   groups: {
@@ -152,7 +159,15 @@ const deviceReducer = (state = initialState, action) => {
       return { ...state, deviceList: action.state };
     case DeviceConstants.SET_FILTER_ATTRIBUTES:
       return { ...state, filteringAttributes: action.attributes };
-
+    case DeviceConstants.SET_FILTERABLES_CONFIG:
+      return {
+        ...state,
+        filteringAttributesConfig: {
+          attributes: action.attributes,
+          count: action.count,
+          limit: action.limit
+        }
+      };
     case DeviceConstants.RECEIVE_DEVICES:
       return {
         ...state,

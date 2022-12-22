@@ -25,6 +25,7 @@ import ExpandableAttribute from '../../common/expandable-attribute';
 import { MenderTooltipClickable } from '../../common/mendertooltip';
 import Billing from './billing';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
+import ReportingLimits from './reportinglimits';
 import { SAMLConfig } from './samlconfig';
 
 const useStyles = makeStyles()(theme => ({
@@ -85,6 +86,7 @@ export const Organization = ({
   downloadLicenseReport,
   getSamlConfigs,
   getUserOrganization,
+  hasReporting,
   isAdmin,
   isEnterprise,
   isHosted,
@@ -164,6 +166,7 @@ export const Organization = ({
           }
           sideBarContent={<CopyTextToClipboard token={org.tenant_token} />}
         />
+        {hasReporting && <ReportingLimits />}
       </List>
       {isEnterprise && isAdmin && (
         <div className="flexbox center-aligned">
@@ -202,6 +205,7 @@ const mapStateToProps = state => {
   const { isAdmin } = getUserRoles(state);
   return {
     canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
+    hasReporting: state.app.features.hasReporting,
     isAdmin,
     isEnterprise,
     isHosted: state.app.features.isHosted,

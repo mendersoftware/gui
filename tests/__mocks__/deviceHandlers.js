@@ -1,6 +1,14 @@
 import { rest } from 'msw';
 
-import { deviceAuthV2, deviceConfig, deviceConnect, inventoryApiUrl, inventoryApiUrlV2, iotManagerBaseURL } from '../../src/js/actions/deviceActions';
+import {
+  deviceAuthV2,
+  deviceConfig,
+  deviceConnect,
+  inventoryApiUrl,
+  inventoryApiUrlV2,
+  iotManagerBaseURL,
+  reportingApiUrl
+} from '../../src/js/actions/deviceActions';
 import { headerNames } from '../../src/js/api/general-api';
 import * as DeviceConstants from '../../src/js/constants/deviceConstants';
 import { defaultCreationDate, defaultMacAddress, defaultState } from '../mockData';
@@ -134,6 +142,9 @@ export const deviceHandlers = [
     return res(ctx.json(groups));
   }),
   rest.get(`${inventoryApiUrlV2}/filters/attributes`, (req, res, ctx) => res(ctx.json(deviceAttributes))),
+  rest.get(`${reportingApiUrl}/devices/attributes`, (req, res, ctx) =>
+    res(ctx.json({ attributes: deviceAttributes, count: deviceAttributes.length, limit: 100 }))
+  ),
   rest.get(`${inventoryApiUrlV2}/filters`, (req, res, ctx) =>
     res(
       ctx.json([

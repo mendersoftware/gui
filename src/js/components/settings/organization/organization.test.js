@@ -23,6 +23,7 @@ describe('MyOrganization Component', () => {
         ...defaultState.app,
         features: {
           ...defaultState.app.features,
+          hasReporting: true,
           isHosted: true
         },
         versionInformation: { Integration: '1.2.3' }
@@ -36,7 +37,16 @@ describe('MyOrganization Component', () => {
             total: 1
           }
         },
-        limit: null
+        limit: null,
+        filteringAttributesConfig: {
+          attributes: {
+            identity: ['something1', 'something2'],
+            inventory: ['else1'],
+            system: ['entirely1']
+          },
+          count: 20,
+          limit: 100
+        }
       },
       organization: {
         ...defaultState.organization,
