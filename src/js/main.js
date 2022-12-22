@@ -64,7 +64,21 @@ export const AppProviders = () => (
   </React.StrictMode>
 );
 
+const welcomeMessage = `Welcome to the Mender project!
+
+Does this page need fixes or improvements?
+
+Open an issue, or contribute a fix to:
+
+- https://github.com/mendersoftware/gui
+
+🤝 Contribute to Mender: https://github.com/mendersoftware/mender/blob/master/CONTRIBUTING.md
+🔎 Ask about problems, and report issues: https://hub.mender.io
+🚀 We like your curiosity! Help us improve Mender by joining the team: https://northern.tech/careers
+`;
+
 export const Main = () => {
+  console.log(welcomeMessage);
   render(<AppProviders />, document.getElementById('main') || document.createElement('div'));
 };
 Main();
