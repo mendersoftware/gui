@@ -21,6 +21,7 @@ const {
   SET_DEVICE_FILTERS,
   SET_DEVICE_LIMIT,
   SET_DEVICE_LIST_STATE,
+  SET_FILTERABLES_CONFIG,
   SET_FILTER_ATTRIBUTES,
   SET_INACTIVE_DEVICES,
   SET_TOTAL_DEVICES
@@ -126,6 +127,18 @@ describe('device reducer', () => {
   it('should handle SET_DEVICE_FILTERS', async () => {
     expect(reducer(undefined, { type: SET_DEVICE_FILTERS, filters: defaultState.devices.groups.byId.testGroupDynamic.filters }).filters).toHaveLength(1);
     expect(reducer(initialState, { type: SET_DEVICE_FILTERS, filters: [{ key: 'test', operator: 'test' }] }).filters).toHaveLength(0);
+  });
+  it('should handle SET_FILTERABLES_CONFIG', async () => {
+    expect(reducer(undefined, { type: SET_FILTERABLES_CONFIG, attributes: { asd: true } }).filteringAttributesConfig).toEqual({
+      attributes: { asd: true },
+      count: undefined,
+      limit: undefined
+    });
+    expect(reducer(initialState, { type: SET_FILTERABLES_CONFIG, attributes: { asd: true }, count: 1, limit: 10 }).filteringAttributesConfig).toEqual({
+      attributes: { asd: true },
+      count: 1,
+      limit: 10
+    });
   });
   it('should handle SET_FILTER_ATTRIBUTES', async () => {
     expect(reducer(undefined, { type: SET_FILTER_ATTRIBUTES, attributes: { things: '12' } }).filteringAttributes).toEqual({

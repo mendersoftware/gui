@@ -37,6 +37,7 @@ import {
   getDynamicGroups,
   getGroupDevices,
   getGroups,
+  getReportingLimits,
   getSessionDetails,
   preauthDevice,
   removeDevicesFromGroup,
@@ -229,6 +230,41 @@ describe('overall device information retrieval', () => {
       expect(key).toBeTruthy();
       expect(value).toBeTruthy();
     });
+  });
+  it('should allow attribute config + limit retrieval and group results', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      {
+        type: DeviceConstants.SET_FILTERABLES_CONFIG,
+        attributes: {
+          identity: ['status', 'mac'],
+          inventory: [
+            'artifact_name',
+            'cpu_model',
+            'device_type',
+            'hostname',
+            'ipv4_wlan0',
+            'ipv6_wlan0',
+            'kernel',
+            'mac_eth0',
+            'mac_wlan0',
+            'mem_total_kB',
+            'mender_bootloader_integration',
+            'mender_client_version',
+            'network_interfaces',
+            'os',
+            'rootfs_type'
+          ],
+          system: ['created_ts', 'updated_ts', 'group']
+        },
+        count: 20,
+        limit: 100
+      }
+    ];
+    await store.dispatch(getReportingLimits());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });
 
