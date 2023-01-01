@@ -780,6 +780,21 @@ export const getDeviceAttributes = () => (dispatch, getState) =>
     });
   });
 
+export const getReportingLimits = () => dispatch =>
+  GeneralApi.get(`${reportingApiUrl}/devices/attributes`)
+    .catch(err => commonErrorHandler(err, `filterable attributes limit & usage could not be retrieved.`, dispatch, commonErrorFallback))
+    .then(({ data }) => {
+      const { attributes = [], count, limit } = data;
+      const groupedAttributes = attributes.reduce((accu, { name, scope }) => {
+        if (!accu[scope]) {
+          accu[scope] = [];
+        }
+        accu[scope].push(name);
+        return accu;
+      }, {});
+      return Promise.resolve(dispatch({ type: DeviceConstants.SET_FILTERABLES_CONFIG, count, limit, attributes: groupedAttributes }));
+    });
+
 export const getDeviceConnect = id => dispatch =>
   GeneralApi.get(`${deviceConnect}/devices/${id}`).then(({ data }) => {
     let tasks = [
