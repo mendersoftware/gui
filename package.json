@@ -43,7 +43,7 @@
     "react-window": "^1.8.8",
     "react-window-infinite-loader": "^1.0.8",
     "stream-browserify": "^3.0.0",
-    "tss-react": "^4.4.2",
+    "tss-react": "^4.5.2",
     "universal-cookie": "^4.0.4",
     "uuid": "^9.0.0",
     "validator": "^13.7.0",
