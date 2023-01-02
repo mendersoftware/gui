@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isCancel } from 'axios';
 
 import { getToken, logout } from '../auth';
 import { TIMEOUTS } from '../constants/appConstants';
@@ -18,7 +18,7 @@ export const apiUrl = {
 export const MAX_PAGE_SIZE = 500;
 
 const unauthorizedRedirect = error => {
-  if (!axios.isCancel(error) && error.response?.status === 401) {
+  if (!isCancel(error) && error.response?.status === 401) {
     logout();
   }
   return Promise.reject(error);

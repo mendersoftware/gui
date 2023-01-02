@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import axios from 'axios';
+import { isCancel } from 'axios';
 import pluralize from 'pluralize';
 import { v4 as uuid } from 'uuid';
 
@@ -845,7 +845,7 @@ export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) =
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
-      if (axios.isCancel(err)) {
+      if (isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
       }
       return commonErrorHandler(err, `Error uploading file to device.`, dispatch);

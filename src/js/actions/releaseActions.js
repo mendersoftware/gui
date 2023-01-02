@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { isCancel } from 'axios';
 import { v4 as uuid } from 'uuid';
 
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
@@ -95,7 +95,7 @@ export const createArtifact = (meta, file) => (dispatch, getState) => {
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
-      if (axios.isCancel(err)) {
+      if (isCancel(err)) {
         return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
       }
       return commonErrorHandler(err, `Artifact couldn't be generated.`, dispatch);
@@ -118,7 +118,7 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
   ])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
-      if (axios.isCancel(err)) {
+      if (isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
       }
       return commonErrorHandler(err, `Artifact couldn't be uploaded.`, dispatch);
