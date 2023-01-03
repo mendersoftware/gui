@@ -186,6 +186,7 @@ describe('Deployments Component', () => {
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
       artifact_name: releaseId,
+      force_installation: false,
       devices: undefined,
       filter_id: undefined,
       group: undefined,
@@ -303,6 +304,7 @@ describe('Deployments Component', () => {
       artifact_name: releaseId,
       devices: undefined,
       filter_id: undefined,
+      force_installation: false,
       group: undefined,
       name: ALL_DEVICES,
       phases: [

@@ -22,7 +22,7 @@ import Tracking from '../../tracking';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Confirm from '../common/confirm';
 import { RolloutPatternSelection } from './deployment-wizard/phasesettings';
-import { Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
+import { ForceDeploy, Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
 import { ScheduleRollout } from './deployment-wizard/schedulerollout';
 import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
 
@@ -174,7 +174,7 @@ export const CreateDeployment = props => {
       return setIsChecking(true);
     }
     isCreating.current = true;
-    const { deploymentDeviceIds, device, filterId, group, phases, release, retries, update_control_map } = settings;
+    const { deploymentDeviceIds, device, filterId, forceDeploy = false, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts : undefined;
     const retrySetting = canRetry && retries ? { retries } : {};
     const newDeployment = {
@@ -191,6 +191,7 @@ export const CreateDeployment = props => {
           })
         : phases,
       ...retrySetting,
+      force_installation: forceDeploy,
       update_control_map
     };
     if (!isOnboardingComplete) {
@@ -303,6 +304,7 @@ export const CreateDeployment = props => {
             <RolloutPatternSelection {...sharedProps} />
             <RolloutOptions {...sharedProps} />
             <Retries {...sharedProps} />
+            <ForceDeploy {...sharedProps} />
           </AccordionDetails>
         </Accordion>
       </form>
