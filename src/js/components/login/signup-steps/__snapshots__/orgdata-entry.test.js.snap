@@ -113,8 +113,12 @@ label+.emotion-2 {
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-2.Mui-error:before,
 .emotion-2.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-2.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -133,12 +137,12 @@ label+.emotion-2 {
   pointer-events: none;
 }
 
-.emotion-2:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-2:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-2:hover:not(.Mui-disabled):before {
+  .emotion-2:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
@@ -332,8 +336,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-10.Mui-error:before,
 .emotion-10.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-10.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -352,12 +360,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   pointer-events: none;
 }
 
-.emotion-10:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-10:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-10:hover:not(.Mui-disabled):before {
+  .emotion-10:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
