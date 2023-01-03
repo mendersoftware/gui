@@ -981,8 +981,12 @@ label+.emotion-12 {
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-12.Mui-error:before,
 .emotion-12.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-12.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -1001,12 +1005,12 @@ label+.emotion-12 {
   pointer-events: none;
 }
 
-.emotion-12:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-12:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-12:hover:not(.Mui-disabled):before {
+  .emotion-12:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
@@ -1184,8 +1188,12 @@ label+.emotion-16 {
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-16.Mui-error:before,
 .emotion-16.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-16.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -1204,12 +1212,12 @@ label+.emotion-16 {
   pointer-events: none;
 }
 
-.emotion-16:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-16:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-16:hover:not(.Mui-disabled):before {
+  .emotion-16:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
@@ -1449,7 +1457,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   >
     <div
       aria-hidden="true"
-      class="MuiBackdrop-root emotion-1"
+      class="MuiBackdrop-root MuiModal-backdrop emotion-1"
       style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
     />
     <div
@@ -2166,8 +2174,12 @@ label+.emotion-22 {
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-22.Mui-error:before,
 .emotion-22.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-22.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -2186,12 +2198,12 @@ label+.emotion-22 {
   pointer-events: none;
 }
 
-.emotion-22:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-22:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-22:hover:not(.Mui-disabled):before {
+  .emotion-22:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
@@ -2369,8 +2381,12 @@ label+.emotion-26 {
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-26.Mui-error:before,
 .emotion-26.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-26.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -2389,12 +2405,12 @@ label+.emotion-26 {
   pointer-events: none;
 }
 
-.emotion-26:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-26:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-26:hover:not(.Mui-disabled):before {
+  .emotion-26:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
@@ -2634,7 +2650,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-27:focus::-ms-input-
   >
     <div
       aria-hidden="true"
-      class="MuiBackdrop-root emotion-1"
+      class="MuiBackdrop-root MuiModal-backdrop emotion-1"
       style="opacity: 1; webkit-transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
     />
     <div

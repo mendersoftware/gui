@@ -143,8 +143,12 @@ label+.emotion-5 {
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-5.Mui-error:before,
 .emotion-5.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-5.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -163,12 +167,12 @@ label+.emotion-5 {
   pointer-events: none;
 }
 
-.emotion-5:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-5:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-5:hover:not(.Mui-disabled):before {
+  .emotion-5:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
@@ -676,8 +680,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-18.Mui-error:before,
 .emotion-18.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-18.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -696,12 +704,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   pointer-events: none;
 }
 
-.emotion-18:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-18:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-18:hover:not(.Mui-disabled):before {
+  .emotion-18:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
@@ -794,8 +802,12 @@ label+.emotion-23 {
   transform: scaleX(1) translateX(0);
 }
 
+.emotion-23.Mui-error:before,
 .emotion-23.Mui-error:after {
   border-bottom-color: #ab1000;
+}
+
+.emotion-23.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
@@ -814,12 +826,12 @@ label+.emotion-23 {
   pointer-events: none;
 }
 
-.emotion-23:hover:not(.Mui-disabled):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
+.emotion-23:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-23:hover:not(.Mui-disabled):before {
+  .emotion-23:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
