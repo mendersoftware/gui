@@ -261,6 +261,7 @@ describe('Deployments Component', () => {
     fireEvent.keyDown(releaseSelect, specialKeys.Enter);
     jest.advanceTimersByTime(2000);
     await waitFor(() => rerender(ui));
+    act(() => userEvent.click(screen.getByRole('button', { name: /advanced options/i })));
     act(() => userEvent.click(screen.getByRole('checkbox', { name: /select a rollout pattern/i })));
     await waitFor(() => rerender(ui));
     await selectMaterialUiSelectOption(screen.getByText(/Single phase: 100%/i), /Custom/i);
@@ -269,6 +270,7 @@ describe('Deployments Component', () => {
     fireEvent.change(within(firstPhase).getByDisplayValue(20), { target: { value: '50' } });
     fireEvent.change(within(firstPhase).getByDisplayValue('2'), { target: { value: '30' } });
     act(() => userEvent.click(screen.getByText(/Add a phase/i)));
+    await waitFor(() => rerender(ui));
     const secondPhase = screen.getByText(/Phase 2/i).parentElement?.parentElement?.parentElement;
     await selectMaterialUiSelectOption(within(secondPhase).getByText(/hours/i).parentElement, /days/i);
     expect(within(secondPhase).getByText(/Phases must have at least 1 device/i)).toBeTruthy();

@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Close as CloseIcon } from '@mui/icons-material';
-import { Button, Divider, Drawer, IconButton, Typography } from '@mui/material';
+import { Close as CloseIcon, ExpandMore } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Divider, Drawer, IconButton, Typography, accordionClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import moment from 'moment';
@@ -16,7 +16,7 @@ import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { deepCompare, standardizePhases, validatePhases } from '../../helpers';
+import { deepCompare, standardizePhases, toggle, validatePhases } from '../../helpers';
 import { getDocsVersion, getIdAttribute, getIsEnterprise, getOnboardingState, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -29,6 +29,17 @@ import { Devices, ReleasesWarning, Software } from './deployment-wizard/software
 const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const useStyles = makeStyles()(theme => ({
+  accordion: {
+    backgroundColor: theme.palette.grey[400],
+    marginTop: theme.spacing(4),
+    '&:before': {
+      display: 'none'
+    },
+    [`&.${accordionClasses.expanded}`]: {
+      margin: 'auto',
+      marginTop: theme.spacing(4)
+    }
+  },
   columns: {
     alignItems: 'start',
     columnGap: 30,
@@ -87,6 +98,7 @@ export const CreateDeployment = props => {
   const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
   const releaseRef = useRef();
   const groupRef = useRef();
@@ -281,12 +293,18 @@ export const CreateDeployment = props => {
           </>
         )}
         <ScheduleRollout {...sharedProps} />
-        <Typography className={`margin-top-large ${classes.disabled}`} variant="subtitle2" display="block">
-          Advanced options
-        </Typography>
-        <RolloutPatternSelection {...sharedProps} />
-        <RolloutOptions {...sharedProps} />
-        <Retries {...sharedProps} />
+        <Accordion className={classes.accordion} square expanded={isExpanded} onChange={() => setIsExpanded(toggle)}>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography className={classes.disabled} variant="subtitle2">
+              {isExpanded ? 'Hide' : 'Show'} advanced options
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <RolloutPatternSelection {...sharedProps} />
+            <RolloutOptions {...sharedProps} />
+            <Retries {...sharedProps} />
+          </AccordionDetails>
+        </Accordion>
       </form>
       <div className="margin-top">
         {isChecking && (
