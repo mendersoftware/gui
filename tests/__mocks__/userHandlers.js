@@ -68,9 +68,11 @@ export const userHandlers = [
   rest.post(`${useradmApiUrl}/auth/login`, ({ headers }, res, ctx) => {
     const authHeader = headers.get('authorization');
     const authInfo = atob(authHeader?.split(' ')[1]);
-    const password = authInfo.split(':')[1];
+    const [user, password] = authInfo.split(':');
     if (password !== defaultPassword) {
       return res(ctx.status(401));
+    } else if (user.includes('limited')) {
+      return res(ctx.status(200), ctx.json('limitedToken'));
     }
     return res(ctx.status(200), ctx.json(token));
   }),
@@ -100,7 +102,11 @@ export const userHandlers = [
     return res(ctx.status(200));
   }),
   rest.get(`${useradmApiUrl}/users`, (req, res, ctx) => res(ctx.status(200), ctx.json(Object.values(defaultState.users.byId)))),
-  rest.get(`${useradmApiUrl}/users/me`, (req, res, ctx) => {
+  rest.get(`${useradmApiUrl}/users/me`, ({ headers }, res, ctx) => {
+    const authHeader = headers.get('authorization');
+    if (authHeader?.includes('limited')) {
+      return res(ctx.status(403), ctx.json({ error: 'forbidden by role-based access control' }));
+    }
     return res(ctx.status(200), ctx.json(defaultState.users.byId[defaultUserId]));
   }),
   rest.get(`${useradmApiUrl}/users/:userId`, ({ params: { userId } }, res, ctx) => {

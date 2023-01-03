@@ -60,9 +60,16 @@ export const loginUser = userData => dispatch =>
       // save token as cookie & set maxAge if noexpiry checkbox not checked
       cookies.set('JWT', token, { sameSite: 'strict', secure: true, path: '/', maxAge: expirySet() ? 900 : undefined });
 
-      window.sessionStorage.removeItem('pendings-redirect');
-      window.location.replace('/ui/');
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(OWN_USER_ID))]);
+      return dispatch(getUser(OWN_USER_ID))
+        .then(() => {
+          window.sessionStorage.removeItem('pendings-redirect');
+          window.location.replace('/ui/');
+          return Promise.resolve(dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }));
+        })
+        .catch(e => {
+          cleanUp();
+          return Promise.reject(dispatch(setSnackbar(extractErrorMessage(e))));
+        });
     });
 
 export const logoutUser = reason => (dispatch, getState) => {

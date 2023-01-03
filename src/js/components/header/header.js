@@ -22,10 +22,12 @@ import { initializeAppData, setFirstLoginAfterSignup, setSearchState, setSnackba
 import { getOnboardingState } from '../../actions/onboardingActions';
 import { getUser, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
+import { TIMEOUTS } from '../../constants/appConstants';
 import * as UserConstants from '../../constants/userConstants';
 import { decodeSessionToken, extractErrorMessage, isEmpty } from '../../helpers';
 import { getDocsVersion, getIsEnterprise, getUserCapabilities, getUserSettings } from '../../selectors';
 import Tracking from '../../tracking';
+import { useDebounce } from '../../utils/debouncehook';
 import Search from '../common/search';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
@@ -111,7 +113,7 @@ export const Header = ({
   const [gettingUser, setGettingUser] = useState(false);
   const [hasOfferCookie, setHasOfferCookie] = useState(false);
 
-  const sessionId = getToken();
+  const sessionId = useDebounce(getToken(), TIMEOUTS.debounceDefault);
 
   useEffect(() => {
     if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
