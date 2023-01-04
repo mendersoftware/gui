@@ -7,6 +7,7 @@ import { TIMEOUTS } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
 import { useDebounce } from '../../../utils/debouncehook';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import MenderTooltip from '../../common/mendertooltip';
 import RolloutSteps from './rolloutsteps';
 
 const useStyles = makeStyles()(() => ({
@@ -15,6 +16,38 @@ const useStyles = makeStyles()(() => ({
   retryInput: { maxWidth: 150, minWidth: 130 },
   wrapper: { minHeight: 300 }
 }));
+
+export const ForceDeploy = ({ deploymentObject, setDeploymentSettings }) => {
+  const [forceDeploy, setForceDeploy] = useState(deploymentObject.forceDeploy ?? false);
+  const { classes } = useStyles();
+
+  useEffect(() => {
+    setDeploymentSettings({ forceDeploy });
+  }, [forceDeploy]);
+
+  return (
+    <div>
+      <MenderTooltip
+        title={
+          <div style={{ whiteSpace: 'normal' }}>
+            <h3>Force update</h3>
+            <p>This will make the Mender client install the update even if the selected release is already installed.</p>
+          </div>
+        }
+      >
+        <FormControlLabel
+          className={classes.heading}
+          control={<Checkbox color="primary" checked={forceDeploy} onChange={() => setForceDeploy(toggle)} size="small" />}
+          label={
+            <>
+              <b>Force update</b> (optional)
+            </>
+          }
+        />
+      </MenderTooltip>
+    </div>
+  );
+};
 
 export const RolloutOptions = ({ deploymentObject, docsVersion, isEnterprise, setDeploymentSettings }) => {
   const { phases = [], release = {} } = deploymentObject;

@@ -194,12 +194,28 @@ describe('user actions', () => {
   it('should allow logging in', async () => {
     jest.clearAllMocks();
     const expectedActions = [
-      { type: SUCCESSFULLY_LOGGED_IN, value: token },
       { type: RECEIVED_USER, user: defaultState.users.byId[userId] },
-      { type: SET_CUSTOM_COLUMNS, value: [] }
+      { type: SET_CUSTOM_COLUMNS, value: [] },
+      { type: SUCCESSFULLY_LOGGED_IN, value: token }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(loginUser({ email: 'test@example.com', password: defaultPassword }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should prevent logging in with a limited user', async () => {
+    jest.clearAllMocks();
+    const cookies = new Cookies();
+    cookies.get.mockReturnValue('limitedToken');
+    const expectedActions = [{ type: SET_SNACKBAR, snackbar: { message: 'forbidden by role-based access control' } }];
+    const store = mockStore({ ...defaultState });
+    try {
+      await store.dispatch(loginUser({ email: 'test-limited@example.com', password: defaultPassword }));
+    } catch (error) {
+      expect(error).toMatchObject(expectedActions[0]);
+    }
+    expect(cookies.remove).toHaveBeenCalledTimes(2);
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
