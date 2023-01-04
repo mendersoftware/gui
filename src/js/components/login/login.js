@@ -147,18 +147,19 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
     }
   }, [currentUser]);
 
-  useEffect(() => {
-    // set no expiry in localstorage to remember checkbox value and avoid any influence of expiration time that might occur with cookies
-    window.localStorage.setItem(noExpiryKey, `${noExpiry}`);
-  }, [noExpiry]);
-
-  const onLoginClick = loginData =>
-    loginUser(loginData).catch(err => {
-      // don't reset the state once it was set - thus not setting `has2FA` solely based on the existence of 2fa in the error
-      if (err?.error?.includes('2fa')) {
-        setHas2FA(true);
-      }
-    });
+  const onLoginClick = useCallback(
+    loginData => {
+      // set no expiry in localstorage to remember checkbox value and avoid any influence of expiration time that might occur with cookies
+      window.localStorage.setItem(noExpiryKey, `${noExpiry}`);
+      loginUser(loginData).catch(err => {
+        // don't reset the state once it was set - thus not setting `has2FA` solely based on the existence of 2fa in the error
+        if (err?.error?.includes('2fa')) {
+          setHas2FA(true);
+        }
+      });
+    },
+    [noExpiry]
+  );
 
   const onSetRef = useCallback(
     ref => {
