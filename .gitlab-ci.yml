@@ -48,6 +48,8 @@ test:lint:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
     - apk add --no-cache bash git jq wget
+    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - docker load -i image.tar
   artifacts:
     expire_in: 2w
     paths:
@@ -65,9 +67,7 @@ test:acceptance:
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
   script:
-    - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
-    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
     - docker rmi $DOCKER_REPOSITORY:pr
 
@@ -81,9 +81,7 @@ test:acceptance:enterprise:
     - if [ -n "$REGISTRY_MENDER_IO_USERNAME" ]; then
     - docker login -u $REGISTRY_MENDER_IO_USERNAME -p $REGISTRY_MENDER_IO_PASSWORD registry.mender.io
     - fi
-    - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
-    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise
     - docker rmi $DOCKER_REPOSITORY:pr
 
