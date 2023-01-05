@@ -78,12 +78,19 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
   const [inputWindow, setInputWindow] = useState(UNSET_LIMIT);
   const [duplicatesWindow, setDuplicatesWindow] = useState(UNSET_LIMIT);
   const [instructionBuffer, setInstructionBuffer] = useState(UNSET_LIMIT);
+  const [isInitialized, setIsInitialized] = useState(false);
   const timer = useRef(null);
+  const initTimer = useRef(null);
 
   const { classes } = useStyles();
 
   useEffect(() => {
     getDeploymentsConfig();
+    clearTimeout(initTimer.current);
+    initTimer.current = setTimeout(() => setIsInitialized(true), TIMEOUTS.threeSeconds);
+    return () => {
+      clearTimeout(initTimer.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -99,6 +106,9 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
   }, [JSON.stringify(deltaConfig), JSON.stringify(deltaLimits)]);
 
   useEffect(() => {
+    if (!isInitialized) {
+      return;
+    }
     clearTimeout(timer.current);
     timer.current = setTimeout(
       () =>
