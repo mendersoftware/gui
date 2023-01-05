@@ -1,6 +1,12 @@
 import * as AppConstants from '../constants/appConstants';
 import * as UserConstants from '../constants/userConstants';
 
+const getYesterday = () => {
+  const today = new Date();
+  today.setDate(today.getDate() - 1);
+  return today.toISOString();
+};
+
 export const initialState = {
   cancelSource: undefined,
   demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
@@ -41,6 +47,7 @@ export const initialState = {
   uploadsById: {
     // id: { uploading: false, uploadProgress: 0, cancelSource: undefined }
   },
+  offlineThreshold: getYesterday(),
   versionInformation: {
     Integration: '',
     'Mender-Client': '',

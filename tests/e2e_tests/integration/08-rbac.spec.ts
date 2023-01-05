@@ -30,11 +30,11 @@ test.describe('RBAC functionality', () => {
     await nameInput.fill('testRole');
     await nameInput.press('Tab');
     await dialog.locator('#role-description').fill('some description');
-    await dialog.locator('text=Search groups​').click();
+    await dialog.locator('text=Search groups​').click({ force: true });
     // we need to check the entire page here, since the selection list is rendered in a portal, so likely outside
     // of the dialog tree
     await page.locator('li[role="option"]:has-text("testgroup")').click();
-    await dialog.locator('text=Select​').click();
+    await dialog.locator('text=Select​').click({ force: true });
     await page.locator('text=Configure').click();
     await page.press('body', 'Escape');
     await dialog.locator('input:right-of(:text("Releases")) >> ..').first().click();
