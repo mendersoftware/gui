@@ -69,6 +69,8 @@ run_tests() {
     declare retries=5
 
     if [[ $ENTERPRISE -eq 1 ]]; then
+        # remove the client, since it won't be able to connect as it lacks a proper tenant token config
+        $COMPOSE_CMD rm -fsv mender-client
         while [[ $retries -gt 0 && -z $containerid ]]; do
             containerid=$(get_container_id mender-tenantadm)
             sleep 1
@@ -82,9 +84,7 @@ run_tests() {
         tenant=$(docker exec $containerid /usr/bin/tenantadm create-org --name=test --username=$USER --password=$PASSWORD)
         token=$(docker exec $containerid /usr/bin/tenantadm get-tenant --id $tenant | jq -r .tenant_token)
         jq --arg tenantToken "$token" '. + { "TenantToken": $tenantToken }' ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json > ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json
-        # remove the client, since it won't be able to connect without a proper tenant token config
-        # starting it is easier when done in the test suite
-        $COMPOSE_CMD rm -fsv mender-client
+        # start a new client, using the obtained tenant token - starting it later (in the test suite) would require docker access in the test runner
         docker run --name connect-client -d --network=gui-tests_mender \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json:/etc/mender/mender.conf \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf \

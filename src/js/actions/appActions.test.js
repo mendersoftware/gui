@@ -174,7 +174,7 @@ describe('app actions', () => {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-            isOffline: false,
+            isOffline: true,
             monitor: {},
             tags: {},
             updated_ts: inventoryDevice.updated_ts
@@ -194,7 +194,7 @@ describe('app actions', () => {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-            isOffline: false,
+            isOffline: true,
             monitor: {},
             status: 'pending',
             tags: {},
@@ -266,11 +266,11 @@ describe('app actions', () => {
       },
       {
         type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: false, monitor: {}, tags: {} } }
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }
       },
       {
         type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: false, monitor: {}, tags: {} } }
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }
       },
       {
         type: RECEIVE_DEVICES,
@@ -279,14 +279,14 @@ describe('app actions', () => {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-            isOffline: false,
+            isOffline: true,
             monitor: {},
             tags: {},
             updated_ts: inventoryDevice.updated_ts
           }
         }
       },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: false, monitor: {}, tags: {} } } },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } } },
       {
         type: ADD_DYNAMIC_GROUP,
         groupName: UNGROUPED_GROUP.id,

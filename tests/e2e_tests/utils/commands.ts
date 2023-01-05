@@ -23,14 +23,14 @@ export const getPeristentLoginInfo = () => {
   return loginInfo;
 };
 
-const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io', token = '', projectRoot) => {
+const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io', token = '') => {
   const connectConfigFile = fs.readFileSync(`dockerClient/${fileName}.json`, 'utf8');
   const connectConfig = JSON.parse(connectConfigFile);
   connectConfig.ServerURL = serverUrl;
   if (token) {
     connectConfig.TenantToken = token;
   }
-  fs.writeFileSync(`${projectRoot}/dockerClient/${fileName}-test.json`, JSON.stringify(connectConfig));
+  fs.writeFileSync(`dockerClient/${fileName}-test.json`, JSON.stringify(connectConfig));
 };
 
 const deviceType = 'qemux86-64';
@@ -77,8 +77,8 @@ export const startClient = async (baseUrl, token, count) => {
 export const startDockerClient = async (baseUrl, token) => {
   const projectRoot = process.cwd();
   const srippedBaseUrl = baseUrl.replace(/\/$/, '');
-  updateConfigFileWithUrl('mender', srippedBaseUrl, token, projectRoot);
-  updateConfigFileWithUrl('mender-connect', srippedBaseUrl, token, projectRoot);
+  updateConfigFileWithUrl('mender', srippedBaseUrl, token);
+  updateConfigFileWithUrl('mender-connect', srippedBaseUrl, token);
   // NB! to run the tests against a running local Mender backend, uncomment & adjust the following
   // const localNetwork = ['--network', 'menderintegration_mender'];
   const localNetwork = baseUrl.includes('docker.mender.io') ? ['--network', 'gui-tests_mender'] : [];
