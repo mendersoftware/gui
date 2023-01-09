@@ -26,6 +26,7 @@ export const onboardingSteps = {
   UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION: 'upload-new-artifact-dialog-destination',
   UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE: 'upload-new-artifact-dialog-device-type',
   UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME: 'upload-new-artifact-dialog-release-name',
+  UPLOAD_NEW_ARTIFACT_DIALOG_CLICK: 'upload-new-artifact-dialog-click',
   ARTIFACT_MODIFIED_ONBOARDING: 'artifact-modified-onboarding',
   ONBOARDING_FINISHED: 'onboarding-finished',
   ONBOARDING_FINISHED_NOTIFICATION: 'onboarding-finished-notification',

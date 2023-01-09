@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { Autocomplete, FormControl, Input, InputLabel, TextField, Tooltip } from '@mui/material';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { duplicateFilter, unionizeStrings } from '../../../helpers';
+import { useDebounce } from '../../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
 import { FileInformation } from './addartifact';
@@ -63,6 +65,8 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
 
+  const debouncedName = useDebounce(name, TIMEOUTS.debounceDefault);
+
   useEffect(() => {
     const nextDestination = onboardingState.complete ? destination : '/data/www/localhost/htdocs';
     updateCreation({
@@ -71,6 +75,12 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
       finalStep: false
     });
   }, []);
+
+  useEffect(() => {
+    if (debouncedName.length) {
+      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME);
+    }
+  }, [debouncedName]);
 
   // to allow device types to automatically be selected on entered ',' we have to filter the input and transform any completed device types (followed by a ',')
   // while also checking for duplicates and allowing complete resets of the input
@@ -106,36 +116,40 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
     updateCreation({ destination: value, isValid: checkDestinationValidity(value) && selectedDeviceTypes.length && name });
 
   let onboardingComponent = null;
+  let extraOnboardingComponent = null;
   if (!onboardingState.complete && deviceTypeRef.current && releaseNameRef.current) {
     const deviceTypeAnchor = {
-      left: deviceTypeRef.current.offsetLeft + deviceTypeRef.current.clientWidth,
-      top: deviceTypeRef.current.offsetTop + deviceTypeRef.current.clientHeight / 2
+      left: deviceTypeRef.current.parentElement.parentElement.offsetLeft + deviceTypeRef.current.parentElement.parentElement.clientWidth,
+      top:
+        deviceTypeRef.current.parentElement.parentElement.offsetTop +
+        deviceTypeRef.current.parentElement.offsetTop +
+        deviceTypeRef.current.parentElement.parentElement.clientHeight / 2
     };
     const releaseNameAnchor = {
-      left: releaseNameRef.current.parentElement.parentElement.offsetLeft + releaseNameRef.current.clientWidth,
-      top: releaseNameRef.current.parentElement.parentElement.offsetTop + releaseNameRef.current.clientHeight / 2
+      left: releaseNameRef.current.parentElement.parentElement.offsetLeft + releaseNameRef.current.parentElement.parentElement.clientWidth,
+      top:
+        releaseNameRef.current.parentElement.parentElement.offsetTop + releaseNameRef.current.parentElement.offsetTop + releaseNameRef.current.clientHeight / 2
     };
     const destinationAnchor = {
-      left: destinationRef.current.parentElement.parentElement.offsetLeft + destinationRef.current.clientWidth,
-      top: destinationRef.current.parentElement.parentElement.offsetTop + destinationRef.current.clientHeight / 2
+      left: destinationRef.current.parentElement.parentElement.offsetLeft + destinationRef.current.parentElement.parentElement.clientWidth,
+      top: destinationRef.current.parentElement.parentElement.offsetTop + destinationRef.current.parentElement.parentElement.clientHeight / 2
     };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION, onboardingState, {
-      anchor: destinationAnchor,
-      place: 'right'
-    });
-    onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE,
+    extraOnboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION,
       onboardingState,
-      {
-        anchor: deviceTypeAnchor,
-        place: 'right'
-      },
-      onboardingComponent
+      { anchor: destinationAnchor, place: 'right' },
+      extraOnboardingComponent
     );
     onboardingComponent = getOnboardingComponentFor(
       onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME,
       onboardingState,
       { anchor: releaseNameAnchor, place: 'right' },
+      onboardingComponent
+    );
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE,
+      onboardingState,
+      { anchor: deviceTypeAnchor, place: 'right' },
       onboardingComponent
     );
   }
@@ -154,7 +168,7 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
         label="Destination directory where the file will be installed on your devices"
         onChange={onDestinationChange}
         placeholder="Example: /opt/installed-by-single-file"
-        ref={destinationRef}
+        inputRef={destinationRef}
         value={destination}
       />
       <h4>Artifact information</h4>
@@ -200,11 +214,12 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
             onBlur={e => onTextInputLeave(e.target.value)}
             onChange={e => onTextInputChange(e.target.value, 'input')}
             placeholder="Enter all device types this software is compatible with"
-            ref={deviceTypeRef}
+            inputRef={deviceTypeRef}
           />
         )}
       />
-      {!!onboardingComponent && onboardingComponent}
+      {onboardingComponent}
+      {extraOnboardingComponent}
     </div>
   );
 };

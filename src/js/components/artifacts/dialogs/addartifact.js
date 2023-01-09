@@ -118,7 +118,7 @@ export const ArtifactUpload = ({ advanceOnboarding, onboardingState, releases, s
         const { name } = acceptedFiles[0];
         updateCreation({
           file: acceptedFiles[0],
-          name: shortenFileName(name),
+          name: onboardingState.complete ? shortenFileName(name) : '',
           type: name.endsWith('.mender') ? uploadTypes.mender.key : uploadTypes.singleFile.key
         });
       }
@@ -218,7 +218,7 @@ export const AddArtifactDialog = ({
       if (!onboardingState.complete && deviceTypes.length && pastCount) {
         advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
         if (type === 'create') {
-          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME);
+          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_CLICK);
         }
       }
       // track in GA
@@ -230,18 +230,33 @@ export const AddArtifactDialog = ({
   const onUpdateCreation = update => setCreation(current => ({ ...current, ...update }));
 
   const onNextClick = useCallback(() => {
-    if (!onboardingState.complete && activeStep === 0 && creation.destination) {
-      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION);
+    if (!onboardingState.complete && creation.destination) {
+      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
     }
-    setActiveStep(activeStep + 1);
     onUpdateCreation({ isValid: false });
+    setActiveStep(activeStep + 1);
   }, [activeStep, creation.destination, onboardingState.complete]);
 
   const onRemove = () => onUpdateCreation({ file: undefined, isValid: false });
+  const buttonRef = useRef();
 
   const { file, finalStep, isValid, type } = creation;
   const { component: ComponentToShow } = uploadTypes[type];
   const commonProps = { advanceOnboarding, onboardingState, releases, setSnackbar, updateCreation: onUpdateCreation };
+
+  let onboardingComponent = null;
+  if (!onboardingState.complete && buttonRef.current && finalStep && isValid) {
+    const releaseNameAnchor = {
+      left: buttonRef.current.offsetLeft - 15,
+      top: buttonRef.current.offsetTop + buttonRef.current.clientHeight / 2
+    };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_CLICK,
+      onboardingState,
+      { anchor: releaseNameAnchor, place: 'left' },
+      onboardingComponent
+    );
+  }
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">
       <DialogTitle>Upload an Artifact</DialogTitle>
@@ -257,10 +272,11 @@ export const AddArtifactDialog = ({
         {!!activeStep && <Button onClick={() => setActiveStep(activeStep - 1)}>Back</Button>}
         <div style={{ flexGrow: 1 }} />
         {file && (
-          <Button variant="contained" color="primary" disabled={!isValid} onClick={() => (finalStep ? onUpload() : onNextClick())}>
+          <Button variant="contained" color="primary" disabled={!isValid} onClick={() => (finalStep ? onUpload() : onNextClick())} ref={buttonRef}>
             {finalStep ? 'Upload artifact' : 'Next'}
           </Button>
         )}
+        {onboardingComponent}
       </DialogActions>
     </Dialog>
   );

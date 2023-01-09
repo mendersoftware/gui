@@ -176,19 +176,21 @@ export const UploadNewArtifactDialogUpload = () => (
 export const UploadNewArtifactDialogDestination = () => (
   <div>
     We have prefilled this for you, for the demo - it is the destination on your device where the new <i>index.html</i> file will be installed.
-    <p>Click &apos;Next&apos; below.</p>
   </div>
 );
 
 export const UploadNewArtifactDialogDeviceType = () => (
-  <div>Enter the device types this will be compatible with. For the demo, you just need to select the device type of your demo device.</div>
+  <div>
+    Enter the device types this will be compatible with. For the demo, you just need to select the device type of your demo device.
+    <br />
+    Then click &apos;Next&apos; below.
+  </div>
 );
 
+export const UploadNewArtifactDialogClick = () => <div>Now click &apos;Upload Artifact&apos; to finish this step!</div>;
+
 export const UploadNewArtifactDialogReleaseName = () => (
-  <div>
-    Now name your Release: for the demo you could call it something like &quot;hello-world&quot;.
-    <p>Then click &apos;Upload&apos; to finish this step!</p>
-  </div>
+  <div>Now name your Release: for the demo you could call it something like &quot;hello-world&quot;.</div>
 );
 
 export const ArtifactModifiedOnboarding = () => (

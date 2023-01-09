@@ -346,6 +346,12 @@ exports[`OnboardingTips Components tiny onboarding tips renders SchedulingReleas
 </div>
 `;
 
+exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogClick correctly 1`] = `
+<div>
+  Now click 'Upload Artifact' to finish this step!
+</div>
+`;
+
 exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogDestination correctly 1`] = `
 <div>
   We have prefilled this for you, for the demo - it is the destination on your device where the new 
@@ -353,24 +359,20 @@ exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifac
     index.html
   </i>
    file will be installed.
-  <p>
-    Click 'Next' below.
-  </p>
 </div>
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogDeviceType correctly 1`] = `
 <div>
   Enter the device types this will be compatible with. For the demo, you just need to select the device type of your demo device.
+  <br />
+  Then click 'Next' below.
 </div>
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogReleaseName correctly 1`] = `
 <div>
   Now name your Release: for the demo you could call it something like "hello-world".
-  <p>
-    Then click 'Upload' to finish this step!
-  </p>
 </div>
 `;
 
