@@ -122,7 +122,7 @@ test:docs-links:
   before_script:
     - apk add --no-cache curl
   script:
-    - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | sed -e 's,\${path},''/,g' | egrep -o 'https?://[^ `]+' | sort | uniq)
+    - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | sed -e 's,\${path},''/,g' | egrep -o 'https?://[^ `"]+' | sort | uniq)
     - error=0
     - for url in $links; do
     - if ! curl --output /dev/null --silent --head --fail $url; then
