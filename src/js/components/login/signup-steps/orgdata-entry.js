@@ -55,7 +55,7 @@ export const OrgDataEntry = ({ classes, data: { name, email, emailVerified, tos,
             <p className="margin-bottom-none margin-top-none muted" style={{ marginRight: 4 }}>
               Choose which instance to set up your Mender account.
             </p>
-            <a href="https://mender.io/plans" target="_blank" rel="noopener noreferrer">
+            <a href="https://docs.mender.io/general/hosted-mender-regions" target="_blank" rel="noopener noreferrer">
               Learn more
             </a>
           </div>
