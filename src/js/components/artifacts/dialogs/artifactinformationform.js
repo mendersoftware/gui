@@ -24,11 +24,13 @@ export const ReleaseTooltip = () => (
   </div>
 );
 
+const defaultVersion = '1.0.0';
+
 export const VersionInformation = ({ creation = {}, onRemove, updateCreation }) => {
   const { file, fileSystem: propFs, name, softwareName: propName, softwareVersion: version = '', type } = creation;
   const [fileSystem, setFileSystem] = useState(propFs);
-  const [softwareName, setSoftwareName] = useState(propName);
-  const [softwareVersion, setSoftwareVersion] = useState(version || name);
+  const [softwareName, setSoftwareName] = useState(propName || name.replace('.', '-'));
+  const [softwareVersion, setSoftwareVersion] = useState(version || defaultVersion);
 
   useEffect(() => {
     updateCreation({ finalStep: true });

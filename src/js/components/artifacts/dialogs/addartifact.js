@@ -184,7 +184,7 @@ export const AddArtifactDialog = ({
     isValidDestination: false,
     name: '',
     selectedDeviceTypes: [],
-    softwareName: 'single-file',
+    softwareName: '',
     softwareVersion: '',
     type: uploadTypes.mender.key
   });
