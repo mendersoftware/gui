@@ -22,6 +22,7 @@ import {
   SchedulingArtifactSelection,
   SchedulingGroupSelection,
   SchedulingReleaseToDevices,
+  UploadNewArtifactDialogClick,
   UploadNewArtifactDialogDestination,
   UploadNewArtifactDialogDeviceType,
   UploadNewArtifactDialogReleaseName,
@@ -151,26 +152,32 @@ export const onboardingSteps = {
     progress: 2
   },
   [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD]: {
-    condition: {},
+    condition: { min: stepNames.UPLOAD_NEW_ARTIFACT_TIP },
     component: UploadNewArtifactDialogUpload,
     fallbackStep: stepNames.UPLOAD_NEW_ARTIFACT_TIP,
     progress: 2
   },
   [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION]: {
-    condition: {},
+    condition: { min: stepNames.UPLOAD_NEW_ARTIFACT_TIP, max: stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME },
     component: UploadNewArtifactDialogDestination,
     fallbackStep: stepNames.UPLOAD_NEW_ARTIFACT_TIP,
     progress: 2
   },
-  [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE]: {
+  [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME]: {
     condition: { min: stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION },
+    component: UploadNewArtifactDialogReleaseName,
+    fallbackStep: stepNames.UPLOAD_NEW_ARTIFACT_TIP,
+    progress: 2
+  },
+  [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE]: {
+    condition: { min: stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME },
     component: UploadNewArtifactDialogDeviceType,
     fallbackStep: stepNames.UPLOAD_NEW_ARTIFACT_TIP,
     progress: 2
   },
-  [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME]: {
+  [stepNames.UPLOAD_NEW_ARTIFACT_DIALOG_CLICK]: {
     condition: {},
-    component: UploadNewArtifactDialogReleaseName,
+    component: UploadNewArtifactDialogClick,
     fallbackStep: stepNames.UPLOAD_NEW_ARTIFACT_TIP,
     progress: 2
   },
