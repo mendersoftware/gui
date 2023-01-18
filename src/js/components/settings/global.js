@@ -14,6 +14,7 @@ import { settingsKeys } from '../../constants/userConstants';
 import { getDocsVersion, getIdAttribute, getOfflineThresholdSettings, getTenantCapabilities, getUserRoles } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import InfoHint from '../common/info-hint';
+import ReportingLimits from './reportinglimits';
 
 const maxWidth = 750;
 
@@ -96,6 +97,7 @@ export const GlobalSettingsDialog = ({
   attributes,
   docsVersion,
   hasMonitor,
+  hasReporting,
   isAdmin,
   notificationChannelSettings,
   offlineThresholdSettings,
@@ -168,7 +170,11 @@ export const GlobalSettingsDialog = ({
         onSaveClick={onSaveClick}
         selectedAttribute={selectedAttribute}
       />
-      <div className="clickable flexbox center-aligned space-between" onClick={toggleDeploymentConfirmation}>
+      {hasReporting && <ReportingLimits />}
+      <InputLabel className="margin-top" shrink>
+        Deployments
+      </InputLabel>
+      <div className="clickable flexbox center-aligned" onClick={toggleDeploymentConfirmation}>
         <p className="help-content">Require confirmation on deployment creation</p>
         <Switch checked={needsDeploymentConfirmation} />
       </div>
@@ -230,6 +236,7 @@ export const GlobalSettingsContainer = ({
   getDeviceAttributes,
   getGlobalSettings,
   hasMonitor,
+  hasReporting,
   isAdmin,
   notificationChannelSettings,
   offlineThresholdSettings,
@@ -281,6 +288,7 @@ export const GlobalSettingsContainer = ({
       attributes={attributes}
       docsVersion={docsVersion}
       hasMonitor={hasMonitor}
+      hasReporting={hasReporting}
       isAdmin={isAdmin}
       notificationChannelSettings={notificationChannelSettings}
       offlineThresholdSettings={offlineThresholdSettings}
@@ -312,6 +320,7 @@ const mapStateToProps = state => {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: id_attributes,
     hasMonitor: getTenantCapabilities(state).hasMonitor,
+    hasReporting: state.app.features.hasReporting,
     isAdmin: getUserRoles(state).isAdmin,
     devicesCount: Object.keys(state.devices.byId).length,
     docsVersion: getDocsVersion(state),
