@@ -7,6 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { getSystemDevices } from '../../../actions/deviceActions';
+import { SORTING_OPTIONS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { getDemoDeviceAddress, toggle, versionCompare } from '../../../helpers';
 import { getDocsVersion, getIdAttribute, getTenantCapabilities } from '../../../selectors';
@@ -43,6 +44,16 @@ export const DeviceSystem = ({
   const { systemDeviceIds = [], systemDeviceTotal = 0 } = device;
   const deviceIp = getDemoDeviceAddress([device]);
 
+  const [sortOptions, setSortOptions] = useState([]);
+
+  const onSortChange = attribute => {
+    let changedOrder = SORTING_OPTIONS.asc;
+    if (sortOptions.length && sortOptions[0].attribute == attribute.name) {
+      changedOrder = sortOptions[0].order === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
+    }
+    setSortOptions([{ attribute: attribute.name, scope: attribute.scope, order: changedOrder }]);
+  };
+
   useEffect(() => {
     const columnHeaders = getHeaders(columnSelection, routes.allDevices.defaultHeaders, idAttribute, openSettingsDialog);
     setColumnHeaders(columnHeaders);
@@ -50,8 +61,10 @@ export const DeviceSystem = ({
   }, [columnSelection, idAttribute.attribute]);
 
   useEffect(() => {
-    getSystemDevices(device.id, { page, perPage });
-  }, [device.id, page, perPage]);
+    if (device.attributes) {
+      getSystemDevices(device.id, device.attributes.mender_gateway_system_id, { page, perPage, sortOptions });
+    }
+  }, [device.id, page, perPage, sortOptions]);
 
   const onDeviceClick = (device = {}) => navigate(`/devices/${device.status}?id=${device.id}&open=true`);
 
@@ -69,12 +82,13 @@ export const DeviceSystem = ({
             devices={systemDeviceIds.map(id => devicesById[id])}
             deviceListState={{ page, perPage }}
             headerKeys={headerKeys}
+            idAttribute={idAttribute}
             onChangeRowsPerPage={setPerPage}
             onExpandClick={onDeviceClick}
             onResizeColumns={false}
             onPageChange={setPage}
             onSelect={false}
-            onSort={i => i}
+            onSort={onSortChange}
             pageLoading={false}
             pageTotal={systemDeviceTotal}
           />

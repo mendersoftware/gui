@@ -13,7 +13,7 @@ export const offlineThresholds = ['minutes', 'hours', 'days'];
 
 export const DEVICE_FILTERING_OPTIONS = {
   $eq: { key: '$eq', title: 'equals', shortform: '=' },
-  $ne: { title: 'not equal', shortform: '!=' },
+  $ne: { key: '$ne', title: 'not equal', shortform: '!=' },
   $gt: {
     key: '$gt',
     title: '>',
@@ -49,18 +49,21 @@ export const DEVICE_FILTERING_OPTIONS = {
     help: `The "not in" operator accepts a list of comma-separated values. It matches if the selected field's value is not equal to any of the specified options.`
   },
   $exists: {
+    key: '$exists',
     title: 'exists',
     shortform: 'exists',
     value: true,
     help: `The "exists" operator matches if the selected field's value has a value. No value needs to be provided for this operator.`
   },
   $nexists: {
+    key: '$nexists',
     title: `doesn't exist`,
     shortform: `doesn't exist`,
     value: true,
     help: `The "doesn't exist" operator matches if the selected field's value has no value. No value needs to be provided for this operator.`
   },
   $regex: {
+    key: '$regex',
     title: `matches regular expression`,
     shortform: `matches`,
     help: `The "regular expression" operator matches the selected field's value with a Perl compatible regular expression (PCRE), automatically anchored by ^. If the regular expression is not valid, the filter will produce no results. If you need to specify options and flags, you can provide the full regex in the format of /regex/flags, for example.`
@@ -219,7 +222,7 @@ export const DEVICE_ISSUE_OPTIONS = {
     needsFullFiltering: false,
     needsMonitor: false,
     needsReporting: true,
-    filterRule: { scope: 'system', key: 'mender_is_gateway', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: true },
+    filterRule: { scope: 'inventory', key: 'mender_is_gateway', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: 'true' },
     title: 'Gateway devices'
   }
 };

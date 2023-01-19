@@ -84,8 +84,11 @@ const GatewayConnectionNotification = ({ gatewayDevices, idAttribute, onClick })
       title={
         <div style={{ maxWidth: 350 }}>
           Connected to{' '}
-          {gatewayDevices.length > 1 ? 'multiple devices' : <DeviceIdentityDisplay device={gatewayDevices[0]} idAttribute={idAttribute} isEditable={false} />}.
-          Click to view
+          {gatewayDevices.length > 1 ? (
+            'multiple devices'
+          ) : (
+            <DeviceIdentityDisplay device={gatewayDevices[0]} idAttribute={idAttribute} isEditable={false} hasAdornment={false} />
+          )}
         </div>
       }
     >
@@ -216,6 +219,11 @@ export const ExpandedDevice = ({
   const navigate = useNavigate();
   const { classes } = useStyles();
 
+  const selectedTabObject = tabs.find(tab => tab.value == selectedTab && tab.isApplicable({ device, integrations, tenantCapabilities, userCapabilities }));
+  if (selectedTabObject === undefined) {
+    setSelectedTab(tabs[0].value);
+  }
+
   const { attributes = {}, isOffline, gatewayIds = [] } = device;
   const { mender_is_gateway, mender_gateway_system_id } = attributes;
   const isGateway = stringToBoolean(mender_is_gateway);
@@ -345,7 +353,8 @@ export const ExpandedDevice = ({
       <div className="flexbox center-aligned space-between">
         <div className="flexbox center-aligned">
           <h3 className="flexbox">
-            Device information for {<DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} style={{ marginLeft: 4 }} />}
+            Device information for{' '}
+            {<DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} hasAdornment={false} style={{ marginLeft: 4 }} />}
           </h3>
           <IconButton onClick={copyLinkToClipboard} size="large">
             <LinkIcon />

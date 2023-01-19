@@ -24,12 +24,15 @@ const attributeComponentMap = {
 };
 
 const adornments = [
-  { component: GatewayConnectionIcon, isApplicable: ({ attributes = {} }) => stringToBoolean(attributes.mender_gateway_system_id) },
+  {
+    component: GatewayConnectionIcon,
+    isApplicable: ({ attributes = {} }) => !stringToBoolean(attributes.mender_is_gateway) && attributes.mender_gateway_system_id !== ''
+  },
   { component: GatewayIcon, isApplicable: ({ attributes = {} }) => stringToBoolean(attributes.mender_is_gateway) }
 ];
 
 export const DeviceIdentityDisplay = props => {
-  const { device, idAttribute, isEditable = true } = props;
+  const { device, idAttribute, isEditable = true, hasAdornment = true } = props;
   const idValue = getDeviceIdentityText({ device, idAttribute });
   const { classes } = useStyles();
 
@@ -42,7 +45,7 @@ export const DeviceIdentityDisplay = props => {
   return (
     <div className="flexbox space-between">
       <Component {...props} value={idValue} />
-      {EndAdornment && <EndAdornment className={`${classes.gatewayIcon}`} />}
+      {hasAdornment && EndAdornment && <EndAdornment className={`${classes.gatewayIcon}`} />}
     </div>
   );
 };

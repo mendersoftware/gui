@@ -201,10 +201,10 @@ describe('locationutils', () => {
       ]);
     });
     it('uses working utilties - parseDeviceQuery converts new style', () => {
-      const { groupName, filters } = parseDeviceQuery(new URLSearchParams('?inventory=some:eq:thing&inventory=group:eq:testgroup&identity=bla:neq:blubb'));
+      const { groupName, filters } = parseDeviceQuery(new URLSearchParams('?inventory=some:eq:thing&inventory=group:eq:testgroup&identity=bla:ne:blubb'));
       expect(groupName).toEqual('testgroup');
       expect(filters).toEqual([
-        { key: 'bla', operator: '$neq', scope: 'identity', value: 'blubb' },
+        { key: 'bla', operator: '$ne', scope: 'identity', value: 'blubb' },
         { key: 'some', operator: '$eq', scope: 'inventory', value: 'thing' }
       ]);
     });

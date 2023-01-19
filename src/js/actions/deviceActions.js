@@ -35,6 +35,8 @@ const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
   { scope: 'inventory', attribute: 'artifact_name' },
   { scope: 'inventory', attribute: 'device_type' },
+  { scope: 'inventory', attribute: 'mender_is_gateway' },
+  { scope: 'inventory', attribute: 'mender_gateway_system_id' },
   { scope: 'inventory', attribute: rootfsImageVersion },
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
@@ -57,7 +59,7 @@ export const getGroups = () => (dispatch, getState) =>
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
     }, {});
-    const filters = [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }];
+    const filters = [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }];
     return Promise.all([
       dispatch({ type: DeviceConstants.RECEIVE_GROUPS, groups }),
       dispatch(getDevicesByStatus(undefined, { filterSelection: filters, page: 1, perPage: 1 }))
@@ -75,7 +77,7 @@ export const getGroups = () => (dispatch, getState) =>
             deviceIds: [],
             total: 0,
             ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
-            filters: [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }]
+            filters: [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }]
           }
         })
       );
@@ -169,7 +171,7 @@ const filterProcessors = {
   $nexists: () => false
 };
 const filterAliases = {
-  $nexists: { alias: '$exists', value: false }
+  $nexists: { alias: DEVICE_FILTERING_OPTIONS.$exists.key, value: false }
 };
 const mapFiltersToTerms = filters =>
   filters.map(filter => ({
@@ -543,7 +545,7 @@ export const getDeviceCount = status => (dispatch, getState) =>
   GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page: 1,
     per_page: 1,
-    filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
+    filters: mapFiltersToTerms([{ key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]),
     attributes: defaultAttributes
   }).then(response => {
     const count = Number(response.headers[headerNames.total]);
@@ -619,14 +621,19 @@ const convertIssueOptionsToFilters = (issuesSelection, filtersState = {}) =>
 export const convertDeviceListStateToFilters = ({ filters = [], group, groups = { byId: {} }, offlineThreshold, selectedIssues = [], status }) => {
   let applicableFilters = [...filters];
   if (typeof group === 'string' && !(groups.byId[group]?.filters || applicableFilters).length) {
-    applicableFilters.push({ key: 'group', value: group, operator: '$eq', scope: 'system' });
+    applicableFilters.push({ key: 'group', value: group, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'system' });
   }
   const nonMonitorFilters = applicableFilters.filter(
-    filter => !Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
+    filter =>
+      !Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).some(
+        ({ filterRule }) => filter.scope !== 'inventory' && filterRule.scope === filter.scope && filterRule.key === filter.key
+      )
   );
   const deviceIssueFilters = convertIssueOptionsToFilters(selectedIssues, { offlineThreshold });
   applicableFilters = [...nonMonitorFilters, ...deviceIssueFilters];
-  const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
+  const effectiveFilters = status
+    ? [...applicableFilters, { key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]
+    : applicableFilters;
   return { applicableFilters: nonMonitorFilters, filterTerms: mapFiltersToTerms(effectiveFilters) };
 };
 
@@ -691,7 +698,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
-      filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
+      filters: mapFiltersToTerms([{ key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]),
       attributes
     }).then(res => {
       const state = getState();
@@ -1069,21 +1076,25 @@ const prepareSearchArguments = ({ filters, group, state, status }) => {
 };
 
 export const getSystemDevices =
-  (id, options = {}) =>
+  (id, gatewaySystemId, options = {}) =>
   (dispatch, getState) => {
-    const { page = defaultPage, perPage = defaultPerPage } = options;
+    const { page = defaultPage, perPage = defaultPerPage, sortOptions = [] } = options;
     const state = getState();
     const { hasFullFiltering } = getTenantCapabilities(state);
     if (!hasFullFiltering) {
       return Promise.resolve();
     }
-    const filters = [{ ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }];
-    const { attributes, filterTerms } = prepareSearchArguments({ filters, state, status: 'any' });
+    const filters = [
+      { ...emptyFilter, key: 'mender_is_gateway', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: 'true', scope: 'inventory' },
+      { ...emptyFilter, key: 'mender_gateway_system_id', value: gatewaySystemId, scope: 'inventory' }
+    ];
+    const { attributes, filterTerms } = prepareSearchArguments({ filters, state });
 
     return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
       page,
       per_page: perPage,
       filters: filterTerms,
+      sort: sortOptions,
       attributes
     })
       .catch(err => commonErrorHandler(err, `There was an error getting system devices device ${id}.`, dispatch, 'Please check your connection.'))
@@ -1113,10 +1124,11 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
   const { attributes = {} } = device;
   const { mender_gateway_system_id } = attributes;
   const filters = [
+    { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: deviceId, scope: 'identity' },
     { ...emptyFilter, key: 'mender_is_gateway', value: 'true', scope: 'inventory' },
     { ...emptyFilter, key: 'mender_gateway_system_id', value: mender_gateway_system_id, scope: 'inventory' }
   ];
-  const { attributes: attributeSelection, filterTerms } = prepareSearchArguments({ filters, state, status: 'any' });
+  const { attributes: attributeSelection, filterTerms } = prepareSearchArguments({ filters, state });
   return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
     page: 1,
     per_page: MAX_PAGE_SIZE,
