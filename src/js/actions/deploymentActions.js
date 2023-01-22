@@ -21,8 +21,7 @@ const {
   RECEIVE_DEPLOYMENT,
   RECEIVE_DEPLOYMENTS,
   REMOVE_DEPLOYMENT,
-  SET_DEPLOYMENTS_STATE,
-  UNSET_LIMIT
+  SET_DEPLOYMENTS_STATE
 } = DeploymentConstants;
 
 // default per page until pagination and counting integrated
@@ -282,7 +281,7 @@ export const setDeploymentsState = selection => (dispatch, getState) => {
 };
 
 const deltaAttributeMappings = [
-  { here: 'compression', there: 'compression_level' },
+  { here: 'compressionLevel', there: 'compression_level' },
   { here: 'disableChecksum', there: 'disable_checksum' },
   { here: 'disableDecompression', there: 'disable_external_decompression' },
   { here: 'sourceWindow', there: 'source_window_size' },
@@ -293,7 +292,7 @@ const deltaAttributeMappings = [
 
 const mapExternalDeltaConfig = (config = {}) =>
   deltaAttributeMappings.reduce((accu, { here, there }) => {
-    if (config[there]) {
+    if (config[there] !== undefined) {
       accu[here] = config[there];
     }
     return accu;
@@ -338,9 +337,9 @@ const deepClean = source =>
 
 export const saveDeltaDeploymentsConfig = config => (dispatch, getState) => {
   const configChange = {
-    timeout: config.timeout !== UNSET_LIMIT ? config.timeout : undefined,
+    timeout: config.timeout,
     xdelta_args: deltaAttributeMappings.reduce((accu, { here, there }) => {
-      if (config[here] !== undefined && config[here] !== UNSET_LIMIT) {
+      if (config[here] !== undefined) {
         accu[there] = config[here];
       }
       return accu;

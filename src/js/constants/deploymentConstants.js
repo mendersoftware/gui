@@ -172,4 +172,3 @@ export const pauseMap = {
   }
 };
 export const limitDefault = { min: 5, max: 100, default: 10 };
-export const UNSET_LIMIT = -1;

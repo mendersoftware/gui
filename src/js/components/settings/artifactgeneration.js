@@ -9,7 +9,6 @@ import { makeStyles } from 'tss-react/mui';
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { getDeploymentsConfig, saveDeltaDeploymentsConfig } from '../../actions/deploymentActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { UNSET_LIMIT } from '../../constants/deploymentConstants';
 import { useDebounce } from '../../utils/debouncehook';
 import InfoText from '../common/infotext';
 
@@ -30,7 +29,7 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 const numberFields = {
-  compression: { key: 'compression', title: 'Compression level' },
+  compressionLevel: { key: 'compressionLevel', title: 'Compression level' },
   sourceWindow: { key: 'sourceWindow', title: 'Source window size' },
   inputWindow: { key: 'inputWindow', title: 'Input window size' },
   duplicatesWindow: { key: 'duplicatesWindow', title: 'Compression duplicates window' },
@@ -43,9 +42,6 @@ const NumberInputLimited = ({ limit, onChange, value: propsValue, ...remainder }
   const { default: defaultValue, max, min } = limit;
 
   useEffect(() => {
-    if (debouncedValue === UNSET_LIMIT) {
-      return;
-    }
     const minimum = Math.max(min, debouncedValue);
     const allowedValue = Math.min(max ?? minimum, minimum);
     if (allowedValue !== debouncedValue) {
@@ -55,55 +51,52 @@ const NumberInputLimited = ({ limit, onChange, value: propsValue, ...remainder }
     onChange(allowedValue);
   }, [debouncedValue]);
 
-  const isInitialized = value !== UNSET_LIMIT;
   return (
     <TextField
       inputProps={{ step: 1, type: 'numeric', pattern: '[0-9]*', autoComplete: 'off' }}
-      InputLabelProps={{ shrink: isInitialized }}
-      error={(min || max) && isInitialized ? min > value || value > max : false}
-      value={isInitialized ? value : ''}
+      InputLabelProps={{ shrink: true }}
+      error={min || max ? min > value || value > max : false}
+      value={value}
       onChange={({ target: { value } }) => setValue(Number(value) || 0)}
-      helperText={!isInitialized && defaultValue !== undefined ? `Defaults to: ${defaultValue}` : null}
+      helperText={defaultValue !== undefined ? `Defaults to: ${defaultValue}` : null}
       {...remainder}
     />
   );
 };
 
 export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLimits, getDeploymentsConfig, saveDeltaDeploymentsConfig }) => {
-  const [timeoutValue, setTimeoutValue] = useState(UNSET_LIMIT);
-  const [disableChecksum, setDisableChecksum] = useState(false);
-  const [disableDecompression, setDisableDecompression] = useState(false);
-  const [compression, setCompression] = useState(UNSET_LIMIT);
-  const [sourceWindow, setSourceWindow] = useState(UNSET_LIMIT);
-  const [inputWindow, setInputWindow] = useState(UNSET_LIMIT);
-  const [duplicatesWindow, setDuplicatesWindow] = useState(UNSET_LIMIT);
-  const [instructionBuffer, setInstructionBuffer] = useState(UNSET_LIMIT);
+  const [timeoutValue, setTimeoutValue] = useState(deltaConfig.timeout);
+  const [disableChecksum, setDisableChecksum] = useState(deltaConfig.disableChecksum);
+  const [disableDecompression, setDisableDecompression] = useState(deltaConfig.disableChecksum);
+  const [compressionLevel, setCompressionLevel] = useState(deltaConfig.compressionLevel);
+  const [sourceWindow, setSourceWindow] = useState(deltaConfig.sourceWindow);
+  const [inputWindow, setInputWindow] = useState(deltaConfig.inputWindow);
+  const [duplicatesWindow, setDuplicatesWindow] = useState(deltaConfig.duplicatesWindow);
+  const [instructionBuffer, setInstructionBuffer] = useState(deltaConfig.instructionBuffer);
   const [isInitialized, setIsInitialized] = useState(false);
   const timer = useRef(null);
-  const initTimer = useRef(null);
 
   const { classes } = useStyles();
 
   useEffect(() => {
-    getDeploymentsConfig();
-    clearTimeout(initTimer.current);
-    initTimer.current = setTimeout(() => setIsInitialized(true), TIMEOUTS.threeSeconds);
-    return () => {
-      clearTimeout(initTimer.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const { timeout, duplicatesWindow, compression, disableChecksum, disableDecompression, inputWindow, instructionBuffer, sourceWindow } = deltaConfig;
+    if (deltaConfig.timeout === -1) {
+      return;
+    }
+    const { timeout, duplicatesWindow, compressionLevel, disableChecksum, disableDecompression, inputWindow, instructionBuffer, sourceWindow } = deltaConfig;
     setDisableChecksum(disableChecksum);
     setDisableDecompression(disableDecompression);
-    setCompression(compression);
+    setCompressionLevel(compressionLevel);
     setTimeoutValue(timeout);
     setSourceWindow(sourceWindow);
     setInputWindow(inputWindow);
     setDuplicatesWindow(duplicatesWindow);
     setInstructionBuffer(instructionBuffer);
+    setTimeout(() => setIsInitialized(true), 0);
   }, [JSON.stringify(deltaConfig), JSON.stringify(deltaLimits)]);
+
+  useEffect(() => {
+    getDeploymentsConfig();
+  }, []);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -115,7 +108,7 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
         saveDeltaDeploymentsConfig({
           timeout: timeoutValue,
           duplicatesWindow,
-          compression,
+          compressionLevel,
           disableChecksum,
           disableDecompression,
           inputWindow,
@@ -127,19 +120,19 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
     return () => {
       clearTimeout(timer.current);
     };
-  }, [compression, disableChecksum, disableDecompression, duplicatesWindow, inputWindow, instructionBuffer, sourceWindow, timeoutValue]);
+  }, [compressionLevel, disableChecksum, disableDecompression, duplicatesWindow, inputWindow, instructionBuffer, sourceWindow, timeoutValue]);
 
   const numberInputs = useMemo(() => {
     return [
-      { ...numberFields.compression, setter: setCompression, value: compression },
+      { ...numberFields.compressionLevel, setter: setCompressionLevel, value: compressionLevel, ...deltaLimits.compressionLevel },
       { ...numberFields.sourceWindow, setter: setSourceWindow, value: sourceWindow, ...deltaLimits.sourceWindow },
       { ...numberFields.inputWindow, setter: setInputWindow, value: inputWindow, ...deltaLimits.inputWindow },
       { ...numberFields.duplicatesWindow, setter: setDuplicatesWindow, value: duplicatesWindow, ...deltaLimits.duplicatesWindow },
       { ...numberFields.instructionBuffer, setter: setInstructionBuffer, value: instructionBuffer, ...deltaLimits.instructionBuffer }
     ];
   }, [
-    compression,
-    setCompression,
+    compressionLevel,
+    setCompressionLevel,
     setSourceWindow,
     sourceWindow,
     inputWindow,
@@ -157,11 +150,11 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
         <DeltaIcon />
         <h5 className="margin-left-small">Delta artifacts generation configuration</h5>
       </div>
-      {deltaEnabled ? (
+      {deltaEnabled && isInitialized ? (
         <div className="margin-small margin-top-none">
           <div className="flexbox">
             <NumberInputLimited
-              limit={{ min: deltaLimits.timeout.min, max: deltaLimits.timeout.max }}
+              limit={{ default: deltaLimits.timeout.default, min: deltaLimits.timeout.min, max: deltaLimits.timeout.max }}
               label="Timeout"
               onChange={setTimeoutValue}
               value={timeoutValue}

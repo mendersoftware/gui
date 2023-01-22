@@ -15,7 +15,7 @@ export const initialState = {
     binaryDelta: {
       timeout: -1,
       duplicatesWindow: -1,
-      compression: -1,
+      compressionLevel: -1,
       disableChecksum: false,
       disableDecompression: false,
       inputWindow: -1,

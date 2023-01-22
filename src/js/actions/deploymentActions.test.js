@@ -26,13 +26,13 @@ const createdDeployment = {
 };
 const deploymentsConfig = {
   binaryDelta: {
-    compression: 6,
+    compressionLevel: 6,
     disableChecksum: false,
     disableDecompression: false,
-    duplicatesWindow: DeploymentConstants.UNSET_LIMIT,
-    inputWindow: DeploymentConstants.UNSET_LIMIT,
-    instructionBuffer: DeploymentConstants.UNSET_LIMIT,
-    sourceWindow: DeploymentConstants.UNSET_LIMIT,
+    duplicatesWindow: 0,
+    inputWindow: 0,
+    instructionBuffer: 0,
+    sourceWindow: 0,
     timeout: 0
   },
   binaryDeltaLimits: {
@@ -304,7 +304,7 @@ describe('deployment actions', () => {
     const changedConfig = {
       timeout: 100,
       duplicatesWindow: 734,
-      compression: 5,
+      compressionLevel: 5,
       disableChecksum: true,
       disableDecompression: false,
       inputWindow: 1253,
