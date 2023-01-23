@@ -1,129 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ArtifactInformationForm Component renders correctly 1`] = `
-.emotion-0.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-@media (pointer: fine) {
-  .emotion-0:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-}
-
-.emotion-0 .MuiAutocomplete-tag {
-  margin: 3px;
-  max-width: calc(100% - 6px);
-}
-
-.emotion-0 .MuiAutocomplete-inputRoot {
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.MuiAutocomplete-hasPopupIcon.emotion-0 .MuiAutocomplete-inputRoot,
-.MuiAutocomplete-hasClearIcon.emotion-0 .MuiAutocomplete-inputRoot {
-  padding-right: 30px;
-}
-
-.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-0 .MuiAutocomplete-inputRoot {
-  padding-right: 56px;
-}
-
-.emotion-0 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
-  width: 0;
-  min-width: 30px;
-}
-
-.emotion-0 .MuiInput-root {
-  padding-bottom: 1px;
-}
-
-.emotion-0 .MuiInput-root .MuiInput-input {
-  padding: 4px 4px 4px 0px;
-}
-
-.emotion-0 .MuiInput-root.MuiInputBase-sizeSmall .MuiInput-input {
-  padding: 2px 4px 3px 0;
-}
-
-.emotion-0 .MuiOutlinedInput-root {
-  padding: 9px;
-}
-
-.MuiAutocomplete-hasPopupIcon.emotion-0 .MuiOutlinedInput-root,
-.MuiAutocomplete-hasClearIcon.emotion-0 .MuiOutlinedInput-root {
-  padding-right: 39px;
-}
-
-.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-0 .MuiOutlinedInput-root {
-  padding-right: 65px;
-}
-
-.emotion-0 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
-}
-
-.emotion-0 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
-  right: 9px;
-}
-
-.emotion-0 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 6px;
-}
-
-.emotion-0 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
-}
-
-.emotion-0 .MuiFilledInput-root {
-  padding-top: 19px;
-  padding-left: 8px;
-}
-
-.MuiAutocomplete-hasPopupIcon.emotion-0 .MuiFilledInput-root,
-.MuiAutocomplete-hasClearIcon.emotion-0 .MuiFilledInput-root {
-  padding-right: 39px;
-}
-
-.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-0 .MuiFilledInput-root {
-  padding-right: 65px;
-}
-
-.emotion-0 .MuiFilledInput-root .MuiFilledInput-input {
-  padding: 7px 4px;
-}
-
-.emotion-0 .MuiFilledInput-root .MuiAutocomplete-endAdornment {
-  right: 9px;
-}
-
-.emotion-0 .MuiFilledInput-root.MuiInputBase-sizeSmall {
-  padding-bottom: 1px;
-}
-
-.emotion-0 .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input {
-  padding: 2.5px 4px;
-}
-
-.emotion-0 .MuiInputBase-hiddenLabel {
-  padding-top: 8px;
-}
-
-.emotion-0 .MuiAutocomplete-input {
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  text-overflow: ellipsis;
-  opacity: 1;
-}
-
-.emotion-1 {
+.emotion-0 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -142,7 +20,274 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
   min-width: 240px;
 }
 
+.emotion-1 {
+  color: rgba(0, 0, 0, 0.54);
+  line-height: 1.4375em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
+  padding: 0;
+  position: relative;
+  color: rgba(0, 0, 0, 0.54);
+  display: block;
+  transform-origin: top left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 133%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
+  -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+}
+
+.emotion-1.Mui-focused {
+  color: #337a87;
+}
+
+.emotion-1.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-1.Mui-error {
+  color: #ab1000;
+}
+
+.emotion-1.Mui-focused {
+  color: #337a87;
+}
+
 .emotion-2 {
+  line-height: 1.4375em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
+  color: rgba(10, 10, 11, 0.78);
+  box-sizing: border-box;
+  position: relative;
+  cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.emotion-2.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+  cursor: default;
+}
+
+label+.emotion-2 {
+  margin-top: 16px;
+}
+
+.emotion-2:after {
+  border-bottom: 2px solid #337a87;
+  left: 0;
+  bottom: 0;
+  content: "";
+  position: absolute;
+  right: 0;
+  -webkit-transform: scaleX(0);
+  -moz-transform: scaleX(0);
+  -ms-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-2.Mui-focused:after {
+  -webkit-transform: scaleX(1) translateX(0);
+  -moz-transform: scaleX(1) translateX(0);
+  -ms-transform: scaleX(1) translateX(0);
+  transform: scaleX(1) translateX(0);
+}
+
+.emotion-2.Mui-error:before,
+.emotion-2.Mui-error:after {
+  border-bottom-color: #ab1000;
+}
+
+.emotion-2.Mui-error:focus-within:after {
+  -webkit-transform: scaleX(1);
+  -moz-transform: scaleX(1);
+  -ms-transform: scaleX(1);
+  transform: scaleX(1);
+}
+
+.emotion-2:before {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  left: 0;
+  bottom: 0;
+  content: "\\00a0";
+  position: absolute;
+  right: 0;
+  -webkit-transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-2:hover:not(.Mui-disabled, .Mui-error):before {
+  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+}
+
+@media (hover: none) {
+  .emotion-2:hover:not(.Mui-disabled, .Mui-error):before {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  }
+}
+
+.emotion-2.Mui-disabled:before {
+  border-bottom-style: dotted;
+}
+
+.emotion-2:before {
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+.emotion-2:hover:not($disabled):before {
+  border-bottom: 2px solid #337a87!important;
+}
+
+.emotion-2:after {
+  border-bottom: 2px solid #337a87;
+}
+
+.emotion-3 {
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentColor;
+  padding: 4px 0 5px;
+  border: 0;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  -webkit-animation-name: mui-auto-fill-cancel;
+  animation-name: mui-auto-fill-cancel;
+  -webkit-animation-duration: 10ms;
+  animation-duration: 10ms;
+}
+
+.emotion-3::-webkit-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-3::-moz-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-3:-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-3::-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-3:focus {
+  outline: 0;
+}
+
+.emotion-3:invalid {
+  box-shadow: none;
+}
+
+.emotion-3::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3::-webkit-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3::-moz-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3::-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-webkit-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-moz-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus:-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+.emotion-3.Mui-disabled {
+  opacity: 1;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-3:-webkit-autofill {
+  -webkit-animation-duration: 5000s;
+  animation-duration: 5000s;
+  -webkit-animation-name: mui-auto-fill;
+  animation-name: mui-auto-fill;
+}
+
+.emotion-4 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  margin-top: 18px;
+  min-width: 240px;
+}
+
+.emotion-5 {
   color: rgba(0, 0, 0, 0.54);
   line-height: 1.4375em;
   font-family: Lato,sans-serif;
@@ -168,248 +313,23 @@ exports[`ArtifactInformationForm Component renders correctly 1`] = `
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
-.emotion-2.Mui-focused {
+.emotion-5.Mui-focused {
   color: #337a87;
 }
 
-.emotion-2.Mui-disabled {
+.emotion-5.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-2.Mui-error {
+.emotion-5.Mui-error {
   color: #ab1000;
 }
 
-.emotion-2.Mui-focused {
+.emotion-5.Mui-focused {
   color: #337a87;
 }
 
-.emotion-3 {
-  line-height: 1.4375em;
-  font-family: Lato,sans-serif;
-  font-weight: 400;
-  font-size: 0.9286rem;
-  color: rgba(10, 10, 11, 0.78);
-  box-sizing: border-box;
-  position: relative;
-  cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-  position: relative;
-}
-
-.emotion-3.Mui-disabled {
-  color: rgba(0, 0, 0, 0.38);
-  cursor: default;
-}
-
-label+.emotion-3 {
-  margin-top: 16px;
-}
-
-.emotion-3:after {
-  border-bottom: 2px solid #337a87;
-  left: 0;
-  bottom: 0;
-  content: "";
-  position: absolute;
-  right: 0;
-  -webkit-transform: scaleX(0);
-  -moz-transform: scaleX(0);
-  -ms-transform: scaleX(0);
-  transform: scaleX(0);
-  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  pointer-events: none;
-}
-
-.emotion-3.Mui-focused:after {
-  -webkit-transform: scaleX(1) translateX(0);
-  -moz-transform: scaleX(1) translateX(0);
-  -ms-transform: scaleX(1) translateX(0);
-  transform: scaleX(1) translateX(0);
-}
-
-.emotion-3.Mui-error:before,
-.emotion-3.Mui-error:after {
-  border-bottom-color: #ab1000;
-}
-
-.emotion-3.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
-.emotion-3:before {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-  left: 0;
-  bottom: 0;
-  content: "\\00a0";
-  position: absolute;
-  right: 0;
-  -webkit-transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  pointer-events: none;
-}
-
-.emotion-3:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
-}
-
-@media (hover: none) {
-  .emotion-3:hover:not(.Mui-disabled, .Mui-error):before {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-  }
-}
-
-.emotion-3.Mui-disabled:before {
-  border-bottom-style: dotted;
-}
-
-.emotion-3:before {
-  border-bottom: 1px solid rgb(224, 224, 224);
-}
-
-.emotion-3:hover:not($disabled):before {
-  border-bottom: 2px solid #337a87!important;
-}
-
-.emotion-3:after {
-  border-bottom: 2px solid #337a87;
-}
-
-.emotion-4 {
-  font: inherit;
-  letter-spacing: inherit;
-  color: currentColor;
-  padding: 4px 0 5px;
-  border: 0;
-  box-sizing: content-box;
-  background: none;
-  height: 1.4375em;
-  margin: 0;
-  -webkit-tap-highlight-color: transparent;
-  display: block;
-  min-width: 0;
-  width: 100%;
-  -webkit-animation-name: mui-auto-fill-cancel;
-  animation-name: mui-auto-fill-cancel;
-  -webkit-animation-duration: 10ms;
-  animation-duration: 10ms;
-}
-
-.emotion-4::-webkit-input-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-
-.emotion-4::-moz-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-
-.emotion-4:-ms-input-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-
-.emotion-4::-ms-input-placeholder {
-  color: currentColor;
-  opacity: 0.42;
-  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-
-.emotion-4:focus {
-  outline: 0;
-}
-
-.emotion-4:invalid {
-  box-shadow: none;
-}
-
-.emotion-4::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4::-webkit-input-placeholder {
-  opacity: 0!important;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4::-moz-placeholder {
-  opacity: 0!important;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:-ms-input-placeholder {
-  opacity: 0!important;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4::-ms-input-placeholder {
-  opacity: 0!important;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-webkit-input-placeholder {
-  opacity: 0.42;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-moz-placeholder {
-  opacity: 0.42;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus:-ms-input-placeholder {
-  opacity: 0.42;
-}
-
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-placeholder {
-  opacity: 0.42;
-}
-
-.emotion-4.Mui-disabled {
-  opacity: 1;
-  -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
-}
-
-.emotion-4:-webkit-autofill {
-  -webkit-animation-duration: 5000s;
-  animation-duration: 5000s;
-  -webkit-animation-name: mui-auto-fill;
-  animation-name: mui-auto-fill;
-}
-
-.emotion-5 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  position: relative;
-  min-width: 0;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  vertical-align: top;
-  margin-top: 18px;
-  min-width: 240px;
-}
-
-.emotion-7 {
+.emotion-6 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -426,11 +346,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   font-size: 1.1607rem;
 }
 
-.emotion-7 iconButton {
+.emotion-6 iconButton {
   margin-right: 8px;
 }
 
-.emotion-8 {
+.emotion-7 {
   line-height: 1.4375em;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -450,16 +370,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   position: relative;
 }
 
-.emotion-8.Mui-disabled {
+.emotion-7.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
 }
 
-label+.emotion-8 {
+label+.emotion-7 {
   margin-top: 16px;
 }
 
-.emotion-8:after {
+.emotion-7:after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -475,26 +395,26 @@ label+.emotion-8 {
   pointer-events: none;
 }
 
-.emotion-8.Mui-focused:after {
+.emotion-7.Mui-focused:after {
   -webkit-transform: scaleX(1) translateX(0);
   -moz-transform: scaleX(1) translateX(0);
   -ms-transform: scaleX(1) translateX(0);
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-8.Mui-error:before,
-.emotion-8.Mui-error:after {
+.emotion-7.Mui-error:before,
+.emotion-7.Mui-error:after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-8.Mui-error:focus-within:after {
+.emotion-7.Mui-error:focus-within:after {
   -webkit-transform: scaleX(1);
   -moz-transform: scaleX(1);
   -ms-transform: scaleX(1);
   transform: scaleX(1);
 }
 
-.emotion-8:before {
+.emotion-7:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -506,79 +426,192 @@ label+.emotion-8 {
   pointer-events: none;
 }
 
-.emotion-8:hover:not(.Mui-disabled, .Mui-error):before {
+.emotion-7:hover:not(.Mui-disabled, .Mui-error):before {
   border-bottom: 1px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
-  .emotion-8:hover:not(.Mui-disabled, .Mui-error):before {
+  .emotion-7:hover:not(.Mui-disabled, .Mui-error):before {
     border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   }
 }
 
-.emotion-8.Mui-disabled:before {
+.emotion-7.Mui-disabled:before {
   border-bottom-style: dotted;
 }
 
-.emotion-8:before {
+.emotion-7:before {
   border-bottom: 1px solid rgb(224, 224, 224);
 }
 
-.emotion-8:hover:not($disabled):before {
+.emotion-7:hover:not($disabled):before {
   border-bottom: 2px solid #337a87!important;
 }
 
-.emotion-8:after {
+.emotion-7:after {
   border-bottom: 2px solid #337a87;
+}
+
+.emotion-9.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-9:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
+.emotion-9 .MuiAutocomplete-tag {
+  margin: 3px;
+  max-width: calc(100% - 6px);
+}
+
+.emotion-9 .MuiAutocomplete-inputRoot {
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.MuiAutocomplete-hasPopupIcon.emotion-9 .MuiAutocomplete-inputRoot,
+.MuiAutocomplete-hasClearIcon.emotion-9 .MuiAutocomplete-inputRoot {
+  padding-right: 30px;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-9 .MuiAutocomplete-inputRoot {
+  padding-right: 56px;
+}
+
+.emotion-9 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
+  width: 0;
+  min-width: 30px;
+}
+
+.emotion-9 .MuiInput-root {
+  padding-bottom: 1px;
+}
+
+.emotion-9 .MuiInput-root .MuiInput-input {
+  padding: 4px 4px 4px 0px;
+}
+
+.emotion-9 .MuiInput-root.MuiInputBase-sizeSmall .MuiInput-input {
+  padding: 2px 4px 3px 0;
+}
+
+.emotion-9 .MuiOutlinedInput-root {
+  padding: 9px;
+}
+
+.MuiAutocomplete-hasPopupIcon.emotion-9 .MuiOutlinedInput-root,
+.MuiAutocomplete-hasClearIcon.emotion-9 .MuiOutlinedInput-root {
+  padding-right: 39px;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-9 .MuiOutlinedInput-root {
+  padding-right: 65px;
+}
+
+.emotion-9 .MuiOutlinedInput-root .MuiAutocomplete-input {
+  padding: 7.5px 4px 7.5px 6px;
+}
+
+.emotion-9 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
+  right: 9px;
+}
+
+.emotion-9 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
+}
+
+.emotion-9 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding: 2.5px 4px 2.5px 6px;
+}
+
+.emotion-9 .MuiFilledInput-root {
+  padding-top: 19px;
+  padding-left: 8px;
+}
+
+.MuiAutocomplete-hasPopupIcon.emotion-9 .MuiFilledInput-root,
+.MuiAutocomplete-hasClearIcon.emotion-9 .MuiFilledInput-root {
+  padding-right: 39px;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-9 .MuiFilledInput-root {
+  padding-right: 65px;
+}
+
+.emotion-9 .MuiFilledInput-root .MuiFilledInput-input {
+  padding: 7px 4px;
+}
+
+.emotion-9 .MuiFilledInput-root .MuiAutocomplete-endAdornment {
+  right: 9px;
+}
+
+.emotion-9 .MuiFilledInput-root.MuiInputBase-sizeSmall {
+  padding-bottom: 1px;
+}
+
+.emotion-9 .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input {
+  padding: 2.5px 4px;
+}
+
+.emotion-9 .MuiInputBase-hiddenLabel {
+  padding-top: 8px;
+}
+
+.emotion-9 .MuiAutocomplete-input {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  opacity: 1;
 }
 
 <div>
   <div
     class="flexbox column"
-    style="max-width: 400px;"
   >
+    <div />
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-0"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-focused MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-1"
+        data-shrink="true"
+        for="mui-1"
+        id="mui-1-label"
+      >
+        Destination directory where the file will be installed on your devices
+      </label>
+      <div
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl emotion-2"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiInput-input emotion-3"
+          id="mui-1"
+          placeholder="Example: /opt/installed-by-single-file"
+          style="margin-top: 16px;"
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
     <h4>
       Artifact information
     </h4>
     <div
-      class="MuiAutocomplete-root emotion-0"
-    >
-      <div
-        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root device-types-input emotion-1"
-      >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-2"
-          data-shrink="false"
-          for="compatible-device-type-selection"
-          id="compatible-device-type-selection-label"
-        >
-          Device types compatible
-        </label>
-        <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-3"
-        >
-          <input
-            aria-autocomplete="list"
-            aria-expanded="false"
-            aria-invalid="false"
-            autocapitalize="none"
-            autocomplete="off"
-            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-4"
-            id="compatible-device-type-selection"
-            placeholder="Enter all device types this software is compatible with"
-            role="combobox"
-            spellcheck="false"
-            type="text"
-            value=""
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="MuiFormControl-root emotion-5"
+      class="MuiFormControl-root emotion-4"
     >
       <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-2"
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-5"
         data-shrink="false"
         for="release-name"
         style="align-items: center; display: flex;"
@@ -586,7 +619,7 @@ label+.emotion-8 {
         Release name
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall emotion-7"
+          class="MuiSvgIcon-root margin-left-small MuiSvgIcon-fontSizeSmall emotion-6"
           data-mui-internal-clone-element="true"
           data-testid="InfoOutlinedIcon"
           focusable="false"
@@ -598,16 +631,50 @@ label+.emotion-8 {
         </svg>
       </label>
       <div
-        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl release-name-input emotion-8"
+        class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl release-name-input emotion-7"
       >
         <input
           aria-invalid="false"
-          class="MuiInputBase-input MuiInput-input emotion-4"
+          class="MuiInputBase-input MuiInput-input emotion-3"
           id="release-name"
           placeholder="A descriptive name for the software"
           type="text"
           value=""
         />
+      </div>
+    </div>
+    <div
+      class="MuiAutocomplete-root emotion-9"
+    >
+      <div
+        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root device-types-input emotion-0"
+      >
+        <label
+          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-5"
+          data-shrink="false"
+          for="compatible-device-type-selection"
+          id="compatible-device-type-selection-label"
+        >
+          Device types compatible
+        </label>
+        <div
+          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-2"
+        >
+          <input
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-invalid="false"
+            autocapitalize="none"
+            autocomplete="off"
+            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-3"
+            id="compatible-device-type-selection"
+            placeholder="Enter all device types this software is compatible with"
+            role="combobox"
+            spellcheck="false"
+            type="text"
+            value=""
+          />
+        </div>
       </div>
     </div>
   </div>

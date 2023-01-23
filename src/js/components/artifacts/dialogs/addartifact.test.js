@@ -35,6 +35,7 @@ describe('AddArtifact Component', () => {
     const ui = (
       <Provider store={store}>
         <AddArtifact
+          createArtifact={jest.fn}
           onboardingState={{ complete: false }}
           onUploadStarted={jest.fn}
           onUploadFinished={jest.fn}
@@ -46,14 +47,14 @@ describe('AddArtifact Component', () => {
       </Provider>
     );
     const { rerender } = render(ui);
-    expect(screen.getByText(/Upload a pre-built .mender Artifact/i)).toBeInTheDocument();
+    expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
     userEvent.upload(uploadInput, menderFile);
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.getByRole('button', { name: /upload/i })).toBeInTheDocument());
-    expect(screen.getByDisplayValue('test.mender')).toBeInTheDocument();
+    expect(screen.getByText('test.mender')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only
     expect(screen.getByText('11.00 Bytes')).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: /upload/i }));
@@ -62,7 +63,7 @@ describe('AddArtifact Component', () => {
 
   it('allows creating a mender artifact', async () => {
     const uploadMock = jest.fn(() => Promise.resolve());
-    const menderFile = new File(['testContent plain'], 'test.txt');
+    const menderFile = new File(['testContent plain'], 'testFile.txt');
     const ui = (
       <Provider store={store}>
         <AddArtifact
@@ -78,7 +79,7 @@ describe('AddArtifact Component', () => {
       </Provider>
     );
     const { rerender } = render(ui);
-    expect(screen.getByText(/Upload a pre-built .mender Artifact/i)).toBeInTheDocument();
+    expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
     userEvent.upload(uploadInput, menderFile);
@@ -86,7 +87,7 @@ describe('AddArtifact Component', () => {
     await waitFor(() => rerender(ui));
     const placeholderText = 'Example: /opt/installed-by-single-file';
     await waitFor(() => expect(screen.getByPlaceholderText(placeholderText)).toBeInTheDocument());
-    expect(screen.getByDisplayValue('test.txt')).toBeInTheDocument();
+    expect(screen.getByText('testFile.txt')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only
     expect(screen.getByText('17.00 Bytes')).toBeInTheDocument();
     userEvent.click(screen.getByPlaceholderText(placeholderText));
@@ -95,11 +96,11 @@ describe('AddArtifact Component', () => {
     userEvent.click(screen.getByPlaceholderText(placeholderText));
     userEvent.clear(screen.getByPlaceholderText(placeholderText));
     userEvent.type(screen.getByPlaceholderText(placeholderText), '/some/path');
-    // await waitFor(() => rerender(ui));
-    userEvent.click(screen.getByRole('button', { name: /next/i }));
     await waitFor(() => expect(screen.getByRole('combobox', { name: /device types compatible/i })).toBeInTheDocument());
     userEvent.type(screen.getByRole('combobox', { name: /device types compatible/i }), 'something');
     userEvent.type(screen.getByRole('textbox', { name: /release name/i }), 'some release');
+    // await waitFor(() => rerender(ui));
+    userEvent.click(screen.getByRole('button', { name: /next/i }));
     await waitFor(() => rerender(ui));
     userEvent.click(screen.getByRole('button', { name: /upload/i }));
     expect(uploadMock).toHaveBeenCalled();

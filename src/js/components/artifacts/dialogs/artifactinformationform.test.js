@@ -6,7 +6,7 @@ import ArtifactInformationForm, { ReleaseTooltip } from './artifactinformationfo
 
 describe('ArtifactInformationForm Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<ArtifactInformationForm customDeviceTypes={[]} onboardingState={{ complete: false }} />);
+    const { baseElement } = render(<ArtifactInformationForm activeStep={0} deviceTypes={[]} updateCreation={jest.fn} onboardingState={{ complete: false }} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
