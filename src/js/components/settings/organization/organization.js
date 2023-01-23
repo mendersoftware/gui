@@ -25,7 +25,6 @@ import ExpandableAttribute from '../../common/expandable-attribute';
 import { MenderTooltipClickable } from '../../common/mendertooltip';
 import Billing from './billing';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
-import ReportingLimits from './reportinglimits';
 import { SAMLConfig } from './samlconfig';
 
 const useStyles = makeStyles()(theme => ({
@@ -86,7 +85,6 @@ export const Organization = ({
   downloadLicenseReport,
   getSamlConfigs,
   getUserOrganization,
-  hasReporting,
   isAdmin,
   isEnterprise,
   isHosted,
@@ -166,7 +164,6 @@ export const Organization = ({
           }
           sideBarContent={<CopyTextToClipboard token={org.tenant_token} />}
         />
-        {hasReporting && <ReportingLimits />}
       </List>
       {isEnterprise && isAdmin && (
         <div className="flexbox center-aligned">
