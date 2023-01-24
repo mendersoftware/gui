@@ -64,7 +64,7 @@ export const Devices = ({
       return;
     }
     getSystemDevices(device.id, { perPage: 500 });
-  }, [device.id]);
+  }, [device.id, device.attributes?.mender_is_gateway]);
 
   const deploymentSettingsUpdate = (e, value) => setDeploymentSettings({ group: value });
 

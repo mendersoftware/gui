@@ -1076,17 +1076,20 @@ const prepareSearchArguments = ({ filters, group, state, status }) => {
 };
 
 export const getSystemDevices =
-  (id, gatewaySystemId, options = {}) =>
+  (id, options = {}) =>
   (dispatch, getState) => {
     const { page = defaultPage, perPage = defaultPerPage, sortOptions = [] } = options;
     const state = getState();
+    let device = state.devices.byId[id];
+    const { attributes: deviceAttributes = {} } = device;
+    const { mender_gateway_system_id } = deviceAttributes;
     const { hasFullFiltering } = getTenantCapabilities(state);
     if (!hasFullFiltering) {
       return Promise.resolve();
     }
     const filters = [
       { ...emptyFilter, key: 'mender_is_gateway', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: 'true', scope: 'inventory' },
-      { ...emptyFilter, key: 'mender_gateway_system_id', value: gatewaySystemId, scope: 'inventory' }
+      { ...emptyFilter, key: 'mender_gateway_system_id', value: mender_gateway_system_id, scope: 'inventory' }
     ];
     const { attributes, filterTerms } = prepareSearchArguments({ filters, state });
 
@@ -1135,9 +1138,8 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
     filters: filterTerms,
     attributes: attributeSelection
   }).then(({ data }) => {
-    let tasks = [];
     const { ids } = reduceReceivedDevices(data, [], getState());
-    ids.map(deviceId => tasks.push(dispatch(getDeviceInfo(deviceId))));
+    let tasks = ids.map(deviceId => dispatch(getDeviceInfo(deviceId)));
     tasks.push(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...getState().devices.byId[deviceId], gatewayIds: ids } }));
     return Promise.all(tasks);
   });

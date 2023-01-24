@@ -62,9 +62,9 @@ export const DeviceSystem = ({
 
   useEffect(() => {
     if (device.attributes) {
-      getSystemDevices(device.id, device.attributes.mender_gateway_system_id, { page, perPage, sortOptions });
+      getSystemDevices(device.id, { page, perPage, sortOptions });
     }
-  }, [device.id, page, perPage, sortOptions]);
+  }, [device.id, device.attributes?.mender_is_gateway, page, perPage, sortOptions]);
 
   const onDeviceClick = (device = {}) => navigate(`/devices/${device.status}?id=${device.id}&open=true`);
 
