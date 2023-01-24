@@ -26,7 +26,7 @@ const attributeComponentMap = {
 const adornments = [
   {
     component: GatewayConnectionIcon,
-    isApplicable: ({ attributes = {} }) => !stringToBoolean(attributes.mender_is_gateway) && attributes.mender_gateway_system_id !== ''
+    isApplicable: ({ attributes = {} }) => !stringToBoolean(attributes.mender_is_gateway) && !!attributes.mender_gateway_system_id
   },
   { component: GatewayIcon, isApplicable: ({ attributes = {} }) => stringToBoolean(attributes.mender_is_gateway) }
 ];
