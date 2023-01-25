@@ -4,7 +4,7 @@ import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
-import { startTimeSort } from '../helpers';
+import { isEmpty, startTimeSort } from '../helpers';
 import Tracking from '../tracking';
 import { saveGlobalSettings } from './userActions';
 
@@ -278,4 +278,91 @@ export const setDeploymentsState = selection => (dispatch, getState) => {
     tasks.push(dispatch(getSingleDeployment(nextState.selectedId)));
   }
   return Promise.all(tasks);
+};
+
+const deltaAttributeMappings = [
+  { here: 'compressionLevel', there: 'compression_level' },
+  { here: 'disableChecksum', there: 'disable_checksum' },
+  { here: 'disableDecompression', there: 'disable_external_decompression' },
+  { here: 'sourceWindow', there: 'source_window_size' },
+  { here: 'inputWindow', there: 'input_window_size' },
+  { here: 'duplicatesWindow', there: 'compression_duplicates_window' },
+  { here: 'instructionBuffer', there: 'instruction_buffer_size' }
+];
+
+const mapExternalDeltaConfig = (config = {}) =>
+  deltaAttributeMappings.reduce((accu, { here, there }) => {
+    if (config[there] !== undefined) {
+      accu[here] = config[there];
+    }
+    return accu;
+  }, {});
+
+export const getDeploymentsConfig = () => (dispatch, getState) =>
+  GeneralApi.get(`${deploymentsApiUrl}/config`).then(({ data }) => {
+    const oldConfig = getState().deployments.config;
+    const { delta = {} } = data;
+    const { binary_delta = {}, binary_delta_limits = {} } = delta;
+    const { xdelta_args = {}, timeout: timeoutConfig = oldConfig.binaryDelta.timeout } = binary_delta;
+    const { xdelta_args_limits = {}, timeout: timeoutLimit = oldConfig.binaryDeltaLimits.timeout } = binary_delta_limits;
+    const config = {
+      ...oldConfig,
+      hasDelta: Boolean(delta.enabled),
+      binaryDelta: {
+        ...oldConfig.binaryDelta,
+        timeout: timeoutConfig,
+        ...mapExternalDeltaConfig(xdelta_args)
+      },
+      binaryDeltaLimits: {
+        ...oldConfig.binaryDeltaLimits,
+        timeout: timeoutLimit,
+        ...mapExternalDeltaConfig(xdelta_args_limits)
+      }
+    };
+    return Promise.resolve(dispatch({ type: DeploymentConstants.SET_DEPLOYMENTS_CONFIG, config }));
+  });
+
+// traverse a source object and remove undefined & empty object properties to only return an attribute if there really is content worth sending
+const deepClean = source =>
+  Object.entries(source).reduce((accu, [key, value]) => {
+    if (value !== undefined) {
+      let cleanedValue = typeof value === 'object' ? deepClean(value) : value;
+      if (cleanedValue === undefined || (typeof cleanedValue === 'object' && isEmpty(cleanedValue))) {
+        return accu;
+      }
+      accu = { ...(accu ?? {}), [key]: cleanedValue };
+    }
+    return accu;
+  }, undefined);
+
+export const saveDeltaDeploymentsConfig = config => (dispatch, getState) => {
+  const configChange = {
+    timeout: config.timeout,
+    xdelta_args: deltaAttributeMappings.reduce((accu, { here, there }) => {
+      if (config[here] !== undefined) {
+        accu[there] = config[here];
+      }
+      return accu;
+    }, {})
+  };
+  const result = deepClean(configChange);
+  if (!result) {
+    return Promise.resolve();
+  }
+  return GeneralApi.put(`${deploymentsApiUrl}/config/binary_delta`, result)
+    .catch(err => commonErrorHandler(err, 'There was a problem storing your delta artifact generation configuration.', dispatch))
+    .then(() => {
+      const oldConfig = getState().deployments.config;
+      const newConfig = {
+        ...oldConfig,
+        binaryDelta: {
+          ...oldConfig.binaryDelta,
+          ...config
+        }
+      };
+      return Promise.all([
+        dispatch({ type: DeploymentConstants.SET_DEPLOYMENTS_CONFIG, config: newConfig }),
+        dispatch(setSnackbar('Settings saved successfully'))
+      ]);
+    });
 };

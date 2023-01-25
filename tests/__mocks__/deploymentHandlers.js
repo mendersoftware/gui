@@ -2,11 +2,41 @@ import { rest } from 'msw';
 
 import { deploymentsApiUrl, deploymentsApiUrlV2 } from '../../src/js/actions/deploymentActions';
 import { headerNames } from '../../src/js/api/general-api';
+import { limitDefault } from '../../src/js/constants/deploymentConstants';
 import { defaultState } from '../mockData';
 
 const createdDeployment = {
   ...defaultState.deployments.byId.d1,
   id: 'created-123'
+};
+
+const defaultDeploymentConfig = {
+  delta: {
+    enabled: true,
+    binary_delta: {
+      xdelta_args: {
+        disable_checksum: false,
+        disable_external_decompression: false,
+        compression_level: 6,
+        source_window_size: 0,
+        input_window_size: 0,
+        compression_duplicates_window: 0,
+        instruction_buffer_size: 0
+      },
+      timeout: 0
+    },
+    binary_delta_limits: {
+      xdelta_args_limits: {
+        source_window_size: limitDefault,
+        input_window_size: limitDefault,
+        compression_duplicates_window: limitDefault,
+        instruction_buffer_size: limitDefault
+      },
+      timeout: { min: 60, max: 3600, default: 60 },
+      jobs_in_parallel: limitDefault,
+      queue_length: limitDefault
+    }
+  }
 };
 
 export const deploymentHandlers = [
@@ -102,5 +132,9 @@ export const deploymentHandlers = [
       );
     }
     return res(ctx.status(529));
-  })
+  }),
+  rest.get(`${deploymentsApiUrl}/config`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(defaultDeploymentConfig));
+  }),
+  rest.put(`${deploymentsApiUrl}/config/binary_delta`, (req, res, ctx) => res(ctx.status(200)))
 ];
