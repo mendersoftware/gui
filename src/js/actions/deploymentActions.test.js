@@ -10,7 +10,9 @@ import {
   createDeployment,
   getDeploymentDevices,
   getDeploymentsByStatus,
+  getDeploymentsConfig,
   getDeviceLog,
+  saveDeltaDeploymentsConfig,
   setDeploymentsState,
   updateDeploymentControlMap
 } from './deploymentActions';
@@ -21,6 +23,26 @@ const mockStore = configureMockStore(middlewares);
 const createdDeployment = {
   ...defaultState.deployments.byId.d1,
   id: 'created-123'
+};
+const deploymentsConfig = {
+  binaryDelta: {
+    compressionLevel: 6,
+    disableChecksum: false,
+    disableDecompression: false,
+    duplicatesWindow: 0,
+    inputWindow: 0,
+    instructionBuffer: 0,
+    sourceWindow: 0,
+    timeout: 0
+  },
+  binaryDeltaLimits: {
+    duplicatesWindow: DeploymentConstants.limitDefault,
+    inputWindow: DeploymentConstants.limitDefault,
+    instructionBuffer: DeploymentConstants.limitDefault,
+    sourceWindow: DeploymentConstants.limitDefault,
+    timeout: { default: 60, max: 3600, min: 60 }
+  },
+  hasDelta: true
 };
 
 const defaultResponseActions = {
@@ -266,5 +288,39 @@ describe('deployment actions', () => {
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
+  it('should allow retrieving config for deployments', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: DeploymentConstants.SET_DEPLOYMENTS_CONFIG, config: deploymentsConfig }];
+    return store.dispatch(getDeploymentsConfig()).then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions.length).toEqual(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
+  it('should allow storing delta deployments settings', async () => {
+    const store = mockStore({ ...defaultState });
+    const changedConfig = {
+      timeout: 100,
+      duplicatesWindow: 734,
+      compressionLevel: 5,
+      disableChecksum: true,
+      disableDecompression: false,
+      inputWindow: 1253,
+      instructionBuffer: 123,
+      sourceWindow: 13
+    };
+    // eslint-disable-next-line no-unused-vars
+    const { hasDelta, ...expectedConfig } = deploymentsConfig;
+    const expectedActions = [
+      { type: DeploymentConstants.SET_DEPLOYMENTS_CONFIG, config: { ...expectedConfig, binaryDelta: { ...expectedConfig.binaryDelta, ...changedConfig } } },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { maxWidth: '900px', message: 'Settings saved successfully', open: true } }
+    ];
+    return store.dispatch(saveDeltaDeploymentsConfig(changedConfig)).then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions.length).toEqual(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
   });
 });

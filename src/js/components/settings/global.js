@@ -11,9 +11,10 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
-import { getDocsVersion, getIdAttribute, getOfflineThresholdSettings, getTenantCapabilities, getUserRoles } from '../../selectors';
+import { getDocsVersion, getIdAttribute, getOfflineThresholdSettings, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import InfoHint from '../common/info-hint';
+import ArtifactGenerationSettings from './artifactgeneration';
 import ReportingLimits from './reportinglimits';
 
 const maxWidth = 750;
@@ -96,7 +97,6 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
 export const GlobalSettingsDialog = ({
   attributes,
   docsVersion,
-  hasMonitor,
   hasReporting,
   isAdmin,
   notificationChannelSettings,
@@ -106,7 +106,9 @@ export const GlobalSettingsDialog = ({
   onSaveClick,
   saveGlobalSettings,
   selectedAttribute,
-  settings
+  settings,
+  tenantCapabilities,
+  userCapabilities
 }) => {
   const [channelSettings, setChannelSettings] = useState(notificationChannelSettings);
   const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
@@ -117,6 +119,8 @@ export const GlobalSettingsDialog = ({
   const timer = useRef(false);
   const { classes } = useStyles();
   const { needsDeploymentConfirmation = false } = settings;
+  const { canDelta, hasMonitor } = tenantCapabilities;
+  const { canManageReleases } = userCapabilities;
 
   useEffect(() => {
     setChannelSettings(notificationChannelSettings);
@@ -178,6 +182,7 @@ export const GlobalSettingsDialog = ({
         <p className="help-content">Require confirmation on deployment creation</p>
         <Switch checked={needsDeploymentConfirmation} />
       </div>
+      {canManageReleases && canDelta && <ArtifactGenerationSettings />}
       {isAdmin &&
         hasMonitor &&
         Object.keys(alertChannels).map(channel => (
@@ -235,14 +240,15 @@ export const GlobalSettingsContainer = ({
   docsVersion,
   getDeviceAttributes,
   getGlobalSettings,
-  hasMonitor,
   hasReporting,
   isAdmin,
   notificationChannelSettings,
   offlineThresholdSettings,
   saveGlobalSettings,
   selectedAttribute,
-  settings
+  settings,
+  tenantCapabilities,
+  userCapabilities
 }) => {
   const [updatedSettings, setUpdatedSettings] = useState({ ...settings });
 
@@ -287,7 +293,6 @@ export const GlobalSettingsContainer = ({
     <GlobalSettingsDialog
       attributes={attributes}
       docsVersion={docsVersion}
-      hasMonitor={hasMonitor}
       hasReporting={hasReporting}
       isAdmin={isAdmin}
       notificationChannelSettings={notificationChannelSettings}
@@ -298,6 +303,8 @@ export const GlobalSettingsContainer = ({
       saveGlobalSettings={saveGlobalSettings}
       settings={settings}
       selectedAttribute={selectedAttribute}
+      tenantCapabilities={tenantCapabilities}
+      userCapabilities={userCapabilities}
     />
   );
 };
@@ -319,7 +326,6 @@ const mapStateToProps = state => {
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: id_attributes,
-    hasMonitor: getTenantCapabilities(state).hasMonitor,
     hasReporting: state.app.features.hasReporting,
     isAdmin: getUserRoles(state).isAdmin,
     devicesCount: Object.keys(state.devices.byId).length,
@@ -327,7 +333,9 @@ const mapStateToProps = state => {
     notificationChannelSettings: state.monitor.settings.global.channels,
     offlineThresholdSettings: getOfflineThresholdSettings(state),
     selectedAttribute: getIdAttribute(state).attribute,
-    settings: state.users.globalSettings
+    settings: state.users.globalSettings,
+    tenantCapabilities: getTenantCapabilities(state),
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

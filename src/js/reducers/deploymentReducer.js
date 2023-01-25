@@ -11,6 +11,25 @@ export const initialState = {
     pending: { deploymentIds: [], total: 0 },
     scheduled: { deploymentIds: [], total: 0 }
   },
+  config: {
+    binaryDelta: {
+      timeout: -1,
+      duplicatesWindow: -1,
+      compressionLevel: -1,
+      disableChecksum: false,
+      disableDecompression: false,
+      inputWindow: -1,
+      instructionBuffer: -1,
+      sourceWindow: -1
+    },
+    binaryDeltaLimits: {
+      timeout: { ...DeploymentConstants.limitDefault, default: 60, max: 3600, min: 60 },
+      sourceWindow: DeploymentConstants.limitDefault,
+      inputWindow: DeploymentConstants.limitDefault,
+      duplicatesWindow: DeploymentConstants.limitDefault,
+      instructionBuffer: DeploymentConstants.limitDefault
+    }
+  },
   deploymentDeviceLimit: 5000,
   selectedDeviceIds: [],
   selectionState: {
@@ -129,6 +148,11 @@ const deploymentReducer = (state = initialState, action) => {
       return {
         ...state,
         selectionState: action.state
+      };
+    case DeploymentConstants.SET_DEPLOYMENTS_CONFIG:
+      return {
+        ...state,
+        config: action.config
       };
     default:
       return state;

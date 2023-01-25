@@ -9,6 +9,7 @@ const {
   RECEIVE_DEPLOYMENT_DEVICE_LOG,
   RECEIVE_DEPLOYMENT_DEVICES,
   DEPLOYMENT_STATES,
+  SET_DEPLOYMENTS_CONFIG,
   SET_DEPLOYMENTS_STATE,
   REMOVE_DEPLOYMENT,
   CREATE_DEPLOYMENT
@@ -97,5 +98,9 @@ describe('deployment reducer', () => {
   it('should handle CREATE_DEPLOYMENT', async () => {
     expect(reducer(undefined, { type: CREATE_DEPLOYMENT, deployment: { name: 'test' }, deploymentId: 'test' }).byId.test.devices).toEqual({});
     expect(reducer(initialState, { type: CREATE_DEPLOYMENT, deployment: { name: 'test' }, deploymentId: 'a1' }).byStatus.pending.deploymentIds).toContain('a1');
+  });
+  it('should handle SET_DEPLOYMENTS_CONFIG', async () => {
+    expect(reducer(undefined, { type: SET_DEPLOYMENTS_CONFIG, config: { name: 'test' } }).config).toEqual({ name: 'test' });
+    expect(reducer(initialState, { type: SET_DEPLOYMENTS_CONFIG, config: { name: 'test' } }).config).toEqual({ name: 'test' });
   });
 });

@@ -99,6 +99,7 @@ export const SELECT_PENDING_DEPLOYMENTS = 'SELECT_PENDING_DEPLOYMENTS';
 export const SELECT_SCHEDULED_DEPLOYMENTS = 'SELECT_SCHEDULED_DEPLOYMENTS';
 export const SELECT_FINISHED_DEPLOYMENTS = 'SELECT_FINISHED_DEPLOYMENTS';
 export const SELECT_DEPLOYMENT = 'SELECT_DEPLOYMENT';
+export const SET_DEPLOYMENTS_CONFIG = 'SET_DEPLOYMENTS_CONFIG';
 export const SET_DEPLOYMENTS_STATE = 'SET_DEPLOYMENTS_STATE';
 export const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
 export const DEPLOYMENT_ROUTES = {
@@ -170,3 +171,4 @@ export const pauseMap = {
     followUp: installationSubstatesMap.reboot.pauseConfigurationIndicator
   }
 };
+export const limitDefault = { min: 5, max: 100, default: 10 };
