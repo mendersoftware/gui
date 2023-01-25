@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
 import * as AppConstants from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
+import * as DeviceConstants from '../constants/deviceConstants';
 import * as UserConstants from '../constants/userConstants';
 import {
   abortDeployment,
@@ -11,7 +12,9 @@ import {
   getDeploymentDevices,
   getDeploymentsByStatus,
   getDeploymentsConfig,
+  getDeviceDeployments,
   getDeviceLog,
+  resetDeviceDeployments,
   saveDeltaDeploymentsConfig,
   setDeploymentsState,
   updateDeploymentControlMap
@@ -247,6 +250,62 @@ describe('deployment actions', () => {
       expect(storeActions.length).toEqual(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
+  });
+  it('should allow device deployment history retrieval', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      {
+        type: DeviceConstants.RECEIVE_DEVICE,
+        device: {
+          ...defaultState.devices.byId.a1,
+          deploymentsCount: 34,
+          deviceDeployments: [
+            {
+              id: defaultState.deployments.byId.d1.id,
+              release: defaultState.deployments.byId.d1.artifact_name,
+              target: defaultState.deployments.byId.d1.name,
+              created: '2019-01-01T12:35:00.000Z',
+              finished: '2019-01-01T12:40:00.000Z',
+              status: 'noartifact',
+              route: DeploymentConstants.DEPLOYMENT_ROUTES.active.key,
+              deploymentStatus: 'inprogress'
+            }
+          ]
+        }
+      }
+    ];
+    await store.dispatch(getDeviceDeployments(defaultState.devices.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow device deployment history deletion', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      {
+        type: DeviceConstants.RECEIVE_DEVICE,
+        device: {
+          ...defaultState.devices.byId.a1,
+          deploymentsCount: 34,
+          deviceDeployments: [
+            {
+              id: defaultState.deployments.byId.d1.id,
+              release: defaultState.deployments.byId.d1.artifact_name,
+              target: defaultState.deployments.byId.d1.name,
+              created: '2019-01-01T12:35:00.000Z',
+              finished: '2019-01-01T12:40:00.000Z',
+              status: 'noartifact',
+              route: DeploymentConstants.DEPLOYMENT_ROUTES.active.key,
+              deploymentStatus: 'inprogress'
+            }
+          ]
+        }
+      }
+    ];
+    await store.dispatch(resetDeviceDeployments(defaultState.devices.byId.a1.id));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should allow updating a deployment to continue the execution', async () => {
     const store = mockStore({ ...defaultState });
