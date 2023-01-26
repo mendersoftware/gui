@@ -575,8 +575,12 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   />
                 </span>
               </div>
-              <div>
-                a1
+              <div
+                class="flexbox space-between"
+              >
+                <div>
+                  a1
+                </div>
               </div>
               <div
                 title="raspberrypi4"
@@ -645,8 +649,12 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   />
                 </span>
               </div>
-              <div>
-                b1
+              <div
+                class="flexbox space-between"
+              >
+                <div>
+                  b1
+                </div>
               </div>
               <div
                 title="qemux86-64"

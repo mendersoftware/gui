@@ -15,7 +15,7 @@ import { saveUserSettings, updateUserColumnSettings } from '../../actions/userAc
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { duplicateFilter, isEmpty, toggle } from '../../helpers';
+import { duplicateFilter, toggle } from '../../helpers';
 import {
   getAvailableIssueOptionsByType,
   getFeatures,
@@ -158,11 +158,18 @@ export const Authorized = props => {
     updateUserColumnSettings,
     userCapabilities
   } = props;
-  const { refreshTrigger, selectedId, selectedIssues = [], isLoading: pageLoading, selection: selectedRows, sort = {}, state: selectedState } = deviceListState;
+  const {
+    refreshTrigger,
+    selectedId,
+    selectedIssues = [],
+    isLoading: pageLoading,
+    selection: selectedRows,
+    sort = {},
+    state: selectedState,
+    detailsTab: tabSelection
+  } = deviceListState;
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const { canManageDevices } = userCapabilities;
-
-  const { hasReporting } = features;
   const { hasMonitor } = tenantCapabilities;
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState([]);
@@ -317,20 +324,9 @@ export const Authorized = props => {
     setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger });
   };
 
-  const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) => {
-    setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
-  };
+  const setDetailsTab = detailsTab => setDeviceListState({ detailsTab, setOnly: true });
 
-  const onSelectAllIssues = shouldSelectAll => {
-    const selectedIssues = shouldSelectAll
-      ? Object.entries(DEVICE_ISSUE_OPTIONS).reduce((accu, [key, { needsReporting }]) => {
-          if (needsReporting && !hasReporting) {
-            return accu;
-          }
-          accu.push(key);
-          return accu;
-        }, [])
-      : [];
+  const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) => {
     setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
   };
 
@@ -338,7 +334,7 @@ export const Authorized = props => {
     if (!onboardingState.complete && selection.length) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
-    setDeviceListState({ selection });
+    setDeviceListState({ selection, setOnly: true });
   };
 
   const onToggleCustomizationClick = () => setShowCustomization(toggle);
@@ -408,12 +404,7 @@ export const Authorized = props => {
             <div className="flexbox">
               <DeviceStateSelection onStateChange={onDeviceStateSelectionChange} selectedState={selectedState} states={states} />
               {hasMonitor && (
-                <DeviceIssuesSelection
-                  onChange={onDeviceIssuesSelectionChange}
-                  onSelectAll={onSelectAllIssues}
-                  options={Object.values(availableIssueOptions)}
-                  selection={selectedIssues}
-                />
+                <DeviceIssuesSelection onChange={onDeviceIssuesSelectionChange} options={Object.values(availableIssueOptions)} selection={selectedIssues} />
               )}
               {selectedGroup && !isUngroupedGroup && (
                 <div className="margin-left muted flexbox centered">
@@ -501,6 +492,8 @@ export const Authorized = props => {
         onMakeGatewayClick={onMakeGatewayClick}
         onRemoveDevicesFromGroup={onRemoveDevicesFromGroup}
         refreshDevices={refreshDevices}
+        setDetailsTab={setDetailsTab}
+        tabSelection={tabSelection}
       />
       {!selectedId && onboardingComponent ? onboardingComponent : null}
       {canManageDevices && !!selectedRows.length && (
@@ -548,9 +541,6 @@ const mapStateToProps = state => {
   if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
     selectedGroup = state.devices.groups.selectedGroup;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
-  } else if (!isEmpty(state.devices.selectedDevice)) {
-    devices = getMappedDevicesList(state, 'selectedDevice');
-    deviceCount = 1;
   }
   const { columnSelection = [] } = getUserSettings(state);
   return {

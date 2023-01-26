@@ -59,6 +59,7 @@ export const Deployments = ({
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const tabsRef = useRef();
+  const isInitialized = useRef(false);
   const navigate = useNavigate();
   const { reportType, showCreationDialog: createDialog, showReportDialog: reportDialog, state } = selectionState.general;
   const { canDeploy, canReadReleases } = userCapabilities;
@@ -69,6 +70,9 @@ export const Deployments = ({
   const [locationParams, setLocationParams] = useLocationParams('deployments', { today, tonight, defaults: listDefaultsByState });
 
   useEffect(() => {
+    if (!isInitialized.current) {
+      return;
+    }
     setLocationParams({ deploymentObject, pageState: selectionState });
   }, [
     selectionState.selectedId,
@@ -93,12 +97,13 @@ export const Deployments = ({
     if (isEnterprise) {
       getDynamicGroups();
     }
-    const { deploymentObject = {}, id: selectedId, ...remainder } = locationParams;
-    const { device: deviceId, release: releaseName } = deploymentObject;
+    const { deploymentObject = {}, id: selectedId = [], ...remainder } = locationParams;
+    const { devices: selectedDevices = [], release: releaseName } = deploymentObject;
     const release = releaseName ? { ...releases[releaseName] } : undefined;
-    const device = deviceId ? { ...devicesById[deviceId] } : undefined;
-    setDeploymentObject({ device, release });
-    setDeploymentsState({ selectedId, ...remainder });
+    const devices = selectedDevices.length ? selectedDevices.map(device => ({ ...device, ...devicesById[device.id] })) : [];
+    setDeploymentObject({ devices, release });
+    setDeploymentsState({ selectedId: selectedId[0], ...remainder });
+    isInitialized.current = true;
   }, []);
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
@@ -110,7 +115,7 @@ export const Deployments = ({
           update_control_map: { states: update_control_map.states || {} }
         }
       : {};
-    const targetDevicesConfig = name === ALL_DEVICES || groupsById[name] ? { group: name } : { device: devicesById[name] };
+    const targetDevicesConfig = name === ALL_DEVICES || groupsById[name] ? { group: name } : { devices: [devicesById[name]] };
     const deploymentObject = {
       deploymentDeviceIds,
       release,

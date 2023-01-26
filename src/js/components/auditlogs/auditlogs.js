@@ -75,7 +75,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
     }
     let state = { ...locationParams, reset: !resetList };
     if (locationParams.id && Boolean(locationParams.open)) {
-      state.selectedId = locationParams.id;
+      state.selectedId = locationParams.id[0];
       const [eventAction, eventTime] = atob(state.selectedId).split('|');
       if (eventTime && !events.some(item => item.time === eventTime && item.action === eventAction)) {
         const { start, end } = getISOStringBoundaries(new Date(eventTime));

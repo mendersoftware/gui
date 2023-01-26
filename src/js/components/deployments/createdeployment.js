@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ import pluralize from 'pluralize';
 
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { createDeployment } from '../../actions/deploymentActions';
-import { getGroupDevices } from '../../actions/deviceActions';
+import { getGroupDevices, getSystemDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
@@ -120,40 +120,42 @@ export const CreateDeployment = props => {
   const { classes } = useStyles();
 
   useEffect(() => {
-    const searchConfig = deploymentObject.device?.attributes.device_type
-      ? { searchAttribute: 'device_type', searchTerm: deploymentObject.device.attributes.device_type[0] }
-      : {};
+    let searchConfig = {};
+    const { devices = [] } = deploymentObject;
+    if (devices.length) {
+      searchConfig = devices[0].attributes.device_type ? { searchAttribute: 'device_type', searchTerm: devices[0].attributes.device_type[0] } : searchConfig;
+    }
     getReleases({ page: 1, perPage: 100, searchOnly: true, ...searchConfig });
   }, []);
 
   useEffect(() => {
-    if (deploymentObject.release) {
+    const { devices = [], group, release } = deploymentObject;
+    if (release) {
       advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION);
     }
-    if (!deploymentObject.group) {
-      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
+    if (!group) {
+      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: devices.length ? devices.length : 0 });
       return;
     }
     advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION);
-    if (deploymentObject.group === ALL_DEVICES) {
+    if (group === ALL_DEVICES) {
       advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION);
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
       return;
     }
-    if (!groups[deploymentObject.group]) {
-      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: deploymentObject.device ? 1 : 0 });
+    if (!groups[group]) {
+      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: devices.length ? devices.length : 0 });
       return;
     }
-    getGroupDevices(deploymentObject.group, { perPage: 1 }).then(({ group: { total: deploymentDeviceCount } }) =>
+    getGroupDevices(group, { perPage: 1 }).then(({ group: { total: deploymentDeviceCount } }) =>
       setDeploymentObject(deploymentObject => ({ ...deploymentObject, deploymentDeviceCount }))
     );
   }, [deploymentObject.group, deploymentObject.release]);
 
   useEffect(() => {
-    let deviceIds = deploymentObject.deploymentDeviceIds || [];
-    let deviceCount = deploymentObject.deploymentDeviceCount;
-    if (deploymentObject.device) {
-      deviceIds = [deploymentObject.device.id];
+    let { deploymentDeviceCount: deviceCount, deploymentDeviceIds: deviceIds = [], devices = [] } = deploymentObject;
+    if (devices.length) {
+      deviceIds = devices.map(({ id }) => id);
       deviceCount = deviceIds.length;
     } else if (deploymentObject.group === ALL_DEVICES) {
       deviceCount = acceptedDeviceCount;
@@ -171,12 +173,7 @@ export const CreateDeployment = props => {
 
   const onSaveRetriesSetting = hasNewRetryDefault => setHasNewRetryDefault(hasNewRetryDefault);
 
-  const setDeploymentSettings = useCallback(
-    change => {
-      setDeploymentObject({ ...deploymentObject, ...change });
-    },
-    [JSON.stringify(deploymentObject)]
-  );
+  const setDeploymentSettings = change => setDeploymentObject(current => ({ ...current, ...change }));
 
   const closeWizard = () => {
     cleanUpDeploymentsStatus();
@@ -190,17 +187,17 @@ export const CreateDeployment = props => {
       return setIsChecking(true);
     }
     isCreating.current = true;
-    const { delta, deploymentDeviceIds, device, filterId, forceDeploy = false, group, phases, release, retries, update_control_map } = settings;
+    const { delta, deploymentDeviceIds, devices, filterId, forceDeploy = false, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts : undefined;
     const retrySetting = canRetry && retries ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
       autogenerate_delta: delta,
-      devices: (filterId || group) && !device ? undefined : deploymentDeviceIds,
+      devices: (filterId || group) && !devices.length ? undefined : deploymentDeviceIds,
       filter_id: filterId,
       all_devices: !filterId && group === ALL_DEVICES,
-      group: group === ALL_DEVICES || device ? undefined : group,
-      name: device?.id || (group ? decodeURIComponent(group) : ALL_DEVICES),
+      group: group === ALL_DEVICES || devices.length ? undefined : group,
+      name: devices[0]?.id || (group ? decodeURIComponent(group) : ALL_DEVICES),
       phases: phases
         ? phases.map((phase, i, origPhases) => {
             phase.start_ts = getPhaseStartTime(origPhases, i, startTime);
@@ -238,7 +235,7 @@ export const CreateDeployment = props => {
       });
   };
 
-  const { delta, deploymentDeviceCount, device, group, phases, release: deploymentRelease = null } = deploymentObject;
+  const { delta, deploymentDeviceCount, devices, group, phases, release: deploymentRelease = null } = deploymentObject;
 
   let onboardingComponent = null;
   if (releaseRef.current && groupRef.current && deploymentAnchor.current) {
@@ -261,11 +258,11 @@ export const CreateDeployment = props => {
         onboardingComponent
       );
     }
-    if (hasDevices && deploymentDeviceCount && deploymentRelease) {
+    if (hasDevices && deploymentDeviceCount && deploymentRelease && devices.length) {
       const buttonAnchor = getAnchor(deploymentAnchor.current, 2);
       onboardingComponent = getOnboardingComponentFor(
         onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
-        { ...onboardingState, selectedDevice: device, selectedGroup: group, selectedRelease: deploymentRelease },
+        { ...onboardingState, selectedDevice: devices[0], selectedGroup: group, selectedRelease: deploymentRelease },
         { anchor: buttonAnchor, place: 'right' },
         onboardingComponent
       );
@@ -358,7 +355,7 @@ export const CreateDeployment = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, saveGlobalSettings };
+const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, getSystemDevices, saveGlobalSettings };
 
 export const mapStateToProps = state => {
   const { canRetry, canSchedule } = getTenantCapabilities(state);

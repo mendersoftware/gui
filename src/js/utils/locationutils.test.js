@@ -25,7 +25,7 @@ describe('locationutils', () => {
       const startParams = new URLSearchParams('?perPage=234&id=123-324&open=true&sort=asc&issues=issueType1&issues=issueType2');
       const { pageState, params, sort } = commonProcessor(startParams);
       expect(sort).toEqual({ direction: 'asc' });
-      expect(pageState).toEqual({ id: '123-324', issues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
+      expect(pageState).toEqual({ id: ['123-324'], issues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
       expect(params.has('page')).not.toBeTruthy();
     });
     it('uses working utilities - formatPageState', () => {
@@ -137,7 +137,7 @@ describe('locationutils', () => {
           ...defaultArgs
         });
         expect(result).toEqual({
-          deploymentObject: { device: 'someDevice' },
+          deploymentObject: { devices: [{ id: 'someDevice' }] },
           general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.active.key }
         });
       });
@@ -201,10 +201,10 @@ describe('locationutils', () => {
       ]);
     });
     it('uses working utilties - parseDeviceQuery converts new style', () => {
-      const { groupName, filters } = parseDeviceQuery(new URLSearchParams('?inventory=some:eq:thing&inventory=group:eq:testgroup&identity=bla:neq:blubb'));
+      const { groupName, filters } = parseDeviceQuery(new URLSearchParams('?inventory=some:eq:thing&inventory=group:eq:testgroup&identity=bla:ne:blubb'));
       expect(groupName).toEqual('testgroup');
       expect(filters).toEqual([
-        { key: 'bla', operator: '$neq', scope: 'identity', value: 'blubb' },
+        { key: 'bla', operator: '$ne', scope: 'identity', value: 'blubb' },
         { key: 'some', operator: '$eq', scope: 'inventory', value: 'thing' }
       ]);
     });
@@ -244,6 +244,7 @@ describe('locationutils', () => {
     it('uses working utilties - formatDeviceSearch - with ungrouped selected', () => {
       const search = formatDeviceSearch({
         filters: [{ key: 'some', value: 'thing' }],
+        pageState: {},
         selectedGroup: UNGROUPED_GROUP.id
       });
       expect(search).toEqual('inventory=some:eq:thing&inventory=group:eq:Unassigned');

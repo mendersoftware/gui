@@ -28,6 +28,16 @@ describe('ExpandedDevice Component', () => {
       },
       devices: {
         ...defaultState.devices,
+        byId: {
+          ...defaultState.devices.byId,
+          [defaultState.devices.byId.a1.id]: {
+            ...defaultState.devices.byId.a1,
+            attributes: {
+              ...defaultState.devices.byId.a1.attributes,
+              mender_is_gateway: true
+            }
+          }
+        },
         groups: {
           ...defaultState.devices.groups,
           selectedGroup: 'testGroup'
@@ -50,7 +60,7 @@ describe('ExpandedDevice Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <ExpandedDevice deviceId={defaultState.devices.byId.a1.id} />
+        <ExpandedDevice deviceId={defaultState.devices.byId.a1.id} setDetailsTab={jest.fn} />
       </Provider>
     );
     const view = baseElement;

@@ -25,7 +25,7 @@ export const defaultTextRender = ({ column, device }) => {
 };
 
 export const getDeviceIdentityText = ({ device = {}, idAttribute }) => {
-  const { id, identity_data = {}, tags = {} } = device;
+  const { id = '', identity_data = {}, tags = {} } = device;
   // eslint-disable-next-line no-unused-vars
   const { status, ...remainingIds } = identity_data;
   const nonIdKey = Object.keys(remainingIds)[0];

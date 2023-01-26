@@ -71,8 +71,12 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
             href="/devices?id=a1"
             style="font-weight: initial; opacity: 1;"
           >
-            <div>
-              a1
+            <div
+              class="flexbox space-between"
+            >
+              <div>
+                a1
+              </div>
             </div>
           </a>
         </td>

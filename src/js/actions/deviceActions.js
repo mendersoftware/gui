@@ -20,7 +20,7 @@ import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbar
 import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
-const { DEVICE_STATES, DEVICE_LIST_DEFAULTS } = DeviceConstants;
+const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, emptyFilter } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const deviceAuthV2 = `${apiUrl.v2}/devauth`;
@@ -35,6 +35,8 @@ const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
   { scope: 'inventory', attribute: 'artifact_name' },
   { scope: 'inventory', attribute: 'device_type' },
+  { scope: 'inventory', attribute: 'mender_is_gateway' },
+  { scope: 'inventory', attribute: 'mender_gateway_system_id' },
   { scope: 'inventory', attribute: rootfsImageVersion },
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
@@ -57,7 +59,7 @@ export const getGroups = () => (dispatch, getState) =>
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
     }, {});
-    const filters = [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }];
+    const filters = [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }];
     return Promise.all([
       dispatch({ type: DeviceConstants.RECEIVE_GROUPS, groups }),
       dispatch(getDevicesByStatus(undefined, { filterSelection: filters, page: 1, perPage: 1 }))
@@ -75,7 +77,7 @@ export const getGroups = () => (dispatch, getState) =>
             deviceIds: [],
             total: 0,
             ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
-            filters: [{ key: 'group', value: res.data, operator: '$nin', scope: 'system' }]
+            filters: [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }]
           }
         })
       );
@@ -132,7 +134,7 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
         })
       ).then(() =>
         Promise.all([
-          dispatch(selectDevice()),
+          dispatch(setDeviceListState({ selectedId: undefined, setOnly: true })),
           dispatch(getGroups()),
           dispatch(setSnackbar(...getGroupNotification(group, getState().devices.groups.selectedGroup)))
         ])
@@ -169,7 +171,7 @@ const filterProcessors = {
   $nexists: () => false
 };
 const filterAliases = {
-  $nexists: { alias: '$exists', value: false }
+  $nexists: { alias: DEVICE_FILTERING_OPTIONS.$exists.key, value: false }
 };
 const mapFiltersToTerms = filters =>
   filters.map(filter => ({
@@ -287,34 +289,6 @@ export const selectGroup =
     tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
     return Promise.all(tasks);
   };
-
-export const selectDevice = (deviceId, status) => dispatch => {
-  if (deviceId) {
-    const tasks = [dispatch(getDeviceById(deviceId)), dispatch(getDeviceAuth(deviceId))];
-    return Promise.all(tasks)
-      .then(results => {
-        if (status && status !== results[1].status) {
-          return Promise.reject();
-        }
-        dispatch({
-          type: DeviceConstants.SELECT_DEVICE,
-          deviceId
-        });
-      })
-      .catch(err => {
-        dispatch(setDeviceListState({ deviceIds: [] }));
-        dispatch({ type: DeviceConstants.SELECT_DEVICE, deviceId: null });
-        commonErrorHandler(err, `Error fetching device details.`, dispatch);
-      });
-  }
-  return Promise.resolve(
-    dispatch({
-      type: DeviceConstants.SELECT_DEVICE,
-      deviceId
-    })
-  );
-};
-
 const getEarliestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA < dateB ? dateA : dateB);
 const getLatestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA >= dateB ? dateA : dateB);
 
@@ -376,11 +350,10 @@ export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, 
   if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
     return Promise.resolve();
   }
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
-  const { filterTerms } = convertDeviceListStateToFilters({
+  const { attributes, filterTerms } = prepareSearchArguments({
     filters: [],
     group,
-    offlineThreshold: getState().app.offlineThreshold,
+    state: getState(),
     status: shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted
   });
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
@@ -420,12 +393,11 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
   if (!!group && (!getState().devices.groups.byId[group] || !getState().devices.groups.byId[group].filters.length)) {
     return Promise.resolve();
   }
-  const { filterTerms: filters } = convertDeviceListStateToFilters({
+  const { attributes, filterTerms: filters } = prepareSearchArguments({
     filters: getState().devices.groups.byId[group].filters,
-    offlineThreshold: getState().app.offlineThreshold,
+    state: getState(),
     status: DEVICE_STATES.accepted
   });
-  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), { page, per_page: perPage, filters, attributes }).then(res => {
       const state = getState();
@@ -545,7 +517,7 @@ export const getDeviceCount = status => (dispatch, getState) =>
   GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page: 1,
     per_page: 1,
-    filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
+    filters: mapFiltersToTerms([{ key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]),
     attributes: defaultAttributes
   }).then(response => {
     const count = Number(response.headers[headerNames.total]);
@@ -577,6 +549,7 @@ export const setDeviceListState =
     const currentState = getState().devices.deviceList;
     let nextState = {
       ...currentState,
+      setOnly: false,
       ...selectionState,
       sort: { ...currentState.sort, ...selectionState.sort }
     };
@@ -585,7 +558,7 @@ export const setDeviceListState =
     const { isLoading: currentLoading, deviceIds: currentDevices, selection: currentSelection, ...currentRequestState } = currentState;
     // eslint-disable-next-line no-unused-vars
     const { isLoading: nextLoading, deviceIds: nextDevices, selection: nextSelection, ...nextRequestState } = nextState;
-    if (!deepCompare(currentRequestState, nextRequestState)) {
+    if (!nextState.setOnly && !deepCompare(currentRequestState, nextRequestState)) {
       const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = nextState.sort ?? {};
       const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
       if (sortCol && sortingAlternatives[sortCol]) {
@@ -598,12 +571,14 @@ export const setDeviceListState =
           .then(results => {
             const { deviceAccu, total } = results[results.length - 1];
             const devicesState = shouldSelectDevices
-              ? { ...nextState, deviceIds: deviceAccu.ids, total, isLoading: false }
-              : { ...nextState, isLoading: false };
+              ? { ...getState().devices.deviceList, deviceIds: deviceAccu.ids, total, isLoading: false }
+              : { ...getState().devices.deviceList, isLoading: false };
             return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: devicesState }));
           })
           // whatever happens, change "loading" back to null
-          .catch(() => Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { ...nextState, isLoading: false } })))
+          .catch(() =>
+            Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { ...getState().devices.deviceList, isLoading: false } }))
+          )
       );
     }
     tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: nextState }));
@@ -621,14 +596,19 @@ const convertIssueOptionsToFilters = (issuesSelection, filtersState = {}) =>
 export const convertDeviceListStateToFilters = ({ filters = [], group, groups = { byId: {} }, offlineThreshold, selectedIssues = [], status }) => {
   let applicableFilters = [...filters];
   if (typeof group === 'string' && !(groups.byId[group]?.filters || applicableFilters).length) {
-    applicableFilters.push({ key: 'group', value: group, operator: '$eq', scope: 'system' });
+    applicableFilters.push({ key: 'group', value: group, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'system' });
   }
   const nonMonitorFilters = applicableFilters.filter(
-    filter => !Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).some(({ filterRule }) => filterRule.scope === filter.scope && filterRule.key === filter.key)
+    filter =>
+      !Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).some(
+        ({ filterRule }) => filter.scope !== 'inventory' && filterRule.scope === filter.scope && filterRule.key === filter.key
+      )
   );
   const deviceIssueFilters = convertIssueOptionsToFilters(selectedIssues, { offlineThreshold });
   applicableFilters = [...nonMonitorFilters, ...deviceIssueFilters];
-  const effectiveFilters = status ? [...applicableFilters, { key: 'status', value: status, operator: '$eq', scope: 'identity' }] : applicableFilters;
+  const effectiveFilters = status
+    ? [...applicableFilters, { key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]
+    : applicableFilters;
   return { applicableFilters: nonMonitorFilters, filterTerms: mapFiltersToTerms(effectiveFilters) };
 };
 
@@ -693,7 +673,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
     GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
-      filters: mapFiltersToTerms([{ key: 'status', value: status, operator: '$eq', scope: 'identity' }]),
+      filters: mapFiltersToTerms([{ key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]),
       attributes
     }).then(res => {
       const state = getState();
@@ -735,7 +715,7 @@ export const searchDevices =
     const { columnSelection = [] } = getUserSettings(state);
     const selectedAttributes = columnSelection.map(column => ({ attribute: column.key, scope: column.scope }));
     const attributes = attributeDuplicateFilter(
-      [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute || 'id' }, ...selectedAttributes],
+      [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute }, ...selectedAttributes],
       'attribute'
     );
     return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
@@ -1061,3 +1041,81 @@ export const setDeviceTwin = (deviceId, integration, settings) => (dispatch, get
         })
       );
     });
+
+const prepareSearchArguments = ({ filters, group, state, status }) => {
+  const { filterTerms } = convertDeviceListStateToFilters({ filters, group, offlineThreshold: state.app.offlineThreshold, selectedIssues: [], status });
+  const { columnSelection = [] } = getUserSettings(state);
+  const selectedAttributes = columnSelection.map(column => ({ attribute: column.key, scope: column.scope }));
+  const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute }, ...selectedAttributes];
+  return { attributes, filterTerms };
+};
+
+export const getSystemDevices =
+  (id, options = {}) =>
+  (dispatch, getState) => {
+    const { page = defaultPage, perPage = defaultPerPage, sortOptions = [] } = options;
+    const state = getState();
+    let device = state.devices.byId[id];
+    const { attributes: deviceAttributes = {} } = device;
+    const { mender_gateway_system_id } = deviceAttributes;
+    const { hasFullFiltering } = getTenantCapabilities(state);
+    if (!hasFullFiltering) {
+      return Promise.resolve();
+    }
+    const filters = [
+      { ...emptyFilter, key: 'mender_is_gateway', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: 'true', scope: 'inventory' },
+      { ...emptyFilter, key: 'mender_gateway_system_id', value: mender_gateway_system_id, scope: 'inventory' }
+    ];
+    const { attributes, filterTerms } = prepareSearchArguments({ filters, state });
+
+    return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+      page,
+      per_page: perPage,
+      filters: filterTerms,
+      sort: sortOptions,
+      attributes
+    })
+      .catch(err => commonErrorHandler(err, `There was an error getting system devices device ${id}.`, dispatch, 'Please check your connection.'))
+      .then(({ data, headers }) => {
+        const state = getState();
+        const { devicesById, ids } = reduceReceivedDevices(data, [], state);
+        const device = {
+          ...state.devices.byId[id],
+          systemDeviceIds: ids,
+          systemDeviceTotal: Number(headers[headerNames.total])
+        };
+        return Promise.resolve(
+          dispatch({
+            type: DeviceConstants.RECEIVE_DEVICES,
+            devicesById: {
+              ...devicesById,
+              [id]: device
+            }
+          })
+        );
+      });
+  };
+
+export const getGatewayDevices = deviceId => (dispatch, getState) => {
+  const state = getState();
+  let device = state.devices.byId[deviceId];
+  const { attributes = {} } = device;
+  const { mender_gateway_system_id } = attributes;
+  const filters = [
+    { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: deviceId, scope: 'identity' },
+    { ...emptyFilter, key: 'mender_is_gateway', value: 'true', scope: 'inventory' },
+    { ...emptyFilter, key: 'mender_gateway_system_id', value: mender_gateway_system_id, scope: 'inventory' }
+  ];
+  const { attributes: attributeSelection, filterTerms } = prepareSearchArguments({ filters, state });
+  return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+    page: 1,
+    per_page: MAX_PAGE_SIZE,
+    filters: filterTerms,
+    attributes: attributeSelection
+  }).then(({ data }) => {
+    const { ids } = reduceReceivedDevices(data, [], getState());
+    let tasks = ids.map(deviceId => dispatch(getDeviceInfo(deviceId)));
+    tasks.push(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...getState().devices.byId[deviceId], gatewayIds: ids } }));
+    return Promise.all(tasks);
+  });
+};
