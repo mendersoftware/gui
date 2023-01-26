@@ -18,7 +18,6 @@ export const initialState = {
     [DeviceConstants.DEVICE_STATES.preauth]: { deviceIds: [], total: 0 },
     [DeviceConstants.DEVICE_STATES.rejected]: { deviceIds: [], total: 0 }
   },
-  selectedDevice: null,
   deviceList: {
     deviceIds: [],
     ...DeviceConstants.DEVICE_LIST_DEFAULTS,
@@ -153,8 +152,6 @@ const deviceReducer = (state = initialState, action) => {
           selectedGroup: action.group
         }
       };
-    case DeviceConstants.SELECT_DEVICE:
-      return { ...state, selectedDevice: action.deviceId };
     case DeviceConstants.SET_DEVICE_LIST_STATE:
       return { ...state, deviceList: action.state };
     case DeviceConstants.SET_FILTER_ATTRIBUTES:

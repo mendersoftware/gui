@@ -134,7 +134,7 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
         })
       ).then(() =>
         Promise.all([
-          dispatch(selectDevice()),
+          dispatch(setDeviceListState({ selectedId: undefined, setOnly: true })),
           dispatch(getGroups()),
           dispatch(setSnackbar(...getGroupNotification(group, getState().devices.groups.selectedGroup)))
         ])
@@ -289,34 +289,6 @@ export const selectGroup =
     tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
     return Promise.all(tasks);
   };
-
-export const selectDevice = (deviceId, status) => dispatch => {
-  if (deviceId) {
-    const tasks = [dispatch(getDeviceById(deviceId)), dispatch(getDeviceAuth(deviceId))];
-    return Promise.all(tasks)
-      .then(results => {
-        if (status && status !== results[1].status) {
-          return Promise.reject();
-        }
-        dispatch({
-          type: DeviceConstants.SELECT_DEVICE,
-          deviceId
-        });
-      })
-      .catch(err => {
-        dispatch(setDeviceListState({ deviceIds: [] }));
-        dispatch({ type: DeviceConstants.SELECT_DEVICE, deviceId: null });
-        commonErrorHandler(err, `Error fetching device details.`, dispatch);
-      });
-  }
-  return Promise.resolve(
-    dispatch({
-      type: DeviceConstants.SELECT_DEVICE,
-      deviceId
-    })
-  );
-};
-
 const getEarliestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA < dateB ? dateA : dateB);
 const getLatestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA >= dateB ? dateA : dateB);
 

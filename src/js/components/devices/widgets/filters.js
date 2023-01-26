@@ -5,7 +5,7 @@ import { Add as AddIcon } from '@mui/icons-material';
 // material ui
 import { Button, Chip, Collapse } from '@mui/material';
 
-import { getDeviceAttributes, selectDevice as resetIdFilter, setDeviceFilters } from '../../../actions/deviceActions';
+import { getDeviceAttributes, setDeviceFilters, setDeviceListState } from '../../../actions/deviceActions';
 import { saveGlobalSettings } from '../../../actions/userActions';
 import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
 import { deepCompare } from '../../../helpers';
@@ -36,10 +36,10 @@ export const Filters = ({
   open,
   plan,
   previousFilters,
-  resetIdFilter,
   saveGlobalSettings,
   selectedGroup,
-  setDeviceFilters
+  setDeviceFilters,
+  setDeviceListState
 }) => {
   const [adding, setAdding] = useState(isModification);
   const [newFilter, setNewFilter] = useState(emptyFilter);
@@ -76,6 +76,8 @@ export const Filters = ({
       saveGlobalSettings({ previousFilters: changedPreviousFilters.slice(-1 * MAX_PREVIOUS_FILTERS_COUNT) });
     }
   };
+
+  const resetIdFilter = () => setDeviceListState({ selectedId: undefined, setOnly: true });
 
   const removeFilter = removedFilter => {
     if (removedFilter.key === 'id') {
@@ -188,9 +190,9 @@ export const Filters = ({
 
 const actionCreators = {
   getDeviceAttributes,
-  resetIdFilter,
   saveGlobalSettings,
-  setDeviceFilters
+  setDeviceFilters,
+  setDeviceListState
 };
 
 const mapStateToProps = (state, ownProps) => {

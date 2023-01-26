@@ -16,7 +16,6 @@ const {
   REMOVE_DYNAMIC_GROUP,
   REMOVE_FROM_GROUP,
   REMOVE_STATIC_GROUP,
-  SELECT_DEVICE,
   SELECT_GROUP,
   SET_DEVICE_FILTERS,
   SET_DEVICE_LIMIT,
@@ -115,10 +114,6 @@ describe('device reducer', () => {
     expect(Object.keys(reducer(initialState, { type: REMOVE_STATIC_GROUP, groups: remainder }).groups.byId)).toHaveLength(
       Object.keys(defaultState.devices.groups.byId).length - 1
     );
-  });
-  it('should handle SELECT_DEVICE', async () => {
-    expect(reducer(undefined, { type: SELECT_DEVICE, deviceId: 'test' }).selectedDevice).toEqual('test');
-    expect(reducer(initialState, { type: SELECT_DEVICE, deviceId: 'test' }).selectedDevice).toEqual('test');
   });
   it('should handle SET_DEVICE_LIST_STATE', async () => {
     expect(reducer(undefined, { type: SET_DEVICE_LIST_STATE, state: { deviceIds: ['test'] } }).deviceList.deviceIds).toEqual(['test']);

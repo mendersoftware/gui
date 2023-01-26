@@ -72,8 +72,6 @@ export const DEVICE_FILTERING_OPTIONS = {
 export const emptyFilter = { key: null, value: '', operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'inventory' };
 
 export const SELECT_GROUP = 'SELECT_GROUP';
-export const SELECT_DEVICE = 'SELECT_DEVICE';
-
 export const ADD_TO_GROUP = 'ADD_TO_GROUP';
 export const ADD_DYNAMIC_GROUP = 'ADD_DYNAMIC_GROUP';
 export const ADD_STATIC_GROUP = 'ADD_STATIC_GROUP';

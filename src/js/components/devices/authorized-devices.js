@@ -15,7 +15,7 @@ import { saveUserSettings, updateUserColumnSettings } from '../../actions/userAc
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { duplicateFilter, isEmpty, toggle } from '../../helpers';
+import { duplicateFilter, toggle } from '../../helpers';
 import {
   getAvailableIssueOptionsByType,
   getFeatures,
@@ -541,9 +541,6 @@ const mapStateToProps = state => {
   if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
     selectedGroup = state.devices.groups.selectedGroup;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
-  } else if (!isEmpty(state.devices.selectedDevice)) {
-    devices = getMappedDevicesList(state, 'selectedDevice');
-    deviceCount = 1;
   }
   const { columnSelection = [] } = getUserSettings(state);
   return {
