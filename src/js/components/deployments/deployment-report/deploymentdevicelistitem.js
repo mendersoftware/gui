@@ -8,7 +8,7 @@ import { deploymentSubstates } from '../../../constants/deploymentConstants';
 import { rootfsImageVersion as rootfsImageVersionAttribute } from '../../../constants/releaseConstants';
 import { formatTime } from '../../../helpers';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
-import Time from '../../common/time';
+import { MaybeTime } from '../../common/time';
 
 const stateTitleMap = {
   noartifact: 'No compatible artifact found',
@@ -62,8 +62,8 @@ const DeploymentDeviceListItem = ({ device, idAttribute, userCapabilities, viewL
       </TableCell>
       <TableCell>{deviceTypes.length ? deviceTypes.join(',') : '-'}</TableCell>
       <TableCell>{currentArtifactLink}</TableCell>
-      <TableCell>{created ? <Time value={formatTime(created)} /> : '-'}</TableCell>
-      <TableCell>{finished ? <Time value={formatTime(finished)} /> : '-'}</TableCell>
+      <TableCell>{<MaybeTime value={formatTime(created)} />}</TableCell>
+      <TableCell>{<MaybeTime value={formatTime(finished)} />}</TableCell>
       {retries ? (
         <TableCell>
           {attempts || 1}/{retries + 1}

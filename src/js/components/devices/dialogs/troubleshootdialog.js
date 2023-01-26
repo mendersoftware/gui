@@ -18,7 +18,7 @@ import { getFeatures, getIdAttribute, getIsEnterprise, getUserRoles } from '../.
 import { useSession } from '../../../utils/sockethook';
 import { TwoColumns } from '../../common/configurationobject';
 import MaterialDesignIcon from '../../common/materialdesignicon';
-import Time from '../../common/time';
+import { MaybeTime } from '../../common/time';
 import FileTransfer from '../troubleshoot/filetransfer';
 import Terminal from '../troubleshoot/terminal';
 import ListOptions from '../widgets/listoptions';
@@ -272,7 +272,7 @@ export const TroubleshootDialog = ({
             className={`margin-top-small margin-bottom-small ${classes.sessionInfo}`}
             items={{
               'Session status': socketInitialized ? 'connected' : 'disconnected',
-              'Connection start': startTime ? <Time value={startTime} /> : '-',
+              'Connection start': <MaybeTime value={startTime} />,
               'Duration': `${duration.format('hh:mm:ss', { trim: false })}`
             }}
           />
