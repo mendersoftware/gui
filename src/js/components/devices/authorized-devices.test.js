@@ -100,7 +100,7 @@ describe('AuthorizedDevices Component', () => {
     );
     const { rerender } = render(ui);
     act(() => userEvent.click(screen.getAllByRole('checkbox')[0]));
-    expect(setListStateMock).toHaveBeenCalledWith({ selection: [0, 1] });
+    expect(setListStateMock).toHaveBeenCalledWith({ selection: [0, 1], setOnly: true });
     act(() => userEvent.click(screen.getByRole('button', { name: /all/i })));
     act(() => userEvent.click(screen.getByRole('option', { name: /devices with issues/i })));
     act(() => Promise.resolve(userEvent.keyboard('{esc}')));

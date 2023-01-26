@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -208,21 +208,15 @@ export const ExpandedDevice = ({
   setDeviceTwin,
   setSnackbar,
   showHelptips,
-  tabSelection = tabs[0].value,
+  tabSelection,
   tenantCapabilities,
   userCapabilities
 }) => {
   const [socketClosed, setSocketClosed] = useState(true);
-  const [selectedTab, setSelectedTab] = useState(tabSelection);
   const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
-
-  const selectedTabObject = tabs.find(tab => tab.value == selectedTab && tab.isApplicable({ device, integrations, tenantCapabilities, userCapabilities }));
-  if (selectedTabObject === undefined) {
-    setSelectedTab(tabs[0].value);
-  }
 
   const { attributes = {}, isOffline, gatewayIds = [] } = device;
   const { mender_is_gateway, mender_gateway_system_id } = attributes;
@@ -237,18 +231,10 @@ export const ExpandedDevice = ({
     clearInterval(timer.current);
     timer.current = setInterval(() => getDeviceInfo(deviceId), refreshDeviceLength);
     getDeviceInfo(deviceId);
-    setSelectedTab(tabSelection || tabs[0].value);
     return () => {
       clearInterval(timer.current);
     };
   }, [deviceId, device.status]);
-
-  useEffect(() => {
-    if (!timer.current) {
-      return;
-    }
-    setDetailsTab(selectedTab);
-  }, [selectedTab]);
 
   useEffect(() => {
     if (!mender_gateway_system_id) {
@@ -279,7 +265,7 @@ export const ExpandedDevice = ({
     setSnackbar('Link copied to clipboard');
   };
 
-  const scrollToMonitor = () => setSelectedTab('monitor');
+  const scrollToMonitor = () => setDetailsTab('monitor');
 
   const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${deviceId}`);
 
@@ -295,9 +281,9 @@ export const ExpandedDevice = ({
 
   const scrollToDeviceSystem = target => {
     if (target) {
-      navigate(`/devices?${target}`);
+      return navigate(`/devices?${target}`);
     }
-    return setSelectedTab('device-system');
+    return setDetailsTab('device-system');
   };
 
   const onCloseClick = useCallback(() => {
@@ -307,16 +293,13 @@ export const ExpandedDevice = ({
   }, [deviceId, onClose]);
 
   const availableTabs = tabs.reduce((accu, tab) => {
-    if (tab.isApplicable({ device, integrations, tenantCapabilities, userCapabilities }) || tab.value === selectedTab) {
+    if (tab.isApplicable({ device, integrations, tenantCapabilities, userCapabilities })) {
       accu.push(tab);
     }
     return accu;
   }, []);
 
-  const SelectedTab = useMemo(() => {
-    const tab = availableTabs.find(tab => tab.value === selectedTab) || tabs[0];
-    return tab.component;
-  }, [selectedTab]);
+  const { component: SelectedTab, value: selectedTab } = availableTabs.find(tab => tab.value === tabSelection) ?? tabs[0];
 
   const commonProps = {
     abortDeployment,
@@ -380,7 +363,7 @@ export const ExpandedDevice = ({
       </div>
       <DeviceNotifications alerts={latestAlerts} device={device} isOffline={isOffline} onClick={scrollToMonitor} />
       <Divider className={classes.dividerTop} />
-      <Tabs value={selectedTab} onChange={(e, tab) => setSelectedTab(tab)} textColor="primary">
+      <Tabs value={selectedTab} onChange={(e, tab) => setDetailsTab(tab)} textColor="primary">
         {availableTabs.map(item => (
           <Tab key={item.value} label={item.title({ integrations })} value={item.value} />
         ))}

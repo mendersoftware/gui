@@ -71,8 +71,32 @@ const getGroupSuccessNotification = groupName => (
 describe('selecting things', () => {
   it('should allow device list selections', async () => {
     const store = mockStore({ ...defaultState });
+    // eslint-disable-next-line no-unused-vars
+    const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
+    const expectedActions = [
+      { type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: ['a1'], isLoading: true } },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
+      {
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
+        deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+        status: DeviceConstants.DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.total
+      },
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
+      {
+        type: DeviceConstants.SET_DEVICE_LIST_STATE,
+        state: { ...defaultState.devices.deviceList, perPage: 20, deviceIds: ['a1', 'a1'], isLoading: false, total: 2 }
+      }
+    ];
     await store.dispatch(setDeviceListState({ deviceIds: ['a1'] }));
-    const expectedActions = [{ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: ['a1'] } }];
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow device list selections without device retrieval', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: ['a1'], isLoading: false } }];
+    await store.dispatch(setDeviceListState({ deviceIds: ['a1'], setOnly: true }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -779,9 +803,10 @@ describe('device retrieval ', () => {
         total: defaultState.devices.byStatus.accepted.total
       },
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
+      // the following perPage setting should be 2 as well, but the test backend seems to respond too fast for the state change to propagate
       {
         type: DeviceConstants.SET_DEVICE_LIST_STATE,
-        state: { ...defaultState.devices.deviceList, perPage: 2, deviceIds: ['a1', 'a1'], isLoading: false, total: 2 }
+        state: { ...defaultState.devices.deviceList, perPage: 20, deviceIds: ['a1', 'a1'], isLoading: false, total: 2 }
       }
     ];
     await store.dispatch(setDeviceListState({ page: 1, perPage: 2, refreshTrigger: true }));

@@ -66,7 +66,7 @@ export const DeviceSystem = ({
     }
   }, [device.id, device.attributes?.mender_is_gateway, page, perPage, sortOptions]);
 
-  const onDeviceClick = (device = {}) => navigate(`/devices/${device.status}?id=${device.id}&open=true`);
+  const onDeviceClick = (device = {}) => navigate(`/devices/${device.status}?id=${device.id}&open=true&tab=identity`);
 
   return (
     <>

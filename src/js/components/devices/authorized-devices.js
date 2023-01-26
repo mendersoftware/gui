@@ -324,7 +324,7 @@ export const Authorized = props => {
     setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger });
   };
 
-  const setDetailsTab = detailsTab => setDeviceListState({ detailsTab });
+  const setDetailsTab = detailsTab => setDeviceListState({ detailsTab, setOnly: true });
 
   const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) => {
     setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
@@ -334,7 +334,7 @@ export const Authorized = props => {
     if (!onboardingState.complete && selection.length) {
       advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING);
     }
-    setDeviceListState({ selection });
+    setDeviceListState({ selection, setOnly: true });
   };
 
   const onToggleCustomizationClick = () => setShowCustomization(toggle);

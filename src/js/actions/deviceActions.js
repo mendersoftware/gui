@@ -577,6 +577,7 @@ export const setDeviceListState =
     const currentState = getState().devices.deviceList;
     let nextState = {
       ...currentState,
+      setOnly: false,
       ...selectionState,
       sort: { ...currentState.sort, ...selectionState.sort }
     };
@@ -585,7 +586,7 @@ export const setDeviceListState =
     const { isLoading: currentLoading, deviceIds: currentDevices, selection: currentSelection, ...currentRequestState } = currentState;
     // eslint-disable-next-line no-unused-vars
     const { isLoading: nextLoading, deviceIds: nextDevices, selection: nextSelection, ...nextRequestState } = nextState;
-    if (!deepCompare(currentRequestState, nextRequestState)) {
+    if (!nextState.setOnly && !deepCompare(currentRequestState, nextRequestState)) {
       const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = nextState.sort ?? {};
       const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
       if (sortCol && sortingAlternatives[sortCol]) {
@@ -598,12 +599,14 @@ export const setDeviceListState =
           .then(results => {
             const { deviceAccu, total } = results[results.length - 1];
             const devicesState = shouldSelectDevices
-              ? { ...nextState, deviceIds: deviceAccu.ids, total, isLoading: false }
-              : { ...nextState, isLoading: false };
+              ? { ...getState().devices.deviceList, deviceIds: deviceAccu.ids, total, isLoading: false }
+              : { ...getState().devices.deviceList, isLoading: false };
             return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: devicesState }));
           })
           // whatever happens, change "loading" back to null
-          .catch(() => Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { ...nextState, isLoading: false } })))
+          .catch(() =>
+            Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { ...getState().devices.deviceList, isLoading: false } }))
+          )
       );
     }
     tasks.push(dispatch({ type: DeviceConstants.SET_DEVICE_LIST_STATE, state: nextState }));

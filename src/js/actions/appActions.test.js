@@ -23,6 +23,7 @@ import {
 import {
   ADD_DYNAMIC_GROUP,
   DEVICE_LIST_DEFAULTS,
+  DEVICE_STATES,
   EXTERNAL_PROVIDER,
   RECEIVE_DEVICES,
   RECEIVE_DYNAMIC_GROUPS,
@@ -100,6 +101,15 @@ describe('app actions', () => {
     });
     // eslint-disable-next-line no-unused-vars
     const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
+    const receivedInventoryDevice = {
+      ...defaultState.devices.byId.a1,
+      attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+      identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+      isOffline: true,
+      monitor: {},
+      tags: {},
+      updated_ts: inventoryDevice.updated_ts
+    };
     const expectedActions = [
       { type: SET_ONBOARDING_COMPLETE, complete: false },
       { type: SET_DEMO_ARTIFACT_PORT, port: undefined },
@@ -272,20 +282,7 @@ describe('app actions', () => {
         type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }
       },
-      {
-        type: RECEIVE_DEVICES,
-        devicesById: {
-          [expectedDevice.id]: {
-            ...defaultState.devices.byId.a1,
-            attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
-            identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-            isOffline: true,
-            monitor: {},
-            tags: {},
-            updated_ts: inventoryDevice.updated_ts
-          }
-        }
-      },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: receivedInventoryDevice } },
       { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } } },
       {
         type: ADD_DYNAMIC_GROUP,
@@ -297,17 +294,40 @@ describe('app actions', () => {
         state: {
           ...DEVICE_LIST_DEFAULTS,
           deviceIds: [],
-          isLoading: false,
+          isLoading: true,
           selectedAttributes: [],
           selectedIssues: [],
           selection: [],
+          setOnly: false,
           sort: { direction: SORTING_OPTIONS.desc },
           state: 'accepted',
           total: 0
         }
       },
       { type: SET_SHOW_HELP, show: true },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: receivedInventoryDevice } },
+      {
+        type: SET_ACCEPTED_DEVICES,
+        deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+        status: DEVICE_STATES.accepted,
+        total: defaultState.devices.byStatus.accepted.total
+      },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } } },
+      {
+        type: SET_DEVICE_LIST_STATE,
+        state: {
+          ...DEVICE_LIST_DEFAULTS,
+          deviceIds: ['a1', 'a1'],
+          isLoading: false,
+          selectedAttributes: [],
+          selectedIssues: [],
+          selection: [],
+          sort: { direction: SORTING_OPTIONS.desc },
+          state: 'accepted',
+          total: 2
+        }
+      },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } }
     ];
     await store.dispatch(initializeAppData());

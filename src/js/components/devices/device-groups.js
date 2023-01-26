@@ -126,7 +126,15 @@ export const DeviceGroups = ({
     if (locationParams.groupName) {
       selectGroup(locationParams.groupName);
     }
-  }, [locationParams.groupName]);
+    let listState = { setOnly: true };
+    if (locationParams.open && locationParams.id.length) {
+      listState = { ...listState, selectedId: locationParams.id[0], detailsTab: locationParams.detailsTab };
+    }
+    if (!locationParams.id?.length && selectedId) {
+      listState = { ...listState, detailsTab: 'identity' };
+    }
+    setDeviceListState(listState);
+  }, [locationParams.detailsTab, locationParams.groupName, JSON.stringify(locationParams.id), locationParams.open]);
 
   useEffect(() => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
