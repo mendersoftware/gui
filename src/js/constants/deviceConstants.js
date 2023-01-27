@@ -13,7 +13,7 @@ export const offlineThresholds = ['minutes', 'hours', 'days'];
 
 export const DEVICE_FILTERING_OPTIONS = {
   $eq: { key: '$eq', title: 'equals', shortform: '=' },
-  $ne: { title: 'not equal', shortform: '!=' },
+  $ne: { key: '$ne', title: 'not equal', shortform: '!=' },
   $gt: {
     key: '$gt',
     title: '>',
@@ -26,6 +26,7 @@ export const DEVICE_FILTERING_OPTIONS = {
     help: 'The "greater than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
   },
   $lt: {
+    key: '$lt',
     title: '<',
     shortform: '<',
     help: 'The "lesser than" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
@@ -36,6 +37,7 @@ export const DEVICE_FILTERING_OPTIONS = {
     help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
   },
   $in: {
+    key: '$in',
     title: 'in',
     shortform: 'in',
     help: 'The "in" operator accepts a list of comma-separated values. It matches if the selected field is equal to one of the specified values.'
@@ -47,27 +49,29 @@ export const DEVICE_FILTERING_OPTIONS = {
     help: `The "not in" operator accepts a list of comma-separated values. It matches if the selected field's value is not equal to any of the specified options.`
   },
   $exists: {
+    key: '$exists',
     title: 'exists',
     shortform: 'exists',
     value: true,
     help: `The "exists" operator matches if the selected field's value has a value. No value needs to be provided for this operator.`
   },
   $nexists: {
+    key: '$nexists',
     title: `doesn't exist`,
     shortform: `doesn't exist`,
     value: true,
     help: `The "doesn't exist" operator matches if the selected field's value has no value. No value needs to be provided for this operator.`
   },
   $regex: {
+    key: '$regex',
     title: `matches regular expression`,
     shortform: `matches`,
     help: `The "regular expression" operator matches the selected field's value with a Perl compatible regular expression (PCRE), automatically anchored by ^. If the regular expression is not valid, the filter will produce no results. If you need to specify options and flags, you can provide the full regex in the format of /regex/flags, for example.`
   }
 };
+export const emptyFilter = { key: null, value: '', operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'inventory' };
 
 export const SELECT_GROUP = 'SELECT_GROUP';
-export const SELECT_DEVICE = 'SELECT_DEVICE';
-
 export const ADD_TO_GROUP = 'ADD_TO_GROUP';
 export const ADD_DYNAMIC_GROUP = 'ADD_DYNAMIC_GROUP';
 export const ADD_STATIC_GROUP = 'ADD_STATIC_GROUP';
@@ -165,7 +169,14 @@ export const DEVICE_LIST_DEFAULTS = {
 };
 export const DEVICE_LIST_MAXIMUM_LENGTH = 50;
 export const DEVICE_ISSUE_OPTIONS = {
+  issues: {
+    isCategory: true,
+    key: 'issues',
+    title: 'Devices with issues',
+    filterRule: {}
+  },
   offline: {
+    issueCategory: 'issues',
     key: 'offline',
     needsFullFiltering: true,
     needsMonitor: false,
@@ -173,26 +184,28 @@ export const DEVICE_ISSUE_OPTIONS = {
     filterRule: {
       scope: 'system',
       key: 'updated_ts',
-      operator: '$lt',
+      operator: DEVICE_FILTERING_OPTIONS.$lt.key,
       value: ({ offlineThreshold }) => offlineThreshold
     },
     title: 'Offline devices'
   },
   failedLastUpdate: {
+    issueCategory: 'issues',
     key: 'failedLastUpdate',
     needsFullFiltering: false,
     needsMonitor: false,
     needsReporting: true,
     filterRule: { scope: 'monitor', key: 'failed_last_update', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: true },
-    title: 'Devices that failed to install their last update'
+    title: 'Deployment failed'
   },
   monitoring: {
+    issueCategory: 'issues',
     key: 'monitoring',
     needsFullFiltering: false,
     needsMonitor: true,
     needsReporting: false,
     filterRule: { scope: 'monitor', key: 'alerts', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: true },
-    title: 'Devices reporting monitoring issues'
+    title: 'Monitoring alert'
   },
   authRequests: {
     key: 'authRequests',
@@ -201,6 +214,14 @@ export const DEVICE_ISSUE_OPTIONS = {
     needsReporting: true,
     filterRule: { scope: 'monitor', key: 'auth_requests', operator: DEVICE_FILTERING_OPTIONS.$gt.key, value: 1 },
     title: 'Devices with new authentication requests'
+  },
+  gatewayDevices: {
+    key: 'gatewayDevices',
+    needsFullFiltering: false,
+    needsMonitor: false,
+    needsReporting: true,
+    filterRule: { scope: 'inventory', key: 'mender_is_gateway', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: 'true' },
+    title: 'Gateway devices'
   }
 };
 // we can't include the dismiss state with the rest since this would include dismissed devices in several queries

@@ -180,6 +180,7 @@ describe('Deployments Component', () => {
     await waitFor(() => rerender(ui));
     expect(groupSelect).toHaveValue(ALL_DEVICES);
     const post = jest.spyOn(GeneralApi, 'post');
+    jest.advanceTimersByTime(2000);
     await act(async () => await userEvent.click(screen.getByRole('button', { name: 'Create deployment' })));
     jest.runAllTicks();
     await waitFor(() => rerender(ui));
@@ -270,7 +271,7 @@ describe('Deployments Component', () => {
     await selectMaterialUiSelectOption(within(firstPhase).getByText(/hours/i).parentElement, /minutes/i);
     fireEvent.change(within(firstPhase).getByDisplayValue(20), { target: { value: '50' } });
     fireEvent.change(within(firstPhase).getByDisplayValue('2'), { target: { value: '30' } });
-    act(() => userEvent.click(screen.getByText(/Add a phase/i)));
+    await act(async () => userEvent.click(screen.getByText(/Add a phase/i)));
     await waitFor(() => rerender(ui));
     const secondPhase = screen.getByText(/Phase 2/i).parentElement?.parentElement?.parentElement;
     await selectMaterialUiSelectOption(within(secondPhase).getByText(/hours/i).parentElement, /days/i);

@@ -14,7 +14,6 @@ const getOrganization = state => state.organization.organization;
 const getAcceptedDevices = state => state.devices.byStatus.accepted;
 const getDevicesById = state => state.devices.byId;
 const getSearchedDevices = state => state.app.searchState.deviceIds;
-const getSelectedDevice = state => state.devices.selectedDevice;
 const getListedDevices = state => state.devices.deviceList.deviceIds;
 const getFilteringAttributes = state => state.devices.filteringAttributes;
 const getDeviceLimit = state => state.devices.limit;
@@ -52,8 +51,7 @@ const listItemMapper = (byId, ids, { defaultObject = {}, cutOffSize = DEVICE_LIS
 
 const listTypeDeviceIdMap = {
   deviceList: getListedDevices,
-  search: getSearchedDevices,
-  selectedDevice: state => [getSelectedDevice(state)]
+  search: getSearchedDevices
 };
 const getDeviceMappingDefaults = () => ({ defaultObject: { auth_sets: [] }, cutOffSize: DEVICE_LIST_MAXIMUM_LENGTH });
 export const getMappedDevicesList = createSelector(
@@ -210,8 +208,8 @@ export const getTenantCapabilities = createSelector(
 export const getAvailableIssueOptionsByType = createSelector(
   [getFeatures, getTenantCapabilities, getIssueCountsByType],
   ({ hasReporting }, { hasFullFiltering, hasMonitor }, issueCounts) =>
-    Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { key, needsFullFiltering, needsMonitor, needsReporting, title }) => {
-      if ((needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering) || (needsMonitor && !hasMonitor)) {
+    Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { isCategory, key, needsFullFiltering, needsMonitor, needsReporting, title }) => {
+      if (isCategory || (needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering) || (needsMonitor && !hasMonitor)) {
         return accu;
       }
       accu[key] = { count: issueCounts[key].filtered, key, title };

@@ -64,7 +64,7 @@ describe('AuthorizedDevices Component', () => {
           advanceOnboarding={jest.fn}
           allCount={40}
           attributes={[]}
-          availableIssueOptions={[]}
+          availableIssueOptions={[{ key: 'offline' }]}
           columnSelection={[]}
           currentUser={defaultState.users.byId[defaultState.users.currentUser]}
           customColumnSizes={[{ attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 }]}
@@ -100,9 +100,11 @@ describe('AuthorizedDevices Component', () => {
     );
     const { rerender } = render(ui);
     act(() => userEvent.click(screen.getAllByRole('checkbox')[0]));
-    expect(setListStateMock).toHaveBeenCalledWith({ page: 1, refreshTrigger: true, selectedIssues: [] });
-    act(() => userEvent.click(screen.getAllByRole('checkbox')[1]));
-    expect(setListStateMock).toHaveBeenCalledWith({ selection: [0, 1] });
+    expect(setListStateMock).toHaveBeenCalledWith({ selection: [0, 1], setOnly: true });
+    act(() => userEvent.click(screen.getByRole('button', { name: /all/i })));
+    act(() => userEvent.click(screen.getByRole('option', { name: /devices with issues/i })));
+    act(() => Promise.resolve(userEvent.keyboard('{esc}')));
+    expect(setListStateMock).toHaveBeenCalledWith({ page: 1, refreshTrigger: true, selectedIssues: ['offline'] });
     act(() => userEvent.click(screen.getByRole('button', { name: /table options/i })));
     await waitFor(() => rerender(ui));
     act(() => userEvent.click(screen.getByRole('menuitem', { name: /customize/i })));

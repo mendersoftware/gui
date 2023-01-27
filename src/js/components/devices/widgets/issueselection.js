@@ -1,26 +1,10 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 // material ui
 import { Checkbox, MenuItem, Select } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
-
-export const EmptySelection = ({ allSelected, emptySelection, onToggleClick }) => {
-  const theme = useTheme();
-  return (
-    <MenuItem value="" style={{ fontSize: 13, paddingRight: theme.spacing(3) }}>
-      <Checkbox
-        checked={allSelected}
-        indeterminate={!(allSelected || emptySelection)}
-        style={{ marginLeft: theme.spacing(-1.5) }}
-        size="small"
-        onChange={onToggleClick}
-      />
-      Show only devices requiring attention
-    </MenuItem>
-  );
-};
 
 const menuProps = {
   anchorOrigin: {
@@ -33,8 +17,57 @@ const menuProps = {
   }
 };
 
-const DeviceIssuesSelection = ({ onChange, onSelectAll, options, selection }) => {
-  const theme = useTheme();
+const useStyles = makeStyles()(theme => ({
+  menuItem: { paddingLeft: theme.spacing(), paddingRight: theme.spacing(3) }
+}));
+
+const groupOptions = (options = [], selection = []) => {
+  const things = options.reduce((accu, value) => {
+    const { issueCategory, key } = DEVICE_ISSUE_OPTIONS[value.key];
+    const nestedValue = { ...value, level: 0, checked: selection.includes(key) };
+    if (issueCategory) {
+      nestedValue.level = 1;
+      let categoryItem = { ...DEVICE_ISSUE_OPTIONS[issueCategory], count: nestedValue.count, checked: nestedValue.checked };
+      let existingItems = [];
+      if (Array.isArray(accu[issueCategory])) {
+        categoryItem = {
+          ...accu[issueCategory][0],
+          count: accu[issueCategory][0].count + nestedValue.count,
+          checked: accu[issueCategory][0].checked && nestedValue.checked
+        };
+        existingItems = accu[issueCategory].slice(1);
+      }
+      accu[issueCategory] = [categoryItem, ...existingItems, nestedValue];
+    } else {
+      accu[key] = nestedValue;
+    }
+    return accu;
+  }, {});
+  return Object.values(things).flat();
+};
+
+const Selection = ({ selected = [], options = [] }) => {
+  const { classes } = useStyles();
+  let content = 'all';
+  if (selected.length) {
+    const { titles, sum } = selected.reduce(
+      (accu, issue) => {
+        accu.titles.push(DEVICE_ISSUE_OPTIONS[issue].title);
+        accu.sum += options.find(option => option.key === issue)?.count || 0;
+        return accu;
+      },
+      { titles: [], sum: 0 }
+    );
+    content = `${titles.join(', ')}} (${sum})`;
+  }
+  return (
+    <MenuItem className={classes.menuItem} size="small" value="">
+      {content}
+    </MenuItem>
+  );
+};
+
+const DeviceIssuesSelection = ({ onChange, options, selection }) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -48,43 +81,55 @@ const DeviceIssuesSelection = ({ onChange, onSelectAll, options, selection }) =>
     setOpen(true);
   };
 
-  const onClearClick = () => onChange({ target: { value: [] } });
+  const groupedOptions = useMemo(() => groupOptions(options, selection), [options.join(''), selection.join('')]);
 
-  const onToggleAllClick = ({ target: { checked } }) => onSelectAll(checked);
+  const onSelectionChange = useCallback(
+    ({ target: { value: newSelection } }, { props: { value: clickedItem } }) => {
+      const issue = DEVICE_ISSUE_OPTIONS[clickedItem];
+      let categoryItems = [];
+      if (issue.isCategory) {
+        categoryItems = options.reduce(
+          (collector, option) => (DEVICE_ISSUE_OPTIONS[option.key].issueCategory === clickedItem ? [...collector, option.key] : collector),
+          categoryItems
+        );
+      }
+
+      let selectedOptions = newSelection;
+      if (categoryItems.length && categoryItems.every(item => selection.includes(item))) {
+        selectedOptions = selectedOptions.filter(option => !(categoryItems.includes(option) || option === clickedItem));
+      } else {
+        selectedOptions = [...newSelection, ...categoryItems].filter(option => (issue.isCategory ? option !== clickedItem : true));
+      }
+      onChange({ target: { value: [...new Set(selectedOptions)] } });
+    },
+    [options, selection]
+  );
 
   return (
-    <Select
-      className="margin-left"
-      disableUnderline
-      displayEmpty
-      MenuProps={menuProps}
-      multiple
-      open={open}
-      onClose={handleClose}
-      onOpen={handleOpen}
-      onChange={onChange}
-      renderValue={selected => {
-        const optionsCount = options.length;
-        if (!selected.length || selected.length !== 1) {
-          return <EmptySelection allSelected={selected.length === optionsCount} emptySelection={!selected.length} onToggleClick={onToggleAllClick} />;
-        }
-        return (
-          <MenuItem value="" style={{ fontSize: 13, paddingRight: theme.spacing(3) }}>
-            <Checkbox checked style={{ marginLeft: theme.spacing(-1.5) }} onChange={onClearClick} size="small" />
-            {DEVICE_ISSUE_OPTIONS[selected[0]].title}
+    <div className="flexbox center-aligned margin-left">
+      <div>Show:</div>
+      <Select
+        disableUnderline
+        displayEmpty
+        MenuProps={menuProps}
+        multiple
+        size="small"
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        onChange={onSelectionChange}
+        renderValue={selected => <Selection selected={selected} options={groupedOptions} />}
+        value={selection}
+        SelectDisplayProps={{ style: { padding: 0 } }}
+      >
+        {groupedOptions.map(({ checked, count, key, title, level = 0 }) => (
+          <MenuItem key={key} value={key} size="small">
+            <Checkbox checked={checked} style={{ marginLeft: 8 * (level + 1) }} size="small" />
+            {title} ({count})
           </MenuItem>
-        );
-      }}
-      value={selection}
-      SelectDisplayProps={{ style: { padding: 0 } }}
-    >
-      {options.map(({ count, key, title }) => (
-        <MenuItem key={key} value={key}>
-          <Checkbox checked={selection.includes(key)} style={{ marginLeft: theme.spacing(-1.5) }} />
-          {title} ({count})
-        </MenuItem>
-      ))}
-    </Select>
+        ))}
+      </Select>
+    </div>
   );
 };
 

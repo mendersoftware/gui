@@ -25,7 +25,7 @@ import {
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { DEVICE_ISSUE_OPTIONS, DEVICE_STATES } from '../../constants/deviceConstants';
+import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
 import { toggle, versionCompare } from '../../helpers';
 import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
@@ -111,6 +111,7 @@ export const DeviceGroups = ({
     }
     setLocationParams({ pageState: deviceListState, filters, selectedGroup });
   }, [
+    deviceListState.detailsTab,
     deviceListState.page,
     deviceListState.perPage,
     deviceListState.selectedIssues,
@@ -125,19 +126,30 @@ export const DeviceGroups = ({
     if (locationParams.groupName) {
       selectGroup(locationParams.groupName);
     }
-  }, [locationParams.groupName]);
+    let listState = { setOnly: true };
+    if (locationParams.open && locationParams.id.length) {
+      listState = { ...listState, selectedId: locationParams.id[0], detailsTab: locationParams.detailsTab };
+    }
+    if (!locationParams.id?.length && selectedId) {
+      listState = { ...listState, detailsTab: 'identity' };
+    }
+    setDeviceListState(listState);
+  }, [locationParams.detailsTab, locationParams.groupName, JSON.stringify(locationParams.id), locationParams.open]);
 
   useEffect(() => {
-    const { groupName, filters, ...remainder } = locationParams;
+    const { groupName, filters = [], id = [], ...remainder } = locationParams;
+    const { hasFullFiltering } = tenantCapabilities;
     if (groupName) {
       selectGroup(groupName, filters);
-    } else if (filters?.length) {
+    } else if (filters.length) {
       setDeviceFilters(filters);
     }
     const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
     let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
-    if (locationParams.id && Boolean(locationParams.open)) {
-      listState.selectedId = locationParams.id;
+    if (id.length === 1 && Boolean(locationParams.open)) {
+      listState.selectedId = id[0];
+    } else if (id.length && hasFullFiltering) {
+      setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]);
     }
     setDeviceListState(listState);
     clearInterval(deviceTimer.current);

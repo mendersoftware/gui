@@ -14,7 +14,7 @@ import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { createDownload, getISOStringBoundaries, toggle } from '../../helpers';
-import { getUserCapabilities } from '../../selectors';
+import { getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import Loader from '../common/loader';
@@ -45,7 +45,18 @@ const autoSelectProps = {
   renderOption
 };
 
-export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserList, groups, selectionState, setAuditlogsState, users, ...props }) => {
+export const AuditLogs = ({
+  events,
+  getAuditLogsCsvLink,
+  getUserList,
+  groups,
+  selectionState,
+  setAuditlogsState,
+  tenantCapabilities,
+  userCapabilities,
+  users,
+  ...props
+}) => {
   const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
   const [filterReset, setFilterReset] = useState(false);
@@ -57,25 +68,23 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
   const [userValue, setUserValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
+  const { canReadUsers } = userCapabilities;
+  const { hasAuditlogs } = tenantCapabilities;
   const { classes } = useStyles();
 
   const debouncedDetail = useDebounce(detailValue, TIMEOUTS.debounceDefault);
   const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
   const debouncedUser = useDebounce(userValue, TIMEOUTS.debounceDefault);
 
-  useEffect(() => {
-    setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser });
-  }, [debouncedDetail, debouncedType, debouncedUser]);
-
   const { detail, isLoading, perPage, endDate, user, reset: resetList, sort, startDate, total, type } = selectionState;
 
   useEffect(() => {
-    if (canReadUsers) {
-      getUserList();
+    if (!hasAuditlogs) {
+      return;
     }
     let state = { ...locationParams, reset: !resetList };
     if (locationParams.id && Boolean(locationParams.open)) {
-      state.selectedId = locationParams.id;
+      state.selectedId = locationParams.id[0];
       const [eventAction, eventTime] = atob(state.selectedId).split('|');
       if (eventTime && !events.some(item => item.time === eventTime && item.action === eventAction)) {
         const { start, end } = getISOStringBoundaries(new Date(eventTime));
@@ -85,11 +94,27 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
     }
     setAuditlogsState(state);
     Object.entries({ detail: setDetailValue, user: setUserValue, type: setTypeValue }).map(([key, setter]) => (state[key] ? setter(state[key]) : undefined));
-  }, []);
+  }, [hasAuditlogs]);
 
   useEffect(() => {
+    if (!hasAuditlogs) {
+      return;
+    }
+    setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser });
+  }, [debouncedDetail, debouncedType, debouncedUser, hasAuditlogs]);
+
+  useEffect(() => {
+    if (canReadUsers) {
+      getUserList();
+    }
+  }, [canReadUsers]);
+
+  useEffect(() => {
+    if (!hasAuditlogs) {
+      return;
+    }
     setLocationParams({ pageState: selectionState });
-  }, [detail, endDate, JSON.stringify(sort), perPage, selectionState.page, selectionState.selectedId, startDate, type, user]);
+  }, [detail, endDate, hasAuditlogs, JSON.stringify(sort), perPage, selectionState.page, selectionState.selectedId, startDate, type, user]);
 
   const reset = () => {
     setAuditlogsState({
@@ -125,21 +150,24 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
     if (!e || reason === 'blur') {
       return;
     }
-    setUserValue(value);
+    setUserValue(value || '');
   };
 
   const onTypeFilterChange = (e, value, reason) => {
     if (!e || reason === 'blur') {
       return;
     }
-    setTypeValue(value);
+    if (!value) {
+      setDetailValue('');
+    }
+    setTypeValue(value || '');
   };
 
   const onDetailFilterChange = (e, value) => {
     if (!e) {
       return;
     }
-    setDetailValue(value);
+    setDetailValue(value || '');
   };
 
   const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) =>
@@ -200,7 +228,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
         />
         <div />
         <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
-        <div style={{ gridColumnStart: 2, gridColumnEnd: 4, marginLeft: -7.5 }}>
+        <div style={{ gridColumnStart: 2, gridColumnEnd: 4, marginLeft: 7.5 }}>
           <TimeframePicker onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
         </div>
         {!!(user || type || detail || startDate !== today || endDate !== tonight) && (
@@ -225,6 +253,7 @@ export const AuditLogs = ({ canReadUsers, events, getAuditLogsCsvLink, getUserLi
           onChangeSorting={onChangeSorting}
           selectionState={selectionState}
           setAuditlogsState={setAuditlogsState}
+          userCapabilities={userCapabilities}
         />
       )}
       {!(isLoading || total) && (
@@ -243,13 +272,12 @@ const actionCreators = { getAuditLogsCsvLink, getUserList, setAuditlogsState };
 const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  const { canReadUsers } = getUserCapabilities(state);
   return {
-    canReadUsers,
     events: state.organization.auditlog.events,
     groups: [ALL_DEVICES, ...Object.keys(groups).sort()],
     selectionState: state.organization.auditlog.selectionState,
     userCapabilities: getUserCapabilities(state),
+    tenantCapabilities: getTenantCapabilities(state),
     users: state.users.byId
   };
 };

@@ -149,8 +149,12 @@ exports[`DeviceListItem Component renders correctly 1`] = `
       />
     </span>
   </div>
-  <div>
-    1
+  <div
+    class="flexbox space-between"
+  >
+    <div>
+      1
+    </div>
   </div>
 </div>
 `;

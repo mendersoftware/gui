@@ -25,7 +25,7 @@ describe('locationutils', () => {
       const startParams = new URLSearchParams('?perPage=234&id=123-324&open=true&sort=asc&issues=issueType1&issues=issueType2');
       const { pageState, params, sort } = commonProcessor(startParams);
       expect(sort).toEqual({ direction: 'asc' });
-      expect(pageState).toEqual({ id: '123-324', issues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
+      expect(pageState).toEqual({ id: ['123-324'], issues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
       expect(params.has('page')).not.toBeTruthy();
     });
     it('uses working utilities - formatPageState', () => {
@@ -37,15 +37,29 @@ describe('locationutils', () => {
     });
   });
   describe('auditlog', () => {
+    const startDate = new Date('2000-01-01').toISOString();
     it('uses working utilties - formatAuditlogs', () => {
-      const search = formatAuditlogs(
+      let search = formatAuditlogs(
         {
           pageState: {
             detail: 'testgroup',
             endDate: new Date().toISOString(),
-            startDate: new Date('2000-01-01').toISOString(),
+            startDate,
             type: AUDIT_LOGS_TYPES[0],
             user: { id: 1 }
+          }
+        },
+        { today, tonight }
+      );
+      expect(search).toEqual('objectId=testgroup&userId=1&objectType=deployment&endDate=2019-01-13&startDate=2000-01-01');
+      search = formatAuditlogs(
+        {
+          pageState: {
+            detail: 'testgroup',
+            endDate: new Date().toISOString(),
+            startDate,
+            type: AUDIT_LOGS_TYPES[0].value,
+            user: '1'
           }
         },
         { today, tonight }
@@ -62,7 +76,7 @@ describe('locationutils', () => {
       expect(result).toEqual({
         detail: 'testgroup',
         endDate: endDate.toISOString(),
-        startDate: new Date('2000-01-01').toISOString(),
+        startDate,
         type: AUDIT_LOGS_TYPES[1],
         user: '1'
       });
@@ -137,7 +151,7 @@ describe('locationutils', () => {
           ...defaultArgs
         });
         expect(result).toEqual({
-          deploymentObject: { device: 'someDevice' },
+          deploymentObject: { devices: [{ id: 'someDevice' }] },
           general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.active.key }
         });
       });
@@ -201,10 +215,10 @@ describe('locationutils', () => {
       ]);
     });
     it('uses working utilties - parseDeviceQuery converts new style', () => {
-      const { groupName, filters } = parseDeviceQuery(new URLSearchParams('?inventory=some:eq:thing&inventory=group:eq:testgroup&identity=bla:neq:blubb'));
+      const { groupName, filters } = parseDeviceQuery(new URLSearchParams('?inventory=some:eq:thing&inventory=group:eq:testgroup&identity=bla:ne:blubb'));
       expect(groupName).toEqual('testgroup');
       expect(filters).toEqual([
-        { key: 'bla', operator: '$neq', scope: 'identity', value: 'blubb' },
+        { key: 'bla', operator: '$ne', scope: 'identity', value: 'blubb' },
         { key: 'some', operator: '$eq', scope: 'inventory', value: 'thing' }
       ]);
     });
@@ -244,6 +258,7 @@ describe('locationutils', () => {
     it('uses working utilties - formatDeviceSearch - with ungrouped selected', () => {
       const search = formatDeviceSearch({
         filters: [{ key: 'some', value: 'thing' }],
+        pageState: {},
         selectedGroup: UNGROUPED_GROUP.id
       });
       expect(search).toEqual('inventory=some:eq:thing&inventory=group:eq:Unassigned');
