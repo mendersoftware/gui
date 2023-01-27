@@ -45,7 +45,7 @@ describe('locationutils', () => {
             detail: 'testgroup',
             endDate: new Date().toISOString(),
             startDate,
-            type: AUDIT_LOGS_TYPES[0],
+            type: AUDIT_LOGS_TYPES[1],
             user: { id: 1 }
           }
         },
@@ -58,7 +58,7 @@ describe('locationutils', () => {
             detail: 'testgroup',
             endDate: new Date().toISOString(),
             startDate,
-            type: AUDIT_LOGS_TYPES[0].value,
+            type: AUDIT_LOGS_TYPES[1].value,
             user: '1'
           }
         },
@@ -77,7 +77,7 @@ describe('locationutils', () => {
         detail: 'testgroup',
         endDate: endDate.toISOString(),
         startDate,
-        type: AUDIT_LOGS_TYPES[1],
+        type: AUDIT_LOGS_TYPES[2],
         user: '1'
       });
     });
