@@ -141,7 +141,7 @@ export const DeploymentReport = props => {
         clearTimeout(timer.current);
       };
     }
-  }, [deployment.id, deployment.stats]);
+  }, [deployment.id, JSON.stringify(deployment.stats)]);
 
   const scrollToBottom = () => {
     rolloutSchedule.current?.scrollIntoView({ behavior: 'smooth' });
