@@ -20,7 +20,7 @@ const mockStore = configureStore([thunk]);
 describe('Auditlogs Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = mockStore({ ...defaultState, app: { ...defaultState.app, features: { ...defaultState.app.features, hasAuditlogs: true } } });
   });
 
   it('renders correctly', async () => {
