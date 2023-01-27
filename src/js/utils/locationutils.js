@@ -230,11 +230,11 @@ const paramReducer = (accu, [key, value]) => {
 };
 
 export const formatAuditlogs = ({ pageState }, { today, tonight }) => {
-  const { detail, endDate, startDate, type, user = {} } = pageState;
+  const { detail, endDate, startDate, type = '', user = '' } = pageState;
   let params = new URLSearchParams();
-  params = Object.entries({ objectId: detail, userId: user.id }).reduce(paramReducer, params);
+  params = Object.entries({ objectId: detail, userId: user.id ?? user }).reduce(paramReducer, params);
   if (type) {
-    params.set('objectType', type.value);
+    params.set('objectType', type.value ?? type);
   }
   params = formatDates({ endDate, params, startDate, today, tonight });
   return params.toString();

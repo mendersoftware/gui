@@ -201,7 +201,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </ul>
       </div>
       <div
-        style="grid-column-start: 2; grid-column-end: 4; margin-left: -7.5px;"
+        style="grid-column-start: 2; grid-column-end: 4; margin-left: 7.5px;"
       >
         <div
           class="MuiFormControl-root MuiTextField-root css-1x6hzm-MuiFormControl-root-MuiTextField-root"
