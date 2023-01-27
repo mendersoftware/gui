@@ -11,6 +11,7 @@ import isUUID from 'validator/lib/isUUID';
 import failImage from '../../../../assets/img/largeFail.png';
 import successImage from '../../../../assets/img/largeSuccess.png';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
+import { groupDeploymentStats } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import Time from '../../common/time';
@@ -46,7 +47,8 @@ const defaultLinkProps = {
 
 export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribute, onScheduleClick }) => {
   const { classes } = useStyles();
-  const { artifact_name, devices = {}, filter, stats = {}, status, totalDeviceCount } = deployment;
+  const { artifact_name, devices = {}, filter, status, totalDeviceCount } = deployment;
+  const { failures, successes } = groupDeploymentStats(deployment);
 
   const finished = deployment.finished || status === DEPLOYMENT_STATES.finished;
 
@@ -94,29 +96,24 @@ export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribu
         </a>
       </div>
 
-      {finished && !!(stats.failure || stats.aborted || stats.success || (stats.failure == 0 && stats.aborted == 0)) && (
+      {finished && (
         <div className="statusLarge flexbox centered">
-          <img src={stats.success ? successImage : failImage} />
+          <img src={successes ? successImage : failImage} />
           <div className={`statusWrapper flexbox centered ${classes.statusWrapper}`}>
             <div className="statusWrapperMessage">
-              {!!stats.success && (
-                <div>
-                  <b className="green">
-                    {stats.success === totalDeviceCount && <span>All </span>}
-                    {stats.success}
+              {(!!successes || !failures) && (
+                <>
+                  <b className={successes ? 'green' : 'red'}>
+                    {successes === totalDeviceCount && totalDeviceCount > 1 && <>All </>}
+                    {successes}
                   </b>{' '}
-                  {pluralize('devices', stats.success)} updated successfully
-                </div>
+                  {pluralize('devices', successes)} updated successfully
+                </>
               )}
-              {stats.success == 0 && stats.failure == 0 && stats.aborted == 0 && (
-                <div>
-                  <b className="red">0</b> devices updated successfully
-                </div>
-              )}
-              {!!(stats.failure || stats.aborted) && (
-                <div>
-                  <b className="red">{stats.failure || stats.aborted}</b> {pluralize('devices', stats.failure)} failed to update
-                </div>
+              {!!failures && (
+                <>
+                  <b className="red">{failures}</b> {pluralize('devices', failures)} failed to update
+                </>
               )}
             </div>
           </div>
