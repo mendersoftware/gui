@@ -8,7 +8,6 @@ exports[`Signup Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  height: calc(100vh - 56px);
   width: 100%;
   margin-top: -95px;
 }
@@ -620,7 +619,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
     id="Loginlogo"
   />
   <div
-    class="content emotion-1"
+    class="content margin-bottom-small emotion-1"
     id="signup-box"
   >
     <div
