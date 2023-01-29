@@ -18,7 +18,6 @@ import UserDataEntry from './signup-steps/userdata-entry';
 const cookies = new Cookies();
 const useStyles = makeStyles()(theme => ({
   background: {
-    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
     width: '100%',
     marginTop: -(50 + 45),
     '&#signup-box': {
@@ -128,7 +127,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
   return (
     <>
       <LoginLogo className={classes.logo} />
-      <div className={`content ${classes.background}`} id="signup-box">
+      <div className={`content margin-bottom-small ${classes.background}`} id="signup-box">
         {loading ? <Loader show={true} style={{ marginTop: '40vh' }} /> : steps[step]}
       </div>
     </>
