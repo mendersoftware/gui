@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow, buttonClasses, tableCellClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { deploymentsApiUrl } from '../../../actions/deploymentActions';
 import { deploymentDisplayStates, deploymentStatesToSubstates } from '../../../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import Confirm from '../../common/confirm';
+import InfoHint from '../../common/info-hint';
 import Pagination from '../../common/pagination';
 import { MaybeTime } from '../../common/time';
 import { DeviceStateSelection } from '../authorized-devices';
 
-const useStyles = makeStyles()(() => ({
+const useStyles = makeStyles()(theme => ({
   deletion: { justifyContent: 'flex-end' },
-  table: { minHeight: '10vh' }
+  table: {
+    minHeight: '10vh',
+    [`.deleted > .${tableCellClasses.root}, .deleted a`]: {
+      background: theme.palette.background.lightgrey,
+      color: theme.palette.grey[700],
+      [`.${buttonClasses.root}`]: { color: theme.palette.text.primary }
+    }
+  }
 }));
 
 const EmptyState = ({ isFiltered }) => (
@@ -59,7 +67,12 @@ const History = ({ className, items, page, perPage, setPage, setPerPage, total }
     setPage(1);
     setPerPage(perPage);
   };
-
+  const wasReset = items.reduce((accu, { deleted }) => {
+    if (!accu) {
+      return !!deleted;
+    }
+    return accu;
+  }, false);
   return (
     <div className={className}>
       <Table>
@@ -72,7 +85,7 @@ const History = ({ className, items, page, perPage, setPage, setPerPage, total }
         </TableHead>
         <TableBody>
           {items.map(item => (
-            <TableRow key={item.id}>
+            <TableRow className={item.deleted ? 'deleted' : ''} key={item.id}>
               {columns.map(({ key, Component }) => (
                 <TableCell key={`${item.id}-${key}`}>
                   <Component deviceDeployment={item} />
@@ -82,14 +95,17 @@ const History = ({ className, items, page, perPage, setPage, setPerPage, total }
           ))}
         </TableBody>
       </Table>
-      <Pagination
-        count={total}
-        onChangePage={setPage}
-        onChangeRowsPerPage={onChangeRowsPerPage}
-        page={page}
-        rowsPerPage={perPage}
-        rowsPerPageOptions={[10, 20]}
-      />
+      <div className="flexbox space-between">
+        <Pagination
+          count={total}
+          onChangePage={setPage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          page={page}
+          rowsPerPage={perPage}
+          rowsPerPageOptions={[10, 20]}
+        />
+        {wasReset && <InfoHint content="Greyed out items will not be considered during deployment roll out" style={{ alignSelf: 'flex-end' }} />}
+      </div>
     </div>
   );
 };

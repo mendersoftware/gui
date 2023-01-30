@@ -190,6 +190,7 @@ export const getDeviceDeployments =
                 target:
                   deployment.groups?.length === 1 && deployment.groups[0] ? deployment.groups[0] : deployment.device ? deployment.device : deployment.name,
                 created: device.created,
+                deleted: device.deleted,
                 deviceId: device.id,
                 finished: device.finished,
                 status: device.status,
