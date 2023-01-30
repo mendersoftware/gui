@@ -3,7 +3,9 @@ import { useIdleTimer, workerTimers } from 'react-idle-timer';
 import { connect } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import withStyles from '@mui/styles/withStyles';
 import { makeStyles } from 'tss-react/mui';
 
 import Cookies from 'universal-cookie';
@@ -17,7 +19,6 @@ import { PrivateRoutes, PublicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import ErrorBoundary from '../errorboundary';
 import { toggle } from '../helpers';
-import { WrappedBaseline } from '../main';
 import { getOnboardingState, getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
@@ -33,6 +34,34 @@ import Uploads from './uploads';
 const activationPath = '/activate';
 const timeout = 900000; // 15 minutes idle time
 const cookies = new Cookies();
+
+const reducePalette =
+  prefix =>
+  (accu, [key, value]) => {
+    if (value instanceof Object) {
+      return {
+        ...accu,
+        ...Object.entries(value).reduce(reducePalette(`${prefix}-${key}`), {})
+      };
+    } else {
+      accu[`${prefix}-${key}`] = value;
+    }
+    return accu;
+  };
+
+const cssVariables = ({ palette }) => {
+  const muiVariables = Object.entries(palette).reduce(reducePalette('--mui'), {});
+  return {
+    '@global': {
+      ':root': {
+        ...muiVariables,
+        '--mui-overlay': palette.grey[400]
+      }
+    }
+  };
+};
+
+const WrappedBaseline = withStyles(cssVariables)(CssBaseline);
 
 const useStyles = makeStyles()(() => ({
   public: {
