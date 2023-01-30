@@ -1,6 +1,7 @@
 import { EXTERNAL_PROVIDER } from './deviceConstants';
 
 export const AUDIT_LOGS_TYPES = [
+  { title: 'Artifact', queryParameter: 'object_type', value: 'artifact' },
   { title: 'Deployment', queryParameter: 'object_deployment_name', value: 'deployment' },
   { title: 'Device', queryParameter: 'object_id', value: 'device' },
   { title: 'User', queryParameter: 'object_id', value: 'user' }
