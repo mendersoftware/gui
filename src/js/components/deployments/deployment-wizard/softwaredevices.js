@@ -46,6 +46,7 @@ export const Devices = ({
   groups,
   hasDevices,
   hasDynamicGroups,
+  hasFullFiltering,
   hasPending,
   idAttribute,
   setDeploymentSettings
@@ -78,7 +79,10 @@ export const Devices = ({
       const { attributes = {}, systemDeviceIds = [] } = device;
       const { mender_is_gateway } = attributes;
       deviceText = `${getDeviceIdentityText({ device, idAttribute })}${stringToBoolean(mender_is_gateway) ? ' (Device system)' : ''}`;
-      devicesLink = `${devicesLink}?${devices.map(({ id }) => `id=${id}`).join('&')}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
+      devicesLink = `${devicesLink}?${devices[0].id}`;
+      if (hasFullFiltering) {
+        devicesLink = `/devices?${devices.map(({ id }) => `id=${id}`).join('&')}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
+      }
       // here we hope the number of systemDeviceIds doesn't exceed the queried 500 and add the gateway device
       targetDeviceCount = systemDeviceIds.length + 1;
     } else if (group) {
