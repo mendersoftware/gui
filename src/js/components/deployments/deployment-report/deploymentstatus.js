@@ -74,7 +74,7 @@ export const DeploymentStatus = ({ className = '', deployment = {} }) => {
           <div>{statsBasedDeviceCount}</div>
         </div>
         {Object.entries(phasesWithStats).map(([key, phase]) => (
-          <div key={key} className={`flexbox column ${phaseStats[key] ? '' : 'disabled'}`}>
+          <div key={key} className="flexbox column">
             <div className="muted margin-bottom-small">{phase}</div>
             <div className="status">{phaseStats[key].toLocaleString()}</div>
           </div>

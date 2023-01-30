@@ -132,6 +132,15 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   margin-left: 8px;
 }
 
+.emotion-8 {
+  background-color: #f7f7f7;
+}
+
+.emotion-8:after {
+  border-right: 20px solid;
+  border-right-color: #f7f7f7;
+}
+
 <div
   class="report-container margin-top-large margin-bottom-large"
 >
@@ -267,6 +276,29 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
         />
       </svg>
     </a>
+  </div>
+  <div
+    class="statusLarge flexbox centered"
+  >
+    <img
+      src="largeFail.png"
+    />
+    <div
+      class="statusWrapper flexbox centered emotion-8"
+    >
+      <div
+        class="statusWrapperMessage"
+      >
+        <b
+          class="red"
+        >
+          0
+        </b>
+         
+        devices
+         updated successfully
+      </div>
+    </div>
   </div>
 </div>
 `;
