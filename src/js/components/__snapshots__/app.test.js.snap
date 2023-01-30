@@ -772,7 +772,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
               <input
                 aria-invalid="false"
                 class="MuiInputBase-input MuiInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedStart emotion-5"
-                id="mui-1"
+                id="mui-7"
                 placeholder="Search devices"
                 type="text"
                 value=""
@@ -984,7 +984,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
                 <div
                   class="clickable slightly-smaller"
                   data-mui-internal-clone-element="true"
-                />
+                >
+                  Version: next
+                </div>
               </span>
               <p
                 class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-35"
@@ -1041,8 +1043,5 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
       class="emotion-37"
     />
   </div>
-  <script
-    src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"
-  />
 </body>
 `;

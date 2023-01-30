@@ -32,7 +32,7 @@ import SearchResult from './search-result';
 import Uploads from './uploads';
 
 const activationPath = '/activate';
-const timeout = 900000; // 15 minutes idle time
+export const timeout = 900000; // 15 minutes idle time
 const cookies = new Cookies();
 
 const reducePalette =
