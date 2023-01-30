@@ -5,21 +5,17 @@ import { BarChart as BarChartIcon } from '@mui/icons-material';
 
 import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
+import { emptyChartSelection } from '../../constants/appConstants';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { getIsEnterprise, getUserSettings } from '../../selectors';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
 
-export const defaultReports = [{ group: null, attribute: 'artifact_name', type: 'distribution' }];
+export const defaultReports = [{ ...emptyChartSelection, group: null, attribute: 'artifact_name', type: 'distribution' }];
 
 const reportTypes = {
   distribution: DistributionReport
-};
-
-const defaultChartStyle = {
-  cursor: 'initial',
-  justifyContent: 'initial'
 };
 
 export const SoftwareDistribution = ({
@@ -75,18 +71,16 @@ export const SoftwareDistribution = ({
         const Component = reportTypes[report.type];
         return (
           <Component
-            attribute={report.attribute}
             devices={devices}
             groups={groups}
-            group={report.group}
             key={`report-${report.group}-${index}`}
             onClick={() => removeReport(report)}
             selectGroup={selectGroup}
-            style={defaultChartStyle}
+            selection={report}
           />
         );
       })}
-      <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} style={defaultChartStyle} />
+      <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} />
     </div>
   ) : (
     <div className="dashboard-placeholder margin-top-large">

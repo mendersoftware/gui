@@ -654,10 +654,10 @@ ul.link-list {
 }
 
 .dashboard {
-  display: grid;
+  display: flex;
   column-gap: 2 * @defaultGutterWidth;
   row-gap: 2 * @defaultGutterWidth;
-  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
+  flex-wrap: wrap;
   .widget {
     border-radius: @dotSize * 0.5;
     border: 1px solid @placeholder;
@@ -670,15 +670,14 @@ ul.link-list {
     min-height: 175px;
     padding: @defaultGutterWidth 1.5 * @defaultGutterWidth;
     position: relative;
-    &:hover .widgetRemover {
-      opacity: 1;
-    }
     &.chart-widget {
+      cursor: initial;
       padding: 10px @defaultGutterWidth;
+      justify-content: initial;
       width: 19vw;
       min-height: 235px;
       max-width: initial;
-      min-width: 315px;
+      min-width: 375px;
     }
     &.flexbox {
       display: flex;
@@ -698,9 +697,6 @@ ul.link-list {
     .counter {
       font-size: xx-large;
     }
-  }
-  .widgetRemover {
-    opacity: 0;
   }
   .link {
     font-size: small;

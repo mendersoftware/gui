@@ -19,9 +19,8 @@ describe('ChartAdditionWidget Component', () => {
     const submitCheck = jest.fn();
     render(<ChartAdditionWidget groups={defaultState.devices.groups.byId} onAdditionClick={submitCheck} />);
     expect(screen.queryByText(/Device group/i)).not.toBeInTheDocument();
-    userEvent.click(screen.getByText(/Add a chart/i));
-    expect(screen.queryByText(/Device group/i)).toBeInTheDocument();
-    const element = screen.getByText(/Device group/i);
+    act(() => userEvent.click(screen.getByText(/Add a widget/i)));
+    const element = screen.getByLabelText(/Device group/i);
     await selectMaterialUiSelectOption(element, 'testGroup');
     act(() => userEvent.click(screen.getByRole('button', { name: /Save/i })));
     expect(submitCheck).toHaveBeenCalled();
