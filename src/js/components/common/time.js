@@ -23,6 +23,9 @@ export const Time = ({ value, relative, format = defaultTimeFormat, valueFormat,
   );
 };
 
+export const MaybeTime = ({ className = '', value, ...remainingProps }) =>
+  value ? <Time value={value} {...remainingProps} /> : <div className={className}>-</div>;
+
 const cutoff = -5 * 60;
 export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) => {
   const [updatedTime, setUpdatedTime] = useState();
@@ -33,7 +36,7 @@ export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) =>
     }
   }, [updateTime]);
 
-  let timeDisplay = updatedTime ? <Time className={className} value={updatedTime} /> : <div className={className}>-</div>;
+  let timeDisplay = <MaybeTime className={className} value={updatedTime} />;
   const diffSeconds = updatedTime ? updatedTime.diff(moment(), 'seconds') : 0;
   if (
     updatedTime &&

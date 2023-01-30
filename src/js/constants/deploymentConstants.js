@@ -106,16 +106,19 @@ export const DEPLOYMENT_ROUTES = {
   active: {
     key: 'active',
     route: '/deployments/active',
+    states: [DEPLOYMENT_STATES.pending, DEPLOYMENT_STATES.inprogress],
     title: 'Active'
   },
   finished: {
     key: 'finished',
     route: '/deployments/finished',
+    states: [DEPLOYMENT_STATES.finished],
     title: 'Finished'
   },
   scheduled: {
     key: 'scheduled',
     route: '/deployments/scheduled',
+    states: [DEPLOYMENT_STATES.scheduled],
     title: 'Scheduled'
   }
 };

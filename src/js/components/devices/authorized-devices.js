@@ -569,7 +569,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, actionCreators)(Authorized);
 
-const DeviceStateSelection = ({ onStateChange, selectedState = '', states }) => {
+export const DeviceStateSelection = ({ onStateChange, selectedState = '', states }) => {
   const theme = useTheme();
   const availableStates = useMemo(() => Object.values(states).filter(duplicateFilter), [states]);
 

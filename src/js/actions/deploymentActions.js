@@ -3,7 +3,7 @@ import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
-import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
+import { DEVICE_LIST_DEFAULTS, RECEIVE_DEVICE } from '../constants/deviceConstants';
 import { isEmpty, startTimeSort } from '../helpers';
 import Tracking from '../tracking';
 import { saveGlobalSettings } from './userActions';
@@ -13,6 +13,7 @@ export const deploymentsApiUrlV2 = `${apiUrl.v2}/deployments`;
 
 const {
   CREATE_DEPLOYMENT,
+  DEPLOYMENT_ROUTES,
   DEPLOYMENT_STATES,
   DEPLOYMENT_TYPES,
   deploymentPrototype,
@@ -170,6 +171,50 @@ export const getDeploymentDevices =
       );
     });
   };
+
+export const getDeviceDeployments =
+  (deviceId, options = {}) =>
+  (dispatch, getState) => {
+    const { filterSelection = [], page = defaultPage, perPage = defaultPerPage } = options;
+    const filters = filterSelection.map(item => `&status=${item}`).join('');
+    return GeneralApi.get(`${deploymentsApiUrl}/deployments/devices/${deviceId}?page=${page}&per_page=${perPage}${filters}`)
+      .then(({ data, headers }) =>
+        Promise.resolve(
+          dispatch({
+            type: RECEIVE_DEVICE,
+            device: {
+              ...getState().devices.byId[deviceId],
+              deviceDeployments: data.map(({ deployment, device }) => ({
+                id: deployment.id,
+                release: deployment.artifact_name,
+                target:
+                  deployment.groups?.length === 1 && deployment.groups[0] ? deployment.groups[0] : deployment.device ? deployment.device : deployment.name,
+                created: device.created,
+                deleted: device.deleted,
+                deviceId: device.id,
+                finished: device.finished,
+                status: device.status,
+                log: device.log,
+                route: Object.values(DEPLOYMENT_ROUTES).reduce((accu, { key, states }) => {
+                  if (!accu) {
+                    return states.includes(deployment.status) ? key : accu;
+                  }
+                  return accu;
+                }, ''),
+                deploymentStatus: deployment.status
+              })),
+              deploymentsCount: Number(headers[headerNames.total])
+            }
+          })
+        )
+      )
+      .catch(err => commonErrorHandler(err, 'There was an error retrieving the device deployment history:', dispatch));
+  };
+
+export const resetDeviceDeployments = deviceId => dispatch =>
+  GeneralApi.delete(`${deploymentsApiUrl}/deployments/devices/${deviceId}/history`)
+    .then(() => Promise.resolve(dispatch(getDeviceDeployments(deviceId))))
+    .catch(err => commonErrorHandler(err, 'There was an error resetting the device deployment history:', dispatch));
 
 export const getSingleDeployment = id => (dispatch, getState) =>
   Promise.resolve(GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`)).then(({ data }) => {

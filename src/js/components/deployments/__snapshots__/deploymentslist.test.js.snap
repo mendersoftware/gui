@@ -322,7 +322,9 @@ exports[`DeploymentsList Component renders correctly 1`] = `
           class=""
           data-mui-internal-clone-element="true"
         >
-          <div>
+          <div
+            class=""
+          >
             -
           </div>
         </span>
@@ -473,7 +475,9 @@ exports[`DeploymentsList Component renders correctly 1`] = `
           class=""
           data-mui-internal-clone-element="true"
         >
-          <div>
+          <div
+            class=""
+          >
             -
           </div>
         </span>
