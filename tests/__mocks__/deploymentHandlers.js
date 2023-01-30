@@ -136,5 +136,30 @@ export const deploymentHandlers = [
   rest.get(`${deploymentsApiUrl}/config`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(defaultDeploymentConfig));
   }),
-  rest.put(`${deploymentsApiUrl}/config/binary_delta`, (req, res, ctx) => res(ctx.status(200)))
+  rest.put(`${deploymentsApiUrl}/config/binary_delta`, (req, res, ctx) => res(ctx.status(200))),
+  rest.get(`${deploymentsApiUrl}/deployments/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+    if (deviceId === defaultState.devices.byId.a1.id) {
+      return res(
+        ctx.set(headerNames.total, 34),
+        ctx.json([
+          {
+            id: createdDeployment.id + 'something',
+            deployment: { ...createdDeployment, id: defaultState.deployments.byId.d1.id, status: 'inprogress' },
+            device: {
+              created: '2019-01-01T12:35:00.000Z',
+              finished: '2019-01-01T12:40:00.000Z',
+              status: 'noartifact',
+              id: 'something',
+              image: { ...defaultState.releases.byId.r1 }
+            },
+            log: true,
+            attempts: 1,
+            delta_job_id: ''
+          }
+        ])
+      );
+    }
+    return res(ctx.status(529));
+  }),
+  rest.delete(`${deploymentsApiUrl}/deployments/devices/:deviceId/history`, (req, res, ctx) => res(ctx.status(204)))
 ];

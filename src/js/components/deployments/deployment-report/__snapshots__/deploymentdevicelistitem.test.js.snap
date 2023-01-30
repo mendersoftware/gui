@@ -146,12 +146,20 @@ exports[`DeploymentDeviceListItem Component renders correctly 1`] = `
   <td
     class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   >
-    -
+    <div
+      class=""
+    >
+      -
+    </div>
   </td>
   <td
     class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"
   >
-    -
+    <div
+      class=""
+    >
+      -
+    </div>
   </td>
   <td
     class="MuiTableCell-root MuiTableCell-sizeMedium emotion-1"

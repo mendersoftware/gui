@@ -93,12 +93,20 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
         <td
           class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
         >
-          -
+          <div
+            class=""
+          >
+            -
+          </div>
         </td>
         <td
           class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"
         >
-          -
+          <div
+            class=""
+          >
+            -
+          </div>
         </td>
         <td
           class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-b25y0t-MuiTableCell-root"

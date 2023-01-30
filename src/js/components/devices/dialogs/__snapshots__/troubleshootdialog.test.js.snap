@@ -665,7 +665,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
               class="flexbox "
             >
               <div
-                title="-"
+                class=""
               >
                 -
               </div>

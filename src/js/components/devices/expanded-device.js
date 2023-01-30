@@ -11,7 +11,7 @@ import copy from 'copy-to-clipboard';
 import GatewayConnectionIcon from '../../../assets/img/gateway-connection.svg';
 import GatewayIcon from '../../../assets/img/gateway.svg';
 import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../actions/deploymentActions';
+import { abortDeployment, getDeviceDeployments, getDeviceLog, getSingleDeployment, resetDeviceDeployments } from '../../actions/deploymentActions';
 import {
   applyDeviceConfig,
   decommissionDevice,
@@ -33,6 +33,7 @@ import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import DeviceConfiguration from './device-details/configuration';
 import { TroubleshootTab } from './device-details/connection';
+import Deployments from './device-details/deployments';
 import DeviceInventory from './device-details/deviceinventory';
 import DeviceSystem from './device-details/devicesystem';
 import { IntegrationTab } from './device-details/devicetwin';
@@ -118,39 +119,46 @@ const GatewayNotification = ({ device, docsVersion, onClick }) => {
   );
 };
 
+const deviceStatusCheck = ({ device: { status = DEVICE_STATES.accepted } }, states = [DEVICE_STATES.accepted]) => states.includes(status);
+
 const tabs = [
   { component: IdentityTab, title: () => 'Identity', value: 'identity', isApplicable: () => true },
   {
     component: DeviceInventory,
     title: () => 'Inventory',
     value: 'inventory',
-    isApplicable: ({ device: { status = DEVICE_STATES.accepted } }) => status === DEVICE_STATES.accepted
+    isApplicable: deviceStatusCheck
   },
   {
     component: InstalledSoftware,
     title: () => 'Software',
     value: 'software',
-    isApplicable: ({ device: { status = DEVICE_STATES.accepted } }) => status === DEVICE_STATES.accepted
+    isApplicable: deviceStatusCheck
+  },
+  {
+    component: Deployments,
+    title: () => 'Deployments',
+    value: 'deployments',
+    isApplicable: deviceStatusCheck
   },
   {
     component: DeviceConfiguration,
     title: () => 'Configuration',
     value: 'configuration',
-    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, tenantCapabilities: { hasDeviceConfig }, userCapabilities: { canConfigure } }) =>
-      hasDeviceConfig && canConfigure && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status)
+    isApplicable: ({ tenantCapabilities: { hasDeviceConfig }, userCapabilities: { canConfigure }, ...rest }) =>
+      hasDeviceConfig && canConfigure && deviceStatusCheck(rest, [DEVICE_STATES.accepted, DEVICE_STATES.preauth])
   },
   {
     component: MonitoringTab,
     title: () => 'Monitoring',
     value: 'monitor',
-    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, tenantCapabilities: { hasMonitor } }) => status === DEVICE_STATES.accepted && hasMonitor
+    isApplicable: ({ tenantCapabilities: { hasMonitor }, ...rest }) => deviceStatusCheck(rest) && hasMonitor
   },
   {
     component: TroubleshootTab,
     title: () => 'Troubleshooting',
     value: 'troubleshoot',
-    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, tenantCapabilities: { hasDeviceConnect } }) =>
-      status === DEVICE_STATES.accepted && hasDeviceConnect
+    isApplicable: ({ tenantCapabilities: { hasDeviceConnect }, ...rest }) => deviceStatusCheck(rest) && hasDeviceConnect
   },
   {
     component: IntegrationTab,
@@ -162,8 +170,7 @@ const tabs = [
       return `${title} ${twinTitle}`;
     },
     value: 'device-twin',
-    isApplicable: ({ device: { status = DEVICE_STATES.accepted }, integrations }) =>
-      !!integrations.length && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(status)
+    isApplicable: ({ integrations, ...rest }) => !!integrations.length && deviceStatusCheck(rest, [DEVICE_STATES.accepted, DEVICE_STATES.preauth])
   },
   {
     component: DeviceSystem,
@@ -184,6 +191,7 @@ export const ExpandedDevice = ({
   devicesById,
   docsVersion,
   features,
+  getDeviceDeployments,
   getDeviceInfo,
   getDeviceLog,
   getDeviceTwin,
@@ -200,6 +208,7 @@ export const ExpandedDevice = ({
   onMakeGatewayClick,
   onRemoveDevicesFromGroup,
   refreshDevices,
+  resetDeviceDeployments,
   saveGlobalSettings,
   selectedGroup,
   setDetailsTab,
@@ -309,6 +318,7 @@ export const ExpandedDevice = ({
     device,
     deviceConfigDeployment,
     docsVersion,
+    getDeviceDeployments,
     getDeviceLog,
     getDeviceTwin,
     getSingleDeployment,
@@ -317,6 +327,7 @@ export const ExpandedDevice = ({
     launchTroubleshoot,
     onDecommissionDevice,
     refreshDevices,
+    resetDeviceDeployments,
     saveGlobalSettings,
     setDetailsTab,
     setDeviceConfig,
@@ -387,11 +398,13 @@ const actionCreators = {
   abortDeployment,
   applyDeviceConfig,
   decommissionDevice,
+  getDeviceDeployments,
   getDeviceLog,
   getDeviceInfo,
   getDeviceTwin,
   getGatewayDevices,
   getSingleDeployment,
+  resetDeviceDeployments,
   saveGlobalSettings,
   setDeviceConfig,
   setDeviceTags,
