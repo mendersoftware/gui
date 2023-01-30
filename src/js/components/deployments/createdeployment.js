@@ -358,9 +358,10 @@ export const CreateDeployment = props => {
 const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, getSystemDevices, saveGlobalSettings };
 
 export const mapStateToProps = state => {
-  const { canRetry, canSchedule } = getTenantCapabilities(state);
+  const { canRetry, canSchedule, hasFullFiltering } = getTenantCapabilities(state);
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
     canRetry,
@@ -370,6 +371,7 @@ export const mapStateToProps = state => {
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     hasDynamicGroups: Object.values(groups).some(group => !!group.id),
+    hasFullFiltering,
     hasPending: state.devices.byStatus.pending.total,
     idAttribute: getIdAttribute(state).attribute,
     isEnterprise: getIsEnterprise(state),
