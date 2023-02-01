@@ -82,7 +82,7 @@
     "css-loader": "^6.7.3",
     "esbuild-loader": "^2.20.0",
     "eslint": "^8.31.0",
-    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-sonarjs": "^0.17.0",
