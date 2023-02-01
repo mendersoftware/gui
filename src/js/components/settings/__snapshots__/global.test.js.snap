@@ -148,13 +148,6 @@ label+.emotion-5 {
   border-bottom-color: #ab1000;
 }
 
-.emotion-5.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-5:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -168,7 +161,7 @@ label+.emotion-5 {
 }
 
 .emotion-5:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
@@ -1104,13 +1097,6 @@ label+.emotion-35 {
   border-bottom-color: #ab1000;
 }
 
-.emotion-35.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-35:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -1124,7 +1110,7 @@ label+.emotion-35 {
 }
 
 .emotion-35:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
@@ -1429,13 +1415,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
   border-bottom-color: #ab1000;
 }
 
-.emotion-77.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-77:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -1449,7 +1428,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
 }
 
 .emotion-77:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {

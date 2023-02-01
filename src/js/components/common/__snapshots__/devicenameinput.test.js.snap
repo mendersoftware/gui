@@ -56,13 +56,6 @@ exports[`DeviceNameInput Component renders correctly 1`] = `
   border-bottom-color: #ab1000;
 }
 
-.emotion-0.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-0:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -76,7 +69,7 @@ exports[`DeviceNameInput Component renders correctly 1`] = `
 }
 
 .emotion-0:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
