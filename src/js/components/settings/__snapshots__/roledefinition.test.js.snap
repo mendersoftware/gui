@@ -411,13 +411,6 @@ label+.emotion-11 {
   border-bottom-color: #ab1000;
 }
 
-.emotion-11.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-11:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -431,7 +424,7 @@ label+.emotion-11 {
 }
 
 .emotion-11:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
@@ -618,13 +611,6 @@ label+.emotion-15 {
   border-bottom-color: #ab1000;
 }
 
-.emotion-15.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-15:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -638,7 +624,7 @@ label+.emotion-15 {
 }
 
 .emotion-15:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
@@ -887,13 +873,6 @@ label+.emotion-22 {
   border-bottom-color: #ab1000;
 }
 
-.emotion-22.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-22:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -907,7 +886,7 @@ label+.emotion-22 {
 }
 
 .emotion-22:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(10, 10, 11, 0.78);
+  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
 }
 
 @media (hover: none) {
