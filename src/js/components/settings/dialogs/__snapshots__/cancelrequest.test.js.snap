@@ -394,13 +394,6 @@ label+.emotion-72 {
   border-bottom-color: #d32f2f;
 }
 
-.emotion-72.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-72:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -414,7 +407,7 @@ label+.emotion-72 {
 }
 
 .emotion-72:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.87);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.87);
 }
 
 @media (hover: none) {
@@ -585,13 +578,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
   border-bottom-color: #d32f2f;
 }
 
-.emotion-74.Mui-error:focus-within:after {
-  -webkit-transform: scaleX(1);
-  -moz-transform: scaleX(1);
-  -ms-transform: scaleX(1);
-  transform: scaleX(1);
-}
-
 .emotion-74:before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
@@ -605,7 +591,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
 }
 
 .emotion-74:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.87);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.87);
 }
 
 @media (hover: none) {
