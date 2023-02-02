@@ -19,9 +19,7 @@ const reportTypes = {
 
 const defaultChartStyle = {
   cursor: 'initial',
-  height: 280,
-  justifyContent: 'initial',
-  padding: 0
+  justifyContent: 'initial'
 };
 
 export const SoftwareDistribution = ({

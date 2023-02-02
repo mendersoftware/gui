@@ -25,7 +25,7 @@ export const ChartAdditionWidget = ({ groups, onAdditionClick, style }) => {
   };
 
   return (
-    <div className="widget chart-widget" style={style}>
+    <div className="widget" style={style}>
       {adding ? (
         <>
           <div className={`flexbox centered ${classes.formWrapper}`}>
@@ -57,7 +57,7 @@ export const ChartAdditionWidget = ({ groups, onAdditionClick, style }) => {
           <div></div>
           <div className={`flexbox centered muted ${classes.additionButton}`} onClick={() => setAdding(true)}>
             <AddIcon />
-            <span className={classes.additionButton}>Add a chart</span>
+            <span className={classes.additionButton}>add a widget</span>
           </div>
         </>
       )}

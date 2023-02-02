@@ -30,7 +30,7 @@ const useStyles = makeStyles()(theme => ({
     position: 'relative',
     rowGap: theme.spacing(6),
     flexDirection: 'column',
-    [theme.breakpoints.up('xl')]: { minWidth: '45vw' }
+    [theme.breakpoints.up('xl')]: { minWidth: '50vw' }
   },
   right: {
     flexGrow: 1,
@@ -73,13 +73,11 @@ export const Dashboard = ({ currentUser, hasReporting, onboardingState, setSnack
   }, []);
 
   const handleClick = params => {
-    let redirect;
+    let redirect = params.route;
     if (params.route === 'deployments') {
       let query = params.open ? ['open=true'] : [];
       params.id ? query.push(`id=${params.id}`) : undefined;
       redirect = `/deployments/${params.tab || DEPLOYMENT_ROUTES.active.key}?${query.join('&')}`;
-    } else {
-      redirect = params.route;
     }
     navigate(redirect);
   };
@@ -109,7 +107,7 @@ const actionCreators = { setSnackbar };
 const mapStateToProps = state => {
   return {
     currentUser: state.users.currentUser,
-    hasReporting: state.app.features.hasReporting,
+    hasReporting: state.app.features.hasReporting || 12,
     onboardingState: getOnboardingState(state)
   };
 };
