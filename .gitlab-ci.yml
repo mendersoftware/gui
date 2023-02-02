@@ -63,8 +63,6 @@ test:lint:
       junit:
         - junit/results.xml
     when: always
-  tags:
-    - mender-qa-worker-generic-light
 
 test:acceptance:
   extends: .template:test:acceptance
