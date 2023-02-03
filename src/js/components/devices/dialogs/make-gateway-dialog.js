@@ -12,7 +12,7 @@ export const getCode = isPreRelease => {
     : { target: 'https://get.mender.io', flags: '' };
   return `JWT_TOKEN='${getToken()}'
 
-wget -O- ${target} | sudo bash -s -- --jwt-token $JWT_TOKEN mender-gateway --demo${flags}`;
+wget -O- ${target} | sudo bash -s -- --jwt-token $JWT_TOKEN mender-gateway --demo${flags} -- --server-url https://${window.location.hostname}`;
 };
 
 export const MakeGatewayDialog = ({ docsVersion, isPreRelease, onCancel }) => (
