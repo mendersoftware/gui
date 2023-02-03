@@ -51,7 +51,7 @@ const useStyles = makeStyles()(theme => ({
   row: { flexWrap: 'wrap', maxWidth: '85vw' }
 }));
 
-export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit, onboardingState, setSnackbar }) => {
+export const Dashboard = ({ currentUser, hasReporting, onboardingState, setSnackbar }) => {
   const timer = useRef();
   const { classes } = useStyles();
   const navigate = useNavigate();
@@ -91,7 +91,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
         <div className={classes.board}>
           <div className={classes.left}>
             <Devices clickHandle={handleClick} />
-            {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
+            {hasReporting ? <SoftwareDistribution /> : <div />}
           </div>
           <Deployments className={classes.right} clickHandle={handleClick} />
         </div>
@@ -108,9 +108,8 @@ const actionCreators = { setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    acceptedDevicesCount: state.devices.byStatus.accepted.total,
     currentUser: state.users.currentUser,
-    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
+    hasReporting: state.app.features.hasReporting,
     onboardingState: getOnboardingState(state)
   };
 };
