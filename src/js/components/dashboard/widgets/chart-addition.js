@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react';
 
 import { Add as AddIcon } from '@mui/icons-material';
-import { Button, FormControl, IconButton, InputLabel, MenuItem, Select, iconButtonClasses, selectClasses } from '@mui/material';
+import { Button, FormControl, IconButton, InputLabel, ListSubheader, MenuItem, Select, iconButtonClasses, selectClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { chartTypes, emptyChartSelection } from '../../../constants/appConstants';
-import { toggle } from '../../../helpers';
+import { softwareTitleMap } from '../../../constants/releaseConstants';
+import { isEmpty, toggle } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import { Header } from './distribution';
 
@@ -55,14 +56,52 @@ const GroupSelect = ({ groups, selection, setSelection }) => (
   </FormControl>
 );
 
+const getLayerKey = ({ title, key }, parent) => `${parent.length ? `${parent}.` : parent}${key.length <= title.length ? key : title}`;
+
+const themeSpacing = 8;
+const basePadding = 2 * themeSpacing;
+const getIndentation = level => ({ paddingLeft: basePadding + level * themeSpacing });
+
+const LayerHeader = ({ softwareLayer, parent, nestingLevel }) => {
+  const { children, key, title } = softwareLayer;
+  const suffix = title === key ? '.version' : '';
+  const layerKey = getLayerKey(softwareLayer, parent);
+  const style = getIndentation(nestingLevel);
+  const layerTitle = `${layerKey}${suffix}`;
+  if (softwareTitleMap[layerTitle]) {
+    return (
+      <>
+        <ListSubheader style={style}>{title}</ListSubheader>
+        <MenuItem key={key} style={getIndentation(nestingLevel + 1)} value={layerTitle}>
+          {softwareTitleMap[layerTitle].title}
+        </MenuItem>
+      </>
+    );
+  } else if (!isEmpty(children)) {
+    return <ListSubheader style={style}>{title}</ListSubheader>;
+  }
+  return (
+    <MenuItem key={key} style={style} value={layerKey}>
+      {title}
+    </MenuItem>
+  );
+};
+
+const SoftwareLayerItems = ({ softwareLayer, parentKey = '', nestingLevel = 0 }) => (
+  <>
+    <LayerHeader softwareLayer={softwareLayer} parent={parentKey} nestingLevel={nestingLevel} />
+    {Object.values(softwareLayer.children).map(software => (
+      <SoftwareLayerItems key={software.key} softwareLayer={software} parentKey={getLayerKey(softwareLayer, parentKey)} nestingLevel={nestingLevel + 1} />
+    ))}
+  </>
+);
+
 const SoftwareSelect = ({ selection, setSelection, software }) => (
   <FormControl className="margin-top-none">
     <InputLabel id="software-select-label">Software</InputLabel>
-    <Select labelId="software-select-label" value={selection.software} onChange={e => setSelection({ software: e.target.value })}>
-      {Object.keys(software).map(software => (
-        <MenuItem key={software} value={software}>
-          {software}
-        </MenuItem>
+    <Select labelId="software-select-label" value={selection.software} onBlur={undefined} onChange={e => setSelection({ software: e.target.value })}>
+      {Object.values(software).map(softwareLayer => (
+        <SoftwareLayerItems key={softwareLayer.key} softwareLayer={softwareLayer} />
       ))}
     </Select>
   </FormControl>
@@ -92,7 +131,7 @@ const chartOptions = [
   { key: 'type', title: 'Display', Selector: ChartSelect }
 ];
 
-export const ChartEditWidget = ({ groups, onSave, onCancel, selection: selectionProp = {}, software = [] }) => {
+export const ChartEditWidget = ({ groups, onSave, onCancel, selection: selectionProp = {}, software = {} }) => {
   const [selection, setSelection] = useState({ ...emptyChartSelection, ...selectionProp });
   const { classes } = useStyles();
 

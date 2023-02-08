@@ -199,8 +199,13 @@ export const Header = ({ chartType }) => {
   );
 };
 
-export const DistributionReport = ({ devices, groups, onClick, selectGroup, selection = {} }) => {
-  const { attribute: attributeSelection = 'rootfs-image.version', group: groupSelection = '', chartType: chartTypeSelection = chartTypes.bar.key } = selection;
+export const DistributionReport = ({ devices, groups, onClick, selectGroup, selection = {}, software: softwareTree }) => {
+  const {
+    attribute: attributeSelection,
+    group: groupSelection = '',
+    chartType: chartTypeSelection = chartTypes.bar.key,
+    software: softwareSelection = 'rootfs-image.version'
+  } = selection;
   const [editing, setEditing] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [chartType, setChartType] = useState(chartTypes.bar.key);
@@ -210,10 +215,10 @@ export const DistributionReport = ({ devices, groups, onClick, selectGroup, sele
   const theme = useTheme();
 
   useEffect(() => {
-    setSoftware(attributeSelection);
+    setSoftware(softwareSelection || attributeSelection);
     setGroup(groupSelection);
     setChartType(chartTypeSelection);
-  }, [attributeSelection, groupSelection, chartTypeSelection]);
+  }, [attributeSelection, groupSelection, chartTypeSelection, softwareSelection]);
 
   const { distribution, totals } = useMemo(
     () => initDistribution({ attribute: attributeSelection, devices, group, groups, theme }),
@@ -260,7 +265,7 @@ export const DistributionReport = ({ devices, groups, onClick, selectGroup, sele
       onSave={onSaveClick}
       onCancel={onToggleEditClick}
       selection={{ ...selection, chartType, group, software }}
-      software={software}
+      software={softwareTree}
     />
   ) : (
     <div className="widget chart-widget">

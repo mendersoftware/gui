@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@mui/icons-material';
 
-import { getAllDynamicGroupDevices, getAllGroupDevices, selectGroup } from '../../actions/deviceActions';
+import { getAllDynamicGroupDevices, getAllGroupDevices, getDeviceAttributes, getReportingLimits, selectGroup } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
 import { emptyChartSelection } from '../../constants/appConstants';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { getIsEnterprise, getUserSettings } from '../../selectors';
+import { getAttributesList, getIsEnterprise, getUserSettings } from '../../selectors';
 import EnterpriseNotification from '../common/enterpriseNotification';
+import { extractSoftwareInformation } from '../devices/device-details/installedsoftware';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
 
@@ -19,9 +20,12 @@ const reportTypes = {
 };
 
 export const SoftwareDistribution = ({
+  attributes,
   devices,
   getAllDynamicGroupDevices,
   getAllGroupDevices,
+  getDeviceAttributes,
+  getReportingLimits,
   groups,
   hasDevices,
   isEnterprise,
@@ -31,11 +35,13 @@ export const SoftwareDistribution = ({
 }) => {
   useEffect(() => {
     reports.map(report => initializeReport(report.group));
+    getDeviceAttributes();
+    getReportingLimits();
   }, []);
 
   useEffect(() => {
     reports.map(report => initializeReport(report.group));
-  }, [reports]);
+  }, [JSON.stringify(reports)]);
 
   const initializeReport = group => {
     if (!group) {
@@ -58,6 +64,11 @@ export const SoftwareDistribution = ({
     saveUserSettings({ reports: reports.filter(report => report !== removedReport) });
   };
 
+  const software = useMemo(() => {
+    const enhancedAttributes = attributes.reduce((accu, attribute) => ({ ...accu, [attribute]: attribute }), {});
+    return extractSoftwareInformation(enhancedAttributes, false);
+  }, [JSON.stringify(attributes)]);
+
   if (!isEnterprise) {
     return (
       <div className="flexbox centered">
@@ -71,16 +82,18 @@ export const SoftwareDistribution = ({
         const Component = reportTypes[report.type];
         return (
           <Component
+            attributes={attributes}
             devices={devices}
             groups={groups}
             key={`report-${report.group}-${index}`}
             onClick={() => removeReport(report)}
             selectGroup={selectGroup}
             selection={report}
+            software={software}
           />
         );
       })}
-      <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} />
+      <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} software={software} />
     </div>
   ) : (
     <div className="dashboard-placeholder margin-top-large">
@@ -90,7 +103,7 @@ export const SoftwareDistribution = ({
   );
 };
 
-const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, saveUserSettings, selectGroup };
+const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, getDeviceAttributes, getReportingLimits, saveUserSettings, selectGroup };
 
 const mapStateToProps = state => {
   const reports =
@@ -100,7 +113,7 @@ const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
-    attributes: state.devices.filteringAttributes.inventoryAttributes.concat(state.devices.filteringAttributes.identityAttributes) || [],
+    attributes: getAttributesList(state),
     devices: state.devices.byId,
     hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
     groups,
