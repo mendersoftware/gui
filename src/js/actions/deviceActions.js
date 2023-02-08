@@ -737,23 +737,21 @@ export const searchDevices =
   };
 
 const ATTRIBUTE_LIST_CUTOFF = 100;
+const attributeReducer = (attributes = []) =>
+  attributes.slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
+    (accu, { name, scope }) => {
+      if (!accu[scope]) {
+        accu[scope] = [];
+      }
+      accu[scope].push(name);
+      return accu;
+    },
+    { identity: [], inventory: [], system: [], tags: [] }
+  );
+
 export const getDeviceAttributes = () => (dispatch, getState) =>
   GeneralApi.get(getAttrsEndpoint(getState().app.features.hasReporting)).then(({ data }) => {
-    const {
-      identity: identityAttributes,
-      inventory: inventoryAttributes,
-      system: systemAttributes,
-      tags: tagAttributes
-    } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
-      (accu, item) => {
-        if (!accu[item.scope]) {
-          accu[item.scope] = [];
-        }
-        accu[item.scope].push(item.name);
-        return accu;
-      },
-      { identity: [], inventory: [], system: [], tags: [] }
-    );
+    const { identity: identityAttributes, inventory: inventoryAttributes, system: systemAttributes, tags: tagAttributes } = attributeReducer(data);
     return dispatch({
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
       attributes: { identityAttributes, inventoryAttributes, systemAttributes, tagAttributes }
@@ -764,14 +762,8 @@ export const getReportingLimits = () => dispatch =>
   GeneralApi.get(`${reportingApiUrl}/devices/attributes`)
     .catch(err => commonErrorHandler(err, `filterable attributes limit & usage could not be retrieved.`, dispatch, commonErrorFallback))
     .then(({ data }) => {
-      const { attributes = [], count, limit } = data;
-      const groupedAttributes = attributes.reduce((accu, { name, scope }) => {
-        if (!accu[scope]) {
-          accu[scope] = [];
-        }
-        accu[scope].push(name);
-        return accu;
-      }, {});
+      const { attributes, count, limit } = data;
+      const groupedAttributes = attributeReducer(attributes);
       return Promise.resolve(dispatch({ type: DeviceConstants.SET_FILTERABLES_CONFIG, count, limit, attributes: groupedAttributes }));
     });
 
