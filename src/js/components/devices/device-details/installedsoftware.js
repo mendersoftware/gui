@@ -67,7 +67,7 @@ const sortAndHoist = thing =>
  * - for a shallower tree rendering the resulting tree is descended recursively once more and all
  *    software with only a single "sublayer" is hoisted up & listed under the shared title
  */
-export const extractSoftwareInformation = (attributes = {}) => {
+export const extractSoftwareInformation = (attributes = {}, sort = true) => {
   const { software } = extractSoftware(attributes);
 
   const softwareLayers = software.reduce((accu, item, index) => {
@@ -84,7 +84,10 @@ export const extractSoftwareInformation = (attributes = {}) => {
     };
     return accu;
   }, {});
-  return sortAndHoist(softwareLayers);
+  if (sort) {
+    return sortAndHoist(softwareLayers);
+  }
+  return softwareLayers;
 };
 
 const SoftwareLayer = ({ classes, layer, isNested, overviewOnly, setSnackbar }) => (
