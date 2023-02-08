@@ -7,6 +7,8 @@ import { getAllDynamicGroupDevices, getAllGroupDevices, getDeviceAttributes, get
 import { saveUserSettings } from '../../actions/userActions';
 import { emptyChartSelection } from '../../constants/appConstants';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { softwareTitleMap } from '../../constants/releaseConstants';
+import { isEmpty } from '../../helpers';
 import { getAttributesList, getIsEnterprise, getUserSettings } from '../../selectors';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { extractSoftwareInformation } from '../devices/device-details/installedsoftware';
@@ -17,6 +19,46 @@ export const defaultReports = [{ ...emptyChartSelection, group: null, attribute:
 
 const reportTypes = {
   distribution: DistributionReport
+};
+
+const getLayerKey = ({ title, key }, parent) => `${parent.length ? `${parent}.` : parent}${key.length <= title.length ? key : title}`;
+
+const generateLayer = (softwareLayer, parentKey = '', nestingLevel = 0) => {
+  const { children, key, title } = softwareLayer;
+  const suffix = title === key ? '.version' : '';
+  const layerKey = getLayerKey(softwareLayer, parentKey);
+  const layerTitle = `${layerKey}${suffix}`;
+  let headerItems = [{ title, nestingLevel, value: layerKey }];
+  if (softwareTitleMap[layerTitle]) {
+    headerItems = [
+      { subheader: title, nestingLevel, value: `${layerTitle}-subheader` },
+      { title: softwareTitleMap[layerTitle].title, nestingLevel: nestingLevel + 1, value: layerTitle }
+    ];
+  } else if (!isEmpty(children)) {
+    headerItems = [{ subheader: title, nestingLevel, value: `${layerTitle}-subheader` }];
+  }
+  return Object.values(softwareLayer.children).reduce((accu, childLayer) => {
+    const layerData = generateLayer(childLayer, getLayerKey(softwareLayer, parentKey), nestingLevel + 1);
+    accu.push(...layerData);
+    return accu;
+  }, headerItems);
+};
+
+const listSoftware = attributes => {
+  const enhancedAttributes = attributes.reduce((accu, attribute) => ({ ...accu, [attribute]: attribute }), {});
+  const softwareTree = extractSoftwareInformation(enhancedAttributes, false);
+  const { rootFs, remainder } = Object.values(softwareTree).reduce(
+    (accu, layer) => {
+      if (layer.key.startsWith('rootfs-image')) {
+        return { ...accu, rootFs: layer };
+      }
+      accu.remainder.push(layer);
+      return accu;
+    },
+    { rootFs: undefined, remainder: [] }
+  );
+
+  return (rootFs ? [rootFs, ...remainder] : remainder).flatMap(softwareLayer => generateLayer(softwareLayer));
 };
 
 export const SoftwareDistribution = ({
@@ -64,10 +106,7 @@ export const SoftwareDistribution = ({
     saveUserSettings({ reports: reports.filter(report => report !== removedReport) });
   };
 
-  const software = useMemo(() => {
-    const enhancedAttributes = attributes.reduce((accu, attribute) => ({ ...accu, [attribute]: attribute }), {});
-    return extractSoftwareInformation(enhancedAttributes, false);
-  }, [JSON.stringify(attributes)]);
+  const software = useMemo(() => listSoftware(attributes), [JSON.stringify(attributes)]);
 
   if (!isEnterprise) {
     return (
