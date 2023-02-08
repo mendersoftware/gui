@@ -15,7 +15,8 @@ import { extractSoftwareInformation } from '../devices/device-details/installeds
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
 
-export const defaultReports = [{ ...emptyChartSelection, group: null, attribute: 'artifact_name', type: 'distribution' }];
+const defaultReportType = 'distribution';
+export const defaultReports = [{ ...emptyChartSelection, group: null, attribute: 'artifact_name', type: defaultReportType }];
 
 const reportTypes = {
   distribution: DistributionReport
@@ -97,8 +98,15 @@ export const SoftwareDistribution = ({
   };
 
   const addCurrentSelection = selection => {
-    const newReports = [...reports, selection];
+    const newReports = [...reports, { ...defaultReports[0], ...selection }];
     initializeReport(selection.group);
+    saveUserSettings({ reports: newReports });
+  };
+
+  const onSaveChangedReport = (change, index) => {
+    let newReports = [...reports];
+    newReports.splice(index, 1, change);
+    initializeReport(change.group);
     saveUserSettings({ reports: newReports });
   };
 
@@ -118,7 +126,7 @@ export const SoftwareDistribution = ({
   return hasDevices ? (
     <div className="dashboard">
       {reports.map((report, index) => {
-        const Component = reportTypes[report.type];
+        const Component = reportTypes[report.type || defaultReportType];
         return (
           <Component
             attributes={attributes}
@@ -126,6 +134,7 @@ export const SoftwareDistribution = ({
             groups={groups}
             key={`report-${report.group}-${index}`}
             onClick={() => removeReport(report)}
+            onSave={change => onSaveChangedReport(change, index)}
             selectGroup={selectGroup}
             selection={report}
             software={software}

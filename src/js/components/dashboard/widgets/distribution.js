@@ -199,7 +199,7 @@ export const Header = ({ chartType }) => {
   );
 };
 
-export const DistributionReport = ({ devices, groups, onClick, selectGroup, selection = {}, software: softwareTree }) => {
+export const DistributionReport = ({ devices, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
   const {
     attribute: attributeSelection,
     group: groupSelection = '',
@@ -243,6 +243,7 @@ export const DistributionReport = ({ devices, groups, onClick, selectGroup, sele
     setChartType(selection.chartType);
     setSoftware(selection.software);
     setGroup(selection.group);
+    onSave(selection);
     setEditing(false);
   };
 
