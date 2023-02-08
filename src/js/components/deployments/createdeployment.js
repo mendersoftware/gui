@@ -23,7 +23,7 @@ import moment from 'moment';
 import pluralize from 'pluralize';
 
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
-import { createDeployment } from '../../actions/deploymentActions';
+import { createDeployment, getDeploymentsConfig } from '../../actions/deploymentActions';
 import { getGroupDevices, getSystemDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
@@ -90,9 +90,11 @@ export const CreateDeployment = props => {
     createdGroup,
     createDeployment,
     deploymentObject = {},
+    getDeploymentsConfig,
     getGroupDevices,
     getReleases,
     groups,
+    hasDeltaEnabled,
     hasDevices,
     isOnboardingComplete,
     onboardingState,
@@ -126,6 +128,7 @@ export const CreateDeployment = props => {
       searchConfig = devices[0].attributes.device_type ? { searchAttribute: 'device_type', searchTerm: devices[0].attributes.device_type[0] } : searchConfig;
     }
     getReleases({ page: 1, perPage: 100, searchOnly: true, ...searchConfig });
+    getDeploymentsConfig();
   }, []);
 
   useEffect(() => {
@@ -319,14 +322,16 @@ export const CreateDeployment = props => {
             <RolloutOptions {...sharedProps} />
             <Retries {...sharedProps} />
             <ForceDeploy {...sharedProps} />
-            <FormControlLabel
-              control={<Checkbox color="primary" checked={delta} onChange={onDeltaToggle} size="small" />}
-              label={
-                <>
-                  Generate and deploy Delta Artifacts (where available) <DeltaIcon />
-                </>
-              }
-            />
+            {hasDeltaEnabled && (
+              <FormControlLabel
+                control={<Checkbox color="primary" checked={delta} onChange={onDeltaToggle} size="small" />}
+                label={
+                  <>
+                    Generate and deploy Delta Artifacts (where available) <DeltaIcon />
+                  </>
+                }
+              />
+            )}
           </AccordionDetails>
         </Accordion>
       </FormGroup>
@@ -355,13 +360,13 @@ export const CreateDeployment = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, createDeployment, getGroupDevices, getReleases, getSystemDevices, saveGlobalSettings };
+const actionCreators = { advanceOnboarding, createDeployment, getDeploymentsConfig, getGroupDevices, getReleases, getSystemDevices, saveGlobalSettings };
 
 export const mapStateToProps = state => {
   const { canRetry, canSchedule, hasFullFiltering } = getTenantCapabilities(state);
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-
+  const { hasDelta } = state.deployments.config ?? {};
   return {
     acceptedDeviceCount: state.devices.byStatus.accepted.total,
     canRetry,
@@ -370,6 +375,7 @@ export const mapStateToProps = state => {
     docsVersion: getDocsVersion(state),
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasDeltaEnabled: hasDelta,
     hasDynamicGroups: Object.values(groups).some(group => !!group.id),
     hasFullFiltering,
     hasPending: state.devices.byStatus.pending.total,
