@@ -1057,7 +1057,7 @@ export const getSystemDevices =
     const state = getState();
     let device = state.devices.byId[id];
     const { attributes: deviceAttributes = {} } = device;
-    const { mender_gateway_system_id } = deviceAttributes;
+    const { mender_gateway_system_id = '' } = deviceAttributes;
     const { hasFullFiltering } = getTenantCapabilities(state);
     if (!hasFullFiltering) {
       return Promise.resolve();
@@ -1100,7 +1100,7 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
   const state = getState();
   let device = state.devices.byId[deviceId];
   const { attributes = {} } = device;
-  const { mender_gateway_system_id } = attributes;
+  const { mender_gateway_system_id = '' } = attributes;
   const filters = [
     { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: deviceId, scope: 'identity' },
     { ...emptyFilter, key: 'mender_is_gateway', value: 'true', scope: 'inventory' },
