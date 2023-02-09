@@ -1,13 +1,59 @@
 import React, { useState } from 'react';
 
+import { accordionClasses, accordionDetailsClasses, accordionSummaryClasses } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { customSort } from '../../../../helpers';
 import { AuthExplainButton } from '../../../helptips/helptooltips';
 import AuthsetListItem from './authsetlistitem';
 
-export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
+const fourColumns = '0.5fr 1fr 2fr 2fr';
+const useStyles = makeStyles()(theme => ({
+  authsets: {
+    [`.header, .${accordionClasses.root}`]: {
+      borderBottom: `1px solid ${theme.palette.grey[600]}`
+    },
+    [`.columnHeader, .${accordionSummaryClasses.root}, .${accordionSummaryClasses.content}`]: {
+      cursor: 'default'
+    },
+    [`.header, .body .${accordionSummaryClasses.content}`]: {
+      display: 'grid',
+      gridColumnGap: theme.spacing(2),
+      gridTemplateColumns: '0.5fr 1fr 2fr 2fr 2fr'
+    }
+  },
+  accordion: {
+    backgroundColor: theme.palette.grey[50],
+    '&:before': { display: 'none' },
+    '&$expanded': { margin: 'auto' },
+    [`.columns-4 .${accordionSummaryClasses.content}`]: {
+      gridTemplateColumns: fourColumns
+    },
+    [`.${accordionDetailsClasses.root}`]: { flexDirection: 'row' }
+  },
+  divider: { marginTop: theme.spacing(), marginBottom: theme.spacing() },
+  header: {
+    padding: theme.spacing(2),
+    '&.columns-4': { gridTemplateColumns: fourColumns }
+  }
+}));
+
+const canAccess = () => true;
+export const defaultColumns = [
+  { title: '', canAccess },
+  { title: 'Status', canAccess },
+  { title: 'Public key', canAccess },
+  { title: 'Time of request', canAccess },
+  { title: 'Actions', canAccess: ({ userCapabilities: { canManageDevices } }) => canManageDevices }
+];
+
+export const AuthsetList = ({ device, showHelptips, userCapabilities, ...remainingProps }) => {
   const [expandRow, setExpandRow] = useState();
+  const { classes } = useStyles();
   const { auth_sets: authsets = [], status = DEVICE_STATES.accepted } = device;
+
+  const availableColumns = defaultColumns.filter(column => column.canAccess({ userCapabilities }));
 
   let groupedAuthsets = authsets.reduce(
     // for each authset compare the device status and if it matches authset status, put it in correct list
@@ -31,9 +77,9 @@ export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
   ];
 
   return (
-    <div className="authsets">
-      <div className="header">
-        {['', 'Status', 'Public key', 'Time of request', 'Actions'].map((headerName, index) => (
+    <div className={`authsets ${classes.authsets}`}>
+      <div className={`header columns-${availableColumns.length} ${classes.header}`}>
+        {availableColumns.map(({ title: headerName }, index) => (
           <div className="columnHeader" key={`columnHeader-${index}`}>
             {headerName}
           </div>
@@ -44,10 +90,13 @@ export const AuthsetList = ({ device, showHelptips, ...remainingProps }) => {
         {orderedAuthsets.map(authset => (
           <AuthsetListItem
             authset={authset}
+            classes={classes}
+            columns={availableColumns}
             device={device}
             isExpanded={expandRow === authset.id}
             key={`authset-${authset.id}`}
             onExpand={setExpandRow}
+            userCapabilities={userCapabilities}
             {...remainingProps}
           />
         ))}
