@@ -1,3 +1,5 @@
+import { BarChart as BarChartIcon, PieChartOutline as PieChartIcon } from '@mui/icons-material';
+
 import FlagEU from '../../assets/img/flag-eu.svg';
 import FlagUS from '../../assets/img/flag-us.svg';
 
@@ -7,6 +9,12 @@ const startingDeviceCount = {
 };
 
 const oneSecond = 1000;
+
+export const chartTypes = {
+  bar: { key: 'bar', Icon: BarChartIcon },
+  pie: { key: 'pie', Icon: PieChartIcon }
+};
+export const emptyChartSelection = { software: '', group: '', chartType: chartTypes.bar.key, attribute: 'artifact_name' };
 
 export const noExpiryKey = 'noExpiry';
 export const RECEIVED_HOSTED_LINKS = 'RECEIVED_HOSTED_LINKS';

@@ -5,7 +5,7 @@ import { PLANS } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { ATTRIBUTE_SCOPES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_ONLINE_CUTOFF, EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
-import { attributeDuplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
+import { attributeDuplicateFilter, duplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
 export const getFeatures = state => state.app.features;
@@ -16,6 +16,7 @@ const getDevicesById = state => state.devices.byId;
 const getSearchedDevices = state => state.app.searchState.deviceIds;
 const getListedDevices = state => state.devices.deviceList.deviceIds;
 const getFilteringAttributes = state => state.devices.filteringAttributes;
+const getFilteringAttributesFromConfig = state => state.devices.filteringAttributesConfig.attributes;
 const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
@@ -118,6 +119,12 @@ export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (
 export const getIsEnterprise = createSelector(
   [getOrganization, getFeatures],
   ({ plan = PLANS.os.value }, { isEnterprise, isHosted }) => isEnterprise || (isHosted && plan === PLANS.enterprise.value)
+);
+
+export const getAttributesList = createSelector(
+  [getFilteringAttributes, getFilteringAttributesFromConfig],
+  ({ identityAttributes = [], inventoryAttributes = [] }, { identity = [], inventory = [] }) =>
+    [...identityAttributes, ...inventoryAttributes, ...identity, ...inventory].filter(duplicateFilter)
 );
 
 export const getUserRoles = createSelector(

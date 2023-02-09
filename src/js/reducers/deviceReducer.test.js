@@ -20,8 +20,9 @@ const {
   SET_DEVICE_FILTERS,
   SET_DEVICE_LIMIT,
   SET_DEVICE_LIST_STATE,
-  SET_FILTERABLES_CONFIG,
+  SET_DEVICE_REPORTS,
   SET_FILTER_ATTRIBUTES,
+  SET_FILTERABLES_CONFIG,
   SET_INACTIVE_DEVICES,
   SET_TOTAL_DEVICES
 } = DeviceConstants;
@@ -163,6 +164,10 @@ describe('device reducer', () => {
   it('should handle SET_INACTIVE_DEVICES', async () => {
     expect(reducer(undefined, { type: SET_INACTIVE_DEVICES, activeDeviceTotal: 1, inactiveDeviceTotal: 1 }).byStatus.active.total).toBeTruthy();
     expect(reducer(initialState, { type: SET_INACTIVE_DEVICES, activeDeviceTotal: 1, inactiveDeviceTotal: 1 }).byStatus.inactive.total).toEqual(1);
+  });
+  it('should handle SET_DEVICE_REPORTS', async () => {
+    expect(reducer(undefined, { type: SET_DEVICE_REPORTS, reports: [1, 2, 3] }).reports).toHaveLength(3);
+    expect(reducer(initialState, { type: SET_DEVICE_REPORTS, reports: [{ something: 'here' }] }).reports).toEqual([{ something: 'here' }]);
   });
   it('should handle SET_<authstatus>_DEVICES', async () => {
     Object.values(DEVICE_STATES).forEach(status => {
