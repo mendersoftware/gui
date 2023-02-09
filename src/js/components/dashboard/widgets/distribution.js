@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Clear as ClearIcon, Settings, Square } from '@mui/icons-material';
@@ -8,9 +8,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import { VictoryBar, VictoryPie, VictoryStack } from 'victory';
 
+import { ensureVersionString } from '../../../actions/deviceActions';
 import { chartTypes } from '../../../constants/appConstants';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
-import { softwareTitleMap } from '../../../constants/releaseConstants';
+import { rootfsImageVersion, softwareTitleMap } from '../../../constants/releaseConstants';
 import { isEmpty, toggle } from '../../../helpers';
 import { chartColorPalette } from '../../../themes/Mender';
 import Loader from '../../common/loader';
@@ -193,7 +194,7 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
     attribute: attributeSelection,
     group: groupSelection = '',
     chartType: chartTypeSelection = chartTypes.bar.key,
-    software: softwareSelection = 'rootfs-image.version'
+    software: softwareSelection = rootfsImageVersion
   } = selection;
   const [editing, setEditing] = useState(false);
   const [removing, setRemoving] = useState(false);
@@ -207,6 +208,7 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
     setSoftware(softwareSelection || attributeSelection);
     setGroup(groupSelection);
     setChartType(chartTypeSelection);
+    setRemoving(false);
   }, [attributeSelection, groupSelection, chartTypeSelection, softwareSelection]);
 
   const { distribution, totals } = useMemo(() => {
@@ -216,15 +218,19 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
     return initDistribution({ data, theme });
   }, [JSON.stringify(data), JSON.stringify(selection)]);
 
-  const onSliceClick = (e, { datum: { x: thing } }) => {
-    if (thing === seriesOther) {
-      return;
-    }
-    const groupFilters = groups[group]?.filters?.length ? groups[group].filters : [];
-    const filters = [...groupFilters, { key: attributeSelection, value: thing, operator: '$eq', scope: 'inventory' }];
-    selectGroup(group, filters);
-    navigate(`/devices?${group ? `group=${group}&` : ''}${attributeSelection}=${thing}`);
-  };
+  const onSliceClick = useCallback(
+    (e, { datum: { x: target } }) => {
+      if (target === seriesOther) {
+        return;
+      }
+      const groupFilters = groups[group]?.filters?.length ? groups[group].filters : [];
+      const filter = { key: ensureVersionString(software, attributeSelection), value: target, operator: '$eq', scope: 'inventory' };
+      const filters = [...groupFilters, filter];
+      selectGroup(group, filters);
+      navigate(`/devices/accepted?${group ? `group=${group}&` : ''}${filter.key}:${filter.operator}:${target}`);
+    },
+    [attributeSelection, group, software]
+  );
 
   const toggleRemoving = () => setRemoving(toggle);
 
@@ -280,8 +286,8 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
       </div>
       {distribution.length ? (
         <Chart {...chartProps} totals={totals} />
-      ) : groups[group]?.filters.length && !groups[group]?.deviceIds.length ? (
-        <div className="muted flexbox centered">No devices are part of this group.</div>
+      ) : groups[group]?.filters.length && !(groups[group]?.deviceIds.length || groups[group]?.total) ? (
+        <div className="muted flexbox centered">There are no devices that match the selected criteria.</div>
       ) : (
         <Loader show={true} />
       )}
