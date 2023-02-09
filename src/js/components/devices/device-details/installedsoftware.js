@@ -3,7 +3,7 @@ import React from 'react';
 import { deepmerge } from '@mui/utils';
 import { makeStyles } from 'tss-react/mui';
 
-import { rootfsImageVersion } from '../../../constants/releaseConstants';
+import { rootfsImageVersion, softwareTitleMap } from '../../../constants/releaseConstants';
 import { extractSoftware, isEmpty } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import DeviceDataCollapse from './devicedatacollapse';
@@ -16,10 +16,6 @@ const useStyles = makeStyles()(theme => ({
   nestingBorders: { ...borderStyle(theme), paddingLeft: theme.spacing(2), paddingBottom: theme.spacing(2) },
   topLevelBorder: { ...borderStyle(theme), paddingBottom: theme.spacing(2), marginBottom: theme.spacing(-2) }
 }));
-
-const softwareTitleMap = {
-  [rootfsImageVersion]: { title: 'System filesystem', priority: 0, key: rootfsImageVersion }
-};
 
 const mapLayerInformation = (key, value, i, path) => {
   const infoItems = key.split('.');
@@ -71,7 +67,7 @@ const sortAndHoist = thing =>
  * - for a shallower tree rendering the resulting tree is descended recursively once more and all
  *    software with only a single "sublayer" is hoisted up & listed under the shared title
  */
-export const extractSoftwareInformation = (attributes = {}) => {
+export const extractSoftwareInformation = (attributes = {}, sort = true) => {
   const { software } = extractSoftware(attributes);
 
   const softwareLayers = software.reduce((accu, item, index) => {
@@ -88,7 +84,10 @@ export const extractSoftwareInformation = (attributes = {}) => {
     };
     return accu;
   }, {});
-  return sortAndHoist(softwareLayers);
+  if (sort) {
+    return sortAndHoist(softwareLayers);
+  }
+  return softwareLayers;
 };
 
 const SoftwareLayer = ({ classes, layer, isNested, overviewOnly, setSnackbar }) => (

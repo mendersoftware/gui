@@ -30,7 +30,7 @@ exports[`ChartAdditionWidget Component renders correctly 1`] = `
 <body>
   <div>
     <div
-      class="widget chart-widget"
+      class="widget"
     >
       <div />
       <div
@@ -50,7 +50,7 @@ exports[`ChartAdditionWidget Component renders correctly 1`] = `
         <span
           class="emotion-0"
         >
-          Add a chart
+          add a widget
         </span>
       </div>
     </div>

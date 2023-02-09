@@ -30,7 +30,7 @@ const useStyles = makeStyles()(theme => ({
     position: 'relative',
     rowGap: theme.spacing(6),
     flexDirection: 'column',
-    [theme.breakpoints.up('xl')]: { minWidth: '45vw' }
+    [theme.breakpoints.up('xl')]: { minWidth: '50vw' }
   },
   right: {
     flexGrow: 1,
@@ -51,7 +51,7 @@ const useStyles = makeStyles()(theme => ({
   row: { flexWrap: 'wrap', maxWidth: '85vw' }
 }));
 
-export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceLimit, onboardingState, setSnackbar }) => {
+export const Dashboard = ({ currentUser, hasReporting, onboardingState, setSnackbar }) => {
   const timer = useRef();
   const { classes } = useStyles();
   const navigate = useNavigate();
@@ -73,13 +73,11 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
   }, []);
 
   const handleClick = params => {
-    let redirect;
+    let redirect = params.route;
     if (params.route === 'deployments') {
       let query = params.open ? ['open=true'] : [];
       params.id ? query.push(`id=${params.id}`) : undefined;
       redirect = `/deployments/${params.tab || DEPLOYMENT_ROUTES.active.key}?${query.join('&')}`;
-    } else {
-      redirect = params.route;
     }
     navigate(redirect);
   };
@@ -91,7 +89,7 @@ export const Dashboard = ({ acceptedDevicesCount, currentUser, deploymentDeviceL
         <div className={classes.board}>
           <div className={classes.left}>
             <Devices clickHandle={handleClick} />
-            {acceptedDevicesCount < deploymentDeviceLimit ? <SoftwareDistribution /> : <div />}
+            {hasReporting ? <SoftwareDistribution /> : <div />}
           </div>
           <Deployments className={classes.right} clickHandle={handleClick} />
         </div>
@@ -108,9 +106,8 @@ const actionCreators = { setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    acceptedDevicesCount: state.devices.byStatus.accepted.total,
     currentUser: state.users.currentUser,
-    deploymentDeviceLimit: state.deployments.deploymentDeviceLimit,
+    hasReporting: state.app.features.hasReporting || 12,
     onboardingState: getOnboardingState(state)
   };
 };
