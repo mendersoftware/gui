@@ -18,6 +18,7 @@ import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
+import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
 const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, emptyFilter } = DeviceConstants;
@@ -346,85 +347,6 @@ export const getGroupDevices =
     });
   };
 
-export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, getState) => {
-  if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
-    return Promise.resolve();
-  }
-  const { attributes, filterTerms } = prepareSearchArguments({
-    filters: [],
-    group,
-    state: getState(),
-    status: shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted
-  });
-  const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
-    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
-      page,
-      per_page: perPage,
-      filters: filterTerms,
-      attributes
-    }).then(res => {
-      const state = getState();
-      const deviceAccu = reduceReceivedDevices(res.data, devices, state);
-      dispatch({
-        type: DeviceConstants.RECEIVE_DEVICES,
-        devicesById: deviceAccu.devicesById
-      });
-      const total = Number(res.headers[headerNames.total]);
-      if (total > perPage * page) {
-        return getAllDevices(perPage, page + 1, deviceAccu.ids);
-      }
-      return Promise.resolve(
-        dispatch({
-          type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-          group: {
-            filters: [],
-            ...state.devices.groups.byId[group],
-            deviceIds: deviceAccu.ids,
-            total: deviceAccu.ids.length
-          },
-          groupName: group
-        })
-      );
-    });
-  return getAllDevices();
-};
-
-export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
-  if (!!group && (!getState().devices.groups.byId[group] || !getState().devices.groups.byId[group].filters.length)) {
-    return Promise.resolve();
-  }
-  const { attributes, filterTerms: filters } = prepareSearchArguments({
-    filters: getState().devices.groups.byId[group].filters,
-    state: getState(),
-    status: DEVICE_STATES.accepted
-  });
-  const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
-    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), { page, per_page: perPage, filters, attributes }).then(res => {
-      const state = getState();
-      const deviceAccu = reduceReceivedDevices(res.data, devices, state);
-      dispatch({
-        type: DeviceConstants.RECEIVE_DEVICES,
-        devicesById: deviceAccu.devicesById
-      });
-      const total = Number(res.headers[headerNames.total]);
-      if (total > deviceAccu.ids.length) {
-        return getAllDevices(perPage, page + 1, deviceAccu.ids);
-      }
-      return Promise.resolve(
-        dispatch({
-          type: DeviceConstants.RECEIVE_GROUP_DEVICES,
-          group: {
-            ...state.devices.groups.byId[group],
-            deviceIds: deviceAccu.ids,
-            total
-          },
-          groupName: group
-        })
-      );
-    });
-  return getAllDevices();
-};
-
 export const setDeviceFilters = filters => (dispatch, getState) => {
   const state = getState();
   if (deepCompare(filters, state.devices.filters)) {
@@ -737,23 +659,21 @@ export const searchDevices =
   };
 
 const ATTRIBUTE_LIST_CUTOFF = 100;
+const attributeReducer = (attributes = []) =>
+  attributes.slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
+    (accu, { name, scope }) => {
+      if (!accu[scope]) {
+        accu[scope] = [];
+      }
+      accu[scope].push(name);
+      return accu;
+    },
+    { identity: [], inventory: [], system: [], tags: [] }
+  );
+
 export const getDeviceAttributes = () => (dispatch, getState) =>
   GeneralApi.get(getAttrsEndpoint(getState().app.features.hasReporting)).then(({ data }) => {
-    const {
-      identity: identityAttributes,
-      inventory: inventoryAttributes,
-      system: systemAttributes,
-      tags: tagAttributes
-    } = (data || []).slice(0, ATTRIBUTE_LIST_CUTOFF).reduce(
-      (accu, item) => {
-        if (!accu[item.scope]) {
-          accu[item.scope] = [];
-        }
-        accu[item.scope].push(item.name);
-        return accu;
-      },
-      { identity: [], inventory: [], system: [], tags: [] }
-    );
+    const { identity: identityAttributes, inventory: inventoryAttributes, system: systemAttributes, tags: tagAttributes } = attributeReducer(data);
     return dispatch({
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
       attributes: { identityAttributes, inventoryAttributes, systemAttributes, tagAttributes }
@@ -764,16 +684,41 @@ export const getReportingLimits = () => dispatch =>
   GeneralApi.get(`${reportingApiUrl}/devices/attributes`)
     .catch(err => commonErrorHandler(err, `filterable attributes limit & usage could not be retrieved.`, dispatch, commonErrorFallback))
     .then(({ data }) => {
-      const { attributes = [], count, limit } = data;
-      const groupedAttributes = attributes.reduce((accu, { name, scope }) => {
-        if (!accu[scope]) {
-          accu[scope] = [];
-        }
-        accu[scope].push(name);
-        return accu;
-      }, {});
+      const { attributes, count, limit } = data;
+      const groupedAttributes = attributeReducer(attributes);
       return Promise.resolve(dispatch({ type: DeviceConstants.SET_FILTERABLES_CONFIG, count, limit, attributes: groupedAttributes }));
     });
+
+export const ensureVersionString = (software, fallback) =>
+  software.length && software !== 'artifact_name' ? (software.endsWith('.version') ? software : `${software}.version`) : fallback;
+
+export const getReportData = (reportConfig, index) => (dispatch, getState) => {
+  const { attribute, group, software = '' } = reportConfig;
+  const filters = [{ key: 'status', scope: 'identity', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: 'accepted' }];
+  if (group) {
+    const staticGroupFilter = { key: 'group', scope: 'system', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: group };
+    const { filters: groupFilters = [] } = getState().devices.groups.byId[group] ?? {};
+    filters.push(...(groupFilters.length ? groupFilters : [staticGroupFilter]));
+  }
+  const aggregationAttribute = ensureVersionString(software, attribute);
+  return GeneralApi.post(`${reportingApiUrl}/devices/aggregate`, {
+    aggregations: [{ attribute: aggregationAttribute, name: '*', scope: 'inventory', size: chartColorPalette.length }],
+    filters: mapFiltersToTerms(filters)
+  }).then(({ data }) => {
+    if (!data.length) {
+      return Promise.resolve();
+    }
+    let { items, other_count } = data[0];
+    const devicesState = getState().devices;
+    const totalDeviceCount = devicesState.byStatus.accepted.total;
+    const dataCount = items.reduce((accu, item) => accu + item.count, 0);
+    // the following is needed to show reports including both old (artifact_name) & current style (rootfs-image.version) device software
+    const otherCount = !group && (software === rootfsImageVersion || attribute === 'artifact_name') ? totalDeviceCount - dataCount : other_count;
+    const newReports = [...devicesState.reports];
+    newReports.splice(index, 1, { items, otherCount, total: otherCount + dataCount });
+    return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
+  });
+};
 
 export const getDeviceConnect = id => dispatch =>
   GeneralApi.get(`${deviceConnect}/devices/${id}`).then(({ data }) => {
@@ -1057,7 +1002,7 @@ export const getSystemDevices =
     const state = getState();
     let device = state.devices.byId[id];
     const { attributes: deviceAttributes = {} } = device;
-    const { mender_gateway_system_id } = deviceAttributes;
+    const { mender_gateway_system_id = '' } = deviceAttributes;
     const { hasFullFiltering } = getTenantCapabilities(state);
     if (!hasFullFiltering) {
       return Promise.resolve();
@@ -1100,7 +1045,7 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
   const state = getState();
   let device = state.devices.byId[deviceId];
   const { attributes = {} } = device;
-  const { mender_gateway_system_id } = attributes;
+  const { mender_gateway_system_id = '' } = attributes;
   const filters = [
     { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: deviceId, scope: 'identity' },
     { ...emptyFilter, key: 'mender_is_gateway', value: 'true', scope: 'inventory' },

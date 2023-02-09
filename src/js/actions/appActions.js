@@ -50,7 +50,7 @@ const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && v
 
 export const parseEnvironmentInfo = () => (dispatch, getState) => {
   const state = getState();
-  let onboardingComplete = state.onboarding.complete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
+  let onboardingComplete = state.onboarding.complete || !!JSON.parse(window.localStorage.getItem('onboardingComplete') ?? 'false');
   let demoArtifactPort = 85;
   let environmentData = {};
   let environmentFeatures = {};

@@ -44,6 +44,9 @@ export const initialState = {
     count: 0,
     limit: 100
   },
+  reports: [
+    // { items: [{ key: "someKey", count: 42  }], otherCount: 123, total: <otherCount + itemsCount> }
+  ],
   total: 0,
   limit: 0,
   groups: {
@@ -194,7 +197,11 @@ const deviceReducer = (state = initialState, action) => {
           }
         }
       };
-
+    case DeviceConstants.SET_DEVICE_REPORTS:
+      return {
+        ...state,
+        reports: action.reports
+      };
     case DeviceConstants.SET_PENDING_DEVICES:
     case DeviceConstants.SET_REJECTED_DEVICES:
     case DeviceConstants.SET_PREAUTHORIZED_DEVICES:

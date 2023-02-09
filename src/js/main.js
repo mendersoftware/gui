@@ -5,8 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import { CssBaseline } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
@@ -19,34 +17,6 @@ const cache = createCache({
   key: 'mui',
   prepend: true
 });
-
-const reducePalette =
-  prefix =>
-  (accu, [key, value]) => {
-    if (value instanceof Object) {
-      return {
-        ...accu,
-        ...Object.entries(value).reduce(reducePalette(`${prefix}-${key}`), {})
-      };
-    } else {
-      accu[`${prefix}-${key}`] = value;
-    }
-    return accu;
-  };
-
-const cssVariables = ({ palette }) => {
-  const muiVariables = Object.entries(palette).reduce(reducePalette('--mui'), {});
-  return {
-    '@global': {
-      ':root': {
-        ...muiVariables,
-        '--mui-overlay': palette.grey[400]
-      }
-    }
-  };
-};
-
-export const WrappedBaseline = withStyles(cssVariables)(CssBaseline);
 
 export const AppProviders = () => (
   <React.StrictMode>
