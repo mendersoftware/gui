@@ -3,6 +3,7 @@ import React from 'react';
 import { adminUserCapabilities, undefineds } from '../../../../../../tests/mockData';
 import { render } from '../../../../../../tests/setupTests';
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
+import { defaultColumns } from './authsetlist';
 import AuthsetListItem, { getConfirmationMessage } from './authsetlistitem';
 
 describe('AuthsetListItem Component', () => {
@@ -38,6 +39,8 @@ gnr0OSIDwEL31l+12DbAQ9+ANv6TLpWNfLpX0E6IStkZAgMBAAE=
     const { baseElement } = render(
       <AuthsetListItem
         authset={authset}
+        classes={{ accordion: 'accordion', divider: 'divider' }}
+        columns={defaultColumns}
         isActive={true}
         isExpanded={true}
         onExpand={jest.fn}
