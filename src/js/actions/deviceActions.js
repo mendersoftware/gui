@@ -689,13 +689,18 @@ export const getReportingLimits = () => dispatch =>
       return Promise.resolve(dispatch({ type: DeviceConstants.SET_FILTERABLES_CONFIG, count, limit, attributes: groupedAttributes }));
     });
 
+export const ensureVersionString = (software, fallback) =>
+  software.length && software !== 'artifact_name' ? (software.endsWith('.version') ? software : `${software}.version`) : fallback;
+
 export const getReportData = (reportConfig, index) => (dispatch, getState) => {
   const { attribute, group, software = '' } = reportConfig;
   const filters = [{ key: 'status', scope: 'identity', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: 'accepted' }];
   if (group) {
-    filters.push({ key: 'group', scope: 'system', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: group });
+    const staticGroupFilter = { key: 'group', scope: 'system', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: group };
+    const { filters: groupFilters = [] } = getState().devices.groups.byId[group] ?? {};
+    filters.push(...(groupFilters.length ? groupFilters : [staticGroupFilter]));
   }
-  const aggregationAttribute = software.length ? (software.endsWith('.version') ? software : `${software}.version`) : attribute;
+  const aggregationAttribute = ensureVersionString(software, attribute);
   return GeneralApi.post(`${reportingApiUrl}/devices/aggregate`, {
     aggregations: [{ attribute: aggregationAttribute, name: '*', scope: 'inventory', size: chartColorPalette.length }],
     filters: mapFiltersToTerms(filters)
