@@ -145,6 +145,20 @@ export const deviceHandlers = [
   rest.get(`${reportingApiUrl}/devices/attributes`, (req, res, ctx) =>
     res(ctx.json({ attributes: deviceAttributes, count: deviceAttributes.length, limit: 100 }))
   ),
+  rest.post(`${reportingApiUrl}/devices/aggregate`, (req, res, ctx) =>
+    res(
+      ctx.json([
+        {
+          name: '*',
+          items: [
+            { key: 'test', count: 6 },
+            { key: 'original', count: 1 }
+          ],
+          other_count: 42
+        }
+      ])
+    )
+  ),
   rest.get(`${inventoryApiUrlV2}/filters`, (req, res, ctx) =>
     res(
       ctx.json([

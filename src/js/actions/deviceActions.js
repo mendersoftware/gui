@@ -18,6 +18,7 @@ import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
+import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
 const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, emptyFilter } = DeviceConstants;
@@ -766,6 +767,32 @@ export const getReportingLimits = () => dispatch =>
       const groupedAttributes = attributeReducer(attributes);
       return Promise.resolve(dispatch({ type: DeviceConstants.SET_FILTERABLES_CONFIG, count, limit, attributes: groupedAttributes }));
     });
+
+export const getReportData = (reportConfig, index) => (dispatch, getState) => {
+  const { attribute, group, software = '' } = reportConfig;
+  const filters = [{ key: 'status', scope: 'identity', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: 'accepted' }];
+  if (group) {
+    filters.push({ key: 'group', scope: 'system', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: group });
+  }
+  const aggregationAttribute = software.length ? (software.endsWith('.version') ? software : `${software}.version`) : attribute;
+  return GeneralApi.post(`${reportingApiUrl}/devices/aggregate`, {
+    aggregations: [{ attribute: aggregationAttribute, name: '*', scope: 'inventory', size: chartColorPalette.length }],
+    filters: mapFiltersToTerms(filters)
+  }).then(({ data }) => {
+    if (!data.length) {
+      return Promise.resolve();
+    }
+    let { items, other_count } = data[0];
+    const devicesState = getState().devices;
+    const totalDeviceCount = devicesState.byStatus.accepted.total;
+    const dataCount = items.reduce((accu, item) => accu + item.count, 0);
+    // the following is needed to show reports including both old (artifact_name) & current style (rootfs-image.version) device software
+    const otherCount = !group && (software === rootfsImageVersion || attribute === 'artifact_name') ? totalDeviceCount - dataCount : other_count;
+    const newReports = [...devicesState.reports];
+    newReports.splice(index, 1, { items, otherCount, total: otherCount + dataCount });
+    return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
+  });
+};
 
 export const getDeviceConnect = id => dispatch =>
   GeneralApi.get(`${deviceConnect}/devices/${id}`).then(({ data }) => {

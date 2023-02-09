@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@mui/icons-material';
 
-import { getAllDynamicGroupDevices, getAllGroupDevices, getDeviceAttributes, getReportingLimits, selectGroup } from '../../actions/deviceActions';
+import { getDeviceAttributes, getReportData, getReportingLimits, selectGroup } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
 import { emptyChartSelection } from '../../constants/appConstants';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
@@ -64,49 +64,36 @@ const listSoftware = attributes => {
 
 export const SoftwareDistribution = ({
   attributes,
-  devices,
-  getAllDynamicGroupDevices,
-  getAllGroupDevices,
+  getReportData,
   getDeviceAttributes,
   getReportingLimits,
   groups,
   hasDevices,
   isEnterprise,
   reports,
+  reportsData,
   saveUserSettings,
   selectGroup
 }) => {
   useEffect(() => {
-    reports.map(report => initializeReport(report.group));
     getDeviceAttributes();
     getReportingLimits();
   }, []);
 
   useEffect(() => {
-    reports.map(report => initializeReport(report.group));
+    reports.map((report, index) => getReportData(report, index));
   }, [JSON.stringify(reports)]);
-
-  const initializeReport = group => {
-    if (!group) {
-      return Promise.resolve();
-    }
-    const storedGroup = groups[group];
-    if (storedGroup && storedGroup.filters.length) {
-      return getAllDynamicGroupDevices(group);
-    }
-    return getAllGroupDevices(group);
-  };
 
   const addCurrentSelection = selection => {
     const newReports = [...reports, { ...defaultReports[0], ...selection }];
-    initializeReport(selection.group);
+    getReportData(selection.group, newReports.length);
     saveUserSettings({ reports: newReports });
   };
 
   const onSaveChangedReport = (change, index) => {
     let newReports = [...reports];
     newReports.splice(index, 1, change);
-    initializeReport(change.group);
+    getReportData(change, index);
     saveUserSettings({ reports: newReports });
   };
 
@@ -129,10 +116,9 @@ export const SoftwareDistribution = ({
         const Component = reportTypes[report.type || defaultReportType];
         return (
           <Component
-            attributes={attributes}
-            devices={devices}
-            groups={groups}
             key={`report-${report.group}-${index}`}
+            data={reportsData[index]}
+            groups={groups}
             onClick={() => removeReport(report)}
             onSave={change => onSaveChangedReport(change, index)}
             selectGroup={selectGroup}
@@ -151,7 +137,13 @@ export const SoftwareDistribution = ({
   );
 };
 
-const actionCreators = { getAllDynamicGroupDevices, getAllGroupDevices, getDeviceAttributes, getReportingLimits, saveUserSettings, selectGroup };
+const actionCreators = {
+  getDeviceAttributes,
+  getReportData,
+  getReportingLimits,
+  saveUserSettings,
+  selectGroup
+};
 
 const mapStateToProps = state => {
   const reports =
@@ -162,11 +154,11 @@ const mapStateToProps = state => {
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     attributes: getAttributesList(state),
-    devices: state.devices.byId,
     hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
     groups,
     isEnterprise: getIsEnterprise(state),
-    reports
+    reports,
+    reportsData: state.devices.reports
   };
 };
 

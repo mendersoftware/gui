@@ -11,7 +11,7 @@ import { VictoryBar, VictoryPie, VictoryStack } from 'victory';
 import { chartTypes } from '../../../constants/appConstants';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { softwareTitleMap } from '../../../constants/releaseConstants';
-import { toggle } from '../../../helpers';
+import { isEmpty, toggle } from '../../../helpers';
 import { chartColorPalette } from '../../../themes/Mender';
 import Loader from '../../common/loader';
 import { ChartEditWidget, RemovalWidget } from './chart-addition';
@@ -143,43 +143,32 @@ const chartTypeComponentMap = {
   [chartTypes.pie.key]: PieChartContainer
 };
 
-const initDistribution = ({ attribute, group, groups, devices, theme }) => {
-  const relevantDevices = group && groups[group] ? groups[group].deviceIds.map(id => devices[id]) : Object.values(devices);
-  const distributionByAttributeId = relevantDevices.reduce((accu, item) => {
-    if (!item.attributes || item.status !== 'accepted') return accu;
-    if (!accu[item.attributes[attribute]]) {
-      accu[item.attributes[attribute]] = 0;
-    }
-    accu[item.attributes[attribute]] = accu[item.attributes[attribute]] + 1;
-    return accu;
-  }, {});
-  const distributionByAttribute = Object.entries(distributionByAttributeId);
-  const total = distributionByAttribute.reduce((prev, [, item]) => prev + item, 0);
-  const numberOfItems = distributionByAttribute.length > chartColorPalette.length ? chartColorPalette.length - 1 : distributionByAttribute.length;
+const initDistribution = ({ data, theme }) => {
+  const { items, otherCount, total } = data;
+  const numberOfItems = items.length > chartColorPalette.length ? chartColorPalette.length - 1 : items.length;
   const colors = chartColorPalette.slice(0, numberOfItems).reverse();
-  let distribution = distributionByAttribute.slice(0, colors.length).reduce(
-    (accu, [key, value], index) => [
+  let distribution = items.slice(0, colors.length).reduce(
+    (accu, { key, count }, index) => [
       {
         x: key || '-',
-        y: (value / total) * 100, //value,
+        y: (count / total) * 100, //value,
         title: key || '-',
         tip: key || '-',
         fill: chartColorPalette[index],
-        value
+        value: count
       },
       ...accu
     ],
     []
   );
-  if (distributionByAttribute.length > chartColorPalette.length) {
-    const others = distributionByAttribute.slice(colors.length).reduce((accu, [, value]) => accu + value, 0);
+  if (items.length > chartColorPalette.length || otherCount) {
     distribution.splice(0, 0, {
       x: seriesOther,
       title: 'Other',
-      tip: seriesOther,
-      y: (others / total) * 100,
+      tip: 'Other',
+      y: (otherCount / total) * 100,
       fill: chartColorPalette[chartColorPalette.length - 1],
-      value: others
+      value: otherCount
     });
   }
   distribution.sort((pairA, pairB) => pairB.y - pairA.y);
@@ -199,7 +188,7 @@ export const Header = ({ chartType }) => {
   );
 };
 
-export const DistributionReport = ({ devices, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
+export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
   const {
     attribute: attributeSelection,
     group: groupSelection = '',
@@ -220,10 +209,12 @@ export const DistributionReport = ({ devices, groups, onClick, onSave, selectGro
     setChartType(chartTypeSelection);
   }, [attributeSelection, groupSelection, chartTypeSelection, softwareSelection]);
 
-  const { distribution, totals } = useMemo(
-    () => initDistribution({ attribute: attributeSelection, devices, group, groups, theme }),
-    [attributeSelection, group, JSON.stringify(groups), groups[group]?.deviceIds.length]
-  );
+  const { distribution, totals } = useMemo(() => {
+    if (isEmpty(data)) {
+      return { distribution: [], totals: [] };
+    }
+    return initDistribution({ data, theme });
+  }, [JSON.stringify(data), JSON.stringify(selection)]);
 
   const onSliceClick = (e, { datum: { x: thing } }) => {
     if (thing === seriesOther) {

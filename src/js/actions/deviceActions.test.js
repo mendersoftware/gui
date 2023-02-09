@@ -11,6 +11,7 @@ import { mockAbortController } from '../../../tests/setupTests';
 import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
+import { rootfsImageVersion } from '../constants/releaseConstants';
 import {
   addDevicesToGroup,
   addDynamicGroup,
@@ -38,6 +39,7 @@ import {
   getGatewayDevices,
   getGroupDevices,
   getGroups,
+  getReportData,
   getReportingLimits,
   getSessionDetails,
   getSystemDevices,
@@ -247,6 +249,29 @@ describe('overall device information retrieval', () => {
       }
     ];
     await store.dispatch(getReportingLimits());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
+  it('should allow getting device aggregation data for use in the dashboard/ reports', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      {
+        type: DeviceConstants.SET_DEVICE_REPORTS,
+        reports: [
+          {
+            items: [
+              { count: 6, key: 'test' },
+              { count: 1, key: 'original' }
+            ],
+            otherCount: 42,
+            total: 49
+          }
+        ]
+      }
+    ];
+    await store.dispatch(getReportData({ attribute: 'something', group: 'somethingGroup', software: rootfsImageVersion }, 0));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
