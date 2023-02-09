@@ -4,7 +4,6 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 // material ui
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Chip, Divider, IconButton } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../../../constants/appConstants';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
@@ -13,19 +12,6 @@ import Loader from '../../../common/loader';
 import Time from '../../../common/time';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
-
-const useStyles = makeStyles()(theme => ({
-  accordion: {
-    backgroundColor: theme.palette.grey[50],
-    '&:before': {
-      display: 'none'
-    },
-    '&$expanded': {
-      margin: 'auto'
-    }
-  },
-  divider: { marginTop: theme.spacing(), marginBottom: theme.spacing() }
-}));
 
 export const getConfirmationMessage = (status, device, authset) => {
   let message = '';
@@ -70,14 +56,13 @@ export const getConfirmationMessage = (status, device, authset) => {
 
 const LF = '\n';
 
-const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loading, onExpand, total, userCapabilities }) => {
+const AuthsetListItem = ({ authset, classes, columns, confirm, device, isExpanded, limitMaxed, loading, onExpand, total, userCapabilities }) => {
   const [showKey, setShowKey] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
   const [copied, setCopied] = useState(false);
   const [keyHash, setKeyHash] = useState('');
   const [endKey, setEndKey] = useState('');
-  const { classes } = useStyles();
   const { canManageDevices } = userCapabilities;
 
   useEffect(() => {
@@ -175,7 +160,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
     key = <a onClick={() => onShowKey(false)}>hide key</a>;
   }
 
-  let actionButtons = <div />;
+  let actionButtons = null;
   if (canManageDevices) {
     actionButtons = confirmMessage.length ? (
       `Set to: ${newStatus}?`
@@ -205,7 +190,7 @@ const AuthsetListItem = ({ authset, confirm, device, isExpanded, limitMaxed, loa
 
   return (
     <Accordion className={classes.accordion} square expanded={isExpanded}>
-      <AccordionSummary style={{ cursor: 'default' }}>
+      <AccordionSummary className={`columns-${columns.length}`}>
         {authsetStatus}
         <div className="capitalized">{authset.status}</div>
         {key}
