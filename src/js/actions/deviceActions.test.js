@@ -22,8 +22,6 @@ import {
   deviceFileUpload,
   getAllDeviceCounts,
   getAllDevicesByStatus,
-  getAllDynamicGroupDevices,
-  getAllGroupDevices,
   getDeviceAttributes,
   getDeviceAuth,
   getDeviceById,
@@ -593,20 +591,6 @@ describe('static grouping related actions', () => {
     expect(devicesById[defaultState.devices.byId.a1.id]).toBeTruthy();
     expect(new Date(devicesById[defaultState.devices.byId.a1.id].updated_ts).getTime()).toBeGreaterThanOrEqual(new Date(updated_ts).getTime());
   });
-  it('should allow complete device retrieval for static groups', async () => {
-    const store = mockStore({ ...defaultState });
-    const groupName = 'testGroup';
-    // eslint-disable-next-line no-unused-vars
-    const { updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
-    const expectedActions = [
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } },
-      { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: { filters: [], deviceIds: [defaultState.devices.byId.a1.id], total: 1 }, groupName }
-    ];
-    await store.dispatch(getAllGroupDevices(groupName));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
 });
 
 describe('dynamic grouping related actions', () => {
@@ -647,20 +631,6 @@ describe('dynamic grouping related actions', () => {
       { type: SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } }
     ];
     await store.dispatch(addDynamicGroup(groupName, [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }]));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should allow complete device retrieval for dynamic groups', async () => {
-    const store = mockStore({ ...defaultState });
-    const groupName = 'testGroupDynamic';
-    // eslint-disable-next-line no-unused-vars
-    const { updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
-    const expectedActions = [
-      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: {} },
-      { type: DeviceConstants.RECEIVE_GROUP_DEVICES, group: defaultState.devices.groups.byId.testGroupDynamic, groupName }
-    ];
-    await store.dispatch(getAllDynamicGroupDevices(groupName));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
