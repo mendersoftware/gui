@@ -13,7 +13,7 @@ import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
-import { SORTING_OPTIONS, UPLOAD_PROGRESS } from '../constants/appConstants';
+import { SORTING_OPTIONS, UPLOAD_PROGRESS, emptyChartSelection } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
@@ -692,30 +692,41 @@ export const getReportingLimits = () => dispatch =>
 export const ensureVersionString = (software, fallback) =>
   software.length && software !== 'artifact_name' ? (software.endsWith('.version') ? software : `${software}.version`) : fallback;
 
-export const getReportData = (reportConfig, index) => (dispatch, getState) => {
+const getSingleReportData = (reportConfig, groups) => {
   const { attribute, group, software = '' } = reportConfig;
   const filters = [{ key: 'status', scope: 'identity', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: 'accepted' }];
   if (group) {
     const staticGroupFilter = { key: 'group', scope: 'system', operator: DEVICE_FILTERING_OPTIONS.$eq.key, value: group };
-    const { filters: groupFilters = [] } = getState().devices.groups.byId[group] ?? {};
+    const { cleanedFilters: groupFilters } = getGroupFilters(group, groups);
     filters.push(...(groupFilters.length ? groupFilters : [staticGroupFilter]));
   }
   const aggregationAttribute = ensureVersionString(software, attribute);
   return GeneralApi.post(`${reportingApiUrl}/devices/aggregate`, {
     aggregations: [{ attribute: aggregationAttribute, name: '*', scope: 'inventory', size: chartColorPalette.length }],
     filters: mapFiltersToTerms(filters)
-  }).then(({ data }) => {
-    if (!data.length) {
-      return Promise.resolve();
-    }
-    let { items, other_count } = data[0];
+  }).then(({ data }) => ({ data, reportConfig }));
+};
+
+export const defaultReportType = 'distribution';
+export const defaultReports = [{ ...emptyChartSelection, group: null, attribute: 'artifact_name', type: defaultReportType }];
+
+export const getReportsData = () => (dispatch, getState) => {
+  const state = getState();
+  const reports =
+    getUserSettings(state).reports ||
+    state.users.globalSettings[`${state.users.currentUser}-reports`] ||
+    (Object.keys(state.devices.byId).length ? defaultReports : []);
+  return Promise.all(reports.map(report => getSingleReportData(report, getState().devices.groups))).then(results => {
     const devicesState = getState().devices;
     const totalDeviceCount = devicesState.byStatus.accepted.total;
-    const dataCount = items.reduce((accu, item) => accu + item.count, 0);
-    // the following is needed to show reports including both old (artifact_name) & current style (rootfs-image.version) device software
-    const otherCount = !group && (software === rootfsImageVersion || attribute === 'artifact_name') ? totalDeviceCount - dataCount : other_count;
-    const newReports = [...devicesState.reports];
-    newReports.splice(index, 1, { items, otherCount, total: otherCount + dataCount });
+    const newReports = results.map(({ data, reportConfig }) => {
+      let { items, other_count } = data[0];
+      const { attribute, group, software = '' } = reportConfig;
+      const dataCount = items.reduce((accu, item) => accu + item.count, 0);
+      // the following is needed to show reports including both old (artifact_name) & current style (rootfs-image.version) device software
+      const otherCount = !group && (software === rootfsImageVersion || attribute === 'artifact_name') ? totalDeviceCount - dataCount : other_count;
+      return { items, otherCount, total: otherCount + dataCount };
+    });
     return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
   });
 };

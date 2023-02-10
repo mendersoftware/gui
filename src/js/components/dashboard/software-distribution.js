@@ -3,9 +3,16 @@ import { connect } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@mui/icons-material';
 
-import { getDeviceAttributes, getReportData, getReportingLimits, selectGroup } from '../../actions/deviceActions';
+import {
+  defaultReportType,
+  defaultReports,
+  getDeviceAttributes,
+  getGroupDevices,
+  getReportingLimits,
+  getReportsData,
+  selectGroup
+} from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
-import { emptyChartSelection } from '../../constants/appConstants';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { softwareTitleMap } from '../../constants/releaseConstants';
 import { isEmpty } from '../../helpers';
@@ -14,9 +21,6 @@ import EnterpriseNotification from '../common/enterpriseNotification';
 import { extractSoftwareInformation } from '../devices/device-details/installedsoftware';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
-
-const defaultReportType = 'distribution';
-export const defaultReports = [{ ...emptyChartSelection, group: null, attribute: 'artifact_name', type: defaultReportType }];
 
 const reportTypes = {
   distribution: DistributionReport
@@ -64,8 +68,9 @@ const listSoftware = attributes => {
 
 export const SoftwareDistribution = ({
   attributes,
-  getReportData,
+  getReportsData,
   getDeviceAttributes,
+  getGroupDevices,
   getReportingLimits,
   groups,
   hasDevices,
@@ -81,19 +86,17 @@ export const SoftwareDistribution = ({
   }, []);
 
   useEffect(() => {
-    reports.map((report, index) => getReportData(report, index));
+    getReportsData();
   }, [JSON.stringify(reports)]);
 
   const addCurrentSelection = selection => {
     const newReports = [...reports, { ...defaultReports[0], ...selection }];
-    getReportData(selection.group, newReports.length);
     saveUserSettings({ reports: newReports });
   };
 
   const onSaveChangedReport = (change, index) => {
     let newReports = [...reports];
     newReports.splice(index, 1, change);
-    getReportData(change, index);
     saveUserSettings({ reports: newReports });
   };
 
@@ -111,13 +114,14 @@ export const SoftwareDistribution = ({
     );
   }
   return hasDevices ? (
-    <div className="dashboard">
+    <div className="dashboard margin-bottom-large">
       {reports.map((report, index) => {
         const Component = reportTypes[report.type || defaultReportType];
         return (
           <Component
             key={`report-${report.group}-${index}`}
             data={reportsData[index]}
+            getGroupDevices={getGroupDevices}
             groups={groups}
             onClick={() => removeReport(report)}
             onSave={change => onSaveChangedReport(change, index)}
@@ -139,7 +143,8 @@ export const SoftwareDistribution = ({
 
 const actionCreators = {
   getDeviceAttributes,
-  getReportData,
+  getGroupDevices,
+  getReportsData,
   getReportingLimits,
   saveUserSettings,
   selectGroup

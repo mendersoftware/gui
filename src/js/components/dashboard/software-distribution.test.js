@@ -55,7 +55,7 @@ describe('Devices Component', () => {
     let store = mockStore(state);
     const { baseElement } = render(
       <Provider store={store}>
-        <SoftwareDistribution getDeviceAttributes={jest.fn} getReportingLimits={jest.fn} getReportData={jest.fn} />
+        <SoftwareDistribution getDeviceAttributes={jest.fn} getReportingLimits={jest.fn} getReportsData={jest.fn} getGroupDevices={jest.fn} />
       </Provider>
     );
     const view = baseElement.firstChild;
@@ -76,7 +76,7 @@ describe('Devices Component', () => {
     });
     const { baseElement } = render(
       <Provider store={store}>
-        <SoftwareDistribution getDeviceAttributes={jest.fn} getReportingLimits={jest.fn} getReportData={jest.fn} />
+        <SoftwareDistribution getDeviceAttributes={jest.fn} getReportingLimits={jest.fn} getReportsData={jest.fn} getGroupDevices={jest.fn} />
       </Provider>
     );
     const view = baseElement.firstChild;
