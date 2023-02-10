@@ -38,7 +38,7 @@ const useStyles = makeStyles()(theme => ({
     display: 'grid',
     gridTemplateColumns: '200px 1fr',
     columnGap: theme.spacing(2),
-    marginBottom: 15,
+    marginBottom: theme.spacing(2),
     '&>.flexbox.column > *': {
       height: 20
     },
@@ -202,7 +202,7 @@ export const Header = ({ chartType }) => {
   );
 };
 
-export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
+export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
   const {
     attribute: attributeSelection,
     group: groupSelection = '',
@@ -222,6 +222,7 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
     setGroup(groupSelection);
     setChartType(chartTypeSelection);
     setRemoving(false);
+    getGroupDevices(groupSelection, { page: 1, perPage: 1 });
   }, [attributeSelection, groupSelection, chartTypeSelection, softwareSelection]);
 
   const { distribution, totals } = useMemo(() => {
@@ -268,6 +269,7 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
     style: { data: { fill: ({ datum }) => datum.fill } },
     labels: () => null
   };
+  const couldHaveDevices = !group || groups[group]?.deviceIds.length;
   return removing ? (
     <RemovalWidget onCancel={toggleRemoving} onClick={onClick} />
   ) : editing ? (
@@ -297,9 +299,9 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
           <div>{group || ALL_DEVICES}</div>
         </div>
       </div>
-      {distribution.length ? (
+      {distribution.length || totals.length ? (
         <Chart {...chartProps} totals={totals} />
-      ) : groups[group]?.filters.length && !(groups[group]?.deviceIds.length || groups[group]?.total) ? (
+      ) : couldHaveDevices ? (
         <div className="muted flexbox centered">There are no devices that match the selected criteria.</div>
       ) : (
         <Loader show={true} />
