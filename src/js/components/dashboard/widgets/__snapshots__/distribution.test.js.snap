@@ -229,24 +229,9 @@ exports[`PendingDevices Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="loaderContainer"
+        class="muted flexbox centered"
       >
-        <div
-          class="  loader"
-        >
-          <span
-            class="dot dot_1"
-          />
-          <span
-            class="dot dot_2"
-          />
-          <span
-            class="dot dot_3"
-          />
-          <span
-            class="dot dot_4"
-          />
-        </div>
+        There are no devices that match the selected criteria.
       </div>
     </div>
   </div>
