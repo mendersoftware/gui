@@ -6,7 +6,7 @@ import { IconButton, LinearProgress, linearProgressClasses, svgIconClasses } fro
 import { useTheme } from '@mui/styles';
 import { makeStyles } from 'tss-react/mui';
 
-import { VictoryBar, VictoryPie, VictoryStack } from 'victory';
+import { VictoryBar, VictoryContainer, VictoryPie, VictoryStack } from 'victory';
 
 import { ensureVersionString } from '../../../actions/deviceActions';
 import { chartTypes } from '../../../constants/appConstants';
@@ -38,7 +38,7 @@ const useStyles = makeStyles()(theme => ({
     display: 'grid',
     gridTemplateColumns: '200px 1fr',
     columnGap: theme.spacing(2),
-    marginBottom: 15,
+    marginBottom: theme.spacing(2),
     '&>.flexbox.column > *': {
       height: 20
     },
@@ -113,7 +113,11 @@ const BarChart = ({ data, events }) => {
   );
 };
 
-const ChartContainer = ({ className, children }) => <div className={className}>{children}</div>;
+const ChartContainer = ({ className, children, innerRef, style = {} }) => (
+  <div className={className} ref={innerRef} style={style}>
+    {children}
+  </div>
+);
 
 const BarChartContainer = ({ classes = {}, data, events, ...remainder }) => (
   <ChartContainer className={classes.wrapper}>
@@ -124,12 +128,21 @@ const BarChartContainer = ({ classes = {}, data, events, ...remainder }) => (
 
 const PieChart = props => <VictoryPie {...props} padding={{ left: 0, right: 0, top: 0, bottom: 15 }} />;
 
-const PieChartContainer = ({ classes = {}, ...chartProps }) => (
-  <ChartContainer className={classes.wrapper}>
-    <ChartLegend {...chartProps} classes={classes} />
-    <PieChart {...chartProps} />
-  </ChartContainer>
-);
+const padding = 10;
+const PieChartContainer = ({ classes = {}, ...chartProps }) => {
+  const ref = useRef();
+  let height;
+  if (ref.current) {
+    // use the widget height, remove the space the header takes up and account for widget padding (top + padding) + own padding for the chart
+    height = ref.current.parentElement.offsetHeight - ref.current.parentElement.children[0].offsetHeight - 3 * padding;
+  }
+  return (
+    <ChartContainer className={classes.wrapper} innerRef={ref} style={{ height }}>
+      <ChartLegend {...chartProps} classes={classes} />
+      {height && <PieChart {...chartProps} containerComponent={<VictoryContainer style={{ height }} />} />}
+    </ChartContainer>
+  );
+};
 
 const VictoryBarChartContainer = ({ classes = {}, ...chartProps }) => (
   <ChartContainer className={classes.wrapper}>
@@ -189,7 +202,7 @@ export const Header = ({ chartType }) => {
   );
 };
 
-export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
+export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
   const {
     attribute: attributeSelection,
     group: groupSelection = '',
@@ -209,6 +222,7 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
     setGroup(groupSelection);
     setChartType(chartTypeSelection);
     setRemoving(false);
+    getGroupDevices(groupSelection, { page: 1, perPage: 1 });
   }, [attributeSelection, groupSelection, chartTypeSelection, softwareSelection]);
 
   const { distribution, totals } = useMemo(() => {
@@ -255,6 +269,7 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
     style: { data: { fill: ({ datum }) => datum.fill } },
     labels: () => null
   };
+  const couldHaveDevices = !group || groups[group]?.deviceIds.length;
   return removing ? (
     <RemovalWidget onCancel={toggleRemoving} onClick={onClick} />
   ) : editing ? (
@@ -284,9 +299,9 @@ export const DistributionReport = ({ data, groups, onClick, onSave, selectGroup,
           <div>{group || ALL_DEVICES}</div>
         </div>
       </div>
-      {distribution.length ? (
+      {distribution.length || totals.length ? (
         <Chart {...chartProps} totals={totals} />
-      ) : groups[group]?.filters.length && !(groups[group]?.deviceIds.length || groups[group]?.total) ? (
+      ) : couldHaveDevices ? (
         <div className="muted flexbox centered">There are no devices that match the selected criteria.</div>
       ) : (
         <Loader show={true} />

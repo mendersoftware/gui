@@ -214,7 +214,7 @@ exports[`Devices Component renders correctly for enterprise 1`] = `
   grid-template-columns: 200px 1fr;
   -webkit-column-gap: 16px;
   column-gap: 16px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .emotion-8>.flexbox.column>* {
@@ -305,7 +305,7 @@ exports[`Devices Component renders correctly for enterprise 1`] = `
 
 <div>
   <div
-    class="dashboard"
+    class="dashboard margin-bottom-large"
   >
     <div
       class="widget chart-widget"

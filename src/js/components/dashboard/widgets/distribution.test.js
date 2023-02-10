@@ -6,7 +6,7 @@ import Distribution from './distribution';
 
 describe('PendingDevices Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<Distribution attribute="artifact_name" group="test" devices={{}} groups={{}} />);
+    const { baseElement } = render(<Distribution attribute="artifact_name" getGroupDevices={jest.fn} group="test" devices={{}} groups={{}} />);
     const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
