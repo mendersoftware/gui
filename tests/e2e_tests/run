@@ -81,7 +81,7 @@ run_tests() {
             echo "failed to get tenantadm id"
             return 1
         fi
-        tenant=$(docker exec $containerid /usr/bin/tenantadm create-org --name=test --username=$USER --password=$PASSWORD)
+        tenant=$(docker exec $containerid /usr/bin/tenantadm create-org --name=test --username=$USER --password=$PASSWORD --addon configure --addon monitor --addon troubleshoot)
         token=$(docker exec $containerid /usr/bin/tenantadm get-tenant --id $tenant | jq -r .tenant_token)
         jq --arg tenantToken "$token" '. + { "TenantToken": $tenantToken }' ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json > ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json
         # start a new client, using the obtained tenant token - starting it later (in the test suite) would require docker access in the test runner
