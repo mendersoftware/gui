@@ -229,6 +229,7 @@ export const DeploymentReport = props => {
         )}
         <LinedHeader className={classes.header} heading="Status" />
         <DeploymentStatus deployment={deployment} />
+        <LinedHeader className={classes.header} heading="Devices" />
         <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule
           deployment={deployment}

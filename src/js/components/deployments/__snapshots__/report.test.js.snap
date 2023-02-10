@@ -423,6 +423,13 @@ Devices that are in the middle of the deployment at the time of abort will finis
             </div>
           </div>
         </div>
+        <h4
+          class="dashboard-header css-1oyj5ad-border css-zr8z23-header"
+        >
+          <span>
+            Devices
+          </span>
+        </h4>
         <div
           class="loaderContainer shrunk"
         >
