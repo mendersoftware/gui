@@ -261,11 +261,11 @@ export const CreateDeployment = props => {
         onboardingComponent
       );
     }
-    if (hasDevices && deploymentDeviceCount && deploymentRelease && devices.length) {
+    if (hasDevices && (deploymentDeviceCount || devices?.length) && deploymentRelease) {
       const buttonAnchor = getAnchor(deploymentAnchor.current, 2);
       onboardingComponent = getOnboardingComponentFor(
         onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
-        { ...onboardingState, selectedDevice: devices[0], selectedGroup: group, selectedRelease: deploymentRelease },
+        { ...onboardingState, selectedDevice: devices.length ? devices[0] : undefined, selectedGroup: group, selectedRelease: deploymentRelease },
         { anchor: buttonAnchor, place: 'right' },
         onboardingComponent
       );

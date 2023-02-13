@@ -104,7 +104,7 @@ export const DevicesAcceptedOnboarding = () => (
   <div>
     <b>Good job! Your first device is connected!</b>
     <p>
-      Your device is now <b>accepted</b>! It&apos;s now going to share inventory details with the server.
+      Your device is now <b>accepted</b>! It&apos;s now going to share device details with the server.
     </p>
     Click to expand the device and see more
   </div>
