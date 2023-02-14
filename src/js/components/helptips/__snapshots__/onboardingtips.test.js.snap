@@ -301,7 +301,7 @@ exports[`OnboardingTips Components tiny onboarding tips renders DevicesAcceptedO
     <b>
       accepted
     </b>
-    ! It's now going to share inventory details with the server.
+    ! It's now going to share device details with the server.
   </p>
   Click to expand the device and see more
 </div>
