@@ -6,6 +6,7 @@ import { Autocomplete, TextField, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
+import isUUID from 'validator/lib/isUUID';
 
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { stringToBoolean } from '../../../helpers';
@@ -27,6 +28,23 @@ const hardCodedStyle = {
   textField: {
     minWidth: 400
   }
+};
+
+export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
+  let devicesLink = '/devices';
+  if (devices.length && (!name || isUUID(name))) {
+    devicesLink = `${devicesLink}?id=${devices[0].id}`;
+    if (hasFullFiltering) {
+      devicesLink = `/devices?${devices.map(({ id }) => `id=${id}`).join('&')}`;
+    }
+    if (devices.length === 1) {
+      const { systemDeviceIds = [] } = devices[0];
+      devicesLink = `${devicesLink}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
+    }
+  } else if (group && group !== ALL_DEVICES) {
+    devicesLink = `${devicesLink}?group=${group}`;
+  }
+  return devicesLink;
 };
 
 export const ReleasesWarning = ({ lacksReleases }) => (
@@ -56,7 +74,7 @@ export const Devices = ({
   const size = useWindowSize();
 
   const { deploymentDeviceCount = 0, devices = [], group = null } = deploymentObject;
-  const device = devices.length ? devices[0] : {};
+  const device = devices.length === 1 ? devices[0] : {};
 
   useEffect(() => {
     const { attributes = {} } = device;
@@ -71,25 +89,21 @@ export const Devices = ({
 
   const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
-    let devicesLink = '/devices';
-    let deviceText = '';
+    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering });
+    let deviceText = devices.map(device => getDeviceIdentityText({ device, idAttribute }) ?? device?.id).join(', ');
     let targetDeviceCount = deploymentDeviceCount;
     let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;
     if (device?.id) {
       const { attributes = {}, systemDeviceIds = [] } = device;
       const { mender_is_gateway } = attributes;
       deviceText = `${getDeviceIdentityText({ device, idAttribute })}${stringToBoolean(mender_is_gateway) ? ' (Device system)' : ''}`;
-      devicesLink = `${devicesLink}?${devices[0].id}`;
-      if (hasFullFiltering) {
-        devicesLink = `/devices?${devices.map(({ id }) => `id=${id}`).join('&')}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
-      }
       // here we hope the number of systemDeviceIds doesn't exceed the queried 500 and add the gateway device
       targetDeviceCount = systemDeviceIds.length + 1;
     } else if (group) {
+      deviceText = '';
       targetDevicesText = 'All devices';
       targetDeviceCount = 2;
       if (group !== ALL_DEVICES) {
-        devicesLink = `${devicesLink}?group=${group}`;
         targetDevicesText = `${targetDevicesText} in this group`;
         targetDeviceCount = deploymentDeviceCount;
       }
@@ -101,8 +115,8 @@ export const Devices = ({
     <>
       <h4 className="margin-bottom-none margin-top-none">Select a device group to target</h4>
       <div ref={groupRef} className={classes.selection}>
-        {device.id ? (
-          <TextField value={deviceText} label="Device" disabled={true} className={classes.infoStyle} />
+        {deviceText ? (
+          <TextField value={deviceText} label={pluralize('device', devices.length)} disabled={true} className={classes.infoStyle} />
         ) : (
           <div>
             <Autocomplete

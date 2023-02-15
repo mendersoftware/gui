@@ -81,18 +81,20 @@ export const DeploymentReport = props => {
     getDeviceLog,
     getRelease,
     getSingleDeployment,
-    hasAuditlogs,
     idAttribute,
     open,
     onClose,
     past,
     retry,
     release,
+    tenantCapabilities,
     type,
     updateDeploymentControlMap,
     userCapabilities
   } = props;
   const { canAuditlog } = userCapabilities;
+  const { hasAuditlogs } = tenantCapabilities;
+
   const { classes } = useStyles();
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
@@ -218,7 +220,14 @@ export const DeploymentReport = props => {
       <Divider />
       <div>
         <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
-        <DeploymentOverview creator={creator} deployment={deployment} devicesById={devicesById} idAttribute={idAttribute} onScheduleClick={scrollToBottom} />
+        <DeploymentOverview
+          creator={creator}
+          deployment={deployment}
+          devicesById={devicesById}
+          idAttribute={idAttribute}
+          onScheduleClick={scrollToBottom}
+          tenantCapabilities={tenantCapabilities}
+        />
         {isConfigurationDeployment && (
           <>
             <LinedHeader className={classes.header} heading="Configuration" />
@@ -264,13 +273,11 @@ const mapStateToProps = state => {
   // - otherwise no creator will be shown
   const { actor = {} } =
     state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectionState.selectedId && event.action === 'create') || {};
-  const { hasAuditlogs } = getTenantCapabilities(state);
   return {
     acceptedDevicesCount: state.devices.byStatus.accepted.total,
     creator: actor.email,
     deployment,
     devicesById: state.devices.byId,
-    hasAuditlogs,
     idAttribute: getIdAttribute(state).attribute,
     isHosted: state.app.features.isHosted,
     release:
@@ -279,6 +286,7 @@ const mapStateToProps = state => {
         : { device_types_compatible: [] },
     selectedDeviceIds: state.deployments.selectedDeviceIds,
     selectedDevices,
+    tenantCapabilities: getTenantCapabilities(state),
     userCapabilities: getUserCapabilities(state)
   };
 };

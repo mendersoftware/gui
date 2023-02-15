@@ -90,6 +90,7 @@ export const CreateDeployment = props => {
     createdGroup,
     createDeployment,
     deploymentObject = {},
+    devicesById,
     getDeploymentsConfig,
     getGroupDevices,
     getReleases,
@@ -160,11 +161,12 @@ export const CreateDeployment = props => {
     if (devices.length) {
       deviceIds = devices.map(({ id }) => id);
       deviceCount = deviceIds.length;
+      devices = devices.map(({ id }) => ({ id, ...(devicesById[id] ?? {}) }));
     } else if (deploymentObject.group === ALL_DEVICES) {
       deviceCount = acceptedDeviceCount;
     }
-    setDeploymentObject({ ...deploymentObject, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount });
-  }, [JSON.stringify(deploymentObject)]);
+    setDeploymentObject({ ...deploymentObject, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount, devices });
+  }, [JSON.stringify(deploymentObject), devicesById]);
 
   const cleanUpDeploymentsStatus = () => {
     if (!window.location.search) {
@@ -372,6 +374,7 @@ export const mapStateToProps = state => {
     canRetry,
     canSchedule,
     createdGroup: Object.keys(groups).length ? Object.keys(groups)[0] : undefined,
+    devicesById: state.devices.byId,
     docsVersion: getDocsVersion(state),
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,

@@ -77,10 +77,10 @@ const defaultActions = {
   createDeployment: {
     icon: <ReplayIcon />,
     key: 'create-deployment',
-    title: pluralized => `Create deployment for this ${pluralized}`,
+    title: (pluralized, count) => `Create deployment for ${pluralize('this', count)} ${pluralized}`,
     action: ({ onCreateDeployment, selection }) => onCreateDeployment(selection),
-    checkRelevance: ({ device, isSingleDevice, userCapabilities: { canDeploy, canReadReleases } }) =>
-      canDeploy && canReadReleases && isSingleDevice && device && device.status === DEVICE_STATES.accepted
+    checkRelevance: ({ device, userCapabilities: { canDeploy, canReadReleases } }) =>
+      canDeploy && canReadReleases && device && device.status === DEVICE_STATES.accepted
   }
 };
 
@@ -116,11 +116,7 @@ export const DeviceQuickActions = (
   const { actions, selectedDevices } = useMemo(() => {
     const selectedDevices = selectedRows.map(row => devices[row]);
     const actions = Object.values(defaultActions).reduce((accu, action) => {
-      if (
-        selectedDevices.every(
-          device => device && action.checkRelevance({ device, features, isSingleDevice, selectedGroup, tenantCapabilities, userCapabilities })
-        )
-      ) {
+      if (selectedDevices.every(device => device && action.checkRelevance({ device, features, selectedGroup, tenantCapabilities, userCapabilities }))) {
         accu.push(action);
       }
       return accu;
@@ -145,7 +141,7 @@ export const DeviceQuickActions = (
             key={action.key}
             aria-label={action.key}
             icon={action.icon}
-            tooltipTitle={action.title(pluralized)}
+            tooltipTitle={action.title(pluralized, selectedDevices.length)}
             tooltipOpen
             onClick={() => action.action({ ...actionCallbacks, selection: selectedDevices })}
           />
