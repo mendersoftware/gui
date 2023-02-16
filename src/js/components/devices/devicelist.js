@@ -5,9 +5,9 @@ import { Settings as SettingsIcon, Sort as SortIcon } from '@mui/icons-material'
 import { Checkbox } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { deepCompare } from '../../helpers';
+import { deepCompare, toggle } from '../../helpers';
 import useWindowSize from '../../utils/resizehook';
 import Loader from '../common/loader';
 import MenderTooltip from '../common/mendertooltip';
@@ -141,7 +141,7 @@ const getTemplateColumns = (columns, selectable) =>
     : `minmax(250px, 1fr) ${columns} minmax(${minCellWidth}px, max-content)`;
 
 const getColumnsStyle = (columns, defaultSize, selectable) => {
-  const template = columns.map(({ size }) => `minmax(${minCellWidth}px, ${defaultSize ? defaultSize : `${size}px`})`);
+  const template = columns.map(({ size }) => `minmax(${minCellWidth}px, ${size ? `${size}px` : defaultSize})`);
   // applying styles via state changes would lead to less smooth changes, so we set the style directly on the components
   return getTemplateColumns(template.join(' '), selectable);
 };
@@ -152,7 +152,6 @@ export const DeviceList = props => {
     customColumnSizes,
     devices,
     deviceListState,
-    headerKeys,
     idAttribute,
     onChangeRowsPerPage,
     PaginationProps = {},
@@ -170,6 +169,8 @@ export const DeviceList = props => {
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const deviceListRef = useRef();
   const selectedRowsRef = useRef(selectedRows);
+  const initRef = useRef();
+  const [resizeTrigger, setResizeTrigger] = useState(false);
 
   const size = useWindowSize();
   const selectable = !!onSelect;
@@ -184,15 +185,16 @@ export const DeviceList = props => {
       return;
     }
     const relevantColumns = getRelevantColumns(deviceListRef.current.querySelector('.deviceListRow').children, selectable);
-    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(relevantColumns, '1.5fr', selectable);
-  }, [deviceListRef.current, size.width, headerKeys, selectable]);
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes.length ? customColumnSizes : relevantColumns, '1.5fr', selectable);
+  }, [deviceListRef.current, customColumnSizes, columnHeaders, selectable, resizeTrigger, size.width]);
 
   useEffect(() => {
-    if (!deviceListRef.current || !customColumnSizes.length) {
-      return;
-    }
-    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes, undefined, selectable);
-  }, [deviceListRef.current, customColumnSizes, selectable]);
+    clearTimeout(initRef.current);
+    initRef.current = setTimeout(() => setResizeTrigger(toggle), TIMEOUTS.debounceDefault);
+    return () => {
+      clearTimeout(initRef.current);
+    };
+  }, [customColumnSizes.length]);
 
   const onRowSelection = selectedRow => {
     let updatedSelection = [...selectedRowsRef.current];
