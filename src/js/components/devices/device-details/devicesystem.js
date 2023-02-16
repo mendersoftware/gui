@@ -22,7 +22,6 @@ import DeviceDataCollapse from './devicedatacollapse';
 const useStyles = makeStyles()(theme => ({ container: { maxWidth: 600, marginTop: theme.spacing(), marginBottom: theme.spacing() } }));
 
 export const DeviceSystem = ({
-  customColumnSizes,
   columnSelection,
   device,
   devicesById,
@@ -77,7 +76,7 @@ export const DeviceSystem = ({
         <EnterpriseNotification isEnterprise={hasFullFiltering} benefit="see devices connected to your gateway device for easy access" />
         {systemDeviceTotal ? (
           <Devicelist
-            customColumnSizes={customColumnSizes}
+            customColumnSizes={[]}
             columnHeaders={columnHeaders}
             devices={systemDeviceIds.map(id => devicesById[id])}
             deviceListState={{ page, perPage }}
@@ -133,7 +132,6 @@ const actionCreators = { getSystemDevices, setSnackbar };
 
 const mapStateToProps = state => {
   return {
-    customColumnSizes: state.users.customColumns,
     devicesById: state.devices.byId,
     docsVersion: getDocsVersion(state),
     hasFullFiltering: getTenantCapabilities(state),
