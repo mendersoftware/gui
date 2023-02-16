@@ -26,7 +26,15 @@ import { saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
-import { getDeviceTwinIntegrations, getDocsVersion, getFeatures, getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import {
+  getDeviceTwinIntegrations,
+  getDocsVersion,
+  getFeatures,
+  getIdAttribute,
+  getTenantCapabilities,
+  getUserCapabilities,
+  getUserSettings
+} from '../../selectors';
 import Tracking from '../../tracking';
 import DeviceIdentityDisplay from '../common/deviceidentity';
 import { MenderTooltipClickable } from '../common/mendertooltip';
@@ -183,6 +191,7 @@ const tabs = [
 export const ExpandedDevice = ({
   abortDeployment,
   applyDeviceConfig,
+  columnSelection,
   decommissionDevice,
   defaultConfig,
   device,
@@ -246,11 +255,11 @@ export const ExpandedDevice = ({
   }, [deviceId, device.status]);
 
   useEffect(() => {
-    if (!mender_gateway_system_id) {
+    if (!(device.id && mender_gateway_system_id)) {
       return;
     }
     getGatewayDevices(device.id);
-  }, [mender_gateway_system_id]);
+  }, [device.id, mender_gateway_system_id]);
 
   const onDecommissionDevice = device_id => {
     // close dialog!
@@ -314,6 +323,7 @@ export const ExpandedDevice = ({
     abortDeployment,
     applyDeviceConfig,
     classes,
+    columnSelection,
     defaultConfig,
     device,
     deviceConfigDeployment,
@@ -423,8 +433,10 @@ const mapStateToProps = (state, ownProps) => {
     selectedGroup = state.devices.groups.selectedGroup;
     groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
   }
+  const { columnSelection = [] } = getUserSettings(state);
   return {
     alertListState: state.monitor.alerts.alertList,
+    columnSelection,
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     device,
     deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
