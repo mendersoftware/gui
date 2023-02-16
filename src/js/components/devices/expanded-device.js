@@ -255,11 +255,11 @@ export const ExpandedDevice = ({
   }, [deviceId, device.status]);
 
   useEffect(() => {
-    if (!mender_gateway_system_id) {
+    if (!(device.id && mender_gateway_system_id)) {
       return;
     }
     getGatewayDevices(device.id);
-  }, [mender_gateway_system_id]);
+  }, [device.id, mender_gateway_system_id]);
 
   const onDecommissionDevice = device_id => {
     // close dialog!
