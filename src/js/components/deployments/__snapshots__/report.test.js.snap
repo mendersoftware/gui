@@ -457,49 +457,42 @@ Devices that are in the middle of the deployment at the time of abort will finis
                 <th
                   class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
                   scope="col"
-                  tooltip="id"
                 >
                   id
                 </th>
                 <th
                   class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
                   scope="col"
-                  tooltip="Device type"
                 >
                   Device type
                 </th>
                 <th
                   class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
                   scope="col"
-                  tooltip="Current software"
                 >
                   Current software
                 </th>
                 <th
                   class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
                   scope="col"
-                  tooltip="Started"
                 >
                   Started
                 </th>
                 <th
                   class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
                   scope="col"
-                  tooltip="Finished"
                 >
                   Finished
                 </th>
                 <th
                   class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
                   scope="col"
-                  tooltip="Deployment status"
                 >
                   Deployment status
                 </th>
                 <th
                   class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-rgvxci-MuiTableCell-root"
                   scope="col"
-                  tooltip=""
                 />
               </tr>
             </thead>

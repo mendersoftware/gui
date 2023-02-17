@@ -9,7 +9,7 @@ import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deplo
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
-import { getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getIdAttribute, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
@@ -196,6 +196,7 @@ const mapStateToProps = state => {
   return {
     canConfigure,
     canDeploy,
+    idAttribute: getIdAttribute(state).attribute,
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,
     pending,

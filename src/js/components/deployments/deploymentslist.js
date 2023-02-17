@@ -29,6 +29,7 @@ export const DeploymentsList = ({
   componentClass = '',
   count,
   headers = defaultHeaders,
+  idAttribute,
   isEnterprise,
   items,
   listClass = '',
@@ -59,6 +60,7 @@ export const DeploymentsList = ({
             columnHeaders={headers}
             deployment={deployment}
             key={`${type}-deployment-${deployment.created}`}
+            idAttribute={idAttribute}
             isEnterprise={isEnterprise}
             openReport={openReport}
             type={type}

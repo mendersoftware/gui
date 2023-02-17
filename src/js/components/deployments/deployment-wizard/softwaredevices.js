@@ -8,6 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
+import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { stringToBoolean } from '../../../helpers';
 import useWindowSize from '../../../utils/resizehook';
@@ -45,6 +46,15 @@ export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
     devicesLink = `${devicesLink}?group=${group}`;
   }
   return devicesLink;
+};
+
+export const getDeploymentTargetText = ({ deployment, idAttribute }) => {
+  const { devices = [], group = '', name = '', type = DEPLOYMENT_TYPES.software } = deployment;
+  const deviceList = Array.isArray(devices) ? devices : Object.values(devices);
+  if (type !== DEPLOYMENT_TYPES.configuration && (!deviceList.length || group || (deployment.name !== undefined && !isUUID(name)))) {
+    return (group || name) ?? '';
+  }
+  return deviceList.map(device => getDeviceIdentityText({ device, idAttribute }) ?? device?.id).join(', ');
 };
 
 export const ReleasesWarning = ({ lacksReleases }) => (
@@ -90,7 +100,7 @@ export const Devices = ({
   const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
     const devicesLink = getDevicesLink({ devices, group, hasFullFiltering });
-    let deviceText = devices.map(device => getDeviceIdentityText({ device, idAttribute }) ?? device?.id).join(', ');
+    let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
     let targetDeviceCount = deploymentDeviceCount;
     let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;
     if (device?.id) {
