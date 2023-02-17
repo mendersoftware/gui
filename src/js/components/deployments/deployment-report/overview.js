@@ -46,11 +46,10 @@ const defaultLinkProps = {
   rel: 'noopener noreferrer'
 };
 
-export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribute, onScheduleClick, tenantCapabilities }) => {
+export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribute, onScheduleClick }) => {
   const { classes } = useStyles();
   const { artifact_name, devices = {}, filter, group, status, totalDeviceCount } = deployment;
   const { failures, successes } = groupDeploymentStats(deployment);
-  const { hasFullFiltering } = tenantCapabilities;
 
   const finished = deployment.finished || status === DEPLOYMENT_STATES.finished;
 
@@ -63,7 +62,7 @@ export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribu
     </Link>
   );
   const isDeviceDeployment = isUUID(name) && Object.keys(devices).length === 1;
-  const devicesLink = getDevicesLink({ devices: Object.values(devices), group, hasFullFiltering, name });
+  const devicesLink = getDevicesLink({ devices: Object.values(devices), group, name });
   let targetDevices = (
     <Link {...defaultLinkProps} to={devicesLink}>
       {isDeviceDeployment && devicesById[name] ? (

@@ -14,7 +14,7 @@ describe('DeploymentOverview Component', () => {
       group: 'testGroup',
       stats: {}
     };
-    const { baseElement } = render(<DeploymentOverview devicesById={{}} deployment={deployment} tenantCapabilities={{ hasFullFiltering: true }} />);
+    const { baseElement } = render(<DeploymentOverview devicesById={{}} deployment={deployment} />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
   });

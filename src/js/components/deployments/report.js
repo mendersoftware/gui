@@ -220,14 +220,7 @@ export const DeploymentReport = props => {
       <Divider />
       <div>
         <DeploymentPhaseNotification deployment={deployment} onReviewClick={scrollToBottom} />
-        <DeploymentOverview
-          creator={creator}
-          deployment={deployment}
-          devicesById={devicesById}
-          idAttribute={idAttribute}
-          onScheduleClick={scrollToBottom}
-          tenantCapabilities={tenantCapabilities}
-        />
+        <DeploymentOverview creator={creator} deployment={deployment} devicesById={devicesById} idAttribute={idAttribute} onScheduleClick={scrollToBottom} />
         {isConfigurationDeployment && (
           <>
             <LinedHeader className={classes.header} heading="Configuration" />

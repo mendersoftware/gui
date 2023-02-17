@@ -145,6 +145,7 @@ export const deviceHandlers = [
   rest.get(`${reportingApiUrl}/devices/attributes`, (req, res, ctx) =>
     res(ctx.json({ attributes: deviceAttributes, count: deviceAttributes.length, limit: 100 }))
   ),
+  rest.get(`${reportingApiUrl}/devices/search/attributes`, (req, res, ctx) => res(ctx.json(deviceAttributes))),
   rest.post(`${reportingApiUrl}/devices/aggregate`, (req, res, ctx) =>
     res(
       ctx.json([
@@ -190,7 +191,7 @@ export const deviceHandlers = [
     }
     return res(ctx.status(200));
   }),
-  rest.post(`${inventoryApiUrlV2}/filters/search`, ({ body: { page, per_page, filters } }, res, ctx) => {
+  rest.post(`${reportingApiUrl}/devices/search`, ({ body: { page, per_page, filters } }, res, ctx) => {
     if ([page, per_page, filters].some(item => !item)) {
       return res(ctx.status(509));
     }
@@ -201,6 +202,9 @@ export const deviceHandlers = [
     if (!status || filters.length > 1) {
       if (filters.find(filter => filter.attribute === 'group' && filter.value.includes(Object.keys(defaultState.devices.groups.byId)[0]))) {
         return res(ctx.set(headerNames.total, 2), ctx.json([inventoryDevice]));
+      }
+      if (filters.find(filter => filter.scope === 'monitor' && ['failed_last_update', 'alerts', 'auth_request'].includes(filter.attribute))) {
+        return res(ctx.set(headerNames.total, 4), ctx.json([inventoryDevice]));
       }
       return res(ctx.set(headerNames.total, 0), ctx.json([]));
     }

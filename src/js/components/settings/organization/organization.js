@@ -202,7 +202,6 @@ const mapStateToProps = state => {
   const { isAdmin } = getUserRoles(state);
   return {
     canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
-    hasReporting: state.app.features.hasReporting,
     isAdmin,
     isEnterprise,
     isHosted: state.app.features.isHosted,
