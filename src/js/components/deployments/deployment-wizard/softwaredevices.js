@@ -95,7 +95,13 @@ export const Devices = ({
     getSystemDevices(device.id, { perPage: 500 });
   }, [device.id, device.attributes?.mender_is_gateway]);
 
-  const deploymentSettingsUpdate = (e, value) => setDeploymentSettings({ group: value });
+  const deploymentSettingsUpdate = (e, value, reason) => {
+    let update = { group: value };
+    if (reason === 'clear') {
+      update = { ...update, deploymentDeviceCount: 0, devices: [] };
+    }
+    setDeploymentSettings(update);
+  };
 
   const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
