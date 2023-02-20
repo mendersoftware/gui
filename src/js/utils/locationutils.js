@@ -108,7 +108,7 @@ const scopedFilterParse = searchParams => {
 export const parseDeviceQuery = (searchParams, extraProps = {}) => {
   let queryParams = new URLSearchParams(searchParams);
   const { filteringAttributes = {}, pageState = {} } = extraProps;
-  const pageStateExtension = pageState.id ? { open: true } : {};
+  const pageStateExtension = pageState.id?.length === 1 ? { open: true } : {};
 
   let scopedFilters;
   const refersOldStyleAttributes = Object.values(filteringAttributes).some(scopeValues => scopeValues.some(scopedValue => queryParams.get(scopedValue)));
