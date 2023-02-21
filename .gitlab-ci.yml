@@ -18,6 +18,8 @@ include:
     file: '.gitlab-ci-check-docker-build.yml'
   - project: 'Northern.tech/Mender/mendertesting'
     file: '.gitlab-ci-github-status-updates.yml'
+  - project: 'Northern.tech/Mender/mender-qa'
+    file: 'gitlab-pipeline/internal-variables.yml'
 
 test:lint:
   stage: test
@@ -187,8 +189,6 @@ build:docker:
   dependencies:
     - test:prep
   variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://docker:2375/
     CI: 1
     DEVICE_TYPE: qemux86-64
     TEST_ENVIRONMENT: staging
