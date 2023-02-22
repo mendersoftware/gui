@@ -10,6 +10,7 @@ import { getDeploymentState } from '../../helpers';
 import Confirm from '../common/confirm';
 import { RelativeTime } from '../common/time';
 import { PhaseProgressDisplay } from './deployment-report/phaseprogress';
+import { getDeploymentTargetText } from './deployment-wizard/softwaredevices';
 import DeploymentStats from './deploymentstatus';
 import ProgressDisplay, { DeploymentStatusNotification } from './progressChart';
 
@@ -25,8 +26,8 @@ export const DeploymentDeviceCount = ({ className, deployment }) => (
     {Math.max(deployment.device_count || 0, deployment.max_devices || 0)}
   </div>
 );
-export const DeploymentDeviceGroup = ({ deployment: { name, type = DEPLOYMENT_TYPES.software, devices = {} }, wrappingClass }) => {
-  const deploymentName = (type === DEPLOYMENT_TYPES.configuration ? Object.keys(devices).join(', ') : name) || name;
+export const DeploymentDeviceGroup = ({ deployment, idAttribute, wrappingClass }) => {
+  const deploymentName = getDeploymentTargetText({ deployment, idAttribute });
   return (
     <div className={wrappingClass} key="DeploymentDeviceGroup" title={deploymentName}>
       {deploymentName}
@@ -71,7 +72,7 @@ const useStyles = makeStyles()(theme => ({
   textWrapping: { whiteSpace: 'initial' }
 }));
 
-export const DeploymentItem = ({ abort: abortDeployment, canConfigure, canDeploy, columnHeaders, deployment, isEnterprise, openReport, type }) => {
+export const DeploymentItem = ({ abort: abortDeployment, canConfigure, canDeploy, columnHeaders, deployment, idAttribute, isEnterprise, openReport, type }) => {
   const [abort, setAbort] = useState(null);
   const { classes } = useStyles();
 
@@ -94,7 +95,14 @@ export const DeploymentItem = ({ abort: abortDeployment, canConfigure, canDeploy
         return (
           <div className={column.class} key={`deploy-item-${i}`}>
             {column.title && <span className="deployment-item-title muted">{column.title}</span>}
-            <ColumnComponent className={column.class || ''} deployment={deployment} started={started} wrappingClass={wrappingClass} {...column.props} />
+            <ColumnComponent
+              className={column.class || ''}
+              idAttribute={idAttribute}
+              deployment={deployment}
+              started={started}
+              wrappingClass={wrappingClass}
+              {...column.props}
+            />
           </div>
         );
       })}

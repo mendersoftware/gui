@@ -191,7 +191,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
     >
       <a
         class="flexbox centered"
-        href="/devices?group=test%20deployment"
+        href="/devices?group=testGroup"
         rel="noopener noreferrer"
         style="font-weight: 500;"
         target="_blank"

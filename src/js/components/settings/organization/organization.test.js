@@ -23,7 +23,6 @@ describe('MyOrganization Component', () => {
         ...defaultState.app,
         features: {
           ...defaultState.app.features,
-          hasReporting: true,
           isHosted: true
         },
         versionInformation: { Integration: '1.2.3' }

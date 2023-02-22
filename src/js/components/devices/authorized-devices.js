@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // material ui
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
@@ -181,6 +182,7 @@ export const Authorized = props => {
   const deviceListRef = useRef();
   const authorizeRef = useRef();
   const timer = useRef();
+  const navigate = useNavigate();
 
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
@@ -360,6 +362,16 @@ export const Authorized = props => {
     }
   };
 
+  const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
+
+  const actionCallbacks = {
+    onAddDevicesToGroup,
+    onAuthorizationChange,
+    onDeviceDismiss,
+    onRemoveDevicesFromGroup,
+    onCreateDeployment: onCreateDeploymentClick
+  };
+
   let onboardingComponent;
   const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
   if (deviceListRef.current) {
@@ -498,7 +510,7 @@ export const Authorized = props => {
       {!selectedId && onboardingComponent ? onboardingComponent : null}
       {canManageDevices && !!selectedRows.length && (
         <DeviceQuickActions
-          actionCallbacks={{ onAddDevicesToGroup, onAuthorizationChange, onDeviceDismiss, onRemoveDevicesFromGroup }}
+          actionCallbacks={actionCallbacks}
           devices={devices}
           features={features}
           selectedGroup={selectedStaticGroup}

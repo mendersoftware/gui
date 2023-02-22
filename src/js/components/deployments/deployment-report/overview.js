@@ -15,6 +15,7 @@ import { groupDeploymentStats } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
 import Time from '../../common/time';
+import { getDevicesLink } from '../deployment-wizard/softwaredevices';
 import { defaultColumnDataProps } from '../report';
 
 const useStyles = makeStyles()(theme => ({
@@ -47,7 +48,7 @@ const defaultLinkProps = {
 
 export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribute, onScheduleClick }) => {
   const { classes } = useStyles();
-  const { artifact_name, devices = {}, filter, status, totalDeviceCount } = deployment;
+  const { artifact_name, devices = {}, filter, group, status, totalDeviceCount } = deployment;
   const { failures, successes } = groupDeploymentStats(deployment);
 
   const finished = deployment.finished || status === DEPLOYMENT_STATES.finished;
@@ -60,11 +61,17 @@ export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribu
       <LaunchIcon className="margin-left-small" fontSize="small" />
     </Link>
   );
-  const isDeviceDeployment = isUUID(name);
-  const deviceQuery = isDeviceDeployment ? `id=${name}` : `group=${encodeURIComponent(name)}`;
+  const isDeviceDeployment = isUUID(name) && Object.keys(devices).length === 1;
+  const devicesLink = getDevicesLink({ devices: Object.values(devices), group, name });
   let targetDevices = (
-    <Link {...defaultLinkProps} to={`/devices?${deviceQuery}`}>
-      {isDeviceDeployment && devicesById[name] ? <DeviceIdentityDisplay device={devicesById[name]} idAttribute={idAttribute} isEditable={false} /> : name}
+    <Link {...defaultLinkProps} to={devicesLink}>
+      {isDeviceDeployment && devicesById[name] ? (
+        <DeviceIdentityDisplay device={devicesById[name]} idAttribute={idAttribute} isEditable={false} />
+      ) : isUUID(name) ? (
+        Object.keys(devices).join(', ')
+      ) : (
+        name
+      )}
       <LaunchIcon className="margin-left-small" fontSize="small" />
       <Chip className={`margin-left uppercased ${classes.chip}`} label={filter ? 'dynamic' : 'static'} size="small" />
     </Link>

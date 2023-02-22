@@ -23,7 +23,6 @@ export const initialState = {
     hasDeviceConfig: false,
     hasDeviceConnect: false,
     hasMonitor: false,
-    hasReporting: false,
     isDemoMode: false,
     isHosted: false,
     isEnterprise: false

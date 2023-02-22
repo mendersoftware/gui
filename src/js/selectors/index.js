@@ -205,23 +205,20 @@ export const getTenantCapabilities = createSelector(
       hasAuditlogs,
       hasDeviceConfig,
       hasDeviceConnect,
-      hasFullFiltering: canDelta,
       hasMonitor,
       isEnterprise
     };
   }
 );
 
-export const getAvailableIssueOptionsByType = createSelector(
-  [getFeatures, getTenantCapabilities, getIssueCountsByType],
-  ({ hasReporting }, { hasFullFiltering, hasMonitor }, issueCounts) =>
-    Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { isCategory, key, needsFullFiltering, needsMonitor, needsReporting, title }) => {
-      if (isCategory || (needsReporting && !hasReporting) || (needsFullFiltering && !hasFullFiltering) || (needsMonitor && !hasMonitor)) {
-        return accu;
-      }
-      accu[key] = { count: issueCounts[key].filtered, key, title };
+export const getAvailableIssueOptionsByType = createSelector([getTenantCapabilities, getIssueCountsByType], ({ hasMonitor }, issueCounts) =>
+  Object.values(DEVICE_ISSUE_OPTIONS).reduce((accu, { isCategory, key, needsMonitor, title }) => {
+    if (isCategory || (needsMonitor && !hasMonitor)) {
       return accu;
-    }, {})
+    }
+    accu[key] = { count: issueCounts[key].filtered, key, title };
+    return accu;
+  }, {})
 );
 
 export const getDeviceTypes = createSelector([getAcceptedDevices, getDevicesById], ({ deviceIds = [] }, devicesById) =>

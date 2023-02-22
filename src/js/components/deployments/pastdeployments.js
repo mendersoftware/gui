@@ -14,7 +14,7 @@ import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentC
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getISOStringBoundaries, tryMapDeployments } from '../../helpers';
-import { getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getIdAttribute, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -261,6 +261,7 @@ const mapStateToProps = state => {
     canConfigure,
     canDeploy,
     groups: [ALL_DEVICES, ...Object.keys(groups)],
+    idAttribute: getIdAttribute(state).attribute,
     onboardingState: getOnboardingState(state),
     past,
     pastSelectionState: state.deployments.selectionState.finished

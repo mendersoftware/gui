@@ -88,7 +88,6 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
       hasDeviceConfig: stringToBoolean(features.hasDeviceConfig),
       hasDeviceConnect: stringToBoolean(features.hasDeviceConnect),
       hasMonitor: stringToBoolean(features.hasMonitor),
-      hasReporting: stringToBoolean(features.hasReporting),
       isHosted: stringToBoolean(features.isHosted) || window.location.hostname.includes('hosted.mender.io'),
       isEnterprise: stringToBoolean(features.isEnterprise),
       isDemoMode: stringToBoolean(isDemoMode || features.isDemoMode)

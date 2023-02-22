@@ -6,7 +6,9 @@ import { Autocomplete, TextField, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
+import isUUID from 'validator/lib/isUUID';
 
+import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { stringToBoolean } from '../../../helpers';
 import useWindowSize from '../../../utils/resizehook';
@@ -29,6 +31,29 @@ const hardCodedStyle = {
   }
 };
 
+export const getDevicesLink = ({ devices, group, name }) => {
+  let devicesLink = '/devices';
+  if (devices.length && (!name || isUUID(name))) {
+    devicesLink = `/devices?${devices.map(({ id }) => `id=${id}`).join('&')}`;
+    if (devices.length === 1) {
+      const { systemDeviceIds = [] } = devices[0];
+      devicesLink = `${devicesLink}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
+    }
+  } else if (group && group !== ALL_DEVICES) {
+    devicesLink = `${devicesLink}?group=${group}`;
+  }
+  return devicesLink;
+};
+
+export const getDeploymentTargetText = ({ deployment, idAttribute }) => {
+  const { devices = [], group = '', name = '', type = DEPLOYMENT_TYPES.software } = deployment;
+  const deviceList = Array.isArray(devices) ? devices : Object.values(devices);
+  if (type !== DEPLOYMENT_TYPES.configuration && (!deviceList.length || group || (deployment.name !== undefined && !isUUID(name)))) {
+    return (group || name) ?? '';
+  }
+  return deviceList.map(device => getDeviceIdentityText({ device, idAttribute }) ?? device?.id).join(', ');
+};
+
 export const ReleasesWarning = ({ lacksReleases }) => (
   <div className="flexbox center-aligned">
     <ErrorOutlineIcon fontSize="small" style={{ marginRight: 4, top: 4, color: 'rgb(171, 16, 0)' }} />
@@ -46,7 +71,6 @@ export const Devices = ({
   groups,
   hasDevices,
   hasDynamicGroups,
-  hasFullFiltering,
   hasPending,
   idAttribute,
   setDeploymentSettings
@@ -56,7 +80,7 @@ export const Devices = ({
   const size = useWindowSize();
 
   const { deploymentDeviceCount = 0, devices = [], group = null } = deploymentObject;
-  const device = devices.length ? devices[0] : {};
+  const device = devices.length === 1 ? devices[0] : {};
 
   useEffect(() => {
     const { attributes = {} } = device;
@@ -67,29 +91,31 @@ export const Devices = ({
     getSystemDevices(device.id, { perPage: 500 });
   }, [device.id, device.attributes?.mender_is_gateway]);
 
-  const deploymentSettingsUpdate = (e, value) => setDeploymentSettings({ group: value });
+  const deploymentSettingsUpdate = (e, value, reason) => {
+    let update = { group: value };
+    if (reason === 'clear') {
+      update = { ...update, deploymentDeviceCount: 0, devices: [] };
+    }
+    setDeploymentSettings(update);
+  };
 
   const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
-    let devicesLink = '/devices';
-    let deviceText = '';
+    const devicesLink = getDevicesLink({ devices, group });
+    let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
     let targetDeviceCount = deploymentDeviceCount;
     let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;
     if (device?.id) {
       const { attributes = {}, systemDeviceIds = [] } = device;
       const { mender_is_gateway } = attributes;
       deviceText = `${getDeviceIdentityText({ device, idAttribute })}${stringToBoolean(mender_is_gateway) ? ' (Device system)' : ''}`;
-      devicesLink = `${devicesLink}?${devices[0].id}`;
-      if (hasFullFiltering) {
-        devicesLink = `/devices?${devices.map(({ id }) => `id=${id}`).join('&')}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
-      }
       // here we hope the number of systemDeviceIds doesn't exceed the queried 500 and add the gateway device
       targetDeviceCount = systemDeviceIds.length + 1;
     } else if (group) {
+      deviceText = '';
       targetDevicesText = 'All devices';
       targetDeviceCount = 2;
       if (group !== ALL_DEVICES) {
-        devicesLink = `${devicesLink}?group=${group}`;
         targetDevicesText = `${targetDevicesText} in this group`;
         targetDeviceCount = deploymentDeviceCount;
       }
@@ -101,8 +127,8 @@ export const Devices = ({
     <>
       <h4 className="margin-bottom-none margin-top-none">Select a device group to target</h4>
       <div ref={groupRef} className={classes.selection}>
-        {device.id ? (
-          <TextField value={deviceText} label="Device" disabled={true} className={classes.infoStyle} />
+        {deviceText ? (
+          <TextField value={deviceText} label={pluralize('device', devices.length)} disabled={true} className={classes.infoStyle} />
         ) : (
           <div>
             <Autocomplete
