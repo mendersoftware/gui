@@ -137,6 +137,14 @@ exports[`UserManagement Component renders correctly 1`] = `
   display: table-header-group;
 }
 
+.emotion-3 .columnHeader {
+  display: table-cell;
+}
+
+.emotion-3 .nonSortable {
+  cursor: initial;
+}
+
 .emotion-4 {
   color: inherit;
   display: table-row;
@@ -361,7 +369,7 @@ exports[`UserManagement Component renders correctly 1`] = `
     </button>
   </div>
   <table
-    class="MuiTable-root margin-bottom emotion-2"
+    class="MuiTable-root margin-bottom  emotion-2"
   >
     <thead
       class="MuiTableHead-root emotion-3"
@@ -370,31 +378,31 @@ exports[`UserManagement Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-head emotion-4"
       >
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-5"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-5"
           scope="col"
         >
           Email
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-5"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-5"
           scope="col"
         >
           Date created
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-5"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-5"
           scope="col"
         >
           Last updated
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-5"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-5"
           scope="col"
         >
           Role
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-5"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-5"
           scope="col"
         >
           Manage
@@ -408,14 +416,14 @@ exports[`UserManagement Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-4"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <span>
             a@b.com
           </span>
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <time
             datetime="2019-01-01T10:30:00+00:00"
@@ -424,7 +432,7 @@ exports[`UserManagement Component renders correctly 1`] = `
           </time>
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <span
             aria-label=""
@@ -439,12 +447,12 @@ exports[`UserManagement Component renders correctly 1`] = `
           </span>
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           Admin
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"
@@ -469,7 +477,7 @@ exports[`UserManagement Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-4"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <span>
             a2@b.com
@@ -499,7 +507,7 @@ exports[`UserManagement Component renders correctly 1`] = `
           </div>
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <time
             datetime="2019-01-01T12:30:00+00:00"
@@ -508,7 +516,7 @@ exports[`UserManagement Component renders correctly 1`] = `
           </time>
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <span
             aria-label=""
@@ -523,10 +531,10 @@ exports[`UserManagement Component renders correctly 1`] = `
           </span>
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         />
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-12"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"

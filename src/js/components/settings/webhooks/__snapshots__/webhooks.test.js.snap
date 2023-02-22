@@ -44,6 +44,14 @@ exports[`Webhooks Component renders correctly with entries  1`] = `
   display: table-header-group;
 }
 
+.emotion-1 .columnHeader {
+  display: table-cell;
+}
+
+.emotion-1 .nonSortable {
+  cursor: initial;
+}
+
 .emotion-2 {
   color: inherit;
   display: table-row;
@@ -125,7 +133,7 @@ exports[`Webhooks Component renders correctly with entries  1`] = `
     Webhooks
   </h2>
   <table
-    class="MuiTable-root margin-bottom emotion-0"
+    class="MuiTable-root margin-bottom  emotion-0"
   >
     <thead
       class="MuiTableHead-root emotion-1"
@@ -134,19 +142,19 @@ exports[`Webhooks Component renders correctly with entries  1`] = `
         class="MuiTableRow-root MuiTableRow-head emotion-2"
       >
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-3"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-3"
           scope="col"
         >
           URL
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-3"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-3"
           scope="col"
         >
           Status
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-3"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-3"
           scope="col"
         >
           Manage
@@ -160,17 +168,17 @@ exports[`Webhooks Component renders correctly with entries  1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-2"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           https://example.com
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           enabled
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"
