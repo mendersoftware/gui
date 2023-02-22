@@ -88,7 +88,7 @@ describe('locationutils', () => {
       const defaultArgs = { location: { pathname: '/deployments' }, today, tonight };
       it('works as expected', () => {
         const result = parseDeploymentsQuery(new URLSearchParams('?pending=1:50&inprogress=5'), {
-          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: 'testId' },
+          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: ['testId'] },
           ...defaultArgs,
           location: { pathname: '/deployments/unknown' }
         });
@@ -101,7 +101,7 @@ describe('locationutils', () => {
       });
       it('works as expected - pt2', () => {
         const result = parseDeploymentsQuery(new URLSearchParams('?type=configuration&search=someSearch'), {
-          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: 'testId' },
+          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: ['testId'] },
           ...defaultArgs,
           location: { pathname: '/deployments/unknownToo' }
         });
@@ -113,7 +113,7 @@ describe('locationutils', () => {
       });
       it('works as expected - pt3', () => {
         const result = parseDeploymentsQuery(new URLSearchParams('?endDate=2020-05-02&startDate=2000-01-25'), {
-          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: 'testId' },
+          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: ['testId'] },
           ...defaultArgs,
           location: { pathname: '/deployments/done' }
         });
@@ -125,7 +125,7 @@ describe('locationutils', () => {
       });
       it('works as expected - pt4', () => {
         const result = parseDeploymentsQuery(new URLSearchParams('?perPage=60'), {
-          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: 'testId', perPage: 60 },
+          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: ['testId'], perPage: 60 },
           ...defaultArgs,
           location: { pathname: '/deployments/scheduled' }
         });
@@ -137,7 +137,7 @@ describe('locationutils', () => {
       });
       it('works with release triggered dialogs', () => {
         const result = parseDeploymentsQuery(new URLSearchParams('?release=somereleaseName'), {
-          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: 'testId' },
+          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: ['testId'] },
           ...defaultArgs
         });
         expect(result).toEqual({
@@ -147,7 +147,7 @@ describe('locationutils', () => {
       });
       it('works with device triggered dialogs', () => {
         const result = parseDeploymentsQuery(new URLSearchParams('?deviceId=someDevice'), {
-          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: 'testId' },
+          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: ['testId'] },
           ...defaultArgs
         });
         expect(result).toEqual({
@@ -222,8 +222,8 @@ describe('locationutils', () => {
         { key: 'some', operator: '$eq', scope: 'inventory', value: 'thing' }
       ]);
     });
-    it('uses working utilties - parseDeviceQuery converts new style', () => {
-      const { open } = parseDeviceQuery(new URLSearchParams(), { pageState: { id: 'something' } });
+    it('uses working utilties - parseDeviceQuery converts new style with device context', () => {
+      const { open } = parseDeviceQuery(new URLSearchParams(), { pageState: { id: ['something'] } });
       expect(open).toEqual(true);
     });
 

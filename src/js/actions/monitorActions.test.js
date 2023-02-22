@@ -56,7 +56,7 @@ describe('monitor actions', () => {
       {
         type: MonitorConstants.RECEIVE_DEVICE_ISSUE_COUNTS,
         issueType: DEVICE_ISSUE_OPTIONS.monitoring.key,
-        counts: { filtered: 0, total: 0 }
+        counts: { filtered: 4, total: 4 }
       }
     ];
     const request = store.dispatch(getIssueCountsByType(DEVICE_ISSUE_OPTIONS.monitoring.key));

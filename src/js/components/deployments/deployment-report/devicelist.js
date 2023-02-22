@@ -65,13 +65,9 @@ export const DeploymentDeviceList = ({
           <Table style={{ minHeight: '10vh', maxHeight: '40vh', overflowX: 'auto' }}>
             <TableHead>
               <TableRow>
-                <TableCell tooltip={idAttribute}>{idAttribute}</TableCell>
+                <TableCell>{idAttribute}</TableCell>
                 {deviceListColumns.map((content, index) =>
-                  content != 'Attempts' || retries ? (
-                    <TableCell key={`device-list-header-${index + 1}`} tooltip={content}>
-                      {content}
-                    </TableCell>
-                  ) : null
+                  content != 'Attempts' || retries ? <TableCell key={`device-list-header-${index + 1}`}>{content}</TableCell> : null
                 )}
               </TableRow>
             </TableHead>

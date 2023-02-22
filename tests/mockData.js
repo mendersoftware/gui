@@ -334,11 +334,21 @@ export const defaultState = {
       }
     },
     issueCounts: {
-      byType: {
-        [DeviceConstants.DEVICE_ISSUE_OPTIONS.authRequests.key]: { filtered: 0, total: 0 },
-        [DeviceConstants.DEVICE_ISSUE_OPTIONS.monitoring.key]: { filtered: 3, total: 0 },
-        [DeviceConstants.DEVICE_ISSUE_OPTIONS.offline.key]: { filtered: 0, total: 0 }
-      }
+      byType: Object.values(DeviceConstants.DEVICE_ISSUE_OPTIONS).reduce(
+        (accu, { isCategory, key }) => {
+          if (isCategory) {
+            return accu;
+          }
+          const current = accu[key] ?? {};
+          accu[key] = { filtered: 0, total: 0, ...current };
+          return accu;
+        },
+        {
+          [DeviceConstants.DEVICE_ISSUE_OPTIONS.authRequests.key]: { filtered: 0, total: 0 },
+          [DeviceConstants.DEVICE_ISSUE_OPTIONS.monitoring.key]: { filtered: 3, total: 0 },
+          [DeviceConstants.DEVICE_ISSUE_OPTIONS.offline.key]: { filtered: 0, total: 0 }
+        }
+      )
     },
     settings: {
       global: {

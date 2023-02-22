@@ -1,12 +1,7 @@
 import React from 'react';
 
-import moment from 'moment';
-import momentDurationFormatSetup from 'moment-duration-format';
-
 import { render } from '../../../../../tests/setupTests';
 import DeploymentOverview from './overview';
-
-momentDurationFormatSetup(moment);
 
 describe('DeploymentOverview Component', () => {
   it('renders correctly', async () => {
@@ -14,24 +9,12 @@ describe('DeploymentOverview Component', () => {
       name: 'test deployment',
       artifact_name: 'test',
       created: '2019-01-01',
-      devices: {},
+      devices: { a: { id: '13' } },
       finished: '2019-01-01',
+      group: 'testGroup',
       stats: {}
     };
-    const creationMoment = moment();
-    const elapsedMoment = moment();
-    const duration = moment.duration(elapsedMoment.diff(creationMoment));
-    const { baseElement } = render(
-      <DeploymentOverview
-        allDevices={[]}
-        deployment={deployment}
-        deviceCount={0}
-        duration={duration}
-        onAbortClick={jest.fn}
-        onRetryClick={jest.fn}
-        viewLog={jest.fn}
-      />
-    );
+    const { baseElement } = render(<DeploymentOverview devicesById={{}} deployment={deployment} />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
   });

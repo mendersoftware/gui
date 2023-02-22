@@ -90,6 +90,7 @@ export const CreateDeployment = props => {
     createdGroup,
     createDeployment,
     deploymentObject = {},
+    devicesById,
     getDeploymentsConfig,
     getGroupDevices,
     getReleases,
@@ -160,11 +161,12 @@ export const CreateDeployment = props => {
     if (devices.length) {
       deviceIds = devices.map(({ id }) => id);
       deviceCount = deviceIds.length;
+      devices = devices.map(({ id }) => ({ id, ...(devicesById[id] ?? {}) }));
     } else if (deploymentObject.group === ALL_DEVICES) {
       deviceCount = acceptedDeviceCount;
     }
-    setDeploymentObject({ ...deploymentObject, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount });
-  }, [JSON.stringify(deploymentObject)]);
+    setDeploymentObject({ ...deploymentObject, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount, devices });
+  }, [JSON.stringify(deploymentObject), devicesById]);
 
   const cleanUpDeploymentsStatus = () => {
     if (!window.location.search) {
@@ -363,7 +365,7 @@ export const CreateDeployment = props => {
 const actionCreators = { advanceOnboarding, createDeployment, getDeploymentsConfig, getGroupDevices, getReleases, getSystemDevices, saveGlobalSettings };
 
 export const mapStateToProps = state => {
-  const { canRetry, canSchedule, hasFullFiltering } = getTenantCapabilities(state);
+  const { canRetry, canSchedule } = getTenantCapabilities(state);
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   const { hasDelta } = state.deployments.config ?? {};
@@ -372,12 +374,12 @@ export const mapStateToProps = state => {
     canRetry,
     canSchedule,
     createdGroup: Object.keys(groups).length ? Object.keys(groups)[0] : undefined,
+    devicesById: state.devices.byId,
     docsVersion: getDocsVersion(state),
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     hasDeltaEnabled: hasDelta,
     hasDynamicGroups: Object.values(groups).some(group => !!group.id),
-    hasFullFiltering,
     hasPending: state.devices.byStatus.pending.total,
     idAttribute: getIdAttribute(state).attribute,
     isEnterprise: getIsEnterprise(state),

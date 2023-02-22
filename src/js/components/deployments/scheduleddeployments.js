@@ -13,7 +13,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { tryMapDeployments } from '../../helpers';
-import { getIsEnterprise, getUserCapabilities } from '../../selectors';
+import { getIdAttribute, getIsEnterprise, getUserCapabilities } from '../../selectors';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
@@ -192,6 +192,7 @@ const mapStateToProps = state => {
     canConfigure,
     canDeploy,
     count: state.deployments.byStatus.scheduled.total,
+    idAttribute: getIdAttribute(state).attribute,
     // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
     isEnterprise: getIsEnterprise(state) || plan !== 'os',
     items: scheduled,
