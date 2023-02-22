@@ -103,7 +103,9 @@ export const Past = props => {
     const pastDeploymentsFailed = past.reduce(
       (accu, item) =>
         item.status === 'failed' ||
-        (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0) ||
+        (item.statistics?.status &&
+          item.statistics.status.noartifact + item.statistics.status.failure + item.statistics.status['already-installed'] + item.statistics.status.aborted >
+            0) ||
         accu,
       false
     );

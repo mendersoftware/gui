@@ -840,28 +840,7 @@ describe('device config ', () => {
   });
   it('should allow single device config deployment', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [
-      { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: { id: defaultState.deployments.byId.d1.id } },
-      {
-        type: DeploymentConstants.RECEIVE_DEPLOYMENTS,
-        deployments: {
-          [defaultState.deployments.byId.d1.id]: {
-            id: defaultState.deployments.byId.d1.id,
-            stats: {
-              'already-installed': 0,
-              decommissioned: 0,
-              downloading: 0,
-              failure: 0,
-              installing: 1,
-              noartifact: 0,
-              pending: 0,
-              rebooting: 0,
-              success: 0
-            }
-          }
-        }
-      }
-    ];
+    const expectedActions = [{ type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: { ...defaultState.deployments.byId.d1, name: 'undefined' } }];
     await store.dispatch(applyDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

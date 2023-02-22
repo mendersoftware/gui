@@ -203,7 +203,7 @@ export const DeploymentDeviceList = ({
       return;
     }
     getDeploymentDevices(deployment.id, { page: currentPage, perPage });
-  }, [currentPage, deployment.status, deployment.stats, loadingDone]);
+  }, [currentPage, deployment.status, JSON.stringify(statistics.status), loadingDone]);
 
   useEffect(() => {
     timer.current = setTimeout(() => setLoadingDone(true), TIMEOUTS.oneSecond);

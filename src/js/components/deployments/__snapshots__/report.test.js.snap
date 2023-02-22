@@ -570,7 +570,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                   class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
                 >
                   <div>
-                    0 Bytes
+                    123.00 Bytes
                   </div>
                 </td>
                 <td
@@ -713,7 +713,7 @@ Devices that are in the middle of the deployment at the time of abort will finis
                 </b>
               </div>
               <div>
-                0 Bytes
+                1.21 KB
               </div>
             </div>
           </div>

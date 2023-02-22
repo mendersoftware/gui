@@ -12,7 +12,7 @@ describe('DeploymentOverview Component', () => {
       devices: { a: { id: '13' } },
       finished: '2019-01-01',
       group: 'testGroup',
-      stats: {}
+      statistics: { status: {} }
     };
     const { baseElement } = render(<DeploymentOverview devicesById={{}} deployment={deployment} />);
     const view = baseElement.firstChild.firstChild;

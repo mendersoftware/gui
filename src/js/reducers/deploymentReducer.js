@@ -3,7 +3,7 @@ import * as DeviceConstants from '../constants/deviceConstants';
 
 export const initialState = {
   byId: {
-    // [id]: { stats, devices: { [deploymentId]: { id, log } }, totalDeviceCount }
+    // [id]: { statistics: { status: {}, total_size }, devices: { [deploymentId]: { id, log } }, totalDeviceCount }
   },
   byStatus: {
     finished: { deploymentIds: [], total: 0 },

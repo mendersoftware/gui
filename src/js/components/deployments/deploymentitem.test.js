@@ -14,16 +14,18 @@ describe('DeploymentItem Component', () => {
       created: '2019-01-01T13:30:00.000Z',
       artifacts: ['123'],
       device_count: 1,
-      stats: {
-        downloading: 0,
-        decommissioned: 0,
-        failure: 0,
-        installing: 1,
-        noartifact: 0,
-        pending: 0,
-        rebooting: 0,
-        success: 0,
-        'already-installed': 0
+      statistics: {
+        status: {
+          downloading: 0,
+          decommissioned: 0,
+          failure: 0,
+          installing: 1,
+          noartifact: 0,
+          pending: 0,
+          rebooting: 0,
+          success: 0,
+          'already-installed': 0
+        }
       }
     };
     const { container } = render(<DeploymentItem columnHeaders={columnHeaders} deployment={deployment} type="progress" />);
