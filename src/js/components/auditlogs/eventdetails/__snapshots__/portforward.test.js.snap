@@ -107,7 +107,7 @@ exports[`PortForward Component renders correctly 1`] = `
         class="align-right key muted"
       >
         <b>
-          System software version
+          Operating system version
         </b>
       </div>
       <div

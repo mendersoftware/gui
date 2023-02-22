@@ -40,8 +40,9 @@ const defaultSteps = {
     title: 'Install',
     tooltip: (
       <>
-        For <b>system updates</b>, this means switching the <i>inactive</i> partition on the device to be <i>active</i> next time the device reboots. This means
-        that on the next reboot the device will boot the updated software, regardless if it was rebooted by Mender, an external process or due to power loss.
+        For <b>operating system updates</b>, this means switching the <i>inactive</i> partition on the device to be <i>active</i> next time the device reboots.
+        This means that on the next reboot the device will boot the updated software, regardless if it was rebooted by Mender, an external process or due to
+        power loss.
         <br />
         For <b>application updates</b>, it depends on the Update Module but in general refers to the <i>system changing</i> effects; e.g. writing a file to its
         location, running a script, installing or starting a container.
