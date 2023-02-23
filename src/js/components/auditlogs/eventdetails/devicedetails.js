@@ -42,7 +42,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
       </Link>
     ),
     'Device type': deviceTypes,
-    'System software version': device[rootfsImageVersion] || artifact_name || '-',
+    'Operating system version': device[rootfsImageVersion] || artifact_name || '-',
     ' ': (
       <Link
         to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}

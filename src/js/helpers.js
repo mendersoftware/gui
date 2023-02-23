@@ -362,8 +362,7 @@ const collectAddressesFrom = devices =>
     return collector;
   }, []);
 
-export const getDemoDeviceAddress = (devices, onboardingApproach, port) => {
-  let targetUrl = '';
+export const getDemoDeviceAddress = (devices, onboardingApproach) => {
   const defaultVitualizedIp = '10.0.2.15';
   const addresses = collectAddressesFrom(devices);
   const address = addresses.reduce((accu, item) => {
@@ -372,12 +371,10 @@ export const getDemoDeviceAddress = (devices, onboardingApproach, port) => {
     }
     return item;
   }, null);
-  targetUrl = `http://${address}`;
   if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
-    targetUrl = `http://localhost`;
+    return 'localhost';
   }
-  targetUrl = port ? `${targetUrl}:${port}` : targetUrl;
-  return targetUrl;
+  return address;
 };
 
 export const detectOsIdentifier = () => {

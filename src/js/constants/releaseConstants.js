@@ -14,4 +14,4 @@ export const SELECTED_RELEASE = 'SELECTED_RELEASE';
 export const SET_RELEASES_LIST_STATE = 'SET_RELEASES_LIST_STATE';
 export const rootfsImageVersion = 'rootfs-image.version';
 
-export const softwareTitleMap = { [rootfsImageVersion]: { title: 'System filesystem', priority: 0, key: rootfsImageVersion } };
+export const softwareTitleMap = { [rootfsImageVersion]: { title: 'Root filesystem', priority: 0, key: rootfsImageVersion } };

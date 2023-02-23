@@ -65,7 +65,8 @@ export const getOnboardingState = () => (dispatch, getState) => {
     onboardingState = state;
   }
   onboardingState.progress = onboardingState.progress || onboardingStepNames.ONBOARDING_START;
-  onboardingState.address = getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach, store.onboarding.demoArtifactPort);
+  const demoDeviceAddress = `http://${getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach)}`;
+  onboardingState.address = store.onboarding.demoArtifactPort ? `${demoDeviceAddress}:${store.onboarding.demoArtifactPort}` : demoDeviceAddress;
   const progress = Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ARTIFACT_CREATION_DIALOG);
   const currentProgress = Object.keys(onboardingSteps).findIndex(step => step === onboardingState.progress);
   onboardingState.showArtifactCreation = Math.abs(currentProgress - progress) <= 1;
