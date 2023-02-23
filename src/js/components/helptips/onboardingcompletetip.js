@@ -59,8 +59,8 @@ export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getD
             Proceed to one of the following tutorials (listed in recommended order):
             <ol>
               <li key="deploy-a-system-update">
-                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-system-update`} target="_blank" rel="noopener noreferrer">
-                  Deploy a system update
+                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-an-operating-system-update`} target="_blank" rel="noopener noreferrer">
+                  Deploy an operating system update
                 </a>
               </li>
               <li key="deploy-a-container-update">

@@ -69,8 +69,8 @@ const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVi
           <div>See the documentation to integrate the following with Mender:</div>
           <ul>
             {[
-              { key: 'debian', target: `https://docs.mender.io/${docsVersion}system-updates-debian-family`, title: 'Debian family' },
-              { key: 'yocto', target: `https://docs.mender.io/${docsVersion}system-updates-yocto-project`, title: 'Yocto OSes' }
+              { key: 'debian', target: `https://docs.mender.io/${docsVersion}operating-system-updates-debian-family`, title: 'Debian family' },
+              { key: 'yocto', target: `https://docs.mender.io/${docsVersion}operating-system-updates-yocto-project`, title: 'Yocto OSes' }
             ].map(item => (
               <li key={item.key}>
                 <a href={item.target} target="_blank" rel="noopener noreferrer">

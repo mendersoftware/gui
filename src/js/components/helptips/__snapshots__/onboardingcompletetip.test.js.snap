@@ -380,11 +380,11 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
           <ol>
             <li>
               <a
-                href="https://docs.mender.io/get-started/deploy-a-system-update"
+                href="https://docs.mender.io/get-started/deploy-an-operating-system-update"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Deploy a system update
+                Deploy an operating system update
               </a>
             </li>
             <li>
