@@ -391,8 +391,8 @@ describe('fullyDecodeURI function', () => {
 });
 describe('getDemoDeviceAddress function', () => {
   it('works as expected', async () => {
-    expect(getDemoDeviceAddress(Object.values(defaultState.devices.byId), 'virtual', 85)).toEqual('http://localhost:85');
-    expect(getDemoDeviceAddress(Object.values(defaultState.devices.byId), 'physical', 85)).toEqual('http://192.168.10.141:85');
+    expect(getDemoDeviceAddress(Object.values(defaultState.devices.byId), 'virtual')).toEqual('localhost');
+    expect(getDemoDeviceAddress(Object.values(defaultState.devices.byId), 'physical')).toEqual('192.168.10.141');
   });
 });
 describe('preformatWithRequestID function', () => {

@@ -38,7 +38,8 @@ export const getHas2FA = createSelector(
 );
 
 export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboarding], (devices, { approach, demoArtifactPort }) => {
-  return getDemoDeviceAddressHelper(devices, approach, demoArtifactPort);
+  const demoDeviceAddress = `http://${getDemoDeviceAddressHelper(devices, approach)}`;
+  return demoArtifactPort ? `${demoDeviceAddress}:${demoArtifactPort}` : demoDeviceAddress;
 });
 
 const listItemMapper = (byId, ids, { defaultObject = {}, cutOffSize = DEVICE_LIST_MAXIMUM_LENGTH }) => {
