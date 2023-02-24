@@ -126,19 +126,23 @@ export const defaultState = {
           a1: {
             attributes: {},
             id: 'a1',
+            image: { size: 123 },
             status: 'installing'
           }
         },
-        stats: {
-          downloading: 0,
-          decommissioned: 0,
-          failure: 0,
-          installing: 1,
-          noartifact: 0,
-          pending: 0,
-          rebooting: 0,
-          success: 0,
-          'already-installed': 0
+        statistics: {
+          status: {
+            downloading: 0,
+            decommissioned: 0,
+            failure: 0,
+            installing: 1,
+            noartifact: 0,
+            pending: 0,
+            rebooting: 0,
+            success: 0,
+            'already-installed': 0
+          },
+          total_size: 1234
         }
       },
       d2: {
@@ -155,16 +159,18 @@ export const defaultState = {
             status: 'pending'
           }
         },
-        stats: {
-          downloading: 0,
-          decommissioned: 0,
-          failure: 0,
-          installing: 0,
-          noartifact: 0,
-          pending: 1,
-          rebooting: 0,
-          success: 0,
-          'already-installed': 0
+        statistics: {
+          status: {
+            downloading: 0,
+            decommissioned: 0,
+            failure: 0,
+            installing: 0,
+            noartifact: 0,
+            pending: 1,
+            rebooting: 0,
+            success: 0,
+            'already-installed': 0
+          }
         }
       }
     },

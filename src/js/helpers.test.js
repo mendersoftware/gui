@@ -548,18 +548,20 @@ describe('tryMapDeployments function', () => {
 describe('deployment stats grouping functions', () => {
   it('groups correctly based on deployment stats', async () => {
     let deployment = {
-      stats: {
-        aborted: 2,
-        'already-installed': 1,
-        decommissioned: 1,
-        downloading: 3,
-        failure: 1,
-        installing: 1,
-        noartifact: 1,
-        pending: 2,
-        paused: 0,
-        rebooting: 1,
-        success: 1
+      statistics: {
+        status: {
+          aborted: 2,
+          'already-installed': 1,
+          decommissioned: 1,
+          downloading: 3,
+          failure: 1,
+          installing: 1,
+          noartifact: 1,
+          pending: 2,
+          paused: 0,
+          rebooting: 1,
+          success: 1
+        }
       }
     };
     expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, paused: 0, pending: 2, successes: 3, failures: 4 });

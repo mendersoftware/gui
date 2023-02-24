@@ -76,7 +76,7 @@ export const deploymentHandlers = [
     if (deployment_ids.includes(createdDeployment.id)) {
       return res(ctx.json([]));
     } else if (deployment_ids.every(id => defaultState.deployments.byId[id])) {
-      const stats = deployment_ids.map(id => ({ id, stats: defaultState.deployments.byId[id].stats }));
+      const stats = deployment_ids.map(id => ({ id, stats: defaultState.deployments.byId[id].statistics.status }));
       return res(ctx.json(stats));
     }
     return res(ctx.status(522));

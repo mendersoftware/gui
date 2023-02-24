@@ -71,7 +71,8 @@ const determineSubstateStatus = (successes, failures, totalDeviceCount, pauseInd
 };
 
 const getDisplayablePhases = ({ pauseMap, deployment, stepWidth, substatesMap, totalDeviceCount }) => {
-  const { stats, update_control_map = {} } = deployment;
+  const { statistics = {}, update_control_map = {} } = deployment;
+  const { status: stats = {} } = statistics;
   const currentPauseState = Object.keys(pauseMap)
     .reverse()
     .find(key => stats[key] > 0);
@@ -159,7 +160,8 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
   const [shouldAbort, setShouldAbort] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { id, stats = {}, update_control_map = {} } = deployment;
+  const { id, statistics = {}, update_control_map = {} } = deployment;
+  const { status: stats = {} } = statistics;
   const { states = {} } = update_control_map;
   const { failures: totalFailureCount, paused: totalPausedCount } = groupDeploymentStats(deployment);
 

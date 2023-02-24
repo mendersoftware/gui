@@ -65,9 +65,6 @@ export const getDeploymentsByStatus =
           total: !(startDate || endDate || group || type) ? total : getState().deployments.byStatus[status].total
         })
       ];
-      if (deploymentIds.length) {
-        tasks.push(dispatch(getDeploymentsStats(deploymentIds)));
-      }
       tasks = deploymentIds.reduce((accu, deploymentId) => {
         if (deployments[deploymentId].type === DEPLOYMENT_TYPES.configuration) {
           accu.push(dispatch(getSingleDeployment(deploymentId)));
@@ -111,7 +108,7 @@ export const createDeployment = newDeployment => (dispatch, getState) => {
       const deployment = {
         ...newDeployment,
         devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : [],
-        stats: {}
+        statistics: { status: {} }
       };
       let tasks = [
         dispatch({
@@ -135,16 +132,6 @@ export const createDeployment = newDeployment => (dispatch, getState) => {
       return Promise.all(tasks);
     });
 };
-
-export const getDeploymentsStats = ids => (dispatch, getState) =>
-  GeneralApi.post(`${deploymentsApiUrl}/deployments/statistics/list`, { deployment_ids: ids }).then(res => {
-    const byIdState = getState().deployments.byId;
-    const deployments = res.data.reduce((accu, item) => {
-      accu[item.id] = { ...byIdState[item.id], stats: item.stats };
-      return accu;
-    }, {});
-    return Promise.resolve(dispatch({ type: RECEIVE_DEPLOYMENTS, deployments }));
-  });
 
 export const getDeploymentDevices =
   (id, options = {}) =>
@@ -217,9 +204,9 @@ export const resetDeviceDeployments = deviceId => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error resetting the device deployment history:', dispatch));
 
 export const getSingleDeployment = id => (dispatch, getState) =>
-  Promise.resolve(GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`)).then(({ data }) => {
+  GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(({ data }) => {
     const storedDeployment = getState().deployments.byId[id] || {};
-    return Promise.all([
+    return Promise.resolve(
       dispatch({
         type: RECEIVE_DEPLOYMENT,
         deployment: {
@@ -228,9 +215,8 @@ export const getSingleDeployment = id => (dispatch, getState) =>
           ...data,
           name: decodeURIComponent(data.name)
         }
-      }),
-      dispatch(getDeploymentsStats([id]))
-    ]);
+      })
+    );
   });
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
