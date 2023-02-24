@@ -51,7 +51,7 @@ const deploymentsConfig = {
 const defaultResponseActions = {
   creation: {
     type: DeploymentConstants.CREATE_DEPLOYMENT,
-    deployment: { devices: [{ id: Object.keys(defaultState.devices.byId)[0], status: 'pending' }], stats: {} },
+    deployment: { devices: [{ id: Object.keys(defaultState.devices.byId)[0], status: 'pending' }], statistics: { status: {} } },
     deploymentId: createdDeployment.id
   },
   devices: {
@@ -156,8 +156,7 @@ describe('deployment actions', () => {
       defaultResponseActions.receive,
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
       { type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } },
-      defaultResponseActions.receiveMultiple
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } }
     ];
     return store.dispatch(createDeployment({ devices: [Object.keys(defaultState.devices.byId)[0]] })).then(() => {
       const storeActions = store.getActions();
@@ -169,7 +168,7 @@ describe('deployment actions', () => {
     const store = mockStore({ ...defaultState });
     const filter_id = '1234';
     const expectedActions = [
-      { ...defaultResponseActions.creation, deployment: { devices: [], filter_id, stats: {} } },
+      { ...defaultResponseActions.creation, deployment: { devices: [], filter_id, statistics: { status: {} } } },
       {
         ...defaultResponseActions.snackbar,
         snackbar: {
@@ -177,8 +176,7 @@ describe('deployment actions', () => {
           autoHideDuration: 8000
         }
       },
-      defaultResponseActions.receive,
-      defaultResponseActions.receiveMultiple
+      defaultResponseActions.receive
     ];
     return store.dispatch(createDeployment({ filter_id })).then(() => {
       const storeActions = store.getActions();
@@ -190,7 +188,7 @@ describe('deployment actions', () => {
     const store = mockStore({ ...defaultState });
     const group = Object.keys(defaultState.devices.groups.byId)[0];
     const expectedActions = [
-      { ...defaultResponseActions.creation, deployment: { devices: [], group, stats: {} } },
+      { ...defaultResponseActions.creation, deployment: { devices: [], group, statistics: { status: {} } } },
       {
         ...defaultResponseActions.snackbar,
         snackbar: {
@@ -198,8 +196,7 @@ describe('deployment actions', () => {
           autoHideDuration: 8000
         }
       },
-      defaultResponseActions.receive,
-      defaultResponseActions.receiveMultiple
+      defaultResponseActions.receive
     ];
     return store.dispatch(createDeployment({ group })).then(() => {
       const storeActions = store.getActions();
@@ -216,14 +213,7 @@ describe('deployment actions', () => {
         deploymentIds: Object.keys(defaultState.deployments.byId),
         total: defaultState.deployments.byStatus.inprogress.total
       },
-      defaultResponseActions.selectMultiple,
-      {
-        ...defaultResponseActions.receiveMultiple,
-        deployments: {
-          [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: defaultState.deployments.byId.d1.stats },
-          [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: defaultState.deployments.byId.d2.stats }
-        }
-      }
+      defaultResponseActions.selectMultiple
     ];
     return store
       .dispatch(getDeploymentsByStatus('inprogress', null, null, undefined, undefined, Object.keys(defaultState.devices.groups.byId)[0], 'configuration', true))
@@ -309,7 +299,7 @@ describe('deployment actions', () => {
   });
   it('should allow updating a deployment to continue the execution', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [defaultResponseActions.receive, defaultResponseActions.receiveMultiple];
+    const expectedActions = [defaultResponseActions.receive];
     return store.dispatch(updateDeploymentControlMap(createdDeployment.id, { something: 'continue' })).then(() => {
       const storeActions = store.getActions();
       expect(storeActions.length).toEqual(expectedActions.length);
@@ -341,8 +331,7 @@ describe('deployment actions', () => {
           selectedId: createdDeployment.id
         }
       },
-      defaultResponseActions.receive,
-      defaultResponseActions.receiveMultiple
+      defaultResponseActions.receive
     ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

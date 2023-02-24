@@ -23,6 +23,14 @@ exports[`Roles Component renders correctly 1`] = `
   display: table-header-group;
 }
 
+.emotion-1 .columnHeader {
+  display: table-cell;
+}
+
+.emotion-1 .nonSortable {
+  cursor: initial;
+}
+
 .emotion-2 {
   color: inherit;
   display: table-row;
@@ -285,7 +293,7 @@ exports[`Roles Component renders correctly 1`] = `
     Roles
   </h2>
   <table
-    class="MuiTable-root margin-bottom emotion-0"
+    class="MuiTable-root margin-bottom  emotion-0"
   >
     <thead
       class="MuiTableHead-root emotion-1"
@@ -294,19 +302,19 @@ exports[`Roles Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-head emotion-2"
       >
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-3"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-3"
           scope="col"
         >
           Role
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-3"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-3"
           scope="col"
         >
           Description
         </th>
         <th
-          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-3"
+          class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable emotion-3"
           scope="col"
         >
           Manage
@@ -320,17 +328,17 @@ exports[`Roles Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-2"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           Admin
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           Full access
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"
@@ -355,17 +363,17 @@ exports[`Roles Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-2"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           Read Access
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           -
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"
@@ -390,17 +398,17 @@ exports[`Roles Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-2"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           Releases Manager
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           -
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"
@@ -425,17 +433,17 @@ exports[`Roles Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-2"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           Deployments Manager
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           -
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"
@@ -460,17 +468,17 @@ exports[`Roles Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-2"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           Troubleshooting
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           Access to the troubleshooting features: Remote Terminal, File Transfer, Port Forwarding
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"
@@ -495,17 +503,17 @@ exports[`Roles Component renders correctly 1`] = `
         class="MuiTableRow-root MuiTableRow-hover clickable emotion-2"
       >
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           test
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           test description
         </td>
         <td
-          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-8"
+          class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-8"
         >
           <div
             class="bold flexbox center-aligned link-color margin-right-small uppercased"

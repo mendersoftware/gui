@@ -157,7 +157,7 @@ export const deploymentDisplayStates = {
 export const deploymentPrototype = {
   devices: {},
   name: undefined,
-  stats: {}
+  statistics: { status: {} }
 };
 
 export const pauseMap = {

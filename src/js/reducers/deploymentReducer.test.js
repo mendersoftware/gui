@@ -25,9 +25,11 @@ describe('deployment reducer', () => {
     expect(reducer(initialState, { type: RECEIVE_DEPLOYMENT, deployment: defaultState.deployments.byId.d1 }).byId.d1).toEqual(defaultState.deployments.byId.d1);
   });
   it('should handle RECEIVE_DEPLOYMENTS', async () => {
-    const { stats } = defaultState.deployments.byId.d1;
+    const { statistics } = defaultState.deployments.byId.d1;
     expect(reducer(undefined, { type: RECEIVE_DEPLOYMENTS, deployments: { plain: 'passing' } }).byId.plain).toBeTruthy();
-    expect(reducer(initialState, { type: RECEIVE_DEPLOYMENTS, deployments: { [defaultState.deployments.byId.d1.id]: { stats } } }).byId.d1.stats).toBeTruthy();
+    expect(
+      reducer(initialState, { type: RECEIVE_DEPLOYMENTS, deployments: { [defaultState.deployments.byId.d1.id]: { statistics } } }).byId.d1.statistics
+    ).toBeTruthy();
   });
   it('should handle RECEIVE_DEPLOYMENT_DEVICE_LOG', async () => {
     const { devices } = defaultState.deployments.byId.d1;
@@ -56,8 +58,8 @@ describe('deployment reducer', () => {
         devices,
         selectedDeviceIds: [devices.a1.id],
         totalDeviceCount: 500
-      }).byId.d1.stats
-    ).toEqual(defaultState.deployments.byId.d1.stats);
+      }).byId.d1.statistics
+    ).toEqual(defaultState.deployments.byId.d1.statistics);
   });
   it('should handle RECEIVE_<deploymentstatus>_DEPLOYMENTS', async () => {
     Object.values(DEPLOYMENT_STATES).forEach(status => {

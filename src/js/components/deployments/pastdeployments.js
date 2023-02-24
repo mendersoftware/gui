@@ -22,11 +22,15 @@ import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
-import { DeploymentStatus } from './deploymentitem';
+import { DeploymentSize, DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
 
-const headers = [...defaultHeaders.slice(0, defaultHeaders.length - 1), { title: 'Status', renderer: DeploymentStatus }];
+const headers = [
+  ...defaultHeaders.slice(0, defaultHeaders.length - 1),
+  { title: 'Status', renderer: DeploymentStatus },
+  { title: 'Data downloaded', renderer: DeploymentSize }
+];
 
 const type = DEPLOYMENT_STATES.finished;
 
@@ -99,7 +103,9 @@ export const Past = props => {
     const pastDeploymentsFailed = past.reduce(
       (accu, item) =>
         item.status === 'failed' ||
-        (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0) ||
+        (item.statistics?.status &&
+          item.statistics.status.noartifact + item.statistics.status.failure + item.statistics.status['already-installed'] + item.statistics.status.aborted >
+            0) ||
         accu,
       false
     );

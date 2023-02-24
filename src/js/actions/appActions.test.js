@@ -110,6 +110,7 @@ describe('app actions', () => {
       tags: {},
       updated_ts: inventoryDevice.updated_ts
     };
+
     const expectedActions = [
       { type: SET_ONBOARDING_COMPLETE, complete: false },
       { type: SET_DEMO_ARTIFACT_PORT, port: undefined },
@@ -260,20 +261,6 @@ describe('app actions', () => {
       { type: RECEIVED_ROLES, value: receivedRoles },
       { type: SET_ORGANIZATION, organization: defaultState.organization.organization },
       { type: SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage },
-      {
-        type: RECEIVE_DEPLOYMENTS,
-        deployments: {
-          [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: { ...defaultState.deployments.byId.d1.stats } },
-          [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: { ...defaultState.deployments.byId.d2.stats } }
-        }
-      },
-      {
-        type: RECEIVE_DEPLOYMENTS,
-        deployments: {
-          [defaultState.deployments.byId.d1.id]: { ...defaultState.deployments.byId.d1, stats: { ...defaultState.deployments.byId.d1.stats } },
-          [defaultState.deployments.byId.d2.id]: { ...defaultState.deployments.byId.d2, stats: { ...defaultState.deployments.byId.d2.stats } }
-        }
-      },
       {
         type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }

@@ -39,7 +39,9 @@ export const groupDeploymentDevicesStats = deployment => {
 
 export const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
 export const groupDeploymentStats = (deployment, withSkipped) => {
-  const stats = { ...defaultStats, ...deployment.stats };
+  const { statistics = {} } = deployment;
+  const { status = {} } = statistics;
+  const stats = { ...defaultStats, ...status };
   let groupStates = deploymentStatesToSubstates;
   let result = {};
   if (withSkipped) {

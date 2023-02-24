@@ -6,7 +6,7 @@ import { Button, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
-import { getDeploymentState } from '../../helpers';
+import { FileSize, getDeploymentState } from '../../helpers';
 import Confirm from '../common/confirm';
 import { RelativeTime } from '../common/time';
 import { PhaseProgressDisplay } from './deployment-report/phaseprogress';
@@ -57,6 +57,8 @@ export const DeploymentRelease = ({ deployment: { artifact_name, type = DEPLOYME
 export const DeploymentStartTime = ({ direction = 'both', started }) => <RelativeTime key="DeploymentStartTime" updateTime={started} shouldCount={direction} />;
 
 export const DeploymentStatus = ({ deployment }) => <DeploymentStats key="DeploymentStatus" deployment={deployment} />;
+
+export const DeploymentSize = ({ deployment: { total_size } }) => <div className="align-right">{total_size ? <FileSize fileSize={total_size} /> : '-'}</div>;
 
 const useStyles = makeStyles()(theme => ({
   detailsButton: {

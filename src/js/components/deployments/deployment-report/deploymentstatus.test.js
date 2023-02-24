@@ -16,11 +16,14 @@ describe('DeploymentStatus Component', () => {
 describe('DeploymentPhaseNotification Component', () => {
   const deployment = {
     ...defaultState.deployments.byId.d1,
-    stats: {
-      ...defaultState.deployments.byId.d1.stats,
-      pause_before_committing: 0,
-      pause_before_installing: 0,
-      pause_before_rebooting: 1
+    statistics: {
+      ...defaultState.deployments.byId.d1.statistics,
+      status: {
+        ...defaultState.deployments.byId.d1.statistics.status,
+        pause_before_committing: 0,
+        pause_before_installing: 0,
+        pause_before_rebooting: 1
+      }
     }
   };
   it('renders correctly', async () => {

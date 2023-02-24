@@ -94,7 +94,8 @@ export const DeploymentReport = props => {
   } = props;
   const { canAuditlog } = userCapabilities;
   const { hasAuditlogs } = tenantCapabilities;
-
+  const { devices = {}, device_count, statistics = {}, type: deploymentType } = deployment;
+  const { status: stats = {} } = statistics;
   const { classes } = useStyles();
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
@@ -128,8 +129,6 @@ export const DeploymentReport = props => {
   }, [deployment.id, open]);
 
   useEffect(() => {
-    const { device_count, stats = {} } = deployment;
-
     const progressCount =
       statCollector(deploymentStatesToSubstates.paused, stats) +
       statCollector(deploymentStatesToSubstates.pending, stats) +
@@ -143,7 +142,7 @@ export const DeploymentReport = props => {
         clearTimeout(timer.current);
       };
     }
-  }, [deployment.id, JSON.stringify(deployment.stats)]);
+  }, [deployment.id, device_count, JSON.stringify(stats)]);
 
   const scrollToBottom = () => {
     rolloutSchedule.current?.scrollIntoView({ behavior: 'smooth' });
@@ -164,7 +163,6 @@ export const DeploymentReport = props => {
     setSnackbar('Link copied to clipboard');
   };
 
-  const { devices = {}, type: deploymentType } = deployment;
   const { log: logData } = devices[deviceId] || {};
   const finished = deployment.finished || deployment.status === DEPLOYMENT_STATES.finished;
   const isConfigurationDeployment = deploymentType === DEPLOYMENT_TYPES.configuration;
@@ -197,7 +195,7 @@ export const DeploymentReport = props => {
         <div className="flexbox center-aligned">
           {!finished ? (
             <DeploymentAbortButton abort={abort} deployment={deployment} />
-          ) : (deployment.stats.failure || deployment.stats.aborted) && !isConfigurationDeployment ? (
+          ) : (stats.failure || stats.aborted) && !isConfigurationDeployment ? (
             <Tooltip
               title="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
               placement="bottom"
@@ -229,6 +227,7 @@ export const DeploymentReport = props => {
         )}
         <LinedHeader className={classes.header} heading="Status" />
         <DeploymentStatus deployment={deployment} />
+        <LinedHeader className={classes.header} heading="Devices" />
         <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule
           deployment={deployment}

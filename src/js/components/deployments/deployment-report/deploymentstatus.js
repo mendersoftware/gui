@@ -35,7 +35,8 @@ export const DeploymentPhaseNotification = ({ className = '', deployment = {}, o
 
 export const DeploymentStatus = ({ className = '', deployment = {} }) => {
   const { classes } = useStyles();
-  const { finished, max_devices, retries = 1, status = 'pending', stats } = deployment;
+  const { finished, max_devices, retries = 1, status = 'pending', statistics = {} } = deployment;
+  const { status: stats = {} } = statistics;
   const phaseStats = groupDeploymentStats(deployment, true);
 
   let statusDescription = (
