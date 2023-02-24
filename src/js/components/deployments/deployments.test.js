@@ -333,7 +333,8 @@ describe('Deployments Component', () => {
             { batch_size: null, start_ts: 2 }
           ]
         ],
-        retries: 1
+        retries: 1,
+        hasDeployments: true
       },
       { headers: {} }
     );

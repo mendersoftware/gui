@@ -28,41 +28,50 @@ const getCurrentOnboardingState = state => {
   return { ...onboardingState, ...onboarding };
 };
 
+const deductOnboardingState = ({ devicesById, devicesByStatus, onboardingState, pastDeployments, releases, userCapabilities, userId }) => {
+  const { canDeploy, canManageDevices, canReadDeployments, canReadDevices, canReadReleases, canUploadReleases } = userCapabilities;
+  const userCookie = cookies.get(`${userId}-onboarded`);
+  const acceptedDevices = devicesByStatus[DEVICE_STATES.accepted].deviceIds;
+  const pendingDevices = devicesByStatus[DEVICE_STATES.pending].deviceIds;
+  let deviceType = onboardingState.deviceType ?? [];
+  deviceType =
+    !deviceType.length && acceptedDevices.length && devicesById[acceptedDevices[0]].hasOwnProperty('attributes')
+      ? devicesById[acceptedDevices[0]].attributes.device_type
+      : deviceType;
+  const progress = applyOnboardingFallbacks(onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments));
+  return {
+    complete: !!(
+      Boolean(userCookie) ||
+      onboardingState.complete ||
+      (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
+      (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
+      (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
+      Object.keys(onboardingSteps).findIndex(step => step === progress) >= Object.keys(onboardingSteps).length - 1 ||
+      onboardingState.disable ||
+      ![canDeploy, canManageDevices, canReadDeployments, canReadDevices, canReadReleases, canUploadReleases].every(i => i)
+    ),
+    showTips: onboardingState.showTips != null ? onboardingState.showTips : true,
+    deviceType,
+    approach: onboardingState.approach || (deviceType.some(type => type.startsWith('qemu')) ? 'virtual' : 'physical'),
+    artifactIncluded: onboardingState.artifactIncluded,
+    progress
+  };
+};
+
 export const getOnboardingState = () => (dispatch, getState) => {
   const store = getState();
   let onboardingState = getCurrentOnboardingState(store);
-  const { canDeploy, canManageDevices, canReadDeployments, canReadDevices, canReadReleases, canUploadReleases } = getUserCapabilities(store);
   if (!onboardingState.complete) {
     const userId = getState().users.currentUser;
-    const userCookie = cookies.get(`${userId}-onboarded`);
-    const acceptedDevices = store.devices.byStatus[DEVICE_STATES.accepted].deviceIds;
-    const pendingDevices = store.devices.byStatus[DEVICE_STATES.pending].deviceIds;
-    const releases = Object.values(store.releases.byId);
-    const pastDeployments = store.deployments.byStatus.finished.deploymentIds;
-    let deviceType = onboardingState.deviceType ?? [];
-    deviceType =
-      !deviceType.length && acceptedDevices.length && store.devices.byId[acceptedDevices[0]].hasOwnProperty('attributes')
-        ? store.devices.byId[acceptedDevices[0]].attributes.device_type
-        : deviceType;
-    const progress = applyOnboardingFallbacks(onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments));
-    const state = {
-      complete: !!(
-        Boolean(userCookie) ||
-        store.onboarding.complete ||
-        (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
-        (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
-        (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
-        Object.keys(onboardingSteps).findIndex(step => step === progress) >= Object.keys(onboardingSteps).length - 1 ||
-        store.onboarding.disable ||
-        ![canDeploy, canManageDevices, canReadDeployments, canReadDevices, canReadReleases, canUploadReleases].every(i => i)
-      ),
-      showTips: onboardingState.showTips != null ? onboardingState.showTips : true,
-      deviceType,
-      approach: onboardingState.approach || (deviceType.some(type => type.startsWith('qemu')) ? 'virtual' : 'physical') || store.onboarding.approach,
-      artifactIncluded: onboardingState.artifactIncluded || store.onboarding.artifactIncluded,
-      progress
-    };
-    onboardingState = state;
+    onboardingState = deductOnboardingState({
+      devicesById: store.devices.byId,
+      devicesByStatus: store.devices.byStatus,
+      onboardingState,
+      pastDeployments: store.deployments.byStatus.finished.deploymentIds,
+      releases: Object.values(store.releases.byId),
+      userCapabilities: getUserCapabilities(store),
+      userId
+    });
   }
   onboardingState.progress = onboardingState.progress || onboardingStepNames.ONBOARDING_START;
   const demoDeviceAddress = `http://${getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach)}`;

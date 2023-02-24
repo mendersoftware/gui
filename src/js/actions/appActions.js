@@ -115,6 +115,44 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
   ]);
 };
 
+const maybeAddOnboardingTasks = ({ devicesByStatus, dispatch, showHelptips, onboardingState, tasks }) => {
+  if (!(showHelptips && onboardingState.showTips) || onboardingState.complete) {
+    return tasks;
+  }
+  const welcomeTip = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, {
+    progress: onboardingState.progress,
+    complete: onboardingState.complete,
+    showHelptips,
+    showTips: onboardingState.showTips
+  });
+  if (welcomeTip) {
+    tasks.push(dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', welcomeTip, () => {}, true)));
+  }
+  // try to retrieve full device details for onboarding devices to ensure ips etc. are available
+  // we only load the first few/ 20 devices, as it is possible the onboarding is left dangling
+  // and a lot of devices are present and we don't want to flood the backend for this
+  return devicesByStatus[DEVICE_STATES.accepted].deviceIds.reduce((accu, id) => {
+    accu.push(dispatch(getDeviceById(id)));
+    return accu;
+  }, tasks);
+};
+
+const processUserCookie = (user, showHelptips) => {
+  const userCookie = cookies.get(user.id);
+  if (userCookie && userCookie.help !== 'undefined') {
+    const { help, ...crumbles } = userCookie;
+    // got user cookie with pre-existing value
+    showHelptips = help;
+    // store only remaining cookie values, to allow relying on stored settings from now on
+    if (!Object.keys(crumbles).length) {
+      cookies.remove(user.id);
+    } else {
+      cookies.set(user.id, crumbles);
+    }
+  }
+  return showHelptips;
+};
+
 export const initializeAppData = () => (dispatch, getState) => {
   let tasks = [
     dispatch(parseEnvironmentInfo()),
@@ -142,40 +180,12 @@ export const initializeAppData = () => (dispatch, getState) => {
   return Promise.all(tasks).then(() => {
     const state = getState();
     const user = getCurrentUser(state);
-    const userCookie = cookies.get(user.id);
     let tasks = [];
     let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettingsSelector(state);
     tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
     // checks if user id is set and if cookie for helptips exists for that user
-    if (userCookie && userCookie.help !== 'undefined') {
-      const { help, ...crumbles } = userCookie;
-      // got user cookie with pre-existing value
-      showHelptips = help;
-      // store only remaining cookie values, to allow relying on stored settings from now on
-      if (!Object.keys(crumbles).length) {
-        cookies.remove(user.id);
-      } else {
-        cookies.set(user.id, crumbles);
-      }
-    }
-    if (showHelptips && state.onboarding.showTips && !state.onboarding.complete) {
-      const welcomeTip = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, {
-        progress: state.onboarding.progress,
-        complete: state.onboarding.complete,
-        showHelptips,
-        showTips: state.onboarding.showTips
-      });
-      if (welcomeTip) {
-        tasks.push(dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', welcomeTip, () => {}, true)));
-      }
-      // try to retrieve full device details for onboarding devices to ensure ips etc. are available
-      // we only load the first few/ 20 devices, as it is possible the onboarding is left dangling
-      // and a lot of devices are present and we don't want to flood the backend for this
-      tasks = state.devices.byStatus[DEVICE_STATES.accepted].deviceIds.reduce((accu, id) => {
-        accu.push(dispatch(getDeviceById(id)));
-        return accu;
-      }, tasks);
-    }
+    showHelptips = processUserCookie(user, showHelptips);
+    tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
     tasks.push(dispatch({ type: SET_SHOW_HELP, show: showHelptips }));
     let settings = { showHelptips };
     if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {

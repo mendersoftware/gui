@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { Clear as ClearIcon, Settings, Square } from '@mui/icons-material';
 import { IconButton, LinearProgress, linearProgressClasses, svgIconClasses } from '@mui/material';
-import { useTheme } from '@mui/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { VictoryBar, VictoryContainer, VictoryPie, VictoryStack } from 'victory';
@@ -215,7 +214,7 @@ export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onS
   const [software, setSoftware] = useState('');
   const [group, setGroup] = useState('');
   const navigate = useNavigate();
-  const theme = useTheme();
+  const { classes, theme } = useStyles();
 
   useEffect(() => {
     setSoftware(softwareSelection || attributeSelection);
@@ -259,7 +258,6 @@ export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onS
   };
 
   const Chart = chartTypeComponentMap[chartType];
-  const { classes } = useStyles();
   const chartProps = {
     classes,
     data: distribution,
@@ -270,17 +268,21 @@ export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onS
     labels: () => null
   };
   const couldHaveDevices = !group || groups[group]?.deviceIds.length;
-  return removing ? (
-    <RemovalWidget onCancel={toggleRemoving} onClick={onClick} />
-  ) : editing ? (
-    <ChartEditWidget
-      groups={groups}
-      onSave={onSaveClick}
-      onCancel={onToggleEditClick}
-      selection={{ ...selection, chartType, group, software }}
-      software={softwareTree}
-    />
-  ) : (
+  if (removing) {
+    return <RemovalWidget onCancel={toggleRemoving} onClick={onClick} />;
+  }
+  if (editing) {
+    return (
+      <ChartEditWidget
+        groups={groups}
+        onSave={onSaveClick}
+        onCancel={onToggleEditClick}
+        selection={{ ...selection, chartType, group, software }}
+        software={softwareTree}
+      />
+    );
+  }
+  return (
     <div className="widget chart-widget">
       <div className="margin-bottom-small">
         <div className="flexbox space-between margin-bottom-small">
