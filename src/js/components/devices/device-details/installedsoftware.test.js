@@ -54,7 +54,7 @@ describe('extractSoftwareInformation function', () => {
         'even.more.dots.than.before.more': 'test-6'
       })
     ).toEqual([
-      { children: [], content: { checksum: '12341143', version: rootfs }, key: 'rootfs-image', priority: 0, title: 'System filesystem' },
+      { children: [], content: { checksum: '12341143', version: rootfs }, key: 'rootfs-image', priority: 0, title: 'Root filesystem' },
       { children: [], content: { version: 'test-2' }, key: 'test', priority: 2, title: 'test' },
       { children: [], content: { more: 'test-4', version: 'test-3' }, key: 'a.whole.lot.of.dots', priority: 3, title: 'a.whole.lot.of.dots' },
       { children: [], content: { more: 'test-6', version: 'test-5' }, key: 'even.more.dots.than.before', priority: 5, title: 'even.more.dots.than.before' }

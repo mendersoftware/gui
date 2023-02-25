@@ -68,7 +68,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
       <div
         class="muted"
       >
-        System filesystem
+        Root filesystem
       </div>
       <div
         class="emotion-1"

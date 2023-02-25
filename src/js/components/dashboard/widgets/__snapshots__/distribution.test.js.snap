@@ -221,7 +221,7 @@ exports[`PendingDevices Component renders correctly 1`] = `
           class="flexbox space-between slightly-smaller"
         >
           <div>
-            System filesystem
+            Root filesystem
           </div>
           <div>
             All devices
