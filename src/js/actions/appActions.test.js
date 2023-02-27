@@ -247,14 +247,10 @@ describe('app actions', () => {
         ]
       },
       { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      {
-        type: SET_RELEASES_LIST_STATE,
-        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42 }
-      },
       { type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: SET_RELEASES_LIST_STATE,
-        value: { ...defaultState.releases.releasesList, searchAttribute: 'name', page: 42 }
+        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42, searchAttribute: 'name' }
       },
       { type: SET_DEVICE_LIMIT, limit: 500 },
       { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },

@@ -118,6 +118,34 @@ const calculateColumnSelectionSize = (changedColumns, customColumnSizes) =>
     { columnSizes: [], selectedAttributes: [] }
   );
 
+const OnboardingComponent = ({ authorizeRef, deviceListRef, onboardingState, selectedRows }) => {
+  let onboardingComponent = null;
+  if (deviceListRef.current) {
+    const element = deviceListRef.current.querySelector('body .deviceListItem > div');
+    const anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
+  }
+  if (selectedRows && authorizeRef.current) {
+    const anchor = {
+      left: authorizeRef.current.offsetLeft - authorizeRef.current.offsetWidth,
+      top:
+        authorizeRef.current.offsetTop +
+        authorizeRef.current.offsetHeight -
+        authorizeRef.current.lastElementChild.offsetHeight +
+        authorizeRef.current.lastElementChild.firstElementChild.offsetHeight * 1.5
+    };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING,
+      onboardingState,
+      { place: 'left', anchor },
+      onboardingComponent
+    );
+  }
+  return onboardingComponent;
+};
+
 export const Authorized = props => {
   const {
     acceptedCount,
@@ -372,33 +400,8 @@ export const Authorized = props => {
     onCreateDeployment: onCreateDeploymentClick
   };
 
-  let onboardingComponent;
-  const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
-  if (deviceListRef.current) {
-    const element = deviceListRef.current.querySelector('body .deviceListItem > div');
-    const anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
-  }
-  if (selectedRows && authorizeRef.current) {
-    const anchor = {
-      left: authorizeRef.current.offsetLeft - authorizeRef.current.offsetWidth,
-      top:
-        authorizeRef.current.offsetTop +
-        authorizeRef.current.offsetHeight -
-        authorizeRef.current.lastElementChild.offsetHeight +
-        authorizeRef.current.lastElementChild.firstElementChild.offsetHeight * 1.5
-    };
-    onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING,
-      onboardingState,
-      { place: 'left', anchor },
-      onboardingComponent
-    );
-  }
-
   const listOptionHandlers = [{ key: 'customize', title: 'Customize', onClick: onToggleCustomizationClick }];
+  const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
 
   const EmptyState = currentSelectedState.emptyState;
 
@@ -507,7 +510,9 @@ export const Authorized = props => {
         setDetailsTab={setDetailsTab}
         tabSelection={tabSelection}
       />
-      {!selectedId && onboardingComponent ? onboardingComponent : null}
+      {!selectedId && (
+        <OnboardingComponent authorizeRef={authorizeRef} deviceListRef={deviceListRef} onboardingState={onboardingState} selectedRows={selectedRows} />
+      )}
       {canManageDevices && !!selectedRows.length && (
         <DeviceQuickActions
           actionCallbacks={actionCallbacks}

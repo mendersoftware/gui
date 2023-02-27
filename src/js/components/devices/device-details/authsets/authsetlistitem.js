@@ -13,48 +13,94 @@ import Time from '../../../common/time';
 
 const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
 
-export const getConfirmationMessage = (status, device, authset) => {
-  let message = '';
-  if (status === DEVICE_STATES.accepted) {
-    message = 'By accepting, the device with this identity data and public key will be granted authentication by the server.';
-    if (device.status === DEVICE_STATES.accepted) {
-      // if device already accepted, and you are accepting a different authset:
-      message = `${message} The previously accepted public key will be rejected automatically in favor of this new key.`;
-    }
-  } else if (status === DEVICE_STATES.rejected) {
-    message = 'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server.';
-    if (device.status === DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.accepted) {
-      // if device is accepted but you are rejecting an authset that is not accepted, device status is unaffected:
-      message = `${message} Rejecting this request will not affect the device status as it is using a different key. `;
-    }
-  } else if (status === DEVICE_DISMISSAL_STATE) {
-    if (authset.status === DEVICE_STATES.preauth) {
-      message = 'The device authentication set will be removed from the preauthorization list.';
-    } else if (authset.status === DEVICE_STATES.accepted) {
+const getDismissalConfirmation = (device, authset) => {
+  switch (authset.status) {
+    case DEVICE_STATES.preauth:
+      return 'The device authentication set will be removed from the preauthorization list.';
+    case DEVICE_STATES.accepted:
       if (device.auth_sets.length > 1) {
         // if there are other authsets, device will still be in UI
-        message = 'The device with this public key will no longer be accepted, and this authorization request will be removed from the UI.';
+        return 'The device with this public key will no longer be accepted, and this authorization request will be removed from the UI.';
       } else {
-        message =
-          'The device with this public key will no longer be accepted, and will be removed from the UI. If it makes another request in the future, it will show again as pending for you to accept or reject at that time.';
+        return 'The device with this public key will no longer be accepted, and will be removed from the UI. If it makes another request in the future, it will show again as pending for you to accept or reject at that time.';
       }
-    } else if (authset.status === DEVICE_STATES.pending) {
-      message = 'You can dismiss this authentication request for now.';
+    case DEVICE_STATES.pending: {
+      const message = 'You can dismiss this authentication request for now.';
       if (device.auth_sets.length > 1) {
         // it has other authsets
-        message = `${message} This will remove this request from the UI, but won’t affect the device.`;
-      } else {
-        message = `${message} The device will be removed from the UI, but if the same device asks for authentication again in the future, it will show again as pending.`;
+        return `${message} This will remove this request from the UI, but won’t affect the device.`;
       }
-    } else if (authset.status === DEVICE_STATES.rejected) {
-      message =
-        'This request will be removed from the UI, but if the device asks for authentication again in the future, it will show as pending for you to accept or reject it at that time.';
+      return `${message} The device will be removed from the UI, but if the same device asks for authentication again in the future, it will show again as pending.`;
     }
+    case DEVICE_STATES.rejected:
+      return 'This request will be removed from the UI, but if the device asks for authentication again in the future, it will show as pending for you to accept or reject it at that time.';
+    default:
+      break;
+  }
+  return '';
+};
+
+export const getConfirmationMessage = (status, device, authset) => {
+  let message = '';
+  switch (status) {
+    case DEVICE_STATES.accepted:
+      message = 'By accepting, the device with this identity data and public key will be granted authentication by the server.';
+      if (device.status === DEVICE_STATES.accepted) {
+        // if device already accepted, and you are accepting a different authset:
+        return `${message} The previously accepted public key will be rejected automatically in favor of this new key.`;
+      }
+      return message;
+    case DEVICE_STATES.rejected:
+      message = 'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server.';
+      if (device.status === DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.accepted) {
+        // if device is accepted but you are rejecting an authset that is not accepted, device status is unaffected:
+        return `${message} Rejecting this request will not affect the device status as it is using a different key. `;
+      }
+      return message;
+    case DEVICE_DISMISSAL_STATE:
+      message = getDismissalConfirmation(device, authset);
+      break;
+    default:
+      break;
   }
   return message;
 };
 
 const LF = '\n';
+
+const AuthSetStatus = ({ authset, device }) => {
+  if (authset.status === device.status) {
+    return <div className="capitalized">Active</div>;
+  }
+  if (authset.status === DEVICE_STATES.pending) {
+    return <Chip size="small" label="new" color="primary" style={{ justifySelf: 'flex-start' }} />;
+  }
+  return <div />;
+};
+
+const ActionButtons = ({ authset, confirmMessage, newStatus, limitMaxed, onAcceptClick, onDismissClick, onRequestConfirm, userCapabilities }) => {
+  const { canManageDevices } = userCapabilities;
+  if (!canManageDevices) {
+    return null;
+  }
+  return confirmMessage.length ? (
+    <div>Set to: {newStatus}?</div>
+  ) : (
+    <div className="action-buttons flexbox">
+      {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !limitMaxed ? (
+        <a onClick={onAcceptClick}>Accept</a>
+      ) : (
+        <div>Accept</div>
+      )}
+      {authset.status !== DEVICE_STATES.rejected && authset.status !== DEVICE_STATES.preauth ? (
+        <a onClick={() => onRequestConfirm(DEVICE_STATES.rejected)}>Reject</a>
+      ) : (
+        <div>Reject</div>
+      )}
+      <a onClick={onDismissClick}>Dismiss</a>
+    </div>
+  );
+};
 
 const AuthsetListItem = ({ authset, classes, columns, confirm, device, isExpanded, limitMaxed, loading, onExpand, total, userCapabilities }) => {
   const [showKey, setShowKey] = useState(false);
@@ -63,7 +109,6 @@ const AuthsetListItem = ({ authset, classes, columns, confirm, device, isExpande
   const [copied, setCopied] = useState(false);
   const [keyHash, setKeyHash] = useState('');
   const [endKey, setEndKey] = useState('');
-  const { canManageDevices } = userCapabilities;
 
   useEffect(() => {
     if (!isExpanded) {
@@ -159,39 +204,10 @@ const AuthsetListItem = ({ authset, classes, columns, confirm, device, isExpande
     ];
     key = <a onClick={() => onShowKey(false)}>hide key</a>;
   }
-
-  let actionButtons = null;
-  if (canManageDevices) {
-    actionButtons = confirmMessage.length ? (
-      `Set to: ${newStatus}?`
-    ) : (
-      <div className="action-buttons flexbox">
-        {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !limitMaxed ? (
-          <a onClick={onAcceptClick}>Accept</a>
-        ) : (
-          <div>Accept</div>
-        )}
-        {authset.status !== DEVICE_STATES.rejected && authset.status !== DEVICE_STATES.preauth ? (
-          <a onClick={() => onRequestConfirm(DEVICE_STATES.rejected)}>Reject</a>
-        ) : (
-          <div>Reject</div>
-        )}
-        <a onClick={onDismissClick}>Dismiss</a>
-      </div>
-    );
-  }
-
-  let authsetStatus = <div />;
-  if (authset.status === device.status) {
-    authsetStatus = <div className="capitalized">Active</div>;
-  } else if (authset.status === DEVICE_STATES.pending) {
-    authsetStatus = <Chip size="small" label="new" color="primary" style={{ justifySelf: 'flex-start' }} />;
-  }
-
   return (
     <Accordion className={classes.accordion} square expanded={isExpanded}>
       <AccordionSummary className={`columns-${columns.length}`}>
-        {authsetStatus}
+        <AuthSetStatus authset={authset} device={device} />
         <div className="capitalized">{authset.status}</div>
         {key}
         <Time value={formatTime(authset.ts)} />
@@ -200,7 +216,16 @@ const AuthsetListItem = ({ authset, classes, columns, confirm, device, isExpande
             Updating status <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '10px' }} />
           </div>
         ) : (
-          actionButtons
+          <ActionButtons
+            authset={authset}
+            confirmMessage={confirmMessage}
+            newStatus={newStatus}
+            limitMaxed={limitMaxed}
+            onAcceptClick={onAcceptClick}
+            onDismissClick={onDismissClick}
+            onRequestConfirm={onRequestConfirm}
+            userCapabilities={userCapabilities}
+          />
         )}
       </AccordionSummary>
       <AccordionDetails>{content}</AccordionDetails>
