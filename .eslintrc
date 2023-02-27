@@ -50,7 +50,7 @@
     "react/style-prop-object": "error",
     "react/void-dom-elements-no-children": "error",
     "react/jsx-no-target-blank": "error",
-    "sonarjs/cognitive-complexity": "off",
+    "sonarjs/cognitive-complexity": ["error", 17],
     "sonarjs/no-nested-template-literals": "off"
   }
 }

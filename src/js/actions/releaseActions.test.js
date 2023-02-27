@@ -36,9 +36,12 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: ['release-1'], total: 5000 } },
+      // { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList,  } },
       { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
-      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, searchAttribute: 'name' } }
+      {
+        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        value: { ...defaultState.releases.releasesList, releaseIds: ['release-1'], total: 5000, searchAttribute: 'name' }
+      }
     ];
     await store.dispatch(getReleases({ perPage: 1, sort: { direction: 'asc', key: 'Name' } }));
     const storeActions = store.getActions();
@@ -96,10 +99,12 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: {
           ...defaultState.releases.releasesList,
+          searchAttribute: 'name',
           searchedIds: [
             'release-1',
             'release-10',
@@ -113,9 +118,7 @@ describe('release actions', () => {
             'release-1006'
           ]
         }
-      },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
-      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, searchAttribute: 'name' } }
+      }
     ];
     await store.dispatch(getReleases({ perPage: 10, searchOnly: true, searchTerm: 'something' }));
     const storeActions = store.getActions();

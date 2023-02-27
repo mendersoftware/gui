@@ -27,20 +27,16 @@ import { createDeployment, getDeploymentsConfig } from '../../actions/deployment
 import { getGroupDevices, getSystemDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
-import { saveGlobalSettings } from '../../actions/userActions';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { deepCompare, standardizePhases, toggle, validatePhases } from '../../helpers';
+import { toggle, validatePhases } from '../../helpers';
 import { getDocsVersion, getIdAttribute, getIsEnterprise, getOnboardingState, getTenantCapabilities } from '../../selectors';
-import Tracking from '../../tracking';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Confirm from '../common/confirm';
 import { RolloutPatternSelection } from './deployment-wizard/phasesettings';
 import { ForceDeploy, Retries, RolloutOptions } from './deployment-wizard/rolloutoptions';
 import { ScheduleRollout } from './deployment-wizard/schedulerollout';
 import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
-
-const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const useStyles = makeStyles()(theme => ({
   accordion: {
@@ -103,11 +99,8 @@ export const CreateDeployment = props => {
     onScheduleSubmit,
     open = true,
     needsCheck,
-    previousPhases,
-    previousRetries,
     releases,
     releasesById,
-    saveGlobalSettings,
     setDeploymentObject
   } = props;
 
@@ -216,20 +209,8 @@ export const CreateDeployment = props => {
     if (!isOnboardingComplete) {
       advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
     }
-    return createDeployment(newDeployment)
+    return createDeployment(newDeployment, hasNewRetryDefault)
       .then(() => {
-        let newSettings = { retries: hasNewRetryDefault ? retries : previousRetries };
-        if (phases) {
-          const standardPhases = standardizePhases(phases);
-          let prevPhases = previousPhases.map(standardizePhases);
-          if (!prevPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-            prevPhases.push(standardPhases);
-          }
-          newSettings.previousPhases = prevPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
-        }
-        saveGlobalSettings(newSettings);
-        // track in GA
-        Tracking.event({ category: 'deployments', action: 'create' });
         // successfully retrieved new deployment
         cleanUpDeploymentsStatus();
         onScheduleSubmit();
@@ -240,39 +221,7 @@ export const CreateDeployment = props => {
       });
   };
 
-  const { delta, deploymentDeviceCount, devices, group, phases, release: deploymentRelease = null } = deploymentObject;
-
-  let onboardingComponent = null;
-  if (releaseRef.current && groupRef.current && deploymentAnchor.current) {
-    const anchor = getAnchor(releaseRef.current);
-    const groupAnchor = getAnchor(groupRef.current);
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION, onboardingState, { anchor: groupAnchor, place: 'right' });
-    if (createdGroup) {
-      onboardingComponent = getOnboardingComponentFor(
-        onboardingSteps.SCHEDULING_GROUP_SELECTION,
-        { ...onboardingState, createdGroup },
-        { anchor: groupAnchor, place: 'right' },
-        onboardingComponent
-      );
-    }
-    if (deploymentDeviceCount && !deploymentRelease) {
-      onboardingComponent = getOnboardingComponentFor(
-        onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
-        { ...onboardingState, selectedRelease: releasesById[releases[0]] || {} },
-        { anchor, place: 'right' },
-        onboardingComponent
-      );
-    }
-    if (hasDevices && (deploymentDeviceCount || devices?.length) && deploymentRelease) {
-      const buttonAnchor = getAnchor(deploymentAnchor.current, 2);
-      onboardingComponent = getOnboardingComponentFor(
-        onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
-        { ...onboardingState, selectedDevice: devices.length ? devices[0] : undefined, selectedGroup: group, selectedRelease: deploymentRelease },
-        { anchor: buttonAnchor, place: 'right' },
-        onboardingComponent
-      );
-    }
-  }
+  const { delta, deploymentDeviceCount, group, phases } = deploymentObject;
 
   const deploymentSettings = {
     ...deploymentObject,
@@ -357,12 +306,22 @@ export const CreateDeployment = props => {
           Create deployment
         </Button>
       </div>
-      {onboardingComponent}
+      <OnboardingComponent
+        releaseRef={releaseRef}
+        groupRef={groupRef}
+        deploymentObject={deploymentObject}
+        deploymentAnchor={deploymentAnchor}
+        onboardingState={onboardingState}
+        createdGroup={createdGroup}
+        releasesById={releasesById}
+        releases={releases}
+        hasDevices={hasDevices}
+      />
     </Drawer>
   );
 };
 
-const actionCreators = { advanceOnboarding, createDeployment, getDeploymentsConfig, getGroupDevices, getReleases, getSystemDevices, saveGlobalSettings };
+const actionCreators = { advanceOnboarding, createDeployment, getDeploymentsConfig, getGroupDevices, getReleases, getSystemDevices };
 
 export const mapStateToProps = state => {
   const { canRetry, canSchedule } = getTenantCapabilities(state);
@@ -395,3 +354,50 @@ export const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, actionCreators)(CreateDeployment);
+
+const OnboardingComponent = ({
+  releaseRef,
+  groupRef,
+  deploymentAnchor,
+  deploymentObject,
+  onboardingState,
+  createdGroup,
+  releasesById,
+  releases,
+  hasDevices
+}) => {
+  const { deploymentDeviceCount, devices, group, release: deploymentRelease = null } = deploymentObject;
+
+  let onboardingComponent = null;
+  if (releaseRef.current && groupRef.current && deploymentAnchor.current) {
+    const anchor = getAnchor(releaseRef.current);
+    const groupAnchor = getAnchor(groupRef.current);
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION, onboardingState, { anchor: groupAnchor, place: 'right' });
+    if (createdGroup) {
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_GROUP_SELECTION,
+        { ...onboardingState, createdGroup },
+        { anchor: groupAnchor, place: 'right' },
+        onboardingComponent
+      );
+    }
+    if (deploymentDeviceCount && !deploymentRelease) {
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_ARTIFACT_SELECTION,
+        { ...onboardingState, selectedRelease: releasesById[releases[0]] || {} },
+        { anchor, place: 'right' },
+        onboardingComponent
+      );
+    }
+    if (hasDevices && (deploymentDeviceCount || devices?.length) && deploymentRelease) {
+      const buttonAnchor = getAnchor(deploymentAnchor.current, 2);
+      onboardingComponent = getOnboardingComponentFor(
+        onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES,
+        { ...onboardingState, selectedDevice: devices.length ? devices[0] : undefined, selectedGroup: group, selectedRelease: deploymentRelease },
+        { anchor: buttonAnchor, place: 'right' },
+        onboardingComponent
+      );
+    }
+  }
+  return onboardingComponent;
+};

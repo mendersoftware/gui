@@ -4,6 +4,88 @@ import { Button } from '@mui/material';
 
 import validator from 'validator';
 
+const getErrorMsg = (validateMethod, args) => {
+  switch (validateMethod) {
+    case 'isLength':
+      if (args[0] === 1) {
+        return 'This field is required';
+      } else if (args[0] > 1) {
+        return `Must be at least ${args[0]} characters long`;
+      }
+      break;
+    case 'isAlpha':
+      return 'This field must contain only letters';
+    case 'isAlphanumeric':
+      return 'This field must contain only letters or numbers';
+    case 'isNumeric':
+      return 'Please enter a valid code';
+    case 'isEmail':
+      return 'Please enter a valid email address';
+    case 'isNot':
+      if (args[0] === args[1]) {
+        return `This field should have a value other than ${args[0]}`;
+      }
+      break;
+    default:
+      return 'There is an error with this field';
+  }
+};
+
+const tryApplyValidations = (value, validations, initialValidationResult) =>
+  validations.split(',').reduce((accu, validation) => {
+    if (!accu.isValid) {
+      return accu;
+    }
+    var args = validation.split(':');
+    var validateMethod = args.shift();
+    // We use JSON.parse to convert the string values passed to the
+    // correct type. Ex. 'isLength:1' will make '1' actually a number
+    args = args.map(arg => JSON.parse(JSON.stringify(arg)));
+
+    var tmpArgs = args;
+    // We then merge two arrays, ending up with the value
+    // to pass first, then options, if any. ['valueFromInput', 5]
+    args = [value].concat(args);
+    try {
+      // So the next line of code is actually:
+      // validator.isLength('valueFromInput', 5)
+      if (!validator[validateMethod].apply(validator, args)) {
+        return { errortext: getErrorMsg(validateMethod, tmpArgs), isValid: false };
+      }
+    } catch {
+      const errortext = getErrorMsg(validateMethod, args) || '';
+      return { errortext, isValid: !errortext };
+    }
+    return accu;
+  }, initialValidationResult);
+
+const runPasswordValidations = ({ required, value, validations, isValid, errortext }) => {
+  if (required && !value) {
+    return { isValid: false, errortext: 'Password is required' };
+  } else if (required || value) {
+    isValid = tryApplyValidations(value, validations, { isValid, errortext }).isValid;
+    return { isValid, errortext: !isValid ? 'Password too weak' : errortext };
+  }
+  return { isValid, errortext };
+};
+
+const runValidations = ({ file, required, value, id, validations }) => {
+  let isValid = true;
+  let errortext = '';
+  if (file) {
+    if (required && !value) {
+      return { isValid: false, errortext: 'You must choose a file to upload' };
+    }
+  } else if (id && id.substr(0, 8) === 'password') {
+    return runPasswordValidations({ required, value, validations, isValid, errortext });
+  } else {
+    if (value || required) {
+      return tryApplyValidations(value, validations, { isValid, errortext });
+    }
+  }
+  return { isValid, errortext };
+};
+
 export default class Form extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -54,102 +136,20 @@ export default class Form extends React.Component {
     });
   }
 
-  tryApplyValidations(value, validations, initialValidationResult) {
-    return validations.split(',').reduce((accu, validation) => {
-      if (!accu.isValid) {
-        return accu;
-      }
-      var args = validation.split(':');
-      var validateMethod = args.shift();
-      // We use JSON.parse to convert the string values passed to the
-      // correct type. Ex. 'isLength:1' will make '1' actually a number
-      args = args.map(arg => JSON.parse(JSON.stringify(arg)));
-
-      var tmpArgs = args;
-      // We then merge two arrays, ending up with the value
-      // to pass first, then options, if any. ['valueFromInput', 5]
-      args = [value].concat(args);
-      try {
-        // So the next line of code is actually:
-        // validator.isLength('valueFromInput', 5)
-        if (!validator[validateMethod].apply(validator, args)) {
-          return { errortext: this.getErrorMsg(validateMethod, tmpArgs), isValid: false };
-        }
-      } catch {
-        const errortext = this.getErrorMsg(validateMethod, args) || '';
-        return { errortext, isValid: !errortext };
-      }
-      return accu;
-    }, initialValidationResult);
-  }
-
   validate(component, value) {
     const { file, id, required, validations } = component.props;
     if (!validations) {
       return;
     }
-
-    var isValid = true;
-    var errortext = '';
-
-    if (file) {
-      if (required && !value) {
-        isValid = false;
-        errortext = 'You must choose a file to upload';
-      }
-    } else if (id && id.substr(0, 8) === 'password') {
-      if (required && !value) {
-        isValid = false;
-        errortext = 'Password is required';
-      } else if (required || value) {
-        isValid = this.tryApplyValidations(value, validations, { isValid, errortext }).isValid;
-        errortext = !isValid ? 'Password too weak' : errortext;
-      }
-    } else {
-      if (value || required) {
-        const { isValid: appliedValid, errortext: appliedError } = this.tryApplyValidations(value, validations, { isValid, errortext });
-        isValid = appliedValid;
-        errortext = appliedError;
-      }
-    }
+    const { isValid, errortext } = runValidations({ file, id, required, validations, value });
 
     // Now we set the state of the input based on the validation
     component.setState(
-      {
-        isValid: isValid,
-        errortext: errortext
-        // We use the callback of setState to wait for the state
-        // change being propagated, then we validate the form itself
-      },
+      { isValid, errortext },
+      // We use the callback of setState to wait for the state
+      // change being propagated, then we validate the form itself
       this.validateForm.bind(this)
     );
-  }
-
-  getErrorMsg(validateMethod, args) {
-    switch (validateMethod) {
-      case 'isLength':
-        if (args[0] === 1) {
-          return 'This field is required';
-        } else if (args[0] > 1) {
-          return `Must be at least ${args[0]} characters long`;
-        }
-        break;
-      case 'isAlpha':
-        return 'This field must contain only letters';
-      case 'isAlphanumeric':
-        return 'This field must contain only letters or numbers';
-      case 'isNumeric':
-        return 'Please enter a valid code';
-      case 'isEmail':
-        return 'Please enter a valid email address';
-      case 'isNot':
-        if (args[0] === args[1]) {
-          return `This field should have a value other than ${args[0]}`;
-        }
-        break;
-      default:
-        return 'There is an error with this field';
-    }
   }
 
   validateForm() {
@@ -168,9 +168,7 @@ export default class Form extends React.Component {
 
     // And last, but not least, we set the valid state of the
     // form itself
-    this.setState({
-      isValid: allIsValid
-    });
+    this.setState({ isValid: allIsValid });
   }
 
   // All methods defined are bound to the component by React JS, so it is safe to use "this"

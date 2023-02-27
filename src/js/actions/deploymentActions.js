@@ -4,7 +4,7 @@ import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS, RECEIVE_DEVICE } from '../constants/deviceConstants';
-import { isEmpty, startTimeSort } from '../helpers';
+import { deepCompare, isEmpty, standardizePhases, startTimeSort } from '../helpers';
 import Tracking from '../tracking';
 import { saveGlobalSettings } from './userActions';
 
@@ -88,50 +88,68 @@ const isWithinFirstMonth = expirationDate => {
   return endOfFirstMonth > new Date();
 };
 
-export const createDeployment = newDeployment => (dispatch, getState) => {
-  let request;
-  if (newDeployment.filter_id) {
-    request = GeneralApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
-  } else if (newDeployment.group) {
-    request = GeneralApi.post(`${deploymentsApiUrl}/deployments/group/${newDeployment.group}`, newDeployment);
-  } else {
-    request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
-  }
-  const totalDeploymentCount = Object.values(getState().deployments.byStatus).reduce((accu, item) => accu + item.total, 0);
-  const { hasDeployments } = getState().users.globalSettings;
-  const { trial_expiration } = getState().organization.organization;
-  return request
-    .catch(err => commonErrorHandler(err, 'Error creating deployment.', dispatch))
-    .then(data => {
-      const lastslashindex = data.headers.location.lastIndexOf('/');
-      const deploymentId = data.headers.location.substring(lastslashindex + 1);
-      const deployment = {
-        ...newDeployment,
-        devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : [],
-        statistics: { status: {} }
-      };
-      let tasks = [
-        dispatch({
-          type: CREATE_DEPLOYMENT,
-          deployment,
-          deploymentId
-        }),
-        dispatch(getSingleDeployment(deploymentId)),
-        dispatch(setSnackbar('Deployment created successfully', 8000))
-      ];
-      if (!totalDeploymentCount) {
-        if (!hasDeployments) {
-          Tracking.event({ category: 'deployments', action: 'create_initial_deployment' });
-          if (isWithinFirstMonth(trial_expiration)) {
-            Tracking.event({ category: 'deployments', action: 'create_initial_deployment_first_month' });
-          }
-          tasks.push(dispatch(saveGlobalSettings({ hasDeployments: true })));
-        }
-        Tracking.event({ category: 'deployments', action: 'create_initial_deployment_user' });
+const trackDeploymentCreation = (totalDeploymentCount, hasDeployments, trial_expiration) => {
+  Tracking.event({ category: 'deployments', action: 'create' });
+  if (!totalDeploymentCount) {
+    if (!hasDeployments) {
+      Tracking.event({ category: 'deployments', action: 'create_initial_deployment' });
+      if (isWithinFirstMonth(trial_expiration)) {
+        Tracking.event({ category: 'deployments', action: 'create_initial_deployment_first_month' });
       }
-      return Promise.all(tasks);
-    });
+    }
+    Tracking.event({ category: 'deployments', action: 'create_initial_deployment_user' });
+  }
 };
+
+const MAX_PREVIOUS_PHASES_COUNT = 5;
+export const createDeployment =
+  (newDeployment, hasNewRetryDefault = false) =>
+  (dispatch, getState) => {
+    let request;
+    if (newDeployment.filter_id) {
+      request = GeneralApi.post(`${deploymentsApiUrlV2}/deployments`, newDeployment);
+    } else if (newDeployment.group) {
+      request = GeneralApi.post(`${deploymentsApiUrl}/deployments/group/${newDeployment.group}`, newDeployment);
+    } else {
+      request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
+    }
+    const totalDeploymentCount = Object.values(getState().deployments.byStatus).reduce((accu, item) => accu + item.total, 0);
+    const { hasDeployments } = getState().users.globalSettings;
+    const { trial_expiration } = getState().organization.organization;
+    return request
+      .catch(err => commonErrorHandler(err, 'Error creating deployment.', dispatch))
+      .then(data => {
+        const lastslashindex = data.headers.location.lastIndexOf('/');
+        const deploymentId = data.headers.location.substring(lastslashindex + 1);
+        const deployment = {
+          ...newDeployment,
+          devices: newDeployment.devices ? newDeployment.devices.map(id => ({ id, status: 'pending' })) : [],
+          statistics: { status: {} }
+        };
+        let tasks = [
+          dispatch({ type: CREATE_DEPLOYMENT, deployment, deploymentId }),
+          dispatch(getSingleDeployment(deploymentId)),
+          dispatch(setSnackbar('Deployment created successfully', 8000))
+        ];
+        // track in GA
+        trackDeploymentCreation(totalDeploymentCount, hasDeployments, trial_expiration);
+
+        const { phases, retries } = newDeployment;
+        const { previousPhases = [], retries: previousRetries = 0 } = getState().users.globalSettings;
+        let newSettings = { retries: hasNewRetryDefault ? retries : previousRetries, hasDeployments: true };
+        if (phases) {
+          const standardPhases = standardizePhases(phases);
+          let prevPhases = previousPhases.map(standardizePhases);
+          if (!prevPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+            prevPhases.push(standardPhases);
+          }
+          newSettings.previousPhases = prevPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
+        }
+
+        tasks.push(dispatch(saveGlobalSettings(newSettings)));
+        return Promise.all(tasks);
+      });
+  };
 
 export const getDeploymentDevices =
   (id, options = {}) =>
@@ -159,6 +177,28 @@ export const getDeploymentDevices =
     });
   };
 
+const parseDeviceDeployment = ({
+  deployment: { id, artifact_name: release, groups = [], name, device: deploymentDevice, status: deploymentStatus },
+  device: { created, deleted, id: deviceId, finished, status, log }
+}) => ({
+  id,
+  release,
+  target: groups.length === 1 && groups[0] ? groups[0] : deploymentDevice ? deploymentDevice : name,
+  created,
+  deleted,
+  deviceId,
+  finished,
+  status,
+  log,
+  route: Object.values(DEPLOYMENT_ROUTES).reduce((accu, { key, states }) => {
+    if (!accu) {
+      return states.includes(deploymentStatus) ? key : accu;
+    }
+    return accu;
+  }, ''),
+  deploymentStatus
+});
+
 export const getDeviceDeployments =
   (deviceId, options = {}) =>
   (dispatch, getState) => {
@@ -171,25 +211,7 @@ export const getDeviceDeployments =
             type: RECEIVE_DEVICE,
             device: {
               ...getState().devices.byId[deviceId],
-              deviceDeployments: data.map(({ deployment, device }) => ({
-                id: deployment.id,
-                release: deployment.artifact_name,
-                target:
-                  deployment.groups?.length === 1 && deployment.groups[0] ? deployment.groups[0] : deployment.device ? deployment.device : deployment.name,
-                created: device.created,
-                deleted: device.deleted,
-                deviceId: device.id,
-                finished: device.finished,
-                status: device.status,
-                log: device.log,
-                route: Object.values(DEPLOYMENT_ROUTES).reduce((accu, { key, states }) => {
-                  if (!accu) {
-                    return states.includes(deployment.status) ? key : accu;
-                  }
-                  return accu;
-                }, ''),
-                deploymentStatus: deployment.status
-              })),
+              deviceDeployments: data.map(parseDeviceDeployment),
               deploymentsCount: Number(headers[headerNames.total])
             }
           })

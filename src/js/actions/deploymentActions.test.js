@@ -97,8 +97,12 @@ const defaultResponseActions = {
     type: DeploymentConstants.SELECT_INPROGRESS_DEPLOYMENTS,
     deploymentIds: Object.keys(defaultState.deployments.byId),
     status: 'inprogress'
-  }
+  },
+  setOfflineThreshold: { type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' }
 };
+
+// eslint-disable-next-line no-unused-vars
+const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
 
 /* eslint-disable sonarjs/no-identical-functions */
 describe('deployment actions', () => {
@@ -142,8 +146,6 @@ describe('deployment actions', () => {
         }
       }
     });
-    // eslint-disable-next-line no-unused-vars
-    const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
     const expectedActions = [
       defaultResponseActions.creation,
       {
@@ -154,8 +156,8 @@ describe('deployment actions', () => {
         }
       },
       defaultResponseActions.receive,
-      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
-      { type: AppConstants.SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: retrievedSettings },
+      defaultResponseActions.setOfflineThreshold,
       { type: UserConstants.SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, hasDeployments: true } }
     ];
     return store.dispatch(createDeployment({ devices: [Object.keys(defaultState.devices.byId)[0]] })).then(() => {
@@ -176,7 +178,10 @@ describe('deployment actions', () => {
           autoHideDuration: 8000
         }
       },
-      defaultResponseActions.receive
+      defaultResponseActions.receive,
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: retrievedSettings },
+      defaultResponseActions.setOfflineThreshold,
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: retrievedSettings }
     ];
     return store.dispatch(createDeployment({ filter_id })).then(() => {
       const storeActions = store.getActions();
@@ -196,7 +201,10 @@ describe('deployment actions', () => {
           autoHideDuration: 8000
         }
       },
-      defaultResponseActions.receive
+      defaultResponseActions.receive,
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: retrievedSettings },
+      defaultResponseActions.setOfflineThreshold,
+      { type: UserConstants.SET_GLOBAL_SETTINGS, settings: retrievedSettings }
     ];
     return store.dispatch(createDeployment({ group })).then(() => {
       const storeActions = store.getActions();
