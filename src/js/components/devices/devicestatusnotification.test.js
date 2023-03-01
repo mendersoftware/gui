@@ -17,9 +17,10 @@ describe('DeviceStatusNotification Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const clickMock = jest.fn();
     render(<DeviceStatusNotification deviceCount={1} onClick={clickMock} state={DEVICE_STATES.pending} />);
-    userEvent.click(screen.getByText(/pending authorization/i));
+    await user.click(screen.getByText(/pending authorization/i));
     expect(clickMock).toHaveBeenCalled();
   });
 });

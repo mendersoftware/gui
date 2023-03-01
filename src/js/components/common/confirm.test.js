@@ -16,16 +16,17 @@ describe('Confirm Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const actionCheck = jest.fn();
     const cancelCheck = jest.fn();
 
     const { container } = render(<Confirm type="chartRemoval" action={actionCheck} cancel={cancelCheck} />);
 
     expect(screen.queryByText(/remove this chart\?/i)).toBeInTheDocument();
-    userEvent.click(container.querySelector('.green'));
+    await user.click(container.querySelector('.green'));
     expect(actionCheck).toHaveBeenCalledTimes(1);
     expect(screen.queryByText(/removing/i)).toBeInTheDocument();
-    userEvent.click(container.querySelector('.red'));
+    await user.click(container.querySelector('.red'));
     expect(cancelCheck).toHaveBeenCalledTimes(1);
   });
 });

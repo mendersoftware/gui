@@ -34,7 +34,7 @@ describe('ProgressDeviceList Component', () => {
       </Provider>
     );
     const { asFragment, rerender } = render(ui);
-    act(() => jest.advanceTimersByTime(5000));
+    await act(async () => jest.advanceTimersByTime(5000));
     await waitFor(() => rerender(ui));
 
     const view = prettyDOM(asFragment().childNodes[1], 100000, { highlight: false })

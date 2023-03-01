@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { act, screen, render as testingLibRender, waitFor } from '@testing-library/react';
+import { screen, render as testingLibRender, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -35,7 +35,10 @@ describe('PasswordReset Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    jest.useFakeTimers();
     const submitCheck = jest.fn();
+    submitCheck.mockResolvedValue();
     const snackbar = jest.fn();
     const secretHash = 'leHash';
 
@@ -50,18 +53,20 @@ describe('PasswordReset Component', () => {
     const { rerender } = testingLibRender(ui);
 
     const passwordInput = screen.getByLabelText('Password *');
-    act(() => userEvent.paste(passwordInput, badPassword));
-    userEvent.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
-    userEvent.click(screen.getByRole('button', { name: /Save password/i }));
-    expect(snackbar).toHaveBeenCalledWith('The passwords you provided do not match, please check again.', 5000, '');
-    act(() => userEvent.clear(screen.getByDisplayValue(badPassword)));
+    await user.type(passwordInput, badPassword);
     await waitFor(() => rerender(ui));
-    act(() => userEvent.paste(passwordInput, goodPassword));
+    await user.type(passwordInput, badPassword);
+    await user.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
+    await user.click(screen.getByRole('button', { name: /Save password/i }));
+    expect(snackbar).toHaveBeenCalledWith('The passwords you provided do not match, please check again.', 5000, '');
+    await user.clear(passwordInput);
+    await user.type(passwordInput, goodPassword, { skipClick: true });
     await waitFor(() => rerender(ui));
     submitCheck.mockResolvedValue(true);
-    act(() => userEvent.click(screen.getByRole('button', { name: /Save password/i })));
+    await user.click(screen.getByRole('button', { name: /Save password/i }));
     await waitFor(() => rerender(ui));
-    expect(submitCheck).toHaveBeenCalledWith(secretHash, goodPassword);
     expect(screen.queryByText(/Your password has been updated./i)).toBeInTheDocument();
+    expect(submitCheck).toHaveBeenCalledWith(secretHash, goodPassword);
+    jest.useRealTimers();
   });
 });

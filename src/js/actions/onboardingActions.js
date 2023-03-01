@@ -135,16 +135,14 @@ export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({
 
 export const setDemoArtifactPort = port => dispatch => dispatch({ type: SET_DEMO_ARTIFACT_PORT, value: port });
 
-export const setOnboardingComplete = val => dispatch =>
-  Promise.resolve(dispatch({ type: SET_ONBOARDING_COMPLETE, complete: val })).then(() => {
-    if (val) {
-      return Promise.all([
-        Promise.resolve(dispatch({ type: SET_SHOW_ONBOARDING_HELP, show: false })),
-        Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED)))
-      ]);
-    }
-    return Promise.resolve();
-  });
+export const setOnboardingComplete = val => dispatch => {
+  let tasks = [Promise.resolve(dispatch({ type: SET_ONBOARDING_COMPLETE, complete: val }))];
+  if (val) {
+    tasks.push(Promise.resolve(dispatch({ type: SET_SHOW_ONBOARDING_HELP, show: false })));
+    tasks.push(Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED))));
+  }
+  return Promise.all(tasks);
+};
 
 export const setOnboardingCanceled = () => dispatch =>
   Promise.all([

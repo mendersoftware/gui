@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { act, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { undefineds } from '../../../../../tests/mockData';
@@ -16,6 +16,7 @@ describe('FileUpload Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const selectMock = jest.fn();
     const submitMock = jest.fn();
 
@@ -26,7 +27,7 @@ describe('FileUpload Component', () => {
     expect(screen.getByText(/test placeholder/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    act(() => userEvent.upload(uploadInput, menderFile));
+    await user.upload(uploadInput, menderFile);
     await waitFor(() => rerender(ui));
 
     expect(uploadInput.files).toHaveLength(1);

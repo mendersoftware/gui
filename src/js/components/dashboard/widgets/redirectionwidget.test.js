@@ -16,14 +16,15 @@ describe('RedirectionWidget Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const content = 'test content';
     const submitCheck = jest.fn();
     render(<RedirectionWidget content={content} onClick={submitCheck} />);
 
-    userEvent.click(screen.getByText(content));
+    await user.click(screen.getByText(content));
     expect(screen.queryByText('redirected')).not.toBeInTheDocument();
     expect(submitCheck).toHaveBeenCalledTimes(1);
-    userEvent.click(screen.getByText(content));
+    await user.click(screen.getByText(content));
     expect(submitCheck).toHaveBeenCalledTimes(2);
   });
 });

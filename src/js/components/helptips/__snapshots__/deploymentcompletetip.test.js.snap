@@ -235,7 +235,7 @@ exports[`DeploymentCompleteTip Component renders correctly 1`] = `
     data-popper-reference-hidden=""
     id="deployments-past-completed"
     role="tooltip"
-    style="position: absolute; top: 0px; left: 0px; margin: 0px; transform: translate(0px, 0px);"
+    style="position: absolute; left: 0px; top: 0px; margin: 0px; transform: translate(0px, 0px);"
   >
     <div
       class="MuiTooltip-tooltip MuiTooltip-tooltipPlacementBottom emotion-2"

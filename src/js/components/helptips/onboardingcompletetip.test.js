@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
+import { act, waitFor } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -28,11 +29,14 @@ describe('OnboardingCompleteTip Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(
+    const ui = (
       <Provider store={store}>
         <OnboardingCompleteTip targetUrl="https://test.com" />
       </Provider>
     );
+    const { baseElement, rerender } = render(ui);
+    await act(async () => {});
+    await waitFor(() => rerender(ui));
     const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

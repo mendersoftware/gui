@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -54,6 +54,7 @@ describe('Header Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const view = (
       <Provider store={store}>
         <Header />
@@ -61,11 +62,11 @@ describe('Header Component', () => {
     );
     const { rerender } = render(view);
     const selectButton = screen.getByRole('button', { name: defaultState.users.byId[defaultState.users.currentUser].email });
-    userEvent.click(selectButton);
+    await user.click(selectButton);
     const listbox = document.body.querySelector('ul[role=menu]');
     const listItem = within(listbox).getByText(/log out/i);
-    userEvent.click(listItem);
-    await fireEvent.mouseDown(listItem);
+    await user.click(listItem);
+    // await fireEvent.mouseDown(listItem);
     await waitFor(() => rerender(view));
     const storeActions = store.getActions();
     const expectedActions = [{ type: AppConstants.SET_SEARCH_STATE }, { type: UserConstants.USER_LOGOUT }];

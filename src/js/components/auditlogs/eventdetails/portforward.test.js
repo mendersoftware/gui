@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
@@ -21,7 +21,7 @@ describe('PortForward Component', () => {
     );
     const { baseElement, rerender } = render(ui);
     await waitFor(() => rerender(ui));
-    jest.advanceTimersByTime(150);
+    act(() => jest.advanceTimersByTime(150));
     expect(detailsMock).toHaveBeenCalled();
 
     const view = baseElement.firstChild.firstChild;

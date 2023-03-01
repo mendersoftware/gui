@@ -30,6 +30,7 @@ describe('Roles Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const createRoleMock = jest.fn();
     const editRoleMock = jest.fn();
     const removeRoleMock = jest.fn();
@@ -51,31 +52,32 @@ describe('Roles Component', () => {
     render(ui);
 
     const role = screen.getByText(/test description/i).parentElement;
-    userEvent.click(within(role).getByText(/view details/i));
+    await user.click(within(role).getByText(/view details/i));
     let collapse = screen.getByText(/edit role/i).parentElement.parentElement;
-    userEvent.click(screen.getByRole('button', { name: /delete/i }));
+    await user.click(screen.getByRole('button', { name: /delete/i }));
     expect(removeRoleMock).toHaveBeenCalled();
     // expect(screen.getByLabelText(/Role name/i)).toBeDisabled();
     // userEvent.type(within(collapse).getByLabelText(/Name/i), 'test');
-    userEvent.click(within(role).getByText(/view details/i));
+    await user.click(within(role).getByText(/view details/i));
     collapse = screen.getByText(/edit role/i).parentElement.parentElement;
     const submitButton = within(collapse).getByRole('button', { name: /submit/i }, { hidden: true });
     expect(within(collapse).getByRole('button', { name: /submit/i })).toBeDisabled();
-    userEvent.type(within(collapse).getByLabelText(/Description/i), 'something');
-    await selectMaterialUiSelectOption(within(collapse).getByText(/search groups/i), Object.keys(groups)[0]);
+    await user.type(within(collapse).getByLabelText(/Description/i), 'something');
+    await selectMaterialUiSelectOption(within(collapse).getByText(/search groups/i), Object.keys(groups)[0], user);
 
     let selectButton = within(collapse)
       .getByText(/select/i)
       .parentNode.parentNode.children[1].querySelector('[role=button]');
     // Open the select dropdown
-    userEvent.click(selectButton);
+    await user.click(selectButton);
     // Get the dropdown element. We don't use getByRole() because it includes <select>s too.
     let listbox = document.body.querySelector('ul[role=listbox]');
     // Click the list item
     let listItem = within(listbox).getByText(/deploy/i);
-    userEvent.click(listItem);
+    await user.click(listItem);
     expect(submitButton).not.toBeDisabled();
-    await userEvent.click(submitButton);
+    await user.click(submitButton);
+
     expect(editRoleMock).toHaveBeenCalledWith({
       allowUserManagement: false,
       description: `${defaultState.users.rolesById.test.description}something`,

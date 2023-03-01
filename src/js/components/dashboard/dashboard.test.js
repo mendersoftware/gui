@@ -40,6 +40,7 @@ describe('Dashboard Component', () => {
         }
       }
     });
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     render(
       <Provider store={store}>
         <Routes>
@@ -48,12 +49,13 @@ describe('Dashboard Component', () => {
         </Routes>
       </Provider>
     );
-    userEvent.click(screen.getByText(/Pending devices/i));
-    await waitFor(() => screen.getByText(/pendings route/i));
+    await user.click(screen.getByText(/Pending devices/i));
+    await waitFor(() => screen.queryByText(/pendings route/i));
     expect(screen.getByText(/pendings route/i)).toBeVisible();
   });
 
   it('allows navigating to accepted devices', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     render(
       <Provider store={store}>
         <Routes>
@@ -62,8 +64,8 @@ describe('Dashboard Component', () => {
         </Routes>
       </Provider>
     );
-    userEvent.click(screen.getByText(/Accepted devices/i));
-    await waitFor(() => screen.getByText(/accepted devices route/i));
+    await user.click(screen.getByText(/Accepted devices/i));
+    await waitFor(() => screen.queryByText(/accepted devices route/i));
     expect(screen.getByText(/accepted devices route/i)).toBeVisible();
   });
 
@@ -78,7 +80,8 @@ describe('Dashboard Component', () => {
         }
       }
     });
-    render(
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const ui = (
       <Provider store={store}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
@@ -86,9 +89,10 @@ describe('Dashboard Component', () => {
         </Routes>
       </Provider>
     );
-    await waitFor(() => screen.findByText(/In progress/i));
-    userEvent.click(screen.getAllByText('test deployment 2')[0]);
-    await waitFor(() => screen.findByText(/deployments route/i));
+    const { rerender } = render(ui);
+    await waitFor(() => rerender(ui));
+    await user.click(screen.getAllByText('test deployment 2')[0]);
+    await waitFor(() => screen.queryByText(/deployments route/i));
     expect(screen.getByText(/deployments route/i)).toBeVisible();
   });
 });

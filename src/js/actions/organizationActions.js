@@ -164,11 +164,12 @@ export const setAuditlogsState = selectionState => (dispatch, getState) => {
   Tenant management + Hosted Mender
 */
 export const tenantDataDivergedMessage = 'The system detected there is a change in your plan or purchased add-ons. Please log out and log in again';
-export const getUserOrganization = () => dispatch =>
-  Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => {
+export const getUserOrganization = () => dispatch => {
+  const token = getToken();
+  return Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => {
     let tasks = [dispatch({ type: SET_ORGANIZATION, organization: res.data })];
     const { addons, plan, trial } = res.data;
-    const jwt = jwtDecode(getToken());
+    const jwt = jwtDecode(token);
     const jwtData = { addons: jwt['mender.addons'], plan: jwt['mender.plan'], trial: jwt['mender.trial'] };
     if (!deepCompare({ addons, plan, trial }, jwtData)) {
       const hash = hashString(tenantDataDivergedMessage);
@@ -177,6 +178,7 @@ export const getUserOrganization = () => dispatch =>
     }
     return Promise.all(tasks);
   });
+};
 
 export const sendSupportMessage = content => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/contact/support`, content)
