@@ -1,14 +1,14 @@
+import autoprefixer from 'autoprefixer';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import { EsbuildPlugin } from 'esbuild-loader';
+import ESLintPlugin from 'eslint-webpack-plugin';
+import HtmlWebPackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import webpack from 'webpack';
-import autoprefixer from 'autoprefixer';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import HtmlWebPackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import { ESBuildMinifyPlugin } from 'esbuild-loader';
-import ESLintPlugin from 'eslint-webpack-plugin';
 
 const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
@@ -33,7 +33,7 @@ export default (env, argv) => {
           loader: 'esbuild-loader',
           options: {
             loader: 'jsx',
-            target: 'es2015'
+            target: 'es2020'
           }
         },
         {
@@ -72,11 +72,7 @@ export default (env, argv) => {
     },
     optimization: {
       minimize: argv.mode === 'production',
-      minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'es2015'
-        })
-      ]
+      minimizer: [new EsbuildPlugin({ target: 'es2020' })]
     },
     output: {
       filename: '[name].[contenthash].min.js',
