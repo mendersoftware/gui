@@ -108,7 +108,7 @@ export const Devices = ({
     if (device?.id) {
       const { attributes = {}, systemDeviceIds = [] } = device;
       const { mender_is_gateway } = attributes;
-      deviceText = `${getDeviceIdentityText({ device, idAttribute })}${stringToBoolean(mender_is_gateway) ? ' (Device system)' : ''}`;
+      deviceText = `${getDeviceIdentityText({ device, idAttribute })}${stringToBoolean(mender_is_gateway) ? ' (System)' : ''}`;
       // here we hope the number of systemDeviceIds doesn't exceed the queried 500 and add the gateway device
       targetDeviceCount = systemDeviceIds.length + 1;
     } else if (group) {
