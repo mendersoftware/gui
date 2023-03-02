@@ -47,7 +47,10 @@ test.describe('SAML Login', () => {
     });
 
     // Setups the SAML/SSO login with samltest.id Identity Provider
-    test('Set up SAML', async ({ context, environment, baseUrl, page }) => {
+    test('Set up SAML', async ({ browserName, context, environment, baseUrl, page }) => {
+      // QA-579
+      test.skip(browserName === 'webkit');
+
       test.skip(environment !== 'staging');
       test.setTimeout(320000);
 
@@ -124,6 +127,9 @@ test.describe('SAML Login', () => {
 
     // Creates a user with login that matches Identity privder (samltest.id) user email
     test('Creates a user without a password', async ({ environment, browserName, baseUrl, page }) => {
+      // QA-579
+      test.skip(browserName === 'webkit');
+
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/settings/user-management`);
       const userExists = await page.isVisible(`text=${samlSettings.credentials[browserName].email}`);
@@ -146,6 +152,10 @@ test.describe('SAML Login', () => {
     // This test calls auth/sso/${id}/login, where id is the id of the identity provider
     // and verifies that login is successful.
     test('User can login via sso/login endpoint', async ({ environment, browserName, baseUrl, browser, loggedInPage }) => {
+      // QA-579
+      test.skip(browserName === 'firefox');
+      test.skip(browserName === 'webkit');
+
       test.skip(environment !== 'staging');
       test.setTimeout(30000);
 

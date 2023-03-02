@@ -125,6 +125,21 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
   padding-top: 8px;
 }
 
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel .MuiAutocomplete-input {
+  padding-top: 16px;
+  padding-bottom: 17px;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding-top: 8px;
+  padding-bottom: 9px;
+}
+
 .emotion-1 .MuiAutocomplete-input {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
@@ -661,6 +676,21 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 
 .emotion-1 .MuiInputBase-hiddenLabel {
   padding-top: 8px;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel .MuiAutocomplete-input {
+  padding-top: 16px;
+  padding-bottom: 17px;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding-top: 8px;
+  padding-bottom: 9px;
 }
 
 .emotion-1 .MuiAutocomplete-input {
@@ -1749,6 +1779,21 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
   padding-top: 8px;
 }
 
+.emotion-3 .MuiFilledInput-root.MuiInputBase-hiddenLabel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emotion-3 .MuiFilledInput-root.MuiInputBase-hiddenLabel .MuiAutocomplete-input {
+  padding-top: 16px;
+  padding-bottom: 17px;
+}
+
+.emotion-3 .MuiFilledInput-root.MuiInputBase-hiddenLabel.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding-top: 8px;
+  padding-bottom: 9px;
+}
+
 .emotion-3 .MuiAutocomplete-input {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
@@ -2406,6 +2451,21 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 
 .emotion-3 .MuiInputBase-hiddenLabel {
   padding-top: 8px;
+}
+
+.emotion-3 .MuiFilledInput-root.MuiInputBase-hiddenLabel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emotion-3 .MuiFilledInput-root.MuiInputBase-hiddenLabel .MuiAutocomplete-input {
+  padding-top: 16px;
+  padding-bottom: 17px;
+}
+
+.emotion-3 .MuiFilledInput-root.MuiInputBase-hiddenLabel.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding-top: 8px;
+  padding-bottom: 9px;
 }
 
 .emotion-3 .MuiAutocomplete-input {
@@ -6064,7 +6124,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 }
 
 <div
-  class="MuiPickersPopper-root emotion-0 MuiPopperUnstyled-root"
+  class="MuiPickersPopper-root emotion-0 MuiPopper-root"
   data-popper-escaped=""
   data-popper-placement="bottom"
   data-popper-reference-hidden=""
@@ -7266,7 +7326,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 }
 
 <div
-  class="MuiPickersPopper-root emotion-0 MuiPopperUnstyled-root"
+  class="MuiPickersPopper-root emotion-0 MuiPopper-root"
   data-popper-escaped=""
   data-popper-placement="bottom"
   data-popper-reference-hidden=""
@@ -7923,6 +7983,21 @@ exports[`CreateDeployment Component smaller components renders Software correctl
   padding-top: 8px;
 }
 
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel .MuiAutocomplete-input {
+  padding-top: 16px;
+  padding-bottom: 17px;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding-top: 8px;
+  padding-bottom: 9px;
+}
+
 .emotion-1 .MuiAutocomplete-input {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
@@ -8362,6 +8437,21 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 
 .emotion-1 .MuiInputBase-hiddenLabel {
   padding-top: 8px;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel .MuiAutocomplete-input {
+  padding-top: 16px;
+  padding-bottom: 17px;
+}
+
+.emotion-1 .MuiFilledInput-root.MuiInputBase-hiddenLabel.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding-top: 8px;
+  padding-bottom: 9px;
 }
 
 .emotion-1 .MuiAutocomplete-input {
