@@ -1,7 +1,7 @@
 import autoprefixer from 'autoprefixer';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import { EsbuildPlugin } from 'esbuild-loader';
+import { ESBuildMinifyPlugin } from 'esbuild-loader';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import HtmlWebPackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -72,7 +72,7 @@ export default (env, argv) => {
     },
     optimization: {
       minimize: argv.mode === 'production',
-      minimizer: [new EsbuildPlugin({ target: 'es2020' })]
+      minimizer: [new ESBuildMinifyPlugin({ target: 'es2020' })]
     },
     output: {
       filename: '[name].[contenthash].min.js',
