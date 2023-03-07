@@ -72,7 +72,9 @@ test.describe('SAML Login', () => {
         await page.locator('.view-lines').click();
 
         console.log('typing metadata');
-        await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]').type(metadata.replace(/(?:\r\n|\r|\n)/g, ''));
+        await page
+          .locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]')
+          .type(metadata.replace(/(?:\r\n|\r|\n)/g, ''), { delay: 0 });
         console.log('typing metadata done.');
         // The screenshot saves the view of the typed metadata
         await page.screenshot({ 'path': 'saml-edit-saving.png' });
