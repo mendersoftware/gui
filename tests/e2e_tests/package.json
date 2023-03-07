@@ -14,7 +14,7 @@
   "author": "Northern.tech AS",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://tracker.mender.io/projects/MEN/issues/"
+    "url": "https://northerntech.atlassian.net/projects/MEN"
   },
   "homepage": "https://mender.io",
   "devDependencies": {
