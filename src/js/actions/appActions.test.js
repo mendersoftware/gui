@@ -296,6 +296,7 @@ describe('app actions', () => {
         total: defaultState.devices.byStatus.accepted.total
       },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } },
       { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } } },
       {
         type: SET_DEVICE_LIST_STATE,
@@ -310,8 +311,7 @@ describe('app actions', () => {
           state: 'accepted',
           total: 2
         }
-      },
-      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } }
+      }
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();

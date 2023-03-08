@@ -35,13 +35,14 @@ describe('Artifacts Component', () => {
         <Artifacts />
       </Provider>
     );
-    act(() => jest.advanceTimersByTime(1000));
+    await act(async () => jest.advanceTimersByTime(1000));
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
   it('works as expected', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const preloadedState = {
       ...defaultState,
       releases: {
@@ -67,16 +68,16 @@ describe('Artifacts Component', () => {
     await act(async () => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
     expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).toBeInTheDocument();
-    act(() => userEvent.click(screen.getByRole('button', { name: /Remove this artifact/i })));
+    await user.click(screen.getByRole('button', { name: /Remove this artifact/i }));
     await waitFor(() => rerender(ui));
-    act(() => userEvent.click(screen.getByRole('button', { name: /Cancel/i })));
+    await user.click(screen.getByRole('button', { name: /Cancel/i }));
     await waitFor(() => rerender(ui));
     const releaseRepoItem = document.body.querySelector('.release-repo');
-    act(() => userEvent.click(within(releaseRepoItem).getByText(defaultState.releases.byId.r1.Name)));
-    act(() => userEvent.click(screen.getByText(/Last modified/i)));
+    await user.click(within(releaseRepoItem).getByText(defaultState.releases.byId.r1.Name));
+    await user.click(screen.getByText(/Last modified/i));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
-    act(() => userEvent.type(screen.getByPlaceholderText(/Filter/i), 'b1'));
+    await user.type(screen.getByPlaceholderText(/Filter/i), 'b1');
     await act(async () => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();

@@ -84,11 +84,11 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
         const ref = inputRefs.current[index];
         return (
           <div className="key-value-container relative" key={index}>
-            <FormControl disabled={disabled} error={hasError}>
+            <FormControl>
               <Input value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
               {hasError && <FormHelperText>{errortext || error}</FormHelperText>}
             </FormControl>
-            <FormControl disabled={disabled} error={hasError}>
+            <FormControl>
               <Input value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
             </FormControl>
             {inputs.length > 1 && !hasRemovalDisabled ? (

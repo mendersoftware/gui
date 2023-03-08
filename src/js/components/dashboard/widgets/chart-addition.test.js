@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
@@ -22,13 +22,15 @@ describe('ChartAdditionWidget Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const submitCheck = jest.fn();
     render(<ChartAdditionWidget groups={defaultState.devices.groups.byId} onAdditionClick={submitCheck} software={software} />);
     expect(screen.queryByText(/Device group/i)).not.toBeInTheDocument();
-    act(() => userEvent.click(screen.getByText(/Add a widget/i)));
-    const element = screen.getByLabelText(/Device group/i);
-    await selectMaterialUiSelectOption(element, 'testGroup');
-    act(() => userEvent.click(screen.getByRole('button', { name: /Save/i })));
+    await user.click(screen.getByText(/Add a widget/i));
+    expect(screen.queryAllByText(/Device group/i).length).toBeTruthy();
+    const element = screen.getByRole('button', { name: /Device group/i });
+    await selectMaterialUiSelectOption(element, 'testGroup', user);
+    await user.click(screen.getByRole('button', { name: /Save/i }));
     expect(submitCheck).toHaveBeenCalled();
     expect(screen.queryByText(/Device group/i)).not.toBeInTheDocument();
   });

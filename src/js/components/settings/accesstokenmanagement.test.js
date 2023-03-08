@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { act, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -68,14 +68,15 @@ describe('UserManagement Component', () => {
       />
     );
     const { rerender } = render(ui);
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
-    userEvent.click(screen.getByRole('button', { name: /generate a token/i }));
+    await user.click(screen.getByRole('button', { name: /generate a token/i }));
     const generateButton = screen.getByRole('button', { name: /create token/i });
     expect(generateButton).toBeDisabled();
-    userEvent.type(screen.getByPlaceholderText(/name/i), 'somename');
+    await user.type(screen.getByPlaceholderText(/name/i), 'somename');
     expect(generateButton).not.toBeDisabled();
     createMock.mockResolvedValue([Promise.resolve(), 'aNewToken']);
-    act(() => userEvent.click(generateButton));
+    await user.click(generateButton);
     expect(createMock).toHaveBeenCalledWith({ expiresIn: 31536000, name: 'somename' });
     await waitFor(() => rerender(ui));
     expect(screen.queryByText('aNewToken')).toBeInTheDocument();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { act, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -30,12 +30,13 @@ describe('Password Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const submitCheck = jest.fn().mockResolvedValue(true);
     const ui = <PasswordComponent passwordResetStart={submitCheck} />;
     const { rerender } = render(ui);
 
-    userEvent.type(await screen.getByLabelText(/your email/i), 'something@example.com');
-    act(() => userEvent.click(screen.getByRole('button', { name: /Send/i })));
+    await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
+    await user.click(screen.getByRole('button', { name: /Send/i }));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Thanks - we're sending you an email now!/i)).toBeInTheDocument();
   });

@@ -8,7 +8,7 @@ import { withStyles } from 'tss-react/mui';
 
 import { bindActionCreators } from 'redux';
 
-import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
+import { getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
@@ -26,19 +26,10 @@ export const CompletionButton = withStyles(Button, ({ palette }) => ({
   }
 }));
 
-export const DeploymentCompleteTip = ({
-  advanceOnboarding,
-  anchor,
-  getDeviceById,
-  getDevicesByStatus,
-  setShowCreateArtifactDialog,
-  setOnboardingComplete,
-  url
-}) => {
+export const DeploymentCompleteTip = ({ advanceOnboarding, anchor, getDevicesByStatus, setShowCreateArtifactDialog, setOnboardingComplete, url }) => {
   const navigate = useNavigate();
-
   useEffect(() => {
-    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted).then(tasks => tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById));
+    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     Tracking.event({ category: 'onboarding', action: onboardingSteps.DEPLOYMENTS_PAST_COMPLETED });
   }, []);
 
@@ -78,7 +69,7 @@ export const DeploymentCompleteTip = ({
 };
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ advanceOnboarding, getDeviceById, getDevicesByStatus, setOnboardingComplete, setShowCreateArtifactDialog }, dispatch);
+  return bindActionCreators({ advanceOnboarding, getDevicesByStatus, setOnboardingComplete, setShowCreateArtifactDialog }, dispatch);
 };
 
 const mapStateToProps = (state, ownProps) => {

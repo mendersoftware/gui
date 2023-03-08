@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { prettyDOM } from '@testing-library/dom';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -77,6 +77,7 @@ describe('DeviceList Component', () => {
   });
 
   it('works as expected', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const onExpandClickMock = jest.fn();
     const onResizeColumns = jest.fn();
     const onPageChange = jest.fn();
@@ -106,12 +107,12 @@ describe('DeviceList Component', () => {
       </Provider>
     );
     render(ui);
-    act(() => userEvent.click(screen.getByText(devices[0].id)));
+    await user.click(screen.getByText(devices[0].id));
     expect(onExpandClickMock).toHaveBeenCalled();
 
-    act(() => userEvent.click(screen.getAllByRole('checkbox')[0]));
+    await user.click(screen.getAllByRole('checkbox')[0]);
     expect(onSelect).toHaveBeenCalledWith([0, 1]);
-    act(() => userEvent.click(screen.getAllByRole('checkbox')[2]));
+    await user.click(screen.getAllByRole('checkbox')[2]);
     expect(onSelect).toHaveBeenCalledWith([1]);
   }, 30000);
 });

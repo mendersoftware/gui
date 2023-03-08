@@ -39,20 +39,21 @@ describe('Login Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const submitCheck = jest.fn().mockResolvedValue();
     const ui = <LoginComponent isHosted={true} currentUser={{}} loginUser={submitCheck} logoutUser={jest.fn} setSnackbar={jest.fn} />;
     const { rerender } = render(ui);
 
-    userEvent.type(screen.queryByLabelText(/your email/i), 'something@example.com');
-    userEvent.type(screen.queryByLabelText(/password/i), 'mysecretpassword!123');
+    await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
+    await user.type(screen.queryByLabelText(/password/i), 'mysecretpassword!123');
     expect(screen.queryByLabelText(/Two Factor Authentication Code/i)).not.toBeInTheDocument();
     submitCheck.mockRejectedValueOnce({ error: '2fa needed' });
-    userEvent.click(screen.getByRole('button', { name: /Log in/i }));
+    await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(submitCheck).toHaveBeenCalled();
     await waitFor(() => rerender(ui));
     expect(screen.queryByLabelText(/Two Factor Authentication Code/i)).toBeInTheDocument();
-    userEvent.type(screen.queryByLabelText(/Two Factor Authentication Code/i), '123456');
-    userEvent.click(screen.getByRole('button', { name: /Log in/i }));
+    await user.type(screen.queryByLabelText(/Two Factor Authentication Code/i), '123456');
+    await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(submitCheck).toHaveBeenCalled();
   });
 });

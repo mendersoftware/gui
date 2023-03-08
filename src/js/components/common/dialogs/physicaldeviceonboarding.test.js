@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
+import { waitFor } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -74,5 +75,6 @@ describe('PhysicalDeviceOnboarding Component', () => {
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await waitFor(() => expect(store.getActions().some(({ type, value }) => type === 'SET_ONBOARDING_APPROACH' && value === 'physical')).toBeTruthy());
   });
 });

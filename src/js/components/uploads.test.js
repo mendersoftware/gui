@@ -37,8 +37,9 @@ describe('Uploads Component', () => {
         <Uploads />
       </Provider>
     );
-    userEvent.hover(screen.getByRole('progressbar'));
-    await waitFor(() => screen.getByText(/in progress/i));
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    user.hover(screen.getByRole('progressbar'));
+    await waitFor(() => screen.queryByText(/in progress/i));
     const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

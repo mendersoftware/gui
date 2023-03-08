@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../../tests/setupTests';
@@ -34,8 +35,9 @@ describe('Deployments Component', () => {
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
     expect(getDeployments).toHaveBeenCalled();
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
-    await selectMaterialUiSelectOption(screen.getByText(/any/i), /in progress/i);
+    await selectMaterialUiSelectOption(screen.getByText(/any/i), /in progress/i, user);
     expect(getDeployments).toHaveBeenLastCalledWith('a1', { filterSelection: ['downloading', 'installing', 'rebooting'], page: 1, perPage: 10 });
   });
 });

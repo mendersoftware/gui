@@ -594,9 +594,10 @@ export const saveUserSettings =
         }
       };
       const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};
-      return GeneralApi.post(`${useradmApiUrl}/settings/me`, updatedSettings, { headers }).then(() =>
-        Promise.resolve(dispatch({ type: UserConstants.SET_USER_SETTINGS, settings: updatedSettings }))
-      );
+      return Promise.all([
+        Promise.resolve(dispatch({ type: UserConstants.SET_USER_SETTINGS, settings: updatedSettings })),
+        GeneralApi.post(`${useradmApiUrl}/settings/me`, updatedSettings, { headers })
+      ]).catch(() => dispatch({ type: UserConstants.SET_USER_SETTINGS, settings: userSettings }));
     });
   };
 

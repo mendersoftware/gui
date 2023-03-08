@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import { IconButton, TablePagination } from '@mui/material';
@@ -24,13 +24,6 @@ const MaybeWrapper = ({ children, disabled }) =>
 
 export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerPage = defaultPerPage, showCountInfo = true }) => {
   const [pageNo, setPageNo] = useState(page + paginationIndex);
-  const timer = useRef(null);
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timer.current);
-    };
-  }, []);
 
   useEffect(() => {
     setPageNo(page + paginationIndex);
