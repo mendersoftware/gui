@@ -75,7 +75,7 @@ test.describe('Test setup', () => {
       ]);
       const newPage = await context.newPage();
       await newPage.goto(baseUrl);
-      await newPage.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
+      await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
       await newPage.waitForSelector('text=/License information/i');
       await context.storageState({ path: 'storage.json' });
     });

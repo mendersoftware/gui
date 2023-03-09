@@ -42,7 +42,7 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     ]);
     const page = await context.newPage();
     await page.goto(`${baseUrl}ui/`);
-    await page.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
+    await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
     await page.waitForSelector('text=License information');
     await use(page);
     await context.storageState({ path: 'storage.json' });
