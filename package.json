@@ -94,7 +94,7 @@
     "jest-canvas-mock": "^2.4.0",
     "jest-environment-jsdom": "^29.5.0",
     "jest-junit": "^15.0.0",
-    "jest-resolve": "~29.4.3",
+    "jest-resolve": "~29.5.0",
     "jest-watch-typeahead": "2.2.2",
     "jsdom-worker": "^0.3.0",
     "less": "^4.1.3",
