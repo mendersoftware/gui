@@ -28,7 +28,7 @@ import { getCurrentUser, getTenantCapabilities } from '../../selectors';
 import CopyCode from '../common/copy-code';
 import Time, { RelativeTime } from '../common/time';
 
-const useStyles = makeStyles()(() => ({
+const useStyles = makeStyles()(theme => ({
   accessTokens: {
     minWidth: 900
   },
@@ -37,6 +37,9 @@ const useStyles = makeStyles()(() => ({
   },
   formEntries: {
     minWidth: 270
+  },
+  warning: {
+    color: theme.palette.warning.main
   }
 }));
 
@@ -66,22 +69,36 @@ const columnData = [
 
 const A_DAY = 24 * 60 * 60;
 const expirationTimes = {
-  '7 days': 7 * A_DAY,
-  '30 days': 30 * A_DAY,
-  '90 days': 90 * A_DAY,
-  'a year': 365 * A_DAY
+  'never': {
+    value: 0,
+    hint: (
+      <>
+        The token will never expire.
+        <br />
+        WARNING: Never-expiring tokens are against security best practices. We highly suggest setting a token expiration date and rotating the secret at least
+        yearly.
+      </>
+    )
+  },
+  '7 days': { value: 7 * A_DAY },
+  '30 days': { value: 30 * A_DAY },
+  '90 days': { value: 90 * A_DAY },
+  'a year': { value: 365 * A_DAY }
 };
 
 export const AccessTokenCreationDialog = ({ onCancel, generateToken, isEnterprise, rolesById, setToken, token, userRoles }) => {
   const [name, setName] = useState('');
-  const [expirationTime, setExpirationTime] = useState(expirationTimes['a year']);
+  const [expirationTime, setExpirationTime] = useState(expirationTimes['a year'].value);
   const [expirationDate, setExpirationDate] = useState(new Date());
+  const [hint, setHint] = useState('');
   const { classes } = useStyles();
 
   useEffect(() => {
     const date = new Date();
     date.setSeconds(date.getSeconds() + expirationTime);
     setExpirationDate(date);
+    const hint = Object.values(expirationTimes).find(({ value }) => value === expirationTime)?.hint ?? '';
+    setHint(hint);
   }, [expirationTime]);
 
   const onGenerateClick = useCallback(
@@ -110,15 +127,19 @@ export const AccessTokenCreationDialog = ({ onCancel, generateToken, isEnterpris
           <FormControl className={classes.formEntries}>
             <InputLabel>Expiration</InputLabel>
             <Select disabled={!!token} onChange={onChangeExpirationTime} value={expirationTime}>
-              {Object.entries(expirationTimes).map(([title, value]) => (
-                <MenuItem key={value} value={value}>
+              {Object.entries(expirationTimes).map(([title, item]) => (
+                <MenuItem key={item.value} value={item.value}>
                   {title}
                 </MenuItem>
               ))}
             </Select>
-            <FormHelperText title={expirationDate.toISOString().slice(0, 10)}>
-              expires on <Time format="YYYY-MM-DD" value={expirationDate} />
-            </FormHelperText>
+            {hint ? (
+              <FormHelperText className={classes.warning}>{hint}</FormHelperText>
+            ) : (
+              <FormHelperText title={expirationDate.toISOString().slice(0, 10)}>
+                expires on <Time format="YYYY-MM-DD" value={expirationDate} />
+              </FormHelperText>
+            )}
           </FormControl>
         </div>
         {token && (
