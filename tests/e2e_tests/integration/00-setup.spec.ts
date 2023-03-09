@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
-import { baseUrlToDomain, login, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
+import { baseUrlToDomain, login, prepareCookies, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors } from '../utils/constants';
 
 test.describe('Test setup', () => {
@@ -68,11 +68,7 @@ test.describe('Test setup', () => {
       // the following sets the UI up for easier navigation by disabling onboarding
       const domain = baseUrlToDomain(baseUrl);
       const { token, userId } = await login(username, password, baseUrl);
-      await context.addCookies([
-        { name: 'JWT', value: token, path: '/', domain },
-        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
-        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
-      ]);
+      context = await prepareCookies(context, domain, userId, token);
       const newPage = await context.newPage();
       await newPage.goto(baseUrl);
       await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
@@ -87,11 +83,7 @@ test.describe('Test setup', () => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       const { token: JWT, userId } = await login(username, password, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
-      await context.addCookies([
-        { name: 'JWT', value: JWT, path: '/', domain },
-        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
-        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
-      ]);
+      context = await prepareCookies(context, domain, userId, JWT);
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui/settings`);
       const isVisible = await page.isVisible(`text=/Change email/i`);

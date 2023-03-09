@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { BrowserContext, Page } from '@playwright/test';
 import axios from 'axios';
 import { spawn } from 'child_process';
 import * as fs from 'fs';
@@ -21,6 +21,15 @@ export const getPeristentLoginInfo = () => {
   }
   fs.writeFileSync('loginInfo.json', JSON.stringify(loginInfo));
   return loginInfo;
+};
+
+export const prepareCookies = async (context: BrowserContext, domain: string, userId: string, token: string) => {
+  await context.addCookies([
+    { name: 'JWT', value: token, path: '/', domain },
+    { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
+    { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
+  ]);
+  return context;
 };
 
 const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io', token = '') => {
