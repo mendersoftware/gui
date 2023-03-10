@@ -15,6 +15,25 @@ exports[`AddOnSelection component renders correctly 1`] = `
   background-color: #f7f7f7;
 }
 
+.emotion-0.addon {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-column-gap: 10px;
+  column-gap: 10px;
+  display: grid;
+  grid-template-columns: max-content minmax(150px, min-content) 1fr max-content;
+  height: initial;
+  margin-top: 10px;
+  min-width: 550px;
+  width: initial;
+}
+
+.emotion-0.addon.upgrade {
+  grid-template-columns: max-content minmax(120px, min-content) minmax(120px, min-content) 1fr max-content;
+}
+
 .emotion-1 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -157,8 +176,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
       Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We'll adjust your subscription and confirm it with you.
     </p>
     <div
-      class="planPanel emotion-0 flexbox center-aligned "
-      style="margin-top: 10px;"
+      class="planPanel emotion-0 addon upgrade "
     >
       <span
         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-1"
@@ -185,13 +203,11 @@ exports[`AddOnSelection component renders correctly 1`] = `
       </span>
       <div
         class="bold"
-        style="min-width: 120px;"
       >
         Configure
       </div>
       <div
         class="flexbox column"
-        style="min-width: 120px;"
       >
         <div
           class="link-color bold emotion-5"
@@ -217,8 +233,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class="planPanel emotion-0 flexbox center-aligned "
-      style="margin-top: 10px;"
+      class="planPanel emotion-0 addon upgrade "
     >
       <span
         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-1"
@@ -245,13 +260,11 @@ exports[`AddOnSelection component renders correctly 1`] = `
       </span>
       <div
         class="bold"
-        style="min-width: 120px;"
       >
         Troubleshoot
       </div>
       <div
         class="flexbox column"
-        style="min-width: 120px;"
       >
         <div
           class="link-color bold emotion-5"

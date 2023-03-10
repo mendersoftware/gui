@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { Checkbox } from '@mui/material';
 
@@ -20,7 +20,19 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
   };
 
   const isUpgrade = Object.keys(PLANS).indexOf(updatedPlan) < Object.keys(PLANS).length - 1;
-  const noteStyle = { minWidth: isUpgrade ? 120 : 150 };
+  const relevantAddons = useMemo(
+    () =>
+      Object.entries(ADDONS).reduce((accu, [addOnName, addOn]) => {
+        if (!addOn.needs.every(need => features[need])) {
+          return accu;
+        }
+        const isEnabled = addons.some(orgAddOn => orgAddOn.enabled && addOnName === orgAddOn.name);
+        accu.push({ ...addOn, name: addOnName, isEnabled });
+        return accu;
+      }, []),
+    [JSON.stringify(addons), JSON.stringify(features)]
+  );
+
   return (
     <>
       <h3 className="margin-top-large">Get more features with add-ons</h3>
@@ -30,36 +42,26 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
           Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We&apos;ll adjust
           your subscription and confirm it with you.
         </p>
-        {Object.entries(ADDONS).reduce((accu, [addOnName, addOn]) => {
-          if (!addOn.needs.every(need => features[need])) {
-            return accu;
-          }
-          const isEnabled = addons.some(orgAddOn => orgAddOn.enabled && addOnName === orgAddOn.name);
-          accu.push(
-            <div
-              key={addOnName}
-              className={`planPanel ${classes.planPanel} flexbox center-aligned ${isEnabled ? 'active' : ''}`}
-              style={{ height: 'initial', marginTop: 10, width: 'initial' }}
-              onClick={e => onAddOnClick(e, addOnName, !isEnabled)}
-            >
-              <Checkbox checked={isEnabled} />
-              <div className="bold" style={noteStyle}>
-                {addOn.title}
+        {relevantAddons.map(addOn => (
+          <div
+            key={addOn.name}
+            className={`planPanel ${classes.planPanel} addon ${isUpgrade ? 'upgrade' : ''} ${addOn.isEnabled ? 'active' : ''}`}
+            onClick={e => onAddOnClick(e, addOn.name, !addOn.isEnabled)}
+          >
+            <Checkbox checked={addOn.isEnabled} />
+            <div className="bold">{addOn.title}</div>
+            {isUpgrade && (
+              <div className="flexbox column">
+                <div className={`link-color bold ${classes.price}`}>{addOn[updatedPlan].price}</div>
+                <div>{addOn[updatedPlan].deviceCount}</div>
               </div>
-              {isUpgrade && (
-                <div className="flexbox column" style={noteStyle}>
-                  <div className={`link-color bold ${classes.price}`}>{addOn[updatedPlan].price}</div>
-                  <div>{addOn[updatedPlan].deviceCount}</div>
-                </div>
-              )}
-              <InfoText variant="dense">{addOn.description}</InfoText>
-              <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener noreferrer">
-                Learn more
-              </a>
-            </div>
-          );
-          return accu;
-        }, [])}
+            )}
+            <InfoText variant="dense">{addOn.description}</InfoText>
+            <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener noreferrer">
+              Learn more
+            </a>
+          </div>
+        ))}
       </div>
     </>
   );
