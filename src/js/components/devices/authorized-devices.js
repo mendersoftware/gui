@@ -67,6 +67,9 @@ const useStyles = makeStyles()(theme => ({
     [`.filter-list > .MuiChip-root`]: {
       marginBottom: theme.spacing()
     },
+    [`.filter-list > .MuiChip-root > .MuiChip-label`]: {
+      whiteSpace: 'normal'
+    },
     ['&.filter-header']: {
       overflow: 'hidden',
       zIndex: 2
