@@ -35,11 +35,12 @@ describe('TimerangePicker Component', () => {
   });
 
   it('works as expected', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const changeListener = jest.fn();
     render(<TimerangePicker onChange={changeListener} />);
-    userEvent.click(screen.getByText(/last 7 days/i));
+    await user.click(screen.getByText(/last 7 days/i));
     expect(changeListener).toHaveBeenCalledWith('2019-01-07T00:00:00.000Z', '2019-01-13T23:59:59.999Z');
-    userEvent.click(screen.getByText(/yesterday/i));
+    await user.click(screen.getByText(/yesterday/i));
     expect(changeListener).toHaveBeenCalledWith('2019-01-12T00:00:00.000Z', '2019-01-12T23:59:59.999Z');
   });
 });

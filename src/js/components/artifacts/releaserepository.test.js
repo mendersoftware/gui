@@ -29,7 +29,7 @@ describe('ReleaseRepository Component', () => {
         <ReleaseRepository artifacts={[]} />
       </Provider>
     );
-    act(() => jest.advanceTimersByTime(1000));
+    await act(async () => jest.advanceTimersByTime(1000));
     const view = baseElement.lastChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

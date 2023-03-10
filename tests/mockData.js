@@ -433,6 +433,7 @@ export const defaultState = {
     },
     intentId: 'testIntent',
     organization: {
+      addons: [],
       id: 1,
       name: 'test',
       plan: 'os',

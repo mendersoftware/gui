@@ -141,12 +141,12 @@ Devices that are in the middle of the deployment at the time of abort will finis
             >
               <a
                 class="flexbox centered"
-                href="/releases/a1"
+                href="/releases/r1"
                 rel="noopener noreferrer"
                 style="font-weight: 500;"
                 target="_blank"
               >
-                a1
+                r1
                 <svg
                   aria-hidden="true"
                   class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small css-1cwsc1r-MuiSvgIcon-root"

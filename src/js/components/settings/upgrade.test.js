@@ -50,7 +50,7 @@ describe('Upgrade Component', () => {
     jest.mock('@stripe/stripe-js', () => ({
       loadStripe: () => ({ createPaymentMethod: jest.fn() })
     }));
-    const stripe = loadStripe();
+    const stripe = loadStripe('123');
     const { baseElement } = render(
       <Provider store={store}>
         <Elements stripe={stripe}>

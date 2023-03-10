@@ -30,25 +30,27 @@ describe('SharedSnackbar Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const actionCheck = jest.fn();
     const copyCheck = jest.fn(() => true);
     document.execCommand = copyCheck;
 
     render(<SharedSnackbar snackbar={{ maxWidth: 200, open: true, message: 'test' }} setSnackbar={actionCheck} />);
     expect(screen.queryByText(/test/i)).toBeInTheDocument();
-    userEvent.click(screen.getByText(/test/i));
+    await user.click(screen.getByText(/test/i));
     expect(actionCheck).toHaveBeenCalled();
     expect(copyCheck).toHaveBeenCalled();
   });
 
   it('works as intended with a click listener', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const actionCheck = jest.fn();
     const copyCheck = jest.fn(() => true);
     const onClickCheck = jest.fn();
     document.execCommand = copyCheck;
 
     render(<SharedSnackbar snackbar={{ maxWidth: 200, open: true, message: 'test', onClick: onClickCheck }} setSnackbar={actionCheck} />);
-    userEvent.click(screen.getByText(/test/i));
+    await user.click(screen.getByText(/test/i));
     expect(actionCheck).not.toHaveBeenCalled();
     expect(copyCheck).not.toHaveBeenCalled();
     expect(onClickCheck).toHaveBeenCalled();

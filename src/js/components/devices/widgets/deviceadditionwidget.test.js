@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { undefineds } from '../../../../../tests/mockData';
@@ -16,9 +16,10 @@ describe('DeviceAdditionWidget Component', () => {
   });
 
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const clickMock = jest.fn();
     render(<DeviceAdditionWidget docsVersion="" features={{}} onConnectClick={clickMock} tenantCapabilities={{}} />);
-    act(() => userEvent.click(screen.getByRole('button', { name: /connect a new device/i })));
+    await user.click(screen.getByRole('button', { name: /connect a new device/i }));
     expect(clickMock).toHaveBeenCalled();
   });
 });

@@ -15,7 +15,7 @@ describe('ReleaseRepositoryItem Component', () => {
     let store = mockStore({ ...defaultState });
     const { baseElement } = render(
       <Provider store={store}>
-        <ReleaseRepositoryItem artifact={{ device_types_compatible: ['test-type'], updates: [], modified: '2019-01-01' }} onExpanded={() => {}} />
+        <ReleaseRepositoryItem artifact={{ device_types_compatible: ['test-type'], updates: [], modified: '2019-01-01' }} onExpanded={jest.fn} />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

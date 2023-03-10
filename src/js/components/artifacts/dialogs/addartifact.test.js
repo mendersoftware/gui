@@ -30,6 +30,7 @@ describe('AddArtifact Component', () => {
   });
 
   it('allows uploading a mender artifact', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const uploadMock = jest.fn(() => Promise.resolve());
     const menderFile = new File(['testContent'], 'test.mender');
     const ui = (
@@ -50,18 +51,19 @@ describe('AddArtifact Component', () => {
     expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    userEvent.upload(uploadInput, menderFile);
+    await user.upload(uploadInput, menderFile);
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.getByRole('button', { name: /upload/i })).toBeInTheDocument());
     expect(screen.getByText('test.mender')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only
     expect(screen.getByText('11.00 Bytes')).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button', { name: /upload/i }));
+    await user.click(screen.getByRole('button', { name: /upload/i }));
     expect(uploadMock).toHaveBeenCalled();
   });
 
   it('allows creating a mender artifact', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const uploadMock = jest.fn(() => Promise.resolve());
     const menderFile = new File(['testContent plain'], 'testFile.txt');
     const ui = (
@@ -82,7 +84,7 @@ describe('AddArtifact Component', () => {
     expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    userEvent.upload(uploadInput, menderFile);
+    await user.upload(uploadInput, menderFile);
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => rerender(ui));
     const placeholderText = 'Example: /opt/installed-by-single-file';
@@ -90,19 +92,18 @@ describe('AddArtifact Component', () => {
     expect(screen.getByText('testFile.txt')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only
     expect(screen.getByText('17.00 Bytes')).toBeInTheDocument();
-    userEvent.click(screen.getByPlaceholderText(placeholderText));
-    userEvent.type(screen.getByPlaceholderText(placeholderText), 'some/path');
+    await user.click(screen.getByPlaceholderText(placeholderText));
+    await user.type(screen.getByPlaceholderText(placeholderText), 'some/path');
     await waitFor(() => expect(screen.getByText(/Destination has to be an absolute path/i)).toBeInTheDocument());
-    userEvent.click(screen.getByPlaceholderText(placeholderText));
-    userEvent.clear(screen.getByPlaceholderText(placeholderText));
-    userEvent.type(screen.getByPlaceholderText(placeholderText), '/some/path');
+    await user.click(screen.getByPlaceholderText(placeholderText));
+    await user.clear(screen.getByPlaceholderText(placeholderText));
+    await user.type(screen.getByPlaceholderText(placeholderText), '/some/path');
     await waitFor(() => expect(screen.getByRole('combobox', { name: /device types compatible/i })).toBeInTheDocument());
-    userEvent.type(screen.getByRole('combobox', { name: /device types compatible/i }), 'something');
-    userEvent.type(screen.getByRole('textbox', { name: /release name/i }), 'some release');
-    // await waitFor(() => rerender(ui));
-    userEvent.click(screen.getByRole('button', { name: /next/i }));
+    await user.type(screen.getByRole('combobox', { name: /device types compatible/i }), 'something');
+    await user.type(screen.getByLabelText(/release name/i), 'some release');
+    await user.click(screen.getByRole('button', { name: /next/i }));
     await waitFor(() => rerender(ui));
-    userEvent.click(screen.getByRole('button', { name: /upload/i }));
+    await user.click(screen.getByRole('button', { name: /upload/i }));
     expect(uploadMock).toHaveBeenCalled();
   });
 });

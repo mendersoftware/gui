@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { undefineds } from '../../../../../tests/mockData';
@@ -18,39 +18,50 @@ describe('KeyValueEditor Component', () => {
   });
   const fabSelector = '.MuiFab-root';
   it('works as intended', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const submitMock = jest.fn();
 
     const ui = <KeyValueEditor onInputChange={submitMock} />;
-    render(ui);
-    userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
-    userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    const { rerender } = render(ui);
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector(fabSelector)).not.toBeDisabled();
-    userEvent.click(document.querySelector(fabSelector));
+    await user.click(document.querySelector(fabSelector));
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValue' });
-    userEvent.type(screen.getByDisplayValue('testValue'), 's');
+    await waitFor(() => rerender(ui));
+
+    act(() => {
+      jest.runAllTimers();
+      jest.runAllTicks();
+    });
+    await user.type(screen.getByDisplayValue('testValue'), 's');
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValues' });
   });
 
   it('warns of duplicate keys', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = <KeyValueEditor onInputChange={jest.fn} />;
-    render(ui);
-    userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
-    userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    userEvent.click(document.querySelector(fabSelector));
-    userEvent.type(screen.getAllByPlaceholderText(/key/i)[1], 'testKey');
-    userEvent.type(screen.getAllByPlaceholderText(/value/i)[1], 'testValue2');
+    const { rerender } = render(ui);
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    await user.click(document.querySelector(fabSelector));
+    await waitFor(() => rerender(ui));
+    await user.type(screen.getAllByPlaceholderText(/key/i)[1], 'testKey');
+    await user.type(screen.getAllByPlaceholderText(/value/i)[1], 'testValue2');
     expect(screen.getByText(/Duplicate keys exist/i)).toBeInTheDocument();
   });
 
   it('forwards a warning', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = <KeyValueEditor errortext="I should be rendered" onInputChange={jest.fn} />;
     render(ui);
-    userEvent.type(screen.getByPlaceholderText(/key/i), 'testKey');
-    userEvent.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(screen.getByText(/I should be rendered/i)).toBeInTheDocument();
   });
 
   it('displays tooltips when keys match', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const TestComponent = () => <div>testthing</div>;
     const helptipsMap = {
       timezone: {
@@ -60,9 +71,9 @@ describe('KeyValueEditor Component', () => {
 
     const ui = <KeyValueEditor inputHelpTipsMap={helptipsMap} onInputChange={jest.fn} showHelptips={true} />;
     render(ui);
-    userEvent.type(screen.getByPlaceholderText(/key/i), 'timezon');
+    await user.type(screen.getByPlaceholderText(/key/i), 'timezon');
     expect(screen.queryByText(/testthing/i)).not.toBeInTheDocument();
-    userEvent.type(screen.getByPlaceholderText(/key/i), 'e');
+    await user.type(screen.getByPlaceholderText(/key/i), 'e');
     expect(screen.getByText(/testthing/i)).toBeInTheDocument();
   });
 });

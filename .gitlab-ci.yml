@@ -1,4 +1,4 @@
-image: node:18-alpine
+image: node:19-alpine
 
 stages:
   - pre-test
@@ -91,7 +91,6 @@ test:acceptance:enterprise:
 
 test:unit:
   stage: test
-  image: node:14-alpine
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []

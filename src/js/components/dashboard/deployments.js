@@ -74,11 +74,10 @@ export const Deployments = ({
           </h4>
           {deploymentsCount ? (
             <>
-              {Object.keys(stateMap).reduce((accu, key) => {
+              {Object.entries(stateMap).reduce((accu, [key, Component]) => {
                 if (!deployments[key]) {
                   return accu;
                 }
-                const Component = stateMap[key];
                 accu.push(
                   <React.Fragment key={key}>
                     <h5 className="margin-bottom-none">{deploymentDisplayStates[key]}</h5>

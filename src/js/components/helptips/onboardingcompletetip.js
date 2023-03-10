@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
@@ -16,12 +16,18 @@ import { MenderTooltipClickable } from '../common/mendertooltip';
 import { CompletionButton } from './deploymentcompletetip';
 
 export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getDevicesByStatus, setOnboardingComplete, url }) => {
+  const timer = useRef();
   useEffect(() => {
     getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
-      .then(tasks => tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById))
-      .finally(() => setTimeout(() => setOnboardingComplete(true), 120000));
+      .then(tasks => {
+        return Promise.all(tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById));
+      })
+      .finally(() => {
+        timer.current = setTimeout(() => setOnboardingComplete(true), 120000);
+      });
     return () => {
       setOnboardingComplete(true);
+      clearTimeout(timer.current);
     };
   }, []);
 
