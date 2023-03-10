@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
-import { baseUrlToDomain, generateOtp, login, startClient, tenantTokenRetrieval } from '../utils/commands';
+import { baseUrlToDomain, generateOtp, login, prepareCookies, startClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors } from '../utils/constants';
 
 test.describe('Settings', () => {
@@ -97,11 +97,7 @@ test.describe('Settings', () => {
       test.skip(environment !== 'staging');
       const { token, userId } = await login(username, password, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
-      await context.addCookies([
-        { name: 'JWT', value: token, path: '/', domain },
-        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
-        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
-      ]);
+      context = await prepareCookies(context, domain, userId, token);
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui`);
 
@@ -232,11 +228,7 @@ test.describe('Settings', () => {
       }
       const { token, userId } = await login(username, replacementPassword, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
-      await context.addCookies([
-        { name: 'JWT', value: token, path: '/', domain },
-        { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
-        { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
-      ]);
+      context = await prepareCookies(context, domain, userId, token);
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui`);
       await page.waitForSelector('text=/License information/i');

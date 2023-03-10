@@ -1,7 +1,7 @@
 import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
 
-import { baseUrlToDomain, getPeristentLoginInfo, login } from '../utils/commands';
+import { baseUrlToDomain, getPeristentLoginInfo, login, prepareCookies } from '../utils/commands';
 
 type TestFixtures = {
   baseUrl: string;
@@ -35,14 +35,10 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     }
     const domain = baseUrlToDomain(baseUrl);
     const { token, userId } = await login(username, password, baseUrl);
-    await context.addCookies([
-      { name: 'JWT', value: token, path: '/', domain },
-      { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
-      { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
-    ]);
+    context = await prepareCookies(context, domain, userId, token);
     const page = await context.newPage();
     await page.goto(`${baseUrl}ui/`);
-    await page.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
+    await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
     await page.waitForSelector('text=License information');
     await use(page);
     await context.storageState({ path: 'storage.json' });

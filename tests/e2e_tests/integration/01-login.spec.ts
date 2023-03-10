@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as https from 'https';
-import jwtDecode from 'jwt-decode';
 
 import test, { expect } from '../fixtures/fixtures';
 import { selectors } from '../utils/constants';
@@ -23,10 +22,7 @@ test.describe('Login', () => {
       await page.click(`:is(button:has-text('Log in'))`);
       // confirm we have logged in successfully
       await page.waitForSelector('text=License information');
-      const cookies = await context.cookies();
-      const token = cookies.find(cookie => cookie.name === 'JWT').value;
-      const userId = jwtDecode(token).sub;
-      await page.evaluate(({ userId }) => localStorage.setItem(`${userId}-onboarding`, JSON.stringify({ complete: true })), { userId });
+      await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
       await context.storageState({ path: 'storage.json' });
       // now we can log out
       await page.click('.header-dropdown', { force: true });
