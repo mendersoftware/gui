@@ -1,14 +1,15 @@
 import { isCancel } from 'axios';
 import { v4 as uuid } from 'uuid';
 
-import { commonErrorHandler, setSnackbar } from '../actions/appActions';
+import { commonErrorFallback, commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appConstants';
-import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
+import { DEVICE_LIST_DEFAULTS, emptyFilter } from '../constants/deviceConstants';
 import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
 import * as ReleaseConstants from '../constants/releaseConstants';
-import { customSort, deepCompare, duplicateFilter } from '../helpers';
+import { customSort, deepCompare, duplicateFilter, extractSoftwareItem } from '../helpers';
 import { deploymentsApiUrl } from './deploymentActions';
+import { convertDeviceListStateToFilters, reportingApiUrl } from './deviceActions';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -50,6 +51,41 @@ const findArtifactIndexInRelease = (releases, id) =>
   );
 
 /* Artifacts */
+export const getArtifactInstallCount = id => (dispatch, getState) => {
+  let { release, index } = findArtifactIndexInRelease(getState().releases.byId, id);
+  if (!release || index === -1) {
+    return;
+  }
+  const releaseArtifacts = [...release.Artifacts];
+  const artifact = releaseArtifacts[index];
+  const { key, name, version } = extractSoftwareItem(artifact.artifact_provides) ?? {};
+  const attribute = `${key}${name ? `.${name}` : ''}.version`;
+  const { filterTerms } = convertDeviceListStateToFilters({
+    filters: [{ ...emptyFilter, key: attribute, value: version, scope: 'inventory' }]
+  });
+  return GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+    page: 1,
+    per_page: 1,
+    filters: filterTerms,
+    attributes: [{ scope: 'identity', attribute: 'status' }]
+  })
+    .catch(err => commonErrorHandler(err, `Retrieving artifact installation count failed:`, dispatch, commonErrorFallback))
+    .then(({ headers }) => {
+      let { release, index } = findArtifactIndexInRelease(getState().releases.byId, id);
+      if (!release || index === -1) {
+        return;
+      }
+      const installCount = Number(headers[headerNames.total]);
+      const releaseArtifacts = [...release.Artifacts];
+      releaseArtifacts[index] = { ...releaseArtifacts[index], installCount };
+      release = {
+        ...release,
+        Artifacts: releaseArtifacts
+      };
+      return dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release });
+    });
+};
+
 export const getArtifactUrl = id => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/artifacts/${id}/download`).then(response => {
     const state = getState();

@@ -16,7 +16,7 @@ describe('Artifact Component', () => {
     let store = mockStore({ ...defaultState });
     const { baseElement } = render(
       <Provider store={store}>
-        <Artifact artifact={{ device_types_compatible: ['test-type'], updates: [], modified: '2019-01-01' }} columns={columns} onExpanded={jest.fn} />
+        <Artifact artifact={{ device_types_compatible: ['test-type'], updates: [], modified: '2019-01-01' }} columns={columns} />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

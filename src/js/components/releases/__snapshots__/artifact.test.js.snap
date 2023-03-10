@@ -356,11 +356,12 @@ exports[`Artifact Component renders correctly 1`] = `
   padding-right: 16px;
   padding-top: 11px;
   padding-bottom: 11px;
-  color: #404041;
+  color: rgba(10, 10, 11, 0.78);
   font-size: 13px;
   margin-right: 2vw;
-  min-midth: 200px;
+  min-width: 200px;
   padding: 0;
+  width: initial;
 }
 
 .emotion-11.Mui-focusVisible {
@@ -1082,15 +1083,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                 class="muted"
               >
                 <ul
-                  class="MuiList-root MuiList-padding emotion-10"
-                  style="display: grid; grid-template-columns: calc(600px + 2vw) 300px;"
+                  class="MuiList-root MuiList-padding list-horizontal-flex emotion-10"
                 >
                   <li
                     class="MuiListItem-root attributes MuiListItem-gutters MuiListItem-padding emotion-11"
                   >
                     <div
                       class="MuiListItemText-root MuiListItemText-multiline emotion-12"
-                      style="margin-bottom: -3px;"
+                      style="margin-bottom: -3px; min-width: 600px;"
                     >
                       <span
                         class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-13"

@@ -9,6 +9,7 @@ import * as ReleaseConstants from '../constants/releaseConstants';
 import {
   createArtifact,
   editArtifact,
+  getArtifactInstallCount,
   getArtifactUrl,
   getRelease,
   getReleases,
@@ -118,7 +119,23 @@ describe('release actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-
+  it('should retrieve the device installation base for an artifact', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      {
+        type: ReleaseConstants.RECEIVE_RELEASE,
+        release: {
+          ...defaultState.releases.byId.r1,
+          Artifacts: [{ ...defaultState.releases.byId.r1.Artifacts[0], installCount: 0 }]
+        }
+      }
+    ];
+    await store.dispatch(getArtifactInstallCount('art1')).then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions.length).toEqual(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+  });
   it('should retrieve the download url for an artifact', async () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
