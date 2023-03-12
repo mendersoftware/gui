@@ -58,7 +58,7 @@ const fileInformationContent = {
   singleFile: {
     title: 'Single File',
     icon: InsertDriveFileIcon,
-    info: `This will generate a single file application update Artifact, which requires some additional metadata to be entered.`
+    info: 'This will generate a single file application update Artifact, which requires some additional metadata to be entered.'
   }
 };
 

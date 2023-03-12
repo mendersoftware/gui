@@ -39,11 +39,11 @@ const CardSection = ({ isSignUp, onCancel, onComplete, onSubmit, setSnackbar }) 
         setSnackbar(`Error while confirming card: ${result.error.message}`);
         onCancel();
       } else {
-        setSnackbar(`Card confirmed. Updating your account...`);
+        setSnackbar('Card confirmed. Updating your account...');
         onComplete();
       }
     } catch (err) {
-      setSnackbar(`Something went wrong while submitting the form. Please contact support.`);
+      setSnackbar('Something went wrong while submitting the form. Please contact support.');
       onCancel();
     }
   };

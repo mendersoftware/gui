@@ -116,7 +116,7 @@ export const Header = ({
   const sessionId = useDebounce(getToken(), TIMEOUTS.debounceDefault);
 
   useEffect(() => {
-    if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
+    if (!((sessionId && user?.id && user.email.length) || gettingUser || loggingOut)) {
       updateUsername();
       return;
     }

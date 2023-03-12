@@ -168,7 +168,7 @@ export const Deployments = ({ device, getDeviceDeployments, resetDeviceDeploymen
                 classes="confirmation-overlay"
                 cancel={() => setIsChecking(false)}
                 action={onResetConfirm}
-                message={`This will reset the stored device deployment history for this device. Are you sure?`}
+                message="This will reset the stored device deployment history for this device. Are you sure?"
                 style={{ marginRight: 0 }}
               />
             )}

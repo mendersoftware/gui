@@ -157,7 +157,7 @@ export const DeviceConfiguration = ({
   }, [isUpdatingConfig, updateFailed]);
 
   useEffect(() => {
-    if (deployment.devices && deployment.devices[device.id]?.log) {
+    if (deployment.devices?.[device.id]?.log) {
       setUpdateLog(deployment.devices[device.id].log);
     }
   }, [deployment.devices]);
@@ -279,7 +279,7 @@ export const DeviceConfiguration = ({
     );
   }
   if (isUpdatingConfig || updateFailed) {
-    const hasLog = deployment.devices && deployment.devices[device.id]?.log;
+    const hasLog = deployment.devices?.[device.id]?.log;
     footer = (
       <>
         <div className="flexbox">

@@ -93,7 +93,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
       plan: 'enterprise',
       tos: formData.tos,
       location,
-      marketing: formData.marketing == 'true',
+      marketing: formData.marketing === 'true',
       'g-recaptcha-response': recaptcha || 'empty',
       ts: captchaTimestamp,
       campaign

@@ -5,7 +5,7 @@ import { render } from '../../../../tests/setupTests';
 import PlanSelection from './planselection';
 
 describe('PlanSelection component', () => {
-  it(`renders correctly`, () => {
+  it('renders correctly', () => {
     const { baseElement } = render(<PlanSelection isUpgrade offerValid offerTag="very now" trial updatedPlan="enterprise" />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();

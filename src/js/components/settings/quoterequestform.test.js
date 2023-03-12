@@ -5,7 +5,7 @@ import { render } from '../../../../tests/setupTests';
 import QuoteRequestForm from './quoterequestform';
 
 describe('QuoteRequestForm component', () => {
-  it(`renders correctly`, () => {
+  it('renders correctly', () => {
     const { baseElement } = render(<QuoteRequestForm addOns={[]} onSendMessage={jest.fn} updatedPlan="enterprise" notification="something notify" />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

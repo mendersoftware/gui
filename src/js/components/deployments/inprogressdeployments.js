@@ -88,7 +88,7 @@ export const Progress = props => {
 
   const setupDeploymentsRefresh = (refreshLength = currentRefreshDeploymentLength) => {
     let tasks = [refreshDeployments(DEPLOYMENT_STATES.inprogress), refreshDeployments(DEPLOYMENT_STATES.pending)];
-    if (!onboardingState.complete && !pastDeploymentsCount) {
+    if (!(onboardingState.complete || pastDeploymentsCount)) {
       // retrieve past deployments outside of the regular refresh cycle to not change the selection state for past deployments
       getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false);
     }

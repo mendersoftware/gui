@@ -16,7 +16,7 @@ export const validateGroupName = (encodedName, groups = [], selectedGroup, isCre
   let invalid = false;
   let errortext = null;
   const isModification = name.length && groups.some(group => decodeURIComponent(group) === name);
-  if (!name && !isModification) {
+  if (!(name || isModification)) {
     invalid = true;
   } else if (!validator.isWhitelisted(name, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
     invalid = true;

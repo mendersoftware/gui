@@ -17,7 +17,7 @@ export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
     if (!formData.hasOwnProperty('password_new')) {
       return;
     }
-    if (formData.password_new != formData.password_confirmation) {
+    if (formData.password_new !== formData.password_confirmation) {
       setSnackbar('The passwords you provided do not match, please check again.', TIMEOUTS.fiveSeconds, '');
       return;
     }

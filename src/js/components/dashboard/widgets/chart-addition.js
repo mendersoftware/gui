@@ -39,11 +39,11 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const GroupSelect = ({ groups, selection, setSelection }) => (
+const GroupSelect = ({ groups, selection: { group = '' }, setSelection }) => (
   <FormControl className="margin-top-none">
     <InputLabel id="group-select-label">Device group</InputLabel>
-    <Select labelId="group-select-label" value={selection.group || true} onChange={e => setSelection({ group: e.target.value })}>
-      <MenuItem value={true}>
+    <Select labelId="group-select-label" value={group} onChange={e => setSelection({ group: e.target.value })}>
+      <MenuItem value="">
         <em>All Devices</em>
       </MenuItem>
       {Object.keys(groups).map(group => (
@@ -157,7 +157,7 @@ export const WidgetAdditionWidget = ({ onAdditionClick, ...remainder }) => {
     <ChartEditWidget {...remainder} onSave={addCurrentSelection} onCancel={onCancelClick} />
   ) : (
     <div className="widget">
-      <div></div>
+      <div />
       <div className={`flexbox centered muted ${classes.additionButton}`} onClick={() => setAdding(true)}>
         <AddIcon />
         <span className={classes.additionButton}>add a widget</span>

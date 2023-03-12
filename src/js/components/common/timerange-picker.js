@@ -24,7 +24,7 @@ export const TimerangePicker = ({ classNames = '', endDate, onChange, startDate 
       let rangeStartDate = new Date();
       rangeStartDate.setDate(rangeStartDate.getDate() - (range.start || 0));
       const { start } = getISOStringBoundaries(rangeStartDate);
-      if (startDate == start && endDate == end) {
+      if (startDate === start && endDate === end) {
         return key;
       }
       return accu;

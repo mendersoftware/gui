@@ -5,7 +5,7 @@ import { render } from '../../../../tests/setupTests';
 import AddOnSelection from './addonselection';
 
 describe('AddOnSelection component', () => {
-  it(`renders correctly`, () => {
+  it('renders correctly', () => {
     const { baseElement } = render(
       <AddOnSelection addOns={[{ name: 'configure', enabled: true }]} features={{ hasDeviceConfig: true, hasDeviceConnect: true }} />
     );

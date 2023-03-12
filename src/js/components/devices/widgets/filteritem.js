@@ -95,8 +95,8 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
   }, [key, onRemove, operator, reset, scope, setReset, value]);
 
   const filterOptions = plan ? filterOptionsByPlan[plan] : DEVICE_FILTERING_OPTIONS;
-  const operatorHelpMessage = (DEVICE_FILTERING_OPTIONS[operator] || {}).help || '';
-  const showValue = typeof (filterOptions[operator] || {}).value === 'undefined';
+  const operatorHelpMessage = DEVICE_FILTERING_OPTIONS[operator]?.help || '';
+  const showValue = typeof filterOptions[operator]?.value === 'undefined';
   return (
     <>
       <div className="flexbox center-aligned relative">

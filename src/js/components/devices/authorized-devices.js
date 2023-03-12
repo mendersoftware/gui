@@ -64,10 +64,10 @@ const useStyles = makeStyles()(theme => ({
     borderRadius: 5,
     borderColor: theme.palette.grey[100],
     background: theme.palette.background.default,
-    [`.filter-list > .MuiChip-root`]: {
+    ['.filter-list > .MuiChip-root']: {
       marginBottom: theme.spacing()
     },
-    [`.filter-list > .MuiChip-root > .MuiChip-label`]: {
+    ['.filter-list > .MuiChip-root > .MuiChip-label']: {
       whiteSpace: 'normal'
     },
     ['&.filter-header']: {

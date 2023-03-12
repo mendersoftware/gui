@@ -189,7 +189,7 @@ export const DeploymentDeviceList = ({
   useEffect(() => {
     // only update those that have changed & lack data
     const lackingData = selectedDevices.reduce((accu, device) => {
-      if (!device.identity_data || !device.attributes || Object.keys(device.attributes).length === 0) {
+      if (!(device.identity_data && device.attributes) || Object.keys(device.attributes).length === 0) {
         accu.push(device.id);
       }
       return accu;

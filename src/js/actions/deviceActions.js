@@ -133,7 +133,7 @@ export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
         ])
       )
     )
-    .catch(err => commonErrorHandler(err, `Group could not be updated:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'Group could not be updated:', dispatch));
 
 export const removeStaticGroup = groupName => (dispatch, getState) => {
   return GeneralApi.delete(`${inventoryApiUrl}/groups/${groupName}`).then(() => {
@@ -158,8 +158,8 @@ const filterProcessors = {
   $gte: val => Number(val) || val,
   $lt: val => Number(val) || val,
   $lte: val => Number(val) || val,
-  $in: val => ('' + val).split(',').map(i => i.trim()),
-  $nin: val => ('' + val).split(',').map(i => i.trim()),
+  $in: val => `${val}`.split(',').map(i => i.trim()),
+  $nin: val => `${val}`.split(',').map(i => i.trim()),
   $exists: () => true,
   $nexists: () => false
 };
@@ -228,7 +228,7 @@ export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getSt
         ]);
       })
     )
-    .catch(err => commonErrorHandler(err, `Group could not be updated:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'Group could not be updated:', dispatch));
 
 export const updateDynamicGroup = (groupName, filterPredicates) => (dispatch, getState) => {
   const filterId = getState().devices.groups.byId[groupName].id;
@@ -240,11 +240,12 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
   const filterId = groups[groupName].id;
   const selectedGroup = getState().devices.groups.selectedGroup === groupName ? undefined : getState().devices.groups.selectedGroup;
   return Promise.all([GeneralApi.delete(`${inventoryApiUrlV2}/filters/${filterId}`), dispatch(selectGroup(selectedGroup))]).then(() => {
-    delete groups[groupName];
+    // eslint-disable-next-line no-unused-vars
+    const { [groupName]: toBeRemoved, ...remainder } = groups;
     return Promise.all([
       dispatch({
         type: DeviceConstants.REMOVE_DYNAMIC_GROUP,
-        groups
+        groups: remainder
       }),
       dispatch(setSnackbar('Group was removed successfully', 5000))
     ]);
@@ -258,7 +259,7 @@ const getGroupFilters = (group, groupsState, filters = []) => {
   const selectedGroup = groupsState.byId[groupName];
   const groupFilterLength = selectedGroup?.filters?.length || 0;
   const cleanedFilters = groupFilterLength
-    ? (filters.length ? filters : selectedGroup.filters).filter((item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index)
+    ? (filters.length ? filters : selectedGroup.filters).filter((item, index, array) => array.findIndex(filter => deepCompare(filter, item)) === index)
     : filters;
   return { cleanedFilters, groupName, selectedGroup, groupFilterLength };
 };
@@ -282,8 +283,8 @@ export const selectGroup =
     tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
     return Promise.all(tasks);
   };
-const getEarliestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA < dateB ? dateA : dateB);
-const getLatestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA >= dateB ? dateA : dateB);
+const getEarliestTs = (dateA = '', dateB = '') => (!(dateA && dateB) ? dateA || dateB : dateA < dateB ? dateA : dateB);
+const getLatestTs = (dateA = '', dateB = '') => (!(dateA && dateB) ? dateA || dateB : dateA >= dateB ? dateA : dateB);
 
 const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
@@ -321,7 +322,7 @@ export const getGroupDevices =
       }
       const { deviceAccu, total } = results[results.length - 1];
       const stateGroup = getState().devices.groups.byId[group];
-      if (!stateGroup && !total && !deviceAccu.ids.length) {
+      if (!(stateGroup || total || deviceAccu.ids.length)) {
         return Promise.resolve();
       }
       return Promise.resolve(
@@ -472,7 +473,7 @@ export const setDeviceListState =
     const { isLoading: currentLoading, deviceIds: currentDevices, selection: currentSelection, ...currentRequestState } = currentState;
     // eslint-disable-next-line no-unused-vars
     const { isLoading: nextLoading, deviceIds: nextDevices, selection: nextSelection, ...nextRequestState } = nextState;
-    if (!nextState.setOnly && !deepCompare(currentRequestState, nextRequestState)) {
+    if (!(nextState.setOnly || deepCompare(currentRequestState, nextRequestState))) {
       const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = nextState.sort ?? {};
       const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
       if (sortCol && sortingAlternatives[sortCol]) {
@@ -674,7 +675,7 @@ export const getDeviceAttributes = () => dispatch =>
 
 export const getReportingLimits = () => dispatch =>
   GeneralApi.get(`${reportingApiUrl}/devices/attributes`)
-    .catch(err => commonErrorHandler(err, `filterable attributes limit & usage could not be retrieved.`, dispatch, commonErrorFallback))
+    .catch(err => commonErrorHandler(err, 'filterable attributes limit & usage could not be retrieved.', dispatch, commonErrorFallback))
     .then(({ data }) => {
       const { attributes, count, limit } = data;
       const groupedAttributes = attributeReducer(attributes);
@@ -776,7 +777,7 @@ export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) =
       if (isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
       }
-      return commonErrorHandler(err, `Error uploading file to device.`, dispatch);
+      return commonErrorHandler(err, 'Error uploading file to device.', dispatch);
     })
     .finally(() => dispatch(cleanUpUpload(uploadId)));
 };

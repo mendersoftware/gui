@@ -93,10 +93,14 @@ export const PhaseSettings = ({ classNames, deploymentObject, disabled, numberDe
     newPhases.splice(index, 1);
 
     // remove batch size from new last phase, use remainder
-    delete newPhases[newPhases.length - 1].batch_size;
+    // eslint-disable-next-line no-unused-vars
+    const { batch_size, ...phase } = newPhases[newPhases.length - 1];
+    newPhases[newPhases.length - 1] = phase;
 
     if (newPhases.length === 1) {
-      delete newPhases[0].delay;
+      // eslint-disable-next-line no-unused-vars
+      const { delay, ...newPhase } = newPhases[0];
+      newPhases[0] = newPhase;
     }
     setDeploymentSettings({ phases: newPhases });
   };

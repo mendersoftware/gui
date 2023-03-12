@@ -25,10 +25,10 @@ const useStyles = makeStyles()(theme => ({
     },
     [`.${accordionSummaryClasses.content}`]: {
       cursor: 'pointer',
-      [`&>time, &>.trigger-type`]: {
+      ['&>time, &>.trigger-type']: {
         color: theme.palette.secondary.main
       },
-      [`&>:last-child`]: {
+      ['&>:last-child']: {
         paddingRight: 'initial'
       }
     },

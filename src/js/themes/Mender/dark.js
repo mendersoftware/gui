@@ -95,10 +95,10 @@ export const dark = {
         ...overrides.MuiListItem.styleOverrides,
         root: {
           ...overrides.MuiListItem.styleOverrides.root,
-          [`&.active`]: {
+          ['&.active']: {
             backgroundColor: palette.background.default
           },
-          [`&.leftNav.active`]: {
+          ['&.leftNav.active']: {
             borderTop: `1px solid ${palette.grey[50]}`,
             borderBottom: `1px solid ${palette.grey[50]}`
           }

@@ -68,7 +68,7 @@ export const startCardUpdate = () => dispatch =>
       });
       return Promise.resolve(res.data.secret);
     })
-    .catch(err => commonErrorHandler(err, `Updating the card failed:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'Updating the card failed:', dispatch));
 
 export const confirmCardUpdate = () => (dispatch, getState) =>
   Api.post(`${tenantadmApiUrlv2}/billing/card/${getState().organization.intentId}/confirm`)
@@ -81,7 +81,7 @@ export const confirmCardUpdate = () => (dispatch, getState) =>
         })
       ])
     )
-    .catch(err => commonErrorHandler(err, `Updating the card failed:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'Updating the card failed:', dispatch));
 
 export const getCurrentCard = () => dispatch =>
   Api.get(`${tenantadmApiUrlv2}/billing`).then(res => {
@@ -101,13 +101,13 @@ export const getCurrentCard = () => dispatch =>
 export const startUpgrade = tenantId => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/start`)
     .then(({ data }) => Promise.resolve(data.secret))
-    .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'There was an error upgrading your account:', dispatch));
 
 export const cancelUpgrade = tenantId => () => Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/cancel`);
 
 export const completeUpgrade = (tenantId, plan) => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/tenants/${tenantId}/upgrade/complete`, { plan })
-    .catch(err => commonErrorHandler(err, `There was an error upgrading your account:`, dispatch))
+    .catch(err => commonErrorHandler(err, 'There was an error upgrading your account:', dispatch))
     .then(() => Promise.resolve(dispatch(getUserOrganization())));
 
 const prepareAuditlogQuery = ({ startDate, endDate, user: userFilter, type, detail: detailFilter, sort = {} }) => {
@@ -134,7 +134,7 @@ export const getAuditLogs = selectionState => (dispatch, getState) => {
       total = Number(total || res.data.length);
       return Promise.resolve(dispatch({ type: RECEIVE_AUDIT_LOGS, events: res.data, total }));
     })
-    .catch(err => commonErrorHandler(err, `There was an error retrieving audit logs:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'There was an error retrieving audit logs:', dispatch));
 };
 
 export const getAuditLogsCsvLink = () => (dispatch, getState) =>

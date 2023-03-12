@@ -239,7 +239,7 @@ export const getOnboardingComponentFor = (id, componentProps, params = {}, previ
 
 export const applyOnboardingFallbacks = progress => {
   const step = onboardingSteps[progress];
-  if (step && step.fallbackStep) {
+  if (step?.fallbackStep) {
     return step.fallbackStep;
   }
   return progress;

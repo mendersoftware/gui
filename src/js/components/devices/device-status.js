@@ -14,13 +14,13 @@ const statusTypes = {
     severity: 'default',
     notification: {
       [DEVICE_STATES.accepted]: `This device has a new auth request. This can happen if the device's public key changes. Click on the row to see more details`,
-      [DEVICE_STATES.pending]: `This device has a new auth request. Inspect its identity details, then check it to accept it.`
+      [DEVICE_STATES.pending]: 'This device has a new auth request. Inspect its identity details, then check it to accept it.'
     }
   },
   monitor: {
     severity: 'warning',
     notification: {
-      default: `This device has reported an issue. Click on the row to see more details`
+      default: 'This device has reported an issue. Click on the row to see more details'
     }
   },
   offline: {

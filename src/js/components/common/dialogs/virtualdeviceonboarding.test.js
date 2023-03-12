@@ -29,7 +29,7 @@ describe('VirtualDeviceOnboarding Component', () => {
 });
 
 describe('getDemoDeviceCreationCommand function', () => {
-  const token = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZW5kZXIudGVuYW50IjoiNWY5YWI0ZWQ4ZjhhMzc0NmYwYTIxNjU1IiwiaXNzIjoiTWVuZGVyIiwic3`;
+  const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZW5kZXIudGVuYW50IjoiNWY5YWI0ZWQ4ZjhhMzc0NmYwYTIxNjU1IiwiaXNzIjoiTWVuZGVyIiwic3';
   it('should not contain any template string leftovers', async () => {
     let code = getDemoDeviceCreationCommand();
     expect(code).not.toMatch(/\$\{([^}]+)\}/);

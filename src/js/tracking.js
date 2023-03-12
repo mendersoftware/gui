@@ -47,7 +47,7 @@ class Tracker {
             regionalLaw: false
           },
           onStatusChange: status => {
-            let hasConsented = status == 'allow';
+            let hasConsented = status === 'allow';
             resolve({ trackingConsentGiven: hasConsented });
           }
         });
@@ -89,7 +89,7 @@ class Tracker {
     }
   }
   setOrganizationUser(organization, user) {
-    if (this.initialized && this.trackingEnabled && this.currentOrganizationUser != { organization, user }) {
+    if (this.initialized && this.trackingEnabled && this.currentOrganizationUser !== { organization, user }) {
       this.currentOrganizationUser = { organization, user };
       this.set({ dimension1: organization.plan });
       this.set({ dimension2: organization.id });

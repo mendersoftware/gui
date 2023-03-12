@@ -143,7 +143,7 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
       }
       isAddOn
       title="Troubleshoot"
-    ></DeviceDataCollapse>
+    />
   );
 };
 

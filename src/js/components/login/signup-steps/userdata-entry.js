@@ -11,7 +11,7 @@ export const UserDataEntry = ({ classes, data = {}, setSnackbar, onSubmit }) => 
   const { email = '', password = '', password_confirmation = '' } = data;
 
   const handleSubmit = formData => {
-    if (formData.password_new != formData.password_confirmation) {
+    if (formData.password_new !== formData.password_confirmation) {
       setSnackbar('The passwords you provided do not match, please check again.', TIMEOUTS.fiveSeconds, '');
       return;
     }

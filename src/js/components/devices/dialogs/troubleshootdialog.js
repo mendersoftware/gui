@@ -200,8 +200,8 @@ export const TroubleshootDialog = ({
       return;
     }
     if (event.wasClean) {
-      onNotify(`Connection with the device closed.`);
-    } else if (event.code == 1006) {
+      onNotify('Connection with the device closed.');
+    } else if (event.code === 1006) {
       // 1006: abnormal closure
       onNotify('Connection to the remote terminal is forbidden.');
     } else {

@@ -176,7 +176,7 @@ export const IntegrationConfiguration = ({ integration, isLast, onCancel, onDele
 
 const determineAvailableIntegrations = (integrations, isPreRelease) =>
   Object.values(EXTERNAL_PROVIDER).reduce((accu, provider) => {
-    const hasIntegrationConfigured = integrations.some(integration => integration.provider == provider.provider);
+    const hasIntegrationConfigured = integrations.some(integration => integration.provider === provider.provider);
     if (provider.title && (provider.enabled || isPreRelease) && !hasIntegrationConfigured) {
       accu.push(provider);
     }

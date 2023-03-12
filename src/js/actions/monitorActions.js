@@ -79,7 +79,7 @@ export const getIssueCountsByType =
       filters: filterTerms,
       attributes: [{ scope: 'identity', attribute: 'status' }]
     })
-      .catch(err => commonErrorHandler(err, `Retrieving issue counts failed:`, dispatch, commonErrorFallback))
+      .catch(err => commonErrorHandler(err, 'Retrieving issue counts failed:', dispatch, commonErrorFallback))
       .then(res => {
         const total = nonMonitorFilters.length ? state.monitor.issueCounts.byType[type].total : Number(res.headers[headerNames.total]);
         const filtered = nonMonitorFilters.length ? Number(res.headers[headerNames.total]) : total;

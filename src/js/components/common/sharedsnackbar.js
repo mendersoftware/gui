@@ -31,10 +31,10 @@ export const SharedSnackbar = ({ setSnackbar, snackbar }) => {
 };
 
 const areEqual = (prevProps, nextProps) => {
-  if (prevProps.snackbar.open != nextProps.snackbar.open || prevProps.snackbar.message != nextProps.snackbar.message) {
+  if (prevProps.snackbar.open !== nextProps.snackbar.open || prevProps.snackbar.message !== nextProps.snackbar.message) {
     return false;
   }
-  return prevProps.snackbar.children != nextProps.snackbar.children;
+  return prevProps.snackbar.children !== nextProps.snackbar.children;
 };
 
 export default memo(SharedSnackbar, areEqual);

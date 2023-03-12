@@ -82,7 +82,7 @@ export const CancelRequestDialog = ({ onCancel, onSubmit }) => {
             variant="contained"
             color="secondary"
             onClick={() => setConfirm(true)}
-            disabled={cancelSubscriptionReason == '' || (cancelSubscriptionReason == 'Other' && cancelSubscriptionReasonOther == '')}
+            disabled={cancelSubscriptionReason === '' || (cancelSubscriptionReason === 'Other' && cancelSubscriptionReasonOther === '')}
           >
             Continue to deactivate
           </Button>

@@ -11,7 +11,7 @@ import { DefaultAttributeRenderer } from './base-devices';
 
 const useStyles = makeStyles()(theme => ({
   active: {
-    [`> *`]: {
+    ['> *']: {
       backgroundColor: theme.palette.background.light
     }
   }
@@ -26,7 +26,7 @@ const DeviceListItem = ({ columnHeaders, device, deviceListState, idAttribute, i
 
   const handleOnClick = useCallback(
     event => {
-      if (event && event.target.closest('input')?.hasOwnProperty('checked')) {
+      if (event?.target.closest('input')?.hasOwnProperty('checked')) {
         return;
       }
       onClick(device);
@@ -64,8 +64,8 @@ const DeviceListItem = ({ columnHeaders, device, deviceListState, idAttribute, i
 
 const areEqual = (prevProps, nextProps) => {
   if (
-    prevProps.idAttribute != nextProps.idAttribute ||
-    prevProps.selected != nextProps.selected ||
+    prevProps.idAttribute !== nextProps.idAttribute ||
+    prevProps.selected !== nextProps.selected ||
     !deepCompare(prevProps.columnHeaders, nextProps.columnHeaders) ||
     !deepCompare(prevProps.device, nextProps.device)
   ) {

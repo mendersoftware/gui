@@ -45,7 +45,7 @@ export const DeviceSystem = ({
 
   const onSortChange = attribute => {
     let changedOrder = SORTING_OPTIONS.asc;
-    if (sortOptions.length && sortOptions[0].attribute == attribute.name) {
+    if (sortOptions.length && sortOptions[0].attribute === attribute.name) {
       changedOrder = sortOptions[0].order === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
     }
     setSortOptions([{ attribute: attribute.name, scope: attribute.scope, order: changedOrder }]);

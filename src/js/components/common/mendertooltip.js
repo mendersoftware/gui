@@ -24,7 +24,7 @@ export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
 }));
 
 export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
-  const [open, setOpen] = useState(startOpen || false);
+  const [open, setOpen] = useState(startOpen);
 
   const toggleVisibility = () => setOpen(toggle);
 

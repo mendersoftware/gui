@@ -217,7 +217,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
     >
       <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`}>
         <div style={widthStyle}>
-          {!initialized || (!(isEmpty(reported) && isEmpty(configured)) && !isSync) ? (
+          {!(initialized && ((isEmpty(reported) && isEmpty(configured)) || isSync)) ? (
             <>
               <div className="two-columns">
                 <h4>Desired configuration</h4>

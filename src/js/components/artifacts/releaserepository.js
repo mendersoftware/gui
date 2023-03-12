@@ -94,7 +94,7 @@ const ArtifactsList = ({
   let repoItemAnchor = useRef();
 
   const onRowSelection = artifact => {
-    if (!artifact || !selectedArtifact || selectedArtifact.id !== artifact.id) {
+    if (!(artifact && selectedArtifact) || selectedArtifact.id !== artifact.id) {
       selectArtifact(artifact);
     } else {
       selectArtifact();

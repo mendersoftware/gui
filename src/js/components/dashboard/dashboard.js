@@ -57,7 +57,7 @@ export const Dashboard = ({ currentUser, onboardingState, setSnackbar }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!currentUser || !onboardingState.showTips) {
+    if (!(currentUser && onboardingState.showTips)) {
       return;
     }
     clearTimeout(timer.current);

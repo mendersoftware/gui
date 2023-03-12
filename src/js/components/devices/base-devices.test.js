@@ -49,7 +49,7 @@ describe('smaller components', () => {
     });
   });
 
-  it(`uses getDeviceIdentityText correctly`, () => {
+  it('uses getDeviceIdentityText correctly', () => {
     let result = getDeviceIdentityText({ device: defaultState.devices.byId.a1 });
     expect(result).toMatch(defaultState.devices.byId.a1.id);
     expect(result).toEqual(expect.not.stringMatching(undefineds));
@@ -57,7 +57,7 @@ describe('smaller components', () => {
     expect(result).toMatch(defaultState.devices.byId.a1.identity_data.mac);
     expect(result).toEqual(expect.not.stringMatching(undefineds));
   });
-  it(`uses defaultTextRender correctly`, () => {
+  it('uses defaultTextRender correctly', () => {
     let result = defaultTextRender({ column: { title: 'mac', attribute: { name: 'id', scope: 'identity' } }, device: defaultState.devices.byId.a1 });
     expect(result).toMatch(defaultState.devices.byId.a1.id);
     expect(result).toEqual(expect.not.stringMatching(undefineds));

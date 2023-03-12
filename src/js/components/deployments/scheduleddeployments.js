@@ -31,7 +31,7 @@ const localizer = momentLocalizer(moment);
 const headers = [
   ...defaultHeaders.slice(0, 2),
   { title: 'Start time', renderer: DeploymentStartTime, props: { direction: 'up' } },
-  { title: `End time`, renderer: DeploymentEndTime },
+  { title: 'End time', renderer: DeploymentEndTime },
   { title: '# devices', class: 'align-right column-defined', renderer: DeploymentDeviceCount },
   { title: 'Phases', renderer: DeploymentPhases }
 ];
@@ -89,7 +89,7 @@ export const Scheduled = props => {
     const calendarEvents = items.map(deployment => {
       const start = new Date(deployment.start_ts || deployment.phases ? deployment.phases[0].start_ts : deployment.created);
       let endDate = start;
-      if (deployment.phases && deployment.phases.length && deployment.phases[deployment.phases.length - 1].end_ts) {
+      if (deployment.phases?.length && deployment.phases[deployment.phases.length - 1].end_ts) {
         endDate = new Date(deployment.phases[deployment.phases.length - 1].end_ts);
       } else if (deployment.filter_id || deployment.filter) {
         // calendar doesn't support never ending events so we arbitrarly set one year

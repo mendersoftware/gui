@@ -34,6 +34,6 @@ describe('CancelRequestDialog Component', () => {
     expect(screen.queryByText(/thank you/i)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-    expect(submitMock).toHaveBeenCalledWith(`test reason\ntest suggestion`);
+    expect(submitMock).toHaveBeenCalledWith('test reason\ntest suggestion');
   });
 });

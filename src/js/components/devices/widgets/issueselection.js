@@ -75,7 +75,7 @@ const DeviceIssuesSelection = ({ onChange, options, selection }) => {
   };
 
   const handleOpen = e => {
-    if (e && e.target.closest('input')?.hasOwnProperty('checked')) {
+    if (e?.target.closest('input')?.hasOwnProperty('checked')) {
       return;
     }
     setOpen(true);

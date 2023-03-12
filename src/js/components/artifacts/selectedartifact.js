@@ -42,7 +42,7 @@ const useStyles = makeStyles()(theme => ({
     borderTop: 'none',
     padding: '0 15px',
     marginBottom: 30,
-    [`&.Mui-expanded`]: {
+    '&.Mui-expanded': {
       background: theme.palette.grey[500],
       marginBottom: 30
     }
@@ -112,7 +112,7 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
   const [showProvidesDepends, setShowProvidesDepends] = useState(false);
 
   useEffect(() => {
-    if (!artifact.url && !gettingUrl && open) {
+    if (!(artifact.url || gettingUrl) && open) {
       setGettingUrl(true);
     }
   }, [artifact.id, open]);

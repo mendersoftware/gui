@@ -87,7 +87,7 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
       if (addon.enabled) {
         const { title } = ADDONS[addon.name];
         let addonPrice = '';
-        if (!organization.trial && !isEnterprise) {
+        if (!(organization.trial || isEnterprise)) {
           const planAddon = ADDONS[addon.name][currentPlan] ? ADDONS[addon.name][currentPlan] : ADDONS[addon.name].os;
           addonPrice = ` - ${planAddon.price}`;
         }
@@ -145,7 +145,7 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
             </div>
           }
         />
-        {!organization.trial && !isEnterprise && <OrganizationPaymentSettings />}
+        {!(organization.trial || isEnterprise) && <OrganizationPaymentSettings />}
       </List>
       {cancelSubscriptionConfirmation && <CancelSubscriptionAlert />}
       {isAdmin && !cancelSubscriptionConfirmation && (

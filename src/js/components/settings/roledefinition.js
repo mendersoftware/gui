@@ -166,7 +166,7 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
       group,
       uiPermissions: groupUiPermissions.map(permissionMapper)
     }));
-    if (!adding && !groupSelections.length && filteredStateGroups.length !== Object.keys(stateGroups).length && !isEmpty(roleGroups)) {
+    if (!(adding || groupSelections.length) && filteredStateGroups.length !== Object.keys(stateGroups).length && !isEmpty(roleGroups)) {
       filteredStateGroups = Object.keys(roleGroups);
       groupSelections = Object.keys(roleGroups).map(group => ({
         group,
@@ -197,8 +197,8 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
       return changedGroupSelection;
     }
     // the following is horrible, but I couldn't come up with a better solution that ensures only a single partly defined definition exists
-    const filtered = changedGroupSelection.filter(selection => !((!selection.group || !selection.uiPermissions.length) && selection !== currentGroup));
-    if (!filtered.some(selection => !selection.group || !selection.uiPermissions.length)) {
+    const filtered = changedGroupSelection.filter(selection => !(!(selection.group && selection.uiPermissions.length) && selection !== currentGroup));
+    if (!filtered.some(selection => !(selection.group && selection.uiPermissions.length))) {
       filtered.push(emptyGroupSelection);
     }
     return filtered;

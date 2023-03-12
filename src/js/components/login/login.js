@@ -71,7 +71,7 @@ const useStyles = makeStyles()(theme => {
 
 const entryText = {
   signup: { linkText: 'Sign up here', question: `Don't have an account?`, target: '/signup' },
-  login: { linkText: 'Log in', question: `Already have an account?`, target: '/login' }
+  login: { linkText: 'Log in', question: 'Already have an account?', target: '/login' }
 };
 
 export const EntryLink = ({ className = '', target = 'signup' }) => (

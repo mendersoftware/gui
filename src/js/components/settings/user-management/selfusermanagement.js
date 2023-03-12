@@ -46,7 +46,7 @@ export const SelfUserManagement = ({
   const { classes } = useStyles();
 
   const editSubmit = userData => {
-    if (userData.password != userData.password_confirmation) {
+    if (userData.password !== userData.password_confirmation) {
       setSnackbar(`The passwords don't match`);
     } else {
       editUser(UserConstants.OWN_USER_ID, userData).then(() => {

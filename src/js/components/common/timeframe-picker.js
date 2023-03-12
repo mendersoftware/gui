@@ -61,7 +61,7 @@ export const TimeframePicker = ({ onChange, ...props }) => {
 };
 
 const areEqual = (prevProps, nextProps) => {
-  return !(prevProps.endDate != nextProps.endDate || prevProps.startDate != nextProps.startDate);
+  return !(prevProps.endDate !== nextProps.endDate || prevProps.startDate !== nextProps.startDate);
 };
 
 export default memo(TimeframePicker, areEqual);

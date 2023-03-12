@@ -131,7 +131,7 @@ export const GlobalSettingsDialog = ({
   }, [offlineThresholdSettings.interval, offlineThresholdSettings.intervalUnit]);
 
   useEffect(() => {
-    if (!window.sessionStorage.getItem(settingsKeys.initialized) || !timer.current) {
+    if (!(window.sessionStorage.getItem(settingsKeys.initialized) && timer.current)) {
       return;
     }
     saveGlobalSettings({ offlineThreshold: { interval: debouncedInterval, intervalUnit: debouncedIntervalUnit } }, false, true);

@@ -152,7 +152,7 @@ export const DeviceQuickActions = (
 };
 
 const areEqual = (prevProps, nextProps) => {
-  if (prevProps.selectedGroup != nextProps.selectedGroup) {
+  if (prevProps.selectedGroup !== nextProps.selectedGroup) {
     return false;
   }
   return (

@@ -66,7 +66,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
         }
         switch (typ) {
           case MessageTypes.New: {
-            if (props.status == WebSocket.CLOSING) {
+            if (props.status === WebSocket.CLOSING) {
               onNotify(`Error: ${byteArrayToString(body)}`);
               return close();
             } else {

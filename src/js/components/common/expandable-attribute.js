@@ -41,7 +41,7 @@ export const ExpandableAttribute = ({
   const onClick = () => {
     if (copyToClipboard) {
       // Date/Time components
-      if (secondary.props && secondary.props.value) {
+      if (secondary.props?.value) {
         copy(secondary.props.value);
       } else {
         copy(secondary);
@@ -73,7 +73,7 @@ export const ExpandableAttribute = ({
         />
         {copyToClipboard ? (
           <Tooltip title={'Copy to clipboard'} placement="top" open={tooltipVisible}>
-            <CopyToClipboardIcon fontSize="small"></CopyToClipboardIcon>
+            <CopyToClipboardIcon fontSize="small" />
           </Tooltip>
         ) : null}
       </ListItem>

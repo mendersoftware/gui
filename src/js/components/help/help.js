@@ -50,7 +50,7 @@ const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
     if (!isHosted && value.hosted) {
       return bag;
     }
-    if (typeof value == 'object' && value !== null && key !== 'component') {
+    if (typeof value === 'object' && value !== null && key !== 'component') {
       const this_path = `${path}/${key}`;
       bag.push({
         title: value.title,
@@ -98,8 +98,8 @@ export const Help = ({ docsVersion, isHosted }) => {
       }
     }
 
-    breadcrumbs = splitsplat[0] ? '  >  ' + components[splitsplat[0]].title : '';
-    breadcrumbs = splitsplat[1] ? breadcrumbs + '  >  ' + components[splitsplat[0]][splitsplat[1]].title : breadcrumbs;
+    breadcrumbs = splitsplat[0] ? `  >  ${components[splitsplat[0]].title}` : '';
+    breadcrumbs = splitsplat[1] ? `${breadcrumbs}  >  ${components[splitsplat[0]][splitsplat[1]].title}` : breadcrumbs;
   }
 
   return (

@@ -45,7 +45,7 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
   }, [socketInitialized, tryFit]);
 
   useEffect(() => {
-    if (!socketInitialized || !xtermRef.current?.terminal || sessionId) {
+    if (!(socketInitialized && xtermRef.current?.terminal) || sessionId) {
       return;
     }
     xtermRef.current.terminal.reset();
@@ -59,12 +59,12 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
   }, [socketInitialized, tryFit, xtermRef.current]);
 
   useEffect(() => {
-    if (!socketInitialized || !xtermRef.current.terminal || !isVisible) {
+    if (!(socketInitialized && xtermRef.current.terminal && isVisible)) {
       return;
     }
     fitAddon.fit();
     const newDimensions = fitAddon.proposeDimensions();
-    if (newDimensions.rows != dimensions.rows || newDimensions.cols != dimensions.cols) {
+    if (newDimensions.rows !== dimensions.rows || newDimensions.cols !== dimensions.cols) {
       //
       sendMessage({
         typ: MessageTypes.Resize,
@@ -75,7 +75,7 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
   }, [size, isVisible]);
 
   useEffect(() => {
-    if (!socketInitialized || !xtermRef.current.terminal || !textInput) {
+    if (!(socketInitialized && xtermRef.current.terminal && textInput)) {
       return;
     }
     xtermRef.current.terminal.paste(textInput);

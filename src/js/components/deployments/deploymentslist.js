@@ -15,7 +15,7 @@ export const defaultHeaders = [
   { title: 'Release', renderer: DeploymentRelease },
   { title: 'Target device(s)', renderer: DeploymentDeviceGroup },
   { title: 'Start time', renderer: DeploymentStartTime },
-  { title: `End time`, renderer: DeploymentEndTime },
+  { title: 'End time', renderer: DeploymentEndTime },
   { title: '# devices', class: 'align-right column-defined', renderer: DeploymentDeviceCount },
   { title: 'Status', renderer: DeploymentProgress }
 ];

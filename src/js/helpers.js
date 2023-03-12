@@ -131,7 +131,10 @@ export const versionCompare = (v1, v2) => {
  */
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export function deepCompare() {
-  var i, l, leftChain, rightChain;
+  var i;
+  var l;
+  var leftChain;
+  var rightChain;
 
   function compare2Objects(x, y) {
     var p;
@@ -243,7 +246,7 @@ export const stringToBoolean = content => {
   if (!content) {
     return false;
   }
-  const string = content + '';
+  const string = `${content}`;
   switch (string.trim().toLowerCase()) {
     case 'true':
     case 'yes':
@@ -279,11 +282,11 @@ export const customSort = (direction, field) => (a, b) => {
   return 0;
 };
 
-export const duplicateFilter = (item, index, array) => array.indexOf(item) == index;
+export const duplicateFilter = (item, index, array) => array.indexOf(item) === index;
 
 export const attributeDuplicateFilter = (filterableArray, attributeName = 'key') =>
   filterableArray.filter(
-    (item, index, array) => array.findIndex(filter => filter[attributeName] === item[attributeName] && filter.scope === item.scope) == index
+    (item, index, array) => array.findIndex(filter => filter[attributeName] === item[attributeName] && filter.scope === item.scope) === index
   );
 
 export const unionizeStrings = (someStrings, someOtherStrings) => {
@@ -300,7 +303,7 @@ export const unionizeStrings = (someStrings, someOtherStrings) => {
 };
 
 export const generateDeploymentGroupDetails = (filter, groupName) =>
-  filter && filter.terms?.length
+  filter?.terms?.length
     ? `${groupName} (${filter.terms
         .map(filter => `${filter.attribute || filter.key} ${DEVICE_FILTERING_OPTIONS[filter.type || filter.operator].shortform} ${filter.value}`)
         .join(', ')})`
@@ -374,16 +377,16 @@ export const getDemoDeviceAddress = (devices, onboardingApproach) => {
     }
     return item;
   }, null);
-  if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
+  if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') !== -1 || navigator.appVersion.indexOf('Mac') !== -1))) {
     return 'localhost';
   }
   return address;
 };
 
 export const detectOsIdentifier = () => {
-  if (navigator.appVersion.indexOf('Win') != -1) return 'Windows';
-  if (navigator.appVersion.indexOf('Mac') != -1) return 'MacOs';
-  if (navigator.appVersion.indexOf('X11') != -1) return 'Unix';
+  if (navigator.appVersion.indexOf('Win') !== -1) return 'Windows';
+  if (navigator.appVersion.indexOf('Mac') !== -1) return 'MacOs';
+  if (navigator.appVersion.indexOf('X11') !== -1) return 'Unix';
   return 'Linux';
 };
 
@@ -415,14 +418,15 @@ export const startTimeSort = (a, b) => (b.created > a.created) - (b.created < a.
 
 export const standardizePhases = phases =>
   phases.map((phase, index) => {
-    let standardizedPhase = { batch_size: phase.batch_size, start_ts: index };
+    let phaseStart = { start_ts: index };
+    if (index === 0) {
+      // delete the start timestamp from a deployment pattern, to default to starting without delay
+      phaseStart = {};
+    }
+    let standardizedPhase = { batch_size: phase.batch_size, ...phaseStart };
     if (phase.delay) {
       standardizedPhase.delay = phase.delay;
       standardizedPhase.delayUnit = phase.delayUnit || 'hours';
-    }
-    if (index === 0) {
-      // delete the start timestamp from a deployment pattern, to default to starting without delay
-      delete standardizedPhase.start_ts;
     }
     return standardizedPhase;
   });
@@ -500,7 +504,7 @@ export const createDownload = (target, filename) => {
   document.body.removeChild(link);
 };
 
-export const createFileDownload = (content, filename) => createDownload('data:text/plain;charset=utf-8,' + encodeURIComponent(content), filename);
+export const createFileDownload = (content, filename) => createDownload(`data:text/plain;charset=utf-8,${encodeURIComponent(content)}`, filename);
 
 export const getISOStringBoundaries = currentDate => {
   const date = [currentDate.getUTCFullYear(), `0${currentDate.getUTCMonth() + 1}`.slice(-2), `0${currentDate.getUTCDate()}`.slice(-2)].join('-');

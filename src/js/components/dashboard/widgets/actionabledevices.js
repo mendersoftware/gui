@@ -41,7 +41,7 @@ const issueTypes = [
 
 const useStyles = makeStyles()(theme => ({
   issueContainer: {
-    border: `1px solid currentColor`,
+    border: '1px solid currentColor',
     borderRadius: '50%',
     fontSize: '2rem',
     height: '5vh',
@@ -122,7 +122,7 @@ export const ActionableDevices = props => {
               </div>
               <div className={`absolute ${classes.issueWrapper}`}>
                 <div className="relative">
-                  <div className="absolute"></div>
+                  <div className="absolute" />
                   <Icon className="absolute" fontSize="small" />
                 </div>
               </div>

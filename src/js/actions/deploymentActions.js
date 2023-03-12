@@ -159,7 +159,7 @@ export const getDeploymentDevices =
       const { devices: deploymentDevices = {} } = getState().deployments.byId[id] || {};
       const devices = response.data.reduce((accu, item) => {
         accu[item.id] = item;
-        const log = (deploymentDevices[item.id] || {}).log;
+        const log = deploymentDevices[item.id]?.log;
         if (log) {
           accu[item.id].log = log;
         }

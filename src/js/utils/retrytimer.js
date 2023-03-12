@@ -21,7 +21,7 @@ export function setRetryTimer(err, service, errorContext, timeLeft, setSnackbar)
 export function clearRetryTimer(service, setSnackbar) {
   if (timers[service]) {
     clearInterval(timers[service]);
-    delete timers[service];
+    timers[service] = undefined;
     setSnackbar('');
   }
 }

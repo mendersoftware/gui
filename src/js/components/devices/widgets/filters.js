@@ -61,7 +61,7 @@ export const Filters = ({
     setNewFilter(newFilter);
     saveUpdatedFilter(newFilter);
     let changedFilters = [...currentFilters];
-    if (editedIndex == currentFilters.length) {
+    if (editedIndex === currentFilters.length) {
       changedFilters.push(newFilter);
       return handleFilterChange(changedFilters);
     }

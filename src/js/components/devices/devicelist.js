@@ -286,9 +286,9 @@ export const DeviceList = props => {
 
 const areEqual = (prevProps, nextProps) => {
   if (
-    prevProps.pageTotal != nextProps.pageTotal ||
-    prevProps.pageLoading != nextProps.pageLoading ||
-    prevProps.idAttribute != nextProps.idAttribute ||
+    prevProps.pageTotal !== nextProps.pageTotal ||
+    prevProps.pageLoading !== nextProps.pageLoading ||
+    prevProps.idAttribute !== nextProps.idAttribute ||
     !deepCompare(prevProps.columnHeaders, nextProps.columnHeaders) ||
     !deepCompare(prevProps.customColumnSizes, nextProps.customColumnSizes) ||
     !deepCompare(prevProps.devices, nextProps.devices)

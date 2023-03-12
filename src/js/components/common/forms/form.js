@@ -121,7 +121,7 @@ export default class Form extends React.Component {
     }
     var props = child.props || {};
     var validations = props.validations || '';
-    if (props.required && validations.indexOf('isLength') == -1) {
+    if (props.required && validations.indexOf('isLength') === -1) {
       validations = validations ? `${validations}, ` : validations;
       validations += 'isLength:1';
     }
@@ -184,8 +184,12 @@ export default class Form extends React.Component {
 
   // We want to remove the input component from the inputs map
   detachFromForm(component) {
-    delete this.inputs[component.props.id];
-    delete this.model[component.props.id];
+    // eslint-disable-next-line no-unused-vars
+    const { [component.props.id]: toBeRemoved, ...inputs } = this.inputs;
+    this.inputs = inputs;
+    // eslint-disable-next-line no-unused-vars
+    const { [component.props.id]: toBeRemovedToo, ...model } = this.model;
+    this.model = model;
   }
   updateModel() {
     Object.keys(this.inputs).forEach(name => {

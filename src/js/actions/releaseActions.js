@@ -178,7 +178,7 @@ export const removeArtifact = id => (dispatch, getState) =>
       }
       return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
     })
-    .catch(err => commonErrorHandler(err, `Error removing artifact:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'Error removing artifact:', dispatch));
 
 export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
@@ -317,7 +317,7 @@ export const getReleases =
 
         return Promise.all(tasks);
       })
-      .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
+      .catch(err => commonErrorHandler(err, 'Please check your connection', dispatch));
   };
 
 const possiblePageSizes = [10, 20, 50, 100, 250, 500];

@@ -245,7 +245,7 @@ export const DEPLOYMENT_CUTOFF = 3;
 export const getRecentDeployments = createSelector([getDeploymentsById, getDeploymentsByStatus], (deploymentsById, deploymentsByStatus) =>
   Object.entries(deploymentsByStatus).reduce(
     (accu, [state, byStatus]) => {
-      if (!relevantDeploymentStates.includes(state) || !byStatus.deploymentIds.length) {
+      if (!(relevantDeploymentStates.includes(state) && byStatus.deploymentIds.length)) {
         return accu;
       }
       accu[state] = byStatus.deploymentIds.map(id => deploymentsById[id]).slice(0, DEPLOYMENT_CUTOFF);

@@ -89,19 +89,19 @@ export const logoutUser = reason => (dispatch, getState) => {
 
 export const passwordResetStart = email => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err =>
-    commonErrorHandler(err, `The password reset request cannot be processed:`, dispatch, undefined, true)
+    commonErrorHandler(err, 'The password reset request cannot be processed:', dispatch, undefined, true)
   );
 
 export const passwordResetComplete = (secretHash, newPassword) => dispatch =>
   GeneralApi.post(`${useradmApiUrl}/auth/password-reset/complete`, { secret_hash: secretHash, password: newPassword }).catch((err = {}) => {
     const { error, response = {} } = err;
     let errorMsg = '';
-    if (response.status == 400) {
+    if (response.status === 400) {
       errorMsg = 'the link you are using expired or the request is not valid, please try again.';
     } else {
       errorMsg = error;
     }
-    dispatch(setSnackbar('The password reset request cannot be processed: ' + errorMsg));
+    dispatch(setSnackbar(`The password reset request cannot be processed: ${errorMsg}`));
     return Promise.reject(err);
   });
 
@@ -210,14 +210,14 @@ export const enableUser2fa =
   (userId = OWN_USER_ID) =>
   dispatch =>
     GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/enable`)
-      .catch(err => commonErrorHandler(err, `There was an error enabling Two Factor authentication for the user.`, dispatch))
+      .catch(err => commonErrorHandler(err, 'There was an error enabling Two Factor authentication for the user.', dispatch))
       .then(() => Promise.resolve(dispatch(getUser(userId))));
 
 export const disableUser2fa =
   (userId = OWN_USER_ID) =>
   dispatch =>
     GeneralApi.post(`${useradmApiUrl}/users/${userId}/2fa/disable`)
-      .catch(err => commonErrorHandler(err, `There was an error disabling Two Factor authentication for the user.`, dispatch))
+      .catch(err => commonErrorHandler(err, 'There was an error disabling Two Factor authentication for the user.', dispatch))
       .then(() => Promise.resolve(dispatch(getUser(userId))));
 
 /* RBAC related things follow:  */
@@ -351,7 +351,7 @@ export const normalizeRbacRoles = (roles, rolesById, permissionSets) =>
         ...roleState,
         ...role,
         description: roleState.description ? roleState.description : role.description,
-        editable: !defaultRolesById[role.name] && !isCustom && (typeof roleState.editable !== 'undefined' ? roleState.editable : true),
+        editable: !(defaultRolesById[role.name] || isCustom) && (typeof roleState.editable !== 'undefined' ? roleState.editable : true),
         isCustom,
         name: roleState.name ? roleState.name : role.name,
         uiPermissions: normalizedPermissions
@@ -507,7 +507,7 @@ export const createRole = roleData => dispatch => {
     permission_sets_with_scope: permissionSetsWithScope
   })
     .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
-    .catch(err => commonErrorHandler(err, `There was an error creating the role:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'There was an error creating the role:', dispatch));
 };
 
 export const editRole = roleData => (dispatch, getState) => {
@@ -518,7 +518,7 @@ export const editRole = roleData => (dispatch, getState) => {
     permission_sets_with_scope: permissionSetsWithScope
   })
     .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
-    .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'There was an error editing the role:', dispatch));
 };
 
 export const removeRole = roleId => (dispatch, getState) =>
@@ -528,7 +528,7 @@ export const removeRole = roleId => (dispatch, getState) =>
       const { [roleId]: toBeRemoved, ...rolesById } = getState().users.rolesById;
       return Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, value: rolesById }), dispatch(getRoles())]);
     })
-    .catch(err => commonErrorHandler(err, `There was an error removing the role:`, dispatch));
+    .catch(err => commonErrorHandler(err, 'There was an error removing the role:', dispatch));
 
 /*
   Global settings
@@ -542,7 +542,7 @@ export const getGlobalSettings = () => dispatch =>
 export const saveGlobalSettings =
   (settings, beOptimistic = false, notify = false) =>
   (dispatch, getState) => {
-    if (!window.sessionStorage.getItem(UserConstants.settingsKeys.initialized) && !beOptimistic) {
+    if (!(window.sessionStorage.getItem(UserConstants.settingsKeys.initialized) || beOptimistic)) {
       return;
     }
     return Promise.resolve(dispatch(getGlobalSettings())).then(result => {
@@ -550,7 +550,9 @@ export const saveGlobalSettings =
       if (getCurrentUser(getState()).verified) {
         updatedSettings['2fa'] = twoFAStates.enabled;
       } else {
-        delete updatedSettings['2fa'];
+        // eslint-disable-next-line no-unused-vars
+        const { '2fa': toBeRemoved, ...remainder } = updatedSettings;
+        updatedSettings = remainder;
       }
       let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, settings: updatedSettings })];
       const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};

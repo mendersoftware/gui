@@ -11,7 +11,7 @@ import { formatTime } from '../../../../helpers';
 import Loader from '../../../common/loader';
 import Time from '../../../common/time';
 
-const padder = <div key="padder" style={{ flexGrow: 1 }}></div>;
+const padder = <div key="padder" style={{ flexGrow: 1 }} />;
 
 const getDismissalConfirmation = (device, authset) => {
   switch (authset.status) {

@@ -85,7 +85,7 @@ export const Devices = ({
   useEffect(() => {
     const { attributes = {} } = device;
     const { mender_is_gateway } = attributes;
-    if (!device.id || !stringToBoolean(mender_is_gateway)) {
+    if (!(device.id && stringToBoolean(mender_is_gateway))) {
       return;
     }
     getSystemDevices(device.id, { perPage: 500 });
@@ -193,7 +193,7 @@ export const Software = ({
 
   const releaseItems = useMemo(() => {
     let releaseItems = releases.map(rel => releasesById[rel]);
-    if (device && device.attributes) {
+    if (device?.attributes) {
       // If single device, don't show incompatible releases
       releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => device.attributes.device_type.includes(type)));
     }
@@ -211,7 +211,7 @@ export const Software = ({
     return getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true }).finally(() => setIsLoadingReleases(false));
   };
 
-  const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];
+  const releaseDeviceTypes = deploymentRelease?.device_types_compatible ?? [];
   const devicetypesInfo = (
     <Tooltip title={<p>{releaseDeviceTypes.join(', ')}</p>} placement="bottom">
       <span className="link">

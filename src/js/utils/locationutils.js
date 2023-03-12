@@ -155,7 +155,7 @@ export const formatPageState = ({ selectedId, selectedIssues, page, perPage, sor
       (accu, [key, value]) => {
         if (Array.isArray(value)) {
           accu.push(...value.map(item => `${key}=${encodeURIComponent(item)}`));
-        } else if ((DEVICE_LIST_DEFAULTS[key] != value || !DEVICE_LIST_DEFAULTS.hasOwnProperty(key)) && value) {
+        } else if ((DEVICE_LIST_DEFAULTS[key] !== value || !DEVICE_LIST_DEFAULTS.hasOwnProperty(key)) && value) {
           accu.push(`${key}=${encodeURIComponent(value)}`);
         }
         return accu;
@@ -179,9 +179,7 @@ const formatFilters = filters => {
       Object.keys(scopes).reduce((accu, item) => ({ ...accu, [item]: new Set() }), {})
     );
   // boil it all down to a single line containing all filters
-  return Object.values(result)
-    .map(filterSet => [...filterSet])
-    .flat();
+  return Object.values(result).flatMap(filterSet => [...filterSet]);
 };
 
 export const formatDeviceSearch = ({ pageState, filters, selectedGroup }) => {

@@ -70,7 +70,7 @@ const useStyles = makeStyles()(theme => ({
     rowGap: 4,
     placeItems: 'center',
     position: 'absolute',
-    gridTemplateRows: `20px 1.25rem min-content`,
+    gridTemplateRows: '20px 1.25rem min-content',
     zIndex: 2,
     ['&.compact']: {
       gridTemplateRows: '45px 1.25rem min-content'
@@ -117,7 +117,7 @@ export const ProgressChartComponent = ({
                     {PhaseDelimiter ? (
                       <PhaseDelimiter {...commonProps} />
                     ) : (
-                      <div className={`absolute ${classes.defaultDelimiter}`} style={{ left: `${phase.offset}%` }}></div>
+                      <div className={`absolute ${classes.defaultDelimiter}`} style={{ left: `${phase.offset}%` }} />
                     )}
                   </>
                 )}
@@ -125,7 +125,7 @@ export const ProgressChartComponent = ({
             );
           })}
           <div className="progress-step relative flexbox progress-step-total">
-            <div className="progress-bar"></div>
+            <div className="progress-bar" />
           </div>
         </div>
         {!minimal && Side && <Side compact={compact} {...remainder} {...sideProps} />}
