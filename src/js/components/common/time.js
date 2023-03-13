@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Tooltip } from '@mui/material';
 
 import moment from 'moment';
+import pluralize from 'pluralize';
 
-const defaultTimeFormat = 'YYYY-MM-DD HH:mm';
+const defaultDateFormat = 'YYYY-MM-DD';
+const defaultTimeFormat = `${defaultDateFormat} HH:mm`;
 
 // based on react-time - https://github.com/andreypopp/react-time - which unfortunately is no longer maintained
 
@@ -54,6 +56,27 @@ export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) =>
       <span>{timeDisplay}</span>
     </Tooltip>
   );
+};
+
+const cutoffDays = 14;
+export const ApproximateRelativeDate = ({ className, updateTime }) => {
+  const [updatedTime, setUpdatedTime] = useState();
+
+  useEffect(() => {
+    if (updateTime !== updatedTime) {
+      setUpdatedTime(moment(updateTime, defaultDateFormat));
+    }
+  }, [updateTime]);
+
+  const diff = updatedTime ? Math.abs(updatedTime.diff(moment(), 'days')) : 0;
+  if (updatedTime && diff <= cutoffDays) {
+    return (
+      <time className={className} dateTime={updatedTime.format(defaultDateFormat)}>
+        {diff !== 0 ? `${diff} ${pluralize('day', diff)} ago` : 'today'}
+      </time>
+    );
+  }
+  return <MaybeTime className={className} value={updatedTime} format={defaultDateFormat} titleFormat={defaultDateFormat} />;
 };
 
 export default Time;

@@ -111,16 +111,10 @@ exports[`smaller components renders RejectedEmptyState correctly 1`] = `
 
 exports[`smaller components renders RelativeDeviceTime correctly 1`] = `
 <div>
-  <span
-    aria-label="Tue Jan 01 2019 09:25:00 GMT+0000"
-    class=""
-    data-mui-internal-clone-element="true"
+  <time
+    datetime="2019-01-01"
   >
-    <time
-      datetime="2019-01-01T09:25:00+00:00"
-    >
-      2019-01-01 09:25
-    </time>
-  </span>
+    12 days ago
+  </time>
 </div>
 `;
