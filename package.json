@@ -107,7 +107,7 @@
     "prettier": "^2.8.4",
     "redux-mock-store": "^1.5.4",
     "util": "^0.12.5",
-    "webpack": "^5.76.0",
+    "webpack": "^5.76.2",
     "webpack-cli": "^5.0.1",
     "yarn": "^1.22.19"
   },
