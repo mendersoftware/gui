@@ -39,7 +39,6 @@
     "react/no-typos": "error",
     "react/no-unsafe": "error",
     "react/no-unused-prop-types": "error",
-    "react/no-unused-state": "off",
     "react/prefer-es6-class": "error",
     "react/prefer-stateless-function": "error",
     "react/prop-types": "off",
