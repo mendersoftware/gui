@@ -209,8 +209,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="true"
-            for="mui-1"
-            id="mui-1-label"
+            for="mui-2"
+            id="mui-2-label"
           >
             From
           </label>
@@ -219,11 +219,13 @@ exports[`Auditlogs Component renders correctly 1`] = `
           >
             <input
               aria-invalid="false"
+              autocomplete="off"
               class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
               
-              placeholder="mmmm do"
+              inputmode="text"
+              placeholder="⁦⁨MM⁩ / ⁨DD⁩ / ⁨YYYY⁩⁩"
               type="text"
-              value="January 13th"
+              value="⁦⁨01⁩ / ⁨13⁩ / ⁨2019⁩⁩"
             />
             <div
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
@@ -258,8 +260,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="true"
-            for="mui-2"
-            id="mui-2-label"
+            for="mui-4"
+            id="mui-4-label"
           >
             To
           </label>
@@ -268,11 +270,13 @@ exports[`Auditlogs Component renders correctly 1`] = `
           >
             <input
               aria-invalid="false"
+              autocomplete="off"
               class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
               
-              placeholder="mmmm do"
+              inputmode="text"
+              placeholder="⁦⁨MM⁩ / ⁨DD⁩ / ⁨YYYY⁩⁩"
               type="text"
-              value="January 13th"
+              value="⁦⁨01⁩ / ⁨13⁩ / ⁨2019⁩⁩"
             />
             <div
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
