@@ -5,7 +5,7 @@ import Cookies from 'universal-cookie';
 
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
-import { cleanUp, expirySet, logout } from '../auth';
+import { cleanUp, logout } from '../auth';
 import * as AppConstants from '../constants/appConstants';
 import { ALL_DEVICES } from '../constants/deviceConstants';
 import * as OnboardingConstants from '../constants/onboardingConstants';
@@ -46,8 +46,8 @@ const handleLoginError = (err, has2FA) => dispatch => {
 /*
   User management
 */
-export const loginUser = userData => dispatch =>
-  UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData)
+export const loginUser = (userData, stayLoggedIn) => dispatch =>
+  UsersApi.postLogin(`${useradmApiUrl}/auth/login`, { ...userData, no_expiry: stayLoggedIn })
     .catch(err => {
       cleanUp();
       return Promise.resolve(dispatch(handleLoginError(err, userData['token2fa'])));
@@ -58,7 +58,7 @@ export const loginUser = userData => dispatch =>
         return;
       }
       // save token as cookie & set maxAge if noexpiry checkbox not checked
-      cookies.set('JWT', token, { sameSite: 'strict', secure: true, path: '/', maxAge: expirySet() ? 900 : undefined });
+      cookies.set('JWT', token, { sameSite: 'strict', secure: true, path: '/', maxAge: stayLoggedIn ? undefined : 900 });
 
       return dispatch(getUser(OWN_USER_ID))
         .then(() => {

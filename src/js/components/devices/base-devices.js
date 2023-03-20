@@ -6,7 +6,7 @@ import pluralize from 'pluralize';
 import preauthImage from '../../../assets/img/preauthorize.png';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { rootfsImageVersion } from '../../constants/releaseConstants';
-import Time, { RelativeTime } from '../common/time';
+import Time, { ApproximateRelativeDate } from '../common/time';
 import DeviceStatus from './device-status';
 
 const propertyNameMap = {
@@ -60,9 +60,10 @@ export const DeviceTypes = ({ device }) => (
 
 export const RelativeDeviceTime = ({ device }) => (
   <div>
-    <RelativeTime updateTime={device.updated_ts} />
+    <ApproximateRelativeDate updateTime={device.updated_ts} />
   </div>
 );
+
 export const DeviceCreationTime = ({ device }) =>
   device.created_ts ? (
     <div>

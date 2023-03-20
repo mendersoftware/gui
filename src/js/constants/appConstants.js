@@ -16,7 +16,6 @@ export const chartTypes = {
 };
 export const emptyChartSelection = { software: '', group: '', chartType: chartTypes.bar.key, attribute: 'artifact_name' };
 
-export const noExpiryKey = 'noExpiry';
 export const RECEIVED_HOSTED_LINKS = 'RECEIVED_HOSTED_LINKS';
 export const SET_ANNOUNCEMENT = 'SET_ANNOUNCEMENT';
 export const SET_ENVIRONMENT_DATA = 'SET_ENVIRONMENT_DATA';
