@@ -1,13 +1,13 @@
+import jwtDecode from 'jwt-decode';
 import Cookies from 'universal-cookie';
 
-import { TIMEOUTS, noExpiryKey } from './constants/appConstants';
+import { TIMEOUTS } from './constants/appConstants';
 
 const cookies = new Cookies();
 
 export const getToken = () => cookies.get('JWT', { doNotParse: true });
 
 export const cleanUp = () => {
-  window.localStorage.removeItem(noExpiryKey);
   cookies.remove('JWT', { path: '/' });
   cookies.remove('JWT', { path: '/ui' });
   window.localStorage.removeItem('oauth');
@@ -36,4 +36,12 @@ export const updateMaxAge = () => {
   }
 };
 
-export const expirySet = () => window.localStorage.getItem(noExpiryKey) !== 'true';
+export const expirySet = () => {
+  let jwt;
+  try {
+    jwt = jwtDecode(getToken());
+  } catch {
+    return false;
+  }
+  return !!jwt?.exp;
+};

@@ -9,7 +9,6 @@ import Cookies from 'universal-cookie';
 import LoginLogo from '../../../assets/img/loginlogo.svg';
 import { setSnackbar } from '../../actions/appActions';
 import { createOrganizationTrial } from '../../actions/organizationActions';
-import { noExpiryKey } from '../../constants/appConstants';
 import { stringToBoolean } from '../../helpers';
 import Loader from '../common/loader';
 import OrgDataEntry from './signup-steps/orgdata-entry';
@@ -57,7 +56,6 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
   const { campaign = '' } = useParams();
 
   useEffect(() => {
-    window.localStorage.removeItem(noExpiryKey);
     const usedOauthProvider = cookies.get('oauth');
     if (usedOauthProvider) {
       setOauthProvider(usedOauthProvider);
