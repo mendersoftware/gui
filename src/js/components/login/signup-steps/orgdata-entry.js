@@ -83,11 +83,7 @@ export const OrgDataEntry = ({ classes, data: { name, email, emailVerified, tos,
             label={
               <label htmlFor="tos">
                 By checking this you agree to our{' '}
-                <a
-                  href="https://northern.tech/legal/Hosted%20Mender%20Agreement%20-%2005-23-2020%20-%20Northern.tech%20AS.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="https://northern.tech/legal/hosted-mender-agreement-10_10_2022-northern-tech-as.pdf" target="_blank" rel="noopener noreferrer">
                   Terms of service
                 </a>{' '}
                 and{' '}
