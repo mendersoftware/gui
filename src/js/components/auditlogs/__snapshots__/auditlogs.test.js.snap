@@ -223,9 +223,9 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
               
               inputmode="text"
-              placeholder="⁦⁨MM⁩ / ⁨DD⁩ / ⁨YYYY⁩⁩"
+              placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
               type="text"
-              value="⁦⁨01⁩ / ⁨13⁩ / ⁨2019⁩⁩"
+              value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
             />
             <div
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
@@ -274,9 +274,9 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
               
               inputmode="text"
-              placeholder="⁦⁨MM⁩ / ⁨DD⁩ / ⁨YYYY⁩⁩"
+              placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
               type="text"
-              value="⁦⁨01⁩ / ⁨13⁩ / ⁨2019⁩⁩"
+              value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
             />
             <div
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
