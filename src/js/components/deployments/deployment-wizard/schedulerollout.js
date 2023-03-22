@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { FormControl, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, MenuItem, Select } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { makeStyles } from 'tss-react/mui';
 
@@ -14,8 +14,6 @@ const useStyles = makeStyles()(() => ({
   infoStyle: { minWidth: 400, borderBottom: 'none' },
   pickerStyle: { marginBottom: 15, width: 'min-content' }
 }));
-
-const renderInput = params => <TextField {...params} style={{ minWidth: 400 }} />;
 
 export const ScheduleRollout = ({ canSchedule, commonClasses, setDeploymentSettings, deploymentObject, open = false }) => {
   const [isPickerOpen, setIsPickerOpen] = useState(open);
@@ -70,7 +68,7 @@ export const ScheduleRollout = ({ canSchedule, commonClasses, setDeploymentSetti
             minDateTime={moment()}
             disabled={!canSchedule}
             onChange={date => handleStartTimeChange(date.toISOString())}
-            renderInput={renderInput}
+            slotProps={{ textField: { style: { minWidth: 400 } } }}
             value={startTime}
           />
         </FormControl>

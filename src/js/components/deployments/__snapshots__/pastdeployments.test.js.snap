@@ -839,9 +839,9 @@ label+.emotion-20 {
           class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-4"
           id="mui-2"
           inputmode="text"
-          placeholder="⁦⁨MM⁩ / ⁨DD⁩ / ⁨YYYY⁩⁩"
+          placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
           type="text"
-          value="⁦⁨01⁩ / ⁨13⁩ / ⁨2019⁩⁩"
+          value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
         />
         <div
           class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-5"
@@ -890,9 +890,9 @@ label+.emotion-20 {
           class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-4"
           id="mui-4"
           inputmode="text"
-          placeholder="⁦⁨MM⁩ / ⁨DD⁩ / ⁨YYYY⁩⁩"
+          placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
           type="text"
-          value="⁦⁨01⁩ / ⁨13⁩ / ⁨2019⁩⁩"
+          value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
         />
         <div
           class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-5"

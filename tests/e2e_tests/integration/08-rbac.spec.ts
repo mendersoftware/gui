@@ -86,8 +86,11 @@ test.describe('RBAC functionality', () => {
     await page.fill(selectors.password, password);
     await page.click(`button:has-text('Log in')`);
     await page.waitForSelector('text=License information');
+    await page.reload();
+    const releasesButton = page.getByText(/releases/i);
+    await releasesButton.waitFor({ timeout: 7000 });
+    await releasesButton.click();
 
-    await page.click(`.leftNav :text('Releases')`);
     // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
     expect(await page.isVisible(`css=button >> text=Upload`)).toBeFalsy();
 
