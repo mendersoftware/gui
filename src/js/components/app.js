@@ -156,7 +156,7 @@ export const AppRoot = ({
       <>
         {getToken() ? (
           <div id="app">
-            <Header mode={mode} history={history} />
+            <Header mode={mode} />
             <LeftNav />
             <div className="rightFluid container">
               <ErrorBoundary>
