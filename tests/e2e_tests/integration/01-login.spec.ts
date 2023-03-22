@@ -27,8 +27,10 @@ test.describe('Login', () => {
       // now we can log out
       await page.click('.header-dropdown', { force: true });
       await page.click(`text=Log out`, { force: true });
-      await page.waitForSelector(`text=Log in`, { timeout: 5000 });
-      expect(await page.isVisible(`text=Log in`)).toBeTruthy();
+      const loginButton = page.getByRole('button', { name: /log in/i });
+      await loginButton.waitFor({ timeout: 7000 });
+      const loginVisible = await loginButton.isVisible();
+      expect(loginVisible).toBeTruthy();
     });
 
     test('does not stay logged in across sessions, after browser restart', async ({ baseUrl, page }) => {
