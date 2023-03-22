@@ -62,16 +62,19 @@ const releasesSample = {
   ]
 };
 
+const signupHandler = ({ body: signup }, res, ctx) => {
+  if (['email', 'organization', 'plan', 'tos'].every(item => !!signup[item])) {
+    return res(ctx.text('test'), ctx.cookie('JWT', 'test'));
+  }
+  return res(ctx.status(400));
+};
+
 export const organizationHandlers = [
   rest.get('/versions.json', (req, res, ctx) => res(ctx.json(releasesSample))),
   rest.get(`${tenantadmApiUrlv1}/user/tenant`, (req, res, ctx) => res(ctx.json(defaultState.organization.organization))),
   rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/cancel`, (req, res, ctx) => res(ctx.status(200))),
-  rest.post(`https://hosted.mender.io${tenantadmApiUrlv2}/tenants/trial`, ({ body: signup }, res, ctx) => {
-    if (['email', 'organization', 'plan', 'tos'].every(item => !!signup[item])) {
-      return res(ctx.text('test'), ctx.cookie('JWT', 'test'));
-    }
-    return res(ctx.status(400));
-  }),
+  rest.post(`${tenantadmApiUrlv2}/tenants/trial`, signupHandler),
+  rest.post(`https://hosted.mender.io${tenantadmApiUrlv2}/tenants/trial`, signupHandler),
   rest.get(`${tenantadmApiUrlv2}/billing`, (req, res, ctx) => res(ctx.json({ card: { last4: '7890', exp_month: 1, exp_year: 2024, brand: 'testCorp' } }))),
   rest.post(`${tenantadmApiUrlv2}/billing/card`, (req, res, ctx) => res(ctx.json({ intent_id: defaultState.organization.intentId, secret: 'testSecret' }))),
   rest.post(`${tenantadmApiUrlv2}/billing/card/:intentId/confirm`, ({ params: { intentId } }, res, ctx) => {
