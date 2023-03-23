@@ -70,7 +70,7 @@ export const DeviceSystem = ({
       <DeviceDataCollapse title="Mender Gateway">
         <TwoColumnData config={{ 'Server IP': deviceIp }} compact setSnackbar={setSnackbar} />
       </DeviceDataCollapse>
-      <DeviceDataCollapse className={classes.container} title="Device system for this gateway">
+      <DeviceDataCollapse className={classes.container} title="System for this gateway">
         {systemDeviceTotal ? (
           <Devicelist
             customColumnSizes={[]}
@@ -103,7 +103,7 @@ export const DeviceSystem = ({
       </DeviceDataCollapse>
       <div className="flexbox">
         <Button color="secondary" component={Link} to={`/deployments?deviceId=${device.id}&open=true`}>
-          Create deployment for this device system
+          Create deployment for this system
         </Button>
         <Button onClick={onConnectToGatewayClick}>Connect devices</Button>
       </div>
