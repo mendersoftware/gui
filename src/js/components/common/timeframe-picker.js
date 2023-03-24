@@ -1,11 +1,8 @@
 import React, { memo, useEffect, useState } from 'react';
 
-import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import moment from 'moment';
-
-const renderInput = params => <TextField className="margin-top-none margin-left-small" {...params} />;
 
 export const TimeframePicker = ({ onChange, ...props }) => {
   const [tonight] = useState(moment().endOf('day'));
@@ -39,23 +36,8 @@ export const TimeframePicker = ({ onChange, ...props }) => {
 
   return (
     <>
-      <DatePicker
-        onChange={handleChangeStartDate}
-        label="From"
-        inputFormat="MMMM Do"
-        value={startDate}
-        maxDate={props.endDate ? endDate : tonight}
-        renderInput={renderInput}
-      />
-      <DatePicker
-        className="margin-left-small"
-        onChange={handleChangeEndDate}
-        label="To"
-        inputFormat="MMMM Do"
-        value={endDate}
-        maxDate={tonight}
-        renderInput={renderInput}
-      />
+      <DatePicker onChange={handleChangeStartDate} label="From" format="MMMM Do" value={startDate} maxDate={props.endDate ? endDate : tonight} />
+      <DatePicker className="margin-left-small" onChange={handleChangeEndDate} label="To" format="MMMM Do" value={endDate} maxDate={tonight} />
     </>
   );
 };

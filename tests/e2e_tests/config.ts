@@ -10,7 +10,7 @@ const contextArgs = {
 export const contextOptions = {
   ...contextArgs,
   contextOptions: contextArgs,
-  slowMo: 50,
+  // slowMo: 50,
   screenshot: 'only-on-failure',
   video: 'retry-with-video',
   // headless: false,

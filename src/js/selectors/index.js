@@ -248,7 +248,14 @@ export const getRecentDeployments = createSelector([getDeploymentsById, getDeplo
       if (!relevantDeploymentStates.includes(state) || !byStatus.deploymentIds.length) {
         return accu;
       }
-      accu[state] = byStatus.deploymentIds.map(id => deploymentsById[id]).slice(0, DEPLOYMENT_CUTOFF);
+      accu[state] = byStatus.deploymentIds
+        .reduce((accu, id) => {
+          if (deploymentsById[id]) {
+            accu.push(deploymentsById[id]);
+          }
+          return accu;
+        }, [])
+        .slice(0, DEPLOYMENT_CUTOFF);
       accu.total += byStatus.total;
       return accu;
     },

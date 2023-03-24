@@ -34,9 +34,12 @@ export const cancelRequest = (tenantId, reason) => dispatch =>
     Promise.resolve(dispatch(setSnackbar('Deactivation request was sent successfully', TIMEOUTS.fiveSeconds, '')))
   );
 
+const devLocations = ['localhost', 'docker.mender.io'];
 export const createOrganizationTrial = data => dispatch => {
   const { location } = locations[data.location];
-  const targetLocation = `https://${window.location.hostname.startsWith('staging') ? 'staging.' : ''}${location}`;
+  const targetLocation = devLocations.includes(window.location.hostname)
+    ? ''
+    : `https://${window.location.hostname.startsWith('staging') ? 'staging.' : ''}${location}`;
   const target = `${targetLocation}${tenantadmApiUrlv2}/tenants/trial`;
   return Api.postUnauthorized(target, data)
     .catch(err => {

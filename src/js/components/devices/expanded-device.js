@@ -182,8 +182,8 @@ const tabs = [
   },
   {
     component: DeviceSystem,
-    title: () => 'Device System',
-    value: 'device-system',
+    title: () => 'System',
+    value: 'system',
     isApplicable: ({ device: { attributes = {} } }) => stringToBoolean(attributes?.mender_is_gateway ?? '')
   }
 ];

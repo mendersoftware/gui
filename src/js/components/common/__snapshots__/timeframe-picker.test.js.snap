@@ -396,8 +396,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     <label
       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-1"
       data-shrink="true"
-      for="mui-1"
-      id="mui-1-label"
+      for="mui-2"
+      id="mui-2-label"
     >
       From
     </label>
@@ -406,11 +406,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     >
       <input
         aria-invalid="false"
+        autocomplete="off"
         class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-3"
-        id="mui-1"
-        placeholder="mmmm do"
+        id="mui-2"
+        inputmode="text"
+        placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
         type="text"
-        value="January 13th"
+        value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
       />
       <div
         class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-4"
@@ -445,8 +447,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     <label
       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-1"
       data-shrink="true"
-      for="mui-2"
-      id="mui-2-label"
+      for="mui-4"
+      id="mui-4-label"
     >
       To
     </label>
@@ -455,11 +457,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
     >
       <input
         aria-invalid="false"
+        autocomplete="off"
         class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-3"
-        id="mui-2"
-        placeholder="mmmm do"
+        id="mui-4"
+        inputmode="text"
+        placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
         type="text"
-        value="January 13th"
+        value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
       />
       <div
         class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-4"
