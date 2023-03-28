@@ -1,16 +1,17 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { act, render } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
 import ReleaseDetails from './releasedetails';
 
 const mockStore = configureStore([thunk]);
 
-describe('Artifact Component', () => {
+describe('ReleaseDetails Component', () => {
   let store;
 
   beforeEach(() => {

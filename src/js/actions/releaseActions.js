@@ -180,6 +180,9 @@ export const removeArtifact = id => (dispatch, getState) =>
     })
     .catch(err => commonErrorHandler(err, `Error removing artifact:`, dispatch));
 
+export const removeRelease = id => (dispatch, getState) =>
+  Promise.all(getState().releases.byId[id].Artifacts.map(({ id }) => dispatch(removeArtifact(id)))).then(() => dispatch(selectRelease()));
+
 export const selectArtifact = artifact => (dispatch, getState) => {
   if (!artifact) {
     return dispatch({ type: ReleaseConstants.SELECTED_ARTIFACT, artifact });

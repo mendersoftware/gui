@@ -14,6 +14,7 @@ import {
   getReleases,
   refreshReleases,
   removeArtifact,
+  removeRelease,
   selectArtifact,
   selectRelease,
   uploadArtifact
@@ -263,6 +264,25 @@ describe('release actions', () => {
       { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: [], total: 0 } }
     ];
     await store.dispatch(removeArtifact('art1'));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should remove a release by name', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      { type: ReleaseConstants.RELEASE_REMOVED, release: defaultState.releases.byId.r1.Name },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, isLoading: true, releaseIds: [], total: 0 } },
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+      {
+        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        value: { ...defaultState.releases.releasesList, releaseIds: retrievedReleaseIds, total: 5000 }
+      },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList } },
+      { type: ReleaseConstants.SELECTED_RELEASE, release: null }
+    ];
+    await store.dispatch(removeRelease(defaultState.releases.byId.r1.Name));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

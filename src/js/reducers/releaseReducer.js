@@ -52,6 +52,7 @@ export const initialState = {
     total: 0,
     visibleSection: { ...ReleaseConstants.defaultVisibleSection }
   },
+  releaseTags: [],
   /*
    * Return single release with corresponding Artifacts
    */

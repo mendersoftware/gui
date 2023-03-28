@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
-import { Autocomplete, FormControl, Input, InputLabel, TextField, Tooltip } from '@mui/material';
+import { FormControl, Input, InputLabel, TextField, Tooltip } from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { duplicateFilter, unionizeStrings } from '../../../helpers';
 import { useDebounce } from '../../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
+import ChipSelect from '../../common/chipselect';
 import { FileInformation } from './addartifact';
 
 export const ReleaseTooltip = () => (
@@ -60,7 +60,7 @@ export const VersionInformation = ({ creation = {}, onRemove, updateCreation }) 
 const checkDestinationValidity = destination => (destination.length ? /^(?:\/|[a-z]+:\/\/)/.test(destination) : true);
 
 export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTypes = [], onboardingState, onRemove, updateCreation }) => {
-  const { customDeviceTypes = [], destination = '', file, name = '', selectedDeviceTypes = [], type } = creation;
+  const { destination = '', file, name = '', selectedDeviceTypes = [], type } = creation;
   const deviceTypeRef = useRef();
   const releaseNameRef = useRef();
   const destinationRef = useRef();
@@ -84,33 +84,14 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
     }
   }, [debouncedName]);
 
-  // to allow device types to automatically be selected on entered ',' we have to filter the input and transform any completed device types (followed by a ',')
-  // while also checking for duplicates and allowing complete resets of the input
-  const onTextInputChange = (inputValue, reason) => {
-    const value = inputValue || '';
-    if (reason === 'clear') {
-      return updateCreation({ customDeviceTypes: '', selectedDeviceTypes: [], isValid: false });
-    } else if (reason === 'reset') {
-      return;
-    }
-    const lastIndex = value.lastIndexOf(',');
-    const possibleCustomDeviceTypes = value.substring(0, lastIndex).split(',').filter(duplicateFilter);
-    const customDeviceTypes = value.substring(lastIndex + 1);
-    const possibleDeviceTypeSelection = unionizeStrings(selectedDeviceTypes, possibleCustomDeviceTypes);
-    if (customDeviceTypes.length > 3) {
+  const onSelectionChanged = ({ currentValue = '', selection = [] }) => {
+    if (currentValue.length > 3) {
       advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
     }
-    updateCreation({ customDeviceTypes, isValid: possibleDeviceTypeSelection.length && name && destination, selectedDeviceTypes: possibleDeviceTypeSelection });
-  };
-
-  const onDeviceTypeSelectionChange = value => updateCreation({ isValid: value.length && name && destination, selectedDeviceTypes: value });
-
-  const onTextInputLeave = value => {
-    const possibleDeviceTypeSelection = unionizeStrings(selectedDeviceTypes, [value]);
     updateCreation({
-      customDeviceTypes: '',
-      isValid: possibleDeviceTypeSelection.length && name && destination,
-      selectedDeviceTypes: possibleDeviceTypeSelection
+      customDeviceTypes: currentValue,
+      isValid: (currentValue.length || selection.length) && name && destination,
+      selectedDeviceTypes: selection
     });
   };
 
@@ -190,35 +171,14 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
           inputRef={releaseNameRef}
         />
       </FormControl>
-      <Autocomplete
+      <ChipSelect
         id="compatible-device-type-selection"
-        // blurOnSelect
-        value={selectedDeviceTypes}
-        filterSelectedOptions
-        freeSolo={true}
-        includeInputInList={true}
-        multiple
-        // allow edits to the textinput without deleting existing device types by ignoring backspace
-        onChange={(e, value) => (e.key !== 'Backspace' ? onDeviceTypeSelectionChange(value) : null)}
-        onInputChange={(e, v, reason) => onTextInputChange(null, reason)}
+        inputRef={deviceTypeRef}
+        label="Device types compatible"
+        onChange={onSelectionChanged}
+        placeholder="Enter all device types this software is compatible with"
+        selection={selectedDeviceTypes}
         options={deviceTypes}
-        renderInput={params => (
-          <TextField
-            className="device-types-input"
-            {...params}
-            fullWidth
-            inputProps={{
-              ...params.inputProps,
-              value: customDeviceTypes
-            }}
-            key="device-types"
-            label="Device types compatible"
-            onBlur={e => onTextInputLeave(e.target.value)}
-            onChange={e => onTextInputChange(e.target.value, 'input')}
-            placeholder="Enter all device types this software is compatible with"
-            inputRef={deviceTypeRef}
-          />
-        )}
       />
       {onboardingComponent}
       {extraOnboardingComponent}

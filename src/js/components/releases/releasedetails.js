@@ -1,43 +1,142 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Dropzone from 'react-dropzone';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // material ui
-import { Sort as SortIcon } from '@mui/icons-material';
-import { Button, Tooltip, Typography } from '@mui/material';
+import {
+  Close as CloseIcon,
+  Edit as EditIcon,
+  HighlightOffOutlined as HighlightOffOutlinedIcon,
+  Link as LinkIcon,
+  Replay as ReplayIcon,
+  Sort as SortIcon
+} from '@mui/icons-material';
+import { Button, Collapse, Divider, Drawer, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip } from '@mui/material';
+import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
+import { makeStyles } from 'tss-react/mui';
+
+import copy from 'copy-to-clipboard';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { editArtifact, removeArtifact, selectArtifact, selectRelease, uploadArtifact } from '../../actions/releaseActions';
+import { editArtifact, removeArtifact, removeRelease, selectArtifact, selectRelease, uploadArtifact } from '../../actions/releaseActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { customSort, toggle } from '../../helpers';
-import { getOnboardingState, getUserCapabilities } from '../../selectors';
+import { FileSize, customSort, formatTime, toggle } from '../../helpers';
+import { getFeatures, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
-import ForwardingLink from '../common/forwardlink';
+import ChipSelect from '../common/chipselect';
+import Confirm from '../common/confirm';
 import Loader from '../common/loader';
+import { RelativeTime } from '../common/time';
 import { ExpandArtifact } from '../helptips/helptooltips';
-import ReleaseRepositoryItem from './artifact';
+import Artifact from './artifact';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 
-const columnHeaders = [
-  { title: 'Device type compatibility', name: 'device_types', sortable: false },
-  { title: 'Last modified', name: 'modified', sortable: true },
-  { title: 'Type', name: 'type', sortable: false },
-  { title: 'Size', name: 'size', sortable: true }
+const DeviceTypeCompatibility = ({ artifact }) => {
+  const compatible = artifact.artifact_depends ? artifact.artifact_depends.device_type.join(', ') : artifact.device_types_compatible.join(', ');
+  return (
+    <Tooltip title={compatible} placement="top-start">
+      <div className="text-overflow">{compatible}</div>
+    </Tooltip>
+  );
+};
+
+export const columns = [
+  {
+    title: 'Device type compatibility',
+    name: 'device_types',
+    sortable: false,
+    render: DeviceTypeCompatibility
+  },
+  {
+    title: 'Type',
+    name: 'type',
+    sortable: false,
+    render: ({ artifact }) => <div style={{ maxWidth: '100vw' }}>{artifact.updates.reduce((accu, item) => (accu ? accu : item.type_info.type), '')}</div>
+  },
+  { title: 'Size', name: 'size', sortable: true, render: ({ artifact }) => <FileSize fileSize={artifact.size} /> },
+  { title: 'Last modified', name: 'modified', sortable: true, render: ({ artifact }) => <RelativeTime updateTime={formatTime(artifact.modified)} /> }
 ];
 
-const UploadArtifactOnboardingComponent = ({ dropzoneRef, onboardingState, demoArtifactLink, releases }) => {
-  if (!dropzoneRef.current || releases.length) {
-    return null;
+const defaultActions = [
+  {
+    action: ({ onCreateDeployment, selection }) => onCreateDeployment(selection),
+    icon: <ReplayIcon />,
+    isApplicable: ({ userCapabilities: { canDeploy } }) => canDeploy,
+    key: 'deploy',
+    title: 'Create a deployment for this release'
+  },
+  {
+    action: ({ onDeleteRelease, selection }) => onDeleteRelease(selection),
+    icon: <HighlightOffOutlinedIcon className="red" />,
+    isApplicable: ({ userCapabilities: { canManageReleases } }) => canManageReleases,
+    key: 'delete',
+    title: 'Delete release'
   }
-  const dropzoneAnchor = { left: 30, top: dropzoneRef.current.offsetTop + dropzoneRef.current.offsetHeight };
-  return getOnboardingComponentFor(
-    onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
-    { ...onboardingState, demoArtifactLink },
-    { anchor: dropzoneAnchor, place: 'left' }
+];
+
+const useStyles = makeStyles()(theme => ({
+  container: {
+    display: 'flex',
+    position: 'fixed',
+    bottom: theme.spacing(6.5),
+    right: theme.spacing(6.5),
+    zIndex: 10,
+    minWidth: 400,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    pointerEvents: 'none',
+    [`.${speedDialActionClasses.staticTooltipLabel}`]: {
+      minWidth: 'max-content'
+    }
+  },
+  fab: { margin: theme.spacing(2) },
+  tagSelect: { maxWidth: 350 },
+  label: {
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(4)
+  }
+}));
+
+export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease, userCapabilities }) => {
+  const [showActions, setShowActions] = useState(false);
+  const { classes } = useStyles();
+
+  const actions = useMemo(() => {
+    return Object.values(defaultActions).reduce((accu, action) => {
+      if (action.isApplicable({ userCapabilities })) {
+        accu.push(action);
+      }
+      return accu;
+    }, []);
+  }, [JSON.stringify(userCapabilities)]);
+
+  return (
+    <div className={classes.container} ref={innerRef}>
+      <div className={classes.label}>Release actions</div>
+      <SpeedDial
+        className={classes.fab}
+        ariaLabel="device-actions"
+        icon={<SpeedDialIcon />}
+        onClose={() => setShowActions(false)}
+        onOpen={setShowActions}
+        open={Boolean(showActions)}
+      >
+        {actions.map(action => (
+          <SpeedDialAction
+            key={action.key}
+            aria-label={action.key}
+            icon={action.icon}
+            tooltipTitle={action.title}
+            tooltipOpen
+            onClick={() => action.action({ ...actionCallbacks, selection: selectedRelease })}
+          />
+        ))}
+      </SpeedDial>
+    </div>
   );
 };
 
@@ -73,25 +172,70 @@ const OnboardingComponent = ({ creationRef, repoItemAnchor, onboardingState, art
   );
 };
 
+const ReleaseTags = ({ existingTags = [] }) => {
+  const [selectedTags, setSelectedTags] = useState(existingTags);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const onToggleEdit = () => {
+    setSelectedTags(existingTags);
+    setIsEditing(toggle);
+  };
+
+  const onTagSelectionChanged = ({ selection }) => setSelectedTags(selection);
+
+  const onSave = () => {
+    console.log('saving tags', selectedTags);
+  };
+
+  const { classes } = useStyles();
+
+  return (
+    <div className="margin-bottom" style={{ maxWidth: 500 }}>
+      <div className="flexbox center-aligned">
+        <h4 className="margin-right">Tags</h4>
+        {!isEditing && (
+          <Button onClick={onToggleEdit} size="small" startIcon={<EditIcon />}>
+            Edit
+          </Button>
+        )}
+      </div>
+      <ChipSelect
+        className={classes.tagSelect}
+        id="release-tags"
+        label=""
+        onChange={onTagSelectionChanged}
+        disabled={!isEditing}
+        key={`${isEditing}`}
+        placeholder={isEditing ? 'Enter release tags' : 'Click edit to add release tags'}
+        selection={selectedTags}
+        options={existingTags}
+      />
+      <Collapse in={isEditing}>
+        <div className="flexbox center-aligned margin-top-small" style={{ justifyContent: 'end' }}>
+          <Button variant="contained" onClick={onSave} color="secondary" style={{ marginRight: 10 }}>
+            Save
+          </Button>
+          <Button onClick={onToggleEdit}>Cancel</Button>
+        </div>
+      </Collapse>
+    </div>
+  );
+};
+
 const ArtifactsList = ({
   advanceOnboarding,
-  artifactIncluded,
-  canDeploy,
   artifacts,
+  innerRef,
   editArtifact,
   onboardingState,
   onExpansion,
-  pastDeploymentsCount,
-  release,
   selectArtifact,
   selectedArtifact,
-  selectRelease,
-  setShowRemoveArtifactDialog
+  setShowRemoveArtifactDialog,
+  showHelptips
 }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
-  const creationRef = useRef();
-  let repoItemAnchor = useRef();
 
   const onRowSelection = artifact => {
     if (!artifact || !selectedArtifact || selectedArtifact.id !== artifact.id) {
@@ -102,16 +246,6 @@ const ArtifactsList = ({
     if (!onboardingState.complete) {
       advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING);
     }
-  };
-
-  const onCreateDeploymentFrom = release => {
-    if (!onboardingState.complete) {
-      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING);
-      if (pastDeploymentsCount === 1) {
-        advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING);
-      }
-    }
-    selectRelease(release);
   };
 
   const sortColumn = col => {
@@ -126,30 +260,15 @@ const ArtifactsList = ({
   if (!artifacts.length) {
     return null;
   }
-  const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
-    const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
-    return (
-      <ReleaseRepositoryItem
-        key={`repository-item-${index}`}
-        artifact={pkg}
-        expanded={expanded}
-        index={index}
-        itemRef={repoItemAnchor}
-        onEdit={editArtifact}
-        onRowSelection={() => onRowSelection(pkg)}
-        // this will be run after expansion + collapse and both need some time to fully settle
-        // otherwise the measurements are off
-        onExpanded={onExpansion}
-        showRemoveArtifactDialog={setShowRemoveArtifactDialog}
-      />
-    );
-  });
+
+  const items = artifacts.sort(customSort(sortDown, sortCol));
 
   return (
     <>
-      <div>
+      <h4>Artifacts in this Release:</h4>
+      <div ref={innerRef}>
         <div className="release-repo-item repo-item repo-header">
-          {columnHeaders.map(item => (
+          {columns.map(item => (
             <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" onClick={() => sortColumn(item)}>
               <div>
                 {item.title}
@@ -159,57 +278,66 @@ const ArtifactsList = ({
           ))}
           <div style={{ width: 48 }} />
         </div>
-        {items}
-        {canDeploy && (
-          <Button
-            color="primary"
-            variant="contained"
-            ref={creationRef}
-            component={ForwardingLink}
-            to={`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(release.Name)}`}
-            style={{ marginLeft: 20 }}
-            onClick={() => onCreateDeploymentFrom(release)}
-          >
-            Create deployment with this release
-          </Button>
-        )}
+        {items.map((pkg, index) => {
+          const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
+          return (
+            <Artifact
+              key={`repository-item-${index}`}
+              artifact={pkg}
+              columns={columns}
+              expanded={expanded}
+              index={index}
+              onEdit={editArtifact}
+              onRowSelection={() => onRowSelection(pkg)}
+              // this will be run after expansion + collapse and both need some time to fully settle
+              // otherwise the measurements are off
+              onExpanded={onExpansion}
+              showRemoveArtifactDialog={setShowRemoveArtifactDialog}
+            />
+          );
+        })}
       </div>
-      <OnboardingComponent creationRef={creationRef} repoItemAnchor={repoItemAnchor} onboardingState={onboardingState} artifactIncluded={artifactIncluded} />
+      {showHelptips && (
+        <span className="relative">
+          <ExpandArtifact />
+        </span>
+      )}
     </>
   );
 };
 
-export const Artifact = ({
+export const ReleaseDetails = ({
   advanceOnboarding,
   artifactIncluded,
-  demoArtifactLink,
   editArtifact,
+  features,
   loading,
   onboardingState,
-  onUpload,
   pastDeploymentsCount,
   refreshArtifacts,
   release,
   releases,
   removeArtifact,
+  removeRelease,
   selectArtifact,
   selectedArtifact,
   selectRelease,
   setSnackbar,
   showHelptips,
-  uploading,
   userCapabilities
 }) => {
   const [wasSelectedRecently, setWasSelectedRecently] = useState(false);
   const [showRemoveDialog, setShowRemoveArtifactDialog] = useState(false);
+  const [confirmReleaseDeletion, setConfirmReleaseDeletion] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   // eslint-disable-next-line no-unused-vars
   const windowSize = useWindowSize();
+  const repoRef = useRef();
+  const creationRef = useRef();
+  const navigate = useNavigate();
 
-  const dropzoneRef = useRef();
-
-  const { canDeploy, canUploadReleases } = userCapabilities;
+  const { hasReleaseTags } = features;
 
   useEffect(() => {
     setWasSelectedRecently(true);
@@ -227,114 +355,118 @@ export const Artifact = ({
     }
   }, [wasSelectedRecently]);
 
-  const onDrop = (acceptedFiles, rejectedFiles) => {
-    if (acceptedFiles.length) {
-      onUpload(acceptedFiles[0]);
-    }
-    if (rejectedFiles.length) {
-      setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null);
-    }
-  };
-
   const editArtifactData = (id, description) => editArtifact(id, { description }).then(refreshArtifacts);
 
   const onExpansion = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), TIMEOUTS.halfASecond);
 
   const onRemoveArtifact = artifact => removeArtifact(artifact.id).finally(() => setShowRemoveArtifactDialog(false));
 
+  const copyLinkToClipboard = () => {
+    const location = window.location.href.substring(0, window.location.href.indexOf('/releases') + '/releases'.length);
+    copy(`${location}?id=${release.Name}`);
+    setSnackbar('Link copied to clipboard');
+  };
+
+  const onCloseClick = () => selectRelease();
+
+  const onCreateDeployment = () => {
+    if (!onboardingState.complete) {
+      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING);
+      if (pastDeploymentsCount === 1) {
+        advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING);
+      }
+    }
+    navigate(`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(release.Name)}`);
+  };
+
+  const onToggleReleaseDeletion = () => setConfirmReleaseDeletion(toggle);
+
+  const onDeleteRelease = () => removeRelease(release.Name).then(() => setConfirmReleaseDeletion(false));
+
   const artifacts = release.Artifacts ?? [];
-
-  const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
-
-  if (loading || wasSelectedRecently) {
-    return (
-      <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
-        <Loader show={true} />
-      </div>
-    );
-  }
   return (
-    <div className="relative release-repo margin-left" style={{ width: '100%' }}>
-      <div className="muted margin-bottom">
-        <Typography variant="body1" style={{ marginBottom: 10 }}>
-          Release:
-        </Typography>
-        <Typography variant="body2">{release.Name || 'No release selected'}</Typography>
-      </div>
-      {!!release.Artifacts && (
-        <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-          Artifacts in this Release:
-        </Typography>
-      )}
-      <UploadArtifactOnboardingComponent dropzoneRef={dropzoneRef} onboardingState={onboardingState} demoArtifactLink={demoArtifactLink} releases={releases} />
-      <div className="relative margin-top margin-right-small">
-        <ArtifactsList
-          advanceOnboarding={advanceOnboarding}
-          artifactIncluded={artifactIncluded}
-          artifacts={artifacts}
-          canDeploy={canDeploy}
-          editArtifact={editArtifactData}
-          onboardingState={onboardingState}
-          onExpansion={onExpansion}
-          pastDeploymentsCount={pastDeploymentsCount}
-          release={release}
-          selectArtifact={selectArtifact}
-          selectedArtifact={selectedArtifact}
-          selectRelease={selectRelease}
-          setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
-        />
-        {showHelptips && artifacts.length ? <ExpandArtifact /> : null}
-
-        {!artifacts.length && (
-          <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }} ref={dropzoneRef}>
-            {releases.length > 0 ? (
-              <p>Select a Release on the left to view its Artifact details</p>
-            ) : (
-              <Dropzone activeClassName="active" disabled={uploading} multiple={false} noClick={true} onDrop={onDrop} rejectClassName="active">
-                {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps({ className: dropzoneClass })} onClick={() => onUpload()}>
-                    <input {...getInputProps()} disabled={uploading} />
-                    <p>
-                      There are no Releases yet.{' '}
-                      {canUploadReleases && (
-                        <>
-                          <a>Upload an Artifact</a> to create a new Release
-                        </>
-                      )}
-                    </p>
-                  </div>
-                )}
-              </Dropzone>
+    <Drawer anchor="right" open={!!release.Name} onClose={onCloseClick} PaperProps={{ style: { minWidth: '60vw' } }}>
+      {loading || wasSelectedRecently ? (
+        <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
+          <Loader show={true} />
+        </div>
+      ) : (
+        <>
+          <div className="flexbox center-aligned space-between">
+            <div className="flexbox center-aligned">
+              <b>
+                Release information for <i>{release.Name}</i>
+              </b>
+              <IconButton onClick={copyLinkToClipboard} size="large">
+                <LinkIcon />
+              </IconButton>
+            </div>
+            <div className="flexbox center-aligned">
+              <div className="muted margin-right flexbox">
+                <div className="margin-right-small">Last modified:</div>
+                <RelativeTime updateTime={release.modified} />
+              </div>
+              <IconButton onClick={onCloseClick} aria-label="close" size="large">
+                <CloseIcon />
+              </IconButton>
+            </div>
+          </div>
+          <Divider className="margin-bottom" />
+          {hasReleaseTags && <ReleaseTags />}
+          <ArtifactsList
+            advanceOnboarding={advanceOnboarding}
+            artifacts={artifacts}
+            editArtifact={editArtifactData}
+            innerRef={repoRef}
+            onboardingState={onboardingState}
+            onExpansion={onExpansion}
+            selectArtifact={selectArtifact}
+            selectedArtifact={selectedArtifact}
+            setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
+            showHelptips={showHelptips}
+          />
+          <OnboardingComponent creationRef={creationRef} repoItemAnchor={repoRef} onboardingState={onboardingState} artifactIncluded={artifactIncluded} />
+          {showRemoveDialog && (
+            <RemoveArtifactDialog
+              artifact={selectedArtifact.name}
+              onCancel={() => setShowRemoveArtifactDialog(false)}
+              onRemove={() => onRemoveArtifact(selectedArtifact)}
+            />
+          )}
+          <div
+            className="relative"
+            style={{ position: 'absolute', top: creationRef.current ? creationRef.current.offsetTop - 15 : '75%', right: 80, width: '100%' }}
+          >
+            {confirmReleaseDeletion && (
+              <Confirm type="releaseRemoval" classes="confirmation-overlay" action={onDeleteRelease} cancel={onToggleReleaseDeletion} />
             )}
           </div>
-        )}
-        {showRemoveDialog && (
-          <RemoveArtifactDialog
-            artifact={selectedArtifact.name}
-            onCancel={() => setShowRemoveArtifactDialog(false)}
-            onRemove={() => onRemoveArtifact(selectedArtifact)}
+          <ReleaseQuickActions
+            actionCallbacks={{ onCreateDeployment, onDeleteRelease: onToggleReleaseDeletion }}
+            innerRef={creationRef}
+            selectedRelease={release}
+            userCapabilities={userCapabilities}
           />
-        )}
-      </div>
-    </div>
+        </>
+      )}
+    </Drawer>
   );
 };
 
-const actionCreators = { advanceOnboarding, editArtifact, removeArtifact, selectArtifact, setSnackbar, selectRelease, uploadArtifact };
+const actionCreators = { advanceOnboarding, editArtifact, removeArtifact, removeRelease, selectArtifact, selectRelease, setSnackbar, uploadArtifact };
 
 const mapStateToProps = state => {
   return {
     artifactIncluded: state.onboarding.artifactIncluded,
-    demoArtifactLink: state.app.demoArtifactLink,
+    features: getFeatures(state),
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,
     release: state.releases.byId[state.releases.selectedRelease] ?? {},
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     showHelptips: state.users.showHelptips,
-    uploading: state.app.uploading,
     userCapabilities: getUserCapabilities(state)
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Artifact);
+export default connect(mapStateToProps, actionCreators)(ReleaseDetails);

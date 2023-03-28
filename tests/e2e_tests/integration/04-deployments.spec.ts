@@ -18,7 +18,7 @@ test.describe('Deployments', () => {
 
   test('allows shortcut deployments', async ({ loggedInPage: page }) => {
     // create an artifact to download first
-    await page.click(`.repository-list-item:has-text('mender-demo-artifact')`);
+    await page.click(`text=/mender-demo-artifact/i`);
     await page.click(`a:has-text('Create deployment')`);
     await page.waitForSelector(selectors.deviceGroupSelect, { timeout: 5000 });
     await page.focus(selectors.deviceGroupSelect);

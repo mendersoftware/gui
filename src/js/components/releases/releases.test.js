@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -67,19 +67,18 @@ describe('Releases Component', () => {
     const { rerender } = render(ui);
     await act(async () => jest.advanceTimersByTime(1000));
     await waitFor(() => rerender(ui));
+    await user.click(screen.getAllByText(defaultState.releases.byId.r1.Name)[0]);
     expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Remove this artifact/i }));
     await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /Cancel/i }));
     await waitFor(() => rerender(ui));
-    const releaseRepoItem = document.body.querySelector('.release-repo');
-    await user.click(within(releaseRepoItem).getByText(defaultState.releases.byId.r1.Name));
-    await user.click(screen.getByText(/Last modified/i));
+    await user.click(screen.getByRole('button', { name: /Close/i }));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
-    await user.type(screen.getByPlaceholderText(/Filter/i), 'b1');
-    await act(async () => jest.advanceTimersByTime(1000));
+    await user.type(screen.getByPlaceholderText(/Search/i), 'b1');
     await waitFor(() => rerender(ui));
+    screen.debug(undefined, 20000);
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
   });
 });

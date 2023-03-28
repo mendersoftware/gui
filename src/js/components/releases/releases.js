@@ -1,9 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { CloudUpload } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import { Button, Tab, Tabs } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+
+import pluralize from 'pluralize';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
@@ -11,32 +15,172 @@ import { createArtifact, getReleases, removeArtifact, selectRelease, setReleases
 import { TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { defaultVisibleSection } from '../../constants/releaseConstants';
-import { getDeviceTypes, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
+import { getDeviceTypes, getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import ChipSelect from '../common/chipselect';
 import InfoHint from '../common/info-hint';
+import Search from '../common/search';
 import AddArtifactDialog from './dialogs/addartifact';
-import ReleaseDetails from './releasedetails';
+import SelectedRelease from './releasedetails';
 import ReleasesList from './releaseslist';
 
 const refreshArtifactsLength = 60000;
 
-export const Artifacts = props => {
+const tabs = [
+  { key: 'releases', title: 'Releases', component: ReleasesList, isApplicable: () => true },
+  {
+    key: 'delta',
+    title: 'Delta Artifacts generation',
+    component: 'div',
+    isApplicable: ({ features: { hasDeltaProgress }, tenantCapabilities: { canDelta } }) => hasDeltaProgress && canDelta
+  }
+];
+
+const UploadArtifactOnboardingComponent = ({ dropzoneRef, onboardingState, demoArtifactLink, releases }) => {
+  if (!dropzoneRef.current || releases.length) {
+    return null;
+  }
+  const dropzoneAnchor = { left: 30, top: dropzoneRef.current.offsetTop + dropzoneRef.current.offsetHeight };
+  return getOnboardingComponentFor(
+    onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
+    { ...onboardingState, demoArtifactLink },
+    { anchor: dropzoneAnchor, place: 'left' }
+  );
+};
+
+const useStyles = makeStyles()(theme => ({
+  empty: { margin: '8vh auto' },
+  filters: { maxWidth: 400, alignItems: 'end', columnGap: 50 },
+  searchNote: { minHeight: '1.8rem' },
+  tabContainer: { alignSelf: 'flex-start' },
+  uploadButton: { marginTop: theme.spacing(1.5), minWidth: 164 }
+}));
+
+const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop, onUpload }) => (
+  <div className={`dashboard-placeholder fadeIn ${className}`} ref={dropzoneRef}>
+    <Dropzone activeClassName="active" disabled={uploading} multiple={false} noClick={true} onDrop={onDrop} rejectClassName="active">
+      {({ getRootProps, getInputProps }) => (
+        <div {...getRootProps({ className: uploading ? 'dropzone disabled muted' : 'dropzone' })} onClick={() => onUpload()}>
+          <input {...getInputProps()} disabled={uploading} />
+          <p>
+            There are no Releases yet.{' '}
+            {canUpload && (
+              <>
+                <a>Upload an Artifact</a> to create a new Release
+              </>
+            )}
+          </p>
+        </div>
+      )}
+    </Dropzone>
+  </div>
+);
+
+const Header = ({
+  canUpload,
+  existingTags = [],
+  features,
+  hasReleases,
+  releasesListState,
+  setReleasesListState,
+  onUploadClick,
+  tenantCapabilities,
+  uploadButtonRef
+}) => {
+  const { hasReleaseTags } = features;
+  const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
+  const { classes } = useStyles();
+
+  const searchUpdated = searchTerm => setReleasesListState({ searchTerm, searchAttribute: undefined });
+
+  const onTabChanged = (e, tab) => setReleasesListState({ tab });
+
+  const onTagSelectionChanged = ({ selection }) => setReleasesListState({ selectedTags: selection });
+
+  const availableTabs = useMemo(
+    () =>
+      tabs.reduce((accu, tab) => {
+        if (tab.isApplicable({ features, tenantCapabilities })) {
+          accu.push(tab);
+        } else {
+          accu.push({ ...tab, disabled: true });
+        }
+        return accu;
+      }, []),
+    [JSON.stringify(tenantCapabilities)]
+  );
+
+  return (
+    <div>
+      <div className="flexbox space-between">
+        <Tabs className={classes.tabContainer} value={tab} onChange={onTabChanged} textColor="primary">
+          {availableTabs.map(({ disabled = false, key, title }) => (
+            <Tab key={key} label={title} value={key} disabled={disabled} />
+          ))}
+        </Tabs>
+        <div>
+          {canUpload && (
+            <>
+              <Button
+                ref={uploadButtonRef}
+                color="secondary"
+                className={classes.uploadButton}
+                onClick={onUploadClick}
+                startIcon={<CloudUpload fontSize="small" />}
+                variant="contained"
+              >
+                Upload
+              </Button>
+              <InfoHint content="Upload an Artifact to an existing or new Release" />
+            </>
+          )}
+        </div>
+      </div>
+      {hasReleases && (
+        <div className={`two-columns ${classes.filters}`}>
+          <Search onSearch={searchUpdated} searchTerm={searchTerm} placeholder="Search releases by name" />
+          {hasReleaseTags && (
+            <ChipSelect
+              id="release-tag-selection"
+              label="Filter by tag"
+              onChange={onTagSelectionChanged}
+              placeholder="Filter by tag"
+              selection={selectedTags}
+              options={existingTags}
+            />
+          )}
+        </div>
+      )}
+      <p className={`muted ${classes.searchNote}`}>{searchTerm && searchTotal !== total ? `Filtered from ${total} ${pluralize('Release', total)}` : ''}</p>
+    </div>
+  );
+};
+
+export const Releases = props => {
   const {
-    canUpload,
+    demoArtifactLink,
     getReleases,
     onboardingState,
+    features,
+    hasReleases,
     releases,
     releasesListState,
+    releaseTags,
     selectedRelease,
     selectRelease,
     setReleasesListState,
-    setShowCreateArtifactDialog
+    setShowCreateArtifactDialog,
+    tenantCapabilities,
+    uploading,
+    userCapabilities
   } = props;
+  const { canUploadReleases } = userCapabilities;
 
   const [doneLoading, setDoneLoading] = useState(!!releases.length);
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
+  const dropzoneRef = useRef();
   const uploadButtonRef = useRef();
   const artifactTimer = useRef();
   const navigate = useNavigate();
@@ -44,6 +188,7 @@ export const Artifacts = props => {
 
   const { searchTerm, sort = {}, visibleSection = {} } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
+  const { classes } = useStyles();
 
   useEffect(() => {
     clearInterval(artifactTimer.current);
@@ -60,9 +205,7 @@ export const Artifacts = props => {
     }
     if (selectedRelease) {
       navigate(`/releases/${encodeURIComponent(selectedRelease.Name)}`, { replace: true });
-      return;
     }
-    selectRelease(releases[0]);
   }, [releases.length, selectedRelease]);
 
   useEffect(() => {
@@ -91,10 +234,21 @@ export const Artifacts = props => {
     setShowAddArtifactDialog(true);
   };
 
+  const onDrop = (acceptedFiles, rejectedFiles) => {
+    if (acceptedFiles.length) {
+      onFileUploadClick(acceptedFiles[0]);
+    }
+    if (rejectedFiles.length) {
+      setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null);
+    }
+  };
+
   const onFileUploadClick = selectedFile => {
     setSelectedFile(selectedFile);
     setShowAddArtifactDialog(true);
   };
+
+  const onUploadFinished = releaseName => getReleases().then(() => selectRelease(releaseName));
 
   let uploadArtifactOnboardingComponent = null;
   if (!onboardingState.complete && uploadButtonRef.current) {
@@ -111,40 +265,41 @@ export const Artifacts = props => {
     );
   }
 
-  const onUploadFinished = releaseName => getReleases().then(() => selectRelease(releaseName));
-
   return (
-    <>
-      <div className="repository">
-        <div className="flexbox column leftFixed">
+    <div className="margin">
+      <div>
+        <Header
+          canUpload={canUploadReleases}
+          existingTags={releaseTags}
+          features={features}
+          hasReleases={hasReleases}
+          onUploadClick={onUploadClick}
+          releasesListState={releasesListState}
+          setReleasesListState={setReleasesListState}
+          tenantCapabilities={tenantCapabilities}
+        />
+        {hasReleases ? (
           <ReleasesList
-            loading={!doneLoading}
+            features={features}
+            onSelect={selectRelease}
             releases={releases}
             releasesListState={releasesListState}
-            selectedRelease={selectedRelease}
             setReleasesListState={setReleasesListState}
-            onSelect={selectRelease}
           />
-          {canUpload && (
-            <>
-              {' '}
-              <Button
-                ref={uploadButtonRef}
-                color="secondary"
-                onClick={onUploadClick}
-                startIcon={<CloudUpload fontSize="small" />}
-                style={{ marginTop: 30, minWidth: 164, justifySelf: 'left' }}
-                variant="contained"
-              >
-                Upload
-              </Button>
-              <InfoHint content="Upload an Artifact to an existing or new Release" />
-              {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
-            </>
-          )}
-        </div>
-        <ReleaseDetails refreshArtifacts={onGetReleases} loading={!doneLoading} onUpload={onFileUploadClick} />
+        ) : (
+          <EmptyState
+            canUpload={canUploadReleases}
+            className={classes.empty}
+            dropzoneRef={dropzoneRef}
+            uploading={uploading}
+            onDrop={onDrop}
+            onUpload={onFileUploadClick}
+          />
+        )}
       </div>
+      <SelectedRelease refreshArtifacts={onGetReleases} loading={!doneLoading} />
+      <UploadArtifactOnboardingComponent dropzoneRef={dropzoneRef} onboardingState={onboardingState} demoArtifactLink={demoArtifactLink} releases={releases} />
+      {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
       {showAddArtifactDialog && (
         <AddArtifactDialog
           {...props}
@@ -154,7 +309,7 @@ export const Artifacts = props => {
           selectedFile={selectedFile}
         />
       )}
-    </>
+    </div>
   );
 };
 
@@ -171,18 +326,22 @@ const actionCreators = {
 };
 
 const mapStateToProps = state => {
-  const { canUploadReleases: canUpload } = getUserCapabilities(state);
   return {
-    canUpload,
     deviceTypes: getDeviceTypes(state),
+    features: getFeatures(state),
+    hasReleases: !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal),
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
+    demoArtifactLink: state.app.demoArtifactLink,
     releases: getReleasesList(state),
-    selectedArtifact: state.releases.selectedArtifact,
-    selectedRelease: state.releases.byId[state.releases.selectedRelease],
     releasesListState: state.releases.releasesList,
-    showRemoveDialog: state.releases.showRemoveDialog
+    releaseTags: state.releases.releaseTags,
+    selectedRelease: state.releases.byId[state.releases.selectedRelease] ?? {},
+    showRemoveDialog: state.releases.showRemoveDialog,
+    tenantCapabilities: getTenantCapabilities(state),
+    userCapabilities: getUserCapabilities(state),
+    uploading: state.app.uploading
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(Artifacts);
+export default connect(mapStateToProps, actionCreators)(Releases);
