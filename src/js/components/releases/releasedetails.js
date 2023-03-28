@@ -19,8 +19,8 @@ import useWindowSize from '../../utils/resizehook';
 import ForwardingLink from '../common/forwardlink';
 import Loader from '../common/loader';
 import { ExpandArtifact } from '../helptips/helptooltips';
+import ReleaseRepositoryItem from './artifact';
 import RemoveArtifactDialog from './dialogs/removeartifact';
-import ReleaseRepositoryItem from './releaserepositoryitem';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -179,7 +179,7 @@ const ArtifactsList = ({
   );
 };
 
-export const ReleaseRepository = ({
+export const Artifact = ({
   advanceOnboarding,
   artifactIncluded,
   demoArtifactLink,
@@ -337,4 +337,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(ReleaseRepository);
+export default connect(mapStateToProps, actionCreators)(Artifact);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import Artifacts from '../components/artifacts/artifacts';
 import AuditLogs from '../components/auditlogs/auditlogs';
 import Dashboard from '../components/dashboard/dashboard';
 import Deployments from '../components/deployments/deployments';
@@ -11,6 +10,7 @@ import Login from '../components/login/login';
 import Password from '../components/login/password';
 import PasswordReset from '../components/login/passwordreset';
 import Signup from '../components/login/signup';
+import Releases from '../components/releases/releases';
 import Settings from '../components/settings/settings';
 
 export const PrivateRoutes = () => (
@@ -19,7 +19,7 @@ export const PrivateRoutes = () => (
     <Route path="devices" element={<Devices />}>
       <Route path=":status" element={null} />
     </Route>
-    <Route path="releases" element={<Artifacts />}>
+    <Route path="releases" element={<Releases />}>
       <Route path=":artifactVersion" element={null} />
     </Route>
     <Route path="deployments" element={<Deployments />}>

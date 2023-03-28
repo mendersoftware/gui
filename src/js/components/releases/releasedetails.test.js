@@ -6,11 +6,11 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
-import ReleaseRepository from './releaserepository';
+import ReleaseDetails from './releasedetails';
 
 const mockStore = configureStore([thunk]);
 
-describe('ReleaseRepository Component', () => {
+describe('Artifact Component', () => {
   let store;
 
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe('ReleaseRepository Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <ReleaseRepository artifacts={[]} />
+        <ReleaseDetails artifacts={[]} />
       </Provider>
     );
     await act(async () => jest.advanceTimersByTime(1000));

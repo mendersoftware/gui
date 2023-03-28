@@ -103,7 +103,7 @@ const extractSoftwareItem = (artifactProvides = {}) => {
   );
 };
 
-export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, onExpansion, open, showRemoveArtifactDialog }) => {
+export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, onExpansion, open, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
@@ -256,4 +256,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(SelectedArtifact);
+export default connect(mapStateToProps, actionCreators)(ArtifactDetails);

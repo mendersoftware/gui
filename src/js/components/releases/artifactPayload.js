@@ -3,8 +3,8 @@ import React from 'react';
 import { List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { FileSize, getFormattedSize } from '../../helpers';
 import Time from '../common/time';
-import { FileSize, getFormattedSize } from './../../helpers';
 
 const METADATA_SPACING = 2;
 

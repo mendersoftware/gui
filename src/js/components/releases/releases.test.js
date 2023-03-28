@@ -9,11 +9,11 @@ import thunk from 'redux-thunk';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import { getConfiguredStore } from '../../reducers';
-import Artifacts from './artifacts';
+import Releases from './releases';
 
 const mockStore = configureStore([thunk]);
 
-describe('Artifacts Component', () => {
+describe('Releases Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
@@ -32,7 +32,7 @@ describe('Artifacts Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <Artifacts />
+        <Releases />
       </Provider>
     );
     await act(async () => jest.advanceTimersByTime(1000));
@@ -61,7 +61,7 @@ describe('Artifacts Component', () => {
     const store = getConfiguredStore({ preloadedState });
     const ui = (
       <Provider store={store}>
-        <Artifacts />
+        <Releases />
       </Provider>
     );
     const { rerender } = render(ui);

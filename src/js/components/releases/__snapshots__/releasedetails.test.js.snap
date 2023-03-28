@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ReleaseRepository Component renders correctly 1`] = `
+exports[`Artifact Component renders correctly 1`] = `
 .emotion-0 {
   margin: 0;
   font-family: "Roboto","Helvetica","Arial",sans-serif;

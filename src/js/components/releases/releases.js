@@ -16,7 +16,7 @@ import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import InfoHint from '../common/info-hint';
 import AddArtifactDialog from './dialogs/addartifact';
-import ReleaseRepository from './releaserepository';
+import ReleaseDetails from './releasedetails';
 import ReleasesList from './releaseslist';
 
 const refreshArtifactsLength = 60000;
@@ -143,7 +143,7 @@ export const Artifacts = props => {
             </>
           )}
         </div>
-        <ReleaseRepository refreshArtifacts={onGetReleases} loading={!doneLoading} onUpload={onFileUploadClick} />
+        <ReleaseDetails refreshArtifacts={onGetReleases} loading={!doneLoading} onUpload={onFileUploadClick} />
       </div>
       {showAddArtifactDialog && (
         <AddArtifactDialog

@@ -7,7 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { FileSize, formatTime } from '../../helpers';
 import Time from '../common/time';
-import SelectedArtifact from './selectedartifact';
+import ArtifactDetails from './artifactdetails';
 
 const useStyles = makeStyles()(theme => ({
   accordion: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection, showRemoveArtifactDialog }) => {
+export const Artifact = ({ artifact, expanded, index, itemRef, onEdit, onExpanded, onRowSelection, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
           </IconButton>
         </AccordionSummary>
         <AccordionDetails>
-          <SelectedArtifact
+          <ArtifactDetails
             artifact={artifact}
             editArtifact={onEdit}
             open={expanded}
@@ -61,4 +61,4 @@ export const ReleaseRepositoryItem = ({ artifact, expanded, index, itemRef, onEd
   );
 };
 
-export default ReleaseRepositoryItem;
+export default Artifact;
