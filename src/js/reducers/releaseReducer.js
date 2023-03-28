@@ -47,6 +47,7 @@ export const initialState = {
       direction: SORTING_OPTIONS.desc,
       key: 'modified'
     },
+    isLoading: undefined,
     searchTerm: '',
     searchTotal: 0,
     total: 0

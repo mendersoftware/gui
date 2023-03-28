@@ -4,9 +4,10 @@ import { v4 as uuid } from 'uuid';
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
 import { SORTING_OPTIONS, UPLOAD_PROGRESS } from '../constants/appConstants';
+import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
 import * as ReleaseConstants from '../constants/releaseConstants';
-import { customSort, duplicateFilter } from '../helpers';
+import { customSort, deepCompare, duplicateFilter } from '../helpers';
 import { deploymentsApiUrl } from './deploymentActions';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -153,7 +154,9 @@ export const editArtifact = (id, body) => (dispatch, getState) =>
       release.Artifacts[index].description = body.description;
       return Promise.all([
         dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release }),
-        dispatch(setSnackbar('Artifact details were updated successfully.', 5000, ''))
+        dispatch(setSnackbar('Artifact details were updated successfully.', 5000, '')),
+        dispatch(getRelease(release.Name)),
+        dispatch(selectRelease(release.Name))
       ]);
     });
 
@@ -205,20 +208,25 @@ export const selectArtifact = artifact => (dispatch, getState) => {
 export const selectRelease = release => dispatch =>
   Promise.resolve(dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: release ? release.Name || release : null }));
 
-export const setReleasesListState = selectionState => (dispatch, getState) =>
-  Promise.resolve(
-    dispatch({
-      type: ReleaseConstants.SET_RELEASES_LIST_STATE,
-      value: {
-        ...getState().releases.releasesList,
-        ...selectionState,
-        sort: {
-          ...getState().releases.releasesList.sort,
-          ...selectionState.sort
-        }
-      }
-    })
-  );
+export const setReleasesListState = selectionState => (dispatch, getState) => {
+  const currentState = getState().releases.releasesList;
+  let nextState = {
+    ...currentState,
+    ...selectionState,
+    sort: { ...currentState.sort, ...selectionState.sort }
+  };
+  let tasks = [];
+  // eslint-disable-next-line no-unused-vars
+  const { isLoading: currentLoading, ...currentRequestState } = currentState;
+  // eslint-disable-next-line no-unused-vars
+  const { isLoading: selectionLoading, ...selectionRequestState } = nextState;
+  if (!deepCompare(currentRequestState, selectionRequestState)) {
+    nextState.isLoading = true;
+    tasks.push(dispatch(getReleases(nextState)).finally(() => dispatch(setReleasesListState({ isLoading: false }))));
+  }
+  tasks.push(dispatch({ type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: nextState }));
+  return Promise.all(tasks);
+};
 
 /* Releases */
 

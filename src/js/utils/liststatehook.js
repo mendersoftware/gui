@@ -7,11 +7,14 @@ import {
   formatDeployments,
   formatDeviceSearch,
   formatPageState,
+  formatReleases,
   generateDeploymentsPath,
   generateDevicePath,
+  generateReleasesPath,
   parseAuditlogsQuery,
   parseDeploymentsQuery,
-  parseDeviceQuery
+  parseDeviceQuery,
+  parseReleasesQuery
 } from './locationutils';
 
 const processors = {
@@ -34,6 +37,11 @@ const processors = {
     format: formatDeviceSearch,
     locate: generateDevicePath,
     parse: parseDeviceQuery
+  },
+  releases: {
+    format: formatReleases,
+    locate: generateReleasesPath,
+    parse: parseReleasesQuery
   }
 };
 

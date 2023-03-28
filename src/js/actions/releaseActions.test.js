@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { defaultState, releasesList } from '../../../tests/mockData';
+import { defaultState } from '../../../tests/mockData';
 import { mockAbortController } from '../../../tests/setupTests';
 import * as AppConstants from '../constants/appConstants';
 import * as OnboardingConstants from '../constants/onboardingConstants';
@@ -12,7 +12,6 @@ import {
   getArtifactUrl,
   getRelease,
   getReleases,
-  refreshReleases,
   removeArtifact,
   removeRelease,
   selectArtifact,
@@ -122,40 +121,6 @@ describe('release actions', () => {
       }
     ];
     await store.dispatch(getReleases({ perPage: 10, searchOnly: true, searchTerm: 'something' }));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-
-  it('should refresh a list of releases', async () => {
-    const sectionLength = 78;
-    const expectedPageSize = 100;
-    const start = 321;
-    const startIndex = Math.floor(start / expectedPageSize) * expectedPageSize;
-    const expectedWindowLength = Math.ceil(sectionLength / expectedPageSize) * expectedPageSize;
-    const releaseIds = [
-      defaultState.releases.byId.r1.Name,
-      ...Array.from({ length: startIndex - 1 }),
-      ...releasesList.slice(startIndex, startIndex + expectedWindowLength).map(item => item.Name)
-    ];
-    const expectedActions = [
-      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      {
-        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
-        value: {
-          ...defaultState.releases.releasesList,
-          page: 20,
-          releaseIds
-        }
-      }
-    ];
-    const store = mockStore({
-      ...defaultState,
-      releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, visibleSection: { start: 4, end: 8 } } }
-    });
-    await store.dispatch(
-      refreshReleases({ visibleSection: { start: startIndex, end: startIndex + sectionLength }, sort: { key: 'modified', direction: 'asc' } })
-    );
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

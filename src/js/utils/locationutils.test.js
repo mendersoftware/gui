@@ -7,11 +7,14 @@ import {
   formatDeployments,
   formatDeviceSearch,
   formatPageState,
+  formatReleases,
   generateDeploymentsPath,
   generateDevicePath,
+  generateReleasesPath,
   parseAuditlogsQuery,
   parseDeploymentsQuery,
-  parseDeviceQuery
+  parseDeviceQuery,
+  parseReleasesQuery
 } from './locationutils';
 
 const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
@@ -262,6 +265,34 @@ describe('locationutils', () => {
         selectedGroup: UNGROUPED_GROUP.id
       });
       expect(search).toEqual('inventory=some:eq:thing&inventory=group:eq:Unassigned');
+    });
+  });
+
+  describe('releases', () => {
+    it('uses working utilties - formatReleases', () => {
+      let search = formatReleases({ pageState: { tab: '', selectedTags: [] } });
+      expect(search).toEqual('');
+      search = formatReleases({ pageState: { tab: 'flump', selectedTags: ['123', '456'] } });
+      expect(search).toEqual('tag=123&tag=456&tab=flump');
+    });
+    it('uses working utilities - parseReleasesQuery', () => {
+      const result = parseReleasesQuery(new URLSearchParams('tab=flump&tag=asd&tag=52534'), {
+        location: { pathname: '/releases/terst' }
+      });
+      const endDate = new Date('2019-01-13');
+      endDate.setHours(23, 59, 59, 999);
+      expect(result).toEqual({
+        selectedRelease: 'terst',
+        tab: 'flump',
+        tags: ['asd', '52534']
+      });
+    });
+    it('uses working utilities - generateReleasesPath', () => {
+      const pageState = { tab: 'flump', selectedRelease: 'testId', selectedTags: ['123', '456'] };
+      const pathname = generateReleasesPath({ pageState });
+      const search = formatReleases({ pageState });
+      expect(pathname).toEqual('/releases/testId');
+      expect(search).toEqual('tag=123&tag=456&tab=flump');
     });
   });
 });

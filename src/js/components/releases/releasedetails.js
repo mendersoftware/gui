@@ -311,10 +311,8 @@ export const ReleaseDetails = ({
   artifactIncluded,
   editArtifact,
   features,
-  loading,
   onboardingState,
   pastDeploymentsCount,
-  refreshArtifacts,
   release,
   releases,
   removeArtifact,
@@ -355,7 +353,7 @@ export const ReleaseDetails = ({
     }
   }, [wasSelectedRecently]);
 
-  const editArtifactData = (id, description) => editArtifact(id, { description }).then(refreshArtifacts);
+  const editArtifactData = (id, description) => editArtifact(id, { description });
 
   const onExpansion = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), TIMEOUTS.halfASecond);
 
@@ -386,7 +384,7 @@ export const ReleaseDetails = ({
   const artifacts = release.Artifacts ?? [];
   return (
     <Drawer anchor="right" open={!!release.Name} onClose={onCloseClick} PaperProps={{ style: { minWidth: '60vw' } }}>
-      {loading || wasSelectedRecently ? (
+      {wasSelectedRecently ? (
         <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
           <Loader show={true} />
         </div>

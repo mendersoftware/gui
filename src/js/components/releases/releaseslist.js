@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
 import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -45,19 +46,19 @@ const useStyles = makeStyles()(() => ({
   container: { maxWidth: 1600 }
 }));
 
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
+
 export const ReleasesList = ({ features, onSelect, releasesListState, releases, setReleasesListState }) => {
-  const { isLoading, page, perPage, searchTerm, sort = {}, searchTotal, total } = releasesListState;
+  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, total } = releasesListState;
   const { key: attribute, direction } = sort;
   const { classes } = useStyles();
-
-  const onSetReleaseListState = changedState => setReleasesListState({ page: 1, ...changedState });
 
   const onChangeSorting = sortKey => {
     let sort = { key: sortKey, direction: direction === SORTING_OPTIONS.asc ? SORTING_OPTIONS.desc : SORTING_OPTIONS.asc };
     if (sortKey !== attribute) {
       sort = { ...sort, direction: columns.find(({ key }) => key === sortKey)?.defaultSortDirection ?? SORTING_OPTIONS.desc };
     }
-    onSetReleaseListState({ sort });
+    setReleasesListState({ page: 1, sort });
   };
 
   const onChangePagination = (page, currentPerPage = perPage) => setReleasesListState({ page, perPage: currentPerPage });

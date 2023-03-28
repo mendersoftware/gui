@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
 
 import { CloudUpload } from '@mui/icons-material';
 import { Button, Tab, Tabs } from '@mui/material';
@@ -12,10 +11,11 @@ import pluralize from 'pluralize';
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
-import { TIMEOUTS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDeviceTypes, getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
+import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import ChipSelect from '../common/chipselect';
 import InfoHint from '../common/info-hint';
@@ -176,53 +176,42 @@ export const Releases = props => {
   } = props;
   const { canUploadReleases } = userCapabilities;
 
-  const [doneLoading, setDoneLoading] = useState(!!releases.length);
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
   const dropzoneRef = useRef();
   const uploadButtonRef = useRef();
   const artifactTimer = useRef();
-  const navigate = useNavigate();
-  const { artifactVersion } = useParams();
-
-  const { searchTerm, sort = {} } = releasesListState;
+  const [locationParams, setLocationParams] = useLocationParams('releases', { defaults: { direction: SORTING_OPTIONS.desc, key: 'modified' } });
+  const { searchTerm, sort = {}, page, perPage, tab, selectedTags } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
   const { classes } = useStyles();
 
   useEffect(() => {
-    clearInterval(artifactTimer.current);
-    artifactTimer.current = setInterval(onGetReleases, refreshArtifactsLength);
-    onGetReleases();
-    return () => {
-      clearInterval(artifactTimer.current);
-    };
-  }, [debouncedSearchTerm, sort.attribute, sort.direction]);
-
-  useEffect(() => {
-    if (!releases.length) {
+    if (!artifactTimer.current) {
       return;
     }
-    if (selectedRelease) {
-      navigate(`/releases/${encodeURIComponent(selectedRelease.Name)}`, { replace: true });
-    }
-  }, [releases.length, selectedRelease]);
+    setLocationParams({ pageState: { ...releasesListState, selectedRelease: selectedRelease.Name } });
+  }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, tab, JSON.stringify(selectedTags)]);
 
   useEffect(() => {
-    if (artifactVersion) {
-      selectRelease(decodeURIComponent(artifactVersion));
+    setReleasesListState({ selectedTags: locationParams.tags });
+    if (locationParams.selectedRelease) {
+      selectRelease(locationParams.selectedRelease);
     }
+  }, [JSON.stringify(locationParams.tags), locationParams.selectedRelease]);
+
+  useEffect(() => {
+    const { selectedRelease, tags, ...remainder } = locationParams;
+    if (selectedRelease) {
+      selectRelease(selectedRelease);
+    }
+    setReleasesListState({ ...remainder, selectedTags: tags });
+    clearInterval(artifactTimer.current);
+    artifactTimer.current = setInterval(getReleases, refreshArtifactsLength);
     return () => {
       clearInterval(artifactTimer.current);
     };
   }, []);
-
-  const onGetReleases = artifactVersion =>
-    getReleases().finally(() => {
-      if (artifactVersion) {
-        selectRelease(artifactVersion);
-      }
-      setDoneLoading(true);
-    });
 
   const onUploadClick = () => {
     if (releases.length) {
@@ -294,7 +283,7 @@ export const Releases = props => {
           />
         )}
       </div>
-      <SelectedRelease refreshArtifacts={onGetReleases} loading={!doneLoading} />
+      <SelectedRelease />
       <UploadArtifactOnboardingComponent dropzoneRef={dropzoneRef} onboardingState={onboardingState} demoArtifactLink={demoArtifactLink} releases={releases} />
       {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
       {showAddArtifactDialog && (

@@ -372,3 +372,19 @@ export const generateDeploymentsPath = ({ pageState }) => {
   const { state: selectedState = DEPLOYMENT_ROUTES.active.key } = pageState.general;
   return `/deployments/${selectedState}`;
 };
+
+const releasesRoot = '/releases';
+export const formatReleases = ({ pageState: { selectedTags = [], tab } }) => {
+  const formattedFilters = selectedTags.map(tag => `tag=${tag}`);
+  if (tab) {
+    formattedFilters.push(`tab=${tab}`);
+  }
+  return formattedFilters.join('&');
+};
+export const generateReleasesPath = ({ pageState: { selectedRelease } }) => `${releasesRoot}${selectedRelease ? `/${selectedRelease}` : ''}`;
+
+export const parseReleasesQuery = (queryParams, extraProps) => {
+  const tab = queryParams.has('tab') ? queryParams.get('tab') : undefined;
+  const tags = queryParams.has('tag') ? queryParams.getAll('tag') : [];
+  return { selectedRelease: extraProps.location.pathname.substring(releasesRoot.length + 1), tab, tags };
+};
