@@ -16,16 +16,16 @@ const useStyles = makeStyles()(() => ({
   }
 }));
 
-export const DetailsTable = ({ className = '', columns, items, onChangeSorting, onItemClick, sort = {}, style = {} }) => {
+export const DetailsTable = ({ className = '', columns, items, onChangeSorting, onItemClick, sort = {}, style = {}, tableRef }) => {
   const { classes } = useStyles();
   return (
-    <Table className={`margin-bottom ${className}`} style={style}>
+    <Table className={`margin-bottom ${className}`} style={style} ref={tableRef}>
       <TableHead className={classes.header}>
         <TableRow>
           {columns.map(({ extras, key, renderTitle, sortable, title }) => (
             <TableCell key={key} className={`columnHeader ${sortable ? '' : 'nonSortable'}`} onClick={() => (sortable ? onChangeSorting(key) : null)}>
               {renderTitle ? renderTitle(extras) : title}
-              {sortable && <SortIcon className={`sortIcon selected ${(sort.direction === SORTING_OPTIONS.desc).toString()}`} />}
+              {sortable && <SortIcon className={`sortIcon ${sort.key === key ? 'selected' : ''} ${(sort.direction === SORTING_OPTIONS.desc).toString()}`} />}
             </TableCell>
           ))}
         </TableRow>
