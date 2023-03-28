@@ -9,6 +9,8 @@ import * as ReleaseConstants from '../constants/releaseConstants';
 import { customSort, duplicateFilter } from '../helpers';
 import { deploymentsApiUrl } from './deploymentActions';
 
+const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
+
 const flattenRelease = (release, stateRelease) => {
   const updatedArtifacts = release.Artifacts.sort(customSort(1, 'modified'));
   const { Artifacts, deviceTypes, modified } = updatedArtifacts.reduce(
@@ -219,63 +221,21 @@ export const setReleasesListState = selectionState => (dispatch, getState) =>
   );
 
 /* Releases */
-const searchAttributes = ['name', 'device_type', 'description'];
 
-function* generateReleaseSearchQuery(search, searchAttribute) {
-  if (!search) {
-    return;
-  }
-  if (searchAttribute) {
-    return `&${searchAttribute}=${search}`;
-  }
-  yield `&${searchAttributes[0]}=${search}`;
-  yield `&${searchAttributes[1]}=${search}`;
-  yield `&${searchAttributes[2]}=${search}`;
-}
-
-const releaseListRetrieval = (config, queryGenerator) => {
-  const { page, perPage, sort = {} } = config;
+const releaseListRetrieval = config => {
+  const { searchTerm = '', page = defaultPage, perPage = defaultPerPage, sort = {}, selectedTags = [] } = config;
   const { key: attribute, direction } = sort;
 
-  const perPageQuery = perPage ? `&per_page=${perPage}` : '';
   const sorting = attribute ? `&sort=${attribute}:${direction}`.toLowerCase() : '';
-  const searchQuery = queryGenerator.next().value ?? '';
-  return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}${perPageQuery}${searchQuery}${sorting}`);
+  const searchQuery = searchTerm ? `&name=${searchTerm}` : '';
+  const tagQuery = selectedTags.map(tag => `&tag=${tag}`).join('');
+  return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}&per_page=${perPage}${searchQuery}${sorting}${tagQuery}`);
 };
 
-const zipReleaseLists = (stateReleaseIds, newReleases, offset) =>
-  newReleases.reduce(
-    (accu, release, index) => {
-      accu[index + offset] = release.Name || release;
-      return accu;
-    },
-    [...stateReleaseIds]
-  );
-
-const releaseListProcessing = (props = {}) => {
-  const { data: receivedReleases, headers } = props;
-  if (!headers) {
-    return Promise.resolve(props);
-  }
-  return Promise.resolve({ receivedReleases, total: Number(headers[headerNames.total]) });
-};
-
-const maybeTriggerRetrieval = (config, queryGenerator) => results => {
-  if (results.receivedReleases?.length) {
-    return Promise.resolve(results);
-  }
-  return releaseListRetrieval(config, queryGenerator);
-};
-
-const deductSearchState = (searchAttribute, queryGenerator, searchTerm, receivedReleases, config, searchOnly, total, state) => {
-  let releaseListState = {};
-  if (!!Object.keys(receivedReleases).length && !searchAttribute) {
-    const nextGeneratorResult = queryGenerator.next().value ?? '';
-    const index = searchAttributes.findIndex(attribute => nextGeneratorResult.includes(attribute));
-    const searchAttribute = index > 0 ? searchAttributes[index - 1] : searchAttributes[searchAttributes.length - 1];
-    releaseListState = { ...releaseListState, searchAttribute: searchTerm ? searchAttribute : searchAttributes[0] };
-  }
-  const flattenedReleases = Object.values(receivedReleases).sort(customSort(config.sort.direction === SORTING_OPTIONS.desc, config.sort.key));
+const deductSearchState = (receivedReleases, config, total, state) => {
+  let releaseListState = { ...state.releasesList };
+  const { searchTerm, searchOnly, sort = {} } = config;
+  const flattenedReleases = Object.values(receivedReleases).sort(customSort(sort.direction === SORTING_OPTIONS.desc, sort.key));
   const releaseIds = flattenedReleases.map(item => item.Name);
   if (searchOnly) {
     releaseListState = { ...releaseListState, searchedIds: releaseIds };
@@ -293,21 +253,10 @@ const deductSearchState = (searchAttribute, queryGenerator, searchTerm, received
 export const getReleases =
   (passedConfig = {}) =>
   (dispatch, getState) => {
-    let config = { ...getState().releases.releasesList, ...passedConfig };
-    const { searchAttribute, searchOnly, searchTerm = '' } = config;
-    if (passedConfig.visibleSection?.start && searchAttribute) {
-      return Promise.resolve(dispatch(refreshReleases(passedConfig)));
-    }
-    config = searchOnly ? { ...config, sort: { key: 'Name', direction: SORTING_OPTIONS.asc } } : config;
-    const queryGenerator = generateReleaseSearchQuery(searchTerm, passedConfig.searchAttribute);
-
-    return releaseListRetrieval(config, queryGenerator) // first we look for name matches
-      .then(releaseListProcessing)
-      .then(maybeTriggerRetrieval(config, queryGenerator)) // if none found, we look for device_type matches
-      .then(releaseListProcessing)
-      .then(maybeTriggerRetrieval(config, queryGenerator)) // if none found, we look for description matches
-      .then(releaseListProcessing)
-      .then(({ receivedReleases = [], total = 0 }) => {
+    const config = { ...getState().releases.releasesList, ...passedConfig };
+    return releaseListRetrieval(config)
+      .then(({ data: receivedReleases = [], headers = {} }) => {
+        const total = headers[headerNames.total] ? Number(headers[headerNames.total]) : 0;
         const state = getState().releases;
         const flatReleases = reduceReceivedReleases(receivedReleases, state.byId);
         const combinedReleases = { ...state.byId, ...flatReleases };
@@ -315,57 +264,12 @@ export const getReleases =
         if (!getState().onboarding.complete) {
           tasks.push(dispatch({ type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(receivedReleases).length }));
         }
-        const releaseListState = deductSearchState(searchAttribute, queryGenerator, searchTerm, receivedReleases, config, searchOnly, total, state);
-        tasks.push(dispatch(setReleasesListState(releaseListState)));
-
+        const releaseListState = deductSearchState(receivedReleases, config, total, state);
+        tasks.push(dispatch({ type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: releaseListState }));
         return Promise.all(tasks);
       })
       .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
   };
-
-const possiblePageSizes = [10, 20, 50, 100, 250, 500];
-const getBestPageSize = itemCount =>
-  possiblePageSizes.reduce(
-    (accu, pageSize) => {
-      const distance = Math.abs(1 - Math.max(itemCount, 1) / pageSize);
-      if (accu.distance > distance && pageSize >= itemCount) {
-        return { pageSize, distance };
-      }
-      return accu;
-    },
-    { pageSize: possiblePageSizes[0], distance: possiblePageSizes[possiblePageSizes.length - 1] }
-  ).pageSize;
-
-export const refreshReleases = config => (dispatch, getState) => {
-  const storedConfig = { ...getState().releases.releasesList, ...config };
-  const { searchAttribute, searchTerm, visibleSection } = storedConfig;
-  const { start, end } = visibleSection;
-
-  const queryGenerator = {
-    next: () => ({ value: searchTerm ? `&${searchAttribute}=${searchTerm}` : '' })
-  };
-
-  const perPage = getBestPageSize(end - start);
-  const page = Math.max(Math.floor(start / perPage) + (start % perPage ? 0 : 1), 1);
-  const offset = (page - 1) * perPage;
-  const refreshAllReleases = ({ page: currentPage, ...refreshConfig }, generator, releases = {}) => {
-    return releaseListRetrieval({ ...refreshConfig, page: currentPage }, generator).then(({ data: retrievedReleases }) => {
-      const flatReleases = reduceReceivedReleases(retrievedReleases, getState().releases.byId);
-      dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: { ...getState().releases.byId, ...flatReleases } });
-      const combinedReleases = { ...releases, ...flatReleases };
-      if (currentPage * perPage > end) {
-        return Promise.resolve(combinedReleases);
-      }
-      return refreshAllReleases({ ...refreshConfig, page: currentPage + 1 }, generator, combinedReleases);
-    });
-  };
-
-  return refreshAllReleases({ ...storedConfig, page, perPage }, queryGenerator).then(refreshedReleasesById => {
-    const releaseIds = zipReleaseLists(getState().releases.releasesList.releaseIds, Object.values(refreshedReleasesById), offset);
-    const currentPage = Math.floor(releaseIds.length / storedConfig.perPage);
-    return Promise.resolve(dispatch(setReleasesListState({ page: currentPage, releaseIds })));
-  });
-};
 
 export const getRelease = name => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) => {

@@ -17,16 +17,6 @@ describe('Releases Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
-    jest.mock(
-      'react-virtualized-auto-sizer',
-      () =>
-        ({ children }) =>
-          children({ height: 800, width: 390 })
-    );
-  });
-
-  afterEach(() => {
-    jest.unmock('react-virtualized-auto-sizer');
   });
 
   it('renders correctly', async () => {
@@ -47,13 +37,6 @@ describe('Releases Component', () => {
       ...defaultState,
       releases: {
         ...defaultState.releases,
-        releasesList: {
-          ...defaultState.releases.releasesList,
-          visibleSection: {
-            start: 1,
-            end: 14
-          }
-        },
         selectedArtifact: defaultState.releases.byId.r1.Artifacts[0],
         selectedRelease: defaultState.releases.byId.r1.Name
       }

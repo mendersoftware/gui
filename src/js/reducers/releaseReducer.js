@@ -49,8 +49,7 @@ export const initialState = {
     },
     searchTerm: '',
     searchTotal: 0,
-    total: 0,
-    visibleSection: { ...ReleaseConstants.defaultVisibleSection }
+    total: 0
   },
   releaseTags: [],
   /*

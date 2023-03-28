@@ -14,7 +14,6 @@ import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/on
 import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { defaultVisibleSection } from '../../constants/releaseConstants';
 import { getDeviceTypes, getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -92,7 +91,7 @@ const Header = ({
   const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
   const { classes } = useStyles();
 
-  const searchUpdated = searchTerm => setReleasesListState({ searchTerm, searchAttribute: undefined });
+  const searchUpdated = searchTerm => setReleasesListState({ searchTerm });
 
   const onTabChanged = (e, tab) => setReleasesListState({ tab });
 
@@ -186,7 +185,7 @@ export const Releases = props => {
   const navigate = useNavigate();
   const { artifactVersion } = useParams();
 
-  const { searchTerm, sort = {}, visibleSection = {} } = releasesListState;
+  const { searchTerm, sort = {} } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
   const { classes } = useStyles();
 
@@ -197,7 +196,7 @@ export const Releases = props => {
     return () => {
       clearInterval(artifactTimer.current);
     };
-  }, [debouncedSearchTerm, sort.attribute, sort.direction, visibleSection.start]);
+  }, [debouncedSearchTerm, sort.attribute, sort.direction]);
 
   useEffect(() => {
     if (!releases.length) {
@@ -209,18 +208,16 @@ export const Releases = props => {
   }, [releases.length, selectedRelease]);
 
   useEffect(() => {
-    setReleasesListState({ visibleSection: { ...defaultVisibleSection } });
     if (artifactVersion) {
       selectRelease(decodeURIComponent(artifactVersion));
     }
     return () => {
-      setReleasesListState({ visibleSection: { ...defaultVisibleSection } });
       clearInterval(artifactTimer.current);
     };
   }, []);
 
   const onGetReleases = artifactVersion =>
-    getReleases({ visibleSection }).finally(() => {
+    getReleases().finally(() => {
       if (artifactVersion) {
         selectRelease(artifactVersion);
       }
