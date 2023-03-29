@@ -53,7 +53,7 @@ export const OrgDataEntry = ({ classes, data: { name, email, emailVerified, tos,
 
           <div className="flexbox center-aligned margin-top slightly-smaller">
             <p className="margin-bottom-none margin-top-none muted" style={{ marginRight: 4 }}>
-              Choose which instance to set up your Mender account.
+              Choose a hosting region for your account.
             </p>
             <a href="https://docs.mender.io/general/hosted-mender-regions" target="_blank" rel="noopener noreferrer">
               Learn more
