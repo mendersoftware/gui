@@ -509,7 +509,7 @@ describe('static grouping related actions', () => {
         }
       }
     ];
-    await store.dispatch(addStaticGroup(groupName, [defaultState.devices.byId.a1.id]));
+    await store.dispatch(addStaticGroup(groupName, [defaultState.devices.byId.a1]));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

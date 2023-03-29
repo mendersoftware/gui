@@ -29,9 +29,9 @@ export const CreateGroup = ({ addListOfDevices, docsVersion, groups, isCreation,
           docsVersion={docsVersion}
           groups={groups}
           isCreationDynamic={isCreationDynamic}
-          isModification={isModification}
           newGroup={newGroup}
           onInputChange={(invalidName, name, isModification) => onNameChange(invalidName, name, isModification)}
+          selectedDevices={selectedDevices}
           selectedGroup={selectedGroup}
         />
       </DialogContent>

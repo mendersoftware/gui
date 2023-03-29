@@ -42,6 +42,7 @@ const defaultAttributes = [
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },
+  { scope: 'system', attribute: 'group' },
   { scope: 'tags', attribute: 'name' }
 ];
 
@@ -116,8 +117,15 @@ const getGroupNotification = (newGroup, selectedGroup) => {
   ];
 };
 
-export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
-  Promise.resolve(dispatch(addDevicesToGroup(group, deviceIds)))
+export const addStaticGroup = (group, devices) => (dispatch, getState) =>
+  Promise.resolve(
+    dispatch(
+      addDevicesToGroup(
+        group,
+        devices.map(({ id }) => id)
+      )
+    )
+  )
     .then(() =>
       Promise.resolve(
         dispatch({
@@ -289,12 +297,19 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
       const stateDevice = state.devices.byId[device.id] || {};
-      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, monitor: storedMonitor = {}, tags: storedTags = {} } = stateDevice;
+      const {
+        attributes: storedAttributes = {},
+        identity_data: storedIdentity = {},
+        monitor: storedMonitor = {},
+        tags: storedTags = {},
+        group: storedGroup
+      } = stateDevice;
       const { identity, inventory, monitor, system = {}, tags } = mapDeviceAttributes(device.attributes);
       // all the other mapped attributes return as empty objects if there are no attributes to map, but identity will be initialized with an empty state
       // for device_type and artifact_name, potentially overwriting existing info, so rely on stored information instead if there are no attributes
       device.attributes = device.attributes ? { ...storedAttributes, ...inventory } : storedAttributes;
       device.tags = { ...storedTags, ...tags };
+      device.group = system.group ?? storedGroup;
       device.monitor = { ...storedMonitor, ...monitor };
       device.identity_data = { ...storedIdentity, ...identity };
       device.status = status ? status : device.status || identity.status;
