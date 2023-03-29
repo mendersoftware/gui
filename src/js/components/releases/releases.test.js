@@ -48,20 +48,30 @@ describe('Releases Component', () => {
       </Provider>
     );
     const { rerender } = render(ui);
-    await act(async () => jest.advanceTimersByTime(1000));
-    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(screen.queryAllByText(defaultState.releases.byId.r1.Name)[0]).toBeInTheDocument());
     await user.click(screen.getAllByText(defaultState.releases.byId.r1.Name)[0]);
     expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Remove this artifact/i }));
-    await waitFor(() => rerender(ui));
+    await user.click(screen.getByRole('button', { name: /Remove this/i }));
+    await waitFor(() => expect(screen.queryByRole('button', { name: /Cancel/i })).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Cancel/i }));
     await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /Close/i }));
     await waitFor(() => rerender(ui));
+    expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).not.toBeInTheDocument();
+  });
+  it('has working search handling as expected', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const preloadedState = { ...defaultState };
+    const store = getConfiguredStore({ preloadedState });
+    const ui = (
+      <Provider store={store}>
+        <Releases />
+      </Provider>
+    );
+    render(ui);
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
     await user.type(screen.getByPlaceholderText(/Search/i), 'b1');
-    await waitFor(() => rerender(ui));
-    screen.debug(undefined, 20000);
+    await waitFor(() => expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument(), { timeout: 2000 });
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
   });
 });

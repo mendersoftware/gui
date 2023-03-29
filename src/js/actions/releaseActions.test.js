@@ -22,6 +22,29 @@ import {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
+const retrievedReleaseIds = [
+  'release-999',
+  'release-998',
+  'release-997',
+  'release-996',
+  'release-995',
+  'release-994',
+  'release-993',
+  'release-992',
+  'release-991',
+  'release-990',
+  'release-99',
+  'release-989',
+  'release-988',
+  'release-987',
+  'release-986',
+  'release-985',
+  'release-984',
+  'release-983',
+  'release-982',
+  'release-981'
+];
+
 describe('release actions', () => {
   it('should retrieve a single release by name', async () => {
     const store = mockStore({ ...defaultState });
@@ -36,11 +59,10 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      // { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList,  } },
       { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
-        value: { ...defaultState.releases.releasesList, releaseIds: ['release-1'], total: 5000, searchAttribute: 'name' }
+        value: { ...defaultState.releases.releasesList, releaseIds: ['release-1'], total: 5000 }
       }
     ];
     await store.dispatch(getReleases({ perPage: 1, sort: { direction: 'asc', key: 'Name' } }));
@@ -49,48 +71,20 @@ describe('release actions', () => {
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should retrieve a search filtered list of releases', async () => {
-    const store = mockStore({
-      ...defaultState,
-      releases: {
-        ...defaultState.releases,
-        releasesList: { ...defaultState.releases.releasesList, searchAttribute: 'name' }
-      }
-    });
+    const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: {
           ...defaultState.releases.releasesList,
-          releaseIds: [
-            defaultState.releases.byId.r1.Name,
-            ...Array.from({ length: 9 }),
-            'release-99',
-            'release-989',
-            'release-988',
-            'release-987',
-            'release-986',
-            'release-985',
-            'release-984',
-            'release-983',
-            'release-982',
-            'release-981',
-            'release-980',
-            'release-98',
-            'release-979',
-            'release-978',
-            'release-977',
-            'release-976',
-            'release-975',
-            'release-974',
-            'release-973',
-            'release-972'
-          ]
+          releaseIds: retrievedReleaseIds,
+          searchTotal: 1234
         }
       }
     ];
-    await store.dispatch(getReleases({ searchTerm: 'something', visibleSection: { start: 24, end: 28 } }));
+    await store.dispatch(getReleases({ searchTerm: 'something' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -104,18 +98,17 @@ describe('release actions', () => {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: {
           ...defaultState.releases.releasesList,
-          searchAttribute: 'name',
           searchedIds: [
-            'release-1',
-            'release-10',
-            'release-100',
-            'release-1000',
-            'release-1001',
-            'release-1002',
-            'release-1003',
-            'release-1004',
-            'release-1005',
-            'release-1006'
+            'release-999',
+            'release-998',
+            'release-997',
+            'release-996',
+            'release-995',
+            'release-994',
+            'release-993',
+            'release-992',
+            'release-991',
+            'release-990'
           ]
         }
       }
@@ -196,7 +189,9 @@ describe('release actions', () => {
           Artifacts: [{ ...defaultState.releases.byId.r1.Artifacts[0], description: 'something new' }]
         }
       },
-      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Artifact details were updated successfully.' } }
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Artifact details were updated successfully.' } },
+      { type: ReleaseConstants.SELECTED_RELEASE, release: defaultState.releases.byId.r1.Name },
+      { type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.r1 }
     ];
     await store.dispatch(editArtifact(defaultState.releases.byId.r1.Artifacts[0].id, { description: 'something new' }));
     const storeActions = store.getActions();
@@ -226,7 +221,14 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RELEASE_REMOVED, release: defaultState.releases.byId.r1.Name },
-      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: [], total: 0 } }
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, isLoading: true, releaseIds: [], total: 0 } },
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+      {
+        type: ReleaseConstants.SET_RELEASES_LIST_STATE,
+        value: { ...defaultState.releases.releasesList, releaseIds: retrievedReleaseIds, total: 5000 }
+      },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList } }
     ];
     await store.dispatch(removeArtifact('art1'));
     const storeActions = store.getActions();
