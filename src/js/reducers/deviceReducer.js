@@ -62,11 +62,13 @@ const deviceReducer = (state = initialState, action) => {
   switch (action.type) {
     case DeviceConstants.RECEIVE_GROUPS:
     case DeviceConstants.RECEIVE_DYNAMIC_GROUPS:
+    case DeviceConstants.REMOVE_STATIC_GROUP:
+    case DeviceConstants.REMOVE_DYNAMIC_GROUP:
       return {
         ...state,
         groups: {
           ...state.groups,
-          byId: { ...state.groups.byId, ...action.groups }
+          byId: action.groups
         }
       };
     case DeviceConstants.ADD_TO_GROUP: {
@@ -132,15 +134,6 @@ const deviceReducer = (state = initialState, action) => {
         groups: {
           ...state.groups,
           byId: { ...state.groups.byId, [action.groupName]: action.group }
-        }
-      };
-    case DeviceConstants.REMOVE_DYNAMIC_GROUP:
-    case DeviceConstants.REMOVE_STATIC_GROUP:
-      return {
-        ...state,
-        groups: {
-          ...state.groups,
-          byId: action.groups
         }
       };
     case DeviceConstants.SELECT_GROUP:

@@ -228,6 +228,7 @@ describe('app actions', () => {
       {
         type: RECEIVE_DYNAMIC_GROUPS,
         groups: {
+          testGroup: defaultState.devices.groups.byId.testGroup,
           testGroupDynamic: {
             deviceIds: [],
             filters: [
@@ -240,7 +241,16 @@ describe('app actions', () => {
           }
         }
       },
-      { type: RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
+      {
+        type: RECEIVE_GROUPS,
+        groups: {
+          testGroup: defaultState.devices.groups.byId.testGroup,
+          testGroupDynamic: {
+            filters: [{ key: 'group', operator: '$eq', scope: 'system', value: 'things' }],
+            id: 'filter1'
+          }
+        }
+      },
       {
         type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [

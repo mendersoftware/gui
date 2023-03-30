@@ -49,10 +49,16 @@ const defaultAttributes = [
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
     const state = getState().devices.groups.byId;
+    const dynamicGroups = Object.entries(state).reduce((accu, [id, group]) => {
+      if (group.id || group.filters?.length) {
+        accu[id] = group;
+      }
+      return accu;
+    }, {});
     const groups = res.data.reduce((accu, group) => {
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
-    }, {});
+    }, dynamicGroups);
     const filters = [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }];
     return Promise.all([
       dispatch({ type: DeviceConstants.RECEIVE_GROUPS, groups }),
@@ -78,16 +84,10 @@ export const getGroups = () => (dispatch, getState) =>
     });
   });
 
-export const addDevicesToGroup = (group, deviceIds) => dispatch =>
-  GeneralApi.patch(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
-    Promise.resolve(
-      dispatch({
-        type: DeviceConstants.ADD_TO_GROUP,
-        group,
-        deviceIds
-      })
-    )
-  );
+export const addDevicesToGroup = (group, deviceIds, isCreation) => dispatch =>
+  GeneralApi.patch(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds)
+    .then(() => dispatch({ type: DeviceConstants.ADD_TO_GROUP, group, deviceIds }))
+    .finally(() => (isCreation ? Promise.resolve(dispatch(getGroups())) : {}));
 
 export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
   GeneralApi.delete(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
@@ -122,7 +122,8 @@ export const addStaticGroup = (group, devices) => (dispatch, getState) =>
     dispatch(
       addDevicesToGroup(
         group,
-        devices.map(({ id }) => id)
+        devices.map(({ id }) => id),
+        true
       )
     )
   )
@@ -194,6 +195,12 @@ export const getDynamicGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`)
     .then(({ data: filters }) => {
       const state = getState().devices.groups.byId;
+      const staticGroups = Object.entries(state).reduce((accu, [id, group]) => {
+        if (!(group.id || group.filters?.length)) {
+          accu[id] = group;
+        }
+        return accu;
+      }, {});
       const groups = (filters || []).reduce((accu, filter) => {
         accu[filter.name] = {
           deviceIds: [],
@@ -203,7 +210,7 @@ export const getDynamicGroups = () => (dispatch, getState) =>
           filters: mapTermsToFilters(filter.terms)
         };
         return accu;
-      }, {});
+      }, staticGroups);
       return Promise.resolve(
         dispatch({
           type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
