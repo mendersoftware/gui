@@ -85,7 +85,7 @@ const useStyles = makeStyles()(theme => ({
     bottom: theme.spacing(6.5),
     right: theme.spacing(6.5),
     zIndex: 10,
-    minWidth: 400,
+    minWidth: 'max-content',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     pointerEvents: 'none',
@@ -140,36 +140,19 @@ export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease
   );
 };
 
-const OnboardingComponent = ({ creationRef, repoItemAnchor, onboardingState, artifactIncluded }) => {
-  if (!(repoItemAnchor.current && creationRef.current)) {
+const OnboardingComponent = ({ creationRef, drawerRef, onboardingState }) => {
+  if (!(creationRef.current && drawerRef.current)) {
     return null;
   }
-  let onboardingComponent = null;
-  const element = repoItemAnchor.current;
-  const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
-  const artifactIncludedAnchor = {
-    left: creationRef.current.offsetLeft + creationRef.current.offsetWidth,
-    top: creationRef.current.offsetTop + creationRef.current.offsetHeight / 2
+  const anchor = {
+    anchor: {
+      left: creationRef.current.offsetLeft - drawerRef.current.offsetLeft - 48,
+      top: creationRef.current.offsetTop + creationRef.current.offsetHeight - 48
+    },
+    place: 'left'
   };
-  const artifactUploadedAnchor = {
-    left: creationRef.current.offsetLeft + creationRef.current.offsetWidth / 2,
-    top: creationRef.current.offsetTop - creationRef.current.offsetHeight / 2
-  };
-
-  onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING, { ...onboardingState, artifactIncluded }, { anchor });
-  onboardingComponent = getOnboardingComponentFor(
-    onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING,
-    onboardingState,
-    { place: 'right', anchor: artifactIncludedAnchor },
-    onboardingComponent
-  );
-  onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
-  return getOnboardingComponentFor(
-    onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING,
-    onboardingState,
-    { anchor: artifactUploadedAnchor, place: 'bottom' },
-    onboardingComponent
-  );
+  let onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING, onboardingState, anchor);
+  return getOnboardingComponentFor(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING, onboardingState, anchor, onboardingComponent);
 };
 
 const ReleaseTags = ({ existingTags = [] }) => {
@@ -222,30 +205,15 @@ const ReleaseTags = ({ existingTags = [] }) => {
   );
 };
 
-const ArtifactsList = ({
-  advanceOnboarding,
-  artifacts,
-  innerRef,
-  editArtifact,
-  onboardingState,
-  onExpansion,
-  selectArtifact,
-  selectedArtifact,
-  setShowRemoveArtifactDialog,
-  showHelptips
-}) => {
+const ArtifactsList = ({ artifacts, editArtifact, onExpansion, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog, showHelptips }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
 
   const onRowSelection = artifact => {
     if (!artifact || !selectedArtifact || selectedArtifact.id !== artifact.id) {
-      selectArtifact(artifact);
-    } else {
-      selectArtifact();
+      return selectArtifact(artifact);
     }
-    if (!onboardingState.complete) {
-      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING);
-    }
+    selectArtifact();
   };
 
   const sortColumn = col => {
@@ -266,7 +234,7 @@ const ArtifactsList = ({
   return (
     <>
       <h4>Artifacts in this Release:</h4>
-      <div ref={innerRef}>
+      <div>
         <div className="release-repo-item repo-item repo-header">
           {columns.map(item => (
             <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" onClick={() => sortColumn(item)}>
@@ -308,13 +276,11 @@ const ArtifactsList = ({
 
 export const ReleaseDetails = ({
   advanceOnboarding,
-  artifactIncluded,
   editArtifact,
   features,
   onboardingState,
   pastDeploymentsCount,
   release,
-  releases,
   removeArtifact,
   removeRelease,
   selectArtifact,
@@ -331,8 +297,8 @@ export const ReleaseDetails = ({
   const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   // eslint-disable-next-line no-unused-vars
   const windowSize = useWindowSize();
-  const repoRef = useRef();
   const creationRef = useRef();
+  const drawerRef = useRef();
   const navigate = useNavigate();
 
   const { hasReleaseTags } = features;
@@ -342,15 +308,11 @@ export const ReleaseDetails = ({
   }, [release.Name]);
 
   useEffect(() => {
-    if (!onboardingState.complete && releases.length === 1) {
-      advanceOnboarding(onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP);
-    }
-  }, [releases.length]);
-
-  useEffect(() => {
+    let timer;
     if (wasSelectedRecently) {
-      setTimeout(() => setWasSelectedRecently(false), TIMEOUTS.debounceShort);
+      timer = setTimeout(() => setWasSelectedRecently(false), TIMEOUTS.debounceShort);
     }
+    return () => clearTimeout(timer);
   }, [wasSelectedRecently]);
 
   const editArtifactData = (id, description) => editArtifact(id, { description });
@@ -383,7 +345,7 @@ export const ReleaseDetails = ({
 
   const artifacts = release.Artifacts ?? [];
   return (
-    <Drawer anchor="right" open={!!release.Name} onClose={onCloseClick} PaperProps={{ style: { minWidth: '60vw' } }}>
+    <Drawer anchor="right" open={!!release.Name} onClose={onCloseClick} PaperProps={{ style: { minWidth: '60vw' }, ref: drawerRef }}>
       {wasSelectedRecently ? (
         <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
           <Loader show={true} />
@@ -412,18 +374,15 @@ export const ReleaseDetails = ({
           <Divider className="margin-bottom" />
           {hasReleaseTags && <ReleaseTags />}
           <ArtifactsList
-            advanceOnboarding={advanceOnboarding}
             artifacts={artifacts}
             editArtifact={editArtifactData}
-            innerRef={repoRef}
-            onboardingState={onboardingState}
             onExpansion={onExpansion}
             selectArtifact={selectArtifact}
             selectedArtifact={selectedArtifact}
             setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
             showHelptips={showHelptips}
           />
-          <OnboardingComponent creationRef={creationRef} repoItemAnchor={repoRef} onboardingState={onboardingState} artifactIncluded={artifactIncluded} />
+          <OnboardingComponent creationRef={creationRef} drawerRef={drawerRef} onboardingState={onboardingState} />
           {showRemoveDialog && (
             <RemoveArtifactDialog
               artifact={selectedArtifact.name}
@@ -455,12 +414,10 @@ const actionCreators = { advanceOnboarding, editArtifact, removeArtifact, remove
 
 const mapStateToProps = state => {
   return {
-    artifactIncluded: state.onboarding.artifactIncluded,
     features: getFeatures(state),
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,
     release: state.releases.byId[state.releases.selectedRelease] ?? {},
-    releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
     showHelptips: state.users.showHelptips,
     userCapabilities: getUserCapabilities(state)

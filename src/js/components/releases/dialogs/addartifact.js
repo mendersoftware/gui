@@ -5,7 +5,6 @@ import { CloudUpload, Delete as DeleteIcon, InsertDriveFile as InsertDriveFileIc
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { TIMEOUTS } from '../../../constants/appConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { FileSize, unionizeStrings } from '../../../helpers';
 import Tracking from '../../../tracking';
@@ -165,7 +164,6 @@ export const AddArtifactDialog = ({
   deviceTypes = [],
   onboardingState,
   onCancel,
-  onUploadFinished,
   onUploadStarted,
   pastCount,
   releases,
@@ -223,7 +221,6 @@ export const AddArtifactDialog = ({
       }
       // track in GA
       Tracking.event({ category: 'artifacts', action: 'create' });
-      return setTimeout(() => onUploadFinished(meta.name), TIMEOUTS.oneSecond);
     });
   };
 

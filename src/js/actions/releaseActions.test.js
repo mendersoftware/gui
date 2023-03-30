@@ -207,12 +207,13 @@ describe('release actions', () => {
         uploads: { 'mock-uuid': { cancelSource: mockAbortController, name: undefined, size: 1234, uploadProgress: 0 } }
       },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      {
-        type: AppConstants.UPLOAD_PROGRESS,
-        uploads: {}
-      }
+      { type: ReleaseConstants.SELECTED_RELEASE, release: 'test' },
+      { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+      { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: retrievedReleaseIds, total: 5000 } },
+      { type: AppConstants.UPLOAD_PROGRESS, uploads: {} }
     ];
-    await store.dispatch(uploadArtifact({ description: 'new artifact to upload' }, { size: 1234 }));
+    await store.dispatch(uploadArtifact({ description: 'new artifact to upload', name: 'test' }, { size: 1234 }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

@@ -21,7 +21,7 @@ import ChipSelect from '../common/chipselect';
 import InfoHint from '../common/info-hint';
 import Search from '../common/search';
 import AddArtifactDialog from './dialogs/addartifact';
-import SelectedRelease from './releasedetails';
+import ReleaseDetails from './releasedetails';
 import ReleasesList from './releaseslist';
 
 const refreshArtifactsLength = 60000;
@@ -35,18 +35,6 @@ const tabs = [
     isApplicable: ({ features: { hasDeltaProgress }, tenantCapabilities: { canDelta } }) => hasDeltaProgress && canDelta
   }
 ];
-
-const UploadArtifactOnboardingComponent = ({ dropzoneRef, onboardingState, demoArtifactLink, releases }) => {
-  if (!dropzoneRef.current || releases.length) {
-    return null;
-  }
-  const dropzoneAnchor = { left: 30, top: dropzoneRef.current.offsetTop + dropzoneRef.current.offsetHeight };
-  return getOnboardingComponentFor(
-    onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
-    { ...onboardingState, demoArtifactLink },
-    { anchor: dropzoneAnchor, place: 'left' }
-  );
-};
 
 const useStyles = makeStyles()(theme => ({
   empty: { margin: '8vh auto' },
@@ -158,6 +146,8 @@ const Header = ({
 
 export const Releases = props => {
   const {
+    advanceOnboarding,
+    artifactIncluded,
     demoArtifactLink,
     getReleases,
     onboardingState,
@@ -201,6 +191,18 @@ export const Releases = props => {
   }, [JSON.stringify(locationParams.tags), locationParams.selectedRelease]);
 
   useEffect(() => {
+    if (!onboardingState.progress || onboardingState.complete) {
+      return;
+    }
+    if (releases.length === 1) {
+      advanceOnboarding(onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP);
+    }
+    if (selectedRelease.Name) {
+      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING);
+    }
+  }, [onboardingState.complete, onboardingState.progress, releases.length, selectedRelease.Name]);
+
+  useEffect(() => {
     const { selectedRelease, tags, ...remainder } = locationParams;
     if (selectedRelease) {
       selectRelease(selectedRelease);
@@ -234,20 +236,25 @@ export const Releases = props => {
     setShowAddArtifactDialog(true);
   };
 
-  const onUploadFinished = releaseName => getReleases().then(() => selectRelease(releaseName));
-
   let uploadArtifactOnboardingComponent = null;
   if (!onboardingState.complete && uploadButtonRef.current) {
+    const anchor = {
+      anchor: {
+        left: uploadButtonRef.current.offsetLeft - 15,
+        top: uploadButtonRef.current.offsetTop + uploadButtonRef.current.offsetHeight / 2
+      },
+      place: 'left'
+    };
+    uploadArtifactOnboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
+      { ...onboardingState, demoArtifactLink },
+      anchor
+    );
     uploadArtifactOnboardingComponent = getOnboardingComponentFor(
       onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP,
       { ...onboardingState, setShowCreateArtifactDialog },
-      {
-        place: 'right',
-        anchor: {
-          left: uploadButtonRef.current.offsetLeft + uploadButtonRef.current.offsetWidth,
-          top: uploadButtonRef.current.offsetTop + uploadButtonRef.current.offsetHeight / 2
-        }
-      }
+      anchor,
+      uploadArtifactOnboardingComponent
     );
   }
 
@@ -266,7 +273,9 @@ export const Releases = props => {
         />
         {hasReleases ? (
           <ReleasesList
+            artifactIncluded={artifactIncluded}
             features={features}
+            onboardingState={onboardingState}
             onSelect={selectRelease}
             releases={releases}
             releasesListState={releasesListState}
@@ -283,15 +292,13 @@ export const Releases = props => {
           />
         )}
       </div>
-      <SelectedRelease />
-      <UploadArtifactOnboardingComponent dropzoneRef={dropzoneRef} onboardingState={onboardingState} demoArtifactLink={demoArtifactLink} releases={releases} />
-      {!!uploadArtifactOnboardingComponent && !showAddArtifactDialog && uploadArtifactOnboardingComponent}
+      <ReleaseDetails />
+      {!showAddArtifactDialog && uploadArtifactOnboardingComponent}
       {showAddArtifactDialog && (
         <AddArtifactDialog
           {...props}
           onCancel={() => setShowAddArtifactDialog(false)}
           onUploadStarted={() => setShowAddArtifactDialog(false)}
-          onUploadFinished={onUploadFinished}
           selectedFile={selectedFile}
         />
       )}
@@ -313,20 +320,21 @@ const actionCreators = {
 
 const mapStateToProps = state => {
   return {
+    artifactIncluded: state.onboarding.artifactIncluded,
+    demoArtifactLink: state.app.demoArtifactLink,
     deviceTypes: getDeviceTypes(state),
     features: getFeatures(state),
     hasReleases: !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal),
     onboardingState: getOnboardingState(state),
     pastCount: state.deployments.byStatus.finished.total,
-    demoArtifactLink: state.app.demoArtifactLink,
     releases: getReleasesList(state),
     releasesListState: state.releases.releasesList,
     releaseTags: state.releases.releaseTags,
     selectedRelease: state.releases.byId[state.releases.selectedRelease] ?? {},
     showRemoveDialog: state.releases.showRemoveDialog,
     tenantCapabilities: getTenantCapabilities(state),
-    userCapabilities: getUserCapabilities(state),
-    uploading: state.app.uploading
+    uploading: state.app.uploading,
+    userCapabilities: getUserCapabilities(state)
   };
 };
 

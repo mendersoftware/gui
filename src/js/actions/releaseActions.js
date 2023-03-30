@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { headerNames } from '../api/general-api';
-import { SORTING_OPTIONS, UPLOAD_PROGRESS } from '../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
 import * as ReleaseConstants from '../constants/releaseConstants';
@@ -96,7 +96,10 @@ export const createArtifact = (meta, file) => (dispatch, getState) => {
     dispatch({ type: UPLOAD_PROGRESS, uploads }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
-    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
+    .then(() => {
+      setTimeout(() => dispatch(selectRelease(meta.name)), TIMEOUTS.oneSecond);
+      return Promise.resolve([dispatch(setSnackbar('Upload successful', 5000))]);
+    })
     .catch(err => {
       if (isCancel(err)) {
         return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
@@ -119,7 +122,13 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
     dispatch({ type: UPLOAD_PROGRESS, uploads }),
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
-    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
+    .then(() => {
+      const tasks = [dispatch(setSnackbar('Upload successful', 5000)), dispatch(getReleases())];
+      if (meta.name) {
+        tasks.push(dispatch(selectRelease(meta.name)));
+      }
+      return Promise.all(tasks);
+    })
     .catch(err => {
       if (isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
