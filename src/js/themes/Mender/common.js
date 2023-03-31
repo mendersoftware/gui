@@ -33,7 +33,7 @@ export const palette = {
   },
   brand: {
     mender: '#015969',
-    northernTech: '#0099C3'
+    northernTech: '#28aee4'
   }
 };
 
