@@ -11,7 +11,7 @@ import InfoText from '../../common/infotext';
 
 const filter = createFilterOptions();
 
-export const validateGroupName = (encodedName, groups = [], selectedGroup, isCreationDynamic) => {
+export const validateGroupName = (encodedName, groups = [], selectedDevices = [], isCreationDynamic) => {
   const name = fullyDecodeURI(encodedName);
   let invalid = false;
   let errortext = null;
@@ -21,7 +21,7 @@ export const validateGroupName = (encodedName, groups = [], selectedGroup, isCre
   } else if (!validator.isWhitelisted(name, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
     invalid = true;
     errortext = 'Valid characters are a-z, A-Z, 0-9, _ and -';
-  } else if (selectedGroup && name === selectedGroup) {
+  } else if (selectedDevices.every(({ group }) => group === name)) {
     invalid = true;
     errortext = `${name} is the same group the selected devices are already in`;
   } else if (isModification && isCreationDynamic) {
@@ -36,11 +36,11 @@ export const validateGroupName = (encodedName, groups = [], selectedGroup, isCre
 
 const GroupOption = (props, option) => <li {...props}>{option.title}</li>;
 
-export const GroupDefinition = ({ docsVersion = '', isCreationDynamic, groups, newGroup, onInputChange, selectedGroup }) => {
+export const GroupDefinition = ({ docsVersion = '', isCreationDynamic, groups, newGroup, onInputChange, selectedDevices, selectedGroup }) => {
   const [errortext, setErrorText] = useState('');
 
   const validateName = encodedName => {
-    const { errortext: error, invalid, isModification, name } = validateGroupName(encodedName, groups, selectedGroup, isCreationDynamic);
+    const { errortext: error, invalid, isModification, name } = validateGroupName(encodedName, groups, selectedDevices, isCreationDynamic);
     setErrorText(error);
     onInputChange(invalid, name, isModification);
   };
@@ -60,7 +60,11 @@ export const GroupDefinition = ({ docsVersion = '', isCreationDynamic, groups, n
         filterSelectedOptions
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
-          if (params.inputValue !== '' && (filtered.length !== 1 || (filtered.length === 1 && filtered[0].title !== params.inputValue))) {
+          if (
+            params.inputValue !== '' &&
+            !groups.some(group => decodeURIComponent(group) === params.inputValue) &&
+            (filtered.length !== 1 || (filtered.length === 1 && filtered[0].title !== params.inputValue))
+          ) {
             filtered.push({
               inputValue: params.inputValue,
               title: `Create "${params.inputValue}" group`

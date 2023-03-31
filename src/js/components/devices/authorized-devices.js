@@ -296,11 +296,6 @@ export const Authorized = props => {
    */
   const devicesToIds = devices => devices.map(device => device.id);
 
-  const onAddDevicesToGroup = devices => {
-    const deviceIds = devicesToIds(devices);
-    addDevicesToGroup(deviceIds);
-  };
-
   const onRemoveDevicesFromGroup = devices => {
     const deviceIds = devicesToIds(devices);
     removeDevicesFromGroup(deviceIds);
@@ -396,11 +391,12 @@ export const Authorized = props => {
   const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
 
   const actionCallbacks = {
-    onAddDevicesToGroup,
+    onAddDevicesToGroup: addDevicesToGroup,
     onAuthorizationChange,
+    onCreateDeployment: onCreateDeploymentClick,
     onDeviceDismiss,
-    onRemoveDevicesFromGroup,
-    onCreateDeployment: onCreateDeploymentClick
+    onPromoteGateway: onMakeGatewayClick,
+    onRemoveDevicesFromGroup
   };
 
   const listOptionHandlers = [{ key: 'customize', title: 'Customize', onClick: onToggleCustomizationClick }];
@@ -502,13 +498,9 @@ export const Authorized = props => {
         <div />
       )}
       <ExpandedDevice
+        actionCallbacks={actionCallbacks}
         deviceId={openedDevice}
-        onAddDevicesToGroup={onAddDevicesToGroup}
-        onAuthorizationChange={onAuthorizationChange}
         onClose={() => setDeviceListState({ selectedId: undefined })}
-        onDeviceDismiss={onDeviceDismiss}
-        onMakeGatewayClick={onMakeGatewayClick}
-        onRemoveDevicesFromGroup={onRemoveDevicesFromGroup}
         refreshDevices={refreshDevices}
         setDetailsTab={setDetailsTab}
         tabSelection={tabSelection}

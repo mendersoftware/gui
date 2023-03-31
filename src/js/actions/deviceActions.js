@@ -42,16 +42,23 @@ const defaultAttributes = [
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },
+  { scope: 'system', attribute: 'group' },
   { scope: 'tags', attribute: 'name' }
 ];
 
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
     const state = getState().devices.groups.byId;
+    const dynamicGroups = Object.entries(state).reduce((accu, [id, group]) => {
+      if (group.id || group.filters?.length) {
+        accu[id] = group;
+      }
+      return accu;
+    }, {});
     const groups = res.data.reduce((accu, group) => {
       accu[group] = { deviceIds: [], filters: [], total: 0, ...state[group] };
       return accu;
-    }, {});
+    }, dynamicGroups);
     const filters = [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }];
     return Promise.all([
       dispatch({ type: DeviceConstants.RECEIVE_GROUPS, groups }),
@@ -77,16 +84,10 @@ export const getGroups = () => (dispatch, getState) =>
     });
   });
 
-export const addDevicesToGroup = (group, deviceIds) => dispatch =>
-  GeneralApi.patch(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
-    Promise.resolve(
-      dispatch({
-        type: DeviceConstants.ADD_TO_GROUP,
-        group,
-        deviceIds
-      })
-    )
-  );
+export const addDevicesToGroup = (group, deviceIds, isCreation) => dispatch =>
+  GeneralApi.patch(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds)
+    .then(() => dispatch({ type: DeviceConstants.ADD_TO_GROUP, group, deviceIds }))
+    .finally(() => (isCreation ? Promise.resolve(dispatch(getGroups())) : {}));
 
 export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
   GeneralApi.delete(`${inventoryApiUrl}/groups/${group}/devices`, deviceIds).then(() =>
@@ -116,8 +117,16 @@ const getGroupNotification = (newGroup, selectedGroup) => {
   ];
 };
 
-export const addStaticGroup = (group, deviceIds) => (dispatch, getState) =>
-  Promise.resolve(dispatch(addDevicesToGroup(group, deviceIds)))
+export const addStaticGroup = (group, devices) => (dispatch, getState) =>
+  Promise.resolve(
+    dispatch(
+      addDevicesToGroup(
+        group,
+        devices.map(({ id }) => id),
+        true
+      )
+    )
+  )
     .then(() =>
       Promise.resolve(
         dispatch({
@@ -186,6 +195,12 @@ export const getDynamicGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrlV2}/filters?per_page=${MAX_PAGE_SIZE}`)
     .then(({ data: filters }) => {
       const state = getState().devices.groups.byId;
+      const staticGroups = Object.entries(state).reduce((accu, [id, group]) => {
+        if (!(group.id || group.filters?.length)) {
+          accu[id] = group;
+        }
+        return accu;
+      }, {});
       const groups = (filters || []).reduce((accu, filter) => {
         accu[filter.name] = {
           deviceIds: [],
@@ -195,7 +210,7 @@ export const getDynamicGroups = () => (dispatch, getState) =>
           filters: mapTermsToFilters(filter.terms)
         };
         return accu;
-      }, {});
+      }, staticGroups);
       return Promise.resolve(
         dispatch({
           type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
@@ -289,12 +304,19 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
     (accu, device) => {
       const stateDevice = state.devices.byId[device.id] || {};
-      const { attributes: storedAttributes = {}, identity_data: storedIdentity = {}, monitor: storedMonitor = {}, tags: storedTags = {} } = stateDevice;
+      const {
+        attributes: storedAttributes = {},
+        identity_data: storedIdentity = {},
+        monitor: storedMonitor = {},
+        tags: storedTags = {},
+        group: storedGroup
+      } = stateDevice;
       const { identity, inventory, monitor, system = {}, tags } = mapDeviceAttributes(device.attributes);
       // all the other mapped attributes return as empty objects if there are no attributes to map, but identity will be initialized with an empty state
       // for device_type and artifact_name, potentially overwriting existing info, so rely on stored information instead if there are no attributes
       device.attributes = device.attributes ? { ...storedAttributes, ...inventory } : storedAttributes;
       device.tags = { ...storedTags, ...tags };
+      device.group = system.group ?? storedGroup;
       device.monitor = { ...storedMonitor, ...monitor };
       device.identity_data = { ...storedIdentity, ...identity };
       device.status = status ? status : device.status || identity.status;
