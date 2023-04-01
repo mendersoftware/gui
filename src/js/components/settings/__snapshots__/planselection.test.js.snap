@@ -15,6 +15,25 @@ exports[`PlanSelection component renders correctly 1`] = `
   background-color: #f7f7f7;
 }
 
+.emotion-0.addon {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-column-gap: 10px;
+  column-gap: 10px;
+  display: grid;
+  grid-template-columns: max-content minmax(150px, min-content) 1fr max-content;
+  height: initial;
+  margin-top: 10px;
+  min-width: 550px;
+  width: initial;
+}
+
+.emotion-0.addon.upgrade {
+  grid-template-columns: max-content minmax(120px, min-content) minmax(120px, min-content) 1fr max-content;
+}
+
 .emotion-1 {
   margin-bottom: -11px;
   font-size: smaller;
