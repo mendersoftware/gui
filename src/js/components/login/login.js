@@ -59,12 +59,13 @@ const useStyles = makeStyles()(theme => {
       padding: '40px 65px',
       borderTopLeftRadius: backgroundRadius,
       borderBottomRightRadius: backgroundRadius,
-      marginBottom: 30,
+      marginBottom: 60,
       marginTop: 30,
-      transform: `skew(0, -${skew}deg)`
+      transform: `skew(0, -${skew}deg)`,
+      zIndex: 1
     },
     link: { marginLeft: theme.spacing(-0.5) },
-    ntBranding: { bottom: `calc(${theme.mixins.toolbar.minHeight}px + 3vh)`, right: 0 },
+    ntBranding: { bottom: `calc(${theme.mixins.toolbar.minHeight}px + 3vh)`, right: 0, zIndex: 0 },
     tfaNote: { maxWidth: 300 }
   };
 });
@@ -75,7 +76,7 @@ const entryText = {
 };
 
 export const EntryLink = ({ className = '', target = 'signup' }) => (
-  <div className={`margin-top flexbox centered ${className}`}>
+  <div className={`margin-top margin-bottom flexbox centered ${className}`}>
     <div className="muted margin-right">{entryText[target].question}</div>
     <Link className="flexbox center-aligned" to={entryText[target].target}>
       {entryText[target].linkText} <ChevronRight fontSize="small" />

@@ -13,7 +13,10 @@ const useStyles = makeStyles()(theme => ({
     paddingRight: '5vw',
     alignItems: 'center',
     '>a': {
-      color: theme.palette.getContrastText(theme.palette.brand.northernTech)
+      color: '#fff'
+    },
+    '>a:hover': {
+      color: '#092128'
     }
   }
 }));
