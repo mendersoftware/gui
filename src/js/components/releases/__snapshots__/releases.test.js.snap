@@ -587,6 +587,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
   display: table-cell;
 }
 
+.emotion-23 .columnHeader .sortIcon {
+  margin-bottom: -6px;
+}
+
 .emotion-23 .nonSortable {
   cursor: initial;
 }

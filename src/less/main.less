@@ -760,7 +760,7 @@ table thead.clickable tr > th:first-child {
   align-items: center;
   .sortIcon {
     visibility: hidden;
-    margin-left: @defaultGutterWidth / 3;
+    margin-left: calc(@defaultGutterWidth / 3);
     .transition(visibility 0.1s ease-in) !important;
     &.selected {
       .opacity(1);

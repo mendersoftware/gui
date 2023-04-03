@@ -141,6 +141,10 @@ exports[`UserManagement Component renders correctly 1`] = `
   display: table-cell;
 }
 
+.emotion-3 .columnHeader .sortIcon {
+  margin-bottom: -6px;
+}
+
 .emotion-3 .nonSortable {
   cursor: initial;
 }

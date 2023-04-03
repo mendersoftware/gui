@@ -12,6 +12,9 @@ const useStyles = makeStyles()(() => ({
     '.columnHeader': {
       display: 'table-cell'
     },
+    '.columnHeader .sortIcon': {
+      marginBottom: -6
+    },
     '.nonSortable': { cursor: 'initial' }
   }
 }));
