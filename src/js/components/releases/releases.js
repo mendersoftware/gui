@@ -18,6 +18,7 @@ import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import ChipSelect from '../common/chipselect';
+import EnterpriseNotification from '../common/enterpriseNotification';
 import InfoHint from '../common/info-hint';
 import Search from '../common/search';
 import AddArtifactDialog from './dialogs/addartifact';
@@ -26,14 +27,16 @@ import ReleasesList from './releaseslist';
 
 const refreshArtifactsLength = 60000;
 
+const DeltaProgressPlaceholder = ({ tenantCapabilities: { canDelta } }) => (
+  <div className="dashboard-placeholder" style={{ display: 'grid', placeContent: 'center' }}>
+    There is no automatic delta artifacts generation running.
+    <EnterpriseNotification isEnterprise={canDelta} benefit="automatic artifact generation to reduce bandwidth consumption during deployments" />
+  </div>
+);
+
 const tabs = [
-  { key: 'releases', title: 'Releases', component: ReleasesList, isApplicable: () => true },
-  {
-    key: 'delta',
-    title: 'Delta Artifacts generation',
-    component: 'div',
-    isApplicable: ({ features: { hasDeltaProgress }, tenantCapabilities: { canDelta } }) => hasDeltaProgress && canDelta
-  }
+  { key: 'releases', title: 'Releases', component: ReleasesList },
+  { key: 'delta', title: 'Delta Artifacts generation', component: DeltaProgressPlaceholder }
 ];
 
 const useStyles = makeStyles()(theme => ({
@@ -64,17 +67,7 @@ const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop,
   </div>
 );
 
-const Header = ({
-  canUpload,
-  existingTags = [],
-  features,
-  hasReleases,
-  releasesListState,
-  setReleasesListState,
-  onUploadClick,
-  tenantCapabilities,
-  uploadButtonRef
-}) => {
+const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesListState, setReleasesListState, onUploadClick, uploadButtonRef }) => {
   const { hasReleaseTags } = features;
   const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
   const { classes } = useStyles();
@@ -85,25 +78,12 @@ const Header = ({
 
   const onTagSelectionChanged = ({ selection }) => setReleasesListState({ selectedTags: selection });
 
-  const availableTabs = useMemo(
-    () =>
-      tabs.reduce((accu, tab) => {
-        if (tab.isApplicable({ features, tenantCapabilities })) {
-          accu.push(tab);
-        } else {
-          accu.push({ ...tab, disabled: true });
-        }
-        return accu;
-      }, []),
-    [JSON.stringify(tenantCapabilities)]
-  );
-
   return (
     <div>
       <div className="flexbox space-between">
         <Tabs className={classes.tabContainer} value={tab} onChange={onTabChanged} textColor="primary">
-          {availableTabs.map(({ disabled = false, key, title }) => (
-            <Tab key={key} label={title} value={key} disabled={disabled} />
+          {tabs.map(({ key, title }) => (
+            <Tab key={key} label={title} value={key} />
           ))}
         </Tabs>
         <div>
@@ -124,7 +104,7 @@ const Header = ({
           )}
         </div>
       </div>
-      {hasReleases && (
+      {hasReleases && tab === tabs[0].key && (
         <div className={`two-columns ${classes.filters}`}>
           <Search onSearch={searchUpdated} searchTerm={searchTerm} placeholder="Search releases by name" />
           {hasReleaseTags && (
@@ -172,7 +152,7 @@ export const Releases = props => {
   const uploadButtonRef = useRef();
   const artifactTimer = useRef();
   const [locationParams, setLocationParams] = useLocationParams('releases', { defaults: { direction: SORTING_OPTIONS.desc, key: 'modified' } });
-  const { searchTerm, sort = {}, page, perPage, tab, selectedTags } = releasesListState;
+  const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
   const { classes } = useStyles();
 
@@ -258,6 +238,7 @@ export const Releases = props => {
     );
   }
 
+  const ContentComponent = useMemo(() => tabs.find(({ key }) => key === tab).component, [tab]);
   return (
     <div className="margin">
       <div>
@@ -269,10 +250,9 @@ export const Releases = props => {
           onUploadClick={onUploadClick}
           releasesListState={releasesListState}
           setReleasesListState={setReleasesListState}
-          tenantCapabilities={tenantCapabilities}
         />
         {hasReleases ? (
-          <ReleasesList
+          <ContentComponent
             artifactIncluded={artifactIncluded}
             features={features}
             onboardingState={onboardingState}
@@ -280,6 +260,7 @@ export const Releases = props => {
             releases={releases}
             releasesListState={releasesListState}
             setReleasesListState={setReleasesListState}
+            tenantCapabilities={tenantCapabilities}
           />
         ) : (
           <EmptyState
