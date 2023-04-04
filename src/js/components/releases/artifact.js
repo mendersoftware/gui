@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // material ui
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
@@ -15,23 +15,13 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Artifact = ({ artifact, columns, expanded, index, onEdit, onExpanded, onRowSelection, showRemoveArtifactDialog }) => {
+export const Artifact = ({ artifact, columns, expanded, index, onEdit, onRowSelection, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
-
-  useEffect(() => {
-    onExpanded();
-  }, []);
 
   return (
     <div className="release-repo-item flexbox">
       <div className="muted">{index + 1}</div>
-      <Accordion
-        className={classes.accordion}
-        square
-        expanded={expanded}
-        onChange={() => onRowSelection(artifact)}
-        TransitionProps={{ onEntered: onExpanded, onExited: onExpanded }}
-      >
+      <Accordion className={classes.accordion} square expanded={expanded} onChange={onRowSelection}>
         <AccordionSummary style={{ padding: '0 12px' }} classes={{ content: 'repo-item' }}>
           {columns.map(({ name, render: Component }) => (
             <Component key={name} artifact={artifact} />
@@ -41,13 +31,7 @@ export const Artifact = ({ artifact, columns, expanded, index, onEdit, onExpande
           </IconButton>
         </AccordionSummary>
         <AccordionDetails>
-          <ArtifactDetails
-            artifact={artifact}
-            editArtifact={onEdit}
-            open={expanded}
-            onExpansion={onExpanded}
-            showRemoveArtifactDialog={showRemoveArtifactDialog}
-          />
+          <ArtifactDetails artifact={artifact} editArtifact={onEdit} open={expanded} showRemoveArtifactDialog={showRemoveArtifactDialog} />
         </AccordionDetails>
       </Accordion>
     </div>

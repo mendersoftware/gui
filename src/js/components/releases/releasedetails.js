@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,6 @@ import copy from 'copy-to-clipboard';
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { editArtifact, removeArtifact, removeRelease, selectArtifact, selectRelease, uploadArtifact } from '../../actions/releaseActions';
-import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
@@ -28,7 +27,6 @@ import { getFeatures, getOnboardingState, getUserCapabilities } from '../../sele
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
-import Loader from '../common/loader';
 import { RelativeTime } from '../common/time';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import Artifact from './artifact';
@@ -204,7 +202,7 @@ const ReleaseTags = ({ existingTags = [] }) => {
   );
 };
 
-const ArtifactsList = ({ artifacts, editArtifact, onExpansion, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog, showHelptips }) => {
+const ArtifactsList = ({ artifacts, editArtifact, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog, showHelptips }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
 
@@ -258,7 +256,6 @@ const ArtifactsList = ({ artifacts, editArtifact, onExpansion, selectArtifact, s
               onRowSelection={() => onRowSelection(pkg)}
               // this will be run after expansion + collapse and both need some time to fully settle
               // otherwise the measurements are off
-              onExpanded={onExpansion}
               showRemoveArtifactDialog={setShowRemoveArtifactDialog}
             />
           );
@@ -289,11 +286,8 @@ export const ReleaseDetails = ({
   showHelptips,
   userCapabilities
 }) => {
-  const [wasSelectedRecently, setWasSelectedRecently] = useState(false);
   const [showRemoveDialog, setShowRemoveArtifactDialog] = useState(false);
   const [confirmReleaseDeletion, setConfirmReleaseDeletion] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [size, setSize] = useState({ height: window.innerHeight, width: window.innerWidth });
   // eslint-disable-next-line no-unused-vars
   const windowSize = useWindowSize();
   const creationRef = useRef();
@@ -302,21 +296,7 @@ export const ReleaseDetails = ({
 
   const { hasReleaseTags } = features;
 
-  useEffect(() => {
-    setWasSelectedRecently(true);
-  }, [release.Name]);
-
-  useEffect(() => {
-    let timer;
-    if (wasSelectedRecently) {
-      timer = setTimeout(() => setWasSelectedRecently(false), TIMEOUTS.debounceShort);
-    }
-    return () => clearTimeout(timer);
-  }, [wasSelectedRecently]);
-
   const editArtifactData = (id, description) => editArtifact(id, { description });
-
-  const onExpansion = () => setTimeout(() => setSize({ height: window.innerHeight, width: window.innerWidth }), TIMEOUTS.halfASecond);
 
   const onRemoveArtifact = artifact => removeArtifact(artifact.id).finally(() => setShowRemoveArtifactDialog(false));
 
@@ -345,58 +325,49 @@ export const ReleaseDetails = ({
   const artifacts = release.Artifacts ?? [];
   return (
     <Drawer anchor="right" open={!!release.Name} onClose={onCloseClick} PaperProps={{ style: { minWidth: '60vw' }, ref: drawerRef }}>
-      {wasSelectedRecently ? (
-        <div className="flexbox centered" style={{ width: '100%', height: '50%' }}>
-          <Loader show={true} />
+      <div className="flexbox center-aligned space-between">
+        <div className="flexbox center-aligned">
+          <b>
+            Release information for <i>{release.Name}</i>
+          </b>
+          <IconButton onClick={copyLinkToClipboard} size="large">
+            <LinkIcon />
+          </IconButton>
         </div>
-      ) : (
-        <>
-          <div className="flexbox center-aligned space-between">
-            <div className="flexbox center-aligned">
-              <b>
-                Release information for <i>{release.Name}</i>
-              </b>
-              <IconButton onClick={copyLinkToClipboard} size="large">
-                <LinkIcon />
-              </IconButton>
-            </div>
-            <div className="flexbox center-aligned">
-              <div className="muted margin-right flexbox">
-                <div className="margin-right-small">Last modified:</div>
-                <RelativeTime updateTime={release.modified} />
-              </div>
-              <IconButton onClick={onCloseClick} aria-label="close" size="large">
-                <CloseIcon />
-              </IconButton>
-            </div>
+        <div className="flexbox center-aligned">
+          <div className="muted margin-right flexbox">
+            <div className="margin-right-small">Last modified:</div>
+            <RelativeTime updateTime={release.modified} />
           </div>
-          <Divider className="margin-bottom" />
-          {hasReleaseTags && <ReleaseTags />}
-          <ArtifactsList
-            artifacts={artifacts}
-            editArtifact={editArtifactData}
-            onExpansion={onExpansion}
-            selectArtifact={selectArtifact}
-            selectedArtifact={selectedArtifact}
-            setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
-            showHelptips={showHelptips}
-          />
-          <OnboardingComponent creationRef={creationRef} drawerRef={drawerRef} onboardingState={onboardingState} />
-          <RemoveArtifactDialog
-            artifact={selectedArtifact}
-            open={!!showRemoveDialog}
-            onCancel={() => setShowRemoveArtifactDialog(false)}
-            onRemove={() => onRemoveArtifact(selectedArtifact)}
-          />
-          <RemoveArtifactDialog open={!!confirmReleaseDeletion} onRemove={onDeleteRelease} onCancel={onToggleReleaseDeletion} release={release} />
-          <ReleaseQuickActions
-            actionCallbacks={{ onCreateDeployment, onDeleteRelease: onToggleReleaseDeletion }}
-            innerRef={creationRef}
-            selectedRelease={release}
-            userCapabilities={userCapabilities}
-          />
-        </>
-      )}
+          <IconButton onClick={onCloseClick} aria-label="close" size="large">
+            <CloseIcon />
+          </IconButton>
+        </div>
+      </div>
+      <Divider className="margin-bottom" />
+      {hasReleaseTags && <ReleaseTags />}
+      <ArtifactsList
+        artifacts={artifacts}
+        editArtifact={editArtifactData}
+        selectArtifact={selectArtifact}
+        selectedArtifact={selectedArtifact}
+        setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
+        showHelptips={showHelptips}
+      />
+      <OnboardingComponent creationRef={creationRef} drawerRef={drawerRef} onboardingState={onboardingState} />
+      <RemoveArtifactDialog
+        artifact={selectedArtifact}
+        open={!!showRemoveDialog}
+        onCancel={() => setShowRemoveArtifactDialog(false)}
+        onRemove={() => onRemoveArtifact(selectedArtifact)}
+      />
+      <RemoveArtifactDialog open={!!confirmReleaseDeletion} onRemove={onDeleteRelease} onCancel={onToggleReleaseDeletion} release={release} />
+      <ReleaseQuickActions
+        actionCallbacks={{ onCreateDeployment, onDeleteRelease: onToggleReleaseDeletion }}
+        innerRef={creationRef}
+        selectedRelease={release}
+        userCapabilities={userCapabilities}
+      />
     </Drawer>
   );
 };
