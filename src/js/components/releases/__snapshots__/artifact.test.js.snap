@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ReleaseRepositoryItem Component renders correctly 1`] = `
+exports[`Artifact Component renders correctly 1`] = `
 .emotion-0 {
   background-color: #fff;
   color: rgba(10, 10, 11, 0.78);
@@ -1022,17 +1022,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
         >
           test-type
         </div>
-        <time
-          datetime="2019-01-01T00:00:00+00:00"
-        >
-          2019-01-01 00:00
-        </time>
         <div
           style="max-width: 100vw;"
         />
         <div>
           0 Bytes
         </div>
+        <span
+          aria-label="Tue Jan 01 2019 00:00:00 GMT+0000"
+          class=""
+          data-mui-internal-clone-element="true"
+        >
+          <time
+            datetime="2019-01-01T00:00:00+00:00"
+          >
+            2019-01-01 00:00
+          </time>
+        </span>
         <button
           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge expandButton emotion-3"
           tabindex="0"

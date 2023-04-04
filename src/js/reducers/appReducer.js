@@ -19,10 +19,12 @@ export const initialState = {
   features: {
     hasAddons: false,
     hasAuditlogs: false,
+    hasDeltaProgress: false,
     hasMultitenancy: false,
     hasDeviceConfig: false,
     hasDeviceConnect: false,
     hasMonitor: false,
+    hasReleaseTags: false,
     isDemoMode: false,
     isHosted: false,
     isEnterprise: false

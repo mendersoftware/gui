@@ -12,16 +12,15 @@ const defaultClasses = { root: 'attributes' };
 
 export const ExpandableAttribute = ({
   className = '',
-  component = 'li',
   copyToClipboard,
-  disableGutters,
   dividerDisabled,
   primary,
   secondary,
   secondaryTypographyProps = {},
   setSnackbar,
   style,
-  textClasses
+  textClasses,
+  ...remainder
 }) => {
   const textContent = useRef(null);
   const [expanded, setExpanded] = useState(false);
@@ -65,7 +64,7 @@ export const ExpandableAttribute = ({
 
   return (
     <div className={className} onClick={onClick} onMouseEnter={() => setTooltipVisible(true)} onMouseLeave={() => setTooltipVisible(false)} style={style}>
-      <ListItem classes={cssClasses} disableGutters={disableGutters} divider={!dividerDisabled} component={component}>
+      <ListItem classes={cssClasses} divider={!dividerDisabled} {...remainder}>
         <ListItemText
           primary={primary}
           secondary={secondaryText}

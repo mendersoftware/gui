@@ -263,7 +263,7 @@ describe('app actions', () => {
       { type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: SET_RELEASES_LIST_STATE,
-        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42, searchAttribute: 'name' }
+        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42 }
       },
       { type: SET_DEVICE_LIMIT, limit: 500 },
       { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },

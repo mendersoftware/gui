@@ -48,6 +48,17 @@ export const commonErrorHandler = (err, errorContext, dispatch, fallback, mightB
 
 const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && version !== 'next' ? 'master' : version);
 
+const featureFlags = [
+  'hasAddons',
+  'hasAuditlogs',
+  'hasMultitenancy',
+  'hasDeltaProgress',
+  'hasDeviceConfig',
+  'hasDeviceConnect',
+  'hasReleaseTags',
+  'hasMonitor',
+  'isEnterprise'
+];
 export const parseEnvironmentInfo = () => (dispatch, getState) => {
   const state = getState();
   let onboardingComplete = state.onboarding.complete || !!JSON.parse(window.localStorage.getItem('onboardingComplete') ?? 'false');
@@ -82,14 +93,8 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
       trackerCode: trackerCode || state.app.trackerCode
     };
     environmentFeatures = {
-      hasAddons: stringToBoolean(features.hasAddons),
-      hasAuditlogs: stringToBoolean(features.hasAuditlogs),
-      hasMultitenancy: stringToBoolean(features.hasMultitenancy),
-      hasDeviceConfig: stringToBoolean(features.hasDeviceConfig),
-      hasDeviceConnect: stringToBoolean(features.hasDeviceConnect),
-      hasMonitor: stringToBoolean(features.hasMonitor),
+      ...featureFlags.reduce((accu, flag) => ({ ...accu, [flag]: stringToBoolean(features[flag]) }), {}),
       isHosted: stringToBoolean(features.isHosted) || window.location.hostname.includes('hosted.mender.io'),
-      isEnterprise: stringToBoolean(features.isEnterprise),
       isDemoMode: stringToBoolean(isDemoMode || features.isDemoMode)
     };
     versionInfo = {

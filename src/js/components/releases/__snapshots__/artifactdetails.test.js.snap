@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SelectedArtifact Component renders correctly 1`] = `
+exports[`ArtifactDetails Component renders correctly 1`] = `
 .emotion-0 {
   list-style: none;
   margin: 0;

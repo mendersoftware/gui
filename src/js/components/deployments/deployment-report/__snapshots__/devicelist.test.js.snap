@@ -6,7 +6,7 @@ exports[`ProgressDeviceList Component renders correctly 1`] = `
     class="MuiTable-root margin-bottom css-1m40mow-MuiTable-root-table"
   >
     <thead
-      class="MuiTableHead-root css-q0me8i-MuiTableHead-root-header"
+      class="MuiTableHead-root css-jko6xl-MuiTableHead-root-header"
     >
       <tr
         class="MuiTableRow-root MuiTableRow-head css-cmdtp3-MuiTableRow-root"

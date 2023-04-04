@@ -168,7 +168,7 @@ describe('Deployments Component', () => {
     const { rerender } = render(ui);
     await user.click(screen.getByRole('tab', { name: /Finished/i }));
     await user.click(screen.getByRole('button', { name: /Create a deployment/i }));
-    const releaseId = 'release-10';
+    const releaseId = 'release-998';
     await waitFor(() => rerender(ui));
     act(() => jest.advanceTimersByTime(1000));
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
@@ -194,6 +194,7 @@ describe('Deployments Component', () => {
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
       artifact_name: releaseId,
+      autogenerate_delta: undefined,
       force_installation: false,
       devices: undefined,
       filter_id: undefined,
@@ -255,7 +256,7 @@ describe('Deployments Component', () => {
     );
     const { rerender } = render(ui);
     await user.click(screen.getByRole('button', { name: /Create a deployment/i }));
-    const releaseId = 'release-10';
+    const releaseId = 'release-998';
     act(() => {
       jest.runAllTicks();
       jest.advanceTimersByTime(2000);
@@ -313,6 +314,7 @@ describe('Deployments Component', () => {
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
       artifact_name: releaseId,
+      autogenerate_delta: undefined,
       devices: undefined,
       filter_id: undefined,
       force_installation: false,
