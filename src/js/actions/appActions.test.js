@@ -53,6 +53,27 @@ import {
 } from './appActions';
 import { tenantDataDivergedMessage } from './organizationActions';
 
+export const attributeReducer = (accu, item) => {
+  if (item.scope === 'inventory') {
+    accu[item.name] = item.value;
+    if (item.name === 'device_type') {
+      accu[item.name] = [].concat(item.value);
+    }
+  }
+  return accu;
+};
+// eslint-disable-next-line no-unused-vars
+const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
+export const receivedInventoryDevice = {
+  ...defaultState.devices.byId.a1,
+  attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+  identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+  isOffline: true,
+  monitor: {},
+  tags: {},
+  updated_ts: inventoryDevice.updated_ts
+};
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -84,36 +105,16 @@ describe('app actions', () => {
 
   it('should try to get all required app information', async () => {
     window.localStorage.getItem.mockReturnValueOnce('false');
-    const attributeReducer = (accu, item) => {
-      if (item.scope === 'inventory') {
-        accu[item.name] = item.value;
-        if (item.name === 'device_type') {
-          accu[item.name] = [].concat(item.value);
-        }
-      }
-      return accu;
-    };
     const store = mockStore({
       ...defaultState,
       app: { ...defaultState.app, features: { ...defaultState.app.features, isHosted: true } },
       users: { ...defaultState.users, globalSettings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } } },
       releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, page: 42 } }
     });
-    // eslint-disable-next-line no-unused-vars
-    const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
-    const receivedInventoryDevice = {
-      ...defaultState.devices.byId.a1,
-      attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
-      identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-      isOffline: true,
-      monitor: {},
-      tags: {},
-      updated_ts: inventoryDevice.updated_ts
-    };
 
     const expectedActions = [
       { type: SET_ONBOARDING_COMPLETE, complete: false },
-      { type: SET_DEMO_ARTIFACT_PORT, port: undefined },
+      { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
       { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
       {
         type: SET_VERSION_INFORMATION,

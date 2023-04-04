@@ -2,9 +2,44 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
+import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { accessTokens, defaultPassword, defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
-import { SET_ANNOUNCEMENT, SET_OFFLINE_THRESHOLD, SET_SNACKBAR } from '../constants/appConstants';
-import * as OnboardingConstants from '../constants/onboardingConstants';
+import {
+  SET_ANNOUNCEMENT,
+  SET_ENVIRONMENT_DATA,
+  SET_FEATURES,
+  SET_FIRST_LOGIN_AFTER_SIGNUP,
+  SET_OFFLINE_THRESHOLD,
+  SET_SNACKBAR,
+  SET_VERSION_INFORMATION,
+  SORTING_OPTIONS
+} from '../constants/appConstants';
+import {
+  RECEIVE_DEPLOYMENTS,
+  RECEIVE_FINISHED_DEPLOYMENTS,
+  RECEIVE_INPROGRESS_DEPLOYMENTS,
+  SELECT_INPROGRESS_DEPLOYMENTS
+} from '../constants/deploymentConstants';
+import {
+  ADD_DYNAMIC_GROUP,
+  DEVICE_LIST_DEFAULTS,
+  DEVICE_STATES,
+  EXTERNAL_PROVIDER,
+  RECEIVE_DEVICES,
+  RECEIVE_DYNAMIC_GROUPS,
+  RECEIVE_GROUPS,
+  SET_ACCEPTED_DEVICES,
+  SET_DEVICE_LIMIT,
+  SET_DEVICE_LIST_STATE,
+  SET_FILTER_ATTRIBUTES,
+  SET_PENDING_DEVICES,
+  SET_PREAUTHORIZED_DEVICES,
+  SET_REJECTED_DEVICES,
+  UNGROUPED_GROUP
+} from '../constants/deviceConstants';
+import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_ARTIFACT_INCLUDED, SET_ONBOARDING_COMPLETE, SET_SHOW_ONBOARDING_HELP } from '../constants/onboardingConstants';
+import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
+import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
 import {
   CREATED_ROLE,
   CREATED_USER,
@@ -28,6 +63,7 @@ import {
   emptyRole,
   uiPermissionsById
 } from '../constants/userConstants';
+import { attributeReducer, receivedInventoryDevice } from './appActions.test';
 import {
   createRole,
   createUser,
@@ -66,6 +102,259 @@ const mockStore = configureMockStore(middlewares);
 const defaultRole = { ...emptyRole, name: 'test', description: 'test description' };
 const settings = { test: true };
 
+// eslint-disable-next-line no-unused-vars
+const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
+
+const offlineThreshold = { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' };
+const appInitActions = [
+  { type: SET_ONBOARDING_COMPLETE, complete: false },
+  { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
+  { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
+  {
+    type: SET_VERSION_INFORMATION,
+    docsVersion: '',
+    value: {
+      Deployments: '1.2.3',
+      Deviceauth: null,
+      GUI: undefined,
+      Integration: 'master',
+      Inventory: null,
+      'Mender-Artifact': undefined,
+      'Mender-Client': 'next',
+      'Meta-Mender': 'saas-123.34'
+    }
+  },
+  { type: SET_ENVIRONMENT_DATA, value: { hostAddress: null, hostedAnnouncement: '', recaptchaSiteKey: '', stripeAPIKey: '', trackerCode: '' } },
+  { type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
+  offlineThreshold,
+  {
+    type: SET_FILTER_ATTRIBUTES,
+    attributes: {
+      identityAttributes: ['status', 'mac'],
+      inventoryAttributes: [
+        'artifact_name',
+        'cpu_model',
+        'device_type',
+        'hostname',
+        'ipv4_wlan0',
+        'ipv6_wlan0',
+        'kernel',
+        'mac_eth0',
+        'mac_wlan0',
+        'mem_total_kB',
+        'mender_bootloader_integration',
+        'mender_client_version',
+        'network_interfaces',
+        'os',
+        'rootfs_type'
+      ],
+      systemAttributes: ['created_ts', 'updated_ts', 'group'],
+      tagAttributes: []
+    }
+  },
+  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+  {
+    type: RECEIVE_FINISHED_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'finished',
+    total: Object.keys(defaultState.deployments.byId).length
+  },
+  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+  {
+    type: RECEIVE_INPROGRESS_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'inprogress',
+    total: Object.keys(defaultState.deployments.byId).length
+  },
+  {
+    type: SELECT_INPROGRESS_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'inprogress'
+  },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: {
+      a1: {
+        ...defaultState.devices.byId.a1,
+        attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+        group: 'test',
+        identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+        isOffline: true,
+        monitor: {},
+        tags: {},
+        updated_ts: inventoryDevice.updated_ts
+      }
+    }
+  },
+  {
+    type: SET_ACCEPTED_DEVICES,
+    deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
+    status: 'accepted',
+    total: defaultState.devices.byStatus.accepted.deviceIds.length
+  },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: {
+      a1: {
+        ...defaultState.devices.byId.a1,
+        attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+        group: 'test',
+        identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+        isOffline: true,
+        monitor: {},
+        status: 'pending',
+        tags: {},
+        updated_ts: inventoryDevice.updated_ts
+      }
+    }
+  },
+  {
+    type: SET_PENDING_DEVICES,
+    deviceIds: Array.from({ length: defaultState.devices.byStatus.pending.total }, () => defaultState.devices.byId.a1.id),
+    status: 'pending',
+    total: defaultState.devices.byStatus.pending.deviceIds.length
+  },
+  { type: RECEIVE_DEVICES, devicesById: {} },
+  { type: SET_PREAUTHORIZED_DEVICES, deviceIds: [], status: 'preauthorized', total: 0 },
+  { type: RECEIVE_DEVICES, devicesById: {} },
+  { type: SET_REJECTED_DEVICES, deviceIds: [], status: 'rejected', total: 0 },
+  {
+    type: RECEIVE_DYNAMIC_GROUPS,
+    groups: {
+      testGroup: defaultState.devices.groups.byId.testGroup,
+      testGroupDynamic: {
+        deviceIds: [],
+        filters: [
+          { key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] },
+          { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
+          { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
+        ],
+        id: 'filter1',
+        total: 0
+      }
+    }
+  },
+  {
+    type: RECEIVE_GROUPS,
+    groups: {
+      testGroup: defaultState.devices.groups.byId.testGroup,
+      testGroupDynamic: {
+        filters: [{ key: 'group', operator: '$eq', scope: 'system', value: 'things' }],
+        id: 'filter1'
+      }
+    }
+  },
+  {
+    type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+    value: [
+      { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
+      { id: 2, provider: 'aws', something: 'new' }
+    ]
+  },
+  { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
+  { type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
+  {
+    type: SET_RELEASES_LIST_STATE,
+    value: {
+      ...defaultState.releases.releasesList,
+      releaseIds: [
+        'release-999',
+        'release-998',
+        'release-997',
+        'release-996',
+        'release-995',
+        'release-994',
+        'release-993',
+        'release-992',
+        'release-991',
+        'release-990',
+        'release-99',
+        'release-989',
+        'release-988',
+        'release-987',
+        'release-986',
+        'release-985',
+        'release-984',
+        'release-983',
+        'release-982',
+        'release-981'
+      ],
+      page: 1,
+      searchAttribute: 'name',
+      total: 5000
+    }
+  },
+  { type: SET_DEVICE_LIMIT, limit: 500 },
+  { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+  { type: RECEIVED_ROLES, value: receivedRoles },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }
+  },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
+  },
+  { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
+  },
+  {
+    type: ADD_DYNAMIC_GROUP,
+    groupName: UNGROUPED_GROUP.id,
+    group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
+  },
+  {
+    type: SET_DEVICE_LIST_STATE,
+    state: {
+      ...DEVICE_LIST_DEFAULTS,
+      deviceIds: [],
+      isLoading: true,
+      selectedAttributes: [],
+      selectedIssues: [],
+      selection: [],
+      setOnly: false,
+      sort: { direction: SORTING_OPTIONS.desc },
+      state: 'accepted',
+      total: 0
+    }
+  },
+  { type: SET_SHOW_HELP, show: true },
+  { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
+  {
+    type: SET_ACCEPTED_DEVICES,
+    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+    status: DEVICE_STATES.accepted,
+    total: defaultState.devices.byStatus.accepted.total
+  },
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } },
+  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
+  offlineThreshold,
+  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
+  },
+  {
+    type: SET_DEVICE_LIST_STATE,
+    state: {
+      ...DEVICE_LIST_DEFAULTS,
+      deviceIds: ['a1', 'a1'],
+      isLoading: false,
+      selectedAttributes: [],
+      selectedIssues: [],
+      selection: [],
+      sort: { direction: SORTING_OPTIONS.desc },
+      state: 'accepted',
+      total: 2
+    }
+  }
+];
+
 /* eslint-disable sonarjs/no-identical-functions */
 describe('user actions', () => {
   it('should forward connecting dialog visibility', async () => {
@@ -85,7 +374,7 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: SET_SHOW_HELP, show: true },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }
+      { type: SET_SHOW_ONBOARDING_HELP, show: true }
     ];
     const store = mockStore({ ...defaultState });
     store.dispatch(toggleHelptips());
@@ -97,7 +386,7 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: SET_SHOW_HELP, show: false },
-      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false }
+      { type: SET_SHOW_ONBOARDING_HELP, show: false }
     ];
     const store = mockStore({
       ...defaultState,
@@ -196,7 +485,8 @@ describe('user actions', () => {
     const expectedActions = [
       { type: RECEIVED_USER, user: defaultState.users.byId[userId] },
       { type: SET_CUSTOM_COLUMNS, value: [] },
-      { type: SUCCESSFULLY_LOGGED_IN, value: token }
+      { type: SUCCESSFULLY_LOGGED_IN, value: token },
+      ...appInitActions
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(loginUser({ email: 'test@example.com', password: defaultPassword }));
@@ -207,7 +497,7 @@ describe('user actions', () => {
   it('should prevent logging in with a limited user', async () => {
     jest.clearAllMocks();
     const cookies = new Cookies();
-    cookies.get.mockReturnValue('limitedToken');
+    cookies.get.mockReturnValueOnce('limitedToken');
     const expectedActions = [{ type: SET_SNACKBAR, snackbar: { message: 'forbidden by role-based access control' } }];
     const store = mockStore({ ...defaultState });
     try {
@@ -388,7 +678,7 @@ describe('user actions', () => {
     const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
     const expectedActions = [
       { type: SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
-      { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
+      offlineThreshold,
       { type: SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, ...settings } }
     ];
     const store = mockStore({ ...defaultState });
@@ -403,7 +693,7 @@ describe('user actions', () => {
     const { id_attribute, ...retrievedSettings } = defaultState.users.globalSettings;
     const expectedActions = [
       { type: SET_GLOBAL_SETTINGS, settings: { ...retrievedSettings } },
-      { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
+      offlineThreshold,
       { type: SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings, ...settings } },
       { type: SET_SNACKBAR, snackbar: { message: 'Settings saved successfully' } }
     ];
