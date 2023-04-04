@@ -34,10 +34,6 @@ const confirmationType = {
     loading: defaultRemoving,
     message: 'Remove the ingration. Are you sure?'
   },
-  releaseRemoval: {
-    loading: defaultRemoving,
-    message: 'All artifacts in this release will be removed. Are you sure?'
-  },
   webhooksRemoval: {
     loading: defaultRemoving,
     message: 'Delete all webhooks?'

@@ -28,7 +28,6 @@ import { getFeatures, getOnboardingState, getUserCapabilities } from '../../sele
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
-import Confirm from '../common/confirm';
 import Loader from '../common/loader';
 import { RelativeTime } from '../common/time';
 import { ExpandArtifact } from '../helptips/helptooltips';
@@ -383,21 +382,13 @@ export const ReleaseDetails = ({
             showHelptips={showHelptips}
           />
           <OnboardingComponent creationRef={creationRef} drawerRef={drawerRef} onboardingState={onboardingState} />
-          {showRemoveDialog && (
-            <RemoveArtifactDialog
-              artifact={selectedArtifact.name}
-              onCancel={() => setShowRemoveArtifactDialog(false)}
-              onRemove={() => onRemoveArtifact(selectedArtifact)}
-            />
-          )}
-          <div
-            className="relative"
-            style={{ position: 'absolute', top: creationRef.current ? creationRef.current.offsetTop - 15 : '75%', right: 80, width: '100%' }}
-          >
-            {confirmReleaseDeletion && (
-              <Confirm type="releaseRemoval" classes="confirmation-overlay" action={onDeleteRelease} cancel={onToggleReleaseDeletion} />
-            )}
-          </div>
+          <RemoveArtifactDialog
+            artifact={selectedArtifact}
+            open={!!showRemoveDialog}
+            onCancel={() => setShowRemoveArtifactDialog(false)}
+            onRemove={() => onRemoveArtifact(selectedArtifact)}
+          />
+          <RemoveArtifactDialog open={!!confirmReleaseDeletion} onRemove={onDeleteRelease} onCancel={onToggleReleaseDeletion} release={release} />
           <ReleaseQuickActions
             actionCallbacks={{ onCreateDeployment, onDeleteRelease: onToggleReleaseDeletion }}
             innerRef={creationRef}

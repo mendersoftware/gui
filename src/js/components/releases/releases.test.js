@@ -54,7 +54,7 @@ describe('Releases Component', () => {
     await user.click(screen.getByRole('button', { name: /Remove this/i }));
     await waitFor(() => expect(screen.queryByRole('button', { name: /Cancel/i })).toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Cancel/i }));
-    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(screen.queryByRole('button', { name: /Cancel/i })).not.toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: /Close/i }));
     await waitFor(() => rerender(ui));
     expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).not.toBeInTheDocument();
