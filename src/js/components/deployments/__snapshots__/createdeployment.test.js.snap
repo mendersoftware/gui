@@ -5902,7 +5902,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   height: 36px;
   border-radius: 50%;
   padding: 0;
-  background-color: #fff;
+  background-color: transparent;
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
   opacity: 0;
@@ -5911,12 +5911,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 
 @media (pointer: fine) {
   .emotion-27:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgba(51, 122, 135, 0.04);
   }
 }
 
 .emotion-27:focus {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-27:focus.Mui-selected {
@@ -5982,7 +5982,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   height: 36px;
   border-radius: 50%;
   padding: 0;
-  background-color: #fff;
+  background-color: transparent;
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
 }
@@ -6005,12 +6005,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 
 @media (pointer: fine) {
   .emotion-29:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgba(51, 122, 135, 0.04);
   }
 }
 
 .emotion-29:focus {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-29:focus.Mui-selected {
@@ -6076,7 +6076,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   height: 36px;
   border-radius: 50%;
   padding: 0;
-  background-color: #fff;
+  background-color: transparent;
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
 }
@@ -6099,12 +6099,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 
 @media (pointer: fine) {
   .emotion-43:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgba(51, 122, 135, 0.04);
   }
 }
 
 .emotion-43:focus {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-43:focus.Mui-selected {
@@ -7182,7 +7182,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   height: 36px;
   border-radius: 50%;
   padding: 0;
-  background-color: #fff;
+  background-color: transparent;
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
   opacity: 0;
@@ -7191,12 +7191,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 
 @media (pointer: fine) {
   .emotion-27:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgba(51, 122, 135, 0.04);
   }
 }
 
 .emotion-27:focus {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-27:focus.Mui-selected {
@@ -7262,7 +7262,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   height: 36px;
   border-radius: 50%;
   padding: 0;
-  background-color: #fff;
+  background-color: transparent;
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
 }
@@ -7285,12 +7285,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 
 @media (pointer: fine) {
   .emotion-29:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgba(51, 122, 135, 0.04);
   }
 }
 
 .emotion-29:focus {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-29:focus.Mui-selected {
@@ -7356,7 +7356,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   height: 36px;
   border-radius: 50%;
   padding: 0;
-  background-color: #fff;
+  background-color: transparent;
   color: rgba(10, 10, 11, 0.78);
   margin: 0 2px;
 }
@@ -7379,12 +7379,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 
 @media (pointer: fine) {
   .emotion-43:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgba(51, 122, 135, 0.04);
   }
 }
 
 .emotion-43:focus {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(51, 122, 135, 0.12);
 }
 
 .emotion-43:focus.Mui-selected {
