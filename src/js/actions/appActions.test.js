@@ -53,6 +53,27 @@ import {
 } from './appActions';
 import { tenantDataDivergedMessage } from './organizationActions';
 
+export const attributeReducer = (accu, item) => {
+  if (item.scope === 'inventory') {
+    accu[item.name] = item.value;
+    if (item.name === 'device_type') {
+      accu[item.name] = [].concat(item.value);
+    }
+  }
+  return accu;
+};
+// eslint-disable-next-line no-unused-vars
+const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
+export const receivedInventoryDevice = {
+  ...defaultState.devices.byId.a1,
+  attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+  identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+  isOffline: true,
+  monitor: {},
+  tags: {},
+  updated_ts: inventoryDevice.updated_ts
+};
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -84,36 +105,16 @@ describe('app actions', () => {
 
   it('should try to get all required app information', async () => {
     window.localStorage.getItem.mockReturnValueOnce('false');
-    const attributeReducer = (accu, item) => {
-      if (item.scope === 'inventory') {
-        accu[item.name] = item.value;
-        if (item.name === 'device_type') {
-          accu[item.name] = [].concat(item.value);
-        }
-      }
-      return accu;
-    };
     const store = mockStore({
       ...defaultState,
       app: { ...defaultState.app, features: { ...defaultState.app.features, isHosted: true } },
       users: { ...defaultState.users, globalSettings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } } },
       releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, page: 42 } }
     });
-    // eslint-disable-next-line no-unused-vars
-    const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
-    const receivedInventoryDevice = {
-      ...defaultState.devices.byId.a1,
-      attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
-      identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-      isOffline: true,
-      monitor: {},
-      tags: {},
-      updated_ts: inventoryDevice.updated_ts
-    };
 
     const expectedActions = [
       { type: SET_ONBOARDING_COMPLETE, complete: false },
-      { type: SET_DEMO_ARTIFACT_PORT, port: undefined },
+      { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
       { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
       {
         type: SET_VERSION_INFORMATION,
@@ -184,6 +185,7 @@ describe('app actions', () => {
           a1: {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+            group: 'test',
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
             isOffline: true,
             monitor: {},
@@ -204,6 +206,7 @@ describe('app actions', () => {
           a1: {
             ...defaultState.devices.byId.a1,
             attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
+            group: 'test',
             identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
             isOffline: true,
             monitor: {},
@@ -226,6 +229,7 @@ describe('app actions', () => {
       {
         type: RECEIVE_DYNAMIC_GROUPS,
         groups: {
+          testGroup: defaultState.devices.groups.byId.testGroup,
           testGroupDynamic: {
             deviceIds: [],
             filters: [
@@ -238,7 +242,16 @@ describe('app actions', () => {
           }
         }
       },
-      { type: RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
+      {
+        type: RECEIVE_GROUPS,
+        groups: {
+          testGroup: defaultState.devices.groups.byId.testGroup,
+          testGroupDynamic: {
+            filters: [{ key: 'group', operator: '$eq', scope: 'system', value: 'things' }],
+            id: 'filter1'
+          }
+        }
+      },
       {
         type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [
@@ -250,7 +263,7 @@ describe('app actions', () => {
       { type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: SET_RELEASES_LIST_STATE,
-        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42, searchAttribute: 'name' }
+        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42 }
       },
       { type: SET_DEVICE_LIMIT, limit: 500 },
       { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
@@ -263,10 +276,13 @@ describe('app actions', () => {
       },
       {
         type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
       },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: receivedInventoryDevice } },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } } },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
+      {
+        type: RECEIVE_DEVICES,
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
+      },
       {
         type: ADD_DYNAMIC_GROUP,
         groupName: UNGROUPED_GROUP.id,
@@ -288,7 +304,7 @@ describe('app actions', () => {
         }
       },
       { type: SET_SHOW_HELP, show: true },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: receivedInventoryDevice } },
+      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
       {
         type: SET_ACCEPTED_DEVICES,
         deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
@@ -297,7 +313,10 @@ describe('app actions', () => {
       },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } } },
+      {
+        type: RECEIVE_DEVICES,
+        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
+      },
       {
         type: SET_DEVICE_LIST_STATE,
         state: {

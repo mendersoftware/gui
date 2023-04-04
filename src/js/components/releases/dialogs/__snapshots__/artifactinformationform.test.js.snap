@@ -648,7 +648,7 @@ label+.emotion-7 {
       class="MuiAutocomplete-root emotion-9"
     >
       <div
-        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root device-types-input emotion-0"
+        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-0"
       >
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-5"

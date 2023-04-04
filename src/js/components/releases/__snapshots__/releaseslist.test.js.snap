@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReleasesList Component renders correctly 1`] = `
+.emotion-0 {
+  max-width: 1600px;
+}
+
+<div
+  class="emotion-0"
+>
+  <p
+    class="margin-top muted align-center margin-right"
+  >
+    There are no Releases 
+    yet
+  </p>
+</div>
+`;

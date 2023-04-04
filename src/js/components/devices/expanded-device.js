@@ -190,6 +190,7 @@ const tabs = [
 
 export const ExpandedDevice = ({
   abortDeployment,
+  actionCallbacks,
   applyDeviceConfig,
   columnSelection,
   decommissionDevice,
@@ -210,12 +211,7 @@ export const ExpandedDevice = ({
   idAttribute,
   integrations,
   latestAlerts,
-  onAddDevicesToGroup,
-  onAuthorizationChange,
   onClose,
-  onDeviceDismiss,
-  onMakeGatewayClick,
-  onRemoveDevicesFromGroup,
   refreshDevices,
   resetDeviceDeployments,
   saveGlobalSettings,
@@ -285,16 +281,6 @@ export const ExpandedDevice = ({
 
   const scrollToMonitor = () => setDetailsTab('monitor');
 
-  const onCreateDeploymentClick = () => navigate(`/deployments?open=true&deviceId=${deviceId}`);
-
-  const actionCallbacks = {
-    onAddDevicesToGroup,
-    onAuthorizationChange,
-    onDeviceDismiss,
-    onRemoveDevicesFromGroup,
-    onPromoteGateway: onMakeGatewayClick,
-    onCreateDeployment: onCreateDeploymentClick
-  };
   const selectedStaticGroup = selectedGroup && !groupFilters.length ? selectedGroup : undefined;
 
   const scrollToDeviceSystem = target => {

@@ -13,7 +13,7 @@ import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
-import { commonErrorFallback, commonErrorHandler, setOfflineThreshold, setSnackbar } from './appActions';
+import { commonErrorFallback, commonErrorHandler, initializeAppData, setOfflineThreshold, setSnackbar } from './appActions';
 
 const cookies = new Cookies();
 const {
@@ -61,16 +61,16 @@ export const loginUser = (userData, stayLoggedIn) => dispatch =>
       cookies.set('JWT', token, { sameSite: 'strict', secure: true, path: '/', maxAge: stayLoggedIn ? undefined : 900 });
 
       return dispatch(getUser(OWN_USER_ID))
+        .catch(e => {
+          cleanUp();
+          return Promise.reject(dispatch(setSnackbar(extractErrorMessage(e))));
+        })
         .then(() => {
           window.sessionStorage.removeItem('pendings-redirect');
           if (window.location.pathname !== '/ui/') {
             window.location.replace('/ui/');
           }
-          return Promise.resolve(dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }));
-        })
-        .catch(e => {
-          cleanUp();
-          return Promise.reject(dispatch(setSnackbar(extractErrorMessage(e))));
+          return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(initializeAppData())]);
         });
     });
 
@@ -376,7 +376,6 @@ export const mapUserRolesToUiPermissions = (userRoles, roles) =>
 
 export const getPermissionSets = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrlv2}/permission_sets?per_page=500`)
-    .catch(() => console.log('Permission set retrieval failed - likely accessing a non-RBAC backend'))
     .then(({ data }) => {
       const permissionSets = data.reduce(
         (accu, permissionSet) => {
@@ -405,11 +404,11 @@ export const getPermissionSets = () => (dispatch, getState) =>
         { ...getState().users.permissionSetsById }
       );
       return Promise.all([dispatch({ type: UserConstants.RECEIVED_PERMISSION_SETS, value: permissionSets }), permissionSets]);
-    });
+    })
+    .catch(() => console.log('Permission set retrieval failed - likely accessing a non-RBAC backend'));
 
 export const getRoles = () => (dispatch, getState) =>
   Promise.all([GeneralApi.get(`${useradmApiUrlv2}/roles?per_page=500`), dispatch(getPermissionSets())])
-    .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'))
     .then(results => {
       if (!results) {
         return Promise.resolve();
@@ -417,7 +416,8 @@ export const getRoles = () => (dispatch, getState) =>
       const [{ data: roles }, permissionSetTasks] = results;
       const rolesById = normalizeRbacRoles(roles, getState().users.rolesById, permissionSetTasks[permissionSetTasks.length - 1]);
       return Promise.resolve(dispatch({ type: UserConstants.RECEIVED_ROLES, value: rolesById }));
-    });
+    })
+    .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'));
 
 const deriveImpliedAreaPermissions = (area, areaPermissions) => {
   const highestAreaPermissionLevelSelected = areaPermissions.reduce(

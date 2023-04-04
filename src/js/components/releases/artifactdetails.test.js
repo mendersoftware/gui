@@ -6,11 +6,11 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import SelectedArtifact, { transformArtifactCapabilities, transformArtifactMetadata } from './selectedartifact';
+import ArtifactDetails, { transformArtifactCapabilities, transformArtifactMetadata } from './artifactdetails';
 
 const mockStore = configureStore([thunk]);
 
-describe('SelectedArtifact Component', () => {
+describe('ArtifactDetails Component', () => {
   let store;
   beforeEach(() => {
     store = mockStore({ ...defaultState });
@@ -19,7 +19,7 @@ describe('SelectedArtifact Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <SelectedArtifact artifact={{ description: 'text', name: 'test' }} />
+        <ArtifactDetails artifact={{ description: 'text', name: 'test' }} />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;

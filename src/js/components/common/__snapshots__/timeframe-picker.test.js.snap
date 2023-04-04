@@ -410,9 +410,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-3"
         id="mui-2"
         inputmode="text"
-        placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
+        placeholder="MMMM⁩ ⁦DD"
         type="text"
-        value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
+        value="January⁩ ⁦13th"
       />
       <div
         class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-4"
@@ -461,9 +461,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-3"
         id="mui-4"
         inputmode="text"
-        placeholder="⁦⁨MMMM⁩⁩ ⁦⁨DD⁩⁩"
+        placeholder="MMMM⁩ ⁦DD"
         type="text"
-        value="⁦⁨January⁩⁩ ⁦⁨13th⁩⁩"
+        value="January⁩ ⁦13th"
       />
       <div
         class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-4"

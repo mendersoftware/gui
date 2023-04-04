@@ -376,13 +376,17 @@ exports[`RemoveArtifact Component renders correctly 1`] = `
         class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-4"
         id="mui-1"
       >
-        Remove this artifact?
+        Remove this 
+        artifact
+        ?
       </h2>
       <div
         class="MuiDialogContent-root emotion-5"
       >
         Are you sure you want to remove 
-        <i />
+        <i>
+          Name
+        </i>
         ?
       </div>
       <div
@@ -406,7 +410,8 @@ exports[`RemoveArtifact Component renders correctly 1`] = `
           tabindex="0"
           type="button"
         >
-          Remove artifact
+          Remove 
+          artifact
           <span
             class="MuiTouchRipple-root emotion-8"
           />

@@ -47,11 +47,12 @@ export const initialState = {
       direction: SORTING_OPTIONS.desc,
       key: 'modified'
     },
+    isLoading: undefined,
     searchTerm: '',
     searchTotal: 0,
-    total: 0,
-    visibleSection: { ...ReleaseConstants.defaultVisibleSection }
+    total: 0
   },
+  releaseTags: [],
   /*
    * Return single release with corresponding Artifacts
    */

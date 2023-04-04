@@ -32,7 +32,7 @@ export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerP
   const debouncedPage = useDebounce(pageNo, TIMEOUTS.debounceShort);
 
   useEffect(() => {
-    const newPage = Math.min(Math.max(paginationIndex, debouncedPage), Math.ceil(count / rowsPerPage));
+    const newPage = Math.min(Math.max(paginationIndex, debouncedPage), Math.max(paginationIndex, Math.ceil(count / rowsPerPage)));
     if (newPage !== page + paginationIndex) {
       onPageChange(newPage);
     }

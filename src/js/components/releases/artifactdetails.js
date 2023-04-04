@@ -103,7 +103,7 @@ const extractSoftwareItem = (artifactProvides = {}) => {
   );
 };
 
-export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, onExpansion, open, showRemoveArtifactDialog }) => {
+export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, open, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
@@ -191,13 +191,7 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
         </ListItem>
       </List>
       <ArtifactMetadataList metaInfo={softwareInformation} />
-      <Accordion
-        square
-        expanded={showPayloads}
-        onChange={() => setShowPayloads(toggle)}
-        TransitionProps={{ onEntered: onExpansion, onExited: onExpansion }}
-        className={classes.accordPanel1}
-      >
+      <Accordion square expanded={showPayloads} onChange={() => setShowPayloads(toggle)} className={classes.accordPanel1}>
         <AccordionSummary className={classes.accordSummary}>
           <p>Artifact contents</p>
           <div style={{ marginLeft: 'auto' }}>{showPayloads ? <RemoveIcon /> : <AddIcon />}</div>
@@ -209,13 +203,7 @@ export const SelectedArtifact = ({ artifact, canManageReleases, editArtifact, ge
         </AccordionDetails>
       </Accordion>
       {hasMetaInfo && (
-        <Accordion
-          square
-          expanded={showProvidesDepends}
-          onChange={() => setShowProvidesDepends(!showProvidesDepends)}
-          TransitionProps={{ onEntered: onExpansion, onExited: onExpansion }}
-          className={classes.accordPanel1}
-        >
+        <Accordion square expanded={showProvidesDepends} onChange={() => setShowProvidesDepends(!showProvidesDepends)} className={classes.accordPanel1}>
           <AccordionSummary className={classes.accordSummary}>
             <p>Provides and Depends</p>
             <div style={{ marginLeft: 'auto' }}>{showProvidesDepends ? <RemoveIcon /> : <AddIcon />}</div>
@@ -256,4 +244,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(SelectedArtifact);
+export default connect(mapStateToProps, actionCreators)(ArtifactDetails);

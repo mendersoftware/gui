@@ -48,6 +48,10 @@ exports[`Webhooks Component renders correctly with entries  1`] = `
   display: table-cell;
 }
 
+.emotion-1 .columnHeader .sortIcon {
+  margin-bottom: -6px;
+}
+
 .emotion-1 .nonSortable {
   cursor: initial;
 }

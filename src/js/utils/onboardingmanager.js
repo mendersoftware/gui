@@ -80,13 +80,17 @@ export const onboardingSteps = {
     progress: 2
   },
   [stepNames.UPLOAD_PREPARED_ARTIFACT_TIP]: {
-    condition: { min: stepNames.DEVICES_ACCEPTED_ONBOARDING, max: stepNames.ARTIFACT_INCLUDED_ONBOARDING },
+    condition: { min: stepNames.DEVICES_ACCEPTED_ONBOARDING },
     component: UploadPreparedArtifactTip,
     fallbackStep: stepNames.APPLICATION_UPDATE_REMINDER_TIP,
     progress: 2
   },
   [stepNames.ARTIFACT_INCLUDED_ONBOARDING]: {
-    condition: { min: stepNames.DEVICES_ACCEPTED_ONBOARDING, max: stepNames.DEPLOYMENTS_INPROGRESS },
+    condition: {
+      min: stepNames.DEVICES_ACCEPTED_ONBOARDING,
+      max: stepNames.DEPLOYMENTS_INPROGRESS,
+      extra: () => !window.location.pathname.substring(window.location.pathname.indexOf('/releases') + '/releases'.length).length
+    },
     component: ArtifactIncludedOnboarding,
     fallbackStep: stepNames.APPLICATION_UPDATE_REMINDER_TIP,
     progress: 1

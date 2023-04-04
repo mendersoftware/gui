@@ -93,6 +93,6 @@ describe('App Component', () => {
     });
     await waitFor(() => expect(screen.queryByText(/Version:/i)).not.toBeInTheDocument(), { timeout: 5000 });
     expect(screen.queryByText(/Northern.tech/i)).toBeInTheDocument();
-    expect(screen.queryByText(`© ${mockDate.getFullYear()} Northern.tech AS`)).toBeInTheDocument();
+    expect(screen.queryByText(`© ${mockDate.getFullYear()} Northern.tech`)).toBeInTheDocument();
   }, 7000);
 });

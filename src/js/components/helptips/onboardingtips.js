@@ -128,7 +128,7 @@ export const UploadPreparedArtifactTip = ({ demoArtifactLink }) => (
 export const ArtifactIncludedOnboarding = ({ artifactIncluded }) => (
   <div>
     {artifactIncluded ? 'We have included' : 'Now you have'} a Mender artifact with a simple Application update for you to test with.
-    <p>Expand it for more details.</p>
+    <p>Click on it for more details.</p>
   </div>
 );
 

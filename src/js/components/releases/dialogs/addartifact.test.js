@@ -39,7 +39,6 @@ describe('AddArtifact Component', () => {
           createArtifact={jest.fn}
           onboardingState={{ complete: false }}
           onUploadStarted={jest.fn}
-          onUploadFinished={jest.fn}
           uploadArtifact={uploadMock}
           deviceTypes={['qemux86-64']}
           advanceOnboarding={jest.fn}
@@ -69,9 +68,7 @@ describe('AddArtifact Component', () => {
     const ui = (
       <Provider store={store}>
         <AddArtifact
-          open={true}
           onUploadStarted={jest.fn}
-          onUploadFinished={jest.fn}
           onboardingState={{ complete: true }}
           createArtifact={uploadMock}
           deviceTypes={['qemux86-64']}

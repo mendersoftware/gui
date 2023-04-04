@@ -471,6 +471,7 @@ export const defaultState = {
     releasesList: {
       ...DeviceConstants.DEVICE_LIST_DEFAULTS,
       searchedIds: [],
+      isLoading: false,
       releaseIds: ['r1'],
       sort: {
         direction: SORTING_OPTIONS.desc,

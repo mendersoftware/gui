@@ -1,5 +1,3 @@
-export const defaultVisibleSection = { start: 0, end: 0 };
-
 export const ARTIFACT_GENERATION_TYPE = { SINGLE_FILE: 'single_file' };
 export const ARTIFACTS_REMOVED_ARTIFACT = 'ARTIFACTS_REMOVED_ARTIFACT';
 export const ARTIFACTS_SET_ARTIFACT_URL = 'ARTIFACTS_SET_ARTIFACT_URL';

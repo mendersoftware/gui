@@ -247,7 +247,7 @@ exports[`OnboardingTips Components tiny onboarding tips renders ArtifactIncluded
   Now you have
    a Mender artifact with a simple Application update for you to test with.
   <p>
-    Expand it for more details.
+    Click on it for more details.
   </p>
 </div>
 `;

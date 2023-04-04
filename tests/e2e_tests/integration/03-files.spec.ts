@@ -40,6 +40,7 @@ test.describe('Files', () => {
 
   test('allows artifact downloads', async ({ loggedInPage: page }) => {
     await page.click(`.leftNav :text('Releases')`);
+    await page.click(`text=/mender-demo-artifact/i`);
     await page.click('.expandButton');
     await page.waitForSelector(`text=Download Artifact`, { timeout: 2000 });
     expect(await page.isVisible(`text=Download Artifact`)).toBeTruthy();
