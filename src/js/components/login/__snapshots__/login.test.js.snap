@@ -27,12 +27,13 @@ exports[`Login Component renders correctly 1`] = `
   padding: 40px 65px;
   border-top-left-radius: 100px;
   border-bottom-right-radius: 100px;
-  margin-bottom: 30px;
+  margin-bottom: 60px;
   margin-top: 30px;
   -webkit-transform: skew(0, -3deg);
   -moz-transform: skew(0, -3deg);
   -ms-transform: skew(0, -3deg);
   transform: skew(0, -3deg);
+  z-index: 1;
 }
 
 .emotion-2 {
@@ -750,6 +751,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
 .emotion-41 {
   bottom: calc(56px + 3vh);
   right: 0;
+  z-index: 0;
 }
 
 <div>
@@ -1063,7 +1065,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
         </form>
       </div>
       <div
-        class="margin-top flexbox centered emotion-39"
+        class="margin-top margin-bottom flexbox centered emotion-39"
       >
         <div
           class="muted margin-right"

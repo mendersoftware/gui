@@ -10,6 +10,7 @@ exports[`Signup Component renders correctly 1`] = `
 .emotion-1 {
   width: 100%;
   margin-top: -95px;
+  height: calc(100vh - 56px);
 }
 
 .emotion-1#signup-box {
@@ -612,7 +613,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
     id="Loginlogo"
   />
   <div
-    class="content margin-bottom-small emotion-1"
+    class="content emotion-1"
     id="signup-box"
   >
     <div
@@ -908,7 +909,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
           </div>
         </form>
         <div
-          class="margin-top flexbox centered "
+          class="margin-top margin-bottom flexbox centered "
         >
           <div
             class="muted margin-right"
@@ -938,15 +939,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
       <div
         class="emotion-2 right"
       >
-        <h2>
-          Connect up to 10 devices free for 12 months – no credit card required.
-        </h2>
-        <p>
-          Mender provides a complete over-the-air update infrastructure for all device software. Whether in the field or the factory, you can remotely and easily manage device software without the need for manual labor.
-        </p>
-        <svg
-          id="Signuphero"
-        />
+        <div
+          class="flexbox column"
+        >
+          <h2>
+            Connect up to 10 devices free for 12 months – no credit card required.
+          </h2>
+          <p>
+            Mender provides a complete over-the-air update infrastructure for all device software. Whether in the field or the factory, you can remotely and easily manage device software without the need for manual labor.
+          </p>
+          <div
+            class="svg-container margin-top"
+          >
+            <svg
+              id="Signuphero"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>

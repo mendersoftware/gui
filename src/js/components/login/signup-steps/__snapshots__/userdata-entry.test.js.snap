@@ -867,7 +867,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
         </div>
       </form>
       <div
-        class="margin-top flexbox centered "
+        class="margin-top margin-bottom flexbox centered "
       >
         <div
           class="muted margin-right"
@@ -897,15 +897,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     <div
       class="test right"
     >
-      <h2>
-        Connect up to 10 devices free for 12 months – no credit card required.
-      </h2>
-      <p>
-        Mender provides a complete over-the-air update infrastructure for all device software. Whether in the field or the factory, you can remotely and easily manage device software without the need for manual labor.
-      </p>
-      <svg
-        id="Signuphero"
-      />
+      <div
+        class="flexbox column"
+      >
+        <h2>
+          Connect up to 10 devices free for 12 months – no credit card required.
+        </h2>
+        <p>
+          Mender provides a complete over-the-air update infrastructure for all device software. Whether in the field or the factory, you can remotely and easily manage device software without the need for manual labor.
+        </p>
+        <div
+          class="svg-container margin-top"
+        >
+          <svg
+            id="Signuphero"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>
