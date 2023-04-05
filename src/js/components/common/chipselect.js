@@ -34,7 +34,7 @@ export const ChipSelect = ({
       setValue('');
       return setCurrentSelection([]);
     } else if (reason === 'reset') {
-      return;
+      return setValue('');
     }
     const lastIndex = value.lastIndexOf(',');
     const possibleSelection = value.substring(0, lastIndex).split(',').filter(duplicateFilter);
