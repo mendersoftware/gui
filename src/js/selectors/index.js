@@ -141,27 +141,27 @@ export const getUserRoles = createSelector(
   }
 );
 
+const hasPermission = (thing, permission) => Object.values(thing).some(permissions => permissions.includes(permission));
+
 export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissions }) => {
-  const canManageReleases = uiPermissions.releases.includes(uiPermissionsById.manage.value);
-  const canReadReleases = canManageReleases || uiPermissions.releases.includes(uiPermissionsById.read.value);
-  const canUploadReleases = canManageReleases || uiPermissions.releases.includes(uiPermissionsById.upload.value);
+  const canManageReleases = hasPermission(uiPermissions.releases, uiPermissionsById.manage.value);
+  const canReadReleases = canManageReleases || hasPermission(uiPermissions.releases, uiPermissionsById.read.value);
+  const canUploadReleases = canManageReleases || hasPermission(uiPermissions.releases, uiPermissionsById.upload.value);
 
   const canAuditlog = uiPermissions.auditlog.includes(uiPermissionsById.read.value);
 
   const canReadUsers = uiPermissions.userManagement.includes(uiPermissionsById.read.value);
   const canManageUsers = uiPermissions.userManagement.includes(uiPermissionsById.manage.value);
 
-  const canReadDevices = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.read.value));
+  const canReadDevices = hasPermission(uiPermissions.groups, uiPermissionsById.read.value);
   const canWriteDevices = Object.values(uiPermissions.groups).some(
     groupPermissions => groupPermissions.includes(uiPermissionsById.read.value) && groupPermissions.length > 1
   );
-  const canTroubleshoot = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.connect.value));
-  const canManageDevices = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.manage.value));
-  const canConfigure = Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.configure.value));
+  const canTroubleshoot = hasPermission(uiPermissions.groups, uiPermissionsById.connect.value);
+  const canManageDevices = hasPermission(uiPermissions.groups, uiPermissionsById.manage.value);
+  const canConfigure = hasPermission(uiPermissions.groups, uiPermissionsById.configure.value);
 
-  const canDeploy =
-    uiPermissions.deployments.includes(uiPermissionsById.deploy.value) ||
-    Object.values(uiPermissions.groups).some(groupPermissions => groupPermissions.includes(uiPermissionsById.deploy.value));
+  const canDeploy = uiPermissions.deployments.includes(uiPermissionsById.deploy.value) || hasPermission(uiPermissions.groups, uiPermissionsById.deploy.value);
   const canReadDeployments = uiPermissions.deployments.includes(uiPermissionsById.read.value);
 
   return {

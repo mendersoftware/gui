@@ -17,49 +17,49 @@ export const roles = [
     name: '141sasd',
     description: '1313adg',
     permission_sets_with_scope: [
-      { name: defaultPermissionSets.ReadDevices.value, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
-      { name: defaultPermissionSets.ConnectToDevices.value, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
-      { name: defaultPermissionSets.ManageUsers.value }
+      { ...defaultPermissionSets.ReadDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
+      { ...defaultPermissionSets.ConnectToDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
+      { ...defaultPermissionSets.ManageUsers }
     ]
   },
   {
     name: 'kljlkk',
     description: 'lkl',
-    permission_sets_with_scope: [{ name: defaultPermissionSets.ConnectToDevices.value, scope: { type: 'DeviceGroups', value: ['bestgroup'] } }]
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } }]
   },
   {
     name: 'yyyyy',
     description: 'asd',
     permission_sets_with_scope: [
-      { name: defaultPermissionSets.ManageDevices.value, scope: { type: 'DeviceGroups', value: ['dockerclient'] } },
-      { name: defaultPermissionSets.ManageReleases.value }
+      { ...defaultPermissionSets.ManageDevices, scope: { type: 'DeviceGroups', value: ['dockerclient'] } },
+      { ...defaultPermissionSets.ManageReleases }
     ]
   },
   {
     name: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
     description: 'Intended for users responsible for managing deployments, this role can create and abort deployments',
-    permission_sets_with_scope: [{ name: defaultPermissionSets.DeployToDevices.value }]
+    permission_sets_with_scope: [{ ...defaultPermissionSets.DeployToDevices }]
   },
   {
     name: 'RBAC_ROLE_REMOTE_TERMINAL',
     description: `Intended for tech support accounts, this role can access the devices' Remote Terminal.`,
-    permission_sets_with_scope: [{ name: defaultPermissionSets.ConnectToDevices.value }]
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices }]
   },
-  { name: 'RBAC_ROLE_PERMIT_ALL', description: '', permission_sets_with_scope: [{ name: defaultPermissionSets.SuperUser.value }] },
+  { name: 'RBAC_ROLE_PERMIT_ALL', description: '', permission_sets_with_scope: [{ ...defaultPermissionSets.SuperUser }] },
   {
     name: 'RBAC_ROLE_OBSERVER',
     description:
       'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
-    permission_sets_with_scope: [{ name: defaultPermissionSets.ReadReleases.value }, { name: defaultPermissionSets.ReadDevices.value }]
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ReadReleases }, { ...defaultPermissionSets.ReadDevices }]
   },
   {
     name: 'RBAC_ROLE_CI',
     description:
       'Intended for automation accounts building software (e.g. CI/CD systems), this role can only manage Artifacts, including upload new Artifacts and delete Artifacts. It does not have access to Devices or Deployments.',
     permission_sets_with_scope: [
-      { name: defaultPermissionSets.ReadReleases.value },
-      { name: defaultPermissionSets.ManageReleases.value },
-      { name: defaultPermissionSets.UploadArtifacts.value }
+      { ...defaultPermissionSets.ReadReleases },
+      { ...defaultPermissionSets.ManageReleases },
+      { ...defaultPermissionSets.UploadArtifacts }
     ]
   }
 ];

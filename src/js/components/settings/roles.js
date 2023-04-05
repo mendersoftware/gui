@@ -26,7 +26,7 @@ const columns = [
   }
 ];
 
-export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGroups, getRoles, groups, removeRole, roles }) => {
+export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGroups, getRoles, groups, releaseTags, removeRole, roles }) => {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const [role, setRole] = useState({ ...emptyRole });
@@ -78,6 +78,7 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
         removeRole={removeRole}
         selectedRole={role}
         stateGroups={groups}
+        stateReleaseTags={releaseTags}
       />
     </div>
   );
@@ -90,6 +91,7 @@ const mapStateToProps = state => {
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
     groups,
+    releaseTags: state.releases.releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}),
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role }))
   };
 };

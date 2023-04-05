@@ -13,3 +13,5 @@ export const SET_RELEASES_LIST_STATE = 'SET_RELEASES_LIST_STATE';
 export const rootfsImageVersion = 'rootfs-image.version';
 
 export const softwareTitleMap = { [rootfsImageVersion]: { title: 'Root filesystem', priority: 0, key: rootfsImageVersion } };
+
+export const ALL_RELEASES = 'All releases';

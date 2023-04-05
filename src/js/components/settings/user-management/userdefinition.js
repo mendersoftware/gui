@@ -29,6 +29,10 @@ export const getUserSSOState = user => {
   return { isOAuth2, provider };
 };
 
+const mapPermissions = permissions => permissions.map(permission => uiPermissionsById[permission].title).join(', ');
+
+const scopedPermissionAreas = ['groups', 'releases'];
+
 export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
   const { email = '', id } = selectedUser;
 
@@ -74,14 +78,13 @@ export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, 
   const togglePasswordReset = () => setShouldResetPassword(toggle);
 
   const { areas, groups } = useMemo(() => {
-    const things = { areas: {}, groups: {} };
+    const emptySelection = { areas: {}, groups: {}, releases: {} };
     if (!(selectedRoles && roles)) {
-      return things;
+      return emptySelection;
     }
-    const mapPermissions = permissions => permissions.map(permission => uiPermissionsById[permission].title).join(', ');
 
     return Object.entries(mapUserRolesToUiPermissions(selectedRoles, roles)).reduce((accu, [key, values]) => {
-      if (key === 'groups') {
+      if (scopedPermissionAreas.includes(key)) {
         accu[key] = Object.entries(values).reduce((groupsAccu, [name, uiPermissions]) => {
           groupsAccu[name] = mapPermissions(uiPermissions);
           return groupsAccu;
@@ -90,7 +93,7 @@ export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, 
         accu.areas[uiPermissionsByArea[key].title] = mapPermissions(values);
       }
       return accu;
-    }, things);
+    }, emptySelection);
   }, [selectedRoles, roles]);
 
   const isSubmitDisabled = !selectedRoles.length;

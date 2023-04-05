@@ -3,12 +3,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 // material ui
 import { Close as CloseIcon, InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
 import { Button, Checkbox, Divider, Drawer, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import validator from 'validator';
 
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { emptyRole, emptyUiPermissions, rolesById, uiPermissionsByArea, uiPermissionsById } from '../../constants/userConstants';
+import { ALL_RELEASES } from '../../constants/releaseConstants';
+import { emptyRole, emptyUiPermissions, itemUiPermissionsReducer, rolesById, uiPermissionsByArea, uiPermissionsById } from '../../constants/userConstants';
 import { deepCompare, isEmpty } from '../../helpers';
 
 const menuProps = {
@@ -22,15 +23,22 @@ const menuProps = {
   }
 };
 
-const PermissionsSelect = ({ disabled, label, onChange, options, values }) => {
-  const theme = useTheme();
+const permissionEnabledDisabled = (uiPermission, values, permissionsArea, unscoped) => {
+  const { permissionLevel, value: permissionValue, unscopedOnly = {} } = uiPermission;
+  const disabled = values.some(permission => uiPermissionsById[permission].permissionLevel > permissionLevel);
+  const enabled = values.some(permission => permission === permissionValue) || disabled;
+  const skip = unscopedOnly[permissionsArea] && !unscoped;
+  return { enabled, disabled, skip };
+};
 
-  const permissionEnabledDisabled = (uiPermission, values) => {
-    const { permissionLevel, value: permissionValue } = uiPermission;
-    const disabled = values.some(permission => uiPermissionsById[permission].permissionLevel > permissionLevel);
-    const enabled = values.some(permission => permission === permissionValue) || disabled;
-    return { enabled, disabled };
-  };
+const useStyles = makeStyles()(theme => ({
+  buttons: { '&.flexbox.centered': { justifyContent: 'flex-end' } },
+  roleDeletion: { marginRight: theme.spacing(2) },
+  permissionSelect: { marginLeft: theme.spacing(-1.5) }
+}));
+
+const PermissionsSelect = ({ disabled, label, onChange, options, permissionsArea, unscoped, values }) => {
+  const { classes } = useStyles();
 
   const onInputChange = ({ target: { value } }) => {
     if (value.includes('')) {
@@ -43,7 +51,10 @@ const PermissionsSelect = ({ disabled, label, onChange, options, values }) => {
     () =>
       options.reduce(
         (accu, uiPermission) => {
-          const { enabled, disabled } = permissionEnabledDisabled(uiPermission, values);
+          const { enabled, disabled, skip } = permissionEnabledDisabled(uiPermission, values, permissionsArea, unscoped);
+          if (skip) {
+            return accu;
+          }
           accu.editablePermissions.push({ enabled, disabled, ...uiPermission });
           if (enabled) {
             accu.selectedValues.push(uiPermission.value);
@@ -52,7 +63,7 @@ const PermissionsSelect = ({ disabled, label, onChange, options, values }) => {
         },
         { editablePermissions: [], selectedValues: [] }
       ),
-    [options, values]
+    [options, permissionsArea, unscoped, values]
   );
 
   return (
@@ -71,7 +82,7 @@ const PermissionsSelect = ({ disabled, label, onChange, options, values }) => {
       >
         {editablePermissions.map(uiPermission => (
           <MenuItem disabled={uiPermission.disabled} key={uiPermission.value} value={uiPermission.value}>
-            <Checkbox checked={uiPermission.enabled} disabled={uiPermission.disabled} style={{ marginLeft: theme.spacing(-1.5) }} />
+            <Checkbox className={classes.permissionSelect} checked={uiPermission.enabled} disabled={uiPermission.disabled} />
             <div className={uiPermission.disabled ? 'text-muted' : ''}>{uiPermission.title}</div>
           </MenuItem>
         ))}
@@ -97,126 +108,186 @@ const PermissionsItem = ({ area, ...remainder }) => (
   </>
 );
 
-const GroupSelection = ({ disableEdit, groups, groupSelection, index, onGroupSelect, onGroupPermissionSelect }) => (
-  <div className="flexbox center-aligned margin-left">
-    <div className="two-columns center-aligned" style={{ maxWidth: 500 }}>
-      {disableEdit ? (
-        // empty label as a shortcut to align the layout with the select path
-        <TextField disabled defaultValue={groupSelection.group} label=" " />
-      ) : (
-        <FormControl>
-          <InputLabel id="permissions-group-selection-label">{!groupSelection.group ? 'Search groups' : ''}</InputLabel>
-          <Select labelId="permissions-group-selection-label" onChange={e => onGroupSelect(index, e)} value={groupSelection.group}>
-            {groups.map(group => (
-              <MenuItem key={group} value={group}>
-                {group}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-      <PermissionsSelect
-        disabled={disableEdit}
-        label="Select"
-        onChange={selectedPermissions => onGroupPermissionSelect(index, selectedPermissions)}
-        options={uiPermissionsByArea.groups.uiPermissions}
-        values={groupSelection.uiPermissions}
-      />
-    </div>
-    {groupSelection.group === ALL_DEVICES && (
-      <div className="margin-left text-muted" style={{ alignSelf: 'flex-end' }}>
-        For &apos;All devices&apos;, users with the Manage permission may also create, edit and delete devices groups.
-      </div>
-    )}
-  </div>
-);
+const groupsFilter = stateGroups =>
+  Object.entries(stateGroups).reduce(
+    (accu, [name, groupInfo]) => {
+      if (!groupInfo.filters.length) {
+        accu.push(name);
+      }
+      return accu;
+    },
+    [ALL_DEVICES]
+  );
 
-const emptyGroupSelection = { group: '', uiPermissions: [], disableEdit: false };
+const releasesFilter = stateReleases => [ALL_RELEASES, ...Object.keys(stateReleases)];
+
+const scopedPermissionAreas = {
+  groups: {
+    key: 'groups',
+    filter: groupsFilter,
+    placeholder: 'Search groups',
+    excessiveAccessConfig: {
+      selector: ALL_DEVICES,
+      warning: `For 'All devices', users with the Manage permission may also create, edit and delete devices groups.`
+    }
+  },
+  releases: {
+    key: 'releases',
+    filter: releasesFilter,
+    placeholder: 'Search release tags',
+    excessiveAccessConfig: {
+      selector: ALL_RELEASES,
+      warning: `For 'All releases', users with the Manage permission may also upload and delete releases.`
+    }
+  }
+};
+
+const maybeExtendPermissionSelection = (changedGroupSelection, currentGroup) => {
+  if (changedGroupSelection.every(selection => selection.item && selection.uiPermissions.length)) {
+    changedGroupSelection.push(emptyItemSelection);
+    return changedGroupSelection;
+  }
+  // the following is horrible, but I couldn't come up with a better solution that ensures only a single partly defined definition exists
+  const filtered = changedGroupSelection.filter(selection => !((!selection.item || !selection.uiPermissions.length) && selection !== currentGroup));
+  if (!filtered.some(selection => !selection.item || !selection.uiPermissions.length)) {
+    filtered.push(emptyItemSelection);
+  }
+  return filtered;
+};
+
+const ItemSelection = ({
+  disableEdit,
+  items,
+  itemsSelection,
+  setter,
+  permissionsArea,
+  placeholder,
+  excessiveAccessConfig: { selector: excessiveAccessSelector, warning: excessiveAccessWarning }
+}) => {
+  const onItemSelect = (index, { target: { value } }, currentSelection) => {
+    let changedSelection = [...currentSelection];
+    changedSelection[index] = { ...changedSelection[index], item: value };
+    changedSelection = maybeExtendPermissionSelection(changedSelection, changedSelection[index]);
+    setter(changedSelection);
+  };
+
+  const onItemPermissionSelect = (index, selectedPermissions, currentSelection) => {
+    let changedSelection = [...currentSelection];
+    changedSelection[index] = { ...changedSelection[index], uiPermissions: selectedPermissions };
+    changedSelection = maybeExtendPermissionSelection(changedSelection, changedSelection[index]);
+    setter(changedSelection);
+  };
+
+  const { title, uiPermissions, explanation } = uiPermissionsByArea[permissionsArea];
+  return (
+    <>
+      <PermissionsAreaTitle className="margin-left-small" explanation={explanation} title={title} />
+      {itemsSelection.map((itemSelection, index) => {
+        const disabled = disableEdit || itemSelection.disableEdit;
+        return (
+          <div className="flexbox center-aligned margin-left" key={`${itemSelection.item}-${index}`}>
+            <div className="two-columns center-aligned" style={{ maxWidth: 500 }}>
+              {disabled ? (
+                // empty label as a shortcut to align the layout with the select path
+                <TextField disabled defaultValue={itemSelection.item} label=" " />
+              ) : (
+                <FormControl>
+                  <InputLabel id="permissions-group-selection-label">{!itemSelection.item ? placeholder : ''}</InputLabel>
+                  <Select labelId="permissions-group-selection-label" onChange={e => onItemSelect(index, e, itemsSelection)} value={itemSelection.item}>
+                    {items.map(item => (
+                      <MenuItem key={item} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
+              <PermissionsSelect
+                disabled={disabled}
+                label="Select"
+                onChange={selectedPermissions => onItemPermissionSelect(index, selectedPermissions, itemsSelection)}
+                options={uiPermissions}
+                permissionsArea={permissionsArea}
+                unscoped={itemSelection.item === excessiveAccessSelector}
+                values={itemSelection.uiPermissions}
+              />
+            </div>
+            {itemSelection.item === excessiveAccessSelector && (
+              <div className="margin-left text-muted" style={{ alignSelf: 'flex-end' }}>
+                {excessiveAccessWarning}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+const emptyItemSelection = { item: '', uiPermissions: [], disableEdit: false };
 
 const permissionMapper = uiPermission => uiPermissionsById[uiPermission].value;
 
-const uiPermissionCompare = (existingPermissions, changedPermissions) => {
-  return deepCompare(existingPermissions, changedPermissions);
+const uiPermissionCompare = (existingPermissions, changedPermissions) => deepCompare(existingPermissions, changedPermissions);
+
+const deriveItemsAndPermissions = (stateItems, roleItems, options = {}) => {
+  const { adding, disableEdit, filter } = options;
+  let filteredStateItems = filter(stateItems);
+  let itemSelections = Object.entries(roleItems).map(([group, permissions]) => ({
+    ...emptyItemSelection,
+    item: group,
+    uiPermissions: permissions.map(permissionMapper)
+  }));
+  if (!adding && !itemSelections.length && filteredStateItems.length !== Object.keys(stateItems).length && !isEmpty(roleItems)) {
+    filteredStateItems = Object.keys(roleItems);
+    itemSelections = Object.keys(roleItems).map(group => ({
+      item: group,
+      uiPermissions: [uiPermissionsById.read.value, uiPermissionsById.manage.value],
+      disableEdit: true
+    }));
+  } else if (!disableEdit) {
+    itemSelections.push(emptyItemSelection);
+  }
+  return { filtered: filteredStateItems, selections: itemSelections };
 };
 
-export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmit, removeRole, selectedRole = { ...emptyRole } }) => {
+const selectedPermissionsFilter = selection => selection.item && selection.uiPermissions.length;
+
+export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags, onCancel, onSubmit, removeRole, selectedRole = { ...emptyRole } }) => {
   const [description, setDescription] = useState(selectedRole.description);
   const [groups, setGroups] = useState([]);
+  const [releases, setReleases] = useState([]);
   const [name, setName] = useState(selectedRole.name);
   const [nameError, setNameError] = useState(false);
-
-  const [releasesPermissions, setReleasesPermissions] = useState([]);
-  const [userManagementPermissions, setUserManagementPermissions] = useState([]);
   const [auditlogPermissions, setAuditlogPermissions] = useState([]);
   const [groupSelections, setGroupSelections] = useState([]);
-  const theme = useTheme();
+  const [releaseTagSelections, setReleaseTagSelections] = useState([]);
+  const [userManagementPermissions, setUserManagementPermissions] = useState([]);
+  const { classes } = useStyles();
 
   useEffect(() => {
     const { name: roleName = '', description: roleDescription = '' } = selectedRole;
-    const { auditlog, groups: roleGroups = {}, releases, userManagement } = { ...emptyUiPermissions, ...selectedRole.uiPermissions };
+    const { auditlog, groups: roleGroups = {}, releases: roleReleases = {}, userManagement } = { ...emptyUiPermissions, ...selectedRole.uiPermissions };
     const disableEdit = editing && Boolean(rolesById[roleName] || !selectedRole.editable);
     setName(roleName);
     setDescription(roleDescription);
     setUserManagementPermissions(userManagement.map(permissionMapper));
-    setReleasesPermissions(releases.map(permissionMapper));
     setAuditlogPermissions(auditlog.map(permissionMapper));
-    let filteredStateGroups = groupsFilter(stateGroups);
-    let groupSelections = Object.entries(roleGroups).map(([group, groupUiPermissions]) => ({
-      ...emptyGroupSelection,
-      group,
-      uiPermissions: groupUiPermissions.map(permissionMapper)
-    }));
-    if (!adding && !groupSelections.length && filteredStateGroups.length !== Object.keys(stateGroups).length && !isEmpty(roleGroups)) {
-      filteredStateGroups = Object.keys(roleGroups);
-      groupSelections = Object.keys(roleGroups).map(group => ({
-        group,
-        uiPermissions: [uiPermissionsById.read.value, uiPermissionsById.manage.value],
-        disableEdit: true
-      }));
-    } else if (!disableEdit) {
-      groupSelections.push(emptyGroupSelection);
-    }
+    const { filtered: filteredStateGroups, selections: groupSelections } = deriveItemsAndPermissions(stateGroups, roleGroups, {
+      adding,
+      disableEdit,
+      filter: scopedPermissionAreas.groups.filter
+    });
     setGroups(filteredStateGroups);
     setGroupSelections(groupSelections);
-  }, [adding, editing, selectedRole, stateGroups]);
-
-  const groupsFilter = stateGroups =>
-    Object.entries(stateGroups).reduce(
-      (accu, [name, groupInfo]) => {
-        if (!groupInfo.filters.length) {
-          accu.push(name);
-        }
-        return accu;
-      },
-      [ALL_DEVICES]
-    );
-
-  const maybeExtendGroupSelection = (changedGroupSelection, currentGroup) => {
-    if (changedGroupSelection.every(selection => selection.group && selection.uiPermissions.length)) {
-      changedGroupSelection.push(emptyGroupSelection);
-      return changedGroupSelection;
-    }
-    // the following is horrible, but I couldn't come up with a better solution that ensures only a single partly defined definition exists
-    const filtered = changedGroupSelection.filter(selection => !((!selection.group || !selection.uiPermissions.length) && selection !== currentGroup));
-    if (!filtered.some(selection => !selection.group || !selection.uiPermissions.length)) {
-      filtered.push(emptyGroupSelection);
-    }
-    return filtered;
-  };
-
-  const onGroupSelect = (index, { target: { value } }) => {
-    let changedGroups = [...groupSelections];
-    changedGroups[index] = { ...changedGroups[index], group: value };
-    changedGroups = maybeExtendGroupSelection(changedGroups, changedGroups[index]);
-    setGroupSelections(changedGroups);
-  };
-
-  const onGroupPermissionSelect = (index, selectedPermissions) => {
-    let changedGroups = [...groupSelections];
-    changedGroups[index] = { ...changedGroups[index], uiPermissions: selectedPermissions };
-    changedGroups = maybeExtendGroupSelection(changedGroups, changedGroups[index]);
-    setGroupSelections(changedGroups);
-  };
+    const { filtered: filteredReleases, selections: releaseTagSelections } = deriveItemsAndPermissions(stateReleaseTags, roleReleases, {
+      adding,
+      disableEdit,
+      filter: scopedPermissionAreas.releases.filter
+    });
+    setReleases(filteredReleases);
+    setReleaseTagSelections(releaseTagSelections);
+  }, [adding, editing, selectedRole, stateGroups, stateReleaseTags]);
 
   const validateNameChange = ({ target: { value } }) => {
     setNameError(!(value && validator.isWhitelisted(value, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')));
@@ -233,7 +304,7 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
       uiPermissions: {
         auditlog: auditlogPermissions,
         groups: groupSelections,
-        releases: releasesPermissions,
+        releases: releaseTagSelections,
         userManagement: userManagementPermissions
       }
     };
@@ -247,28 +318,25 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
 
   const disableEdit = editing && Boolean(rolesById[selectedRole.id] || !selectedRole.editable);
   const isSubmitDisabled = useMemo(() => {
-    const filteredGroups = groupSelections.filter(selection => selection.group && selection.uiPermissions.length);
+    const selectedGroups = groupSelections.some(selectedPermissionsFilter);
+    const selectedReleaseTags = releaseTagSelections.some(selectedPermissionsFilter);
     const changedPermissions = {
       ...emptyUiPermissions,
-      userManagement: userManagementPermissions,
-      releases: releasesPermissions,
       auditlog: auditlogPermissions,
-      groups: groupSelections.reduce((accu, item) => {
-        if (item.group) {
-          accu[item.group] = item.uiPermissions;
-        }
-        return accu;
-      }, {})
+      userManagement: userManagementPermissions,
+      groups: groupSelections.reduce(itemUiPermissionsReducer, {}),
+      releases: releaseTagSelections.reduce(itemUiPermissionsReducer, {})
     };
     return Boolean(
       disableEdit ||
         !name ||
         nameError ||
-        !(userManagementPermissions.length || filteredGroups.length) ||
+        !(userManagementPermissions.length || selectedGroups || selectedReleaseTags) ||
+        [...groupSelections, ...releaseTagSelections].some(({ item, uiPermissions }) => (item && !uiPermissions.length) || (!item && uiPermissions.length)) ||
         (Object.entries({ description, name }).every(([key, value]) => selectedRole[key] === value) &&
           uiPermissionCompare(selectedRole.uiPermissions, changedPermissions))
     );
-  }, [auditlogPermissions, description, disableEdit, groupSelections, name, nameError, releasesPermissions, userManagementPermissions]);
+  }, [auditlogPermissions, description, disableEdit, groupSelections, name, nameError, releaseTagSelections, userManagementPermissions]);
 
   return (
     <Drawer anchor="right" open={adding || editing} PaperProps={{ style: { minWidth: 600, width: '50vw' } }}>
@@ -276,13 +344,7 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
         <h3>{adding ? 'Add a' : 'Edit'} role</h3>
         <div className="flexbox center-aligned">
           {editing && !rolesById[selectedRole.id] && (
-            <Button
-              className="flexbox center-aligned"
-              color="secondary"
-              disabled={disableEdit}
-              onClick={onRemoveRole}
-              style={{ marginRight: theme.spacing(2) }}
-            >
+            <Button className={`flexbox center-aligned ${classes.roleDeletion}`} color="secondary" disabled={disableEdit} onClick={onRemoveRole}>
               delete role
             </Button>
           )}
@@ -319,26 +381,32 @@ export const RoleDefinition = ({ adding, editing, stateGroups, onCancel, onSubmi
           values={userManagementPermissions}
         />
         <PermissionsItem disabled={disableEdit} area={uiPermissionsByArea.auditlog} onChange={setAuditlogPermissions} values={auditlogPermissions} />
-        <PermissionsItem disabled={disableEdit} area={uiPermissionsByArea.releases} onChange={setReleasesPermissions} values={releasesPermissions} />
       </div>
-
-      {(!disableEdit || !!groupSelections.length) && (
-        <PermissionsAreaTitle className="margin-left-small" explanation={uiPermissionsByArea.groups.explanation} title={uiPermissionsByArea.groups.title} />
-      )}
-      {groupSelections.map((groupSelection, index) => (
-        <GroupSelection
-          disableEdit={disableEdit || groupSelection.disableEdit}
-          groups={groups}
-          groupSelection={groupSelection}
-          index={index}
-          key={`${groupSelection.group}-${index}`}
-          onGroupSelect={onGroupSelect}
-          onGroupPermissionSelect={onGroupPermissionSelect}
+      {(!disableEdit || !!releaseTagSelections.length) && (
+        <ItemSelection
+          disableEdit={disableEdit}
+          excessiveAccessConfig={scopedPermissionAreas.releases.excessiveAccessConfig}
+          items={releases}
+          itemsSelection={releaseTagSelections}
+          permissionsArea={scopedPermissionAreas.releases.key}
+          placeholder={scopedPermissionAreas.releases.placeholder}
+          setter={setReleaseTagSelections}
         />
-      ))}
-      <Divider light style={{ marginTop: theme.spacing(4) }} />
-      <div className="flexbox centered margin-top" style={{ justifyContent: 'flex-end' }}>
-        <Button onClick={onCancel} style={{ marginRight: theme.spacing(2) }}>
+      )}
+      {(!disableEdit || !!groupSelections.length) && (
+        <ItemSelection
+          disableEdit={disableEdit}
+          excessiveAccessConfig={scopedPermissionAreas.groups.excessiveAccessConfig}
+          items={groups}
+          itemsSelection={groupSelections}
+          permissionsArea={scopedPermissionAreas.groups.key}
+          placeholder={scopedPermissionAreas.groups.placeholder}
+          setter={setGroupSelections}
+        />
+      )}
+      <Divider className="margin-top-large" light />
+      <div className={`flexbox centered margin-top ${classes.buttons}`}>
+        <Button className="margin-right" onClick={onCancel}>
           Cancel
         </Button>
         <Button color="secondary" variant="contained" target="_blank" disabled={isSubmitDisabled} onClick={onSubmitClick}>
