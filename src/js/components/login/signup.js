@@ -19,6 +19,7 @@ const useStyles = makeStyles()(theme => ({
   background: {
     width: '100%',
     marginTop: -(50 + 45),
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
     '&#signup-box': {
       maxWidth: 'initial'
     }
@@ -125,7 +126,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
   return (
     <>
       <LoginLogo className={classes.logo} />
-      <div className={`content margin-bottom-small ${classes.background}`} id="signup-box">
+      <div className={`content ${classes.background}`} id="signup-box">
         {loading ? <Loader show={true} style={{ marginTop: '40vh' }} /> : steps[step]}
       </div>
     </>

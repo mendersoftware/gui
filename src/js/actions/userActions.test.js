@@ -282,7 +282,6 @@ const appInitActions = [
         'release-981'
       ],
       page: 1,
-      searchAttribute: 'name',
       total: 5000
     }
   },

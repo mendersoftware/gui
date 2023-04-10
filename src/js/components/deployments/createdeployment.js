@@ -116,12 +116,7 @@ export const CreateDeployment = props => {
   const { classes } = useStyles();
 
   useEffect(() => {
-    let searchConfig = {};
-    const { devices = [] } = deploymentObject;
-    if (devices.length) {
-      searchConfig = devices[0].attributes.device_type ? { searchAttribute: 'device_type', searchTerm: devices[0].attributes.device_type[0] } : searchConfig;
-    }
-    getReleases({ page: 1, perPage: 100, searchOnly: true, ...searchConfig });
+    getReleases({ page: 1, perPage: 100, searchOnly: true });
     getDeploymentsConfig();
   }, []);
 
