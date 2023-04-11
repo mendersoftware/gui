@@ -70,7 +70,7 @@
     "@typescript-eslint/parser": "^5.58.0",
     "assert": "^2.0.0",
     "autoprefixer": "^10.4.14",
-    "axios-mock-adapter": "^1.21.3",
+    "axios-mock-adapter": "^1.21.4",
     "babel-jest": "~29.5.0",
     "child_process": "^1.0.2",
     "clean-webpack-plugin": "^4.0.0",
