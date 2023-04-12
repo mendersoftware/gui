@@ -9,6 +9,7 @@ import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { emptyRole, rolesById } from '../../constants/userConstants';
+import { getFeatures } from '../../selectors';
 import DetailsTable from '../common/detailstable';
 import RoleDefinition from './roledefinition';
 
@@ -26,7 +27,7 @@ const columns = [
   }
 ];
 
-export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGroups, getRoles, groups, releaseTags, removeRole, roles }) => {
+export const RoleManagement = ({ createRole, editRole, features, getDynamicGroups, getGroups, getRoles, groups, releaseTags, removeRole, roles }) => {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const [role, setRole] = useState({ ...emptyRole });
@@ -85,6 +86,7 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
       <RoleDefinition
         adding={adding}
         editing={editing}
+        features={features}
         onCancel={onCancel}
         onSubmit={onSubmit}
         removeRole={removeRole}
@@ -102,6 +104,7 @@ const mapStateToProps = state => {
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
   return {
+    features: getFeatures(state),
     groups,
     releaseTags: state.releases.releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}),
     roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role }))

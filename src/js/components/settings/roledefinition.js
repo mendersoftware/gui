@@ -119,7 +119,7 @@ const groupsFilter = stateGroups =>
     [ALL_DEVICES]
   );
 
-const releasesFilter = stateReleases => [ALL_RELEASES, ...Object.keys(stateReleases)];
+const releasesFilter = stateReleaseTags => [ALL_RELEASES, ...Object.keys(stateReleaseTags)];
 
 const scopedPermissionAreas = {
   groups: {
@@ -251,9 +251,19 @@ const deriveItemsAndPermissions = (stateItems, roleItems, options = {}) => {
   return { filtered: filteredStateItems, selections: itemSelections };
 };
 
-const selectedPermissionsFilter = selection => selection.item && selection.uiPermissions.length;
+const permissionCompatibilityReducer = (accu, permission) => ({ [ALL_RELEASES]: [...accu[ALL_RELEASES], permission] });
 
-export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags, onCancel, onSubmit, removeRole, selectedRole = { ...emptyRole } }) => {
+export const RoleDefinition = ({
+  adding,
+  editing,
+  features,
+  stateGroups,
+  stateReleaseTags,
+  onCancel,
+  onSubmit,
+  removeRole,
+  selectedRole = { ...emptyRole }
+}) => {
   const [description, setDescription] = useState(selectedRole.description);
   const [groups, setGroups] = useState([]);
   const [releases, setReleases] = useState([]);
@@ -261,9 +271,11 @@ export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags,
   const [nameError, setNameError] = useState(false);
   const [auditlogPermissions, setAuditlogPermissions] = useState([]);
   const [groupSelections, setGroupSelections] = useState([]);
+  const [releasesPermissions, setReleasesPermissions] = useState([]);
   const [releaseTagSelections, setReleaseTagSelections] = useState([]);
   const [userManagementPermissions, setUserManagementPermissions] = useState([]);
   const { classes } = useStyles();
+  const { hasReleaseTags } = features;
 
   useEffect(() => {
     const { name: roleName = '', description: roleDescription = '' } = selectedRole;
@@ -287,6 +299,14 @@ export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags,
     });
     setReleases(filteredReleases);
     setReleaseTagSelections(releaseTagSelections);
+    setReleasesPermissions(
+      releaseTagSelections.reduce((accu, { item, uiPermissions }) => {
+        if (item === ALL_RELEASES) {
+          return [...accu, ...uiPermissions];
+        }
+        return accu;
+      }, [])
+    );
   }, [adding, editing, selectedRole, stateGroups, stateReleaseTags]);
 
   const validateNameChange = ({ target: { value } }) => {
@@ -304,7 +324,7 @@ export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags,
       uiPermissions: {
         auditlog: auditlogPermissions,
         groups: groupSelections,
-        releases: releaseTagSelections,
+        releases: hasReleaseTags ? releaseTagSelections : [{ item: ALL_RELEASES, uiPermissions: releasesPermissions }],
         userManagement: userManagementPermissions
       }
     };
@@ -318,25 +338,33 @@ export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags,
 
   const disableEdit = editing && Boolean(rolesById[selectedRole.id] || !selectedRole.editable);
   const isSubmitDisabled = useMemo(() => {
-    const selectedGroups = groupSelections.some(selectedPermissionsFilter);
-    const selectedReleaseTags = releaseTagSelections.some(selectedPermissionsFilter);
     const changedPermissions = {
       ...emptyUiPermissions,
       auditlog: auditlogPermissions,
       userManagement: userManagementPermissions,
       groups: groupSelections.reduce(itemUiPermissionsReducer, {}),
-      releases: releaseTagSelections.reduce(itemUiPermissionsReducer, {})
+      releases: hasReleaseTags
+        ? releaseTagSelections.reduce(itemUiPermissionsReducer, {})
+        : releasesPermissions.reduce(permissionCompatibilityReducer, { [ALL_RELEASES]: [] })
     };
+    const { hasPartiallyDefinedAreas, hasAreaPermissions } = [...groupSelections, ...releaseTagSelections].reduce(
+      (accu, { item, uiPermissions }) => {
+        accu.hasPartiallyDefinedAreas = accu.hasPartiallyDefinedAreas || (item && !uiPermissions.length) || (!item && uiPermissions.length);
+        accu.hasAreaPermissions = accu.hasAreaPermissions || !!(item && uiPermissions.length);
+        return accu;
+      },
+      { hasPartiallyDefinedAreas: false, hasAreaPermissions: false }
+    );
     return Boolean(
       disableEdit ||
         !name ||
         nameError ||
-        !(userManagementPermissions.length || selectedGroups || selectedReleaseTags) ||
-        [...groupSelections, ...releaseTagSelections].some(({ item, uiPermissions }) => (item && !uiPermissions.length) || (!item && uiPermissions.length)) ||
+        hasPartiallyDefinedAreas ||
+        !(auditlogPermissions.length || hasAreaPermissions || releasesPermissions.length || userManagementPermissions.length) ||
         (Object.entries({ description, name }).every(([key, value]) => selectedRole[key] === value) &&
           uiPermissionCompare(selectedRole.uiPermissions, changedPermissions))
     );
-  }, [auditlogPermissions, description, disableEdit, groupSelections, name, nameError, releaseTagSelections, userManagementPermissions]);
+  }, [auditlogPermissions, description, disableEdit, groupSelections, name, nameError, releasesPermissions, releaseTagSelections, userManagementPermissions]);
 
   return (
     <Drawer anchor="right" open={adding || editing} PaperProps={{ style: { minWidth: 600, width: '50vw' } }}>
@@ -381,8 +409,11 @@ export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags,
           values={userManagementPermissions}
         />
         <PermissionsItem disabled={disableEdit} area={uiPermissionsByArea.auditlog} onChange={setAuditlogPermissions} values={auditlogPermissions} />
+        {!hasReleaseTags && (
+          <PermissionsItem disabled={disableEdit} area={uiPermissionsByArea.releases} onChange={setReleasesPermissions} values={releasesPermissions} />
+        )}
       </div>
-      {(!disableEdit || !!releaseTagSelections.length) && (
+      {(!disableEdit || !!releaseTagSelections.length) && hasReleaseTags && (
         <ItemSelection
           disableEdit={disableEdit}
           excessiveAccessConfig={scopedPermissionAreas.releases.excessiveAccessConfig}
