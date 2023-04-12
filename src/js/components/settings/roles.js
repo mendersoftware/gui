@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -8,7 +8,7 @@ import { Chip } from '@mui/material';
 import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { emptyRole } from '../../constants/userConstants';
+import { emptyRole, rolesById } from '../../constants/userConstants';
 import DetailsTable from '../common/detailstable';
 import RoleDefinition from './roledefinition';
 
@@ -65,10 +65,22 @@ export const RoleManagement = ({ createRole, editRole, getDynamicGroups, getGrou
     onCancel();
   };
 
+  const items = useMemo(
+    () =>
+      Object.keys(rolesById)
+        .reverse()
+        .reduce((accu, key) => {
+          const index = accu.findIndex(({ id }) => id === key);
+          accu = [accu[index], ...accu.filter((item, itemIndex) => index !== itemIndex)];
+          return accu;
+        }, roles),
+    [JSON.stringify(roles)]
+  );
+
   return (
     <div>
       <h2 style={{ marginLeft: 20 }}>Roles</h2>
-      <DetailsTable columns={columns} items={roles} onItemClick={onEditRole} />
+      <DetailsTable columns={columns} items={items} onItemClick={onEditRole} />
       <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} />
       <RoleDefinition
         adding={adding}
