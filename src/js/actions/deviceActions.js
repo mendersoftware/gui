@@ -318,7 +318,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.tags = { ...storedTags, ...tags };
       device.group = system.group ?? storedGroup;
       device.monitor = { ...storedMonitor, ...monitor };
-      device.identity_data = { ...storedIdentity, ...identity };
+      device.identity_data = { ...storedIdentity, ...identity, ...(device.identity_data ? device.identity_data : {}) };
       device.status = status ? status : device.status || identity.status;
       device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
       device.updated_ts = getLatestTs(getLatestTs(system.updated_ts, device.updated_ts), stateDevice.updated_ts);
