@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 // material ui
@@ -10,14 +10,18 @@ import {
   Check as CheckIcon,
   Edit as EditIcon,
   ExitToApp as ExitToAppIcon,
+  Launch as LaunchIcon,
   Remove as RemoveIcon
 } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { getArtifactUrl } from '../../actions/releaseActions';
-import { extractSoftware, toggle } from '../../helpers';
+import pluralize from 'pluralize';
+
+import { getArtifactInstallCount, getArtifactUrl } from '../../actions/releaseActions';
+import { extractSoftware, extractSoftwareItem, toggle } from '../../helpers';
 import { getUserCapabilities } from '../../selectors';
+import ExpandableAttribute from '../common/expandable-attribute';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
 
@@ -26,17 +30,20 @@ const useStyles = makeStyles()(theme => ({
     color: 'rgba(0, 0, 0, 0.54)',
     marginBottom: 10
   },
+  link: { marginTop: theme.spacing() },
   listItemStyle: {
-    color: '#404041',
-    fontSize: 13,
-    marginRight: '2vw',
-    minMidth: 200,
-    padding: 0,
     bordered: {
       borderBottom: '1px solid',
       borderBottomColor: theme.palette.grey[500]
-    }
+    },
+    color: theme.palette.text.primary,
+    fontSize: 13,
+    marginRight: '2vw',
+    minWidth: 200,
+    padding: 0,
+    width: 'initial'
   },
+  paddingOverride: { paddingBottom: 4, paddingTop: 0 },
   accordPanel1: {
     background: theme.palette.grey[500],
     borderTop: 'none',
@@ -84,44 +91,61 @@ export const transformArtifactMetadata = (metadata = {}) => {
   }, []);
 };
 
-const extractSoftwareItem = (artifactProvides = {}) => {
-  const { software } = extractSoftware(artifactProvides);
+const DevicesLink = ({ artifact: { installCount }, softwareItem: { key, name, version } }) => {
+  const { classes } = useStyles();
+  const text = `${installCount} ${pluralize('device', installCount)}`;
+  if (!installCount) {
+    return <div className={classes.link}>{text}</div>;
+  }
+  const attribute = `${key}${name ? `.${name}` : ''}.version`;
   return (
-    software
-      .reduce((accu, item) => {
-        const infoItems = item[0].split('.');
-        if (infoItems[infoItems.length - 1] !== 'version') {
-          return accu;
-        }
-        accu.push({ key: infoItems[0], name: infoItems.slice(1, infoItems.length - 1).join('.'), version: item[1], nestingLevel: infoItems.length });
-        return accu;
-      }, [])
-      // we assume the smaller the nesting level in the software name, the closer the software is to the rootfs/ the higher the chances we show the rootfs
-      // sort based on this assumption & then only return the first item (can't use index access, since there might not be any software item at all)
-      .sort((a, b) => a.nestingLevel - b.nestingLevel)
-      .reduce((accu, item) => accu ?? item, undefined)
+    <a
+      className={`flexbox center-aligned ${classes.link}`}
+      href={`${window.location.origin}/ui/devices/accepted?inventory=${attribute}:eq:${version}`}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {text}
+      <LaunchIcon className="margin-left-small" fontSize="small" />
+    </a>
   );
 };
 
-export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, getArtifactUrl, open, showRemoveArtifactDialog }) => {
+export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, getArtifactInstallCount, getArtifactUrl, open, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
-  const [gettingUrl, setGettingUrl] = useState(false);
   const [showPayloads, setShowPayloads] = useState(false);
   const [showProvidesDepends, setShowProvidesDepends] = useState(false);
 
-  useEffect(() => {
-    if (!artifact.url && !gettingUrl && open) {
-      setGettingUrl(true);
-    }
-  }, [artifact.id, open]);
+  const softwareVersions = useMemo(() => {
+    const { software } = extractSoftware(artifact.artifact_provides);
+    return software.reduce((accu, item) => {
+      const infoItems = item[0].split('.');
+      if (infoItems[infoItems.length - 1] !== 'version') {
+        return accu;
+      }
+      accu.push({ key: infoItems[0], name: infoItems.slice(1, infoItems.length - 1).join('.'), version: item[1], nestingLevel: infoItems.length });
+      return accu;
+    }, []);
+  }, [JSON.stringify(artifact.artifact_provides)]);
 
   useEffect(() => {
-    if (gettingUrl) {
-      getArtifactUrl(artifact.id).then(() => setGettingUrl(false));
+    if (artifact.url || !open) {
+      return;
     }
-  }, [gettingUrl]);
+    getArtifactUrl(artifact.id);
+  }, [artifact.id, artifact.url, open]);
+
+  useEffect(() => {
+    if (artifact.installCount || !open || softwareVersions.length > 1) {
+      return;
+    }
+    const { version } = softwareVersions.sort((a, b) => a.nestingLevel - b.nestingLevel).reduce((accu, item) => accu ?? item, undefined) ?? {};
+    if (version) {
+      getArtifactInstallCount(artifact.id);
+    }
+  }, [artifact.id, artifact.installCount, open, softwareVersions.length]);
 
   const onToggleEditing = useCallback(
     event => {
@@ -156,13 +180,15 @@ export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, get
     { title: 'Artifact metadata', content: transformArtifactMetadata(artifact.metaData) }
   ];
   const hasMetaInfo = artifactMetaInfo.some(item => !!item.content.length);
+  const { installCount } = artifact;
+  const itemProps = { classes: { root: 'attributes', disabled: 'opaque' }, className: classes.listItemStyle };
   return (
     <div className={artifact.name == null ? 'muted' : null}>
-      <List style={{ display: 'grid', gridTemplateColumns: 'calc(600px + 2vw) 300px', gridColumnGap: '2vw' }}>
-        <ListItem className={classes.listItemStyle} classes={{ root: 'attributes', disabled: 'opaque' }}>
+      <List className="list-horizontal-flex">
+        <ListItem {...itemProps}>
           <ListItemText
             primary="Description"
-            style={{ marginBottom: -3 }}
+            style={{ marginBottom: -3, minWidth: 600 }}
             primaryTypographyProps={{ style: { marginBottom: 3 } }}
             secondary={
               <Input
@@ -186,9 +212,19 @@ export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, get
             secondaryTypographyProps={{ component: 'div' }}
           />
         </ListItem>
-        <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} className={`${classes.listItemStyle} ${classes.listItemStyle.bordered}`}>
+        <ListItem {...itemProps} className={`${classes.listItemStyle} ${classes.listItemStyle.bordered}`}>
           <ListItemText primary="Signed" secondary={artifact.signed ? <CheckCircleOutlineIcon className="green" /> : <CancelOutlinedIcon className="red" />} />
         </ListItem>
+        {installCount !== undefined && softwareVersions.length === 1 && (
+          <ExpandableAttribute
+            classes={{ root: classes.paddingOverride }}
+            disableGutters
+            primary="Installed on"
+            secondary={<DevicesLink artifact={artifact} softwareItem={softwareItem} />}
+            secondaryTypographyProps={{ title: `installed on ${installCount} ${pluralize('device', installCount)}` }}
+            style={{ padding: 0 }}
+          />
+        )}
       </List>
       <ArtifactMetadataList metaInfo={softwareInformation} />
       <Accordion square expanded={showPayloads} onChange={() => setShowPayloads(toggle)} className={classes.accordPanel1}>
@@ -235,7 +271,7 @@ export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, get
   );
 };
 
-const actionCreators = { getArtifactUrl };
+const actionCreators = { getArtifactInstallCount, getArtifactUrl };
 
 const mapStateToProps = state => {
   const { canManageReleases } = getUserCapabilities(state);

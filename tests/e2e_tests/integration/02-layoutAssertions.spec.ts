@@ -50,6 +50,10 @@ test.describe('Layout assertions', () => {
   });
 
   test('can group a device', async ({ loggedInPage: page }) => {
+    const wasGrouped = await page.isVisible(`.grouplist:has-text('testgroup')`);
+    if (wasGrouped) {
+      test.skip('looks like the device was grouped already, continue with the remaining tests');
+    }
     await page.click(`.leftNav :text('Devices')`);
     await page.click(selectors.deviceListCheckbox);
     await page.hover('.MuiSpeedDial-fab');
@@ -57,6 +61,7 @@ test.describe('Layout assertions', () => {
     await page.type('#group-creation-selection', 'testgroup');
     await page.click('.MuiDialogTitle-root');
     await page.click(`:is(:text-matches('create group', 'i'), :text-matches('add to group', 'i'))`);
+    await page.waitForSelector(`.grouplist:has-text('testgroup')`);
     expect(await page.isVisible(`.grouplist:has-text('testgroup')`)).toBeTruthy();
     await page.click(`.grouplist:has-text('All devices')`);
     await page.click(selectors.deviceListCheckbox);
