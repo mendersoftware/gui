@@ -11,10 +11,12 @@ describe('Roles Component', () => {
       <RoleDefinition
         adding
         editing
+        features={{}}
         onCancel={jest.fn}
         onSubmit={jest.fn}
         removeRole={jest.fn}
         stateGroups={defaultState.devices.groups.byId}
+        stateReleaseTags={{}}
         selectedRole={{ ...emptyRole }}
       />
     );

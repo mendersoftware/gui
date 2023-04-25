@@ -8,6 +8,8 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
+import { ALL_DEVICES } from '../../constants/deviceConstants';
+import { ALL_RELEASES } from '../../constants/releaseConstants';
 import Roles, { RoleManagement } from './roles';
 
 const mockStore = configureStore([thunk]);
@@ -35,16 +37,18 @@ describe('Roles Component', () => {
     const editRoleMock = jest.fn();
     const removeRoleMock = jest.fn();
     const groups = defaultState.devices.groups.byId;
-    const roles = Object.values(defaultState.users.rolesById);
+    const roles = Object.entries(defaultState.users.rolesById).map(([id, role]) => ({ id, ...role }));
 
     const ui = (
       <RoleManagement
         createRole={createRoleMock}
         editRole={editRoleMock}
+        features={{}}
         getDynamicGroups={jest.fn}
         getGroups={jest.fn}
         getRoles={jest.fn}
         groups={groups}
+        releaseTags={{}}
         removeRole={removeRoleMock}
         roles={roles}
       />
@@ -60,20 +64,26 @@ describe('Roles Component', () => {
     // userEvent.type(within(collapse).getByLabelText(/Name/i), 'test');
     await user.click(within(role).getByText(/view details/i));
     collapse = screen.getByText(/edit role/i).parentElement.parentElement;
-    const submitButton = within(collapse).getByRole('button', { name: /submit/i }, { hidden: true });
-    expect(within(collapse).getByRole('button', { name: /submit/i })).toBeDisabled();
     await user.type(within(collapse).getByLabelText(/Description/i), 'something');
-    await selectMaterialUiSelectOption(within(collapse).getByText(/search groups/i), Object.keys(groups)[0], user);
+    const groupSelect = within(collapse).getByText(Object.keys(groups)[0]);
+    await selectMaterialUiSelectOption(groupSelect, ALL_DEVICES, user);
+    expect(screen.getByText(/For 'All devices',/)).toBeVisible();
 
-    let selectButton = within(collapse)
-      .getByText(/select/i)
-      .parentNode.parentNode.children[1].querySelector('[role=button]');
+    const permissionSelect = within(collapse).getByDisplayValue(ALL_DEVICES).parentElement?.parentElement?.parentElement;
+    const selectButton = within(within(permissionSelect).getByText(/read/i).parentElement?.parentElement).getByRole('button');
+    expect(selectButton).not.toBeDisabled();
     // Open the select dropdown
-    await user.click(selectButton);
     // Get the dropdown element. We don't use getByRole() because it includes <select>s too.
-    let listbox = document.body.querySelector('ul[role=listbox]');
+    await user.click(selectButton);
+    const listbox = await within(document.body).findByRole('listbox');
+    expect(listbox).toBeTruthy();
+
     // Click the list item
-    let listItem = within(listbox).getByText(/deploy/i);
+    let listItem = within(listbox).getByText(/read/i);
+    await user.click(listItem);
+    const submitButton = screen.getByRole('button', { name: /submit/i, hidden: true });
+    expect(submitButton).toBeDisabled();
+    listItem = within(listbox).getByText(/deploy/i);
     await user.click(listItem);
     expect(submitButton).not.toBeDisabled();
     await user.click(submitButton);
@@ -85,14 +95,13 @@ describe('Roles Component', () => {
       uiPermissions: {
         auditlog: [],
         groups: [
-          { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['read'] },
-          { disableEdit: false, group: Object.keys(defaultState.devices.groups.byId)[0], uiPermissions: ['deploy'] },
-          { disableEdit: false, group: '', uiPermissions: [] }
+          { disableEdit: false, item: ALL_DEVICES, uiPermissions: ['deploy'] },
+          { disableEdit: false, item: '', uiPermissions: [] }
         ],
-        releases: [],
+        releases: [{ item: ALL_RELEASES, uiPermissions: [] }],
         userManagement: []
       },
-      source: defaultState.users.rolesById.test
+      source: { ...defaultState.users.rolesById.test, id: defaultState.users.rolesById.test.name }
     });
   });
 });

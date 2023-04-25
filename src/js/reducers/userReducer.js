@@ -13,6 +13,9 @@ export const initialState = {
     retries: 0
   },
   showHelptips: true,
+  permissionSetsById: {
+    ...UserConstants.defaultPermissionSets
+  },
   rolesById: {
     ...UserConstants.rolesById
   },
