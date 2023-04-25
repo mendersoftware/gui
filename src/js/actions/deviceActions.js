@@ -46,6 +46,14 @@ const defaultAttributes = [
   { scope: 'tags', attribute: 'name' }
 ];
 
+export const getSearchEndpoint = hasReporting => {
+  return hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`;
+};
+
+const getAttrsEndpoint = hasReporting => {
+  return hasReporting ? `${reportingApiUrl}/devices/search/attributes` : `${inventoryApiUrlV2}/filters/attributes`;
+};
+
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
     const state = getState().devices.groups.byId;
@@ -449,8 +457,8 @@ const deriveInactiveDevices = deviceIds => (dispatch, getState) => {
 /*
     Device Auth + admission
   */
-export const getDeviceCount = status => dispatch =>
-  GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+export const getDeviceCount = status => (dispatch, getState) =>
+  GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page: 1,
     per_page: 1,
     filters: mapFiltersToTerms([{ key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]),
@@ -562,7 +570,7 @@ export const getDevicesByStatus =
       status
     });
     const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }, ...selectedAttributes];
-    return GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+    return GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
       filters: filterTerms,
@@ -606,7 +614,7 @@ export const getDevicesByStatus =
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
   const attributes = [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(getState()).attribute || 'id' }];
   const getAllDevices = (perPage = MAX_PAGE_SIZE, page = 1, devices = []) =>
-    GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
       page,
       per_page: perPage,
       filters: mapFiltersToTerms([{ key: 'status', value: status, operator: DEVICE_FILTERING_OPTIONS.$eq.key, scope: 'identity' }]),
@@ -654,7 +662,7 @@ export const searchDevices =
       [...defaultAttributes, { scope: 'identity', attribute: getIdAttribute(state).attribute }, ...selectedAttributes],
       'attribute'
     );
-    return GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+    return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
       page,
       per_page: 10,
       filters: [],
@@ -685,8 +693,8 @@ const attributeReducer = (attributes = []) =>
     { identity: [], inventory: [], system: [], tags: [] }
   );
 
-export const getDeviceAttributes = () => dispatch =>
-  GeneralApi.get(`${reportingApiUrl}/devices/search/attributes`).then(({ data }) => {
+export const getDeviceAttributes = () => (dispatch, getState) =>
+  GeneralApi.get(getAttrsEndpoint(getState().app.features.hasReporting)).then(({ data }) => {
     const { identity: identityAttributes, inventory: inventoryAttributes, system: systemAttributes, tags: tagAttributes } = attributeReducer(data);
     return dispatch({
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
@@ -1028,13 +1036,17 @@ export const getSystemDevices =
     let device = state.devices.byId[id];
     const { attributes: deviceAttributes = {} } = device;
     const { mender_gateway_system_id = '' } = deviceAttributes;
+    const { hasFullFiltering } = getTenantCapabilities(state);
+    if (!hasFullFiltering) {
+      return Promise.resolve();
+    }
     const filters = [
       { ...emptyFilter, key: 'mender_is_gateway', operator: DEVICE_FILTERING_OPTIONS.$ne.key, value: 'true', scope: 'inventory' },
       { ...emptyFilter, key: 'mender_gateway_system_id', value: mender_gateway_system_id, scope: 'inventory' }
     ];
     const { attributes, filterTerms } = prepareSearchArguments({ filters, state });
 
-    return GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+    return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
       page,
       per_page: perPage,
       filters: filterTerms,
@@ -1073,7 +1085,7 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
     { ...emptyFilter, key: 'mender_gateway_system_id', value: mender_gateway_system_id, scope: 'inventory' }
   ];
   const { attributes: attributeSelection, filterTerms } = prepareSearchArguments({ filters, state });
-  return GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+  return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
     page: 1,
     per_page: MAX_PAGE_SIZE,
     filters: filterTerms,

@@ -62,6 +62,7 @@ export const DeviceGroups = ({
   groupFilters,
   groups,
   groupsById,
+  hasReporting,
   limitMaxed,
   pendingCount,
   preauthDevice,
@@ -137,6 +138,7 @@ export const DeviceGroups = ({
 
   useEffect(() => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
+    const { hasFullFiltering } = tenantCapabilities;
     if (groupName) {
       selectGroup(groupName, filters);
     } else if (filters.length) {
@@ -146,7 +148,7 @@ export const DeviceGroups = ({
     let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
     if (id.length === 1 && Boolean(locationParams.open)) {
       listState.selectedId = id[0];
-    } else if (id.length) {
+    } else if (id.length && hasFullFiltering) {
       setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]);
     }
     setDeviceListState(listState);
@@ -251,7 +253,7 @@ export const DeviceGroups = ({
       <div className="tab-container with-sub-panels margin-bottom-small" style={{ padding: 0, minHeight: 'initial' }}>
         <h3 style={{ marginBottom: 0 }}>Devices</h3>
         <div className="flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small">
-          {!!authRequestCount && (
+          {hasReporting && !!authRequestCount && (
             <a className="flexbox center-aligned margin-right-large" onClick={onShowAuthRequestDevicesClick}>
               <AddIcon fontSize="small" style={{ marginRight: 6 }} />
               {authRequestCount} new device authentication {pluralize('request', authRequestCount)}
@@ -380,6 +382,7 @@ const mapStateToProps = state => {
     groupsById: state.devices.groups.byId,
     groupCount,
     groupFilters,
+    hasReporting: state.app.features.hasReporting,
     limitMaxed: getLimitMaxed(state),
     pendingCount: state.devices.byStatus.pending.total || 0,
     selectedGroup,

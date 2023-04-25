@@ -10,8 +10,9 @@ import { getSystemDevices } from '../../../actions/deviceActions';
 import { SORTING_OPTIONS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { getDemoDeviceAddress, toggle, versionCompare } from '../../../helpers';
-import { getDocsVersion, getIdAttribute } from '../../../selectors';
+import { getDocsVersion, getIdAttribute, getTenantCapabilities } from '../../../selectors';
 import { TwoColumnData } from '../../common/configurationobject';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import { getHeaders } from '../authorized-devices';
 import { routes } from '../base-devices';
 import Devicelist from '../devicelist';
@@ -26,6 +27,7 @@ export const DeviceSystem = ({
   devicesById,
   docsVersion,
   getSystemDevices,
+  hasFullFiltering,
   idAttribute,
   onConnectToGatewayClick,
   openSettingsDialog,
@@ -71,6 +73,7 @@ export const DeviceSystem = ({
         <TwoColumnData config={{ 'Server IP': deviceIp }} compact setSnackbar={setSnackbar} />
       </DeviceDataCollapse>
       <DeviceDataCollapse className={classes.container} title="System for this gateway">
+        <EnterpriseNotification isEnterprise={hasFullFiltering} benefit="see devices connected to your gateway device for easy access" />
         {systemDeviceTotal ? (
           <Devicelist
             customColumnSizes={[]}
@@ -131,6 +134,7 @@ const mapStateToProps = state => {
   return {
     devicesById: state.devices.byId,
     docsVersion: getDocsVersion(state),
+    hasFullFiltering: getTenantCapabilities(state),
     idAttribute: getIdAttribute(state),
     isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
     tenantToken: state.organization.organization.tenant_token

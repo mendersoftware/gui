@@ -9,7 +9,7 @@ import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstan
 import * as ReleaseConstants from '../constants/releaseConstants';
 import { customSort, deepCompare, duplicateFilter, extractSoftwareItem } from '../helpers';
 import { deploymentsApiUrl } from './deploymentActions';
-import { convertDeviceListStateToFilters, reportingApiUrl } from './deviceActions';
+import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -63,7 +63,7 @@ export const getArtifactInstallCount = id => (dispatch, getState) => {
   const { filterTerms } = convertDeviceListStateToFilters({
     filters: [{ ...emptyFilter, key: attribute, value: version, scope: 'inventory' }]
   });
-  return GeneralApi.post(`${reportingApiUrl}/devices/search`, {
+  return GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
     page: 1,
     per_page: 1,
     filters: filterTerms,
