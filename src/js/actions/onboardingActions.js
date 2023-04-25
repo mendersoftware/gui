@@ -79,7 +79,7 @@ export const getOnboardingState = () => (dispatch, getState) => {
   const progress = Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ARTIFACT_CREATION_DIALOG);
   const currentProgress = Object.keys(onboardingSteps).findIndex(step => step === onboardingState.progress);
   onboardingState.showArtifactCreation = Math.abs(currentProgress - progress) <= 1;
-  if (onboardingState.showArtifactCreation && !onboardingState.complete && onboardingState.showTips) {
+  if (onboardingState.showArtifactCreation && !onboardingState.complete && onboardingState.showTips && store.users.showHelptips) {
     dispatch(setShowCreateArtifactDialog(true));
     onboardingState.progress = onboardingStepNames.ARTIFACT_CREATION_DIALOG;
     // although it would be more appropriate to do this in the app component, this happens here because in the app component we would need to track

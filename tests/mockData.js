@@ -1,5 +1,6 @@
 import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
 import * as DeviceConstants from '../src/js/constants/deviceConstants';
+import { ALL_RELEASES } from '../src/js/constants/releaseConstants';
 import {
   defaultPermissionSets,
   emptyRole,
@@ -516,7 +517,7 @@ export const releasesList = Array.from({ length: 5000 }, (x, i) => ({
 
 export const permissionSets = [
   {
-    name: defaultPermissionSets.Basic.value,
+    ...defaultPermissionSets.Basic,
     object: permissionSetObjectTypes.empty,
     description: 'Set containing basic permissions.',
     permissions: [
@@ -530,7 +531,7 @@ export const permissionSets = [
     ]
   },
   {
-    name: defaultPermissionSets.ManageReleases.value,
+    ...defaultPermissionSets.ManageReleases,
     action: uiPermissionsById.manage.title,
     object: permissionSetObjectTypes.releases,
     description: 'Set of permissions which allows user to manage releases',
@@ -543,28 +544,28 @@ export const permissionSets = [
     ]
   },
   {
-    name: defaultPermissionSets.ReadUsers.value,
+    ...defaultPermissionSets.ReadUsers,
     action: uiPermissionsById.read.title,
     object: permissionSetObjectTypes.userManagement,
     description: 'Set of permissions which allows user to view other users',
     permissions: [{ action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9])/useradm/' } }]
   },
   {
-    name: defaultPermissionSets.ManageUsers.value,
+    ...defaultPermissionSets.ManageUsers,
     action: uiPermissionsById.manage.title,
     object: permissionSetObjectTypes.userManagement,
     description: 'Set of permissions which allows user manage other user accounts',
     permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/useradm/' } }]
   },
   {
-    name: defaultPermissionSets.ReadAuditLogs.value,
+    ...defaultPermissionSets.ReadAuditLogs,
     action: uiPermissionsById.read.title,
     object: 'System audit log',
     description: 'Set of permissions which allows user to view system audit log',
     permissions: [{ action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/auditlogs/logs' } }]
   },
   {
-    name: defaultPermissionSets.DeployToDevices.value,
+    ...defaultPermissionSets.DeployToDevices,
     action: 'Deploy',
     object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to deploy to devices',
@@ -572,7 +573,15 @@ export const permissionSets = [
     supported_scope_types: ['DeviceGroups']
   },
   {
-    name: defaultPermissionSets.ConnectToDevices.value,
+    ...defaultPermissionSets.ConfigureDevices,
+    action: 'Configure',
+    object: permissionSetObjectTypes.groups,
+    description: 'Set of permissions which allows user to manage configuration of the devices',
+    permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deviceconfig/' } }],
+    supported_scope_types: ['DeviceGroups']
+  },
+  {
+    ...defaultPermissionSets.ConnectToDevices,
     action: 'Connect',
     object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to use remote terminal and file transfer',
@@ -584,14 +593,14 @@ export const permissionSets = [
     supported_scope_types: ['DeviceGroups']
   },
   {
-    name: defaultPermissionSets.SuperUser.value,
+    ...defaultPermissionSets.SuperUser,
     action: 'Any',
     object: permissionSetObjectTypes.any,
     description: 'Set of permissions which allows user to do anything',
     permissions: [{ action: 'any', object: { type: 'any', value: 'any' } }]
   },
   {
-    name: defaultPermissionSets.UploadArtifacts.value,
+    ...defaultPermissionSets.UploadArtifacts,
     action: 'Upload',
     object: permissionSetObjectTypes.artifacts,
     description: 'Set of permissions which allows user to upload artifacts',
@@ -601,7 +610,7 @@ export const permissionSets = [
     ]
   },
   {
-    name: defaultPermissionSets.ReadDevices.value,
+    ...defaultPermissionSets.ReadDevices,
     action: uiPermissionsById.read.title,
     object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to view devices',
@@ -614,7 +623,7 @@ export const permissionSets = [
     supported_scope_types: ['DeviceGroups']
   },
   {
-    name: defaultPermissionSets.ManageDevices.value,
+    ...defaultPermissionSets.ManageDevices,
     action: uiPermissionsById.manage.title,
     object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to manage devices',
@@ -626,7 +635,7 @@ export const permissionSets = [
     supported_scope_types: ['DeviceGroups']
   },
   {
-    name: defaultPermissionSets.ReadReleases.value,
+    ...defaultPermissionSets.ReadReleases,
     action: uiPermissionsById.read.title,
     object: permissionSetObjectTypes.releases,
     description: 'Set of permissions which allows user to view releases',
@@ -666,7 +675,11 @@ const expectedParsedRoles = {
   yyyyy: {
     editable: true,
     isCustom: undefined,
-    uiPermissions: { ...emptyUiPermissions, groups: { dockerclient: [uiPermissionsById.manage.value] }, releases: [uiPermissionsById.manage.value] }
+    uiPermissions: {
+      ...emptyUiPermissions,
+      groups: { dockerclient: [uiPermissionsById.manage.value] },
+      releases: { [ALL_RELEASES]: [uiPermissionsById.manage.value] }
+    }
   }
 };
 

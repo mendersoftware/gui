@@ -490,6 +490,25 @@ export const extractSoftware = (attributes = {}) => {
   );
 };
 
+export const extractSoftwareItem = (artifactProvides = {}) => {
+  const { software } = extractSoftware(artifactProvides);
+  return (
+    software
+      .reduce((accu, item) => {
+        const infoItems = item[0].split('.');
+        if (infoItems[infoItems.length - 1] !== 'version') {
+          return accu;
+        }
+        accu.push({ key: infoItems[0], name: infoItems.slice(1, infoItems.length - 1).join('.'), version: item[1], nestingLevel: infoItems.length });
+        return accu;
+      }, [])
+      // we assume the smaller the nesting level in the software name, the closer the software is to the rootfs/ the higher the chances we show the rootfs
+      // sort based on this assumption & then only return the first item (can't use index access, since there might not be any software item at all)
+      .sort((a, b) => a.nestingLevel - b.nestingLevel)
+      .reduce((accu, item) => accu ?? item, undefined)
+  );
+};
+
 export const createDownload = (target, filename) => {
   let link = document.createElement('a');
   link.setAttribute('href', target);
