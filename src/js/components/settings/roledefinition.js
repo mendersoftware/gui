@@ -34,7 +34,8 @@ const permissionEnabledDisabled = (uiPermission, values, permissionsArea, unscop
 const useStyles = makeStyles()(theme => ({
   buttons: { '&.flexbox.centered': { justifyContent: 'flex-end' } },
   roleDeletion: { marginRight: theme.spacing(2) },
-  permissionSelect: { marginLeft: theme.spacing(-1.5) }
+  permissionSelect: { marginLeft: theme.spacing(-1.5) },
+  permissionsTitle: { marginBottom: theme.spacing(-1), minHeight: theme.spacing(3) }
 }));
 
 const PermissionsSelect = ({ disabled, label, onChange, options, permissionsArea, unscoped, values }) => {
@@ -142,7 +143,10 @@ const scopedPermissionAreas = {
   }
 };
 
-const maybeExtendPermissionSelection = (changedGroupSelection, currentGroup) => {
+const maybeExtendPermissionSelection = (changedGroupSelection, currentGroup, items) => {
+  if (items.every(item => changedGroupSelection.some(selectionItem => selectionItem.item === item))) {
+    return changedGroupSelection;
+  }
   if (changedGroupSelection.every(selection => selection.item && selection.uiPermissions.length)) {
     changedGroupSelection.push(emptyItemSelection);
     return changedGroupSelection;
@@ -167,14 +171,14 @@ const ItemSelection = ({
   const onItemSelect = (index, { target: { value } }, currentSelection) => {
     let changedSelection = [...currentSelection];
     changedSelection[index] = { ...changedSelection[index], item: value };
-    changedSelection = maybeExtendPermissionSelection(changedSelection, changedSelection[index]);
+    changedSelection = maybeExtendPermissionSelection(changedSelection, changedSelection[index], items);
     setter(changedSelection);
   };
 
   const onItemPermissionSelect = (index, selectedPermissions, currentSelection) => {
     let changedSelection = [...currentSelection];
     changedSelection[index] = { ...changedSelection[index], uiPermissions: selectedPermissions };
-    changedSelection = maybeExtendPermissionSelection(changedSelection, changedSelection[index]);
+    changedSelection = maybeExtendPermissionSelection(changedSelection, changedSelection[index], items);
     setter(changedSelection);
   };
 
@@ -398,7 +402,7 @@ export const RoleDefinition = ({
         />
       </div>
 
-      <InputLabel className="margin-top" shrink>
+      <InputLabel className={`margin-top ${classes.permissionsTitle}`} shrink>
         Permissions
       </InputLabel>
       <div className="two-columns center-aligned margin-left-small" style={{ maxWidth: 500 }}>
