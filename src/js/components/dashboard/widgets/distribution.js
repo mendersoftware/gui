@@ -201,7 +201,7 @@ export const Header = ({ chartType }) => {
   );
 };
 
-export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onSave, selectGroup, selection = {}, software: softwareTree }) => {
+export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onSave, selection = {}, software: softwareTree }) => {
   const {
     attribute: attributeSelection,
     group: groupSelection = '',
@@ -236,11 +236,7 @@ export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onS
       if (target === seriesOther) {
         return;
       }
-      const groupFilters = groups[group]?.filters?.length ? groups[group].filters : [];
-      const filter = { key: ensureVersionString(software, attributeSelection), value: target, operator: '$eq', scope: 'inventory' };
-      const filters = [...groupFilters, filter];
-      selectGroup(group, filters);
-      navigate(`/devices/accepted?${group ? `group=${group}&` : ''}${filter.key}:${filter.operator}:${target}`);
+      navigate(`/devices/accepted?inventory=${group ? `group:eq:${group}&` : ''}${ensureVersionString(software, attributeSelection)}:eq:${target}`);
     },
     [attributeSelection, group, software]
   );
