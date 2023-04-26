@@ -17,7 +17,14 @@ import { SORTING_OPTIONS, UPLOAD_PROGRESS, emptyChartSelection } from '../consta
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
-import { getDeviceTwinIntegrations, getIdAttribute, getTenantCapabilities, getUserCapabilities, getUserSettings } from '../selectors';
+import {
+  getDeviceTwinIntegrations,
+  getGroups as getGroupsSelector,
+  getIdAttribute,
+  getTenantCapabilities,
+  getUserCapabilities,
+  getUserSettings
+} from '../selectors';
 import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
@@ -831,6 +838,49 @@ export const getReportsData = () => (dispatch, getState) => {
     return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
   });
 };
+
+const initializeDistributionData = (report, groups, devices, totalDeviceCount) => {
+  const { attribute, group = '', software = '' } = report;
+  const effectiveAttribute = software ? software : attribute;
+  const { deviceIds, total = 0 } = groups[group] || {};
+  const relevantDevices = groups[group] ? deviceIds.map(id => devices[id]) : Object.values(devices);
+  const distributionByAttribute = relevantDevices.reduce((accu, item) => {
+    if (!item.attributes || item.status !== DEVICE_STATES.accepted) return accu;
+    if (!accu[item.attributes[effectiveAttribute]]) {
+      accu[item.attributes[effectiveAttribute]] = 0;
+    }
+    accu[item.attributes[effectiveAttribute]] = accu[item.attributes[effectiveAttribute]] + 1;
+    return accu;
+  }, {});
+  const distributionByAttributeSorted = Object.entries(distributionByAttribute).sort((pairA, pairB) => pairB[1] - pairA[1]);
+  const items = distributionByAttributeSorted.map(([key, count]) => ({ key, count }));
+  const dataCount = items.reduce((accu, item) => accu + item.count, 0);
+  // the following is needed to show reports including both old (artifact_name) & current style (rootfs-image.version) device software
+  const otherCount = (groups[group] ? total : totalDeviceCount) - dataCount;
+  return { items, otherCount, total: otherCount + dataCount };
+};
+
+export const deriveReportsData = () => (dispatch, getState) =>
+  Promise.all([dispatch(getGroups()), dispatch(getDynamicGroups())]).then(() => {
+    const { dynamic: dynamicGroups, static: staticGroups } = getGroupsSelector(getState());
+    return Promise.all([
+      ...staticGroups.map(group => dispatch(getAllGroupDevices(group))),
+      ...dynamicGroups.map(group => dispatch(getAllDynamicGroupDevices(group)))
+    ]).then(() => {
+      const state = getState();
+      const {
+        groups: { byId: groupsById },
+        byId,
+        byStatus: {
+          accepted: { total }
+        }
+      } = state.devices;
+      const reports =
+        getUserSettings(state).reports || state.users.globalSettings[`${state.users.currentUser}-reports`] || (Object.keys(byId).length ? defaultReports : []);
+      const newReports = reports.map(report => initializeDistributionData(report, groupsById, byId, total));
+      return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
+    });
+  });
 
 export const getDeviceConnect = id => dispatch =>
   GeneralApi.get(`${deviceConnect}/devices/${id}`).then(({ data }) => {
