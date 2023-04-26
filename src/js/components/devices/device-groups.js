@@ -27,7 +27,7 @@ import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
 import { toggle, versionCompare } from '../../helpers';
-import { getDocsVersion, getFeatures, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getDocsVersion, getFeatures, getGroups as getGroupsSelector, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
@@ -61,7 +61,7 @@ export const DeviceGroups = ({
   groupCount,
   groupFilters,
   groups,
-  groupsById,
+  groupsByType,
   hasReporting,
   limitMaxed,
   pendingCount,
@@ -281,7 +281,7 @@ export const DeviceGroups = ({
           className="leftFixed"
           acceptedCount={acceptedCount}
           changeGroup={onGroupSelect}
-          groups={groupsById}
+          groups={groupsByType}
           openGroupDialog={setCreateGroupExplanation}
           selectedGroup={selectedGroup}
           showHelptips={showHelptips}
@@ -367,6 +367,7 @@ const mapStateToProps = state => {
   const filteringAttributes = { ...state.devices.filteringAttributes, identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id'] };
   const { canManageDevices } = getUserCapabilities(state);
   const tenantCapabilities = getTenantCapabilities(state);
+  const { groupNames, ...groupsByType } = getGroupsSelector(state);
   return {
     acceptedCount: state.devices.byStatus.accepted.total || 0,
     authRequestCount: state.monitor.issueCounts.byType[DEVICE_ISSUE_OPTIONS.authRequests.key].total,
@@ -378,8 +379,8 @@ const mapStateToProps = state => {
     features: getFeatures(state),
     filteringAttributes,
     filters: state.devices.filters || [],
-    groups: Object.keys(state.devices.groups.byId).sort(),
-    groupsById: state.devices.groups.byId,
+    groups: groupNames,
+    groupsByType,
     groupCount,
     groupFilters,
     hasReporting: state.app.features.hasReporting,

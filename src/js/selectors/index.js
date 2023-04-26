@@ -3,7 +3,14 @@ import { createSelector } from '@reduxjs/toolkit';
 import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
-import { ATTRIBUTE_SCOPES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH, DEVICE_ONLINE_CUTOFF, EXTERNAL_PROVIDER } from '../constants/deviceConstants';
+import {
+  ATTRIBUTE_SCOPES,
+  DEVICE_ISSUE_OPTIONS,
+  DEVICE_LIST_MAXIMUM_LENGTH,
+  DEVICE_ONLINE_CUTOFF,
+  EXTERNAL_PROVIDER,
+  UNGROUPED_GROUP
+} from '../constants/deviceConstants';
 import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
 import { attributeDuplicateFilter, duplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
 
@@ -13,6 +20,7 @@ const getRolesById = state => state.users.rolesById;
 const getOrganization = state => state.organization.organization;
 const getAcceptedDevices = state => state.devices.byStatus.accepted;
 const getDevicesById = state => state.devices.byId;
+const getGroupsById = state => state.devices.groups.byId;
 const getSearchedDevices = state => state.app.searchState.deviceIds;
 const getListedDevices = state => state.devices.deviceList.deviceIds;
 const getFilteringAttributes = state => state.devices.filteringAttributes;
@@ -94,6 +102,30 @@ export const getFilterAttributes = createSelector(
     return attributeDuplicateFilter(attributes, 'key');
   }
 );
+
+export const getGroups = createSelector([getGroupsById], groupsById => {
+  const groupNames = Object.keys(groupsById).sort();
+  const groupedGroups = Object.entries(groupsById)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .reduce(
+      (accu, [groupname, group]) => {
+        const name = groupname === UNGROUPED_GROUP.id ? UNGROUPED_GROUP.name : groupname;
+        const groupItem = { ...group, groupId: name, name: groupname };
+        if (group.filters.length > 0) {
+          if (groupname !== UNGROUPED_GROUP.id) {
+            accu.dynamic.push(groupItem);
+          } else {
+            accu.ungrouped.push(groupItem);
+          }
+        } else {
+          accu.static.push(groupItem);
+        }
+        return accu;
+      },
+      { dynamic: [], static: [], ungrouped: [] }
+    );
+  return { groupNames, ...groupedGroups };
+});
 
 export const getDeviceTwinIntegrations = createSelector([getExternalIntegrations], integrations =>
   integrations.filter(integration => integration.id && EXTERNAL_PROVIDER[integration.provider]?.deviceTwin)
