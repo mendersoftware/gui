@@ -369,6 +369,85 @@ export const getGroupDevices =
     });
   };
 
+export const getAllGroupDevices = (group, shouldIncludeAllStates) => (dispatch, getState) => {
+  if (!group || (!!group && (!getState().devices.groups.byId[group] || getState().devices.groups.byId[group].filters.length))) {
+    return Promise.resolve();
+  }
+  const { attributes, filterTerms } = prepareSearchArguments({
+    filters: [],
+    group,
+    state: getState(),
+    status: shouldIncludeAllStates ? undefined : DEVICE_STATES.accepted
+  });
+  const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
+    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), {
+      page,
+      per_page: perPage,
+      filters: filterTerms,
+      attributes
+    }).then(res => {
+      const state = getState();
+      const deviceAccu = reduceReceivedDevices(res.data, devices, state);
+      dispatch({
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: deviceAccu.devicesById
+      });
+      const total = Number(res.headers[headerNames.total]);
+      if (total > perPage * page) {
+        return getAllDevices(perPage, page + 1, deviceAccu.ids);
+      }
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_GROUP_DEVICES,
+          group: {
+            filters: [],
+            ...state.devices.groups.byId[group],
+            deviceIds: deviceAccu.ids,
+            total: deviceAccu.ids.length
+          },
+          groupName: group
+        })
+      );
+    });
+  return getAllDevices();
+};
+
+export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
+  if (!!group && (!getState().devices.groups.byId[group] || !getState().devices.groups.byId[group].filters.length)) {
+    return Promise.resolve();
+  }
+  const { attributes, filterTerms: filters } = prepareSearchArguments({
+    filters: getState().devices.groups.byId[group].filters,
+    state: getState(),
+    status: DEVICE_STATES.accepted
+  });
+  const getAllDevices = (perPage = MAX_PAGE_SIZE, page = defaultPage, devices = []) =>
+    GeneralApi.post(getSearchEndpoint(getState().app.features.hasReporting), { page, per_page: perPage, filters, attributes }).then(res => {
+      const state = getState();
+      const deviceAccu = reduceReceivedDevices(res.data, devices, state);
+      dispatch({
+        type: DeviceConstants.RECEIVE_DEVICES,
+        devicesById: deviceAccu.devicesById
+      });
+      const total = Number(res.headers[headerNames.total]);
+      if (total > deviceAccu.ids.length) {
+        return getAllDevices(perPage, page + 1, deviceAccu.ids);
+      }
+      return Promise.resolve(
+        dispatch({
+          type: DeviceConstants.RECEIVE_GROUP_DEVICES,
+          group: {
+            ...state.devices.groups.byId[group],
+            deviceIds: deviceAccu.ids,
+            total
+          },
+          groupName: group
+        })
+      );
+    });
+  return getAllDevices();
+};
+
 export const setDeviceFilters = filters => (dispatch, getState) => {
   const state = getState();
   if (deepCompare(filters, state.devices.filters)) {
