@@ -82,7 +82,7 @@ export const getGroups = () => (dispatch, getState) =>
       const ungroupedDevices = promises[promises.length - 1] || [];
       const result = ungroupedDevices[ungroupedDevices.length - 1] || {};
       if (!result.total) {
-        return;
+        return Promise.resolve();
       }
       return Promise.resolve(
         dispatch({
