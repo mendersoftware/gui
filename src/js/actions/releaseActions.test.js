@@ -171,8 +171,11 @@ describe('release actions', () => {
   });
   it('should select a release by name', async () => {
     const store = mockStore({ ...defaultState });
-    await store.dispatch(selectRelease('test'));
-    const expectedActions = [{ type: ReleaseConstants.SELECTED_RELEASE, release: 'test' }];
+    await store.dispatch(selectRelease(defaultState.releases.byId.r1.Name));
+    const expectedActions = [
+      { type: ReleaseConstants.SELECTED_RELEASE, release: defaultState.releases.byId.r1.Name },
+      { type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.r1 }
+    ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -208,6 +211,7 @@ describe('release actions', () => {
       },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Artifact details were updated successfully.' } },
       { type: ReleaseConstants.SELECTED_RELEASE, release: defaultState.releases.byId.r1.Name },
+      { type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.r1 },
       { type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.r1 }
     ];
     await store.dispatch(editArtifact(defaultState.releases.byId.r1.Artifacts[0].id, { description: 'something new' }));
@@ -224,13 +228,14 @@ describe('release actions', () => {
         uploads: { 'mock-uuid': { cancelSource: mockAbortController, name: undefined, size: 1234, uploadProgress: 0 } }
       },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      { type: ReleaseConstants.SELECTED_RELEASE, release: 'test' },
+      { type: ReleaseConstants.SELECTED_RELEASE, release: defaultState.releases.byId.r1.Name },
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
       { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: retrievedReleaseIds, total: 5000 } },
+      { type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.r1 },
       { type: AppConstants.UPLOAD_PROGRESS, uploads: {} }
     ];
-    await store.dispatch(uploadArtifact({ description: 'new artifact to upload', name: 'test' }, { size: 1234 }));
+    await store.dispatch(uploadArtifact({ description: 'new artifact to upload', name: defaultState.releases.byId.r1.Name }, { size: 1234 }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

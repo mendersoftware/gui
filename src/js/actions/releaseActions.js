@@ -250,8 +250,14 @@ export const selectArtifact = artifact => (dispatch, getState) => {
   }
 };
 
-export const selectRelease = release => dispatch =>
-  Promise.resolve(dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: release ? release.Name || release : null }));
+export const selectRelease = release => dispatch => {
+  const name = release ? release.Name || release : null;
+  let tasks = [dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: name })];
+  if (name) {
+    tasks.push(dispatch(getRelease(name)));
+  }
+  return Promise.all(tasks);
+};
 
 export const setReleasesListState = selectionState => (dispatch, getState) => {
   const currentState = getState().releases.releasesList;
