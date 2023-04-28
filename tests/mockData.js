@@ -653,7 +653,7 @@ const expectedParsedRoles = {
     isCustom: undefined,
     uiPermissions: {
       ...emptyUiPermissions,
-      groups: { bestgroup: [uiPermissionsById.connect.value, uiPermissionsById.read.value] },
+      groups: { bestgroup: [uiPermissionsById.read.value, uiPermissionsById.connect.value] },
       userManagement: [uiPermissionsById.manage.value]
     }
   },
@@ -671,13 +671,17 @@ const expectedParsedRoles = {
       groups: { dyn: [uiPermissionsById.read.value, uiPermissionsById.deploy.value] }
     }
   },
-  kljlkk: { editable: true, isCustom: false, uiPermissions: { ...emptyUiPermissions, groups: { bestgroup: [uiPermissionsById.connect.value] } } },
+  kljlkk: {
+    editable: true,
+    isCustom: false,
+    uiPermissions: { ...emptyUiPermissions, groups: { bestgroup: [uiPermissionsById.read.value, uiPermissionsById.connect.value] } }
+  },
   yyyyy: {
     editable: true,
     isCustom: undefined,
     uiPermissions: {
       ...emptyUiPermissions,
-      groups: { dockerclient: [uiPermissionsById.manage.value] },
+      groups: { dockerclient: [uiPermissionsById.read.value, uiPermissionsById.manage.value] },
       releases: { [ALL_RELEASES]: [uiPermissionsById.manage.value] }
     }
   }

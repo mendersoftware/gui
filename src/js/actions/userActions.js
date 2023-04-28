@@ -308,7 +308,8 @@ const customPermissionHandler = (accu, permission) => {
 
 const mapPermissionSet = (permissionSetName, names, existingGroupsPermissions = {}, scope) => {
   const permission = Object.values(uiPermissionsById).find(permission => permission.permissionSets[scope] === permissionSetName).value;
-  return names.reduce((accu, name) => combinePermissions(accu, { [name]: [permission] }), existingGroupsPermissions);
+  const scopedPermissions = names.reduce((accu, name) => combinePermissions(accu, { [name]: [permission] }), existingGroupsPermissions);
+  return Object.entries(scopedPermissions).reduce((accu, [key, permissions]) => ({ ...accu, [key]: deriveImpliedAreaPermissions(scope, permissions) }), {});
 };
 
 const parseRolePermissions = ({ permission_sets_with_scope = [], permissions = [] }, permissionSets) => {
