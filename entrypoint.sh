@@ -33,6 +33,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       hasMonitor: "$HAVE_MONITOR",
       hasMultitenancy: "$HAVE_MULTITENANT",
       hasReleaseTags: "$HAVE_RELEASE_TAGS",
+      hasReporting: "$HAVE_REPORTING",
       isEnterprise: "$HAVE_ENTERPRISE",
       isHosted: "$MENDER_HOSTED"
     },

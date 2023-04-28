@@ -56,6 +56,7 @@ const featureFlags = [
   'hasDeviceConfig',
   'hasDeviceConnect',
   'hasReleaseTags',
+  'hasReporting',
   'hasMonitor',
   'isEnterprise'
 ];

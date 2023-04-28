@@ -6,6 +6,7 @@ import { BarChart as BarChartIcon } from '@mui/icons-material';
 import {
   defaultReportType,
   defaultReports,
+  deriveReportsData,
   getDeviceAttributes,
   getGroupDevices,
   getReportingLimits,
@@ -14,9 +15,9 @@ import {
 } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { softwareTitleMap } from '../../constants/releaseConstants';
+import { rootfsImageVersion, softwareTitleMap } from '../../constants/releaseConstants';
 import { isEmpty } from '../../helpers';
-import { getAttributesList, getIsEnterprise, getUserSettings } from '../../selectors';
+import { getAttributesList, getFeatures, getIsEnterprise, getUserSettings } from '../../selectors';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { extractSoftwareInformation } from '../devices/device-details/installedsoftware';
 import ChartAdditionWidget from './widgets/chart-addition';
@@ -68,12 +69,14 @@ const listSoftware = attributes => {
 
 export const SoftwareDistribution = ({
   attributes,
+  deriveReportsData,
   getReportsData,
   getDeviceAttributes,
   getGroupDevices,
   getReportingLimits,
   groups,
   hasDevices,
+  hasReporting,
   isEnterprise,
   reports,
   reportsData,
@@ -82,11 +85,17 @@ export const SoftwareDistribution = ({
 }) => {
   useEffect(() => {
     getDeviceAttributes();
-    getReportingLimits();
+    if (hasReporting) {
+      getReportingLimits();
+    }
   }, []);
 
   useEffect(() => {
-    getReportsData();
+    if (hasReporting) {
+      getReportsData();
+      return;
+    }
+    deriveReportsData();
   }, [JSON.stringify(reports)]);
 
   const addCurrentSelection = selection => {
@@ -104,7 +113,7 @@ export const SoftwareDistribution = ({
     saveUserSettings({ reports: reports.filter(report => report !== removedReport) });
   };
 
-  const software = useMemo(() => listSoftware(attributes), [JSON.stringify(attributes)]);
+  const software = useMemo(() => listSoftware(hasReporting ? attributes : [rootfsImageVersion]), [JSON.stringify(attributes), hasReporting]);
 
   if (!isEnterprise) {
     return (
@@ -142,6 +151,7 @@ export const SoftwareDistribution = ({
 };
 
 const actionCreators = {
+  deriveReportsData,
   getDeviceAttributes,
   getGroupDevices,
   getReportsData,
@@ -157,10 +167,12 @@ const mapStateToProps = state => {
     (Object.keys(state.devices.byId).length ? defaultReports : []);
   // eslint-disable-next-line no-unused-vars
   const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+  const { hasReporting } = getFeatures(state);
   return {
     attributes: getAttributesList(state),
-    hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
     groups,
+    hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
+    hasReporting,
     isEnterprise: getIsEnterprise(state),
     reports,
     reportsData: state.devices.reports

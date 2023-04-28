@@ -2,7 +2,7 @@ import Api, { apiUrl, headerNames } from '../api/general-api';
 import * as DeviceConstants from '../constants/deviceConstants';
 import * as MonitorConstants from '../constants/monitorConstants';
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
-import { convertDeviceListStateToFilters, reportingApiUrl } from './deviceActions';
+import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
 export const monitorApiUrlv1 = `${apiUrl.v1}/devicemonitor`;
 
@@ -73,7 +73,7 @@ export const getIssueCountsByType =
       selectedIssues: [type],
       status
     });
-    return Api.post(`${reportingApiUrl}/devices/search`, {
+    return Api.post(getSearchEndpoint(state.app.features.hasReporting), {
       page: 1,
       per_page: 1,
       filters: filterTerms,

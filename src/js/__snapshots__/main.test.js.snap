@@ -418,47 +418,6 @@ exports[`Main Component renders correctly 1`] = `
                   </p>
                 </a>
                 <a
-                  class="flexbox center-aligned column mui-1i32ysv-issueType red"
-                  href="/devices?issues=failedLastUpdate"
-                >
-                  <div
-                    class="relative mui-1donq9n-issueContainer"
-                  >
-                    <div
-                      class="mui-1uwsjn9-issueCounter"
-                    >
-                      4
-                    </div>
-                    <div
-                      class="absolute mui-wx993p-issueWrapper"
-                    >
-                      <div
-                        class="relative"
-                      >
-                        <div
-                          class="absolute"
-                        />
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall absolute mui-1cwsc1r-MuiSvgIcon-root"
-                          data-testid="CancelOutlinedIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <p
-                    class="align-center slightly-smaller"
-                  >
-                    Failed last update
-                  </p>
-                </a>
-                <a
                   class="flexbox center-aligned column mui-1i32ysv-issueType green"
                   href="/devices?issues=authRequests"
                 >

@@ -21,7 +21,7 @@ export const validateGroupName = (encodedName, groups = [], selectedDevices = []
   } else if (!validator.isWhitelisted(name, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
     invalid = true;
     errortext = 'Valid characters are a-z, A-Z, 0-9, _ and -';
-  } else if (selectedDevices.every(({ group }) => group === name)) {
+  } else if (selectedDevices.length && selectedDevices.every(({ group }) => group === name)) {
     invalid = true;
     errortext = `${name} is the same group the selected devices are already in`;
   } else if (isModification && isCreationDynamic) {

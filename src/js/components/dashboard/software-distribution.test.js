@@ -54,11 +54,14 @@ const state = {
 describe('Devices Component', () => {
   it('renders correctly', async () => {
     let store = mockStore(state);
-    const { baseElement } = render(
+    const ui = (
       <Provider store={store}>
-        <SoftwareDistribution getDeviceAttributes={jest.fn} getReportingLimits={jest.fn} getReportsData={jest.fn} getGroupDevices={jest.fn} />
+        <SoftwareDistribution />
       </Provider>
     );
+    const { baseElement, rerender } = render(ui);
+    await waitFor(() => rerender(ui));
+    await act(async () => {});
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
