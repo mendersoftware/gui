@@ -97,6 +97,7 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
 export const GlobalSettingsDialog = ({
   attributes,
   docsVersion,
+  hasReporting,
   isAdmin,
   notificationChannelSettings,
   offlineThresholdSettings,
@@ -173,7 +174,7 @@ export const GlobalSettingsDialog = ({
         onSaveClick={onSaveClick}
         selectedAttribute={selectedAttribute}
       />
-      <ReportingLimits />
+      {hasReporting && <ReportingLimits />}
       <InputLabel className="margin-top" shrink>
         Deployments
       </InputLabel>
@@ -239,6 +240,7 @@ export const GlobalSettingsContainer = ({
   docsVersion,
   getDeviceAttributes,
   getGlobalSettings,
+  hasReporting,
   isAdmin,
   notificationChannelSettings,
   offlineThresholdSettings,
@@ -291,6 +293,7 @@ export const GlobalSettingsContainer = ({
     <GlobalSettingsDialog
       attributes={attributes}
       docsVersion={docsVersion}
+      hasReporting={hasReporting}
       isAdmin={isAdmin}
       notificationChannelSettings={notificationChannelSettings}
       offlineThresholdSettings={offlineThresholdSettings}
@@ -323,6 +326,7 @@ const mapStateToProps = state => {
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
     attributes: id_attributes,
+    hasReporting: state.app.features.hasReporting,
     isAdmin: getUserRoles(state).isAdmin,
     devicesCount: Object.keys(state.devices.byId).length,
     docsVersion: getDocsVersion(state),

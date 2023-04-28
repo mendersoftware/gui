@@ -5,7 +5,6 @@ import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AddGroup } from '../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
@@ -38,30 +37,7 @@ export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
 );
 
 export const Groups = ({ acceptedCount, changeGroup, className, groups, openGroupDialog, selectedGroup, showHelptips }) => {
-  const {
-    dynamic: dynamicGroups,
-    static: staticGroups,
-    ungrouped
-  } = Object.entries(groups)
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .reduce(
-      (accu, [groupname, group], index) => {
-        const name = groupname === UNGROUPED_GROUP.id ? UNGROUPED_GROUP.name : groupname;
-        const groupItem = <GroupItem changeGroup={changeGroup} groupname={groupname} key={groupname + index} name={name} selectedGroup={selectedGroup} />;
-        if (group.filters.length > 0) {
-          if (groupname !== UNGROUPED_GROUP.id) {
-            accu.dynamic.push(groupItem);
-          } else {
-            accu.ungrouped.push(groupItem);
-          }
-        } else {
-          accu.static.push(groupItem);
-        }
-        return accu;
-      },
-      { dynamic: [], static: [], ungrouped: [] }
-    );
-
+  const { dynamic: dynamicGroups, static: staticGroups, ungrouped } = groups;
   return (
     <div className={className}>
       <div className="muted margin-bottom-small">Groups</div>
@@ -70,10 +46,17 @@ export const Groups = ({ acceptedCount, changeGroup, className, groups, openGrou
           <ListItemText primary="All devices" />
         </ListItem>
         {!!dynamicGroups.length && <GroupsSubheader heading="Dynamic" />}
-        {dynamicGroups}
+        {dynamicGroups.map(({ groupId, name }, index) => (
+          <GroupItem changeGroup={changeGroup} groupname={name} key={name + index} name={groupId} selectedGroup={selectedGroup} />
+        ))}
         {!!staticGroups.length && <GroupsSubheader heading="Static" />}
-        {staticGroups}
-        {!!staticGroups.length && ungrouped}
+        {staticGroups.map(({ groupId, name }, index) => (
+          <GroupItem changeGroup={changeGroup} groupname={name} key={name + index} name={groupId} selectedGroup={selectedGroup} />
+        ))}
+        {!!staticGroups.length &&
+          ungrouped.map(({ groupId, name }, index) => (
+            <GroupItem changeGroup={changeGroup} groupname={name} key={name + index} name={groupId} selectedGroup={selectedGroup} />
+          ))}
         <ListItem button classes={{ root: 'grouplist' }} style={{ marginTop: 30 }} onClick={openGroupDialog}>
           <ListItemIcon>
             <InfoIcon />

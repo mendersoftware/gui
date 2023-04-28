@@ -2,11 +2,14 @@ import React from 'react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import { getGroups } from '../../selectors';
 import Groups, { GroupItem, GroupsSubheader } from './groups';
 
 describe('Groups Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<Groups groups={defaultState.devices.groups.byId} openGroupDialog={jest.fn} />);
+    // eslint-disable-next-line no-unused-vars
+    const { groupNames, ...groups } = getGroups(defaultState);
+    const { baseElement } = render(<Groups groups={groups} openGroupDialog={jest.fn} />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
