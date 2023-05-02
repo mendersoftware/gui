@@ -40,7 +40,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.0",
     "stream-browserify": "^3.0.0",
-    "tss-react": "^4.8.2",
+    "tss-react": "^4.8.3",
     "universal-cookie": "^4.0.4",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",
