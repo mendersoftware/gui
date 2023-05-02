@@ -184,7 +184,7 @@ exports[`CreateGroup Component renders correctly 1`] = `
 }
 
 .emotion-6 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-6 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -198,7 +198,7 @@ exports[`CreateGroup Component renders correctly 1`] = `
 }
 
 .emotion-6 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-6 .MuiFilledInput-root {

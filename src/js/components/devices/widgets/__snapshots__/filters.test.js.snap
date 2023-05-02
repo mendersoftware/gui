@@ -82,7 +82,7 @@ exports[`Filters Component renders correctly 1`] = `
 }
 
 .emotion-3 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-3 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -96,7 +96,7 @@ exports[`Filters Component renders correctly 1`] = `
 }
 
 .emotion-3 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-3 .MuiFilledInput-root {
@@ -1036,6 +1036,7 @@ label+.emotion-18 {
               </div>
               <input
                 aria-hidden="true"
+                aria-invalid="false"
                 class="MuiSelect-nativeInput emotion-14"
                 tabindex="-1"
                 value="$eq"

@@ -929,6 +929,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-31:focus::-ms-input-
         </div>
         <input
           aria-hidden="true"
+          aria-invalid="false"
           class="MuiSelect-nativeInput emotion-2"
           tabindex="-1"
           value="any"
@@ -1105,6 +1106,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-31:focus::-ms-input-
             </div>
             <input
               aria-hidden="true"
+              aria-invalid="false"
               class="MuiSelect-nativeInput emotion-2"
               tabindex="-1"
               value="10"

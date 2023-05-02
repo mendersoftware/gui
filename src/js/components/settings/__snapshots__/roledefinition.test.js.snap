@@ -1490,6 +1490,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
           </div>
           <input
             aria-hidden="true"
+            aria-invalid="false"
             class="MuiSelect-nativeInput emotion-24"
             disabled=""
             tabindex="-1"
@@ -1551,6 +1552,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
           </div>
           <input
             aria-hidden="true"
+            aria-invalid="false"
             class="MuiSelect-nativeInput emotion-24"
             disabled=""
             tabindex="-1"
@@ -1612,6 +1614,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-23:focus::-ms-input-
           </div>
           <input
             aria-hidden="true"
+            aria-invalid="false"
             class="MuiSelect-nativeInput emotion-24"
             disabled=""
             tabindex="-1"
