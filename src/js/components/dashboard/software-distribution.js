@@ -21,6 +21,7 @@ import {
   defaultReports,
   deriveReportsData,
   getDeviceAttributes,
+  getDevicesInBounds,
   getGroupDevices,
   getReportingLimits,
   getReportsData
@@ -29,11 +30,12 @@ import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { rootfsImageVersion, softwareTitleMap } from '../../constants/releaseConstants';
 import { isEmpty } from '../../helpers';
-import { getAttributesList, getFeatures, getIsEnterprise, getUserSettings } from '../../selectors';
+import { getAttributesList, getFeatures, getGroupNames, getIsEnterprise, getUserSettings } from '../../selectors';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { extractSoftwareInformation } from '../devices/device-details/installedsoftware';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
+import MapWrapper from './widgets/mapwidget';
 
 const reportTypes = {
   distribution: DistributionReport
@@ -95,6 +97,8 @@ export const SoftwareDistribution = () => {
   const hasDevices = useSelector(state => state.devices.byStatus[DEVICE_STATES.accepted].total);
   const isEnterprise = useSelector(getIsEnterprise);
   const reportsData = useSelector(state => state.devices.reports);
+  const groupNames = useSelector(getGroupNames);
+  const devicesById = useSelector(state => state.devices.byId);
 
   useEffect(() => {
     dispatch(getDeviceAttributes());
@@ -133,15 +137,23 @@ export const SoftwareDistribution = () => {
       </div>
     );
   }
+  const dispatchedGetGroupDevices = (...args) => dispatch(getGroupDevices(...args));
   return hasDevices ? (
     <div className="dashboard margin-bottom-large">
+      <MapWrapper
+        groups={groups}
+        groupNames={groupNames}
+        devicesById={devicesById}
+        getGroupDevices={dispatchedGetGroupDevices}
+        getDevicesInBounds={(...args) => dispatch(getDevicesInBounds(...args))}
+      />
       {reports.map((report, index) => {
         const Component = reportTypes[report.type || defaultReportType];
         return (
           <Component
             key={`report-${report.group}-${index}`}
             data={reportsData[index]}
-            getGroupDevices={(...args) => dispatch(getGroupDevices(...args))}
+            getGroupDevices={dispatchedGetGroupDevices}
             groups={groups}
             onClick={() => removeReport(report)}
             onSave={change => onSaveChangedReport(change, index)}
