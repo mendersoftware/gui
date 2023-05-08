@@ -1220,3 +1220,30 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
     return Promise.all(tasks);
   });
 };
+
+export const geoAttributes = ['geo-lat', 'geo-lon'].map(attribute => ({ attribute, scope: 'inventory' }));
+export const getDevicesInBounds = (bounds, group) => (dispatch, getState) => {
+  const state = getState();
+  const { filterTerms } = convertDeviceListStateToFilters({
+    group: group === DeviceConstants.ALL_DEVICES ? undefined : group,
+    groups: state.devices.groups,
+    status: DEVICE_STATES.accepted
+  });
+  return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+    page: 1,
+    per_page: MAX_PAGE_SIZE,
+    filters: filterTerms,
+    attributes: geoAttributes,
+    geo_bounding_box_filter: {
+      geo_bounding_box: {
+        location: {
+          top_left: { lat: bounds._northEast.lat, lon: bounds._southWest.lng },
+          bottom_right: { lat: bounds._southWest.lat, lon: bounds._northEast.lng }
+        }
+      }
+    }
+  }).then(({ data }) => {
+    const { devicesById } = reduceReceivedDevices(data, [], getState());
+    return Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICES, devicesById }));
+  });
+};
