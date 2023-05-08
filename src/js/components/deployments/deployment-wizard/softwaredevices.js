@@ -87,7 +87,7 @@ export const Devices = ({
   deploymentObject,
   getSystemDevices,
   groupRef,
-  groups,
+  groupNames,
   hasDevices,
   hasDynamicGroups,
   hasFullFiltering,
@@ -119,7 +119,6 @@ export const Devices = ({
     setDeploymentSettings(update);
   };
 
-  const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
     const devicesLink = getDevicesLink({ devices, group, hasFullFiltering });
     let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
@@ -158,7 +157,7 @@ export const Devices = ({
               filterSelectedOptions
               handleHomeEndKeys
               disabled={!(hasDevices || hasDynamicGroups)}
-              options={groupItems}
+              options={groupNames}
               onChange={deploymentSettingsUpdate}
               renderInput={params => (
                 <TextField {...params} placeholder="Select a device group" InputProps={{ ...params.InputProps }} className={classes.textField} />
