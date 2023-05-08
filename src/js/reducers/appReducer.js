@@ -62,6 +62,7 @@ export const initialState = {
   uploadsById: {
     // id: { uploading: false, uploadProgress: 0, cancelSource: undefined }
   },
+  newThreshold: getYesterday(),
   offlineThreshold: getYesterday(),
   versionInformation: {
     Integration: '',
