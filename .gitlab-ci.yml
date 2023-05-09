@@ -40,6 +40,54 @@ test:lint:
   tags:
     - mender-qa-worker-generic-light
 
+test:types:
+  stage: test
+  image: python:3.11
+  needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+    - when: manual
+  before_script:
+    # Prepare SSH key
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    # Configure git
+    - git config --global user.email "mender@northern.tech"
+    - git config --global user.name "Mender Test Bot"
+    # install hub cli + deno + release tool dependency
+    - apt-get update && apt-get install hub -qqy
+    - curl -fsSL https://deno.land/x/install/install.sh | sh && export PATH="/root/.deno/bin:$PATH"
+    - wget https://raw.githubusercontent.com/mendersoftware/integration/master/extra/requirements.txt
+    - pip3 install -r requirements.txt
+    # get enterprise api specs from all the repos, based on mender-api-docs tooling
+    - export GITHUB_TOKEN=${GITHUB_BOT_TOKEN_REPO_FULL}
+    - cd scripts
+    - 'wget --header "Authorization: token $GITHUB_TOKEN" https://raw.githubusercontent.com/mendersoftware/mender-api-docs/master/versions.template.js'
+    - cd typeGeneration
+    - 'wget --header "Authorization: token $GITHUB_TOKEN" https://raw.githubusercontent.com/mendersoftware/mender-api-docs/master/specs/download.sh'
+    - chmod +x ./download.sh && TARGET=specs ./download.sh
+  script:
+    - deno run --allow-read --allow-write --allow-net convert.js
+    - deno fmt generated/models
+    - mkdir -p ../../src/js/api/types && mv -f generated/models/* ../../src/js/api/types
+    - cd ../..
+    - git checkout -b update-types-$(date +%s)
+    - 'git add src/js/api/types && git commit --signoff -m "chore: Types update"'
+    - git remote add mendersoftware git@github.com:mendersoftware/gui.git
+    - 'hub pull-request --push --base mendersoftware:master --message "chore: Types update" --message "keeping types aligned"'
+  allow_failure: true
+  artifacts:
+    expire_in: 2w
+    paths:
+      - scripts/typeGeneration
+      - src/js/api/types
+  tags:
+    - mender-qa-worker-generic-light
+
 .template:test:acceptance:
   stage: e2e-test
   image: tiangolo/docker-with-compose
