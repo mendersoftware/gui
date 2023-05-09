@@ -11,7 +11,7 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
-import { getDocsVersion, getIdAttribute, getOfflineThresholdSettings, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
+import { getDocsVersion, getIdAttribute, getOfflineThresholdSettings, getTenantCapabilities, getUserRoles } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import InfoHint from '../common/info-hint';
 import ArtifactGenerationSettings from './artifactgeneration';
@@ -107,8 +107,7 @@ export const GlobalSettingsDialog = ({
   saveGlobalSettings,
   selectedAttribute,
   settings,
-  tenantCapabilities,
-  userCapabilities
+  tenantCapabilities
 }) => {
   const [channelSettings, setChannelSettings] = useState(notificationChannelSettings);
   const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
@@ -119,8 +118,7 @@ export const GlobalSettingsDialog = ({
   const timer = useRef(false);
   const { classes } = useStyles();
   const { needsDeploymentConfirmation = false } = settings;
-  const { canDelta, hasMonitor } = tenantCapabilities;
-  const { canManageReleases } = userCapabilities;
+  const { hasMonitor, isEnterprise } = tenantCapabilities;
 
   useEffect(() => {
     setChannelSettings(notificationChannelSettings);
@@ -182,7 +180,7 @@ export const GlobalSettingsDialog = ({
         <p className="help-content">Require confirmation on deployment creation</p>
         <Switch checked={needsDeploymentConfirmation} />
       </div>
-      {canManageReleases && canDelta && <ArtifactGenerationSettings />}
+      {isEnterprise && <ArtifactGenerationSettings />}
       {isAdmin &&
         hasMonitor &&
         Object.keys(alertChannels).map(channel => (
@@ -247,8 +245,7 @@ export const GlobalSettingsContainer = ({
   saveGlobalSettings,
   selectedAttribute,
   settings,
-  tenantCapabilities,
-  userCapabilities
+  tenantCapabilities
 }) => {
   const [updatedSettings, setUpdatedSettings] = useState({ ...settings });
 
@@ -304,7 +301,6 @@ export const GlobalSettingsContainer = ({
       settings={settings}
       selectedAttribute={selectedAttribute}
       tenantCapabilities={tenantCapabilities}
-      userCapabilities={userCapabilities}
     />
   );
 };
@@ -334,8 +330,7 @@ const mapStateToProps = state => {
     offlineThresholdSettings: getOfflineThresholdSettings(state),
     selectedAttribute: getIdAttribute(state).attribute,
     settings: state.users.globalSettings,
-    tenantCapabilities: getTenantCapabilities(state),
-    userCapabilities: getUserCapabilities(state)
+    tenantCapabilities: getTenantCapabilities(state)
   };
 };
 
