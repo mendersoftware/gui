@@ -777,7 +777,8 @@ const attributeReducer = (attributes = []) =>
 
 export const getDeviceAttributes = () => (dispatch, getState) =>
   GeneralApi.get(getAttrsEndpoint(getState().app.features.hasReporting)).then(({ data }) => {
-    const { identity: identityAttributes, inventory: inventoryAttributes, system: systemAttributes, tags: tagAttributes } = attributeReducer(data);
+    // TODO: remove the array fallback once the inventory attributes endpoint is fixed
+    const { identity: identityAttributes, inventory: inventoryAttributes, system: systemAttributes, tags: tagAttributes } = attributeReducer(data || []);
     return dispatch({
       type: DeviceConstants.SET_FILTER_ATTRIBUTES,
       attributes: { identityAttributes, inventoryAttributes, systemAttributes, tagAttributes }
