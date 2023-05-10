@@ -28,7 +28,7 @@ import {
 import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
-const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, emptyFilter } = DeviceConstants;
+const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP, emptyFilter } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 export const deviceAuthV2 = `${apiUrl.v2}/devauth`;
@@ -65,7 +65,7 @@ export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
     const state = getState().devices.groups.byId;
     const dynamicGroups = Object.entries(state).reduce((accu, [id, group]) => {
-      if (group.id || group.filters?.length) {
+      if (group.id || (group.filters?.length && id !== UNGROUPED_GROUP.id)) {
         accu[id] = group;
       }
       return accu;
@@ -77,7 +77,7 @@ export const getGroups = () => (dispatch, getState) =>
     const filters = [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }];
     return Promise.all([
       dispatch({ type: DeviceConstants.RECEIVE_GROUPS, groups }),
-      dispatch(getDevicesByStatus(undefined, { filterSelection: filters, page: 1, perPage: 1 }))
+      dispatch(getDevicesByStatus(undefined, { filterSelection: filters, group: 0, page: 1, perPage: 1 }))
     ]).then(promises => {
       const ungroupedDevices = promises[promises.length - 1] || [];
       const result = ungroupedDevices[ungroupedDevices.length - 1] || {};
@@ -87,11 +87,11 @@ export const getGroups = () => (dispatch, getState) =>
       return Promise.resolve(
         dispatch({
           type: DeviceConstants.ADD_DYNAMIC_GROUP,
-          groupName: DeviceConstants.UNGROUPED_GROUP.id,
+          groupName: UNGROUPED_GROUP.id,
           group: {
             deviceIds: [],
             total: 0,
-            ...getState().devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id],
+            ...getState().devices.groups.byId[UNGROUPED_GROUP.id],
             filters: [{ key: 'group', value: res.data, operator: DEVICE_FILTERING_OPTIONS.$nin.key, scope: 'system' }]
           }
         })
@@ -226,12 +226,7 @@ export const getDynamicGroups = () => (dispatch, getState) =>
         };
         return accu;
       }, staticGroups);
-      return Promise.resolve(
-        dispatch({
-          type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
-          groups
-        })
-      );
+      return Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS, groups }));
     })
     .catch(() => console.log('Dynamic group retrieval failed - likely accessing a non-enterprise backend'));
 
@@ -254,7 +249,8 @@ export const addDynamicGroup = (groupName, filterPredicates) => (dispatch, getSt
         const { cleanedFilters } = getGroupFilters(groupName, getState().devices.groups);
         return Promise.all([
           dispatch(setDeviceFilters(cleanedFilters)),
-          dispatch(setSnackbar(...getGroupNotification(groupName, getState().devices.groups.selectedGroup)))
+          dispatch(setSnackbar(...getGroupNotification(groupName, getState().devices.groups.selectedGroup))),
+          dispatch(getDynamicGroups())
         ]);
       })
     )
@@ -284,7 +280,7 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
  * Device inventory functions
  */
 const getGroupFilters = (group, groupsState, filters = []) => {
-  const groupName = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name ? DeviceConstants.UNGROUPED_GROUP.id : group;
+  const groupName = group === UNGROUPED_GROUP.id || group === UNGROUPED_GROUP.name ? UNGROUPED_GROUP.id : group;
   const selectedGroup = groupsState.byId[groupName];
   const groupFilterLength = selectedGroup?.filters?.length || 0;
   const cleanedFilters = groupFilterLength
