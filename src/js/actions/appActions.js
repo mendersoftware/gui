@@ -16,7 +16,7 @@ import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
-import { customSort, deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
+import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
 import { getCurrentUser, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeploymentsByStatus } from './deploymentActions';
@@ -117,7 +117,8 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
     dispatch(setDemoArtifactPort(demoArtifactPort)),
     dispatch({ type: SET_FEATURES, value: environmentFeatures }),
     dispatch({ type: SET_VERSION_INFORMATION, docsVersion: versionInfo.docs, value: versionInfo.remainder }),
-    dispatch({ type: SET_ENVIRONMENT_DATA, value: environmentData })
+    dispatch({ type: SET_ENVIRONMENT_DATA, value: environmentData }),
+    dispatch(getLatestReleaseInfo())
   ]);
 };
 
@@ -286,31 +287,35 @@ const repoKeyMap = {
   'mender-artifact': 'Mender-Artifact'
 };
 
+const deductSaasState = (latestRelease, guiTags, saasReleases) => {
+  const latestGuiTag = guiTags[0].name;
+  const latestSaasRelease = latestGuiTag.startsWith('saas-v') ? { date: latestGuiTag.split('-v')[1].replaceAll('.', '-'), tag: latestGuiTag } : saasReleases[0];
+  return latestSaasRelease.date > latestRelease.release_date ? latestSaasRelease.tag : latestRelease.release;
+};
+
 export const getLatestReleaseInfo = () => (dispatch, getState) => {
   if (!getState().app.features.isHosted) {
     return Promise.resolve();
   }
-  return GeneralApi.get('/versions.json').then(({ data }) => {
+  return Promise.all([GeneralApi.get('/versions.json'), GeneralApi.get('/tags.json')]).then(([{ data }, { data: guiTags }]) => {
     const { releases, saas } = data;
     const latestRelease = getLatestRelease(getLatestRelease(releases));
     const { latestRepos, latestVersions } = latestRelease.repos.reduce(
       (accu, item) => {
         if (repoKeyMap[item.name]) {
-          accu.latestVersions[repoKeyMap[item.name]] = item.version;
+          accu.latestVersions[repoKeyMap[item.name]] = getComparisonCompatibleVersion(item.version);
         }
-        accu.latestRepos[item.name] = item.version;
+        accu.latestRepos[item.name] = getComparisonCompatibleVersion(item.version);
         return accu;
       },
-      { latestVersions: {}, latestRepos: {} }
+      { latestVersions: { ...getState().app.versionInformation }, latestRepos: {} }
     );
-    const latestSaasRelease = saas.sort(customSort(true, 'date'))[0];
-    const info = latestSaasRelease.date > latestRelease.release_date ? latestSaasRelease.tag : latestRelease.release;
+    const info = deductSaasState(latestRelease, guiTags, saas);
     return Promise.resolve(
       dispatch({
         type: SET_VERSION_INFORMATION,
-        docsVersion: latestVersions.Integration.split('.').slice(0, 2).join('.'),
+        docsVersion: getState().app.docsVersion,
         value: {
-          ...getState().app.versionInformation,
           ...latestVersions,
           backend: info,
           GUI: info,

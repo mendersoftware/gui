@@ -202,9 +202,8 @@ exports[`Main Component renders correctly 1`] = `
         style="padding: 0px;"
       >
         <a
-          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-iez8uw-MuiListItem-root"
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-s9istv-MuiListItem-root-navLink"
           href="/"
-          style="padding: 22px 16px 22px 42px;"
         >
           <div
             class="MuiListItemText-root mui-924vb1-MuiListItemText-root"
@@ -218,9 +217,8 @@ exports[`Main Component renders correctly 1`] = `
           </div>
         </a>
         <a
-          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-iez8uw-MuiListItem-root"
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-s9istv-MuiListItem-root-navLink"
           href="/devices"
-          style="padding: 22px 16px 22px 42px;"
         >
           <div
             class="MuiListItemText-root mui-924vb1-MuiListItemText-root"
@@ -234,9 +232,8 @@ exports[`Main Component renders correctly 1`] = `
           </div>
         </a>
         <a
-          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-iez8uw-MuiListItem-root"
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-s9istv-MuiListItem-root-navLink"
           href="/releases"
-          style="padding: 22px 16px 22px 42px;"
         >
           <div
             class="MuiListItemText-root mui-924vb1-MuiListItemText-root"
@@ -250,9 +247,8 @@ exports[`Main Component renders correctly 1`] = `
           </div>
         </a>
         <a
-          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-iez8uw-MuiListItem-root"
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-s9istv-MuiListItem-root-navLink"
           href="/deployments"
-          style="padding: 22px 16px 22px 42px;"
         >
           <div
             class="MuiListItemText-root mui-924vb1-MuiListItemText-root"

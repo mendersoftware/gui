@@ -8,7 +8,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
 
-import { getLatestReleaseInfo, setSnackbar, setVersionInfo } from '../actions/appActions';
+import { setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../selectors';
@@ -33,15 +33,24 @@ const useStyles = makeStyles()(theme => ({
     backgroundColor: theme.palette.background.lightgrey,
     borderRight: `1px solid ${theme.palette.grey[300]}`
   },
-  listItem: { padding: '16px 16px 16px 42px' }
+  navLink: { padding: '22px 16px 22px 42px' },
+  listItem: { padding: '16px 16px 16px 42px' },
+  versions: { display: 'grid', gridTemplateColumns: 'max-content 60px', columnGap: theme.spacing(), '>a': { color: theme.palette.grey[100] } }
 }));
 
-const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionInfo, versionInformation }) => {
+const linkables = {
+  'Integration': 'integration',
+  'Mender-Client': 'mender',
+  'Mender-Artifact': 'mender-artifact',
+  'GUI': 'gui'
+};
+
+const VersionInfo = ({ isHosted, setSnackbar, setVersionInfo, versionInformation }) => {
   const [clicks, setClicks] = useState(0);
   const timer = useRef();
+  const { classes } = useStyles();
 
   useEffect(() => {
-    getLatestReleaseInfo();
     return () => {
       clearTimeout(timer.current);
     };
@@ -53,19 +62,27 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
   };
 
   const versions = (
-    <ul className="unstyled" style={{ minWidth: 120 }}>
+    <div className={classes.versions}>
       {Object.entries(versionInformation).reduce((accu, [key, version]) => {
         if (version) {
           accu.push(
-            <li key={key} className="flexbox space-between">
-              <div>{key}</div>
-              <div>{version}</div>
-            </li>
+            <React.Fragment key={key}>
+              {linkables[key] ? (
+                <a href={`https://github.com/mendersoftware/${linkables[key]}/tree/${version}`} target="_blank" rel="noopener noreferrer">
+                  {key}
+                </a>
+              ) : (
+                <div>{key}</div>
+              )}
+              <div className="align-right text-overflow" title={version}>
+                {version}
+              </div>
+            </React.Fragment>
           );
         }
         return accu;
       }, [])}
-    </ul>
+    </div>
   );
 
   const onClick = () => {
@@ -82,7 +99,7 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
 
   let title = versionInformation.Integration ? `Version: ${versionInformation.Integration}` : '';
   if (isHosted && versionInformation.Integration !== 'next') {
-    title = 'latest';
+    title = 'Version: latest';
   }
   return (
     <Tooltip title={versions} placement="top">
@@ -93,17 +110,7 @@ const VersionInfo = ({ getLatestReleaseInfo, isHosted, setSnackbar, setVersionIn
   );
 };
 
-export const LeftNav = ({
-  docsVersion,
-  getLatestReleaseInfo,
-  isHosted,
-  onboardingState,
-  setSnackbar,
-  setVersionInfo,
-  tenantCapabilities,
-  userCapabilities,
-  versionInformation
-}) => {
+export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, setVersionInfo, tenantCapabilities, userCapabilities, versionInformation }) => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
@@ -140,11 +147,10 @@ export const LeftNav = ({
           }
           accu.push(
             <ListItem
-              className="navLink leftNav"
+              className={`navLink leftNav ${classes.navLink}`}
               component={NavLink}
               end={item.route === '/'}
               key={index}
-              style={{ padding: '22px 16px 22px 42px' }}
               ref={item.route === '/releases' ? releasesRef : null}
               to={item.route}
             >
@@ -161,15 +167,7 @@ export const LeftNav = ({
         </ListItem>
         <ListItem className={classes.listItem}>
           <ListItemText
-            primary={
-              <VersionInfo
-                getLatestReleaseInfo={getLatestReleaseInfo}
-                isHosted={isHosted}
-                setSnackbar={setSnackbar}
-                setVersionInfo={setVersionInfo}
-                versionInformation={versionInfo}
-              />
-            }
+            primary={<VersionInfo isHosted={isHosted} setSnackbar={setSnackbar} setVersionInfo={setVersionInfo} versionInformation={versionInfo} />}
             secondary={licenseLink}
           />
         </ListItem>
@@ -178,7 +176,7 @@ export const LeftNav = ({
   );
 };
 
-const actionCreators = { getLatestReleaseInfo, setSnackbar, setVersionInfo };
+const actionCreators = { setSnackbar, setVersionInfo };
 
 const mapStateToProps = state => {
   const { isHosted } = getFeatures(state);

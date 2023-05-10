@@ -62,6 +62,8 @@ const releasesSample = {
   ]
 };
 
+const tagsSample = [{ name: 'saas-v2023.05.02', more: 'here' }];
+
 const signupHandler = ({ body: signup }, res, ctx) => {
   if (['email', 'organization', 'plan', 'tos'].every(item => !!signup[item])) {
     return res(ctx.text('test'), ctx.cookie('JWT', 'test'));
@@ -70,6 +72,7 @@ const signupHandler = ({ body: signup }, res, ctx) => {
 };
 
 export const organizationHandlers = [
+  rest.get('/tags.json', (req, res, ctx) => res(ctx.json(tagsSample))),
   rest.get('/versions.json', (req, res, ctx) => res(ctx.json(releasesSample))),
   rest.get(`${tenantadmApiUrlv1}/user/tenant`, (req, res, ctx) => res(ctx.json(defaultState.organization.organization))),
   rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/cancel`, (req, res, ctx) => res(ctx.status(200))),
