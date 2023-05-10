@@ -20,6 +20,10 @@ export type DeviceDeviceauth = {
    * Updated timestamp
    */
   updated_ts?: string;
+  /**
+   * Time when accepted device contacted server for the last time.
+   */
+  check_in_time?: string;
   auth_sets?: Array<AuthSet>;
   /**
    * Devices that are part of ongoing decommissioning process will return True
