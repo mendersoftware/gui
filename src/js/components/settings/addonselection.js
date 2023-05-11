@@ -42,26 +42,30 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
           Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We&apos;ll adjust
           your subscription and confirm it with you.
         </p>
-        {relevantAddons.map(addOn => (
-          <div
-            key={addOn.name}
-            className={`planPanel ${classes.planPanel} addon ${isUpgrade ? 'upgrade' : ''} ${addOn.isEnabled ? 'active' : ''}`}
-            onClick={e => onAddOnClick(e, addOn.name, !addOn.isEnabled)}
-          >
-            <Checkbox checked={addOn.isEnabled} />
-            <div className="bold">{addOn.title}</div>
-            {isUpgrade && (
-              <div className="flexbox column">
-                <div className={`link-color bold ${classes.price}`}>{addOn[updatedPlan].price}</div>
-                <div>{addOn[updatedPlan].deviceCount}</div>
-              </div>
-            )}
-            <InfoText variant="dense">{addOn.description}</InfoText>
-            <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener noreferrer">
-              Learn more
-            </a>
-          </div>
-        ))}
+        {relevantAddons.map(addOn => {
+          const isEligible = addOn.eligible.indexOf(updatedPlan) > -1;
+
+          return (
+            <div
+              key={addOn.name}
+              className={`planPanel ${classes.planPanel} addon ${isUpgrade ? 'upgrade' : ''} ${addOn.isEnabled ? 'active' : ''} ${isEligible ? '' : 'muted'}`}
+              onClick={e => (isEligible ? onAddOnClick(e, addOn.name, !addOn.isEnabled) : () => false)}
+            >
+              <Checkbox disabled={!isEligible} checked={addOn.isEnabled} />
+              <div className="bold">{addOn.title}</div>
+              {isUpgrade && (
+                <div className="flexbox column">
+                  <div className={`link-color bold ${classes.price}`}>{addOn[updatedPlan].price}</div>
+                  <div>{addOn[updatedPlan].deviceCount}</div>
+                </div>
+              )}
+              <InfoText variant="dense">{addOn.description}</InfoText>
+              <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener noreferrer">
+                Learn more
+              </a>
+            </div>
+          );
+        })}
       </div>
     </>
   );

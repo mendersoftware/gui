@@ -176,7 +176,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
       Extend Mender features with our add-ons. Select one or more from the list and submit to request add-ons to be added to your plan. We'll adjust your subscription and confirm it with you.
     </p>
     <div
-      class="planPanel emotion-0 addon upgrade "
+      class="planPanel emotion-0 addon upgrade  "
     >
       <span
         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-1"
@@ -212,7 +212,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
         <div
           class="link-color bold emotion-5"
         >
-          $10/month
+          $11/month
         </div>
         <div>
           for first 50 devices
@@ -233,7 +233,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
       </a>
     </div>
     <div
-      class="planPanel emotion-0 addon upgrade "
+      class="planPanel emotion-0 addon upgrade  "
     >
       <span
         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-1"
@@ -269,7 +269,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
         <div
           class="link-color bold emotion-5"
         >
-          $24/month
+          $27/month
         </div>
         <div>
           for first 50 devices

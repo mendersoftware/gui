@@ -74,7 +74,7 @@ exports[`PlanSelection component renders correctly 1`] = `
         <div
           class="link-color bold emotion-2"
         >
-          $29/month
+          $32/month
         </div>
         <div>
           for first 50 devices
@@ -108,7 +108,7 @@ exports[`PlanSelection component renders correctly 1`] = `
         <div
           class="link-color bold emotion-2"
         >
-          $249/month
+          $269/month
         </div>
         <div>
           for first 250 devices
