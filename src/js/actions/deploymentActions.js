@@ -1,4 +1,6 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
+import isUUID from 'validator/lib/isUUID';
+
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
 import { SORTING_OPTIONS } from '../constants/appConstants';
@@ -28,15 +30,20 @@ const {
 // default per page until pagination and counting integrated
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
+export const deriveDeploymentGroup = ({ filter = {}, group, groups = [], name }) => (group || (groups.length === 1 && !isUUID(name)) ? groups[0] : filter.name);
+
 const transformDeployments = (deployments, deploymentsById) =>
   deployments.sort(startTimeSort).reduce(
     (accu, item) => {
-      accu.deployments[item.id] = {
+      let deployment = {
         ...deploymentPrototype,
         ...deploymentsById[item.id],
         ...item,
         name: decodeURIComponent(item.name)
       };
+      // deriving the group in a second step to potentially make use of the merged data from the existing group state + the decoded name
+      deployment = { ...deployment, group: deriveDeploymentGroup(deployment) };
+      accu.deployments[item.id] = deployment;
       accu.deploymentIds.push(item.id);
       return accu;
     },
