@@ -19,6 +19,7 @@ if [ -n "$GATEWAY_PORT" ]; then
     HOSTNAME=$HOSTNAME':'$GATEWAY_PORT
 fi
 
+wget -O /var/www/mender-gui/dist/tags.json https://api.github.com/repos/mendersoftware/gui/tags?per_page=10
 cat >/var/www/mender-gui/dist/env.js <<EOF
   mender_environment = {
     hostAddress: "$HOSTNAME",

@@ -67,6 +67,24 @@ const getGroupSuccessNotification = groupName => (
   </>
 );
 
+const defaultResults = {
+  receivedDynamicGroups: {
+    type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
+    groups: {
+      testGroupDynamic: {
+        deviceIds: [],
+        filters: [
+          { key: 'id', operator: '$in', scope: 'identity', value: ['a1'] },
+          { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
+          { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
+        ],
+        id: 'filter1',
+        total: 0
+      }
+    }
+  }
+};
+
 /* eslint-disable sonarjs/no-identical-functions */
 describe('selecting things', () => {
   it('should allow device list selections', async () => {
@@ -629,23 +647,7 @@ describe('static grouping related actions', () => {
 describe('dynamic grouping related actions', () => {
   it('should allow retrieving dynamic groups', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [
-      {
-        type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
-        groups: {
-          testGroupDynamic: {
-            deviceIds: [],
-            filters: [
-              { key: 'id', operator: '$in', scope: 'identity', value: ['a1'] },
-              { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
-              { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
-            ],
-            id: 'filter1',
-            total: 0
-          }
-        }
-      }
-    ];
+    const expectedActions = [defaultResults.receivedDynamicGroups];
     await store.dispatch(getDynamicGroups());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
@@ -661,7 +663,8 @@ describe('dynamic grouping related actions', () => {
         groupName,
         group: { deviceIds: [], total: 0, filters: [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }] }
       },
-      { type: SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } }
+      { type: SET_SNACKBAR, snackbar: { message: getGroupSuccessNotification(groupName) } },
+      defaultResults.receivedDynamicGroups
     ];
     await store.dispatch(addDynamicGroup(groupName, [{ key: 'group', operator: '$nin', scope: 'system', value: ['testGroup'] }]));
     const storeActions = store.getActions();
@@ -697,7 +700,8 @@ describe('dynamic grouping related actions', () => {
     const expectedActions = [
       { type: DeviceConstants.ADD_DYNAMIC_GROUP, groupName, group: { deviceIds: [], total: 0, filters: [] } },
       { type: DeviceConstants.SET_DEVICE_FILTERS, filters: defaultState.devices.groups.byId.testGroupDynamic.filters },
-      { type: SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } }
+      { type: SET_SNACKBAR, snackbar: { message: groupUpdateSuccessMessage } },
+      defaultResults.receivedDynamicGroups
     ];
     await store.dispatch(updateDynamicGroup(groupName, []));
     const storeActions = store.getActions();

@@ -40,6 +40,7 @@ exports[`LeftNav Component renders correctly 1`] = `
   padding-right: 16px;
   padding-top: 11px;
   padding-bottom: 11px;
+  padding: 22px 16px 22px 42px;
 }
 
 .emotion-2.Mui-focusVisible {
@@ -213,7 +214,6 @@ exports[`LeftNav Component renders correctly 1`] = `
       aria-current="page"
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-2 active"
       href="/"
-      style="padding: 22px 16px 22px 42px;"
     >
       <div
         class="MuiListItemText-root emotion-3"
@@ -229,7 +229,6 @@ exports[`LeftNav Component renders correctly 1`] = `
     <a
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-2"
       href="/devices"
-      style="padding: 22px 16px 22px 42px;"
     >
       <div
         class="MuiListItemText-root emotion-3"
@@ -245,7 +244,6 @@ exports[`LeftNav Component renders correctly 1`] = `
     <a
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-2"
       href="/releases"
-      style="padding: 22px 16px 22px 42px;"
     >
       <div
         class="MuiListItemText-root emotion-3"
@@ -261,7 +259,6 @@ exports[`LeftNav Component renders correctly 1`] = `
     <a
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-2"
       href="/deployments"
-      style="padding: 22px 16px 22px 42px;"
     >
       <div
         class="MuiListItemText-root emotion-3"

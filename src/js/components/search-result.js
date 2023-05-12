@@ -9,7 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { setSearchState, setSnackbar, setVersionInfo } from '../actions/appActions';
+import { setSearchState, setSnackbar } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import { getIdAttribute, getMappedDevicesList, getOnboardingState, getUserSettings } from '../selectors';
@@ -151,7 +151,7 @@ export const SearchResult = ({
   );
 };
 
-const actionCreators = { setDeviceListState, setSearchState, setSnackbar, setVersionInfo };
+const actionCreators = { setDeviceListState, setSearchState, setSnackbar };
 
 const mapStateToProps = state => {
   const { columnSelection } = getUserSettings(state);

@@ -43,7 +43,7 @@ export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
       devicesLink = `${devicesLink}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
     }
   } else if (group && group !== ALL_DEVICES) {
-    devicesLink = `${devicesLink}?group=${group}`;
+    devicesLink = `${devicesLink}?inventory=group:eq:${group}`;
   }
   return devicesLink;
 };

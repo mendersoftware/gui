@@ -10,7 +10,7 @@ exports[`DeviceStatusNotification Component renders correctly 1`] = `
 
 .emotion-0.onboard {
   background: #f7f7f7;
-  padding: 12px;
+  padding: 10px;
 }
 
 .emotion-1 {

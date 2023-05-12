@@ -12,7 +12,7 @@ const useStyles = makeStyles()(theme => ({
     flexGrow: 1,
     ['&.onboard']: {
       background: theme.palette.grey[400],
-      padding: theme.spacing(1.5)
+      padding: 10
     }
   }
 }));

@@ -12,8 +12,6 @@ import {
   addDynamicGroup,
   addStaticGroup,
   getAllDeviceCounts,
-  getDynamicGroups,
-  getGroups,
   preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
@@ -56,8 +54,6 @@ export const DeviceGroups = ({
   filteringAttributes,
   filters,
   getAllDeviceCounts,
-  getDynamicGroups,
-  getGroups,
   groupCount,
   groupFilters,
   groups,
@@ -100,10 +96,6 @@ export const DeviceGroups = ({
   });
 
   const { refreshTrigger, selectedId, state: selectedState } = deviceListState;
-
-  useEffect(() => {
-    refreshGroups();
-  }, [groupCount]);
 
   useEffect(() => {
     if (!deviceTimer.current) {
@@ -163,14 +155,6 @@ export const DeviceGroups = ({
   /*
    * Groups
    */
-  const refreshGroups = () => {
-    let tasks = [getGroups()];
-    if (isEnterprise) {
-      tasks.push(getDynamicGroups());
-    }
-    return Promise.all(tasks).catch(console.log);
-  };
-
   const removeCurrentGroup = () => {
     const request = groupFilters.length ? removeDynamicGroup(selectedGroup) : removeStaticGroup(selectedGroup);
     return request.then(toggleGroupRemoval).catch(console.log);
@@ -190,7 +174,6 @@ export const DeviceGroups = ({
       setCreateGroupExplanation(false);
       setModifyGroupDialog(false);
       setFromFilters(false);
-      refreshGroups();
     });
   };
 
@@ -340,8 +323,6 @@ const actionCreators = {
   addDynamicGroup,
   addStaticGroup,
   getAllDeviceCounts,
-  getDynamicGroups,
-  getGroups,
   preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
