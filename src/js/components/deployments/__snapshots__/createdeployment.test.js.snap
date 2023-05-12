@@ -74,7 +74,7 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -88,7 +88,7 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-1 .MuiFilledInput-root {
@@ -627,7 +627,7 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -641,7 +641,7 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-1 .MuiFilledInput-root {
@@ -1728,7 +1728,7 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 }
 
 .emotion-3 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-3 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -1742,7 +1742,7 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 }
 
 .emotion-3 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-3 .MuiFilledInput-root {
@@ -2402,7 +2402,7 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 }
 
 .emotion-3 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-3 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -2416,7 +2416,7 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 }
 
 .emotion-3 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-3 .MuiFilledInput-root {
@@ -4841,6 +4841,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
             </div>
             <input
               aria-hidden="true"
+              aria-invalid="false"
               class="MuiSelect-nativeInput emotion-11"
               disabled=""
               tabindex="-1"
@@ -5433,6 +5434,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             </div>
             <input
               aria-hidden="true"
+              aria-invalid="false"
               class="MuiSelect-nativeInput emotion-12"
               tabindex="-1"
               value="0"
@@ -8088,7 +8090,7 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -8102,7 +8104,7 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-1 .MuiFilledInput-root {
@@ -8544,7 +8546,7 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-input {
-  padding: 7.5px 4px 7.5px 6px;
+  padding: 7.5px 4px 7.5px 5px;
 }
 
 .emotion-1 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
@@ -8558,7 +8560,7 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 }
 
 .emotion-1 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
-  padding: 2.5px 4px 2.5px 6px;
+  padding: 2.5px 4px 2.5px 8px;
 }
 
 .emotion-1 .MuiFilledInput-root {

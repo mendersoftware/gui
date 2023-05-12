@@ -534,6 +534,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
   padding-right: 16px;
   padding-top: 11px;
   padding-bottom: 11px;
+  padding: 22px 16px 22px 42px;
 }
 
 .emotion-16.Mui-focusVisible {
@@ -886,7 +887,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             aria-current="page"
             class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-16 active"
             href="/"
-            style="padding: 22px 16px 22px 42px;"
           >
             <div
               class="MuiListItemText-root emotion-17"
@@ -902,7 +902,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
           <a
             class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-16"
             href="/devices"
-            style="padding: 22px 16px 22px 42px;"
           >
             <div
               class="MuiListItemText-root emotion-17"
@@ -918,7 +917,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
           <a
             class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-16"
             href="/releases"
-            style="padding: 22px 16px 22px 42px;"
           >
             <div
               class="MuiListItemText-root emotion-17"
@@ -934,7 +932,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
           <a
             class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav emotion-16"
             href="/deployments"
-            style="padding: 22px 16px 22px 42px;"
           >
             <div
               class="MuiListItemText-root emotion-17"

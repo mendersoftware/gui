@@ -1,4 +1,4 @@
-FROM node:19.8.1-alpine AS base
+FROM node:20.0.0-alpine AS base
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
 RUN npm ci
@@ -12,7 +12,6 @@ RUN npm run build
 
 FROM nginx:1.23.4-alpine
 EXPOSE 8080
-RUN mkdir -p /var/www/mender-gui/dist
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG
 ENV GIT_COMMIT_TAG="${GIT_COMMIT_TAG:-local_local}"
