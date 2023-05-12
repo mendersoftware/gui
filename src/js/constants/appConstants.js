@@ -49,7 +49,7 @@ export const PLANS = {
   os: {
     name: 'Basic',
     offer: true,
-    price: '$29/month',
+    price: '$32/month',
     deviceCount: startingDeviceCount.os,
     offerprice: '$23/month for first 50 devices',
     price2: 'for first 6 months;\n$29/month thereafter',
@@ -59,7 +59,7 @@ export const PLANS = {
   professional: {
     name: 'Professional',
     offer: true,
-    price: '$249/month',
+    price: '$269/month',
     deviceCount: startingDeviceCount.professional,
     offerprice: '$200/month for first 50 devices',
     price2: 'for first 6 months;\n$249/month thereafter',
@@ -81,38 +81,41 @@ export const ADDONS = {
     description: 'Expand your plan with device configuration features',
     needs: ['hasDeviceConfig'],
     os: {
-      price: '$10/month',
+      price: '$11/month',
       deviceCount: startingDeviceCount.os
     },
     professional: {
-      price: '$60/month',
+      price: '$65/month',
       deviceCount: startingDeviceCount.professional
-    }
+    },
+    eligible: ['os', 'professional', 'enterprise']
   },
   troubleshoot: {
     title: 'Troubleshoot',
     description: 'Expand your plan with device troubleshooting features',
     needs: ['hasDeviceConnect'],
     os: {
-      price: '$24/month',
+      price: '$27/month',
       deviceCount: startingDeviceCount.os
     },
     professional: {
-      price: '$67/month',
+      price: '$72/month',
       deviceCount: startingDeviceCount.professional
-    }
+    },
+    eligible: ['os', 'professional', 'enterprise']
   },
   monitor: {
     title: 'Monitor',
     description: 'Expand your plan with device monitoring features',
     needs: ['hasMonitor'],
     os: {
-      price: '$24/month',
-      deviceCount: startingDeviceCount.os
+      price: '-',
+      deviceCount: '-'
     },
     professional: {
-      price: '$67/month',
+      price: '$86/month',
       deviceCount: startingDeviceCount.professional
-    }
+    },
+    eligible: ['professional', 'enterprise']
   }
 };
