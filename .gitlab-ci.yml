@@ -95,7 +95,7 @@ test:types:
     - job: build:docker
       artifacts: true
   services:
-    - docker:dind
+    - docker:23.0.6-dind-alpine3.17
   before_script:
     - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
     - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
@@ -199,11 +199,11 @@ test:docs-links:hosted:
 
 test:prep:
   stage: pre-test
-  image: docker
+  image: docker:23.0.4-alpine3.17
   only:
     - staging
   services:
-    - docker:dind
+    - docker:23.0.6-dind-alpine3.17
   script:
     - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client:master -c "cp mender-stress-test-client /extract/"
   artifacts:
@@ -226,7 +226,7 @@ build:docker:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
   stage: .post
   services:
-    - docker:dind
+    - docker:23.0.6-dind-alpine3.17
   cache:
     key:
       files:
@@ -322,7 +322,7 @@ publish:disclaimer:
     - job: build:docker
       artifacts: true
   services:
-    - docker:dind
+    - docker:23.0.6-dind-alpine3.17
   variables:
     DOCKER_BUILDKIT: 1
   script:
