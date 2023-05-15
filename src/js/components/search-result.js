@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -22,7 +22,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { setSearchState, setSnackbar } from '../actions/appActions';
+import { setSearchState } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import { getIdAttribute, getMappedDevicesList, getOnboardingState, getUserSettings } from '../selectors';
@@ -63,20 +63,16 @@ const ResultTitle = ({ onClick, term, total }) => {
   );
 };
 
-export const SearchResult = ({
-  columnSelection,
-  customColumnSizes,
-  devices,
-  idAttribute,
-  onboardingState,
-  onToggleSearchResult,
-  open = true,
-  searchState,
-  setDeviceListState,
-  setSearchState,
-  setSnackbar
-}) => {
+export const SearchResult = ({ onToggleSearchResult, open = true }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { columnSelection } = useSelector(getUserSettings);
+  const customColumnSizes = useSelector(state => state.users.customColumns);
+  const devices = useSelector(state => getMappedDevicesList(state, 'search'));
+  const idAttribute = useSelector(getIdAttribute);
+  const onboardingState = useSelector(getOnboardingState);
+  const searchState = useSelector(state => state.app.searchState);
 
   const { classes } = useStyles();
 
@@ -103,13 +99,13 @@ export const SearchResult = ({
   }, [open, searchTerm]);
 
   const onDeviceSelect = device => {
-    setDeviceListState({ selectedId: device.id });
+    dispatch(setDeviceListState({ selectedId: device.id }));
     onToggleSearchResult();
     setTimeout(() => navigate(`/devices/${device.status}?id=${device.id}`), TIMEOUTS.debounceShort);
   };
 
   const handlePageChange = page => {
-    setSearchState({ page });
+    dispatch(setSearchState({ page }));
   };
 
   const onSortChange = attribute => {
@@ -118,11 +114,11 @@ export const SearchResult = ({
     if (changedSortCol !== sortCol) {
       changedSortDown = SORTING_OPTIONS.desc;
     }
-    setSearchState({ page: 1, sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope } });
+    dispatch(setSearchState({ page: 1, sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope } }));
   };
 
   const onClearClick = () => {
-    setSearchState({ searchTerm: '' });
+    dispatch(setSearchState({ searchTerm: '' }));
     onToggleSearchResult();
   };
 
@@ -157,25 +153,10 @@ export const SearchResult = ({
           onPageChange={handlePageChange}
           pageLoading={isSearching}
           onExpandClick={onDeviceSelect}
-          setSnackbar={setSnackbar}
         />
       )}
     </Drawer>
   );
 };
 
-const actionCreators = { setDeviceListState, setSearchState, setSnackbar };
-
-const mapStateToProps = state => {
-  const { columnSelection } = getUserSettings(state);
-  return {
-    columnSelection,
-    customColumnSizes: state.users.customColumns,
-    devices: getMappedDevicesList(state, 'search'),
-    idAttribute: getIdAttribute(state),
-    onboardingState: getOnboardingState(state),
-    searchState: state.app.searchState
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(SearchResult);
+export default SearchResult;

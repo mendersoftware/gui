@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
@@ -31,14 +31,26 @@ import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import logo from '../../../assets/img/headerlogo.png';
 import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
-import { initializeAppData, setFirstLoginAfterSignup, setSearchState, setSnackbar } from '../../actions/appActions';
+import { initializeAppData, setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
 import { getOnboardingState } from '../../actions/onboardingActions';
 import { getUser, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
 import * as UserConstants from '../../constants/userConstants';
-import { decodeSessionToken, extractErrorMessage, isEmpty } from '../../helpers';
-import { getDocsVersion, getIsEnterprise, getUserCapabilities, getUserSettings } from '../../selectors';
+import { decodeSessionToken, extractErrorMessage } from '../../helpers';
+import {
+  getAcceptedDevices,
+  getCurrentUser,
+  getDeviceCountsByStatus,
+  getDeviceLimit,
+  getDocsVersion,
+  getFeatures,
+  getIsEnterprise,
+  getOrganization,
+  getShowHelptips,
+  getUserCapabilities,
+  getUserSettings
+} from '../../selectors';
 import Tracking from '../../tracking';
 import { useDebounce } from '../../utils/debouncehook';
 import Search from '../common/search';
@@ -91,42 +103,32 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Header = ({
-  acceptedDevices,
-  allowUserManagement,
-  announcement,
-  demo,
-  deviceLimit,
-  docsVersion,
-  firstLoginAfterSignup,
-  getOnboardingState,
-  getUser,
-  hasTrackingEnabled,
-  initializeAppData,
-  inProgress,
-  isEnterprise,
-  isHosted,
-  isSearching,
-  logoutUser,
-  mode,
-  multitenancy,
-  organization,
-  pendingDevices,
-  searchTerm,
-  setFirstLoginAfterSignup,
-  setHideAnnouncement,
-  setSearchState,
-  showHelptips,
-  toggleHelptips,
-  user
-}) => {
+export const Header = ({ mode }) => {
   const { classes } = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [gettingUser, setGettingUser] = useState(false);
   const [hasOfferCookie, setHasOfferCookie] = useState(false);
-
   const sessionId = useDebounce(getToken(), TIMEOUTS.debounceDefault);
+
+  const organization = useSelector(getOrganization);
+  const { canManageUsers: allowUserManagement } = useSelector(getUserCapabilities);
+  const { total: acceptedDevices = 0 } = useSelector(getAcceptedDevices);
+  const announcement = useSelector(state => state.app.hostedAnnouncement);
+  const deviceLimit = useSelector(getDeviceLimit);
+  const docsVersion = useSelector(getDocsVersion);
+  const firstLoginAfterSignup = useSelector(state => state.app.firstLoginAfterSignup);
+  const { trackingConsentGiven: hasTrackingEnabled } = useSelector(getUserSettings);
+  const inProgress = useSelector(state => state.deployments.byStatus.inprogress.total);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const { isDemoMode: demo, hasMultitenancy, isHosted } = useSelector(getFeatures);
+  const isSearching = useSelector(state => state.app.searchState.isSearching);
+  const multitenancy = hasMultitenancy || isEnterprise || isHosted;
+  const searchTerm = useSelector(state => state.app.searchState.searchTerm);
+  const showHelptips = useSelector(getShowHelptips);
+  const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
+  const user = useSelector(getCurrentUser);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
@@ -138,7 +140,7 @@ export const Header = ({
       Tracking.setOrganizationUser(organization, user);
       if (firstLoginAfterSignup) {
         Tracking.pageview('/signup/complete');
-        setFirstLoginAfterSignup(false);
+        dispatch(setFirstLoginAfterSignup(false));
       }
     }
   }, [sessionId, user.id, user.email, gettingUser, loggingOut]);
@@ -157,11 +159,11 @@ export const Header = ({
     setGettingUser(true);
     // get current user
     return (
-      getUser(UserConstants.OWN_USER_ID)
-        .then(initializeAppData)
+      dispatch(getUser(UserConstants.OWN_USER_ID))
+        .then(() => dispatch(initializeAppData()))
         // this is allowed to fail if no user information are available
         .catch(err => console.log(extractErrorMessage(err)))
-        .then(getOnboardingState)
+        .then(() => dispatch(getOnboardingState()))
         .finally(() => setGettingUser(false))
     );
   };
@@ -170,10 +172,10 @@ export const Header = ({
     setGettingUser(false);
     setLoggingOut(true);
     setAnchorEl(null);
-    logoutUser();
+    dispatch(logoutUser());
   };
 
-  const onSearch = searchTerm => setSearchState({ searchTerm, page: 1 });
+  const onSearch = searchTerm => dispatch(setSearchState({ searchTerm, page: 1 }));
 
   const setHideOffer = () => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
@@ -193,7 +195,7 @@ export const Header = ({
           errorIconClassName={classes.redAnnouncementIcon}
           iconClassName={classes.demoAnnouncementIcon}
           sectionClassName={classes.demoTrialAnnouncement}
-          onHide={setHideAnnouncement}
+          onHide={() => dispatch(setHideAnnouncement(true))}
         />
       )}
       {showOffer && <OfferHeader docsVersion={docsVersion} onHide={setHideOffer} />}
@@ -252,7 +254,7 @@ export const Header = ({
                 User management
               </MenuItem>
             )}
-            <MenuItem onClick={toggleHelptips}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+            <MenuItem onClick={() => dispatch(toggleHelptips())}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
             <MenuItem component={Link} to="/help/get-started">
               Help & support
             </MenuItem>
@@ -271,41 +273,4 @@ export const Header = ({
   );
 };
 
-const actionCreators = {
-  getOnboardingState,
-  getUser,
-  setHideAnnouncement,
-  initializeAppData,
-  logoutUser,
-  setFirstLoginAfterSignup,
-  setSnackbar,
-  setSearchState,
-  toggleHelptips
-};
-
-const mapStateToProps = state => {
-  const organization = !isEmpty(state.organization.organization) ? state.organization.organization : { plan: 'os', id: null };
-  const { canManageUsers: allowUserManagement } = getUserCapabilities(state);
-  return {
-    acceptedDevices: state.devices.byStatus.accepted.total,
-    allowUserManagement,
-    announcement: state.app.hostedAnnouncement,
-    deviceLimit: state.devices.limit,
-    demo: state.app.features.isDemoMode,
-    docsVersion: getDocsVersion(state),
-    firstLoginAfterSignup: state.app.firstLoginAfterSignup,
-    hasTrackingEnabled: getUserSettings(state).trackingConsentGiven,
-    inProgress: state.deployments.byStatus.inprogress.total,
-    isEnterprise: getIsEnterprise(state),
-    isHosted: state.app.features.isHosted,
-    isSearching: state.app.searchState.isSearching,
-    multitenancy: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
-    searchTerm: state.app.searchState.searchTerm,
-    showHelptips: state.users.showHelptips,
-    pendingDevices: state.devices.byStatus.pending.total,
-    organization,
-    user: state.users.byId[state.users.currentUser] || { email: '', id: null }
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Header);
+export default Header;

@@ -69,7 +69,7 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
     sendMessage({ typ: MessageTypes.New, props: { terminal_height: rows, terminal_width: cols } });
     setDimensions({ rows, cols });
     xtermRef.current.terminal.focus();
-  }, [socketInitialized, tryFit, xtermRef.current]);
+  }, [sessionId, socketInitialized, tryFit, xtermRef.current]);
 
   useEffect(() => {
     if (!socketInitialized || !xtermRef.current.terminal || !isVisible) {

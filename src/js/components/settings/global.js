@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
@@ -24,7 +24,16 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
-import { getDocsVersion, getIdAttribute, getOfflineThresholdSettings, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
+import {
+  getDocsVersion,
+  getFeatures,
+  getGlobalSettings as getGlobalSettingsSelector,
+  getIdAttribute,
+  getOfflineThresholdSettings,
+  getTenantCapabilities,
+  getUserCapabilities,
+  getUserRoles
+} from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import InfoHint from '../common/info-hint';
 import ArtifactGenerationSettings from './artifactgeneration';
@@ -245,31 +254,39 @@ export const GlobalSettingsDialog = ({
   );
 };
 
-export const GlobalSettingsContainer = ({
-  attributes,
-  changeNotificationSetting,
-  closeDialog,
-  dialog,
-  docsVersion,
-  getDeviceAttributes,
-  getGlobalSettings,
-  hasReporting,
-  isAdmin,
-  notificationChannelSettings,
-  offlineThresholdSettings,
-  saveGlobalSettings,
-  selectedAttribute,
-  settings,
-  tenantCapabilities,
-  userCapabilities
-}) => {
+export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
+  const dispatch = useDispatch();
+  const attributes = useSelector(state => {
+    // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
+    const attributes = state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit);
+    return attributes.reduce(
+      (accu, value) => {
+        accu.push({ value, label: value, scope: 'identity' });
+        return accu;
+      },
+      [
+        { value: 'name', label: 'Name', scope: 'tags' },
+        { value: 'id', label: 'Device ID', scope: 'identity' }
+      ]
+    );
+  });
+  const { hasReporting } = useSelector(getFeatures);
+  const { isAdmin } = useSelector(getUserRoles);
+  const docsVersion = useSelector(getDocsVersion);
+  const notificationChannelSettings = useSelector(state => state.monitor.settings.global.channels);
+  const offlineThresholdSettings = useSelector(getOfflineThresholdSettings);
+  const { attribute: selectedAttribute } = useSelector(getIdAttribute);
+  const settings = useSelector(getGlobalSettingsSelector);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const userCapabilities = useSelector(getUserCapabilities);
+
   const [updatedSettings, setUpdatedSettings] = useState({ ...settings });
 
   useEffect(() => {
     if (!settings) {
-      getGlobalSettings();
+      dispatch(getGlobalSettings());
     }
-    getDeviceAttributes();
+    dispatch(getDeviceAttributes());
   }, []);
 
   useEffect(() => {
@@ -283,7 +300,7 @@ export const GlobalSettingsContainer = ({
   };
 
   const saveAttributeSetting = (e, id_attribute) => {
-    return saveGlobalSettings({ ...updatedSettings, id_attribute }, false, true).then(() => {
+    return dispatch(saveGlobalSettings({ ...updatedSettings, id_attribute }, false, true)).then(() => {
       if (dialog) {
         closeDialog(e);
       }
@@ -310,10 +327,10 @@ export const GlobalSettingsContainer = ({
       isAdmin={isAdmin}
       notificationChannelSettings={notificationChannelSettings}
       offlineThresholdSettings={offlineThresholdSettings}
-      onChangeNotificationSetting={changeNotificationSetting}
+      onChangeNotificationSetting={(...args) => dispatch(changeNotificationSetting(...args))}
       onCloseClick={onCloseClick}
       onSaveClick={saveAttributeSetting}
-      saveGlobalSettings={saveGlobalSettings}
+      saveGlobalSettings={(...args) => dispatch(saveGlobalSettings(...args))}
       settings={settings}
       selectedAttribute={selectedAttribute}
       tenantCapabilities={tenantCapabilities}
@@ -321,35 +338,4 @@ export const GlobalSettingsContainer = ({
     />
   );
 };
-
-const actionCreators = { changeNotificationSetting, getDeviceAttributes, getGlobalSettings, saveGlobalSettings };
-
-const mapStateToProps = state => {
-  const attributes = state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit);
-  const id_attributes = attributes.reduce(
-    (accu, value) => {
-      accu.push({ value, label: value, scope: 'identity' });
-      return accu;
-    },
-    [
-      { value: 'name', label: 'Name', scope: 'tags' },
-      { value: 'id', label: 'Device ID', scope: 'identity' }
-    ]
-  );
-  return {
-    // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
-    attributes: id_attributes,
-    hasReporting: state.app.features.hasReporting,
-    isAdmin: getUserRoles(state).isAdmin,
-    devicesCount: Object.keys(state.devices.byId).length,
-    docsVersion: getDocsVersion(state),
-    notificationChannelSettings: state.monitor.settings.global.channels,
-    offlineThresholdSettings: getOfflineThresholdSettings(state),
-    selectedAttribute: getIdAttribute(state).attribute,
-    settings: state.users.globalSettings,
-    tenantCapabilities: getTenantCapabilities(state),
-    userCapabilities: getUserCapabilities(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(GlobalSettingsContainer);
+export default GlobalSettingsContainer;

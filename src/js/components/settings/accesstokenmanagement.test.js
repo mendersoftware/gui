@@ -14,18 +14,15 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { accessTokens, defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import AccessTokenManagement, {
-  AccessTokenCreationDialog,
-  AccessTokenRevocationDialog,
-  AccessTokenManagement as DisconnectedAccessTokenManagement
-} from './accesstokenmanagement';
+import * as UserActions from '../../actions/userActions';
+import AccessTokenManagement, { AccessTokenCreationDialog, AccessTokenRevocationDialog } from './accesstokenmanagement';
 
 const mockStore = configureStore([thunk]);
 
@@ -57,7 +54,7 @@ describe('UserManagement Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <AccessTokenManagement generateToken={jest.fn} getTokens={jest.fn} revokeToken={jest.fn} />
+        <AccessTokenManagement />
       </Provider>
     );
     const view = baseElement.firstChild.firstChild;
@@ -66,19 +63,12 @@ describe('UserManagement Component', () => {
   });
 
   it('works as expected', async () => {
-    const createMock = jest.fn();
-    const getMock = jest.fn();
-    const removeMock = jest.fn();
+    const getSpy = jest.spyOn(UserActions, 'getTokens');
+    const createSpy = jest.spyOn(UserActions, 'generateToken');
     const ui = (
-      <DisconnectedAccessTokenManagement
-        generateToken={createMock}
-        getTokens={getMock}
-        revokeToken={removeMock}
-        isEnterprise={false}
-        rolesById={defaultState.users.rolesById}
-        tokens={[]}
-        userRoles={['test']}
-      />
+      <Provider store={store}>
+        <AccessTokenManagement />
+      </Provider>
     );
     const { rerender } = render(ui);
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
@@ -88,13 +78,18 @@ describe('UserManagement Component', () => {
     expect(generateButton).toBeDisabled();
     await user.type(screen.getByPlaceholderText(/name/i), 'somename');
     expect(generateButton).not.toBeDisabled();
-    createMock.mockResolvedValue([Promise.resolve(), 'aNewToken']);
     await user.click(generateButton);
-    expect(createMock).toHaveBeenCalledWith({ expiresIn: 31536000, name: 'somename' });
     await waitFor(() => rerender(ui));
-    expect(screen.queryByText('aNewToken')).toBeInTheDocument();
+    expect(createSpy).toHaveBeenCalledWith({ expiresIn: 31536000, name: 'somename' });
+    await waitFor(() => expect(getSpy.mock.calls.length).toBeGreaterThanOrEqual(4));
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
+    await waitFor(() => rerender(ui));
     expect(screen.queryByRole('button', { name: /create token/i })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
+    expect(screen.getByText('aNewToken')).toBeInTheDocument();
   });
 
   [AccessTokenCreationDialog, AccessTokenRevocationDialog].forEach(async (Component, index) => {

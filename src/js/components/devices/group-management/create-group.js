@@ -12,19 +12,27 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
-import { getDocsVersion } from '../../../selectors';
+import { getDocsVersion, getSelectedGroupInfo } from '../../../selectors';
 import GroupDefinition from './group-definition';
 
-export const CreateGroup = ({ addListOfDevices, docsVersion, groups, isCreation, isCreationDynamic, onClose, selectedDevices, selectedGroup }) => {
+export const CreateGroup = ({ addListOfDevices, fromFilters, isCreation, onClose, selectedDevices }) => {
+  const isCreationDynamic = isCreation && fromFilters;
   const [invalid, setInvalid] = useState(true);
   const [isModification, setIsModification] = useState(!isCreation);
   const [newGroup, setNewGroup] = useState('');
   const [title, setTitle] = useState(isCreationDynamic ? 'Create a new group' : `Add ${selectedDevices.length ? 'selected ' : ''}devices to group`);
+
+  const docsVersion = useSelector(getDocsVersion);
+  const { selectedGroup } = useSelector(getSelectedGroupInfo);
+  // ensure that existing dynamic groups are only listed if a dynamic group should be created
+  const groups = useSelector(state =>
+    Object.keys(state.devices.groups.byId).filter(group => (fromFilters ? group !== UNGROUPED_GROUP.id : !state.devices.groups.byId[group].filters.length))
+  );
 
   const onNameChange = (isInvalid, newGroupName, isModification) => {
     const title = !isCreationDynamic ? `Add ${selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
@@ -60,17 +68,4 @@ export const CreateGroup = ({ addListOfDevices, docsVersion, groups, isCreation,
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  // ensure that existing dynamic groups are only listed if a dynamic group should be created
-  const groups = Object.keys(state.devices.groups.byId).filter(group =>
-    ownProps.fromFilters ? group !== UNGROUPED_GROUP.id : !state.devices.groups.byId[group].filters.length
-  );
-  return {
-    docsVersion: getDocsVersion(state),
-    groups,
-    isCreationDynamic: ownProps.isCreation && ownProps.fromFilters,
-    selectedGroup: state.devices.groups.selectedGroup
-  };
-};
-
-export default connect(mapStateToProps)(CreateGroup);
+export default CreateGroup;

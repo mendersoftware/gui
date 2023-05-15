@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React, { useCallback, useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@mui/icons-material';
@@ -33,8 +33,8 @@ import {
   storeSamlConfig
 } from '../../../actions/organizationActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
-import { createFileDownload, toggle, versionCompare } from '../../../helpers';
-import { getTenantCapabilities, getUserRoles } from '../../../selectors';
+import { createFileDownload, toggle } from '../../../helpers';
+import { getFeatures, getIsEnterprise, getIsPreview, getOrganization, getUserRoles } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { MenderTooltipClickable } from '../../common/mendertooltip';
 import Billing from './billing';
@@ -93,34 +93,27 @@ export const CopyTextToClipboard = ({ token }) => {
   );
 };
 
-export const Organization = ({
-  canPreview,
-  changeSamlConfig,
-  deleteSamlConfig,
-  downloadLicenseReport,
-  getSamlConfigs,
-  getUserOrganization,
-  isAdmin,
-  isEnterprise,
-  isHosted,
-  org,
-  samlConfigs,
-  setSnackbar,
-  storeSamlConfig
-}) => {
+export const Organization = () => {
   const [hasSingleSignOn, setHasSingleSignOn] = useState(false);
   const [isResettingSSO, setIsResettingSSO] = useState(false);
   const [isConfiguringSSO, setIsConfiguringSSO] = useState(false);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const { isAdmin } = useSelector(getUserRoles);
+  const canPreview = useSelector(getIsPreview);
+  const { isHosted } = useSelector(getFeatures);
+  const org = useSelector(getOrganization);
+  const samlConfigs = useSelector(state => state.organization.samlConfigs);
+  const dispatch = useDispatch();
 
   const { classes } = useStyles();
 
   useEffect(() => {
-    getUserOrganization();
+    dispatch(getUserOrganization());
   }, []);
 
   useEffect(() => {
     if (isEnterprise) {
-      getSamlConfigs();
+      dispatch(getSamlConfigs());
     }
   }, [isEnterprise]);
 
@@ -145,18 +138,18 @@ export const Organization = ({
   const onSaveSSOSettings = useCallback(
     (id, fileContent) => {
       if (isResettingSSO) {
-        return deleteSamlConfig(samlConfigs[0]).then(() => setIsResettingSSO(false));
+        return dispatch(deleteSamlConfig(samlConfigs[0])).then(() => setIsResettingSSO(false));
       }
       if (id) {
-        return changeSamlConfig({ id, config: fileContent });
+        return dispatch(changeSamlConfig({ id, config: fileContent }));
       }
-      return storeSamlConfig(fileContent);
+      return dispatch(storeSamlConfig(fileContent));
     },
     [isResettingSSO, changeSamlConfig, deleteSamlConfig, storeSamlConfig]
   );
 
   const onDownloadReportClick = () =>
-    downloadLicenseReport().then(report => createFileDownload(report, `Mender-license-report-${moment().format(moment.HTML5_FMT.DATE)}`));
+    dispatch(downloadLicenseReport()).then(report => createFileDownload(report, `Mender-license-report-${moment().format(moment.HTML5_FMT.DATE)}`));
 
   const onTenantInfoClick = () => {
     copy(`Organization: ${org.name}, Tenant ID: ${org.id}`);
@@ -214,7 +207,7 @@ export const Organization = ({
         </div>
       )}
       <Collapse className="margin-left-large" in={isConfiguringSSO}>
-        <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={setSnackbar} />
+        <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={message => dispatch(setSnackbar(message))} />
       </Collapse>
       {isHosted && <Billing />}
       {(canPreview || !isHosted) && isEnterprise && isAdmin && (
@@ -226,20 +219,4 @@ export const Organization = ({
   );
 };
 
-const actionCreators = { changeSamlConfig, deleteSamlConfig, downloadLicenseReport, getSamlConfigs, getUserOrganization, setSnackbar, storeSamlConfig };
-
-const mapStateToProps = state => {
-  const { isEnterprise } = getTenantCapabilities(state);
-  const { isAdmin } = getUserRoles(state);
-  return {
-    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
-    hasReporting: state.app.features.hasReporting,
-    isAdmin,
-    isEnterprise,
-    isHosted: state.app.features.isHosted,
-    org: state.organization.organization,
-    samlConfigs: state.organization.samlConfigs
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Organization);
+export default Organization;

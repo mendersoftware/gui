@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -26,7 +26,7 @@ import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getDocsVersion, getTenantCapabilities } from '../../../selectors';
+import { getDeviceCountsByStatus, getDocsVersion, getOnboardingState, getTenantCapabilities } from '../../../selectors';
 import InfoText from '../../common/infotext';
 import { DeviceSupportTip } from '../../helptips/helptooltips';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
@@ -104,21 +104,17 @@ const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVi
   );
 };
 
-export const DeviceConnectionDialog = ({
-  advanceOnboarding,
-  docsVersion,
-  hasMonitor,
-  onboardingDeviceType,
-  onboardingComplete,
-  onCancel,
-  pendingCount,
-  setDeviceListState
-}) => {
+export const DeviceConnectionDialog = ({ onCancel }) => {
   const [onDevice, setOnDevice] = useState(false);
   const [progress, setProgress] = useState(1);
   const [virtualDevice, setVirtualDevice] = useState(false);
+  const { pending: pendingCount } = useSelector(getDeviceCountsByStatus);
   const [pendingDevicesCount] = useState(pendingCount);
   const [hasMoreDevices, setHasMoreDevices] = useState(false);
+  const docsVersion = useSelector(getDocsVersion);
+  const { hasMonitor } = useSelector(getTenantCapabilities);
+  const { complete: onboardingComplete, deviceType: onboardingDeviceType } = useSelector(getOnboardingState);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,8 +123,8 @@ export const DeviceConnectionDialog = ({
 
   useEffect(() => {
     if ((virtualDevice || progress >= 2) && hasMoreDevices && !window.location.hash.includes('pending')) {
-      advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
-      setDeviceListState({ state: DEVICE_STATES.pending });
+      dispatch(advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START));
+      dispatch(setDeviceListState({ state: DEVICE_STATES.pending }));
       navigate('/devices/pending');
     }
   }, [advanceOnboarding, hasMoreDevices, progress, virtualDevice]);
@@ -144,7 +140,7 @@ export const DeviceConnectionDialog = ({
   };
 
   const onAdvance = () => {
-    advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
+    dispatch(advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START));
     setProgress(progress + 1);
   };
 
@@ -187,16 +183,4 @@ export const DeviceConnectionDialog = ({
   );
 };
 
-const actionCreators = { advanceOnboarding, setDeviceListState };
-
-const mapStateToProps = state => {
-  return {
-    docsVersion: getDocsVersion(state),
-    hasMonitor: getTenantCapabilities(state).hasMonitor,
-    pendingCount: state.devices.byStatus.pending.total,
-    onboardingComplete: state.onboarding.complete,
-    onboardingDeviceType: state.onboarding.deviceType
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(DeviceConnectionDialog);
+export default DeviceConnectionDialog;

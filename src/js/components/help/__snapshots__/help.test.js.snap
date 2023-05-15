@@ -1537,7 +1537,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-client"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-client"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -1697,7 +1697,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-artifact"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-artifact"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -1823,7 +1823,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-binary-delta"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-binary-delta"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -1983,7 +1983,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-cli"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-cli"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -2493,7 +2493,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-configure"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-configure"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -2993,7 +2993,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-connect"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-connect"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -3119,7 +3119,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-convert"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-convert"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -3619,7 +3619,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-gateway"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-gateway"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -3847,7 +3847,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               </div>
               <a
                 class=""
-                href="https://docs.mender.io/release-information/release-notes-changelog/mender-monitor"
+                href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-monitor"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -3877,7 +3877,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
      
     <a
       class=""
-      href="https://docs.mender.io/downloads"
+      href="https://docs.mender.io/development/downloads"
       rel="noopener noreferrer"
       target="_blank"
     >

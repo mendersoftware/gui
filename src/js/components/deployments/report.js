@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import {
@@ -38,7 +38,7 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { statCollector, toggle } from '../../helpers';
-import { getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getDevicesById, getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import Confirm from '../common/confirm';
 import LogDialog from '../common/dialogs/log';
@@ -84,35 +84,46 @@ export const DeploymentAbortButton = ({ abort, deployment }) => {
   );
 };
 
-export const DeploymentReport = props => {
-  const {
-    abort,
-    creator,
-    deployment,
-    devicesById,
-    getAuditLogs,
-    getDeviceLog,
-    getRelease,
-    getSingleDeployment,
-    idAttribute,
-    open,
-    onClose,
-    past,
-    retry,
-    release,
-    tenantCapabilities,
-    type,
-    updateDeploymentControlMap,
-    userCapabilities
-  } = props;
+export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) => {
+  const [deviceId, setDeviceId] = useState('');
+  const rolloutSchedule = useRef();
+  const timer = useRef();
+  const { classes } = useStyles();
+  const dispatch = useDispatch();
+  const { deployment, selectedDevices, selectedDeviceIds } = useSelector(state => {
+    const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
+    const { devices = {} } = deployment;
+    const { selectedDeviceIds } = state.deployments;
+    return {
+      deployment,
+      selectedDevices: selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] })),
+      selectedDeviceIds
+    };
+  });
+  const devicesById = useSelector(getDevicesById);
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const release = useSelector(state => {
+    const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
+    return deployment.artifact_name && state.releases.byId[deployment.artifact_name]
+      ? state.releases.byId[deployment.artifact_name]
+      : { device_types_compatible: [] };
+  });
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const userCapabilities = useSelector(getUserCapabilities);
+  // we can't filter by auditlog action via the api, so
+  // - fall back to the following filter
+  // - hope the deployment creation event is retrieved with the call to auditlogs api on report open
+  // - otherwise no creator will be shown
+  const { actor = {} } =
+    useSelector(state =>
+      state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectionState.selectedId && event.action === 'create')
+    ) || {};
+  const creator = actor.email;
+
   const { canAuditlog } = userCapabilities;
   const { hasAuditlogs } = tenantCapabilities;
   const { devices = {}, device_count, statistics = {}, type: deploymentType } = deployment;
   const { status: stats = {} } = statistics;
-  const { classes } = useStyles();
-  const [deviceId, setDeviceId] = useState('');
-  const rolloutSchedule = useRef();
-  const timer = useRef();
 
   useEffect(() => {
     if (!open) {
@@ -123,18 +134,20 @@ export const DeploymentReport = props => {
       timer.current = past ? null : setInterval(refreshDeployment, TIMEOUTS.fiveSeconds);
     }
     if ((deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) && deployment.artifact_name) {
-      getRelease(deployment.artifact_name);
+      dispatch(getRelease(deployment.artifact_name));
     }
     if (hasAuditlogs && canAuditlog) {
-      getAuditLogs({
-        page: 1,
-        perPage: 100,
-        startDate: undefined,
-        endDate: undefined,
-        user: undefined,
-        type: AUDIT_LOGS_TYPES.find(item => item.value === 'deployment'),
-        detail: deployment.name
-      });
+      dispatch(
+        getAuditLogs({
+          page: 1,
+          perPage: 100,
+          startDate: undefined,
+          endDate: undefined,
+          user: undefined,
+          type: AUDIT_LOGS_TYPES.find(item => item.value === 'deployment'),
+          detail: deployment.name
+        })
+      );
     }
     return () => {
       clearInterval(timer.current);
@@ -165,15 +178,15 @@ export const DeploymentReport = props => {
     if (!deployment.id) {
       return;
     }
-    return getSingleDeployment(deployment.id);
+    return dispatch(getSingleDeployment(deployment.id));
   };
 
-  const viewLog = id => getDeviceLog(deployment.id, id).then(() => setDeviceId(id));
+  const viewLog = id => dispatch(getDeviceLog(deployment.id, id)).then(() => setDeviceId(id));
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/deployments') + '/deployments'.length);
     copy(`${location}?open=true&id=${deployment.id}`);
-    setSnackbar('Link copied to clipboard');
+    dispatch(setSnackbar('Link copied to clipboard'));
   };
 
   const { log: logData } = devices[deviceId] || {};
@@ -192,7 +205,19 @@ export const DeploymentReport = props => {
     const { id, update_control_map = {} } = deployment;
     const { states } = update_control_map;
     const { states: updatedStates } = updatedMap;
-    updateDeploymentControlMap(id, { states: { ...states, ...updatedStates } });
+    dispatch(updateDeploymentControlMap(id, { states: { ...states, ...updatedStates } }));
+  };
+
+  const props = {
+    deployment,
+    getDeploymentDevices: (id, options) => dispatch(getDeploymentDevices(id, options)),
+    getDeviceAuth: id => dispatch(getDeviceAuth(id)),
+    getDeviceById: id => dispatch(getDeviceById(id)),
+    idAttribute,
+    selectedDeviceIds,
+    selectedDevices,
+    userCapabilities,
+    viewLog
   };
 
   return (
@@ -262,45 +287,4 @@ export const DeploymentReport = props => {
     </Drawer>
   );
 };
-
-const actionCreators = {
-  getAuditLogs,
-  getDeploymentDevices,
-  getDeviceAuth,
-  getDeviceById,
-  getDeviceLog,
-  getRelease,
-  getSingleDeployment,
-  setSnackbar,
-  updateDeploymentControlMap
-};
-
-const mapStateToProps = state => {
-  const { devices = {} } = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
-  const selectedDevices = state.deployments.selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] }));
-  const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
-  // we can't filter by auditlog action via the api, so
-  // - fall back to the following filter
-  // - hope the deployment creation event is retrieved with the call to auditlogs api on report open
-  // - otherwise no creator will be shown
-  const { actor = {} } =
-    state.organization.auditlog.events.find(event => event.object.id === state.deployments.selectionState.selectedId && event.action === 'create') || {};
-  return {
-    acceptedDevicesCount: state.devices.byStatus.accepted.total,
-    creator: actor.email,
-    deployment,
-    devicesById: state.devices.byId,
-    idAttribute: getIdAttribute(state).attribute,
-    isHosted: state.app.features.isHosted,
-    release:
-      deployment.artifact_name && state.releases.byId[deployment.artifact_name]
-        ? state.releases.byId[deployment.artifact_name]
-        : { device_types_compatible: [] },
-    selectedDeviceIds: state.deployments.selectedDeviceIds,
-    selectedDevices,
-    tenantCapabilities: getTenantCapabilities(state),
-    userCapabilities: getUserCapabilities(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(DeploymentReport);
+export default DeploymentReport;

@@ -889,13 +889,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
 }
 
 <div
-  aria-labelledby="mui-7"
+  aria-labelledby="mui-11"
   class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm emotion-0"
   role="dialog"
 >
   <h2
     class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-1"
-    id="mui-7"
+    id="mui-11"
   >
     Create new token
   </h2>
@@ -913,7 +913,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             aria-invalid="false"
             class="MuiInputBase-input MuiInput-input Mui-disabled emotion-5"
             disabled=""
-            id="mui-8"
+            id="mui-12"
             placeholder="Name"
             type="text"
             value=""
@@ -969,7 +969,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
         >
           expires on 
           <time
-            datetime="2020-01-13T13:00:00+00:00"
+            datetime="2020-01-13T13:00:01+00:00"
           >
             2020-01-13
           </time>
@@ -1218,13 +1218,13 @@ exports[`UserManagement Component renders AccessTokenRevocationDialog correctly 
 }
 
 <div
-  aria-labelledby="mui-9"
+  aria-labelledby="mui-13"
   class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm emotion-0"
   role="dialog"
 >
   <h2
     class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-1"
-    id="mui-9"
+    id="mui-13"
   >
     Revoke token
   </h2>

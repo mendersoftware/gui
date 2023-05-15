@@ -22,8 +22,10 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import { Password } from './password';
-import PasswordReset, { PasswordReset as PasswordResetComponent } from './passwordreset';
+import * as AppActions from '../../actions/appActions';
+import * as UserActions from '../../actions/userActions';
+import Password from './password';
+import PasswordReset from './passwordreset';
 
 const mockStore = configureStore([thunk]);
 
@@ -50,18 +52,20 @@ describe('PasswordReset Component', () => {
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     jest.useFakeTimers();
-    const submitCheck = jest.fn();
-    submitCheck.mockResolvedValue();
-    const snackbar = jest.fn();
+    const snackbarSpy = jest.spyOn(AppActions, 'setSnackbar');
+    const completeSpy = jest.spyOn(UserActions, 'passwordResetComplete');
+
     const secretHash = 'leHash';
 
     const ui = (
-      <MemoryRouter initialEntries={[`/password/${secretHash}`]}>
-        <Routes>
-          <Route path="password" element={<Password />} />
-          <Route path="password/:secretHash" element={<PasswordResetComponent passwordResetComplete={submitCheck} setSnackbar={snackbar} />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/password/${secretHash}`]}>
+          <Routes>
+            <Route path="password" element={<Password />} />
+            <Route path="password/:secretHash" element={<PasswordReset />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
     const { rerender } = testingLibRender(ui);
 
@@ -71,15 +75,14 @@ describe('PasswordReset Component', () => {
     await user.type(passwordInput, badPassword);
     await user.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
     await user.click(screen.getByRole('button', { name: /Save password/i }));
-    expect(snackbar).toHaveBeenCalledWith('The passwords you provided do not match, please check again.', 5000, '');
+    expect(snackbarSpy).toHaveBeenCalledWith('The passwords you provided do not match, please check again.', 5000, '');
     await user.clear(passwordInput);
     await user.type(passwordInput, goodPassword, { skipClick: true });
     await waitFor(() => rerender(ui));
-    submitCheck.mockResolvedValue(true);
     await user.click(screen.getByRole('button', { name: /Save password/i }));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Your password has been updated./i)).toBeInTheDocument();
-    expect(submitCheck).toHaveBeenCalledWith(secretHash, goodPassword);
+    expect(completeSpy).toHaveBeenCalledWith(secretHash, goodPassword);
     jest.useRealTimers();
   });
 });

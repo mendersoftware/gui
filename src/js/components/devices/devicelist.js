@@ -159,26 +159,23 @@ const getColumnsStyle = (columns, defaultSize, selectable) => {
   return getTemplateColumns(template.join(' '), selectable);
 };
 
-export const DeviceList = props => {
-  const {
-    columnHeaders,
-    customColumnSizes,
-    devices,
-    deviceListState,
-    idAttribute,
-    onChangeRowsPerPage,
-    PaginationProps = {},
-    onExpandClick,
-    onResizeColumns,
-    onPageChange,
-    onSelect,
-    onSort,
-    pageLoading,
-    pageTotal
-  } = props;
-
+export const DeviceList = ({
+  columnHeaders,
+  customColumnSizes,
+  devices,
+  deviceListState,
+  idAttribute,
+  onChangeRowsPerPage,
+  PaginationProps = {},
+  onExpandClick,
+  onResizeColumns,
+  onPageChange,
+  onSelect,
+  onSort,
+  pageLoading,
+  pageTotal
+}) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, selection: selectedRows = [], sort = {} } = deviceListState;
-
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const deviceListRef = useRef();
   const selectedRowsRef = useRef(selectedRows);

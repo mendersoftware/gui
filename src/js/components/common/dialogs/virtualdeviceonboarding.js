@@ -12,11 +12,11 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setOnboardingApproach } from '../../../actions/onboardingActions';
 import { initialState as onboardingReducerState } from '../../../reducers/onboardingReducer';
-import { getDocsVersion } from '../../../selectors';
+import { getDocsVersion, getFeatures, getOrganization } from '../../../selectors';
 import CopyCode from '../copy-code';
 
 export const getDemoDeviceCreationCommand = tenantToken =>
@@ -24,9 +24,14 @@ export const getDemoDeviceCreationCommand = tenantToken =>
     ? `TENANT_TOKEN='${tenantToken}'\ndocker run -it -p ${onboardingReducerState.demoArtifactPort}:${onboardingReducerState.demoArtifactPort} -e SERVER_URL='https://${window.location.hostname}' \\\n-e TENANT_TOKEN=$TENANT_TOKEN --pull=always mendersoftware/mender-client-qemu`
     : './demo --client up';
 
-export const VirtualDeviceOnboarding = ({ docsVersion, isHosted, setOnboardingApproach, tenantToken }) => {
+export const VirtualDeviceOnboarding = () => {
+  const dispatch = useDispatch();
+  const docsVersion = useSelector(getDocsVersion);
+  const { isHosted } = useSelector(getFeatures);
+  const { tenant_token: tenantToken } = useSelector(getOrganization);
+
   useEffect(() => {
-    setOnboardingApproach('virtual');
+    dispatch(setOnboardingApproach('virtual'));
   }, []);
 
   const codeToCopy = getDemoDeviceCreationCommand(tenantToken);
@@ -70,14 +75,4 @@ export const VirtualDeviceOnboarding = ({ docsVersion, isHosted, setOnboardingAp
   );
 };
 
-const actionCreators = { setOnboardingApproach };
-
-const mapStateToProps = state => {
-  return {
-    docsVersion: getDocsVersion(state),
-    isHosted: state.app.features.isHosted,
-    tenantToken: state.organization.organization.tenant_token
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(VirtualDeviceOnboarding);
+export default VirtualDeviceOnboarding;

@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useMemo } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@mui/icons-material';
 
@@ -23,8 +23,7 @@ import {
   getDeviceAttributes,
   getGroupDevices,
   getReportingLimits,
-  getReportsData,
-  selectGroup
+  getReportsData
 } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
@@ -80,51 +79,50 @@ const listSoftware = attributes => {
   return (rootFs ? [rootFs, ...remainder] : remainder).flatMap(softwareLayer => generateLayer(softwareLayer));
 };
 
-export const SoftwareDistribution = ({
-  attributes,
-  deriveReportsData,
-  getReportsData,
-  getDeviceAttributes,
-  getGroupDevices,
-  getReportingLimits,
-  groups,
-  hasDevices,
-  hasReporting,
-  isEnterprise,
-  reports,
-  reportsData,
-  saveUserSettings,
-  selectGroup
-}) => {
+export const SoftwareDistribution = () => {
+  const dispatch = useDispatch();
+
+  const reports = useSelector(
+    state =>
+      getUserSettings(state).reports ||
+      state.users.globalSettings[`${state.users.currentUser}-reports`] ||
+      (Object.keys(state.devices.byId).length ? defaultReports : [])
+  );
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = useSelector(state => state.devices.groups.byId);
+  const { hasReporting } = useSelector(getFeatures);
+  const attributes = useSelector(getAttributesList);
+  const hasDevices = useSelector(state => state.devices.byStatus[DEVICE_STATES.accepted].total);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const reportsData = useSelector(state => state.devices.reports);
+
   useEffect(() => {
-    getDeviceAttributes();
+    dispatch(getDeviceAttributes());
     if (hasReporting) {
-      getReportingLimits();
+      dispatch(getReportingLimits());
     }
   }, []);
 
   useEffect(() => {
     if (hasReporting) {
-      getReportsData();
+      dispatch(getReportsData());
       return;
     }
-    deriveReportsData();
+    dispatch(deriveReportsData());
   }, [JSON.stringify(reports)]);
 
   const addCurrentSelection = selection => {
     const newReports = [...reports, { ...defaultReports[0], ...selection }];
-    saveUserSettings({ reports: newReports });
+    dispatch(saveUserSettings({ reports: newReports }));
   };
 
   const onSaveChangedReport = (change, index) => {
     let newReports = [...reports];
     newReports.splice(index, 1, change);
-    saveUserSettings({ reports: newReports });
+    dispatch(saveUserSettings({ reports: newReports }));
   };
 
-  const removeReport = removedReport => {
-    saveUserSettings({ reports: reports.filter(report => report !== removedReport) });
-  };
+  const removeReport = removedReport => dispatch(saveUserSettings({ reports: reports.filter(report => report !== removedReport) }));
 
   const software = useMemo(() => listSoftware(hasReporting ? attributes : [rootfsImageVersion]), [JSON.stringify(attributes), hasReporting]);
 
@@ -143,11 +141,10 @@ export const SoftwareDistribution = ({
           <Component
             key={`report-${report.group}-${index}`}
             data={reportsData[index]}
-            getGroupDevices={getGroupDevices}
+            getGroupDevices={(...args) => dispatch(getGroupDevices(...args))}
             groups={groups}
             onClick={() => removeReport(report)}
             onSave={change => onSaveChangedReport(change, index)}
-            selectGroup={selectGroup}
             selection={report}
             software={software}
           />
@@ -163,33 +160,4 @@ export const SoftwareDistribution = ({
   );
 };
 
-const actionCreators = {
-  deriveReportsData,
-  getDeviceAttributes,
-  getGroupDevices,
-  getReportsData,
-  getReportingLimits,
-  saveUserSettings,
-  selectGroup
-};
-
-const mapStateToProps = state => {
-  const reports =
-    getUserSettings(state).reports ||
-    state.users.globalSettings[`${state.users.currentUser}-reports`] ||
-    (Object.keys(state.devices.byId).length ? defaultReports : []);
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  const { hasReporting } = getFeatures(state);
-  return {
-    attributes: getAttributesList(state),
-    groups,
-    hasDevices: state.devices.byStatus[DEVICE_STATES.accepted].total,
-    hasReporting,
-    isEnterprise: getIsEnterprise(state),
-    reports,
-    reportsData: state.devices.reports
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(SoftwareDistribution);
+export default SoftwareDistribution;

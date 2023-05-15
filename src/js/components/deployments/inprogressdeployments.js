@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
@@ -22,7 +22,7 @@ import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deplo
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { tryMapDeployments } from '../../helpers';
-import { getIdAttribute, getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getIdAttribute, getIsEnterprise, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
@@ -48,22 +48,23 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Progress = props => {
-  const {
-    abort,
-    canDeploy,
-    createClick,
-    getDeploymentsByStatus,
-    onboardingState,
-    pastDeploymentsCount,
-    pending,
-    pendingCount,
-    progress,
-    progressCount,
-    selectionState,
-    setDeploymentsState,
-    setSnackbar
-  } = props;
+export const Progress = ({ abort, createClick, ...remainder }) => {
+  const dispatch = useDispatch();
+  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
+  const progress = useSelector(
+    state => state.deployments.selectionState.inprogress.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments
+  );
+  const pending = useSelector(state => state.deployments.selectionState.pending.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments);
+  const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const onboardingState = useSelector(getOnboardingState);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const pastDeploymentsCount = useSelector(state => state.deployments.byStatus.finished.total);
+  const pendingCount = useSelector(state => state.deployments.byStatus.pending.total);
+  const progressCount = useSelector(state => state.deployments.byStatus.inprogress.total);
+  const selectionState = useSelector(state => state.deployments.selectionState);
+  const devices = useSelector(state => state.devices.byId);
+
   const { page: progressPage, perPage: progressPerPage } = selectionState.inprogress;
   const { page: pendingPage, perPage: pendingPerPage } = selectionState.pending;
 
@@ -79,7 +80,7 @@ export const Progress = props => {
 
   useEffect(() => {
     return () => {
-      clearAllRetryTimers(setSnackbar);
+      clearAllRetryTimers(dispatchedSetSnackbar);
     };
   }, []);
 
@@ -103,7 +104,7 @@ export const Progress = props => {
     let tasks = [refreshDeployments(DEPLOYMENT_STATES.inprogress), refreshDeployments(DEPLOYMENT_STATES.pending)];
     if (!onboardingState.complete && !pastDeploymentsCount) {
       // retrieve past deployments outside of the regular refresh cycle to not change the selection state for past deployments
-      getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false);
+      dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false));
     }
     return Promise.all(tasks)
       .then(() => {
@@ -119,15 +120,15 @@ export const Progress = props => {
   const refreshDeployments = useCallback(
     deploymentStatus => {
       const { page, perPage } = selectionState[deploymentStatus];
-      return getDeploymentsByStatus(deploymentStatus, page, perPage)
+      return dispatch(getDeploymentsByStatus(deploymentStatus, page, perPage))
         .then(deploymentsAction => {
-          clearRetryTimer(deploymentStatus, setSnackbar);
+          clearRetryTimer(deploymentStatus, dispatchedSetSnackbar);
           const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
           if (total && !deploymentIds.length) {
             return refreshDeployments(deploymentStatus);
           }
         })
-        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar))
+        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar))
         .finally(() => setDoneLoading(true));
     },
     [pendingPage, pendingPerPage, progressPage, progressPerPage]
@@ -144,7 +145,7 @@ export const Progress = props => {
     };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_INPROGRESS, onboardingState, { anchor });
   }
-
+  const props = { ...remainder, canDeploy, canConfigure, devices, idAttribute, isEnterprise };
   return doneLoading ? (
     <div className="fadeIn">
       {!!progress.length && (
@@ -159,8 +160,8 @@ export const Progress = props => {
             page={progressPage}
             pageSize={progressPerPage}
             rootRef={inprogressRef}
-            onChangeRowsPerPage={perPage => setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page: 1, perPage } })}
-            onChangePage={page => setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page } })}
+            onChangeRowsPerPage={perPage => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page: 1, perPage } }))}
+            onChangePage={page => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page } }))}
             type={DEPLOYMENT_STATES.inprogress}
           />
         </div>
@@ -177,8 +178,8 @@ export const Progress = props => {
             items={pending}
             page={pendingPage}
             pageSize={pendingPerPage}
-            onChangeRowsPerPage={perPage => setDeploymentsState({ [DEPLOYMENT_STATES.pending]: { page: 1, perPage } })}
-            onChangePage={page => setDeploymentsState({ [DEPLOYMENT_STATES.pending]: { page } })}
+            onChangeRowsPerPage={perPage => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.pending]: { page: 1, perPage } }))}
+            onChangePage={page => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.pending]: { page } }))}
             type={DEPLOYMENT_STATES.pending}
           />
         </div>
@@ -200,25 +201,4 @@ export const Progress = props => {
   );
 };
 
-const actionCreators = { getDeploymentsByStatus, setDeploymentsState, setSnackbar };
-
-const mapStateToProps = state => {
-  const progress = state.deployments.selectionState.inprogress.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const pending = state.deployments.selectionState.pending.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const { canConfigure, canDeploy } = getUserCapabilities(state);
-  return {
-    canConfigure,
-    canDeploy,
-    devices: state.devices.byId,
-    idAttribute: getIdAttribute(state).attribute,
-    onboardingState: getOnboardingState(state),
-    pastDeploymentsCount: state.deployments.byStatus.finished.total,
-    pending,
-    pendingCount: state.deployments.byStatus.pending.total,
-    progress,
-    progressCount: state.deployments.byStatus.inprogress.total,
-    selectionState: state.deployments.selectionState
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Progress);
+export default Progress;

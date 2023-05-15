@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '@mui/material';
@@ -22,8 +22,8 @@ import { setSnackbar } from '../../../actions/appActions';
 import { getSystemDevices } from '../../../actions/deviceActions';
 import { SORTING_OPTIONS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
-import { getDemoDeviceAddress, toggle, versionCompare } from '../../../helpers';
-import { getDocsVersion, getIdAttribute, getTenantCapabilities } from '../../../selectors';
+import { getDemoDeviceAddress, toggle } from '../../../helpers';
+import { getDevicesById, getDocsVersion, getIdAttribute, getIsPreview, getOrganization, getTenantCapabilities } from '../../../selectors';
 import { TwoColumnData } from '../../common/configurationobject';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { getHeaders } from '../authorized-devices';
@@ -34,24 +34,17 @@ import DeviceDataCollapse from './devicedatacollapse';
 
 const useStyles = makeStyles()(theme => ({ container: { maxWidth: 600, marginTop: theme.spacing(), marginBottom: theme.spacing() } }));
 
-export const DeviceSystem = ({
-  columnSelection,
-  device,
-  devicesById,
-  docsVersion,
-  getSystemDevices,
-  hasFullFiltering,
-  idAttribute,
-  onConnectToGatewayClick,
-  openSettingsDialog,
-  setSnackbar
-}) => {
+export const DeviceSystem = ({ columnSelection, device, docsVersion, onConnectToGatewayClick, openSettingsDialog }) => {
   const [columnHeaders, setColumnHeaders] = useState([]);
   const [headerKeys, setHeaderKeys] = useState([]);
   const [page, setPage] = useState(DEVICE_LIST_DEFAULTS.page);
   const [perPage, setPerPage] = useState(DEVICE_LIST_DEFAULTS.perPage);
   const { classes } = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const devicesById = useSelector(getDevicesById);
+  const idAttribute = useSelector(getIdAttribute);
+  const hasFullFiltering = useSelector(getTenantCapabilities);
 
   const { systemDeviceIds = [], systemDeviceTotal = 0 } = device;
   const deviceIp = getDemoDeviceAddress([device]);
@@ -74,7 +67,7 @@ export const DeviceSystem = ({
 
   useEffect(() => {
     if (device.attributes) {
-      getSystemDevices(device.id, { page, perPage, sortOptions });
+      dispatch(getSystemDevices(device.id, { page, perPage, sortOptions }));
     }
   }, [device.id, device.attributes?.mender_is_gateway, page, perPage, sortOptions]);
 
@@ -83,7 +76,7 @@ export const DeviceSystem = ({
   return (
     <>
       <DeviceDataCollapse title="Mender Gateway">
-        <TwoColumnData config={{ 'Server IP': deviceIp }} compact setSnackbar={setSnackbar} />
+        <TwoColumnData config={{ 'Server IP': deviceIp }} compact setSnackbar={message => dispatch(setSnackbar(message))} />
       </DeviceDataCollapse>
       <DeviceDataCollapse className={classes.container} title="System for this gateway">
         <EnterpriseNotification isEnterprise={hasFullFiltering} benefit="see devices connected to your gateway device for easy access" />
@@ -127,13 +120,17 @@ export const DeviceSystem = ({
   );
 };
 
-const DeviceSystemTab = ({ docsVersion, device, isPreRelease, tenantToken, ...remainder }) => {
+const DeviceSystemTab = ({ device, ...remainder }) => {
   const [open, setOpen] = useState(false);
+  const docsVersion = useSelector(getDocsVersion);
+  const isPreRelease = useSelector(getIsPreview);
+  const { tenant_token: tenantToken } = useSelector(getOrganization);
+
   const gatewayIp = getDemoDeviceAddress([device]);
   const toggleDialog = () => setOpen(toggle);
   return (
     <>
-      <DeviceSystem device={device} docsVersion={docsVersion} onConnectToGatewayClick={toggleDialog} {...remainder} />
+      <DeviceSystem onConnectToGatewayClick={toggleDialog} {...{ device, docsVersion, ...remainder }} />
       {open && (
         <ConnectToGatewayDialog docsVersion={docsVersion} gatewayIp={gatewayIp} isPreRelease={isPreRelease} onCancel={toggleDialog} tenantToken={tenantToken} />
       )}
@@ -141,17 +138,4 @@ const DeviceSystemTab = ({ docsVersion, device, isPreRelease, tenantToken, ...re
   );
 };
 
-const actionCreators = { getSystemDevices, setSnackbar };
-
-const mapStateToProps = state => {
-  return {
-    devicesById: state.devices.byId,
-    docsVersion: getDocsVersion(state),
-    hasFullFiltering: getTenantCapabilities(state),
-    idAttribute: getIdAttribute(state),
-    isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
-    tenantToken: state.organization.organization.tenant_token
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(DeviceSystemTab);
+export default DeviceSystemTab;
