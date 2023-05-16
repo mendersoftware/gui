@@ -16,6 +16,7 @@ include:
     file: '.gitlab-ci-check-commits.yml'
   - project: 'Northern.tech/Mender/mendertesting'
     file: '.gitlab-ci-check-docker-build.yml'
+    ref: MC-6387-helm-staging-poc
   - project: 'Northern.tech/Mender/mendertesting'
     file: '.gitlab-ci-github-status-updates.yml'
   - project: 'Northern.tech/Mender/mender-qa'
