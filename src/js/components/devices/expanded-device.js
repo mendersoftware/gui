@@ -11,20 +11,10 @@ import copy from 'copy-to-clipboard';
 import GatewayConnectionIcon from '../../../assets/img/gateway-connection.svg';
 import GatewayIcon from '../../../assets/img/gateway.svg';
 import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, getDeviceDeployments, getDeviceLog, getSingleDeployment, resetDeviceDeployments } from '../../actions/deploymentActions';
-import {
-  applyDeviceConfig,
-  decommissionDevice,
-  getDeviceInfo,
-  getDeviceTwin,
-  getGatewayDevices,
-  setDeviceConfig,
-  setDeviceTags,
-  setDeviceTwin
-} from '../../actions/deviceActions';
+import { decommissionDevice, getDeviceInfo, getDeviceTwin, getGatewayDevices, setDeviceTags, setDeviceTwin } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import {
   getDeviceTwinIntegrations,
@@ -39,14 +29,8 @@ import Tracking from '../../tracking';
 import DeviceIdentityDisplay from '../common/deviceidentity';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
-import DeviceConfiguration from './device-details/configuration';
-import { TroubleshootTab } from './device-details/connection';
-import Deployments from './device-details/deployments';
-import DeviceInventory from './device-details/deviceinventory';
-import DeviceSystem from './device-details/devicesystem';
-import { IntegrationTab } from './device-details/devicetwin';
+import DeviceConnection from './device-details/connection';
 import { IdentityTab } from './device-details/identity';
-import InstalledSoftware from './device-details/installedsoftware';
 import MonitoringTab from './device-details/monitoring';
 import DeviceNotifications from './device-details/notifications';
 import DeviceQuickActions from './widgets/devicequickactions';
@@ -130,68 +114,24 @@ const GatewayNotification = ({ device, docsVersion, onClick }) => {
 const deviceStatusCheck = ({ device: { status = DEVICE_STATES.accepted } }, states = [DEVICE_STATES.accepted]) => states.includes(status);
 
 const tabs = [
+  {
+    component: DeviceConnection,
+    title: () => 'Troubleshooting',
+    value: 'troubleshoot',
+    isApplicable: () => true
+  },
   { component: IdentityTab, title: () => 'Identity', value: 'identity', isApplicable: () => true },
-  {
-    component: DeviceInventory,
-    title: () => 'Inventory',
-    value: 'inventory',
-    isApplicable: deviceStatusCheck
-  },
-  {
-    component: InstalledSoftware,
-    title: () => 'Software',
-    value: 'software',
-    isApplicable: deviceStatusCheck
-  },
-  {
-    component: Deployments,
-    title: () => 'Deployments',
-    value: 'deployments',
-    isApplicable: deviceStatusCheck
-  },
-  {
-    component: DeviceConfiguration,
-    title: () => 'Configuration',
-    value: 'configuration',
-    isApplicable: ({ tenantCapabilities: { hasDeviceConfig }, userCapabilities: { canConfigure }, ...rest }) =>
-      hasDeviceConfig && canConfigure && deviceStatusCheck(rest, [DEVICE_STATES.accepted, DEVICE_STATES.preauth])
-  },
   {
     component: MonitoringTab,
     title: () => 'Monitoring',
     value: 'monitor',
     isApplicable: ({ tenantCapabilities: { hasMonitor }, ...rest }) => deviceStatusCheck(rest) && hasMonitor
-  },
-  {
-    component: TroubleshootTab,
-    title: () => 'Troubleshooting',
-    value: 'troubleshoot',
-    isApplicable: ({ tenantCapabilities: { hasDeviceConnect }, ...rest }) => deviceStatusCheck(rest) && hasDeviceConnect
-  },
-  {
-    component: IntegrationTab,
-    title: ({ integrations }) => {
-      if (integrations.length > 1) {
-        return 'Device Twin';
-      }
-      const { title, twinTitle } = EXTERNAL_PROVIDER[integrations[0].provider];
-      return `${title} ${twinTitle}`;
-    },
-    value: 'device-twin',
-    isApplicable: ({ integrations, ...rest }) => !!integrations.length && deviceStatusCheck(rest, [DEVICE_STATES.accepted, DEVICE_STATES.preauth])
-  },
-  {
-    component: DeviceSystem,
-    title: () => 'System',
-    value: 'system',
-    isApplicable: ({ device: { attributes = {} } }) => stringToBoolean(attributes?.mender_is_gateway ?? '')
   }
 ];
 
 export const ExpandedDevice = ({
   abortDeployment,
   actionCallbacks,
-  applyDeviceConfig,
   columnSelection,
   decommissionDevice,
   defaultConfig,
@@ -217,7 +157,6 @@ export const ExpandedDevice = ({
   saveGlobalSettings,
   selectedGroup,
   setDetailsTab,
-  setDeviceConfig,
   setDeviceTags,
   setDeviceTwin,
   setSnackbar,
@@ -227,7 +166,6 @@ export const ExpandedDevice = ({
   userCapabilities
 }) => {
   const [socketClosed, setSocketClosed] = useState(true);
-  const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -267,10 +205,9 @@ export const ExpandedDevice = ({
     });
   };
 
-  const launchTroubleshoot = type => {
+  const launchTroubleshoot = () => {
     Tracking.event({ category: 'devices', action: 'open_terminal' });
     setSocketClosed(false);
-    setTroubleshootType(type);
   };
 
   const copyLinkToClipboard = () => {
@@ -307,7 +244,6 @@ export const ExpandedDevice = ({
 
   const commonProps = {
     abortDeployment,
-    applyDeviceConfig,
     classes,
     columnSelection,
     defaultConfig,
@@ -318,6 +254,7 @@ export const ExpandedDevice = ({
     getDeviceLog,
     getDeviceTwin,
     getSingleDeployment,
+    idAttribute,
     integrations,
     latestAlerts,
     launchTroubleshoot,
@@ -326,16 +263,13 @@ export const ExpandedDevice = ({
     resetDeviceDeployments,
     saveGlobalSettings,
     setDetailsTab,
-    setDeviceConfig,
     setDeviceTags,
     setDeviceTwin,
     setSnackbar,
     setSocketClosed,
-    setTroubleshootType,
     showHelptips,
     socketClosed,
     tenantCapabilities: { hasAuditlogs },
-    troubleshootType,
     userCapabilities
   };
   return (
@@ -391,18 +325,11 @@ export const ExpandedDevice = ({
 };
 
 const actionCreators = {
-  abortDeployment,
-  applyDeviceConfig,
   decommissionDevice,
-  getDeviceDeployments,
-  getDeviceLog,
   getDeviceInfo,
   getDeviceTwin,
   getGatewayDevices,
-  getSingleDeployment,
-  resetDeviceDeployments,
   saveGlobalSettings,
-  setDeviceConfig,
   setDeviceTags,
   setDeviceTwin,
   setSnackbar
@@ -410,8 +337,6 @@ const actionCreators = {
 
 const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.deviceId] || {};
-  const { config = {} } = device;
-  const { deployment_id: configDeploymentId } = config;
   const { latest = [] } = state.monitor.alerts.byDeviceId[ownProps.deviceId] || {};
   let selectedGroup;
   let groupFilters = [];
@@ -425,7 +350,6 @@ const mapStateToProps = (state, ownProps) => {
     columnSelection,
     defaultConfig: state.users.globalSettings.defaultDeviceConfig,
     device,
-    deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
     devicesById: state.devices.byId,
     docsVersion: getDocsVersion(state),
     features: getFeatures(state),
@@ -433,7 +357,6 @@ const mapStateToProps = (state, ownProps) => {
     idAttribute: getIdAttribute(state),
     integrations: getDeviceTwinIntegrations(state),
     latestAlerts: latest,
-    onboardingComplete: state.onboarding.complete,
     selectedGroup,
     showHelptips: state.users.showHelptips,
     tenantCapabilities: getTenantCapabilities(state),

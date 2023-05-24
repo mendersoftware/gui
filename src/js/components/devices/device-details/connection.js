@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
-import { Button, Typography } from '@mui/material';
+import { InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
+import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-
-import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
 import { formatAuditlogs } from '../../../utils/locationutils';
-import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
 import Troubleshootdialog from '../dialogs/troubleshootdialog';
@@ -75,46 +72,23 @@ export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs }) => (
   </DeviceConnectionNote>
 );
 
-export const TroubleshootButton = ({ disabled, item, onClick }) => {
-  const theme = useTheme();
-  return (
-    <Button onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon} style={{ marginRight: theme.spacing(2) }}>
-      <Typography variant="subtitle2" style={buttonStyle}>
-        {item.title}
-      </Typography>
-    </Button>
-  );
-};
-
-const troubleshootingTools = [
-  {
-    key: 'terminal',
-    title: 'Launch a new Remote Terminal session',
-    icon: <MaterialDesignIcon path={ConsoleIcon} />,
-    needsWriteAccess: true,
-    needsTroubleshoot: true
-  },
-  { key: 'transfer', title: 'Launch File Transfer', icon: <ImportExportIcon />, needsWriteAccess: false, needsTroubleshoot: false },
-  { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
-];
-
 const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device');
 
-export const DeviceConnection = ({ className = '', device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
-  const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
-
-  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
+export const DeviceConnection = ({
+  className = '',
+  device,
+  docsVersion = '',
+  hasAuditlogs,
+  // socketClosed,
+  launchTroubleshoot,
+  userCapabilities,
+  setSocketClosed
+}) => {
+  const { canAuditlog } = userCapabilities;
 
   useEffect(() => {
-    const allowedTabs = troubleshootingTools.reduce((accu, tab) => {
-      if ((tab.needsWriteAccess && !hasWriteAccess) || (tab.needsTroubleshoot && !canTroubleshoot)) {
-        return accu;
-      }
-      accu.push(tab);
-      return accu;
-    }, []);
-    setAvailableTabs(allowedTabs);
-  }, [hasWriteAccess, canTroubleshoot]);
+    launchTroubleshoot('terminal');
+  }, []);
 
   const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
   return (
@@ -123,14 +97,6 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
         <div className={`flexbox ${className}`}>
           {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} />}
           {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} />}
-          {connect_status === DEVICE_CONNECT_STATES.connected &&
-            availableTabs.map(item => {
-              let Component = TroubleshootButton;
-              if (item.component) {
-                Component = item.component;
-              }
-              return <Component key={item.key} docsVersion={docsVersion} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
-            })}
           {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
             <Link
               className="flexbox center-aligned margin-left"
@@ -142,43 +108,13 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
         </div>
       }
       isAddOn
-      title="Troubleshoot"
-    ></DeviceDataCollapse>
+      title="Remote terminal"
+    >
+      {connect_status === DEVICE_CONNECT_STATES.connected && (
+        <Troubleshootdialog device={device} hasAuditlogs={hasAuditlogs} setSocketClosed={setSocketClosed} userCapabilities={userCapabilities} />
+      )}
+    </DeviceDataCollapse>
   );
 };
 
 export default DeviceConnection;
-
-export const TroubleshootTab = ({
-  classes,
-  device,
-  docsVersion,
-  tenantCapabilities: { hasAuditlogs },
-  socketClosed,
-  launchTroubleshoot,
-  userCapabilities,
-  troubleshootType,
-  setTroubleshootType,
-  setSocketClosed
-}) => (
-  <>
-    <DeviceConnection
-      className={classes.deviceConnection}
-      device={device}
-      docsVersion={docsVersion}
-      hasAuditlogs={hasAuditlogs}
-      socketClosed={socketClosed}
-      startTroubleshoot={launchTroubleshoot}
-      userCapabilities={userCapabilities}
-    />
-    <Troubleshootdialog
-      device={device}
-      hasAuditlogs={hasAuditlogs}
-      open={Boolean(troubleshootType)}
-      onCancel={() => setTroubleshootType()}
-      setSocketClosed={setSocketClosed}
-      type={troubleshootType}
-      userCapabilities={userCapabilities}
-    />
-  </>
-);
