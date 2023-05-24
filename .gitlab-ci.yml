@@ -27,6 +27,7 @@ test:lint:
   except:
     - master
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+    - MC-6387-helm-staging-poc
   needs: []
   cache:
     key:
@@ -119,6 +120,7 @@ test:acceptance:
   extends: .template:test:acceptance
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+    - MC-6387-helm-staging-poc
   script:
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
@@ -142,6 +144,7 @@ test:unit:
   stage: test
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+    - MC-6387-helm-staging-poc
   needs: []
   cache:
     key:
@@ -171,6 +174,7 @@ test:docs-links:
   needs: []
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+    - MC-6387-helm-staging-poc
   before_script:
     - apk add --no-cache curl
   script:
@@ -194,6 +198,7 @@ test:docs-links:hosted:
   extends: test:docs-links
   only:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+    - MC-6387-helm-staging-poc
   except: []
   variables:
     DOCS_VERSION: hosted
@@ -297,6 +302,7 @@ publish:tests:
   extends: .template:publish:tests
   except:
     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+    - MC-6387-helm-staging-poc
   needs:
     - test:unit
   script:
