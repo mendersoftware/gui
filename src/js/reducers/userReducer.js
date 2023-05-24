@@ -20,8 +20,7 @@ export const initialState = {
     ...UserConstants.rolesById
   },
   userSettings: {
-    columnSelection: [],
-    onboarding: {}
+    columnSelection: []
   }
 };
 

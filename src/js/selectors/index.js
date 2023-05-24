@@ -2,7 +2,6 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
-import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import {
   ATTRIBUTE_SCOPES,
   DEVICE_ISSUE_OPTIONS,
@@ -27,15 +26,9 @@ const getFilteringAttributes = state => state.devices.filteringAttributes;
 const getFilteringAttributesFromConfig = state => state.devices.filteringAttributesConfig.attributes;
 const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
-const getOnboarding = state => state.onboarding;
-const getShowHelptips = state => state.users.showHelptips;
 const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
-const getReleasesById = state => state.releases.byId;
-const getListedReleases = state => state.releases.releasesList.releaseIds;
 const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
-const getDeploymentsById = state => state.deployments.byId;
-const getDeploymentsByStatus = state => state.deployments.byStatus;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.userSettings;
@@ -45,9 +38,8 @@ export const getHas2FA = createSelector(
   currentUser => currentUser.hasOwnProperty('tfa_status') && currentUser.tfa_status === twoFAStates.enabled
 );
 
-export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboarding], (devices, { approach, demoArtifactPort }) => {
-  const demoDeviceAddress = `http://${getDemoDeviceAddressHelper(devices, approach)}`;
-  return demoArtifactPort ? `${demoDeviceAddress}:${demoArtifactPort}` : demoDeviceAddress;
+export const getDemoDeviceAddress = createSelector([getDevicesList], devices => {
+  return `http://${getDemoDeviceAddressHelper(devices)}`;
 });
 
 const listItemMapper = (byId, ids, { defaultObject = {}, cutOffSize = DEVICE_LIST_MAXIMUM_LENGTH }) => {
@@ -136,13 +128,6 @@ export const getOfflineThresholdSettings = createSelector([getGlobalSettings], (
   intervalUnit: offlineThreshold?.intervalUnit || DEVICE_ONLINE_CUTOFF.intervalName
 }));
 
-export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips }, showHelptips) => ({
-  complete,
-  progress,
-  showHelptips,
-  showTips
-}));
-
 export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (appDocsVersion, { isHosted }) => {
   // if hosted, use latest docs version
   const docsVersion = appDocsVersion ? `${appDocsVersion}/` : 'development/';
@@ -176,10 +161,6 @@ export const getUserRoles = createSelector(
 const hasPermission = (thing, permission) => Object.values(thing).some(permissions => permissions.includes(permission));
 
 export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissions }) => {
-  const canManageReleases = hasPermission(uiPermissions.releases, uiPermissionsById.manage.value);
-  const canReadReleases = canManageReleases || hasPermission(uiPermissions.releases, uiPermissionsById.read.value);
-  const canUploadReleases = canManageReleases || hasPermission(uiPermissions.releases, uiPermissionsById.upload.value);
-
   const canAuditlog = uiPermissions.auditlog.includes(uiPermissionsById.read.value);
 
   const canReadUsers = uiPermissions.userManagement.includes(uiPermissionsById.read.value);
@@ -201,14 +182,11 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
     canConfigure,
     canDeploy,
     canManageDevices,
-    canManageReleases,
     canManageUsers,
     canReadDeployments,
     canReadDevices,
-    canReadReleases,
     canReadUsers,
     canTroubleshoot,
-    canUploadReleases,
     canWriteDevices
   };
 });
@@ -216,20 +194,13 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
 export const getTenantCapabilities = createSelector(
   [getFeatures, getOrganization, getIsEnterprise],
   (
-    {
-      hasAuditlogs: isAuditlogEnabled,
-      hasDeviceConfig: isDeviceConfigEnabled,
-      hasDeviceConnect: isDeviceConnectEnabled,
-      hasMonitor: isMonitorEnabled,
-      isHosted
-    },
+    { hasAuditlogs: isAuditlogEnabled, hasDeviceConfig: isDeviceConfigEnabled, hasMonitor: isMonitorEnabled, isHosted },
     { addons = [], plan },
     isEnterprise
   ) => {
     const canDelta = isEnterprise || plan === PLANS.professional.value;
     const hasAuditlogs = isAuditlogEnabled && (!isHosted || isEnterprise || plan === PLANS.professional.value);
     const hasDeviceConfig = isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled)));
-    const hasDeviceConnect = isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled)));
     const hasMonitor = isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled)));
     return {
       canDelta,
@@ -237,7 +208,7 @@ export const getTenantCapabilities = createSelector(
       canSchedule: canDelta,
       hasAuditlogs,
       hasDeviceConfig,
-      hasDeviceConnect,
+      hasDeviceConnect: true,
       hasFullFiltering: canDelta,
       hasMonitor,
       isEnterprise
@@ -269,31 +240,5 @@ export const getDeviceTypes = createSelector([getAcceptedDevices, getDevicesById
       }, accu);
       return accu;
     }, {})
-  )
-);
-
-const getReleaseMappingDefaults = () => ({});
-export const getReleasesList = createSelector([getReleasesById, getListedReleases, getReleaseMappingDefaults], listItemMapper);
-
-const relevantDeploymentStates = [DEPLOYMENT_STATES.pending, DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.finished];
-export const DEPLOYMENT_CUTOFF = 3;
-export const getRecentDeployments = createSelector([getDeploymentsById, getDeploymentsByStatus], (deploymentsById, deploymentsByStatus) =>
-  Object.entries(deploymentsByStatus).reduce(
-    (accu, [state, byStatus]) => {
-      if (!relevantDeploymentStates.includes(state) || !byStatus.deploymentIds.length) {
-        return accu;
-      }
-      accu[state] = byStatus.deploymentIds
-        .reduce((accu, id) => {
-          if (deploymentsById[id]) {
-            accu.push(deploymentsById[id]);
-          }
-          return accu;
-        }, [])
-        .slice(0, DEPLOYMENT_CUTOFF);
-      accu.total += byStatus.total;
-      return accu;
-    },
-    { total: 0 }
   )
 );

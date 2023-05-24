@@ -11,25 +11,20 @@ import { makeStyles } from 'tss-react/mui';
 import Cookies from 'universal-cookie';
 
 import { parseEnvironmentInfo, setSnackbar } from '../actions/appActions';
-import { cancelFileUpload } from '../actions/releaseActions';
 import { logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
 import { expirySet, getToken, updateMaxAge } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
-import { onboardingSteps } from '../constants/onboardingConstants';
 import ErrorBoundary from '../errorboundary';
 import { toggle } from '../helpers';
-import { getOnboardingState, getUserSettings } from '../selectors';
+import { getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import Footer from './footer';
 import Header from './header/header';
 import LeftNav from './leftnav';
 import SearchResult from './search-result';
-import Uploads from './uploads';
 
 const activationPath = '/activate';
 export const timeout = 900000; // 15 minutes idle time
@@ -79,12 +74,10 @@ export const AppRoot = ({
   currentUser,
   logoutUser,
   mode,
-  onboardingState,
   parseEnvironmentInfo,
   setAccountActivationCode,
   setShowConnectingDialog,
   showDeviceConnectionDialog,
-  showDismissHelptipsDialog,
   setSnackbar,
   snackbar,
   trackingCode
@@ -145,7 +138,6 @@ export const AppRoot = ({
 
   const onToggleSearchResult = () => setShowSearchResult(toggle);
 
-  const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
   const theme = createTheme(mode === 'dark' ? darkTheme : lightTheme);
 
   const { classes } = useStyles();
@@ -164,8 +156,6 @@ export const AppRoot = ({
                 <PrivateRoutes />
               </ErrorBoundary>
             </div>
-            {onboardingComponent ? onboardingComponent : null}
-            {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
             {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
           </div>
         ) : (
@@ -175,19 +165,16 @@ export const AppRoot = ({
           </div>
         )}
         <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
-        <Uploads />
       </>
     </ThemeProvider>
   );
 };
 
-const actionCreators = { cancelFileUpload, logoutUser, parseEnvironmentInfo, saveUserSettings, setAccountActivationCode, setShowConnectingDialog, setSnackbar };
+const actionCreators = { logoutUser, parseEnvironmentInfo, saveUserSettings, setAccountActivationCode, setShowConnectingDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {
     currentUser: state.users.currentUser,
-    onboardingState: getOnboardingState(state),
-    showDismissHelptipsDialog: !state.onboarding.complete && state.onboarding.showTipsDialog,
     showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
     snackbar: state.app.snackbar,
     trackingCode: state.app.trackerCode,

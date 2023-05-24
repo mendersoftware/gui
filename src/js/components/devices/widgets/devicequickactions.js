@@ -5,8 +5,7 @@ import {
   CheckCircle as CheckCircleIcon,
   HeightOutlined as HeightOutlinedIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
-  RemoveCircleOutline as RemoveCircleOutlineIcon,
-  Replay as ReplayIcon
+  RemoveCircleOutline as RemoveCircleOutlineIcon
 } from '@mui/icons-material';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
@@ -73,14 +72,6 @@ const defaultActions = {
     action: ({ onPromoteGateway, selection }) => onPromoteGateway(selection),
     checkRelevance: ({ device, features, tenantCapabilities: { isEnterprise } }) =>
       features.isHosted && isEnterprise && !stringToBoolean(device.attributes?.mender_is_gateway) && device.status === DEVICE_STATES.accepted
-  },
-  createDeployment: {
-    icon: <ReplayIcon />,
-    key: 'create-deployment',
-    title: (pluralized, count) => `Create deployment for ${pluralize('this', count)} ${pluralized}`,
-    action: ({ onCreateDeployment, selection }) => onCreateDeployment(selection),
-    checkRelevance: ({ device, userCapabilities: { canDeploy, canReadReleases } }) =>
-      canDeploy && canReadReleases && device && device.status === DEVICE_STATES.accepted
   }
 };
 

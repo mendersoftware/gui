@@ -79,7 +79,6 @@ describe('AuthorizedDevices Component', () => {
           getIssueCountsByType={jest.fn}
           groupFilters={[]}
           idAttribute={'id'}
-          onboardingState={{}}
           onGroupClick={jest.fn}
           onGroupRemoval={jest.fn}
           onPreauthClick={jest.fn}

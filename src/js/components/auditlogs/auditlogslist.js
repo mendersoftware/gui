@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
 
 import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import Time from '../common/time';
@@ -12,8 +11,6 @@ import EventDetailsDrawer from './eventdetailsdrawer';
 
 export const defaultRowsPerPage = 20;
 
-const ArtifactLink = ({ item }) => <Link to={`/releases/${item.object.artifact.name}`}>View artifact</Link>;
-const DeploymentLink = ({ item }) => <Link to={`${DEPLOYMENT_ROUTES.finished.route}?open=true&id=${item.object.id}`}>View deployment</Link>;
 const DeviceLink = ({ item }) => <Link to={`/devices?id=${item.object.id}`}>View device</Link>;
 const DeviceRejectedLink = ({ item }) => <Link to={`/devices/rejected?id=${item.object.id}`}>View device</Link>;
 const TerminalSessionLink = () => <a>View session log</a>;
@@ -42,12 +39,6 @@ const fallbackFormatter = data => {
 const defaultAccess = () => true;
 const changeMap = {
   default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle', accessCheck: defaultAccess },
-  artifact: { actionFormatter: data => decodeURIComponent(data.artifact.name), component: ArtifactLink, accessCheck: ({ canReadReleases }) => canReadReleases },
-  deployment: {
-    actionFormatter: data => decodeURIComponent(data.deployment.name),
-    component: DeploymentLink,
-    accessCheck: ({ canReadDeployments }) => canReadDeployments
-  },
   deviceDecommissioned: { actionFormatter: data => decodeURIComponent(data.id), component: 'div', accessCheck: defaultAccess },
   deviceRejected: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceRejectedLink, accessCheck: ({ canReadDevices }) => canReadDevices },
   deviceGeneral: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceLink, accessCheck: ({ canReadDevices }) => canReadDevices },

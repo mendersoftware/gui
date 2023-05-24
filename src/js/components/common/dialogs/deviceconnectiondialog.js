@@ -9,13 +9,9 @@ import docker from '../../../../assets/img/docker.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import { setDeviceListState } from '../../../actions/deviceActions';
-import { advanceOnboarding } from '../../../actions/onboardingActions';
-import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDocsVersion, getTenantCapabilities } from '../../../selectors';
 import InfoText from '../../common/infotext';
-import { DeviceSupportTip } from '../../helptips/helptooltips';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
@@ -86,21 +82,11 @@ const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVi
           and search integrations for your device and OS.
         </div>
       </div>
-      <DeviceSupportTip />
     </>
   );
 };
 
-export const DeviceConnectionDialog = ({
-  advanceOnboarding,
-  docsVersion,
-  hasMonitor,
-  onboardingDeviceType,
-  onboardingComplete,
-  onCancel,
-  pendingCount,
-  setDeviceListState
-}) => {
+export const DeviceConnectionDialog = ({ docsVersion, hasMonitor, onboardingDeviceType, onCancel, pendingCount, setDeviceListState }) => {
   const [onDevice, setOnDevice] = useState(false);
   const [progress, setProgress] = useState(1);
   const [virtualDevice, setVirtualDevice] = useState(false);
@@ -114,11 +100,10 @@ export const DeviceConnectionDialog = ({
 
   useEffect(() => {
     if ((virtualDevice || progress >= 2) && hasMoreDevices && !window.location.hash.includes('pending')) {
-      advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
       setDeviceListState({ state: DEVICE_STATES.pending });
       navigate('/devices/pending');
     }
-  }, [advanceOnboarding, hasMoreDevices, progress, virtualDevice]);
+  }, [hasMoreDevices, progress, virtualDevice]);
 
   const onBackClick = () => {
     let updatedProgress = progress - 1;
@@ -131,19 +116,14 @@ export const DeviceConnectionDialog = ({
   };
 
   const onAdvance = () => {
-    advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START);
     setProgress(progress + 1);
   };
 
   let content = <DeviceConnectionExplainer docsVersion={docsVersion} hasMonitor={hasMonitor} setOnDevice={setOnDevice} setVirtualDevice={setVirtualDevice} />;
   if (onDevice) {
-    content = <PhysicalDeviceOnboarding progress={progress} />;
+    content = <PhysicalDeviceOnboarding />;
   } else if (virtualDevice) {
     content = <VirtualDeviceOnboarding />;
-  }
-
-  if (hasMoreDevices && !onboardingComplete) {
-    setTimeout(onCancel, TIMEOUTS.twoSeconds);
   }
 
   return (
@@ -163,8 +143,8 @@ export const DeviceConnectionDialog = ({
                 Next
               </Button>
             ) : (
-              <Button variant="contained" disabled={!onboardingComplete} onClick={onCancel}>
-                {onboardingComplete ? 'Close' : 'Waiting for device'}
+              <Button variant="contained" onClick={onCancel}>
+                Close
               </Button>
             )}
           </div>
@@ -174,15 +154,13 @@ export const DeviceConnectionDialog = ({
   );
 };
 
-const actionCreators = { advanceOnboarding, setDeviceListState };
+const actionCreators = { setDeviceListState };
 
 const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
     hasMonitor: getTenantCapabilities(state).hasMonitor,
-    pendingCount: state.devices.byStatus.pending.total,
-    onboardingComplete: state.onboarding.complete,
-    onboardingDeviceType: state.onboarding.deviceType
+    pendingCount: state.devices.byStatus.pending.total
   };
 };
 

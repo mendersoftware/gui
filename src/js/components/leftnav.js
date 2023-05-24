@@ -10,15 +10,10 @@ import copy from 'copy-to-clipboard';
 
 import { setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS } from '../constants/appConstants';
-import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../selectors';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import { getDocsVersion, getFeatures, getTenantCapabilities, getUserCapabilities } from '../selectors';
 
 const listItems = [
-  { route: '/', text: 'Dashboard', canAccess: () => true },
-  { route: '/devices', text: 'Devices', canAccess: ({ userCapabilities: { canReadDevices } }) => canReadDevices },
-  { route: '/releases', text: 'Releases', canAccess: ({ userCapabilities: { canReadReleases, canUploadReleases } }) => canReadReleases || canUploadReleases },
-  { route: '/deployments', text: 'Deployments', canAccess: ({ userCapabilities: { canDeploy, canReadDeployments } }) => canReadDeployments || canDeploy },
+  { route: '/', text: 'Devices', canAccess: ({ userCapabilities: { canReadDevices } }) => canReadDevices },
   {
     route: '/auditlog',
     text: 'Audit log',
@@ -110,7 +105,7 @@ const VersionInfo = ({ isHosted, setSnackbar, setVersionInfo, versionInformation
   );
 };
 
-export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, setVersionInfo, tenantCapabilities, userCapabilities, versionInformation }) => {
+export const LeftNav = ({ docsVersion, isHosted, setSnackbar, setVersionInfo, tenantCapabilities, userCapabilities, versionInformation }) => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
@@ -128,16 +123,6 @@ export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, s
     </a>
   );
 
-  let onboardingComponent;
-  if (releasesRef.current) {
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
-      anchor: {
-        left: releasesRef.current.offsetWidth - 48,
-        top: releasesRef.current.offsetTop + releasesRef.current.offsetHeight / 2
-      },
-      place: 'right'
-    });
-  }
   return (
     <div className={`leftFixed leftNav ${classes.list}`}>
       <List style={{ padding: 0 }}>
@@ -160,7 +145,6 @@ export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, s
           return accu;
         }, [])}
       </List>
-      {onboardingComponent ? onboardingComponent : null}
       <List className={classes.infoList}>
         <ListItem className={`navLink leftNav ${classes.listItem}`} component={Link} to="/help">
           <ListItemText primary="Help & support" />
@@ -183,7 +167,6 @@ const mapStateToProps = state => {
   return {
     docsVersion: getDocsVersion(state),
     isHosted,
-    onboardingState: getOnboardingState(state),
     userCapabilities: getUserCapabilities(state),
     tenantCapabilities: getTenantCapabilities(state),
     versionInformation: state.app.versionInformation

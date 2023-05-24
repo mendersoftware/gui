@@ -4,14 +4,7 @@ import jwtDecode from 'jwt-decode';
 import pluralize from 'pluralize';
 
 import { getToken } from './auth';
-import {
-  DEPLOYMENT_STATES,
-  defaultStats,
-  deploymentDisplayStates,
-  deploymentStatesToSubstates,
-  deploymentStatesToSubstatesWithSkipped
-} from './constants/deploymentConstants';
-import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+import { ATTRIBUTE_SCOPES } from './constants/deviceConstants';
 
 const isEncoded = uri => {
   uri = uri || '';
@@ -24,55 +17,6 @@ export const fullyDecodeURI = uri => {
   }
   return uri;
 };
-
-export const groupDeploymentDevicesStats = deployment => {
-  const deviceStatCollector = (deploymentStates, devices) =>
-    Object.values(devices).reduce((accu, device) => (deploymentStates.includes(device.status) ? accu + 1 : accu), 0);
-
-  const inprogress = deviceStatCollector(deploymentStatesToSubstates.inprogress, deployment.devices);
-  const pending = deviceStatCollector(deploymentStatesToSubstates.pending, deployment.devices);
-  const successes = deviceStatCollector(deploymentStatesToSubstates.successes, deployment.devices);
-  const failures = deviceStatCollector(deploymentStatesToSubstates.failures, deployment.devices);
-  const paused = deviceStatCollector(deploymentStatesToSubstates.paused, deployment.devices);
-  return { inprogress, paused, pending, successes, failures };
-};
-
-export const statCollector = (items, statistics) => items.reduce((accu, property) => accu + Number(statistics[property] || 0), 0);
-export const groupDeploymentStats = (deployment, withSkipped) => {
-  const { statistics = {} } = deployment;
-  const { status = {} } = statistics;
-  const stats = { ...defaultStats, ...status };
-  let groupStates = deploymentStatesToSubstates;
-  let result = {};
-  if (withSkipped) {
-    groupStates = deploymentStatesToSubstatesWithSkipped;
-    result.skipped = statCollector(groupStates.skipped, stats);
-  }
-  result = {
-    ...result,
-    // don't include 'pending' as inprogress, as all remaining devices will be pending - we don't discriminate based on phase membership
-    inprogress: statCollector(groupStates.inprogress, stats),
-    pending: (deployment.max_devices ? deployment.max_devices - deployment.device_count : 0) + statCollector(groupStates.pending, stats),
-    successes: statCollector(groupStates.successes, stats),
-    failures: statCollector(groupStates.failures, stats),
-    paused: statCollector(groupStates.paused, stats)
-  };
-  return result;
-};
-
-export const getDeploymentState = deployment => {
-  const { status: deploymentStatus = DEPLOYMENT_STATES.pending } = deployment;
-  const { inprogress: currentProgressCount, paused } = groupDeploymentStats(deployment);
-
-  let status = deploymentDisplayStates[deploymentStatus];
-  if (deploymentStatus === DEPLOYMENT_STATES.pending && currentProgressCount === 0) {
-    status = 'queued';
-  } else if (paused > 0) {
-    status = deploymentDisplayStates.paused;
-  }
-  return status;
-};
-
 export const decodeSessionToken = token => {
   try {
     var decoded = jwtDecode(token);
@@ -299,20 +243,6 @@ export const unionizeStrings = (someStrings, someOtherStrings) => {
   return [...uniqueStrings];
 };
 
-export const generateDeploymentGroupDetails = (filter, groupName) =>
-  filter && filter.terms?.length
-    ? `${groupName} (${filter.terms
-        .map(filter => `${filter.attribute || filter.key} ${DEVICE_FILTERING_OPTIONS[filter.type || filter.operator].shortform} ${filter.value}`)
-        .join(', ')})`
-    : groupName;
-
-export const tryMapDeployments = (accu, id) => {
-  if (accu.state.deployments.byId[id]) {
-    accu.deployments.push(accu.state.deployments.byId[id]);
-  }
-  return accu;
-};
-
 export const mapDeviceAttributes = (attributes = []) =>
   attributes.reduce(
     (accu, attribute) => {
@@ -365,7 +295,7 @@ const collectAddressesFrom = devices =>
     return collector;
   }, []);
 
-export const getDemoDeviceAddress = (devices, onboardingApproach) => {
+export const getDemoDeviceAddress = devices => {
   const defaultVitualizedIp = '10.0.2.15';
   const addresses = collectAddressesFrom(devices);
   const address = addresses.reduce((accu, item) => {
@@ -374,7 +304,7 @@ export const getDemoDeviceAddress = (devices, onboardingApproach) => {
     }
     return item;
   }, null);
-  if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
+  if (!address || navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1) {
     return 'localhost';
   }
   return address;
@@ -434,11 +364,11 @@ const getInstallScriptArgs = ({ isHosted, isPreRelease }) => {
   return installScriptArgs;
 };
 
-const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, tenantToken, isOnboarding }) => {
+const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, tenantToken }) => {
   let menderSetupArgs = `--quiet --device-type "${deviceType}"`;
   menderSetupArgs = tenantToken ? `${menderSetupArgs} --tenant-token $TENANT_TOKEN` : menderSetupArgs;
   // in production we use polling intervals from the client examples: https://github.com/mendersoftware/mender/blob/master/examples/mender.conf.production
-  menderSetupArgs = isDemoMode || isOnboarding ? `${menderSetupArgs} --demo` : `${menderSetupArgs} --retry-poll 300 --update-poll 1800 --inventory-poll 28800`;
+  menderSetupArgs = isDemoMode ? `${menderSetupArgs} --demo` : `${menderSetupArgs} --retry-poll 300 --update-poll 1800 --inventory-poll 28800`;
   if (isDemoMode) {
     // Demo installation, either OS os Enterprise. Install demo cert and add IP to /etc/hosts
     menderSetupArgs = `${menderSetupArgs}${ipAddress ? ` --server-ip ${ipAddress}` : ''}`;

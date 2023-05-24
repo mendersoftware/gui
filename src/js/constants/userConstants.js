@@ -2,7 +2,8 @@
 
 import { apiUrl } from '../api/general-api';
 import { ALL_DEVICES } from './deviceConstants';
-import { ALL_RELEASES } from './releaseConstants';
+
+const ALL_RELEASES = 'ALL_RELEASES';
 
 export const useradmApiUrlv1 = `${apiUrl.v1}/useradm`;
 export const useradmApiUrlv2 = `${apiUrl.v2}/useradm`;

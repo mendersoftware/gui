@@ -6,7 +6,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
-import { rootfsImageVersion } from '../../../constants/releaseConstants';
 import { formatAuditlogs } from '../../../utils/locationutils';
 import { TwoColumns } from '../../common/configurationobject';
 import DeviceIdentityDisplay from '../../common/deviceidentity';
@@ -42,7 +41,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
       </Link>
     ),
     'Device type': deviceTypes,
-    'Operating system version': device[rootfsImageVersion] || artifact_name || '-',
+    'Operating system version': artifact_name || '-',
     ' ': (
       <Link
         to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}

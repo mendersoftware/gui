@@ -5,8 +5,6 @@ import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { AddGroup } from '../helptips/helptooltips';
-
 const useStyles = makeStyles()(theme => ({
   header: {
     color: theme.palette.grey[800],
@@ -36,7 +34,7 @@ export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
   </ListItem>
 );
 
-export const Groups = ({ acceptedCount, changeGroup, className, groups, openGroupDialog, selectedGroup, showHelptips }) => {
+export const Groups = ({ changeGroup, className, groups, openGroupDialog, selectedGroup }) => {
   const { dynamic: dynamicGroups, static: staticGroups, ungrouped } = groups;
   return (
     <div className={className}>
@@ -64,8 +62,6 @@ export const Groups = ({ acceptedCount, changeGroup, className, groups, openGrou
           <ListItemText primary="Create a group" />
         </ListItem>
       </List>
-
-      {showHelptips && acceptedCount && groups.length <= 1 ? <AddGroup /> : null}
     </div>
   );
 };

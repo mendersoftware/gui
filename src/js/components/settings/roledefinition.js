@@ -8,7 +8,6 @@ import { makeStyles } from 'tss-react/mui';
 import validator from 'validator';
 
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { ALL_RELEASES } from '../../constants/releaseConstants';
 import { emptyRole, emptyUiPermissions, itemUiPermissionsReducer, rolesById, uiPermissionsByArea, uiPermissionsById } from '../../constants/userConstants';
 import { deepCompare, isEmpty } from '../../helpers';
 
@@ -120,8 +119,6 @@ const groupsFilter = stateGroups =>
     [ALL_DEVICES]
   );
 
-const releasesFilter = stateReleaseTags => [ALL_RELEASES, ...Object.keys(stateReleaseTags)];
-
 const scopedPermissionAreas = {
   groups: {
     key: 'groups',
@@ -130,15 +127,6 @@ const scopedPermissionAreas = {
     excessiveAccessConfig: {
       selector: ALL_DEVICES,
       warning: `For 'All devices', users with the Manage permission may also create, edit and delete devices groups.`
-    }
-  },
-  releases: {
-    key: 'releases',
-    filter: releasesFilter,
-    placeholder: 'Search release tags',
-    excessiveAccessConfig: {
-      selector: ALL_RELEASES,
-      warning: `For 'All releases', users with the Manage permission may also upload and delete releases.`
     }
   }
 };
@@ -255,7 +243,7 @@ const deriveItemsAndPermissions = (stateItems, roleItems, options = {}) => {
   return { filtered: filteredStateItems, selections: itemSelections };
 };
 
-const permissionCompatibilityReducer = (accu, permission) => ({ [ALL_RELEASES]: [...accu[ALL_RELEASES], permission] });
+const permissionCompatibilityReducer = (accu, permission) => ({ ['ALL_RELEASES']: [...accu['ALL_RELEASES'], permission] });
 
 export const RoleDefinition = ({
   adding,
@@ -305,7 +293,7 @@ export const RoleDefinition = ({
     setReleaseTagSelections(releaseTagSelections);
     setReleasesPermissions(
       releaseTagSelections.reduce((accu, { item, uiPermissions }) => {
-        if (item === ALL_RELEASES) {
+        if (item === 'ALL_RELEASES') {
           return [...accu, ...uiPermissions];
         }
         return accu;
@@ -328,7 +316,7 @@ export const RoleDefinition = ({
       uiPermissions: {
         auditlog: auditlogPermissions,
         groups: groupSelections,
-        releases: hasReleaseTags ? releaseTagSelections : [{ item: ALL_RELEASES, uiPermissions: releasesPermissions }],
+        releases: [{ item: 'ALL_RELEASES', uiPermissions: releasesPermissions }],
         userManagement: userManagementPermissions
       }
     };
@@ -349,7 +337,7 @@ export const RoleDefinition = ({
       groups: groupSelections.reduce(itemUiPermissionsReducer, {}),
       releases: hasReleaseTags
         ? releaseTagSelections.reduce(itemUiPermissionsReducer, {})
-        : releasesPermissions.reduce(permissionCompatibilityReducer, { [ALL_RELEASES]: [] })
+        : releasesPermissions.reduce(permissionCompatibilityReducer, { ['ALL_RELEASES']: [] })
     };
     const { hasPartiallyDefinedAreas, hasAreaPermissions } = [...groupSelections, ...releaseTagSelections].reduce(
       (accu, { item, uiPermissions }) => {

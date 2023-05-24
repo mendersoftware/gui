@@ -7,24 +7,13 @@ import pluralize from 'pluralize';
 import { v4 as uuid } from 'uuid';
 
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from '../actions/appActions';
-import { getSingleDeployment } from '../actions/deploymentActions';
 import { auditLogsApiUrl } from '../actions/organizationActions';
-import { cleanUpUpload, progress } from '../actions/releaseActions';
-import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
 import { SORTING_OPTIONS, UPLOAD_PROGRESS, emptyChartSelection } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
-import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
-import {
-  getDeviceTwinIntegrations,
-  getGroups as getGroupsSelector,
-  getIdAttribute,
-  getTenantCapabilities,
-  getUserCapabilities,
-  getUserSettings
-} from '../selectors';
+import { getDeviceTwinIntegrations, getGroups as getGroupsSelector, getIdAttribute, getTenantCapabilities, getUserSettings } from '../selectors';
 import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
 
@@ -43,9 +32,6 @@ const defaultAttributes = [
   { scope: 'identity', attribute: 'status' },
   { scope: 'inventory', attribute: 'artifact_name' },
   { scope: 'inventory', attribute: 'device_type' },
-  { scope: 'inventory', attribute: 'mender_is_gateway' },
-  { scope: 'inventory', attribute: 'mender_gateway_system_id' },
-  { scope: 'inventory', attribute: rootfsImageVersion },
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },
@@ -490,19 +476,13 @@ export const getDeviceById = id => (dispatch, getState) =>
 
 export const getDeviceInfo = deviceId => (dispatch, getState) => {
   const device = getState().devices.byId[deviceId] || {};
-  const { hasDeviceConfig, hasDeviceConnect, hasMonitor } = getTenantCapabilities(getState());
-  const { canConfigure } = getUserCapabilities(getState());
+  const { hasMonitor } = getTenantCapabilities(getState());
   const integrations = getDeviceTwinIntegrations(getState());
   let tasks = [dispatch(getDeviceAuth(deviceId)), ...integrations.map(integration => dispatch(getDeviceTwin(deviceId, integration)))];
-  if (hasDeviceConfig && canConfigure && [DEVICE_STATES.accepted, DEVICE_STATES.preauth].includes(device.status)) {
-    tasks.push(dispatch(getDeviceConfig(deviceId)));
-  }
   if (device.status === DEVICE_STATES.accepted) {
     // Get full device identity details for single selected device
     tasks.push(dispatch(getDeviceById(deviceId)));
-    if (hasDeviceConnect) {
-      tasks.push(dispatch(getDeviceConnect(deviceId)));
-    }
+    tasks.push(dispatch(getDeviceConnect(deviceId)));
     if (hasMonitor) {
       tasks.push(dispatch(getLatestDeviceAlerts(deviceId)));
       tasks.push(dispatch(getDeviceMonitorConfig(deviceId)));
@@ -826,10 +806,10 @@ export const getReportsData = () => (dispatch, getState) => {
     const totalDeviceCount = devicesState.byStatus.accepted.total;
     const newReports = results.map(({ data, reportConfig }) => {
       let { items, other_count } = data[0];
-      const { attribute, group, software = '' } = reportConfig;
+      const { attribute, group } = reportConfig;
       const dataCount = items.reduce((accu, item) => accu + item.count, 0);
       // the following is needed to show reports including both old (artifact_name) & current style (rootfs-image.version) device software
-      const otherCount = !group && (software === rootfsImageVersion || attribute === 'artifact_name') ? totalDeviceCount - dataCount : other_count;
+      const otherCount = !group && attribute === 'artifact_name' ? totalDeviceCount - dataCount : other_count;
       return { items, otherCount, total: otherCount + dataCount };
     });
     return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
@@ -922,19 +902,14 @@ export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) =
   const uploadId = uuid();
   const cancelSource = new AbortController();
   const uploads = { ...getState().app.uploads, [uploadId]: { inprogress: true, uploadProgress: 0, cancelSource } };
-  return Promise.all([
-    dispatch(setSnackbar('Uploading file')),
-    dispatch({ type: UPLOAD_PROGRESS, uploads }),
-    GeneralApi.uploadPut(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
-  ])
+  return Promise.all([dispatch(setSnackbar('Uploading file')), dispatch({ type: UPLOAD_PROGRESS, uploads })])
     .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
       if (isCancel(err)) {
         return dispatch(setSnackbar('The upload has been cancelled', 5000));
       }
       return commonErrorHandler(err, `Error uploading file to device.`, dispatch);
-    })
-    .finally(() => dispatch(cleanUpUpload(uploadId)));
+    });
 };
 
 export const getDeviceAuth = id => dispatch =>
@@ -1038,42 +1013,6 @@ export const decommissionDevice = (deviceId, authId) => dispatch =>
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was decommissioned successfully'))))
     .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch))
     .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
-
-export const getDeviceConfig = deviceId => dispatch =>
-  GeneralApi.get(`${deviceConfig}/${deviceId}`)
-    .then(({ data }) => {
-      let tasks = [
-        dispatch({
-          type: DeviceConstants.RECEIVE_DEVICE_CONFIG,
-          device: { id: deviceId, config: data }
-        })
-      ];
-      tasks.push(Promise.resolve(data));
-      return Promise.all(tasks);
-    })
-    .catch(err => {
-      // if we get a proper error response we most likely queried a device without an existing config check-in and we can just ignore the call
-      if (err.response?.data?.error.status_code !== 404) {
-        return commonErrorHandler(err, `There was an error retrieving the configuration for device ${deviceId}.`, dispatch, commonErrorFallback);
-      }
-    });
-
-export const setDeviceConfig = (deviceId, config) => dispatch =>
-  GeneralApi.put(`${deviceConfig}/${deviceId}`, config)
-    .catch(err => commonErrorHandler(err, `There was an error setting the configuration for device ${deviceId}.`, dispatch, commonErrorFallback))
-    .then(() => Promise.resolve(dispatch(getDeviceConfig(deviceId))));
-
-export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDefault, config) => (dispatch, getState) =>
-  GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, configDeploymentConfiguration)
-    .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, commonErrorFallback))
-    .then(({ data }) => {
-      let tasks = [dispatch(getSingleDeployment(data.deployment_id))];
-      if (isDefault) {
-        const { previous } = getState().users.globalSettings.defaultDeviceConfig;
-        tasks.push(dispatch(saveGlobalSettings({ defaultDeviceConfig: { current: config, previous } })));
-      }
-      return Promise.all(tasks);
-    });
 
 export const setDeviceTags = (deviceId, tags) => dispatch =>
   // to prevent tag set failures, retrieve the device & use the freshest etag we can get

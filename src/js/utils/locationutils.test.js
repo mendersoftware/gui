@@ -1,4 +1,3 @@
-import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, listDefaultsByState } from '../constants/deploymentConstants';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import {
@@ -12,7 +11,6 @@ import {
   generateDevicePath,
   generateReleasesPath,
   parseAuditlogsQuery,
-  parseDeploymentsQuery,
   parseDeviceQuery,
   parseReleasesQuery
 } from './locationutils';

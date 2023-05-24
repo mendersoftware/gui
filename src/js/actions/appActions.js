@@ -9,30 +9,14 @@ import {
   SET_OFFLINE_THRESHOLD,
   SET_SEARCH_STATE,
   SET_SNACKBAR,
-  SET_VERSION_INFORMATION,
-  TIMEOUTS
+  SET_VERSION_INFORMATION
 } from '../constants/appConstants';
-import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
-import { onboardingSteps } from '../constants/onboardingConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
 import { getCurrentUser, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
-import { getDeploymentsByStatus } from './deploymentActions';
-import {
-  getDeviceAttributes,
-  getDeviceById,
-  getDeviceLimit,
-  getDevicesByStatus,
-  getDynamicGroups,
-  getGroups,
-  searchDevices,
-  setDeviceListState
-} from './deviceActions';
-import { setDemoArtifactPort, setOnboardingComplete } from './onboardingActions';
+import { getDeviceAttributes, getDeviceLimit, getDevicesByStatus, getDynamicGroups, getGroups, searchDevices, setDeviceListState } from './deviceActions';
 import { getIntegrations, getUserOrganization } from './organizationActions';
-import { getReleases } from './releaseActions';
 import { getGlobalSettings, getRoles, getUserSettings, saveGlobalSettings, saveUserSettings } from './userActions';
 
 const cookies = new Cookies();
@@ -62,16 +46,12 @@ const featureFlags = [
 ];
 export const parseEnvironmentInfo = () => (dispatch, getState) => {
   const state = getState();
-  let onboardingComplete = state.onboarding.complete || !!JSON.parse(window.localStorage.getItem('onboardingComplete') ?? 'false');
-  let demoArtifactPort = 85;
   let environmentData = {};
   let environmentFeatures = {};
   let versionInfo = {};
   if (mender_environment) {
     const {
       features = {},
-      demoArtifactPort: port,
-      disableOnboarding,
       hostAddress,
       hostedAnnouncement,
       integrationVersion,
@@ -84,8 +64,6 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
       stripeAPIKey,
       trackerCode
     } = mender_environment;
-    onboardingComplete = stringToBoolean(features.isEnterprise) || stringToBoolean(disableOnboarding) || onboardingComplete;
-    demoArtifactPort = port || demoArtifactPort;
     environmentData = {
       hostedAnnouncement: hostedAnnouncement || state.app.hostedAnnouncement,
       hostAddress: hostAddress || state.app.hostAddress,
@@ -113,35 +91,11 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
     };
   }
   return Promise.all([
-    dispatch(setOnboardingComplete(onboardingComplete)),
-    dispatch(setDemoArtifactPort(demoArtifactPort)),
     dispatch({ type: SET_FEATURES, value: environmentFeatures }),
     dispatch({ type: SET_VERSION_INFORMATION, docsVersion: versionInfo.docs, value: versionInfo.remainder }),
     dispatch({ type: SET_ENVIRONMENT_DATA, value: environmentData }),
     dispatch(getLatestReleaseInfo())
   ]);
-};
-
-const maybeAddOnboardingTasks = ({ devicesByStatus, dispatch, showHelptips, onboardingState, tasks }) => {
-  if (!(showHelptips && onboardingState.showTips) || onboardingState.complete) {
-    return tasks;
-  }
-  const welcomeTip = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, {
-    progress: onboardingState.progress,
-    complete: onboardingState.complete,
-    showHelptips,
-    showTips: onboardingState.showTips
-  });
-  if (welcomeTip) {
-    tasks.push(dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', welcomeTip, () => {}, true)));
-  }
-  // try to retrieve full device details for onboarding devices to ensure ips etc. are available
-  // we only load the first few/ 20 devices, as it is possible the onboarding is left dangling
-  // and a lot of devices are present and we don't want to flood the backend for this
-  return devicesByStatus[DEVICE_STATES.accepted].deviceIds.reduce((accu, id) => {
-    accu.push(dispatch(getDeviceById(id)));
-    return accu;
-  }, tasks);
 };
 
 const processUserCookie = (user, showHelptips) => {
@@ -166,8 +120,6 @@ export const initializeAppData = () => (dispatch, getState) => {
     dispatch(getUserSettings()),
     dispatch(getGlobalSettings()),
     dispatch(getDeviceAttributes()),
-    dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, undefined, undefined, undefined, undefined, undefined, undefined, false)),
-    dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.inprogress)),
     dispatch(getDevicesByStatus(DEVICE_STATES.accepted)),
     dispatch(getDevicesByStatus(DEVICE_STATES.pending)),
     dispatch(getDevicesByStatus(DEVICE_STATES.preauth)),
@@ -175,7 +127,6 @@ export const initializeAppData = () => (dispatch, getState) => {
     dispatch(getDynamicGroups()),
     dispatch(getGroups()),
     dispatch(getIntegrations()),
-    dispatch(getReleases()),
     dispatch(getDeviceLimit()),
     dispatch(getRoles()),
     dispatch(setFirstLoginAfterSignup(cookies.get('firstLoginAfterSignup')))
@@ -192,7 +143,6 @@ export const initializeAppData = () => (dispatch, getState) => {
     tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
     // checks if user id is set and if cookie for helptips exists for that user
     showHelptips = processUserCookie(user, showHelptips);
-    tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
     tasks.push(dispatch({ type: SET_SHOW_HELP, show: showHelptips }));
     let settings = { showHelptips };
     if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {

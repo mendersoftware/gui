@@ -23,70 +23,20 @@ export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
   }
 }));
 
-export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
+export const MenderTooltipClickable = ({ children, startOpen = false, ...remainingProps }) => {
   const [open, setOpen] = useState(startOpen || false);
 
   const toggleVisibility = () => setOpen(toggle);
 
   const hide = () => setOpen(false);
 
-  const Component = onboarding ? OnboardingTooltip : MenderTooltip;
-  const extraProps = onboarding
-    ? {
-        PopperProps: {
-          disablePortal: true,
-          popperOptions: {
-            strategy: 'fixed',
-            modifiers: [
-              { name: 'flip', enabled: false },
-              { name: 'preventOverflow', enabled: true, options: { boundary: window, altBoundary: false } }
-            ]
-          }
-        }
-      }
-    : {};
   return (
     <ClickAwayListener onClickAway={hide}>
-      <Component
-        arrow={!onboarding}
-        open={open}
-        disableFocusListener
-        disableHoverListener
-        disableTouchListener
-        onOpen={() => setOpen(true)}
-        {...extraProps}
-        {...remainingProps}
-      >
+      <MenderTooltip arrow open={open} disableFocusListener disableHoverListener disableTouchListener onOpen={() => setOpen(true)} {...remainingProps}>
         <div onClick={toggleVisibility}>{children}</div>
-      </Component>
+      </MenderTooltip>
     </ClickAwayListener>
   );
 };
 
-const iconWidth = 30;
-
-export const OnboardingTooltip = withStyles(Tooltip, theme => ({
-  arrow: {
-    color: theme.palette.primary.main
-  },
-  tooltip: {
-    backgroundColor: theme.palette.primary.main,
-    boxShadow: theme.shadows[1],
-    color: theme.palette.grey[500],
-    fontSize: 14,
-    maxWidth: 350,
-    padding: '12px 18px',
-    width: 350,
-    '& a': {
-      color: theme.palette.grey[500]
-    },
-    '&.MuiTooltip-tooltipPlacementTop': { marginLeft: iconWidth, marginBottom: 0, marginTop: `calc(${iconWidth} + ${theme.spacing(1.5)})` },
-    '&.MuiTooltip-tooltipPlacementRight': { marginTop: iconWidth / 2 },
-    '&.MuiTooltip-tooltipPlacementBottom': { marginLeft: iconWidth },
-    '&.MuiTooltip-tooltipPlacementLeft': { marginTop: iconWidth / 2 }
-  },
-  popper: {
-    opacity: 0.9
-  }
-}));
 export default MenderTooltip;

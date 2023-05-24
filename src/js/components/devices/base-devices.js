@@ -5,7 +5,6 @@ import pluralize from 'pluralize';
 
 import preauthImage from '../../../assets/img/preauthorize.png';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { rootfsImageVersion } from '../../constants/releaseConstants';
 import Time, { ApproximateRelativeDate } from '../common/time';
 import DeviceStatus from './device-status';
 
@@ -48,7 +47,7 @@ export const DefaultAttributeRenderer = ({ column, device, idAttribute }) => (
   <AttributeRenderer content={column.textRender({ device, column, idAttribute })} textContent={column.textRender({ device, column, idAttribute })} />
 );
 
-export const getDeviceSoftwareText = (attributes = {}) => attributes[rootfsImageVersion] || attributes.artifact_name || '-';
+export const getDeviceSoftwareText = (attributes = {}) => attributes.artifact_name || '-';
 export const DeviceSoftware = ({ device }) => (
   <AttributeRenderer content={getDeviceSoftwareText(device.attributes)} textContent={getDeviceSoftwareText(device.attributes)} />
 );
@@ -130,7 +129,7 @@ export const RejectedEmptyState = ({ filters }) => (
 export const defaultHeaders = {
   currentSoftware: {
     title: 'Current software',
-    attribute: { name: rootfsImageVersion, scope: 'inventory', alternative: 'artifact_name' },
+    attribute: { name: 'artifact_name', scope: 'inventory', alternative: 'artifact_name' },
     component: DeviceSoftware,
     sortable: true,
     textRender: getDeviceSoftwareText

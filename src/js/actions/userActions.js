@@ -8,11 +8,9 @@ import UsersApi from '../api/users-api';
 import { cleanUp, logout } from '../auth';
 import * as AppConstants from '../constants/appConstants';
 import { ALL_DEVICES } from '../constants/deviceConstants';
-import * as OnboardingConstants from '../constants/onboardingConstants';
-import { ALL_RELEASES } from '../constants/releaseConstants';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
-import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getCurrentUser, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 import { commonErrorFallback, commonErrorHandler, initializeAppData, setOfflineThreshold, setSnackbar } from './appActions';
 
@@ -382,7 +380,7 @@ export const mapUserRolesToUiPermissions = (userRoles, roles) =>
 
 const scopedPermissionAreas = {
   groups: { key: 'groups', excessiveAccessSelector: ALL_DEVICES },
-  releases: { key: 'releases', excessiveAccessSelector: ALL_RELEASES }
+  releases: { key: 'releases', excessiveAccessSelector: 'ALL_RELEASES' }
 };
 
 export const getPermissionSets = () => (dispatch, getState) =>
@@ -601,7 +599,7 @@ export const getUserSettings = () => dispatch =>
   });
 
 export const saveUserSettings =
-  (settings = { onboarding: {} }) =>
+  (settings = {}) =>
   (dispatch, getState) => {
     if (!getState().users.currentUser) {
       return Promise.resolve();
@@ -610,11 +608,7 @@ export const saveUserSettings =
       const userSettings = getUserSettingsSelector(getState());
       const updatedSettings = {
         ...userSettings,
-        ...settings,
-        onboarding: {
-          ...userSettings.onboarding,
-          ...settings.onboarding
-        }
+        ...settings
       };
       const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};
       return Promise.all([
@@ -630,11 +624,8 @@ export const get2FAQRCode = () => dispatch =>
 /*
   Onboarding
 */
-export const setShowHelptips = show => (dispatch, getState) => {
+export const setShowHelptips = show => dispatch => {
   let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch(saveUserSettings({ showHelptips: show }))];
-  if (!getOnboardingState(getState()).complete) {
-    tasks.push(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }));
-  }
   return Promise.all(tasks);
 };
 

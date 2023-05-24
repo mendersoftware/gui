@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Dashboard Component renders correctly 1`] = `
-<h4
-  class="margin-left-small"
->
-  Dashboard
-</h4>
-`;

@@ -8,15 +8,7 @@ import { toggle } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
-import { NameTagTip } from '../../helptips/helptooltips';
 import DeviceDataCollapse from './devicedatacollapse';
-
-const configHelpTipsMap = {
-  name: {
-    position: 'right',
-    component: NameTagTip
-  }
-};
 
 export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, userCapabilities }) => {
   const { canWriteDevices } = userCapabilities;
@@ -58,13 +50,6 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, u
       .finally(() => setIsEditDisabled(false));
   };
 
-  const helpTipsMap = Object.entries(configHelpTipsMap).reduce((accu, [key, value]) => {
-    accu[key] = {
-      ...value,
-      props: { deviceId: device.id }
-    };
-    return accu;
-  }, {});
   return (
     <DeviceDataCollapse
       title={
@@ -87,7 +72,6 @@ export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, u
               disabled={isEditDisabled}
               errortext=""
               input={changedTags}
-              inputHelpTipsMap={helpTipsMap}
               onInputChange={setChangedTags}
               reset={shouldUpdateEditor}
               showHelptips={showHelptips}

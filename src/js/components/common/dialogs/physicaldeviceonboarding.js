@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -6,11 +6,9 @@ import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material'
 import { Autocomplete, TextField } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 
-import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/onboardingActions';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
-import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
-import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../../selectors';
+import { getDocsVersion, getIsEnterprise } from '../../../selectors';
 import CopyCode from '../copy-code';
 import { MenderTooltipClickable } from '../mendertooltip';
 
@@ -83,17 +81,7 @@ export const DeviceTypeTip = () => (
   </MenderTooltipClickable>
 );
 
-export const DeviceTypeSelectionStep = ({
-  docsVersion,
-  hasConvertedImage,
-  hasExternalIntegration,
-  integrationProvider,
-  onboardingState,
-  onSelect,
-  selection = '',
-  version
-}) => {
-  const shouldShowOnboardingTip = !onboardingState.complete && onboardingState.showTips && onboardingState.showHelptips;
+export const DeviceTypeSelectionStep = ({ docsVersion, hasConvertedImage, hasExternalIntegration, integrationProvider, onSelect, selection = '', version }) => {
   const hasExternalIntegrationSupport = versionCompare(version, '3.2') > -1;
   return (
     <>
@@ -138,7 +126,6 @@ export const DeviceTypeSelectionStep = ({
           style={{ maxWidth: 300 }}
           value={selection}
         />
-        {shouldShowOnboardingTip ? <DeviceTypeTip /> : <div />}
         {hasExternalIntegrationSupport && <ExternalProviderTip hasExternalIntegration={hasExternalIntegration} integrationProvider={integrationProvider} />}
       </div>
       {hasConvertedImage && <ConvertedImageNote docsVersion={docsVersion} />}
@@ -146,15 +133,15 @@ export const DeviceTypeSelectionStep = ({
   );
 };
 
-export const InstallationStep = ({ advanceOnboarding, selection, onboardingState, ...remainingProps }) => {
-  const codeToCopy = getDebConfigurationCode({ ...remainingProps, deviceType: selection, isOnboarding: !onboardingState.complete });
+export const InstallationStep = ({ selection, ...remainingProps }) => {
+  const codeToCopy = getDebConfigurationCode({ ...remainingProps, deviceType: selection, isOnboarding: false });
   return (
     <>
       <h4>Log into your device and install the Mender client</h4>
       <p>
         Copy & paste and run this command <b>on your device</b>:
       </p>
-      <CopyCode code={codeToCopy} onCopy={() => advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START)} withDescription={true} />
+      <CopyCode code={codeToCopy} withDescription={true} />
       <p>This downloads the Mender client on the device, sets the configuration and starts the client.</p>
       <p>
         Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can continue.
@@ -169,7 +156,6 @@ const steps = {
 };
 
 export const PhysicalDeviceOnboarding = ({
-  advanceOnboarding,
   docsVersion,
   hasExternalIntegration,
   integrationProvider,
@@ -178,25 +164,17 @@ export const PhysicalDeviceOnboarding = ({
   isEnterprise,
   isDemoMode,
   isPreRelease,
-  onboardingState,
-  progress,
-  setOnboardingApproach,
-  setOnboardingDeviceType,
   tenantToken,
   version
 }) => {
   const [selection, setSelection] = useState('');
-
-  useEffect(() => {
-    setOnboardingApproach('physical');
-  }, []);
+  const [progress, setProgress] = useState(1);
 
   const onSelect = (e, deviceType, reason) => {
     if (reason === 'selectOption') {
-      setOnboardingDeviceType(deviceType.value);
       setSelection(deviceType.value);
+      setProgress(2);
     } else if (reason === 'clear') {
-      setOnboardingDeviceType('');
       setSelection('');
     }
   };
@@ -206,7 +184,6 @@ export const PhysicalDeviceOnboarding = ({
   const ComponentToShow = steps[progress];
   return (
     <ComponentToShow
-      advanceOnboarding={advanceOnboarding}
       hasExternalIntegration={hasExternalIntegration}
       docsVersion={docsVersion}
       hasConvertedImage={hasConvertedImage}
@@ -216,7 +193,6 @@ export const PhysicalDeviceOnboarding = ({
       isHosted={isHosted}
       isDemoMode={isDemoMode}
       isPreRelease={isPreRelease}
-      onboardingState={onboardingState}
       onSelect={onSelect}
       selection={selection}
       tenantToken={tenantToken}
@@ -224,8 +200,6 @@ export const PhysicalDeviceOnboarding = ({
     />
   );
 };
-
-const actionCreators = { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType };
 
 const mapStateToProps = state => {
   const integrationProvider = EXTERNAL_PROVIDER['iot-hub'].provider;
@@ -240,10 +214,9 @@ const mapStateToProps = state => {
     isHosted: state.app.features.isHosted,
     isDemoMode: state.app.features.isDemoMode,
     isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
-    onboardingState: getOnboardingState(state),
     tenantToken: state.organization.organization.tenant_token,
     version: state.app.versionInformation.Integration
   };
 };
 
-export default connect(mapStateToProps, actionCreators)(PhysicalDeviceOnboarding);
+export default connect(mapStateToProps)(PhysicalDeviceOnboarding);

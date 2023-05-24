@@ -19,7 +19,6 @@ import logo from '../../../assets/img/headerlogo.png';
 import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { initializeAppData, setFirstLoginAfterSignup, setSearchState, setSnackbar } from '../../actions/appActions';
-import { getOnboardingState } from '../../actions/onboardingActions';
 import { getUser, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
@@ -31,7 +30,6 @@ import { useDebounce } from '../../utils/debouncehook';
 import Search from '../common/search';
 import Announcement from './announcement';
 import DemoNotification from './demonotification';
-import DeploymentNotifications from './deploymentnotifications';
 import DeviceNotifications from './devicenotifications';
 import OfferHeader from './offerheader';
 import TrialNotification from './trialnotification';
@@ -86,11 +84,9 @@ export const Header = ({
   deviceLimit,
   docsVersion,
   firstLoginAfterSignup,
-  getOnboardingState,
   getUser,
   hasTrackingEnabled,
   initializeAppData,
-  inProgress,
   isEnterprise,
   isHosted,
   isSearching,
@@ -148,7 +144,6 @@ export const Header = ({
         .then(initializeAppData)
         // this is allowed to fail if no user information are available
         .catch(err => console.log(extractErrorMessage(err)))
-        .then(getOnboardingState)
         .finally(() => setGettingUser(false))
     );
   };
@@ -201,7 +196,6 @@ export const Header = ({
         <Search isSearching={isSearching} searchTerm={searchTerm} onSearch={onSearch} />
         <div className="flexbox center-aligned">
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
-          <DeploymentNotifications inprogress={inProgress} />
           <Button
             className={`header-dropdown ${classes.dropDown}`}
             onClick={e => setAnchorEl(e.currentTarget)}
@@ -259,7 +253,6 @@ export const Header = ({
 };
 
 const actionCreators = {
-  getOnboardingState,
   getUser,
   setHideAnnouncement,
   initializeAppData,
@@ -282,7 +275,6 @@ const mapStateToProps = state => {
     docsVersion: getDocsVersion(state),
     firstLoginAfterSignup: state.app.firstLoginAfterSignup,
     hasTrackingEnabled: getUserSettings(state).trackingConsentGiven,
-    inProgress: state.deployments.byStatus.inprogress.total,
     isEnterprise: getIsEnterprise(state),
     isHosted: state.app.features.isHosted,
     isSearching: state.app.searchState.isSearching,

@@ -5,7 +5,6 @@ import { Chip, Icon } from '@mui/material';
 
 import pendingIcon from '../../../../assets/img/pending_status.png';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { AuthButton } from '../../helptips/helptooltips';
 import Authsets from './authsets/authsets';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -42,9 +41,6 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, showHelpti
             {statusIcon}
           </div>
           {requestNotification}
-          {showHelptips && (
-            <div style={{ position: 'relative', width: 50, height: 30 }}>{status === DEVICE_STATES.pending && <AuthButton highlightHelp={true} />}</div>
-          )}
         </div>
       }
     >

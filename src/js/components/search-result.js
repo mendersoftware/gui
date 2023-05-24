@@ -12,7 +12,7 @@ import pluralize from 'pluralize';
 import { setSearchState, setSnackbar } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
-import { getIdAttribute, getMappedDevicesList, getOnboardingState, getUserSettings } from '../selectors';
+import { getIdAttribute, getMappedDevicesList, getUserSettings } from '../selectors';
 import { getHeaders } from './devices/authorized-devices';
 import { routes } from './devices/base-devices';
 import Devicelist from './devices/devicelist';
@@ -55,7 +55,6 @@ export const SearchResult = ({
   customColumnSizes,
   devices,
   idAttribute,
-  onboardingState,
   onToggleSearchResult,
   open = true,
   searchState,
@@ -137,7 +136,6 @@ export const SearchResult = ({
           deviceListState={{ perPage: 10, sort: {} }}
           devices={devices}
           idAttribute={idAttribute}
-          onboardingState={onboardingState}
           onSort={onSortChange}
           PaginationProps={{ rowsPerPageOptions: [10] }}
           pageTotal={searchTotal}
@@ -160,7 +158,6 @@ const mapStateToProps = state => {
     customColumnSizes: state.users.customColumns,
     devices: getMappedDevicesList(state, 'search'),
     idAttribute: getIdAttribute(state),
-    onboardingState: getOnboardingState(state),
     searchState: state.app.searchState
   };
 };
