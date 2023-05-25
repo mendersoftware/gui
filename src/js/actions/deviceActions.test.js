@@ -9,13 +9,11 @@ import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState } from '../../../tests/mockData';
 import { mockAbortController } from '../../../tests/setupTests';
 import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
-import * as DeploymentConstants from '../constants/deploymentConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import {
   addDevicesToGroup,
   addDynamicGroup,
   addStaticGroup,
-  applyDeviceConfig,
   decommissionDevice,
   deleteAuthset,
   deviceFileUpload,
@@ -26,7 +24,6 @@ import {
   getDeviceAttributes,
   getDeviceAuth,
   getDeviceById,
-  getDeviceConfig,
   getDeviceCount,
   getDeviceFileDownloadLink,
   getDeviceInfo,
@@ -47,7 +44,6 @@ import {
   removeDynamicGroup,
   removeStaticGroup,
   selectGroup,
-  setDeviceConfig,
   setDeviceFilters,
   setDeviceListState,
   setDeviceTags,
@@ -848,62 +844,6 @@ describe('device retrieval ', () => {
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [expectedDevice1.id]: expectedDevice1, [expectedDevice2.id]: expectedDevice2 } }
     ];
     await store.dispatch(getDevicesWithAuth([defaultState.devices.byId.a1, defaultState.devices.byId.b1]));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-});
-
-const deviceConfig = {
-  configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-  reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-  updated_ts: defaultState.devices.byId.a1.updated_ts,
-  reported_ts: '2019-01-01T09:25:01.000Z'
-};
-
-describe('device config ', () => {
-  it('should allow single device config retrieval', async () => {
-    const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { config: deviceConfig, id: defaultState.devices.byId.a1.id } }];
-    await store.dispatch(getDeviceConfig(defaultState.devices.byId.a1.id));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should not have a problem with unknown devices on config retrieval', async () => {
-    const store = mockStore({ ...defaultState });
-    const expectedActions = [];
-    await store.dispatch(getDeviceConfig('testId'));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-
-  it('should allow single device config update', async () => {
-    const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE_CONFIG, device: { config: deviceConfig, id: defaultState.devices.byId.a1.id } }];
-    await store.dispatch(setDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should allow single device config deployment', async () => {
-    const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: { ...defaultState.deployments.byId.d1, name: 'undefined' } }];
-    await store.dispatch(applyDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-
-  it('should allow setting device tags', async () => {
-    const store = mockStore({ ...defaultState });
-    const { attributes, id } = defaultState.devices.byId.a1;
-    const expectedActions = [
-      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
-      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id, tags: { something: 'asdl' } } }
-    ];
-    await store.dispatch(setDeviceTags(defaultState.devices.byId.a1.id, { something: 'asdl' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

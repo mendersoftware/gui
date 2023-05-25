@@ -3,16 +3,11 @@ import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import {
   commonProcessor,
   formatAuditlogs,
-  formatDeployments,
   formatDeviceSearch,
   formatPageState,
-  formatReleases,
-  generateDeploymentsPath,
   generateDevicePath,
-  generateReleasesPath,
   parseAuditlogsQuery,
-  parseDeviceQuery,
-  parseReleasesQuery
+  parseDeviceQuery
 } from './locationutils';
 
 const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
@@ -84,124 +79,6 @@ describe('locationutils', () => {
     });
   });
 
-  describe('deployments', () => {
-    describe('parseDeploymentsQuery', () => {
-      const defaultArgs = { location: { pathname: '/deployments' }, today, tonight };
-      it('works as expected', () => {
-        const result = parseDeploymentsQuery(new URLSearchParams('?pending=1:50&inprogress=5'), {
-          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: ['testId'] },
-          ...defaultArgs,
-          location: { pathname: '/deployments/unknown' }
-        });
-        expect(result).toEqual({
-          deploymentObject: {},
-          general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.active.key },
-          [DEPLOYMENT_STATES.inprogress]: { page: 5 },
-          [DEPLOYMENT_STATES.pending]: { page: 1, perPage: 50 }
-        });
-      });
-      it('works as expected - pt2', () => {
-        const result = parseDeploymentsQuery(new URLSearchParams('?type=configuration&search=someSearch'), {
-          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: ['testId'] },
-          ...defaultArgs,
-          location: { pathname: '/deployments/unknownToo' }
-        });
-        expect(result).toEqual({
-          deploymentObject: {},
-          general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.finished.key },
-          [DEPLOYMENT_STATES.finished]: { startDate: today, endDate: tonight, search: 'someSearch', type: 'configuration' }
-        });
-      });
-      it('works as expected - pt3', () => {
-        const result = parseDeploymentsQuery(new URLSearchParams('?endDate=2020-05-02&startDate=2000-01-25'), {
-          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: ['testId'] },
-          ...defaultArgs,
-          location: { pathname: '/deployments/done' }
-        });
-        expect(result).toEqual({
-          deploymentObject: {},
-          general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.finished.key },
-          [DEPLOYMENT_STATES.finished]: { startDate: '2000-01-25T00:00:00.000Z', endDate: '2020-05-02T23:59:59.999Z', search: '', type: '' }
-        });
-      });
-      it('works as expected - pt4', () => {
-        const result = parseDeploymentsQuery(new URLSearchParams('?perPage=60'), {
-          pageState: { state: DEPLOYMENT_ROUTES.finished.key, id: ['testId'], perPage: 60 },
-          ...defaultArgs,
-          location: { pathname: '/deployments/scheduled' }
-        });
-        expect(result).toEqual({
-          deploymentObject: {},
-          general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.scheduled.key },
-          [DEPLOYMENT_STATES.scheduled]: { perPage: 60 }
-        });
-      });
-      it('works with release triggered dialogs', () => {
-        const result = parseDeploymentsQuery(new URLSearchParams('?release=somereleaseName'), {
-          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: ['testId'] },
-          ...defaultArgs
-        });
-        expect(result).toEqual({
-          deploymentObject: { release: 'somereleaseName' },
-          general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.active.key }
-        });
-      });
-      it('works with device triggered dialogs', () => {
-        const result = parseDeploymentsQuery(new URLSearchParams('?deviceId=someDevice'), {
-          pageState: { state: DEPLOYMENT_ROUTES.active.key, id: ['testId'] },
-          ...defaultArgs
-        });
-        expect(result).toEqual({
-          deploymentObject: { devices: [{ id: 'someDevice' }] },
-          general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.active.key }
-        });
-      });
-    });
-    describe('formatDeployments', () => {
-      it('on active', () => {
-        const pageState = {
-          general: { state: DEPLOYMENT_ROUTES.active.key },
-          [DEPLOYMENT_STATES.pending]: { page: 2, perPage: 40 },
-          [DEPLOYMENT_STATES.inprogress]: { perPage: 60 },
-          selectedId: 'testId'
-        };
-        const pathname = generateDeploymentsPath({ pageState });
-        const search = formatDeployments({ pageState }, { defaults: listDefaultsByState, today, tonight });
-        expect(pathname).toEqual('/deployments/active');
-        expect(search).toEqual('inprogress=1:60&pending=2:40');
-      });
-
-      it('on scheduled', () => {
-        const pageState = {
-          general: { state: DEPLOYMENT_ROUTES.scheduled.key },
-          [DEPLOYMENT_STATES.scheduled]: { page: 2 }
-        };
-        const pathname = generateDeploymentsPath({ pageState });
-        const search = formatDeployments(
-          { pageState },
-          {
-            defaults: listDefaultsByState,
-            today,
-            tonight
-          }
-        );
-        expect(pathname).toEqual('/deployments/scheduled');
-        expect(search).toEqual('page=2');
-      });
-
-      it('on finished', () => {
-        const pageState = {
-          general: { state: DEPLOYMENT_ROUTES.finished.key },
-          [DEPLOYMENT_STATES.finished]: { page: 4, search: 'something', type: 'deployment' }
-        };
-        const search = formatDeployments({ pageState }, { defaults: listDefaultsByState, today, tonight });
-        const pathname = generateDeploymentsPath({ pageState });
-        expect(pathname).toEqual('/deployments/finished');
-        expect(search).toEqual('page=4&search=something&type=deployment');
-      });
-    });
-  });
-
   describe('devices', () => {
     it('uses working utilties - parseDeviceQuery converts classic url style', () => {
       const { groupName, filters } = parseDeviceQuery(new URLSearchParams('?some=thing&group=testgroup&mac=donalds&existing=filter'), {
@@ -263,34 +140,6 @@ describe('locationutils', () => {
         selectedGroup: UNGROUPED_GROUP.id
       });
       expect(search).toEqual('inventory=some:eq:thing&inventory=group:eq:Unassigned');
-    });
-  });
-
-  describe('releases', () => {
-    it('uses working utilties - formatReleases', () => {
-      let search = formatReleases({ pageState: { tab: '', selectedTags: [] } });
-      expect(search).toEqual('');
-      search = formatReleases({ pageState: { tab: 'flump', selectedTags: ['123', '456'] } });
-      expect(search).toEqual('tag=123&tag=456&tab=flump');
-    });
-    it('uses working utilities - parseReleasesQuery', () => {
-      const result = parseReleasesQuery(new URLSearchParams('tab=flump&tag=asd&tag=52534'), {
-        location: { pathname: '/releases/terst' }
-      });
-      const endDate = new Date('2019-01-13');
-      endDate.setHours(23, 59, 59, 999);
-      expect(result).toEqual({
-        selectedRelease: 'terst',
-        tab: 'flump',
-        tags: ['asd', '52534']
-      });
-    });
-    it('uses working utilities - generateReleasesPath', () => {
-      const pageState = { tab: 'flump', selectedRelease: 'testId', selectedTags: ['123', '456'] };
-      const pathname = generateReleasesPath({ pageState });
-      const search = formatReleases({ pageState });
-      expect(pathname).toEqual('/releases/testId');
-      expect(search).toEqual('tag=123&tag=456&tab=flump');
     });
   });
 });

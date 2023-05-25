@@ -1,6 +1,5 @@
 import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
 import * as DeviceConstants from '../src/js/constants/deviceConstants';
-import { ALL_RELEASES } from '../src/js/constants/releaseConstants';
 import {
   defaultPermissionSets,
   emptyRole,
@@ -11,12 +10,9 @@ import {
   uiPermissionsById
 } from '../src/js/constants/userConstants';
 import { initialState as initialAppState } from '../src/js/reducers/appReducer';
-import { initialState as initialDeploymentsState } from '../src/js/reducers/deploymentReducer';
 import { initialState as initialDevicesState } from '../src/js/reducers/deviceReducer';
 import { initialState as initialMonitorState } from '../src/js/reducers/monitorReducer';
-import { initialState as initialOnboardingState } from '../src/js/reducers/onboardingReducer';
 import { initialState as initialOrganizationState } from '../src/js/reducers/organizationReducer';
-import { initialState as initialReleasesState } from '../src/js/reducers/releaseReducer';
 import { initialState as initialUsersState } from '../src/js/reducers/userReducer';
 import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
 
@@ -88,14 +84,11 @@ export const adminUserCapabilities = {
   canConfigure: true,
   canDeploy: true,
   canManageDevices: true,
-  canManageReleases: true,
   canManageUsers: true,
   canReadDeployments: true,
   canReadDevices: true,
-  canReadReleases: true,
   canReadUsers: true,
   canTroubleshoot: true,
-  canUploadReleases: true,
   canWriteDevices: true
 };
 
@@ -304,15 +297,6 @@ export const defaultState = {
       selectedGroup: undefined
     },
     limit: 500
-  },
-  onboarding: {
-    ...initialOnboardingState,
-    progress: undefined,
-    complete: false,
-    demoArtifactPort: 85,
-    showCreateArtifactDialog: false,
-    showConnectDeviceDialog: false,
-    showTipsDialog: false
   },
   monitor: {
     ...initialMonitorState,

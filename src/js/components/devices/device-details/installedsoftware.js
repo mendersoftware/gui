@@ -3,11 +3,9 @@ import React from 'react';
 import { deepmerge } from '@mui/utils';
 import { makeStyles } from 'tss-react/mui';
 
-import { rootfsImageVersion, softwareTitleMap } from '../../../constants/releaseConstants';
 import { extractSoftware, isEmpty } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import DeviceDataCollapse from './devicedatacollapse';
-import DeviceInventoryLoader from './deviceinventoryloader';
 
 const borderStyle = theme => ({ borderLeft: 'solid 1px', borderLeftColor: theme.palette.grey[500] });
 
@@ -17,17 +15,14 @@ const useStyles = makeStyles()(theme => ({
   topLevelBorder: { ...borderStyle(theme), paddingBottom: theme.spacing(2), marginBottom: theme.spacing(-2) }
 }));
 
-const mapLayerInformation = (key, value, i, path) => {
+const mapLayerInformation = (key, value, i) => {
   const infoItems = key.split('.');
   let priority = i;
   let title = infoItems[0];
-  if (softwareTitleMap[path]) {
-    priority = softwareTitleMap[path].priority;
-  }
   const itemKey = infoItems[infoItems.length - 1];
   let contents = {};
   if (infoItems.length > 2) {
-    contents = { content: {}, children: { [infoItems[1]]: mapLayerInformation(infoItems.slice(1).join('.'), value, i + 1, key) } };
+    contents = { content: {}, children: { [infoItems[1]]: mapLayerInformation(infoItems.slice(1).join('.'), value, i + 1) } };
   } else {
     contents = { content: { [itemKey]: value }, children: {} };
   }
@@ -44,10 +39,7 @@ const sortAndHoist = thing =>
     .sort((a, b) => a[1].priority - b[1].priority)
     .reduce((accu, entry) => {
       let { children, content, title } = entry[1];
-      title = Object.keys(content).reduce((layerTitle, key) => {
-        if (softwareTitleMap[`${title}.${key}`]) {
-          return softwareTitleMap[`${title}.${key}`].title;
-        }
+      title = Object.keys(content).reduce(layerTitle => {
         return layerTitle;
       }, title);
       children = sortAndHoist(children);
@@ -71,7 +63,7 @@ export const extractSoftwareInformation = (attributes = {}, sort = true) => {
   const { software } = extractSoftware(attributes);
 
   const softwareLayers = software.reduce((accu, item, index) => {
-    const layer = mapLayerInformation(item[0], item[1], index, item[0]);
+    const layer = mapLayerInformation(item[0], item[1], index);
     if (!accu[layer.title]) {
       accu[layer.title] = { content: {}, children: {} };
     }
@@ -113,26 +105,15 @@ const SoftwareLayer = ({ classes, layer, isNested, overviewOnly, setSnackbar }) 
   </div>
 );
 
-export const InstalledSoftware = ({ device, docsVersion, setSnackbar }) => {
+export const InstalledSoftware = ({ device, setSnackbar }) => {
   const { classes } = useStyles();
 
   const { attributes = {} } = device;
 
   let softwareInformation = extractSoftwareInformation(attributes);
 
-  if (!softwareInformation.length) {
-    softwareInformation = [
-      {
-        children: [],
-        content: { [softwareTitleMap[rootfsImageVersion].title]: attributes.artifact_name },
-        title: softwareTitleMap[rootfsImageVersion].title
-      }
-    ];
-  }
-
-  const waiting = !Object.values(attributes).some(i => i);
   return (
-    <DeviceDataCollapse header={waiting && <DeviceInventoryLoader docsVersion={docsVersion} />} title="Installed software">
+    <DeviceDataCollapse title="Installed software">
       <div className={classes.nestingBorders}>
         {softwareInformation.map(layer => (
           <SoftwareLayer classes={classes} key={layer.key} layer={layer} setSnackbar={setSnackbar} />

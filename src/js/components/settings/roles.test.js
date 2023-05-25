@@ -9,7 +9,6 @@ import thunk from 'redux-thunk';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { ALL_RELEASES } from '../../constants/releaseConstants';
 import Roles, { RoleManagement } from './roles';
 
 const mockStore = configureStore([thunk]);
@@ -98,7 +97,7 @@ describe('Roles Component', () => {
           { disableEdit: false, item: ALL_DEVICES, uiPermissions: ['deploy'] },
           { disableEdit: false, item: '', uiPermissions: [] }
         ],
-        releases: [{ item: ALL_RELEASES, uiPermissions: [] }],
+        releases: [{ item: 'ALL_RELEASES', uiPermissions: [] }],
         userManagement: []
       },
       source: { ...defaultState.users.rolesById.test, id: defaultState.users.rolesById.test.name }

@@ -2,7 +2,6 @@ import { rest } from 'msw';
 
 import { deploymentsApiUrl, deploymentsApiUrlV2 } from '../../src/js/actions/deploymentActions';
 import { headerNames } from '../../src/js/api/general-api';
-import { limitDefault } from '../../src/js/constants/deploymentConstants';
 import { defaultState } from '../mockData';
 
 const createdDeployment = {

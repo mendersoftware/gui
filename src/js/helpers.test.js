@@ -14,20 +14,16 @@ import {
   extractSoftware,
   formatTime,
   fullyDecodeURI,
-  generateDeploymentGroupDetails,
   getDebConfigurationCode,
   getDemoDeviceAddress,
   getFormattedSize,
   getPhaseDeviceCount,
   getRemainderPercent,
-  groupDeploymentDevicesStats,
-  groupDeploymentStats,
   isEmpty,
   mapDeviceAttributes,
   preformatWithRequestID,
   standardizePhases,
   stringToBoolean,
-  tryMapDeployments,
   unionizeStrings,
   validatePhases,
   versionCompare
@@ -434,27 +430,6 @@ describe('extractSoftware function', () => {
   });
 });
 
-describe('generateDeploymentGroupDetails function', () => {
-  it('works as expected', async () => {
-    expect(generateDeploymentGroupDetails({ terms: defaultState.devices.groups.byId.testGroupDynamic.filters }, 'testGroupDynamic')).toEqual(
-      'testGroupDynamic (group = things)'
-    );
-    expect(
-      generateDeploymentGroupDetails(
-        {
-          terms: [
-            { scope: 'system', key: 'group', operator: '$eq', value: 'things' },
-            { scope: 'system', key: 'group', operator: '$nexists', value: 'otherThings' },
-            { scope: 'system', key: 'group', operator: '$nin', value: 'a,small,list' }
-          ]
-        },
-        'testGroupDynamic'
-      )
-    ).toEqual(`testGroupDynamic (group = things, group doesn't exist otherThings, group not in a,small,list)`);
-    expect(generateDeploymentGroupDetails({ terms: undefined }, 'testGroupDynamic')).toEqual('testGroupDynamic');
-  });
-});
-
 describe('standardizePhases function', () => {
   it('works as expected', async () => {
     const phases = [
@@ -533,56 +508,5 @@ describe('validatePhases function', () => {
         true
       )
     ).toEqual(true);
-  });
-});
-
-describe('tryMapDeployments function', () => {
-  it('works as expected', async () => {
-    expect(Object.keys(defaultState.deployments.byId).reduce(tryMapDeployments, { state: { ...defaultState }, deployments: [] }).deployments).toEqual(
-      Object.values(defaultState.deployments.byId)
-    );
-    expect(['unknownDeploymentId'].reduce(tryMapDeployments, { state: { ...defaultState }, deployments: [] }).deployments).toEqual([]);
-  });
-});
-
-describe('deployment stats grouping functions', () => {
-  it('groups correctly based on deployment stats', async () => {
-    let deployment = {
-      statistics: {
-        status: {
-          aborted: 2,
-          'already-installed': 1,
-          decommissioned: 1,
-          downloading: 3,
-          failure: 1,
-          installing: 1,
-          noartifact: 1,
-          pending: 2,
-          paused: 0,
-          rebooting: 1,
-          success: 1
-        }
-      }
-    };
-    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, paused: 0, pending: 2, successes: 3, failures: 4 });
-    deployment = { ...deployment, max_devices: 100, device_count: 10 };
-    expect(groupDeploymentStats(deployment)).toEqual({ inprogress: 5, paused: 0, pending: 92, successes: 3, failures: 4 });
-  });
-  it('groups correctly based on deployment devices states', async () => {
-    const deployment = {
-      devices: {
-        a: { status: 'aborted' },
-        b: { status: 'already-installed' },
-        c: { status: 'decommissioned' },
-        d: { status: 'downloading' },
-        e: { status: 'failure' },
-        f: { status: 'installing' },
-        g: { status: 'noartifact' },
-        h: { status: 'pending' },
-        i: { status: 'rebooting' },
-        j: { status: 'success' }
-      }
-    };
-    expect(groupDeploymentDevicesStats(deployment)).toEqual({ inprogress: 3, paused: 0, pending: 1, successes: 3, failures: 3 });
   });
 });

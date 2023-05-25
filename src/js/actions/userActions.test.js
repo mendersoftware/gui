@@ -15,12 +15,6 @@ import {
   SORTING_OPTIONS
 } from '../constants/appConstants';
 import {
-  RECEIVE_DEPLOYMENTS,
-  RECEIVE_FINISHED_DEPLOYMENTS,
-  RECEIVE_INPROGRESS_DEPLOYMENTS,
-  SELECT_INPROGRESS_DEPLOYMENTS
-} from '../constants/deploymentConstants';
-import {
   ADD_DYNAMIC_GROUP,
   DEVICE_LIST_DEFAULTS,
   DEVICE_STATES,
@@ -37,9 +31,7 @@ import {
   SET_REJECTED_DEVICES,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
-import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_ARTIFACT_INCLUDED, SET_ONBOARDING_COMPLETE, SET_SHOW_ONBOARDING_HELP } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
-import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
 import {
   CREATED_ROLE,
   CREATED_USER,
