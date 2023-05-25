@@ -308,7 +308,7 @@ publish:tests:
   script:
     - export COVERALLS_SERVICE_JOB_NUMBER=unittests
     - export COVERALLS_FLAG_NAME=unittests
-    - coveralls < coverage/lcov.info
+    # - coveralls < coverage/lcov.info
 
 publish:e2e-tests:
   extends: .template:publish:tests
