@@ -39,6 +39,13 @@ describe('DeviceMonitoring Component', () => {
   it('renders correctly', async () => {
     const store = mockStore({
       ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasAddons: true
+        }
+      },
       monitor: {
         ...defaultState.monitor,
         alerts: {
@@ -56,7 +63,7 @@ describe('DeviceMonitoring Component', () => {
     });
     const { baseElement } = render(
       <Provider store={store}>
-        <DeviceMonitoring device={defaultState.devices.byId.a1} isOffline />
+        <DeviceMonitoring device={defaultState.devices.byId.a1} isOffline tenantCapabilities={{ hasMonitor: true }} />
       </Provider>
     );
     // special snapshot handling here to work around unstable ids in mui code...

@@ -18,7 +18,8 @@ import { useTheme } from '@mui/material/styles';
 
 import { getDeviceAlerts, setAlertListState } from '../../../actions/monitorActions';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
-import { getDocsVersion, getOfflineThresholdSettings } from '../../../selectors';
+import { getDocsVersion, getOfflineThresholdSettings, getTenantCapabilities } from '../../../selectors';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import Pagination from '../../common/pagination';
 import Time from '../../common/time';
 import MonitorDetailsDialog from '../dialogs/monitordetailsdialog';
@@ -65,6 +66,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
   const offlineThresholdSettings = useSelector(getOfflineThresholdSettings);
   const dispatch = useDispatch();
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
+  const { hasMonitor } = useSelector(getTenantCapabilities);
 
   useEffect(() => {
     dispatch(getDeviceAlerts(device.id, alertListState));
@@ -80,7 +82,9 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
   return (
     <DeviceDataCollapse
       header={
-        hasMonitorsDefined || isOffline ? (
+        !hasMonitor ? (
+          <EnterpriseNotification isEnterprise={hasMonitor} benefit="device monitoring features" />
+        ) : hasMonitorsDefined || isOffline ? (
           <>
             {hasMonitorsDefined && !latestAlerts.length && <NoAlertsHeaderNotification />}
             {latestAlerts.map(alert => (
@@ -100,6 +104,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
         </div>
       }
     >
+      <EnterpriseNotification isEnterprise={hasMonitor} benefit="device monitoring features" />
       {alerts.length ? (
         <>
           <div>

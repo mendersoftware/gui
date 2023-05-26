@@ -22,8 +22,9 @@ import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { emptyRole, rolesById } from '../../constants/userConstants';
-import { getFeatures } from '../../selectors';
+import { getFeatures, getIsEnterprise } from '../../selectors';
 import DetailsTable from '../common/detailstable';
+import EnterpriseNotification from '../common/enterpriseNotification';
 import RoleDefinition from './roledefinition';
 
 const columns = [
@@ -53,6 +54,7 @@ export const RoleManagement = () => {
   });
   const releaseTags = useSelector(state => state.releases.releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}));
   const roles = useSelector(state => Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })));
+  const isEnterprise = useSelector(getIsEnterprise);
 
   useEffect(() => {
     if (Object.keys(groups).length) {
@@ -105,7 +107,8 @@ export const RoleManagement = () => {
     <div>
       <h2 style={{ marginLeft: 20 }}>Roles</h2>
       <DetailsTable columns={columns} items={items} onItemClick={onEditRole} />
-      <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} />
+      <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} disabled={!isEnterprise} />
+      <EnterpriseNotification isEnterprise={isEnterprise} benefit="granular role based access control" />
       <RoleDefinition
         adding={adding}
         editing={editing}

@@ -73,6 +73,7 @@ describe('Configuration Component', () => {
           getSingleDeployment={jest.fn}
           saveGlobalSettings={jest.fn}
           setDeviceConfig={setDeviceConfigMock}
+          tenantCapabilities={{ hasDeviceConfig: true }}
         />
       </Provider>
     );
@@ -104,6 +105,7 @@ describe('Configuration Component', () => {
           getSingleDeployment={jest.fn}
           saveGlobalSettings={jest.fn}
           setDeviceConfig={submitMock}
+          tenantCapabilities={{ hasDeviceConfig: true }}
         />
       </Provider>
     );
@@ -148,6 +150,7 @@ describe('Configuration Component', () => {
           getSingleDeployment={jest.fn}
           saveGlobalSettings={jest.fn}
           setDeviceConfig={submitMock}
+          tenantCapabilities={{ hasDeviceConfig: true }}
         />
       </Provider>
     );

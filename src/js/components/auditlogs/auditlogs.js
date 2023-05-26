@@ -30,6 +30,7 @@ import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
+import EnterpriseNotification from '../common/enterpriseNotification';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
@@ -287,6 +288,15 @@ export const AuditLogs = props => {
           <p>No log entries were found.</p>
           <p>Try adjusting the filters.</p>
           <img src={historyImage} alt="Past" />
+        </div>
+      )}
+      {!hasAuditlogs && (
+        <div className="dashboard-placeholder" style={{ maxWidth: 800, placeSelf: 'center' }}>
+          <img src={historyImage} alt="Past" />
+          <EnterpriseNotification
+            isEnterprise={hasAuditlogs}
+            benefit="audit logs to trace change across your devices and access troubleshooting session replay."
+          />
         </div>
       )}
     </div>

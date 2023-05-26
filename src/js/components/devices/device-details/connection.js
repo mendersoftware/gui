@@ -25,6 +25,7 @@ import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceCon
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
 import { checkPermissionsObject, uiPermissionsById } from '../../../constants/userConstants';
 import { formatAuditlogs } from '../../../utils/locationutils';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
@@ -114,10 +115,20 @@ const troubleshootingTools = [
 
 const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device');
 
-export const DeviceConnection = ({ className = '', device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
+export const DeviceConnection = ({
+  className = '',
+  device,
+  docsVersion = '',
+  hasAuditlogs,
+  socketClosed,
+  startTroubleshoot,
+  tenantCapabilities,
+  userCapabilities
+}) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
 
   const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess, groupsPermissions } = userCapabilities;
+  const { hasDeviceConnect } = tenantCapabilities;
 
   useEffect(() => {
     const allowedTabs = troubleshootingTools.reduce((accu, tab) => {
@@ -137,26 +148,34 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
   return (
     <DeviceDataCollapse
       header={
-        <div className={`flexbox ${className}`}>
-          {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} />}
-          {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} />}
-          {connect_status === DEVICE_CONNECT_STATES.connected &&
-            availableTabs.map(item => {
-              let Component = TroubleshootButton;
-              if (item.component) {
-                Component = item.component;
-              }
-              return <Component key={item.key} docsVersion={docsVersion} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
-            })}
-          {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
-            <Link
-              className="flexbox center-aligned margin-left"
-              to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
-            >
-              List all log entries for this device
-            </Link>
-          )}
-        </div>
+        hasDeviceConnect ? (
+          <div className={`flexbox ${className}`}>
+            {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} />}
+            {connect_status === DEVICE_CONNECT_STATES.disconnected && (
+              <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} />
+            )}
+            {connect_status === DEVICE_CONNECT_STATES.connected &&
+              availableTabs.map(item => {
+                let Component = TroubleshootButton;
+                if (item.component) {
+                  Component = item.component;
+                }
+                return (
+                  <Component key={item.key} disabled={!socketClosed || !hasDeviceConnect} docsVersion={docsVersion} onClick={startTroubleshoot} item={item} />
+                );
+              })}
+            {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
+              <Link
+                className="flexbox center-aligned margin-left"
+                to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
+              >
+                List all log entries for this device
+              </Link>
+            )}
+          </div>
+        ) : (
+          <EnterpriseNotification isEnterprise={hasDeviceConnect} benefit="device troubleshooting features" />
+        )
       }
       isAddOn
       title="Troubleshoot"
@@ -170,23 +189,23 @@ export const TroubleshootTab = ({
   classes,
   device,
   docsVersion,
-  tenantCapabilities: { hasAuditlogs },
-  socketClosed,
   launchTroubleshoot,
-  userCapabilities,
-  troubleshootType,
+  setSocketClosed,
   setTroubleshootType,
-  setSocketClosed
+  socketClosed,
+  tenantCapabilities,
+  troubleshootType,
+  userCapabilities
 }) => (
   <>
     <DeviceConnection
       className={classes.deviceConnection}
       device={device}
       docsVersion={docsVersion}
-      hasAuditlogs={hasAuditlogs}
       socketClosed={socketClosed}
       startTroubleshoot={launchTroubleshoot}
       userCapabilities={userCapabilities}
+      tenantCapabilities={tenantCapabilities}
     />
     <Troubleshootdialog
       device={device}

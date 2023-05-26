@@ -38,7 +38,7 @@ import Form from '../../common/forms/form';
 import PasswordInput from '../../common/forms/passwordinput';
 import TextInput from '../../common/forms/textinput';
 
-export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
+export const UserRolesSelect = ({ currentUser, disabled, onSelect, roles, user }) => {
   const [selectedRoleIds, setSelectedRoleIds] = useState(
     (user.roles || []).reduce((accu, roleId) => {
       const foundRole = roles[roleId];
@@ -93,6 +93,7 @@ export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
       <Select
         labelId="roles-selection-label"
         id={`roles-selector-${selectedRoleIds.length}`}
+        disabled={disabled}
         multiple
         value={selectedRoleIds}
         required

@@ -24,7 +24,7 @@ import copy from 'copy-to-clipboard';
 import { setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS, canAccess } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities, getVersionInformation } from '../selectors';
+import { getDocsVersion, getFeatures, getOnboardingState, getUserCapabilities, getVersionInformation } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 const listItems = [
@@ -32,11 +32,7 @@ const listItems = [
   { route: '/devices', text: 'Devices', canAccess: ({ userCapabilities: { canReadDevices } }) => canReadDevices },
   { route: '/releases', text: 'Releases', canAccess: ({ userCapabilities: { canReadReleases, canUploadReleases } }) => canReadReleases || canUploadReleases },
   { route: '/deployments', text: 'Deployments', canAccess: ({ userCapabilities: { canDeploy, canReadDeployments } }) => canReadDeployments || canDeploy },
-  {
-    route: '/auditlog',
-    text: 'Audit log',
-    canAccess: ({ tenantCapabilities: { hasAuditlogs }, userCapabilities: { canAuditlog } }) => hasAuditlogs && canAuditlog
-  }
+  { route: '/auditlog', text: 'Audit log', canAccess: ({ userCapabilities: { canAuditlog } }) => canAuditlog }
 ];
 
 const useStyles = makeStyles()(theme => ({
@@ -134,7 +130,6 @@ export const LeftNav = () => {
 
   const docsVersion = useSelector(getDocsVersion);
   const onboardingState = useSelector(getOnboardingState);
-  const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
 
   const licenseLink = (
@@ -162,7 +157,7 @@ export const LeftNav = () => {
     <div className={`leftFixed leftNav ${classes.list}`}>
       <List style={{ padding: 0 }}>
         {listItems.reduce((accu, item, index) => {
-          if (!item.canAccess({ tenantCapabilities, userCapabilities })) {
+          if (!item.canAccess({ userCapabilities })) {
             return accu;
           }
           accu.push(

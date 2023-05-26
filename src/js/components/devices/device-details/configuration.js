@@ -31,6 +31,7 @@ import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
@@ -141,10 +142,12 @@ export const DeviceConfiguration = ({
   saveGlobalSettings,
   setDeviceConfig,
   setSnackbar,
-  showHelptips
+  showHelptips,
+  tenantCapabilities
 }) => {
   const { config = {}, status } = device;
   const { configured, deployment_id, reported = {}, reported_ts, updated_ts } = config;
+  const { hasDeviceConfig: hasDeviceConfigAddOn } = tenantCapabilities;
 
   const [changedConfig, setChangedConfig] = useState();
   const [isEditDisabled, setIsEditDisabled] = useState(false);
@@ -338,7 +341,7 @@ export const DeviceConfiguration = ({
         <div className="two-columns">
           <div className="flexbox center-aligned">
             <h4 className="margin-right">Device configuration</h4>
-            {!(isEditingConfig || isUpdatingConfig) && (
+            {hasDeviceConfigAddOn && !(isEditingConfig || isUpdatingConfig) && (
               <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
                 Edit
               </Button>
@@ -370,6 +373,7 @@ export const DeviceConfiguration = ({
         <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
         {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
         {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} setSnackbar={setSnackbar} />}
+        <EnterpriseNotification isEnterprise={hasDeviceConfigAddOn} benefit="device configuration features" />
       </div>
     </DeviceDataCollapse>
   );

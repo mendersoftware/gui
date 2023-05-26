@@ -22,7 +22,7 @@ import { getDeviceAttributes, setDeviceFilters, setDeviceListState } from '../..
 import { saveGlobalSettings } from '../../../actions/userActions';
 import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
 import { deepCompare } from '../../../helpers';
-import { getDeviceFilters, getFilterAttributes, getIsEnterprise, getOrganization, getSelectedGroupInfo, getTenantCapabilities } from '../../../selectors';
+import { getDeviceFilters, getFilterAttributes, getIsEnterprise, getOrganization, getSelectedGroupInfo } from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import MenderTooltip from '../../common/mendertooltip';
 import FilterItem from './filteritem';
@@ -43,7 +43,6 @@ export const Filters = ({ className = '', filters: propsFilters, isModification 
   const { plan = 'os' } = useSelector(getOrganization);
   const { groupFilters, selectedGroup } = useSelector(getSelectedGroupInfo);
   const attributes = useSelector(getFilterAttributes);
-  const { hasFullFiltering: canFilterMultiple } = useSelector(getTenantCapabilities);
   const filters = propsFilters || useSelector(getDeviceFilters);
   const isEnterprise = useSelector(getIsEnterprise);
   const previousFilters = useSelector(state => state.users.globalSettings.previousFilters);
@@ -164,7 +163,7 @@ export const Filters = ({ className = '', filters: propsFilters, isModification 
             isEnterprise={isEnterprise}
             benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
           />
-          {canFilterMultiple && isEnterprise && filters.length >= 1 && (
+          {isEnterprise && filters.length >= 1 && (
             <>
               {selectedGroup ? (
                 !!groupFilters.length && (
