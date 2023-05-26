@@ -38,14 +38,20 @@ describe('DeviceConnection Component', () => {
     groupsPermissions: { [ALL_DEVICES]: [uiPermissionsById.connect.value, uiPermissionsById.manage.value] }
   };
   it('renders correctly', async () => {
-    const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} />);
+    const { baseElement } = render(
+      <DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} tenantCapabilities={{ hasDeviceConnect: true }} />
+    );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('renders correctly when disconnected', async () => {
     const { baseElement } = render(
-      <DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }} userCapabilities={userCapabilities} />
+      <DeviceConnection
+        device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }}
+        userCapabilities={userCapabilities}
+        tenantCapabilities={{ hasDeviceConnect: true }}
+      />
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
@@ -57,6 +63,7 @@ describe('DeviceConnection Component', () => {
         device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }}
         hasAuditlogs
         userCapabilities={userCapabilities}
+        tenantCapabilities={{ hasDeviceConnect: true }}
       />
     );
     const view = baseElement.firstChild;

@@ -19,7 +19,9 @@ import { makeStyles } from 'tss-react/mui';
 
 import moment from 'moment';
 
+import { BENEFITS } from '../../../constants/appConstants';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import { InfoHintContainer } from '../../common/info-hint';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 
 const useStyles = makeStyles()(() => ({
@@ -68,7 +70,10 @@ export const ScheduleRollout = ({ canSchedule, commonClasses, setDeploymentSetti
             <MenuItem value="custom">Schedule the start date &amp; time</MenuItem>
           </Select>
         </FormControl>
-        <MenderHelpTooltip id={HELPTOOLTIPS.scheduleDeployment.id} />
+        <InfoHintContainer>
+          <EnterpriseNotification id={BENEFITS.scheduledDeployments.id} />
+          <MenderHelpTooltip id={HELPTOOLTIPS.scheduleDeployment.id} />
+        </InfoHintContainer>
       </div>
       {Boolean(isPickerOpen || start_time) && (
         <FormControl className={`margin-top-none ${classes.pickerStyle}`} disabled={!canSchedule}>
@@ -86,7 +91,6 @@ export const ScheduleRollout = ({ canSchedule, commonClasses, setDeploymentSetti
           />
         </FormControl>
       )}
-      <EnterpriseNotification isEnterprise={canSchedule} benefit="scheduled deployments to steer the distribution of your updates" />
     </>
   );
 };

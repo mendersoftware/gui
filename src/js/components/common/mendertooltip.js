@@ -61,7 +61,15 @@ export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows, spacing })
   }
 }));
 
-export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, visibility = startOpen, onOpenChange, ...remainingProps }) => {
+export const MenderTooltipClickable = ({
+  children,
+  onboarding,
+  startOpen = false,
+  visibility = startOpen,
+  onOpenChange,
+  tooltipComponent = MenderTooltip,
+  ...remainingProps
+}) => {
   const [open, setOpen] = useState(startOpen || false);
 
   useEffect(() => {
@@ -79,7 +87,7 @@ export const MenderTooltipClickable = ({ children, onboarding, startOpen = false
 
   const hide = () => setOpen(false);
 
-  const Component = onboarding ? OnboardingTooltip : MenderTooltip;
+  const Component = onboarding ? OnboardingTooltip : tooltipComponent;
   const extraProps = onboarding
     ? {
         PopperProps: {

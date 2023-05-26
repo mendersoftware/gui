@@ -20,10 +20,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { getSystemDevices } from '../../../actions/deviceActions';
-import { SORTING_OPTIONS } from '../../../constants/appConstants';
+import { BENEFITS, SORTING_OPTIONS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { getDemoDeviceAddress, toggle } from '../../../helpers';
-import { getDevicesById, getIdAttribute, getIsPreview, getOrganization, getTenantCapabilities } from '../../../selectors';
+import { getDevicesById, getIdAttribute, getIsPreview, getOrganization } from '../../../selectors';
 import { TwoColumnData } from '../../common/configurationobject';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
@@ -45,7 +45,6 @@ export const DeviceSystem = ({ columnSelection, device, onConnectToGatewayClick,
   const dispatch = useDispatch();
   const devicesById = useSelector(getDevicesById);
   const idAttribute = useSelector(getIdAttribute);
-  const hasFullFiltering = useSelector(getTenantCapabilities);
 
   const { systemDeviceIds = [], systemDeviceTotal = 0 } = device;
   const deviceIp = getDemoDeviceAddress([device]);
@@ -78,11 +77,17 @@ export const DeviceSystem = ({ columnSelection, device, onConnectToGatewayClick,
 
   return (
     <>
-      <DeviceDataCollapse title="Mender Gateway">
+      <DeviceDataCollapse
+        title={
+          <div className="flexbox center-aligned">
+            <h4>Mender Gateway</h4>
+            <EnterpriseNotification className="margin-left-small" id={BENEFITS.gateway.id} />
+          </div>
+        }
+      >
         <TwoColumnData config={{ 'Server IP': deviceIp }} compact setSnackbar={message => dispatch(setSnackbar(message))} />
       </DeviceDataCollapse>
       <DeviceDataCollapse className={classes.container} title="System for this gateway">
-        <EnterpriseNotification isEnterprise={hasFullFiltering} benefit="see devices connected to your gateway device for easy access" />
         {systemDeviceTotal ? (
           <Devicelist
             customColumnSizes={[]}

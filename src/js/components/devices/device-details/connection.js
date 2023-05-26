@@ -20,12 +20,13 @@ import { useTheme } from '@mui/material/styles';
 
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
-import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
+import { BEGINNING_OF_TIME, BENEFITS } from '../../../constants/appConstants';
 import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
 import { checkPermissionsObject, uiPermissionsById } from '../../../constants/userConstants';
 import { formatAuditlogs } from '../../../utils/locationutils';
 import DocsLink from '../../common/docslink';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
@@ -153,7 +154,12 @@ export const DeviceConnection = ({ className = '', device, hasAuditlogs, socketC
         </div>
       }
       isAddOn
-      title="Troubleshoot"
+      title={
+        <div className="flexbox center-aligned">
+          <h4>Troubleshoot</h4>
+          <EnterpriseNotification className="margin-left-small" id={BENEFITS.deviceTroubleshoot.id} />
+        </div>
+      }
     ></DeviceDataCollapse>
   );
 };
@@ -163,22 +169,22 @@ export default DeviceConnection;
 export const TroubleshootTab = ({
   classes,
   device,
-  tenantCapabilities: { hasAuditlogs },
-  socketClosed,
   launchTroubleshoot,
-  userCapabilities,
-  troubleshootType,
+  setSocketClosed,
   setTroubleshootType,
-  setSocketClosed
+  socketClosed,
+  tenantCapabilities,
+  troubleshootType,
+  userCapabilities
 }) => (
   <>
     <DeviceConnection
       className={classes.deviceConnection}
       device={device}
-      hasAuditlogs={hasAuditlogs}
       socketClosed={socketClosed}
       startTroubleshoot={launchTroubleshoot}
       userCapabilities={userCapabilities}
+      tenantCapabilities={tenantCapabilities}
     />
     <Troubleshootdialog
       device={device}

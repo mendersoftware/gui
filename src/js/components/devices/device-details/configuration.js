@@ -29,7 +29,7 @@ import { setSnackbar } from '../../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../../actions/deploymentActions';
 import { applyDeviceConfig, setDeviceConfig } from '../../../actions/deviceActions';
 import { saveGlobalSettings } from '../../../actions/userActions';
-import { TIMEOUTS } from '../../../constants/appConstants';
+import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
@@ -38,7 +38,9 @@ import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
+import { InfoHintContainer } from '../../common/info-hint';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
@@ -142,7 +144,6 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
   const { config = {}, status } = device;
   const { configured = {}, deployment_id, reported = {}, reported_ts, updated_ts } = config;
   const isRelevantDeployment = deployment.created > updated_ts && (!reported_ts || deployment.finished > reported_ts);
-
   const [changedConfig, setChangedConfig] = useState();
   const [editableConfig, setEditableConfig] = useState();
   const [isAborting, setIsAborting] = useState(false);
@@ -294,7 +295,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
   const onAbortClick = () => setIsAborting(toggle);
 
   const hasDeviceConfig = !isEmpty(reported);
-  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
+  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={updated_ts} />;
   if (isEditingConfig) {
     footer = (
       <ConfigEditingActions
@@ -365,7 +366,10 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
                 Import configuration
               </Button>
             ) : null}
-            <MenderHelpTooltip id={HELPTOOLTIPS.configureAddOnTip.id} style={{ marginTop: 5 }} />
+            <InfoHintContainer>
+              <EnterpriseNotification id={BENEFITS.deviceConfiguration.id} />
+              <MenderHelpTooltip id={HELPTOOLTIPS.configureAddOnTip.id} style={{ marginTop: 5 }} />
+            </InfoHintContainer>
           </div>
         </div>
       }

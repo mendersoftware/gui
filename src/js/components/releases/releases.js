@@ -12,7 +12,6 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Dropzone from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CloudUpload } from '@mui/icons-material';
@@ -21,17 +20,16 @@ import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { getReleases, selectRelease, setReleasesListState } from '../../actions/releaseActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getFeatures, getIsEnterprise, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import ChipSelect from '../common/chipselect';
-import EnterpriseNotification from '../common/enterpriseNotification';
+import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import Search from '../common/search';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import AddArtifactDialog from './dialogs/addartifact';
@@ -40,45 +38,33 @@ import ReleasesList from './releaseslist';
 
 const refreshArtifactsLength = 60000;
 
-const DeltaProgressPlaceholder = ({ tenantCapabilities: { canDelta } }) => (
-  <div className="dashboard-placeholder" style={{ display: 'grid', placeContent: 'center' }}>
-    There is no automatic delta artifacts generation running.
-    <EnterpriseNotification isEnterprise={canDelta} benefit="automatic artifact generation to reduce bandwidth consumption during deployments" />
+const DeltaProgress = () => {
+  const isEnterprise = useSelector(getIsEnterprise);
+  return (
+    <div className="dashboard-placeholder" style={{ display: 'grid', placeContent: 'center' }}>
+      {isEnterprise ? 'There is no automatic delta artifacts generation running.' : <DefaultUpgradeNotification />}
+    </div>
+  );
+};
+
+const DeltaTitle = () => (
+  <div className="flexbox center-aligned">
+    <div>Delta Artifacts generation</div>
+    <EnterpriseNotification className="margin-left-small" id={BENEFITS.deltaGeneration.id} />
   </div>
 );
 
 const tabs = [
-  { key: 'releases', title: 'Releases', component: ReleasesList },
-  { key: 'delta', title: 'Delta Artifacts generation', component: DeltaProgressPlaceholder }
+  { key: 'releases', Title: () => 'Releases', component: ReleasesList },
+  { key: 'delta', Title: DeltaTitle, component: DeltaProgress }
 ];
 
 const useStyles = makeStyles()(theme => ({
-  empty: { margin: '8vh auto' },
   filters: { maxWidth: 400, alignItems: 'end', columnGap: 50 },
   searchNote: { minHeight: '1.8rem' },
   tabContainer: { alignSelf: 'flex-start' },
   uploadButton: { minWidth: 164, marginRight: theme.spacing(2) }
 }));
-
-const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop, onUpload }) => (
-  <div className={`dashboard-placeholder fadeIn ${className}`} ref={dropzoneRef}>
-    <Dropzone activeClassName="active" disabled={uploading} multiple={false} noClick={true} onDrop={onDrop} rejectClassName="active">
-      {({ getRootProps, getInputProps }) => (
-        <div {...getRootProps({ className: uploading ? 'dropzone disabled muted' : 'dropzone' })} onClick={() => onUpload()}>
-          <input {...getInputProps()} disabled={uploading} />
-          <p>
-            There are no Releases yet.{' '}
-            {canUpload && (
-              <>
-                <a>Upload an Artifact</a> to create a new Release
-              </>
-            )}
-          </p>
-        </div>
-      )}
-    </Dropzone>
-  </div>
-);
 
 const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesListState, setReleasesListState, onUploadClick, uploadButtonRef }) => {
   const { hasReleaseTags } = features;
@@ -95,8 +81,8 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
     <div>
       <div className="flexbox space-between center-aligned">
         <Tabs className={classes.tabContainer} value={tab} onChange={onTabChanged} textColor="primary">
-          {tabs.map(({ key, title }) => (
-            <Tab key={key} label={title} value={key} />
+          {tabs.map(({ key, Title }) => (
+            <Tab key={key} label={<Title />} value={key} />
           ))}
         </Tabs>
         {canUpload && (
@@ -142,26 +128,21 @@ export const Releases = () => {
     state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
   );
   const onboardingState = useSelector(getOnboardingState);
-  const { artifactIncluded } = onboardingState;
   const releases = useSelector(getReleasesList);
   const releasesListState = useSelector(state => state.releases.releasesList);
   const releaseTags = useSelector(state => state.releases.releaseTags);
   const selectedRelease = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
-  const tenantCapabilities = useSelector(getTenantCapabilities);
-  const uploading = useSelector(state => state.app.uploading);
   const userCapabilities = useSelector(getUserCapabilities);
   const { canUploadReleases } = userCapabilities;
   const dispatch = useDispatch();
 
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
-  const dropzoneRef = useRef();
   const uploadButtonRef = useRef();
   const artifactTimer = useRef();
   const [locationParams, setLocationParams] = useLocationParams('releases', { defaults: { direction: SORTING_OPTIONS.desc, key: 'modified' } });
   const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
-  const { classes } = useStyles();
 
   useEffect(() => {
     if (!artifactTimer.current) {
@@ -204,15 +185,6 @@ export const Releases = () => {
     setShowAddArtifactDialog(true);
   };
 
-  const onDrop = (acceptedFiles, rejectedFiles) => {
-    if (acceptedFiles.length) {
-      onFileUploadClick(acceptedFiles[0]);
-    }
-    if (rejectedFiles.length) {
-      dispatch(setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null));
-    }
-  };
-
   const onFileUploadClick = selectedFile => {
     setSelectedFile(selectedFile);
     setShowAddArtifactDialog(true);
@@ -221,7 +193,6 @@ export const Releases = () => {
   const onHideAddArtifactDialog = () => setShowAddArtifactDialog(false);
 
   const onSetReleasesListState = useCallback(state => dispatch(setReleasesListState(state)), [dispatch]);
-  const onReleaseSelect = useCallback(id => dispatch(selectRelease(id)), [dispatch]);
 
   let uploadArtifactOnboardingComponent = null;
   if (!onboardingState.complete && uploadButtonRef.current) {
@@ -259,27 +230,7 @@ export const Releases = () => {
           setReleasesListState={onSetReleasesListState}
           uploadButtonRef={uploadButtonRef}
         />
-        {hasReleases ? (
-          <ContentComponent
-            artifactIncluded={artifactIncluded}
-            features={features}
-            onboardingState={onboardingState}
-            onSelect={onReleaseSelect}
-            releases={releases}
-            releasesListState={releasesListState}
-            setReleasesListState={onSetReleasesListState}
-            tenantCapabilities={tenantCapabilities}
-          />
-        ) : (
-          <EmptyState
-            canUpload={canUploadReleases}
-            className={classes.empty}
-            dropzoneRef={dropzoneRef}
-            uploading={uploading}
-            onDrop={onDrop}
-            onUpload={onFileUploadClick}
-          />
-        )}
+        <ContentComponent onFileUploadClick={onFileUploadClick} />
       </div>
       <ReleaseDetails />
       {!showAddArtifactDialog && uploadArtifactOnboardingComponent}

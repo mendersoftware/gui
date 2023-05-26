@@ -61,36 +61,37 @@ export const locations = {
 };
 export const PLANS = {
   os: {
+    id: 'os',
     name: 'Basic',
     offer: true,
     price: '$32/month',
     deviceCount: startingDeviceCount.os,
     offerprice: '$23/month for first 50 devices',
     price2: 'for first 6 months;\n$29/month thereafter',
-    features: ['Basic OTA features'],
-    value: 'os'
+    features: ['Basic OTA features']
   },
   professional: {
+    id: 'professional',
     name: 'Professional',
     offer: true,
     price: '$269/month',
     deviceCount: startingDeviceCount.professional,
     offerprice: '$200/month for first 50 devices',
     price2: 'for first 6 months;\n$249/month thereafter',
-    features: ['+ Advanced OTA features', '+ Standard support'],
-    value: 'professional'
+    features: ['+ Advanced OTA features', '+ Standard support']
   },
   enterprise: {
+    id: 'enterprise',
     name: 'Enterprise',
     price: 'Custom pricing',
     deviceCount: 'unlimited devices',
-    features: ['+ Enterprise-grade OTA features', '+ Premium support'],
-    value: 'enterprise'
+    features: ['+ Enterprise-grade OTA features', '+ Premium support']
   }
 };
 // the needs names need to be aligned with the name of the features in the appReducer, as they will be checked in the addonselection
 export const ADDONS = {
   configure: {
+    id: 'configure',
     title: 'Configure',
     description: 'Expand your plan with device configuration features',
     needs: ['hasDeviceConfig'],
@@ -105,6 +106,7 @@ export const ADDONS = {
     eligible: ['os', 'professional', 'enterprise']
   },
   troubleshoot: {
+    id: 'troubleshoot',
     title: 'Troubleshoot',
     description: 'Expand your plan with device troubleshooting features',
     needs: ['hasDeviceConnect'],
@@ -119,6 +121,7 @@ export const ADDONS = {
     eligible: ['os', 'professional', 'enterprise']
   },
   monitor: {
+    id: 'monitor',
     title: 'Monitor',
     description: 'Expand your plan with device monitoring features',
     needs: ['hasMonitor'],
@@ -132,6 +135,37 @@ export const ADDONS = {
     },
     eligible: ['professional', 'enterprise']
   }
+};
+
+export const BENEFITS = {
+  auditlog: { id: 'auditlog', benefit: 'trace change across your devices and access troubleshooting session replay', requiredPlan: PLANS.professional.id },
+  dashboard: { id: 'dashboard', benefit: 'actionable insights into the devices you are updating with Mender', requiredPlan: PLANS.enterprise.id },
+  deltaGeneration: {
+    id: 'deltaGeneration',
+    benefit: 'automatic delta artifacts generation to minimize data transfer and improve the update delivery',
+    requiredPlan: PLANS.enterprise.id
+  },
+  deviceConfiguration: { id: 'deviceConfiguration', benefit: 'device configuration features', requiredAddon: ADDONS.configure.id },
+  deviceMonitor: { id: 'deviceMonitor', benefit: 'device monitoring features', requiredAddon: ADDONS.monitor.id, requiredPlan: PLANS.professional.id },
+  deviceTroubleshoot: { id: 'deviceTroubleshoot', benefit: 'device troubleshooting features', requiredAddon: ADDONS.troubleshoot.id },
+  dynamicGroups: { id: 'dynamicGroups', benefit: 'create dynamic groups to ease device management', requiredPlan: PLANS.enterprise.id },
+  fullFiltering: { id: 'fullFiltering', benefit: 'filtering by multiple attributes to improve the device overview', requiredPlan: PLANS.professional.id },
+  gateway: { id: 'gateway', benefit: 'see devices connected to your gateway device for easy access', requiredPlans: PLANS.professional.id },
+  pausedDeployments: {
+    id: 'pausedDeployments',
+    benefit: 'granular control about update rollout to allow synchronization across your fleet',
+    requiredPlan: PLANS.enterprise.id
+  },
+  phasedDeployments: { id: 'phasedDeployments', benefit: 'choose to roll out deployments in multiple phases', requiredPlan: PLANS.enterprise.id },
+  rbac: { id: 'rbac', benefit: 'granular role based access control', requiredPlan: PLANS.enterprise.id },
+  retryDeployments: { id: 'retryDeployments', benefit: 'optional retries for failed rollout attempts', requiredPlan: PLANS.professional.id },
+  scheduledDeployments: {
+    id: 'scheduledDeployments',
+    benefit: 'scheduled deployments to steer the distribution of your updates.',
+    requiredPlan: PLANS.professional.id
+  },
+
+  default: { id: 'default', benefit: 'gain access to this feature', requiredPlan: PLANS.enterprise.id }
 };
 
 export const yes = () => true;

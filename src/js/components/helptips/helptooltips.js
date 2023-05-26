@@ -180,6 +180,8 @@ const TwoFactorNote = ({ className }) => (
   </div>
 );
 
+const AuditlogExplanation = () => <>The audit log shows the history of changes made to your Devices, Artifacts, Deployments, and user management.</>;
+
 const DashboardWidget = () => (
   <>Add dashboard widgets to visualize the software distribution or geographical location of all your devices, or a group of your devices.</>
 );
@@ -190,6 +192,7 @@ const ScheduleDeployment = () => (
     update at the same time.
   </>
 );
+
 const GroupDeployment = () => (
   <>The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type.</>
 );
@@ -262,6 +265,7 @@ export const HELPTOOLTIPS = {
   addGroup: { id: 'addGroup', Component: AddGroup },
   artifactUpload: { id: 'artifactUpload', Component: ArtifactUpload },
   attributeLimit: { id: 'attributeLimit', Component: AttributeLimit },
+  auditlogExplanation: { id: 'auditlogExplanation', Component: AuditlogExplanation },
   authButton: { id: 'authButton', Component: AuthButton },
   authExplainButton: { id: 'authExplainButton', Component: AuthExplainButton },
   configureAddOnTip: { id: 'configureAddOnTip', Component: ConfigureAddOnTip },

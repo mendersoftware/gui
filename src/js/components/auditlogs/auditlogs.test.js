@@ -15,6 +15,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
@@ -22,6 +23,7 @@ import { prettyDOM } from '@testing-library/dom';
 import { screen, render as testingLibRender, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { light as lightTheme } from '../../../../src/js/themes/Mender';
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import { getConfiguredStore } from '../../reducers';
@@ -62,13 +64,16 @@ describe('Auditlogs Component', () => {
   it('allows navigating by url as expected', async () => {
     let store = getConfiguredStore({ preloadedState });
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const theme = createTheme(lightTheme);
     const ui = (
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <MemoryRouter initialEntries={['/auditlog?startDate=2020-01-01']}>
-          <Provider store={store}>
-            <AuditLogs />
-          </Provider>
-        </MemoryRouter>
+        <ThemeProvider theme={theme}>
+          <MemoryRouter initialEntries={['/auditlog?startDate=2020-01-01']}>
+            <Provider store={store}>
+              <AuditLogs />
+            </Provider>
+          </MemoryRouter>
+        </ThemeProvider>
       </LocalizationProvider>
     );
     const { rerender } = testingLibRender(ui);

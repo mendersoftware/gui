@@ -51,7 +51,8 @@ const palette = {
   },
   tooltip: {
     ...commonPalette.tooltip,
-    text: grey[50]
+    text: grey[50],
+    tierTipBackground: '#f7fafb'
   },
   text: {
     ...commonPalette.text,

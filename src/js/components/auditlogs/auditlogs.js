@@ -23,15 +23,18 @@ import moment from 'moment';
 import historyImage from '../../../assets/img/history.png';
 import { getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
+import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
+import { InfoHintContainer } from '../common/info-hint';
 import Loader from '../common/loader';
 import TimeframePicker from '../common/timeframe-picker';
 import TimerangePicker from '../common/timerange-picker';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import AuditLogsList from './auditlogslist';
 
 const detailsMap = {
@@ -210,7 +213,12 @@ export const AuditLogs = props => {
 
   return (
     <div className="fadeIn margin-left flexbox column" style={{ marginRight: '5%' }}>
-      <h3>Audit log</h3>
+      <div className="flexbox center-aligned">
+        <h3 className="margin-right-small">Audit log</h3>
+        <InfoHintContainer>
+          <EnterpriseNotification id={BENEFITS.auditlog.id} />
+        </InfoHintContainer>
+      </div>
       <div className={`auditlogs-filters margin-bottom margin-top-small ${classes.filters}`}>
         <Autocomplete
           {...autoSelectProps}
@@ -284,11 +292,17 @@ export const AuditLogs = props => {
           userCapabilities={userCapabilities}
         />
       )}
-      {!(isLoading || total) && (
+      {!(isLoading || total) && hasAuditlogs && (
         <div className="dashboard-placeholder">
           <p>No log entries were found.</p>
           <p>Try adjusting the filters.</p>
           <img src={historyImage} alt="Past" />
+        </div>
+      )}
+      {!hasAuditlogs && (
+        <div className="dashboard-placeholder flexbox" style={{ marginTop: '5vh', placeSelf: 'center' }}>
+          <DefaultUpgradeNotification />
+          <MenderHelpTooltip id={HELPTOOLTIPS.AuditlogExplanation.id} anchor={{ position: 'initial', marginLeft: 15 }} />
         </div>
       )}
     </div>

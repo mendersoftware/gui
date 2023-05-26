@@ -17,9 +17,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
 import { getDeviceAlerts, setAlertListState } from '../../../actions/monitorActions';
+import { BENEFITS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { getOfflineThresholdSettings } from '../../../selectors';
 import DocsLink from '../../common/docslink';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import Pagination from '../../common/pagination';
 import Time from '../../common/time';
 import MonitorDetailsDialog from '../dialogs/monitordetailsdialog';
@@ -94,6 +96,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
         <div className="flexbox center-aligned">
           <h4 className="margin-bottom-small margin-right">Monitoring</h4>
           {!!monitors.length && <Time className="muted" value={updated_ts} />}
+          <EnterpriseNotification className="margin-left-small" id={BENEFITS.deviceMonitor.id} />
         </div>
       }
     >

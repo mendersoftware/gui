@@ -255,7 +255,7 @@ export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (
 
 export const getIsEnterprise = createSelector(
   [getOrganization, getFeatures],
-  ({ plan = PLANS.os.value }, { isEnterprise, isHosted }) => isEnterprise || (isHosted && plan === PLANS.enterprise.value)
+  ({ plan = PLANS.os.id }, { isEnterprise, isHosted }) => isEnterprise || (isHosted && plan === PLANS.enterprise.id)
 );
 
 export const getAttributesList = createSelector(
@@ -268,10 +268,10 @@ export const getRolesList = createSelector([getRolesById], rolesById => Object.e
 
 export const getUserRoles = createSelector(
   [getCurrentUser, getRolesById, getIsEnterprise, getFeatures, getOrganization],
-  (currentUser, rolesById, isEnterprise, { isHosted, hasMultitenancy }, { plan = PLANS.os.value }) => {
+  (currentUser, rolesById, isEnterprise, { isHosted, hasMultitenancy }, { plan = PLANS.os.id }) => {
     const isAdmin = currentUser.roles?.length
       ? currentUser.roles.some(role => role === rolesByName.admin)
-      : !(hasMultitenancy || isEnterprise || (isHosted && plan !== PLANS.os.value));
+      : !(hasMultitenancy || isEnterprise || (isHosted && plan !== PLANS.os.id));
     const uiPermissions = isAdmin
       ? mapUserRolesToUiPermissions([rolesByName.admin], rolesById)
       : mapUserRolesToUiPermissions(currentUser.roles || [], rolesById);
@@ -332,11 +332,11 @@ export const getTenantCapabilities = createSelector(
       hasMonitor: isMonitorEnabled,
       isHosted
     },
-    { addons = [], plan },
+    { addons = [], plan = PLANS.os.id },
     isEnterprise
   ) => {
-    const canDelta = isEnterprise || plan === PLANS.professional.value;
-    const hasAuditlogs = isAuditlogEnabled && (!isHosted || isEnterprise || plan === PLANS.professional.value);
+    const canDelta = isEnterprise || plan === PLANS.professional.id;
+    const hasAuditlogs = isAuditlogEnabled && (!isHosted || isEnterprise || plan === PLANS.professional.id);
     const hasDeviceConfig = hasAddons || (isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled))));
     const hasDeviceConnect =
       hasAddons || (isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled))));
@@ -350,7 +350,8 @@ export const getTenantCapabilities = createSelector(
       hasDeviceConnect,
       hasFullFiltering: canDelta,
       hasMonitor,
-      isEnterprise
+      isEnterprise,
+      plan
     };
   }
 );

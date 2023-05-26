@@ -17,9 +17,11 @@ import { Add as AddIcon } from '@mui/icons-material';
 import { Button, FormControl, IconButton, InputLabel, ListSubheader, MenuItem, Select, iconButtonClasses, selectClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { chartTypes, emptyChartSelection } from '../../../constants/appConstants';
+import { BENEFITS, chartTypes, emptyChartSelection } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
 import Confirm from '../../common/confirm';
+import EnterpriseNotification from '../../common/enterpriseNotification';
+import { InfoHintContainer } from '../../common/info-hint';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import { Header } from './distribution';
 
@@ -172,7 +174,10 @@ export const WidgetAdditionWidget = ({ onAdditionClick, ...remainder }) => {
     <ChartEditWidget {...remainder} onSave={addCurrentSelection} onCancel={onCancelClick} />
   ) : (
     <div className="widget">
-      <MenderHelpTooltip id={HELPTOOLTIPS.dashboardWidget.id} />
+      <InfoHintContainer className="" style={{ alignItems: 'end' }}>
+        <EnterpriseNotification id={BENEFITS.dashboard.id} />
+        <MenderHelpTooltip id={HELPTOOLTIPS.dashboardWidget.id} />
+      </InfoHintContainer>
       <div className={`flexbox centered muted ${classes.additionButton}`} onClick={() => setAdding(true)}>
         <AddIcon />
         <span className={classes.additionButton}>add a widget</span>
