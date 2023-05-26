@@ -164,20 +164,19 @@ const tabs = [
     component: DeviceConfiguration,
     title: () => 'Configuration',
     value: 'configuration',
-    isApplicable: ({ tenantCapabilities: { hasDeviceConfig }, userCapabilities: { canConfigure }, ...rest }) =>
-      hasDeviceConfig && canConfigure && deviceStatusCheck(rest, [DEVICE_STATES.accepted, DEVICE_STATES.preauth])
+    isApplicable: ({ userCapabilities: { canConfigure }, ...rest }) => canConfigure && deviceStatusCheck(rest, [DEVICE_STATES.accepted, DEVICE_STATES.preauth])
   },
   {
     component: MonitoringTab,
     title: () => 'Monitoring',
     value: 'monitor',
-    isApplicable: ({ tenantCapabilities: { hasMonitor }, ...rest }) => deviceStatusCheck(rest) && hasMonitor
+    isApplicable: deviceStatusCheck
   },
   {
     component: TroubleshootTab,
     title: () => 'Troubleshooting',
     value: 'troubleshoot',
-    isApplicable: ({ tenantCapabilities: { hasDeviceConnect }, ...rest }) => deviceStatusCheck(rest) && hasDeviceConnect
+    isApplicable: deviceStatusCheck
   },
   {
     component: IntegrationTab,
@@ -223,8 +222,6 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
   const { attributes = {}, isOffline, gatewayIds = [] } = device;
   const { mender_is_gateway, mender_gateway_system_id } = attributes;
   const isGateway = stringToBoolean(mender_is_gateway);
-
-  const { hasAuditlogs } = tenantCapabilities;
 
   useEffect(() => {
     if (!deviceId) {
@@ -314,7 +311,7 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
     setTroubleshootType,
     showHelptips,
     socketClosed,
-    tenantCapabilities: { hasAuditlogs },
+    tenantCapabilities,
     troubleshootType,
     userCapabilities
   };

@@ -34,6 +34,13 @@ describe('DeviceMonitoring Component', () => {
   it('renders correctly', async () => {
     const preloadedState = {
       ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasAddons: true
+        }
+      },
       monitor: {
         ...defaultState.monitor,
         alerts: {
@@ -49,7 +56,7 @@ describe('DeviceMonitoring Component', () => {
         }
       }
     };
-    const { baseElement } = render(<DeviceMonitoring device={defaultState.devices.byId.a1} isOffline />, { preloadedState });
+    const { baseElement } = render(<DeviceMonitoring device={defaultState.devices.byId.a1} />, { preloadedState });
     // special snapshot handling here to work around unstable ids in mui code...
     const view = prettyDOM(baseElement.firstChild.firstChild, 100000, { highlight: false })
       .replace(/id="mui-[0-9]*"/g, '')

@@ -63,6 +63,7 @@ describe('Configuration Component', () => {
         getSingleDeployment={jest.fn}
         saveGlobalSettings={jest.fn}
         setDeviceConfig={setDeviceConfigMock}
+        tenantCapabilities={{ hasDeviceConfig: true }}
       />
     );
     const view = baseElement.firstChild.firstChild;
@@ -92,6 +93,7 @@ describe('Configuration Component', () => {
         getSingleDeployment={jest.fn}
         saveGlobalSettings={jest.fn}
         setDeviceConfig={submitMock}
+        tenantCapabilities={{ hasDeviceConfig: true }}
       />
     );
     const { rerender } = render(ui);
@@ -134,6 +136,7 @@ describe('Configuration Component', () => {
         getSingleDeployment={jest.fn}
         saveGlobalSettings={jest.fn}
         setDeviceConfig={submitMock}
+        tenantCapabilities={{ hasDeviceConfig: true }}
       />
     );
     act(() => jest.advanceTimersByTime(2000));

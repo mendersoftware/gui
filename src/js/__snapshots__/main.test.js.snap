@@ -261,6 +261,21 @@ exports[`Main Component renders correctly 1`] = `
             </span>
           </div>
         </a>
+        <a
+          class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink leftNav mui-s9istv-MuiListItem-root-navLink"
+          href="/auditlog"
+        >
+          <div
+            class="MuiListItemText-root mui-924vb1-MuiListItemText-root"
+            style="text-transform: uppercase;"
+          >
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary mui-mon4qq-MuiTypography-root"
+            >
+              Audit log
+            </span>
+          </div>
+        </a>
       </ul>
       <ul
         class="MuiList-root MuiList-padding mui-anvol5-MuiList-root-infoList"

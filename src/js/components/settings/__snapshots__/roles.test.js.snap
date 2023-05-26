@@ -279,15 +279,33 @@ exports[`Roles Component renders correctly 1`] = `
 }
 
 .emotion-40 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-41 {
+  gap: 8px;
+}
+
+.emotion-42 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.1607rem;
+}
+
+.emotion-42 iconButton {
+  margin-right: 8px;
 }
 
 <div>
@@ -541,9 +559,10 @@ exports[`Roles Component renders correctly 1`] = `
     </tbody>
   </table>
   <div
-    class="MuiButtonBase-root MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-37"
+    aria-disabled="true"
+    class="MuiButtonBase-root Mui-disabled MuiChip-root MuiChip-filled Mui-disabled MuiChip-sizeMedium MuiChip-colorPrimary MuiChip-clickable MuiChip-clickableColorPrimary MuiChip-filledPrimary emotion-37"
     role="button"
-    tabindex="0"
+    tabindex="-1"
   >
     <svg
       aria-hidden="true"
@@ -561,9 +580,32 @@ exports[`Roles Component renders correctly 1`] = `
     >
       Add a role
     </span>
-    <span
-      class="MuiTouchRipple-root emotion-40"
-    />
   </div>
+  <p
+    class="emotion-40 icon flexbox center-aligned emotion-41 "
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-42"
+      data-testid="InfoOutlinedIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      />
+    </svg>
+    <span>
+      With a more advanced commercial Mender plan you get access to granular role based access control. Get an overview of the Mender plans on the 
+      <a
+        href="https://mender.io/plans/features"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        features page
+      </a>
+      .
+    </span>
+  </p>
 </div>
 `;
