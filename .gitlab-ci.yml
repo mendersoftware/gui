@@ -85,6 +85,26 @@ test:types:
     paths:
       - scripts/typeGeneration
       - src/js/api/types
+
+test:licenses:
+  image: denoland/deno:alpine
+  stage: test
+  except:
+    - master
+    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  needs: []
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  before_script:
+    - apk add --no-cache nodejs npm
+    - npm ci
+  script:
+    - cd tests/licenses
+    - deno run --allow-read --allow-env licenseCheck.ts
   tags:
     - mender-qa-worker-generic-light
 

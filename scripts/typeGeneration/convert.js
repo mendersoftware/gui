@@ -1,34 +1,23 @@
-import { basename, dirname, join, resolve } from 'https://deno.land/std/path/posix.ts';
+import { basename, dirname } from 'https://deno.land/std/path/posix.ts';
 import { parse, stringify } from 'https://deno.land/std/yaml/mod.ts';
 import { camelCase } from 'https://deno.land/x/case/mod.ts';
 import { generate } from 'npm:openapi-typescript-codegen';
 import converter from 'npm:swagger2openapi';
 
+import { getFiles } from '../common.js';
+
 const apiTypes = ['management'];
 
-const resourceToFileInfo = res => {
+const resourceToFileInfo = async res => {
   const filename = res.substring(res.lastIndexOf('/') + 1, res.indexOf('.yml'));
   const apiType = filename.substring(0, filename.indexOf('_'));
   let versionSuffix = filename.substring(filename.lastIndexOf('_'));
   versionSuffix = versionSuffix != '_api' ? versionSuffix : '';
   const service = basename(dirname(res));
-  return { filename, apiType, path: res, service, versionSuffix };
-};
-
-const getFiles = async folder => {
-  const files = [];
-  for await (const singleDirEntry of Deno.readDir(folder)) {
-    if (singleDirEntry.isDirectory) {
-      files.push(...(await getFiles(join(folder, singleDirEntry.name))));
-    } else if (singleDirEntry.isFile) {
-      const res = resolve(folder, singleDirEntry.name);
-      const fileInfo = resourceToFileInfo(res);
-      if (apiTypes.includes(fileInfo.apiType)) {
-        files.push(fileInfo);
-      }
-    }
+  if (apiTypes.includes(apiType)) {
+    return { filename, apiType, path: res, service, versionSuffix };
   }
-  return files;
+  return;
 };
 
 const getFileContents = async file => {
@@ -96,7 +85,7 @@ const baseSpec = {
 };
 
 const processFiles = async root => {
-  const files = await getFiles(root);
+  const files = await getFiles(root, { fileProcessor: resourceToFileInfo });
   const fileContents = await Promise.all(files.map(getFileContents));
   return fileContents.reduce((accu, { fileData, service, versionSuffix }) => {
     const { renamedSchemas, serviceSchemas, counter } = sanitizeSchemas(fileData.components.schemas, accu.components.schemas, service, accu.counter);
