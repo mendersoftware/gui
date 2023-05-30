@@ -2,28 +2,16 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { DeviceStatus } from "./DeviceStatus";
-
+/**
+ * Device descriptor.
+ */
 export type Device = {
   /**
-   * Device identifier.
+   * Device ID.
    */
-  id: string;
-  status: DeviceStatus;
-  created?: string;
-  finished?: string;
-  deleted?: string;
-  device_type?: string;
+  id?: string;
   /**
-   * Availability of the device's deployment log.
+   * Vendor-specific JSON representation of the device identity data (MACs, serial numbers, etc.).
    */
-  log: boolean;
-  /**
-   * State reported by device
-   */
-  state?: string;
-  /**
-   * Additional state information
-   */
-  substate?: string;
+  identity_data: string;
 };

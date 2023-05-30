@@ -7,26 +7,39 @@
  */
 export type FilterPredicate = {
   /**
-   * The scope of the attribute.
-   *
-   * Scope is a string and acts as namespace for the attribute name.
-   */
-  scope: string;
-  /**
-   * Name of the attribute to be queried for filtering.
+   * Attribute name.
    */
   attribute: string;
+  scope: string;
   /**
    * Type or operator of the filter predicate.
+   *
+   * | *Operator* | *Name*                       | *Argument type* |
+   * |:----------:|:-----------------------------|:----------------|
+   * | $eq        | Equal (`==`)                 | any             |
+   * | $ne        | Not equal (`!=`)             | any             |
+   * | $gt        | Greater than (`>`)           | any             |
+   * | $gte       | Greater than or equal (`>=`) | any             |
+   * | $lt        | Less than (`<`)              | any             |
+   * | $lte       | Less than or equal (`<=`)    | any             |
+   * | $exists    | Attribute exists             | bool            |
+   * | $in        | Is an element of             | array           |
+   * | $nin       | Is not an element of         | array           |
+   * | $regex     | Regex filter                 | string          |
    */
   type: FilterPredicate.type;
   /**
    * The value of the attribute to be used in filtering.
-   *
    * Attribute type is implicit, inferred from the JSON type.
    *
-   * Supported types: number, string, array of numbers, array of strings.
-   * Mixed arrays are not allowed.
+   * The $exists operator expects a boolean value: true means the specified
+   * attribute exists, false means the specified attribute doesn't exist.
+   *
+   * The $regex operator expects a string as a Perl compatible regular expression
+   * (PCRE), automatically anchored by ^. If the regular expression is not valid,
+   * the filter will produce no results. If you need to specify options and flags,
+   * you can provide the full regex in the format of /regex/flags, for example
+   * `/[a-z]+/i`.
    */
   value: string;
 };
@@ -34,6 +47,19 @@ export type FilterPredicate = {
 export namespace FilterPredicate {
   /**
    * Type or operator of the filter predicate.
+   *
+   * | *Operator* | *Name*                       | *Argument type* |
+   * |:----------:|:-----------------------------|:----------------|
+   * | $eq        | Equal (`==`)                 | any             |
+   * | $ne        | Not equal (`!=`)             | any             |
+   * | $gt        | Greater than (`>`)           | any             |
+   * | $gte       | Greater than or equal (`>=`) | any             |
+   * | $lt        | Less than (`<`)              | any             |
+   * | $lte       | Less than or equal (`<=`)    | any             |
+   * | $exists    | Attribute exists             | bool            |
+   * | $in        | Is an element of             | array           |
+   * | $nin       | Is not an element of         | array           |
+   * | $regex     | Regex filter                 | string          |
    */
   export enum type {
     _EQ = "$eq",
@@ -45,5 +71,6 @@ export namespace FilterPredicate {
     _NE = "$ne",
     _NIN = "$nin",
     _EXISTS = "$exists",
+    _REGEX = "$regex",
   }
 }
