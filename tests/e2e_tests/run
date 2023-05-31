@@ -11,6 +11,7 @@ ENTERPRISE_COMPOSE=" -f ${INTEGRATION_PATH}/docker-compose.enterprise.yml"
 TEST_COMPOSE=" -f ${GUI_REPOSITORY}/tests/e2e_tests/docker-compose.e2e-tests.yml"
 TEST_COMPOSE_ENTERPRISE=" -f ${GUI_REPOSITORY}/tests/e2e_tests/docker-compose.e2e-tests.enterprise.yml"
 ENTERPRISE=0
+UNPRIVILEGED=0
 
 COMPOSE_FILES=()
 
@@ -42,6 +43,10 @@ parse_args(){
             SKIP_CLEANUP=1
             shift
             ;;
+            --unprivileged)
+            UNPRIVILEGED=1
+            shift
+            ;;
             --enterprise)
             COMPOSE_CMD+=$ENTERPRISE_COMPOSE
             export TEST_ENVIRONMENT=enterprise
@@ -64,6 +69,9 @@ run_tests() {
     COMPOSE_CMD+=$TEST_COMPOSE
     if [[ $ENTERPRISE -eq 1 ]]; then
       COMPOSE_CMD+=$TEST_COMPOSE_ENTERPRISE
+    fi
+    if [[ $UNPRIVILEGED -eq 1 ]]; then
+      sed -i 's|"http://mender-gui"|"http://mender-gui:8090"|g' ${INTEGRATION_PATH}/config/traefik/traefik.yaml
     fi
     $COMPOSE_CMD up -d
     declare retries=5
