@@ -52,3 +52,4 @@ services:
     environment:
       - GATEWAY_IP=docker.mender.io
       - DISABLE_ONBOARDING=true
+      - HAVE_REPORTING=0
