@@ -5939,8 +5939,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-27.Mui-disabled {
+.emotion-27.Mui-disabled:not(.Mui-selected) {
   color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-27.Mui-disabled.emotion-27.Mui-selected {
+  opacity: 0.6;
 }
 
 .emotion-29 {
@@ -6033,8 +6037,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-29.Mui-disabled {
+.emotion-29.Mui-disabled:not(.Mui-selected) {
   color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-29.Mui-disabled.emotion-29.Mui-selected {
+  opacity: 0.6;
 }
 
 .emotion-43 {
@@ -6127,8 +6135,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-43.Mui-disabled {
+.emotion-43.Mui-disabled:not(.Mui-selected) {
   color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-43.Mui-disabled.emotion-43.Mui-selected {
+  opacity: 0.6;
 }
 
 .emotion-43:not(.Mui-selected) {
@@ -7219,8 +7231,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-27.Mui-disabled {
+.emotion-27.Mui-disabled:not(.Mui-selected) {
   color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-27.Mui-disabled.emotion-27.Mui-selected {
+  opacity: 0.6;
 }
 
 .emotion-29 {
@@ -7313,8 +7329,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-29.Mui-disabled {
+.emotion-29.Mui-disabled:not(.Mui-selected) {
   color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-29.Mui-disabled.emotion-29.Mui-selected {
+  opacity: 0.6;
 }
 
 .emotion-43 {
@@ -7407,8 +7427,12 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   background-color: rgb(35, 85, 94);
 }
 
-.emotion-43.Mui-disabled {
+.emotion-43.Mui-disabled:not(.Mui-selected) {
   color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-43.Mui-disabled.emotion-43.Mui-selected {
+  opacity: 0.6;
 }
 
 .emotion-43:not(.Mui-selected) {
