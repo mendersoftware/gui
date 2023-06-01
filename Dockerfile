@@ -10,7 +10,7 @@ FROM base AS build
 COPY . ./
 RUN npm run build
 
-FROM nginx:1.23.4-alpine
+FROM nginx:1.25.0-alpine
 EXPOSE 8080
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG
