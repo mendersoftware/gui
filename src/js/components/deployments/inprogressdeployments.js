@@ -209,6 +209,7 @@ const mapStateToProps = state => {
   return {
     canConfigure,
     canDeploy,
+    devices: state.devices.byId,
     idAttribute: getIdAttribute(state).attribute,
     onboardingState: getOnboardingState(state),
     pastDeploymentsCount: state.deployments.byStatus.finished.total,

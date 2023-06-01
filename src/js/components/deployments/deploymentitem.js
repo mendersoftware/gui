@@ -11,13 +11,17 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 // material ui
 import { CancelOutlined as CancelOutlinedIcon } from '@mui/icons-material';
 import { Button, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import isUUID from 'validator/lib/isUUID';
+
+import { getDeviceById } from '../../actions/deviceActions';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { FileSize, getDeploymentState } from '../../helpers';
 import Confirm from '../common/confirm';
@@ -39,8 +43,8 @@ export const DeploymentDeviceCount = ({ className, deployment }) => (
     {Math.max(deployment.device_count || 0, deployment.max_devices || 0)}
   </div>
 );
-export const DeploymentDeviceGroup = ({ deployment, idAttribute, wrappingClass }) => {
-  const deploymentName = getDeploymentTargetText({ deployment, idAttribute });
+export const DeploymentDeviceGroup = ({ deployment, devicesById, idAttribute, wrappingClass }) => {
+  const deploymentName = getDeploymentTargetText({ deployment, devicesById, idAttribute });
   return (
     <div className={wrappingClass} key="DeploymentDeviceGroup" title={deploymentName}>
       {deploymentName}
@@ -87,9 +91,28 @@ const useStyles = makeStyles()(theme => ({
   textWrapping: { whiteSpace: 'initial' }
 }));
 
-export const DeploymentItem = ({ abort: abortDeployment, canConfigure, canDeploy, columnHeaders, deployment, idAttribute, isEnterprise, openReport, type }) => {
+export const DeploymentItem = ({
+  abort: abortDeployment,
+  canConfigure,
+  canDeploy,
+  columnHeaders,
+  deployment,
+  devices,
+  idAttribute,
+  isEnterprise,
+  openReport,
+  type
+}) => {
   const [abort, setAbort] = useState(null);
+
   const { classes } = useStyles();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isUUID(deployment.name) && !devices[deployment.name]) {
+      dispatch(getDeviceById(deployment.name));
+    }
+  }, [deployment.name]);
 
   const toggleConfirm = id => {
     setTimeout(() => setAbort(abort ? null : id), 150);
@@ -114,6 +137,7 @@ export const DeploymentItem = ({ abort: abortDeployment, canConfigure, canDeploy
               className={column.class || ''}
               idAttribute={idAttribute}
               deployment={deployment}
+              devicesById={devices}
               started={started}
               wrappingClass={wrappingClass}
               {...column.props}

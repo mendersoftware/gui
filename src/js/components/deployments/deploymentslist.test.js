@@ -12,15 +12,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
+
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import DeploymentsList from './deploymentslist';
 
+const mockStore = configureStore([thunk]);
+
+const store = mockStore({ ...defaultState });
+
 describe('DeploymentsList Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <DeploymentsList items={Object.values(defaultState.deployments.byId)} refreshItems={() => {}} type="pending" title="pending" />
+      <Provider store={store}>
+        <DeploymentsList items={Object.values(defaultState.deployments.byId)} refreshItems={() => {}} type="pending" title="pending" />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
