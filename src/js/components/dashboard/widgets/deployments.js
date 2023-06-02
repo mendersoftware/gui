@@ -11,13 +11,17 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { makeStyles } from 'tss-react/mui';
 
+import isUUID from 'validator/lib/isUUID';
+
+import { getDeviceById } from '../../../actions/deviceActions';
 import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import Time from '../../common/time';
-import { DeploymentProgress } from '../../deployments/deploymentitem';
+import { DeploymentDeviceGroup, DeploymentProgress } from '../../deployments/deploymentitem';
 import DeploymentStats from '../../deployments/deploymentstatus';
 import { DeploymentStatusNotification } from '../../deployments/progressChart';
 
@@ -41,10 +45,10 @@ const useStyles = makeStyles()(theme => ({
   wrapper: { display: 'flex', flexDirection: 'column', maxWidth, '> time': { alignSelf: 'flex-end', marginRight: 6 } }
 }));
 
-const KeyInfo = ({ deployment }) => (
+const KeyInfo = ({ deployment, devicesById, idAttribute }) => (
   <div>
     <div>{deployment.artifact_name}</div>
-    <div>{deployment.name}</div>
+    <DeploymentDeviceGroup deployment={deployment} devicesById={devicesById} idAttribute={idAttribute} wrappingClass="" />
   </div>
 );
 
@@ -58,14 +62,22 @@ const deploymentStateComponentMap = {
   )
 };
 
-const BaseDeploymentWidget = ({ deployment, onClick, state }) => {
+const BaseDeploymentWidget = ({ deployment, devicesById, idAttribute, onClick, state }) => {
   const { classes } = useStyles();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isUUID(deployment.name) && !devicesById[deployment.name]) {
+      dispatch(getDeviceById(deployment.name));
+    }
+  }, [deployment.name]);
+
   const Component = deploymentStateComponentMap[state];
   const onWidgetClick = () => onClick({ route: 'deployments', id: deployment.id, tab: state === DEPLOYMENT_STATES.finished ? state : undefined, open: true });
 
   return (
     <div className={`clickable ${classes.base}`} onClick={onWidgetClick}>
-      <KeyInfo deployment={deployment} />
+      <KeyInfo deployment={deployment} devicesById={devicesById} idAttribute={idAttribute} />
       <Component classes={classes} deployment={deployment} />
     </div>
   );

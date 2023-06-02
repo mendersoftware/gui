@@ -41,6 +41,7 @@ export const DeploymentsList = ({
   canConfigure,
   componentClass = '',
   count,
+  devices,
   headers = defaultHeaders,
   idAttribute,
   isEnterprise,
@@ -72,6 +73,7 @@ export const DeploymentsList = ({
             canDeploy={canDeploy}
             columnHeaders={headers}
             deployment={deployment}
+            devices={devices}
             key={`${type}-deployment-${deployment.created}`}
             idAttribute={idAttribute}
             isEnterprise={isEnterprise}
