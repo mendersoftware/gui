@@ -19,7 +19,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, deploymentDisplayStates } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { DEPLOYMENT_CUTOFF, getOnboardingState, getRecentDeployments, getUserCapabilities } from '../../selectors';
+import { DEPLOYMENT_CUTOFF, getIdAttribute, getOnboardingState, getRecentDeployments, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -42,7 +42,9 @@ export const Deployments = ({
   clickHandle,
   deployments,
   deploymentsCount,
+  devicesById,
   getDeploymentsByStatus,
+  idAttribute,
   onboardingState,
   setSnackbar
 }) => {
@@ -94,7 +96,7 @@ export const Deployments = ({
                 accu.push(
                   <React.Fragment key={key}>
                     <h5 className="margin-bottom-none">{deploymentDisplayStates[key]}</h5>
-                    <Component deployments={deployments[key]} state={key} onClick={clickHandle} />
+                    <Component deployments={deployments[key]} devicesById={devicesById} idAttribute={idAttribute} state={key} onClick={clickHandle} />
                   </React.Fragment>
                 );
                 return accu;
@@ -127,6 +129,8 @@ const mapStateToProps = state => {
     canDeploy,
     deploymentsCount,
     deployments,
+    devicesById: state.devices.byId,
+    idAttribute: getIdAttribute(state),
     onboardingState: getOnboardingState(state)
   };
 };

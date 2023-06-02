@@ -522,7 +522,10 @@ exports[`Main Component renders correctly 1`] = `
                 <div>
                   r1
                 </div>
-                <div>
+                <div
+                  class=""
+                  title="test deployment"
+                >
                   test deployment
                 </div>
               </div>
@@ -553,7 +556,10 @@ exports[`Main Component renders correctly 1`] = `
                 <div>
                   r1
                 </div>
-                <div>
+                <div
+                  class=""
+                  title="test deployment 2"
+                >
                   test deployment 2
                 </div>
               </div>
@@ -589,7 +595,10 @@ exports[`Main Component renders correctly 1`] = `
                 <div>
                   r1
                 </div>
-                <div>
+                <div
+                  class=""
+                  title="test deployment"
+                >
                   test deployment
                 </div>
               </div>
@@ -641,7 +650,10 @@ exports[`Main Component renders correctly 1`] = `
                 <div>
                   r1
                 </div>
-                <div>
+                <div
+                  class=""
+                  title="test deployment 2"
+                >
                   test deployment 2
                 </div>
               </div>
@@ -686,7 +698,10 @@ exports[`Main Component renders correctly 1`] = `
                   <div>
                     r1
                   </div>
-                  <div>
+                  <div
+                    class=""
+                    title="test deployment"
+                  >
                     test deployment
                   </div>
                 </div>
@@ -786,7 +801,10 @@ exports[`Main Component renders correctly 1`] = `
                   <div>
                     r1
                   </div>
-                  <div>
+                  <div
+                    class=""
+                    title="test deployment 2"
+                  >
                     test deployment 2
                   </div>
                 </div>

@@ -205,6 +205,7 @@ const mapStateToProps = state => {
     canConfigure,
     canDeploy,
     count: state.deployments.byStatus.scheduled.total,
+    devices: state.devices.byId,
     idAttribute: getIdAttribute(state).attribute,
     // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
     isEnterprise: getIsEnterprise(state) || plan !== 'os',

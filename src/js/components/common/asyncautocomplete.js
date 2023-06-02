@@ -50,12 +50,7 @@ export const AsyncAutocomplete = ({
     } else {
       onChange(debouncedValue);
     }
-  }, [debouncedValue]);
-
-  useEffect(() => {
-    const selection = options.find(option => option[selectionAttribute] === debouncedValue);
-    onChangeSelection(selection);
-  }, [options]);
+  }, [debouncedValue, JSON.stringify(options), selectionAttribute]);
 
   const onInputChange = (e, value, reason) => {
     if (reason === 'clear') {

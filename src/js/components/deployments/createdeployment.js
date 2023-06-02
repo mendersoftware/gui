@@ -118,7 +118,7 @@ export const CreateDeployment = props => {
   } = props;
 
   const isCreating = useRef(false);
-  const [releaseSelectionLocked] = useState(Boolean(deploymentObject.release));
+  const [releaseSelectionLocked, setReleaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -137,6 +137,7 @@ export const CreateDeployment = props => {
     const { devices = [], group, release } = deploymentObject;
     if (release) {
       advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION);
+      setReleaseSelectionLocked(Boolean(deploymentObject.release));
     }
     if (!group) {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: devices.length ? devices.length : 0 });
