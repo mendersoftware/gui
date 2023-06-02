@@ -222,7 +222,9 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
     canReadUsers,
     canTroubleshoot,
     canUploadReleases,
-    canWriteDevices
+    canWriteDevices,
+    groupsPermissions: uiPermissions.groups,
+    releasesPermissions: uiPermissions.releases
   };
 });
 
