@@ -36,6 +36,18 @@ export const getPeristentLoginInfo = () => {
   return loginInfo;
 };
 
+export const getStorageState = location => {
+  let storageState;
+  try {
+    const content = fs.readFileSync(location, 'utf8');
+    storageState = JSON.parse(content);
+    return storageState;
+  } catch (error) {
+    storageState = { username: process.env.STAGING_USER ?? `${uuid()}@example.com`, password: process.env.STAGING_PASSWORD ?? uuid() };
+  }
+  return storageState;
+};
+
 export const prepareCookies = async (context: BrowserContext, domain: string, userId: string, token: string) => {
   await context.addCookies([
     { name: 'JWT', value: token, path: '/', domain },

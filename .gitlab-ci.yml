@@ -1,4 +1,4 @@
-image: node:19-alpine
+image: node:20-alpine
 
 stages:
   - pre-test
@@ -159,8 +159,8 @@ test:acceptance:enterprise:
 
 test:acceptance:unprivileged:
   extends: .template:test:acceptance
-  # only:
-  #   - master
+  only:
+    - master
   script:
     - docker load -i unprivilegedImage.tar
     - docker tag ${DOCKER_REPOSITORY}:unprivileged $DOCKER_REPOSITORY:pr
@@ -169,8 +169,8 @@ test:acceptance:unprivileged:
 
 test:acceptance:enterprise-unprivileged:
   extends: .template:test:acceptance
-  # only:
-  #   - master
+  only:
+    - master
   variables:
     TEST_ENVIRONMENT: enterprise
   script:
