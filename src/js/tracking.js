@@ -1,5 +1,5 @@
 /* eslint-disable import/no-named-as-default-member */
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 const cookieConsentCSS = 'https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css';
 const cookieConsentJS = 'https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js';
@@ -69,7 +69,7 @@ class Tracker {
     if (this.initialized && this.trackingEnabled) {
       return false;
     }
-    ReactGA.initialize(trackingCode);
+    ReactGA.default.initialize(trackingCode);
     this.initialized = true;
     return true;
   }
@@ -78,9 +78,6 @@ class Tracker {
       this.currentPageView = data;
     } else {
       data = this.currentPageView;
-    }
-    if (this.initialized && this.trackingEnabled) {
-      ReactGA.pageview(data);
     }
   }
   set(value) {

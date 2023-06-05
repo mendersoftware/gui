@@ -1,4 +1,4 @@
-image: node:19-alpine
+image: node:20-alpine
 
 stages:
   - pre-test
@@ -157,6 +157,31 @@ test:acceptance:enterprise:
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise
     - docker rmi $DOCKER_REPOSITORY:pr
 
+test:acceptance:unprivileged:
+  extends: .template:test:acceptance
+  only:
+    - master
+  script:
+    - docker load -i unprivilegedImage.tar
+    - docker tag ${DOCKER_REPOSITORY}:unprivileged $DOCKER_REPOSITORY:pr
+    - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --unprivileged
+    - docker rmi $DOCKER_REPOSITORY:pr
+
+test:acceptance:enterprise-unprivileged:
+  extends: .template:test:acceptance
+  only:
+    - master
+  variables:
+    TEST_ENVIRONMENT: enterprise
+  script:
+    - docker load -i unprivilegedImage.tar
+    - if [ -n "$REGISTRY_MENDER_IO_USERNAME" ]; then
+    - docker login -u $REGISTRY_MENDER_IO_USERNAME -p $REGISTRY_MENDER_IO_PASSWORD registry.mender.io
+    - fi
+    - docker tag ${DOCKER_REPOSITORY}:unprivileged $DOCKER_REPOSITORY:pr
+    - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise --unprivileged
+    - docker rmi $DOCKER_REPOSITORY:pr
+
 test:unit:
   stage: test
   except:
@@ -234,13 +259,30 @@ test:prep:
     - mender-qa-worker-generic-light
 
 build:docker:
-  after_script:
-    - docker build --tag ${DOCKER_REPOSITORY}:base --target base --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}" .
-    - docker save ${DOCKER_REPOSITORY}:base > baseImage.tar
+  services:
+    - docker:dind
+  # unfortunately we can't just extend the after_script here as it would require rebuilding all layers of the image for the different build targets
+  script:
+    - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
+    - apk add --no-cache git
+    - docker context create the-context
+    - docker buildx create --driver=docker-container --name=buildx-builder --use the-context
+    - docker buildx build
+      --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
+      --tag $DOCKER_BUILD_SERVICE_IMAGE
+      --output=type=docker,dest=- . > image.tar
+    - docker buildx build --tag ${DOCKER_REPOSITORY}:base
+      --target base
+      --output=type=docker,dest=- . > baseImage.tar
+    - docker buildx build --tag ${DOCKER_REPOSITORY}:unprivileged
+      --target unprivileged
+      --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
+      --output=type=docker,dest=- . > unprivilegedImage.tar
   artifacts:
     paths:
       - baseImage.tar
       - image.tar
+      - unprivilegedImage.tar
 
 .template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
@@ -358,6 +400,21 @@ publish:disclaimer:
     - /^(master|staging|[0-9]+\.[0-9]+\.x)$/
   tags:
     - mender-qa-worker-generic-light
+
+publish:image:
+  after_script:
+    - docker load -i unprivilegedImage.tar
+    - docker tag $DOCKER_BUILD_SERVICE_IMAGE $DOCKER_REPOSITORY:${DOCKER_PUBLISH_TAG}-unprivileged
+    - docker push $DOCKER_REPOSITORY:${DOCKER_PUBLISH_TAG}-unprivileged
+
+publish:image:mender:
+  after_script:
+    - integration_versions=$(release_tool --integration-versions-including $CI_PROJECT_NAME --version $CI_COMMIT_REF_NAME | sed -e 's/origin\///')
+    - docker load -i unprivilegedImage.tar
+    - for version in $integration_versions; do
+    - docker tag $DOCKER_BUILD_SERVICE_IMAGE $DOCKER_REPOSITORY:mender-${version}-unprivileged
+    - docker push $DOCKER_REPOSITORY:mender-${version}-unprivileged
+    - done
 
 coveralls:done:
   image: curlimages/curl
