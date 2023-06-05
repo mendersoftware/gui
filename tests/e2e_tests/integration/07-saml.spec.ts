@@ -19,7 +19,6 @@ import test, { expect } from '../fixtures/fixtures';
 import { getStorageState } from '../utils/commands';
 
 const timeoutFourSeconds = 4000;
-const timeoutOneSecond = 1000;
 const samlSettings = {
   credentials: {
     chromium: { login: 'morty', password: 'panic', email: 'msmith@samltest.id' },
@@ -138,7 +137,7 @@ test.describe('SAML Login via sso/id/login', () => {
       console.log('uploaded file, making screen shot, after waiting 4s');
       await page.waitForTimeout(timeoutFourSeconds);
       // Let's save the image after the upload
-      await page.screenshot({ path: 'saml-uploaded.png' });
+      await page.screenshot({ path: './test-results/saml-uploaded.png' });
     });
 
     // Creates a user with login that matches Identity privder (samltest.id) user email
@@ -161,7 +160,8 @@ test.describe('SAML Login via sso/id/login', () => {
       await page.locator('[placeholder="Email"]').fill(samlSettings.credentials[browserName].email);
       // Click text=Create user
       await page.locator('text=Create user').click();
-      await page.waitForTimeout(timeoutOneSecond);
+      await page.screenshot({ path: './test-results/user-created.png' });
+      await page.waitForSelector('text=The user was created successfully.');
       console.log(`${samlSettings.credentials[browserName].email} created.`);
     });
 
@@ -190,7 +190,7 @@ test.describe('SAML Login via sso/id/login', () => {
       await page.goto(loginUrl);
       await page.waitForTimeout(timeoutFourSeconds);
       // This screenshot saves the view right after the first redirection
-      await page.screenshot({ path: 'saml-redirected.png' });
+      await page.screenshot({ path: './test-results/saml-redirected.png' });
 
       // fill login info
       await page.fill('label:has-text("username")', samlSettings.credentials[browserName].login);
@@ -200,12 +200,12 @@ test.describe('SAML Login via sso/id/login', () => {
       await page.locator('button:has-text("Login")').click();
       await page.waitForSelector('text=Accept');
       // This screen shot saves the summary of the data that will be sent in assertion
-      await page.screenshot({ path: 'saml-logging-in.png' });
+      await page.screenshot({ path: './test-results/saml-logging-in.png' });
 
       // Click text=Accept
       await page.locator('text=Accept').click();
       // confirm we have logged in successfully
-      await page.screenshot({ path: 'saml-logging-in-accept.png' });
+      await page.screenshot({ path: './test-results/saml-logging-in-accept.png' });
       await page.waitForSelector('text=License information');
     });
   });
