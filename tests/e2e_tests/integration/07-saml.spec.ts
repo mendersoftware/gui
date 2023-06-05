@@ -16,6 +16,7 @@ import * as fs from 'fs';
 import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
+import { getStorageState } from '../utils/commands';
 
 const timeoutFourSeconds = 4000;
 const timeoutOneSecond = 1000;
@@ -31,15 +32,15 @@ const samlSettings = {
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 const defaultHeaders = { 'Content-Type': 'application/json' };
 
-test.describe('SAML Login', () => {
+test.describe('SAML Login via sso/id/login', () => {
+  test.describe.configure({ mode: 'serial' });
   test.use({ storageState: 'storage.json' });
   test.describe('SAML login via sso/id/login', () => {
-    test.afterAll(async ({ environment, baseUrl, browserName, context }, testInfo) => {
+    test.afterAll(async ({ environment, baseUrl, browserName }, testInfo) => {
       if (testInfo.status === 'skipped' || environment !== 'staging') {
         return;
       }
-      const storage = await context.storageState();
-      const jwt = storage['cookies'].find(cookie => cookie.name === 'JWT').value;
+      const jwt = getStorageState('storage.json').cookies.find(cookie => cookie.name === 'JWT').value;
       const requestInfo = { headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` }, httpsAgent, method: 'GET' };
       console.log(`Finished ${testInfo.title} with status ${testInfo.status}. Cleaning up.`);
       const response = await axios({
