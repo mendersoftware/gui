@@ -1,8 +1,9 @@
-/* eslint-disable import/no-named-as-default-member */
-import ReactGA from 'react-ga4';
+import ReactGA4 from 'react-ga4';
 
 const cookieConsentCSS = 'https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css';
 const cookieConsentJS = 'https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js';
+
+const ReactGA = ReactGA4.default;
 
 class Tracker {
   constructor() {
@@ -69,7 +70,7 @@ class Tracker {
     if (this.initialized && this.trackingEnabled) {
       return false;
     }
-    ReactGA.default.initialize(trackingCode);
+    ReactGA.initialize(trackingCode);
     this.initialized = true;
     return true;
   }
