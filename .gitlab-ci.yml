@@ -269,20 +269,32 @@ build:docker:
     - docker buildx create --driver=docker-container --name=buildx-builder --use the-context
     - docker buildx build
       --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
-      --tag $DOCKER_BUILD_SERVICE_IMAGE
-      --output=type=docker,dest=- . > image.tar
+      --output type=docker,dest=image.tar
+      --tag $DOCKER_BUILD_SERVICE_IMAGE .
+    - docker buildx build
+      --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
+      --platform linux/amd64,linux/arm64,linux/arm
+      --provenance false
+      --output type=oci,dest=ociImage.tar
+      --tag $DOCKER_BUILD_SERVICE_IMAGE .
+    # - >
+    #   if [[ "$CI_COMMIT_REF_NAME" =~ ^(master|staging|[0-9]+\.[0-9]+\.x)$ ]]; then
+    #     echo "Skipping extra image builds on $CI_COMMIT_REF_NAME"
+    #     exit 0
+    #   fi
     - docker buildx build --tag ${DOCKER_REPOSITORY}:base
       --target base
-      --output=type=docker,dest=- . > baseImage.tar
+      --output=type=docker,dest=baseImage.tar .
     - docker buildx build --tag ${DOCKER_REPOSITORY}:unprivileged
       --target unprivileged
       --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
-      --output=type=docker,dest=- . > unprivilegedImage.tar
+      --output=type=docker,dest=unprivilegedImage.tar .
   artifacts:
     paths:
       - baseImage.tar
       - image.tar
       - unprivilegedImage.tar
+      - ociImage.tar
 
 .template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
