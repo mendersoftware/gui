@@ -399,5 +399,9 @@ export const generateReleasesPath = ({ pageState: { selectedRelease } }) => `${r
 export const parseReleasesQuery = (queryParams, extraProps) => {
   const tab = queryParams.has('tab') ? queryParams.get('tab') : undefined;
   const tags = queryParams.has('tag') ? queryParams.getAll('tag') : [];
-  return { selectedRelease: extraProps.location.pathname.substring(releasesRoot.length + 1), tab, tags };
+  let selectedRelease = extraProps.location.pathname.substring(releasesRoot.length + 1);
+  if (!selectedRelease && extraProps.pageState.id?.length) {
+    selectedRelease = extraProps.pageState.id[0];
+  }
+  return { selectedRelease, tab, tags };
 };
