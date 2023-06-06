@@ -49,7 +49,7 @@ const EmptyState = ({ isFiltered }) => (
 );
 
 const columns = [
-  { content: 'Release', key: 'release', Component: ({ deviceDeployment: { release } }) => <Link to={`/releases?name=${release}`}>{release}</Link> },
+  { content: 'Release', key: 'release', Component: ({ deviceDeployment: { release } }) => <Link to={`/releases/${release}`}>{release}</Link> },
   {
     content: 'Target device(s)',
     key: 'target',

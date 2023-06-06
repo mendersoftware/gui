@@ -1012,7 +1012,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-31:focus::-ms-input-
             class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-17"
           >
             <a
-              href="/releases?name=some-release"
+              href="/releases/some-release"
             >
               some-release
             </a>

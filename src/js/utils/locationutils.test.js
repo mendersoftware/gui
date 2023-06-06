@@ -242,6 +242,10 @@ describe('locationutils', () => {
       const { open } = parseDeviceQuery(new URLSearchParams(), { pageState: { id: ['something'] } });
       expect(open).toEqual(true);
     });
+    it('uses working utilties - parseDeviceQuery parses properly with many : in the query', () => {
+      const { filters } = parseDeviceQuery(new URLSearchParams('?inventory=some:eq:thing:group:eq:testgroup:bla:ne:blubb'));
+      expect(filters).toEqual([{ key: 'some', operator: '$eq', scope: 'inventory', value: 'thing:group:eq:testgroup:bla:ne:blubb' }]);
+    });
 
     const devicesPath = '/devices/asd';
     const devicesSearch = '?some=thing&different=thing&entirely=different';

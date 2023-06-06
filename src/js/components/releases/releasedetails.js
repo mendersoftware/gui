@@ -315,7 +315,7 @@ export const ReleaseDetails = ({
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/releases') + '/releases'.length);
-    copy(`${location}?id=${release.Name}`);
+    copy(`${location}/${release.Name}`);
     setSnackbar('Link copied to clipboard');
   };
 
