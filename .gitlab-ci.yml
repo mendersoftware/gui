@@ -21,6 +21,12 @@ include:
   - project: 'Northern.tech/Mender/mender-qa'
     file: 'gitlab-pipeline/internal-variables.yml'
 
+.export_docker_vars: &export_docker_vars |
+  DOCKER_BUILD_TAG=${CI_COMMIT_REF_SLUG:-local}
+  DOCKER_BUILD_SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_BUILD_TAG}
+  DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}
+  DOCKER_PUBLISH_COMMIT_TAG=${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}
+
 test:lint:
   stage: test
   except:
@@ -403,12 +409,14 @@ publish:disclaimer:
 
 publish:image:
   after_script:
+    - *export_docker_vars
     - docker load -i unprivilegedImage.tar
     - docker tag $DOCKER_BUILD_SERVICE_IMAGE $DOCKER_REPOSITORY:${DOCKER_PUBLISH_TAG}-unprivileged
     - docker push $DOCKER_REPOSITORY:${DOCKER_PUBLISH_TAG}-unprivileged
 
 publish:image:mender:
   after_script:
+    - *export_docker_vars
     - integration_versions=$(release_tool --integration-versions-including $CI_PROJECT_NAME --version $CI_COMMIT_REF_NAME | sed -e 's/origin\///')
     - docker load -i unprivilegedImage.tar
     - for version in $integration_versions; do
