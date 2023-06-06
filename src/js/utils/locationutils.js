@@ -79,8 +79,7 @@ const legacyDeviceQueryParse = (searchParams, filteringAttributes) => {
   }
   const filters = [...params.keys()].reduce(
     (accu, key) =>
-      params.getAll(key).reduce((innerAccu, query) => {
-        const value = decodeURIComponent(query);
+      params.getAll(key).reduce((innerAccu, value) => {
         const scope =
           Object.entries(filteringAttributes).reduce((foundScope, [currentScope, attributes]) => {
             if (foundScope) {
@@ -107,7 +106,8 @@ const scopedFilterParse = searchParams => {
       }
       accu[scope] = params.getAll(scope).map(scopedQuery => {
         const items = scopedQuery.split(SEPARATOR);
-        return { ...emptyFilter, scope, key: items[0], operator: `$${items[1]}`, value: decodeURIComponent(items[2]) };
+        // URLSearchParams will automatically decode any URI encoding present in the query string, thus we have to also handle queries with a SEPARATOR separately
+        return { ...emptyFilter, scope, key: items[0], operator: `$${items[1]}`, value: items.slice(2).join(SEPARATOR) };
       });
       return accu;
     },
