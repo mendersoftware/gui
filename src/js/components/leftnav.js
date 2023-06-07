@@ -22,13 +22,13 @@ import { makeStyles } from 'tss-react/mui';
 import copy from 'copy-to-clipboard';
 
 import { setSnackbar, setVersionInfo } from '../actions/appActions';
-import { TIMEOUTS } from '../constants/appConstants';
+import { TIMEOUTS, canAccess } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 const listItems = [
-  { route: '/', text: 'Dashboard', canAccess: () => true },
+  { route: '/', text: 'Dashboard', canAccess },
   { route: '/devices', text: 'Devices', canAccess: ({ userCapabilities: { canReadDevices } }) => canReadDevices },
   { route: '/releases', text: 'Releases', canAccess: ({ userCapabilities: { canReadReleases, canUploadReleases } }) => canReadReleases || canUploadReleases },
   { route: '/deployments', text: 'Deployments', canAccess: ({ userCapabilities: { canDeploy, canReadDeployments } }) => canReadDeployments || canDeploy },

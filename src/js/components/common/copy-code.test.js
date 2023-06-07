@@ -18,6 +18,7 @@ import userEvent from '@testing-library/user-event';
 
 import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import { yes } from '../../constants/appConstants';
 import CopyCode from './copy-code';
 
 describe('CopyCode Component', () => {
@@ -31,7 +32,7 @@ describe('CopyCode Component', () => {
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const submitCheck = jest.fn();
-    document.execCommand = jest.fn(() => true);
+    document.execCommand = jest.fn(yes);
     const ui = <CopyCode code="sudo it all!" onCopy={submitCheck} withDescription={true} />;
     const { rerender } = render(ui);
 

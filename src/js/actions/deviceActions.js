@@ -13,7 +13,7 @@ import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
-import { SORTING_OPTIONS, UPLOAD_PROGRESS, emptyChartSelection } from '../constants/appConstants';
+import { SORTING_OPTIONS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
@@ -184,7 +184,7 @@ const filterProcessors = {
   $lte: val => Number(val) || val,
   $in: val => ('' + val).split(',').map(i => i.trim()),
   $nin: val => ('' + val).split(',').map(i => i.trim()),
-  $exists: () => true,
+  $exists: yes,
   $nexists: () => false
 };
 const filterAliases = {

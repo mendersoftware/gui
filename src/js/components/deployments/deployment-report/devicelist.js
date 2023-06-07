@@ -19,7 +19,7 @@ import { Button, LinearProgress } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import DeltaIcon from '../../../../assets/img/deltaicon.svg';
-import { TIMEOUTS } from '../../../constants/appConstants';
+import { TIMEOUTS, canAccess as canShow } from '../../../constants/appConstants';
 import { deploymentSubstates } from '../../../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { rootfsImageVersion as rootfsImageVersionAttribute } from '../../../constants/releaseConstants';
@@ -61,8 +61,6 @@ const statusColorMap = {
 };
 
 const undefinedStates = [deploymentSubstates.pending, deploymentSubstates.decommissioned, deploymentSubstates.alreadyInstalled];
-
-const canShow = () => true;
 
 const deviceListColumns = [
   {
