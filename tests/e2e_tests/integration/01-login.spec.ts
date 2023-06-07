@@ -17,6 +17,8 @@ import * as https from 'https';
 import test, { expect } from '../fixtures/fixtures';
 import { selectors } from '../utils/constants';
 
+const loggedInText = 'text=License information';
+
 test.describe('Login', () => {
   test.describe('works as expected', () => {
     test.beforeEach(async ({ baseUrl, page }) => {
@@ -34,22 +36,23 @@ test.describe('Login', () => {
       await page.fill(selectors.password, password);
       await page.click(`:is(button:has-text('Log in'))`);
       // confirm we have logged in successfully
-      await page.waitForSelector('text=License information');
+      await page.waitForSelector(loggedInText);
       await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
       await context.storageState({ path: 'storage.json' });
-      // now we can log out
-      await page.click('.header-dropdown', { force: true });
-      await page.click(`text=Log out`, { force: true });
-      const loginButton = page.getByRole('button', { name: /log in/i });
-      await loginButton.waitFor({ timeout: 7000 });
-      const loginVisible = await loginButton.isVisible();
-      expect(loginVisible).toBeTruthy();
     });
 
     test('does not stay logged in across sessions, after browser restart', async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
       const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
       expect(loginVisible).toBeTruthy();
+    });
+
+    test('Logs out using UI', async ({ loggedInPage: page }) => {
+      await page.waitForSelector(loggedInText);
+      // now we can log out
+      await page.click('.header-dropdown', { force: true });
+      await page.click(`text=/Log out/i`, { force: true });
+      await page.waitForSelector('text=/log in/i', { timeout: 7000 });
     });
 
     test('fails to access unknown resource', async ({ baseUrl, page }) => {
@@ -114,7 +117,7 @@ test.describe('Login', () => {
       await page.click(`:is(button:has-text('Log in'))`);
 
       // confirm we have logged in successfully
-      await page.waitForSelector('text=License information');
+      await page.waitForSelector(loggedInText);
       const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
       expect(loginVisible).toBeFalsy();
       const cookies = await context.cookies();
