@@ -20,6 +20,7 @@ import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@mui/icons-material
 import { Button, Checkbox, Collapse, FormControlLabel, List } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import copy from 'copy-to-clipboard';
 import moment from 'moment';
 
 import { setSnackbar } from '../../../actions/appActions';
@@ -44,6 +45,7 @@ const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
   deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
   ssoToggle: { width: `calc(${maxWidth}px + ${theme.spacing(4)})` },
+  tenantInfo: { marginTop: 11, paddingBottom: 3, 'span': { marginLeft: theme.spacing(0.5), color: theme.palette.text.disabled } },
   tenantToken: { width: `calc(${maxWidth}px - ${theme.spacing(4)})` },
   tokenTitle: { paddingRight: 10 },
   tokenExplanation: { margin: '1em 0' }
@@ -156,11 +158,27 @@ export const Organization = ({
   const onDownloadReportClick = () =>
     downloadLicenseReport().then(report => createFileDownload(report, `Mender-license-report-${moment().format(moment.HTML5_FMT.DATE)}`));
 
+  const onTenantInfoClick = () => {
+    copy(`Organization: ${org.name}, Tenant ID: ${org.id}`);
+    setSnackbar('Copied to clipboard');
+  };
+
   return (
     <div className="margin-top-small">
       <h2 className="margin-top-small">Organization and billing</h2>
       <List>
-        <OrganizationSettingsItem title="Organization name" content={{ action: { internal: true }, description: org.name }} />
+        <OrganizationSettingsItem
+          title="Organization name"
+          content={{
+            action: { action: onTenantInfoClick, internal: true },
+            description: (
+              <div className={`clickable ${classes.tenantInfo}`} onClick={onTenantInfoClick}>
+                {org.name}
+                <span>({org.id})</span>
+              </div>
+            )
+          }}
+        />
         <OrganizationSettingsItem
           title={<OrgHeader />}
           content={{}}
