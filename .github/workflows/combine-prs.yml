@@ -19,3 +19,5 @@ jobs:
       - name: combine-prs
         id: combine-prs
         uses: github/combine-prs@v3.1.1
+        with:
+          ci_required: false # to allow combining PRs with incomplete CI (e.g. mender-qa or here: to work with the partial coverage collection on PRs as well)
