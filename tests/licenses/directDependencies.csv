@@ -92,7 +92,7 @@
 "util","MIT","https://github.com/browserify/node-util"
 "uuid","MIT","https://github.com/uuidjs/uuid"
 "validator","MIT","https://github.com/validatorjs/validator.js"
-"victory","MIT","https://github.com/formidablelabs/victory"
+"victory","MIT","https://github.com/FormidableLabs/victory"
 "webpack-cli","MIT","https://github.com/webpack/webpack-cli"
 "webpack","MIT","https://github.com/webpack/webpack"
 "xterm-addon-canvas","MIT","https://github.com/xtermjs/xterm.js"
