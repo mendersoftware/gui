@@ -78,7 +78,7 @@
     "core-js": "^3.30.2",
     "css-loader": "^6.8.1",
     "esbuild-loader": "^3.0.1",
-    "eslint": "^8.39.0",
+    "eslint": "^8.42.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
