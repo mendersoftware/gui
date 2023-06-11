@@ -24,6 +24,7 @@ include:
 .export_docker_vars: &export_docker_vars |
   DOCKER_BUILD_TAG=${CI_COMMIT_REF_SLUG:-local}
   DOCKER_BUILD_SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_BUILD_TAG}
+  DOCKER_BUILD_SERVICE_IMAGE_INTERNAL=${CI_REGISTRY_IMAGE}:${DOCKER_BUILD_TAG}
   DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}
   DOCKER_PUBLISH_COMMIT_TAG=${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}
 
@@ -271,19 +272,29 @@ build:docker:
   script:
     - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
     - apk add --no-cache git
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker context create the-context
     - docker buildx create --driver=docker-container --name=buildx-builder --use the-context
     - docker buildx build
       --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
-      --tag $DOCKER_BUILD_SERVICE_IMAGE
-      --output=type=docker,dest=- . > image.tar
-    - docker buildx build --tag ${DOCKER_REPOSITORY}:base
+      --tag $DOCKER_BUILD_SERVICE_IMAGE_INTERNAL
+      --platform $PLATFORMS
+      --provenance false
+      --push
+      .
+    - docker buildx build --tag ${CI_REGISTRY_IMAGE}:base
       --target base
-      --output=type=docker,dest=- . > baseImage.tar
-    - docker buildx build --tag ${DOCKER_REPOSITORY}:unprivileged
+      --platform $PLATFORMS
+      --provenance false
+      --push
+      .
+    - docker buildx build --tag ${CI_REGISTRY_IMAGE}:unprivileged
       --target unprivileged
       --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
-      --output=type=docker,dest=- . > unprivilegedImage.tar
+      --platform $PLATFORMS
+      --provenance false
+      --push
+      .
   artifacts:
     paths:
       - baseImage.tar
