@@ -322,7 +322,7 @@ export const TroubleshootDialog = ({
             <div className={classes.terminalStatePlaceholder} />
           )}
           {canAuditlog && hasAuditlogs && (
-            <Button component={Link} to={`auditlog?object_id=${device.id}&start_date=${BEGINNING_OF_TIME}`}>
+            <Button component={Link} to={`/auditlog?objectType=device&objectId=${device.id}&startDate=${BEGINNING_OF_TIME}`}>
               View {tabs[currentTab].link} for this device
             </Button>
           )}

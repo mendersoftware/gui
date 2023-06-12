@@ -106,6 +106,16 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-5 {
+  margin-top: 11px;
+  padding-bottom: 3px;
+}
+
+.emotion-5 span {
+  margin-left: 4px;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-6 {
   margin: 0;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -119,7 +129,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   width: 500px;
 }
 
-.emotion-7 {
+.emotion-8 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -134,11 +144,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
   margin-bottom: 0;
 }
 
-.emotion-9 {
+.emotion-10 {
   padding-right: 10px;
 }
 
-.emotion-10 {
+.emotion-11 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -155,15 +165,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-10 iconButton {
+.emotion-11 iconButton {
   margin-right: 8px;
 }
 
-.emotion-12 {
+.emotion-13 {
   width: calc(500px - 32px);
 }
 
-.emotion-13 {
+.emotion-14 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -188,41 +198,41 @@ exports[`MyOrganization Component renders correctly 1`] = `
   padding-bottom: 11px;
 }
 
-.emotion-13.Mui-focusVisible {
+.emotion-14.Mui-focusVisible {
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-13.Mui-selected {
+.emotion-14.Mui-selected {
   background-color: rgba(51, 122, 135, 0.08);
 }
 
-.emotion-13.Mui-selected.Mui-focusVisible {
+.emotion-14.Mui-selected.Mui-focusVisible {
   background-color: rgba(51, 122, 135, 0.2);
 }
 
-.emotion-13.Mui-disabled {
+.emotion-14.Mui-disabled {
   opacity: 0.38;
 }
 
-.emotion-13.Mui-disabled {
+.emotion-14.Mui-disabled {
   opacity: 1;
 }
 
-.emotion-13.active {
+.emotion-14.active {
   background-color: #fff;
 }
 
-.emotion-13.leftNav.active {
+.emotion-14.leftNav.active {
   border-top: 1px solid #d4e9e7;
   border-bottom: 1px solid #d4e9e7;
 }
 
-.emotion-13.navLink,
-.emotion-13.navLink .MuiListItemText-root {
+.emotion-14.navLink,
+.emotion-14.navLink .MuiListItemText-root {
   color: #969696;
 }
 
-.emotion-14 {
+.emotion-15 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -234,7 +244,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-17 {
+.emotion-18 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -284,57 +294,57 @@ exports[`MyOrganization Component renders correctly 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-17::-moz-focus-inner {
+.emotion-18::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-17.Mui-disabled {
+.emotion-18.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-17 {
+  .emotion-18 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-17:hover {
+.emotion-18:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-17:hover {
+  .emotion-18:hover {
     background-color: transparent;
   }
 }
 
-.emotion-17.Mui-disabled {
+.emotion-18.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-17:hover {
+.emotion-18:hover {
   colors: #337a87;
 }
 
-.emotion-17.MuiButton-text {
+.emotion-18.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-18 {
+.emotion-19 {
   display: inherit;
   margin-right: 8px;
   margin-left: -4px;
 }
 
-.emotion-18>*:nth-of-type(1) {
+.emotion-19>*:nth-of-type(1) {
   font-size: 20px;
 }
 
-.emotion-20 {
+.emotion-21 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -346,12 +356,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-21 {
+.emotion-22 {
   height: 30px;
   padding: 15px;
 }
 
-.emotion-22 {
+.emotion-23 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -369,15 +379,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
   width: calc(500px + 32px);
 }
 
-.emotion-22.Mui-disabled {
+.emotion-23.Mui-disabled {
   cursor: default;
 }
 
-.emotion-22 .MuiFormControlLabel-label.Mui-disabled {
+.emotion-23 .MuiFormControlLabel-label.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-23 {
+.emotion-24 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -416,42 +426,42 @@ exports[`MyOrganization Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-23::-moz-focus-inner {
+.emotion-24::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-23.Mui-disabled {
+.emotion-24.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-23 {
+  .emotion-24 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-23:hover {
+.emotion-24:hover {
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-23:hover {
+  .emotion-24:hover {
     background-color: transparent;
   }
 }
 
-.emotion-23.Mui-checked,
-.emotion-23.MuiCheckbox-indeterminate {
+.emotion-24.Mui-checked,
+.emotion-24.MuiCheckbox-indeterminate {
   color: #337a87;
 }
 
-.emotion-23.Mui-disabled {
+.emotion-24.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-24 {
+.emotion-25 {
   cursor: inherit;
   position: absolute;
   opacity: 0;
@@ -464,7 +474,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   z-index: 1;
 }
 
-.emotion-27 {
+.emotion-28 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -472,7 +482,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   font-size: 0.9286rem;
 }
 
-.emotion-28 {
+.emotion-29 {
   height: 0;
   overflow: hidden;
   -webkit-transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -480,7 +490,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
   visibility: hidden;
 }
 
-.emotion-29 {
+.emotion-30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -488,11 +498,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
   width: 100%;
 }
 
-.emotion-30 {
+.emotion-31 {
   width: 100%;
 }
 
-.emotion-31 {
+.emotion-32 {
   -webkit-align-items: start;
   -webkit-box-align: start;
   -ms-flex-align: start;
@@ -503,11 +513,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
   grid-template-columns: minmax(max-content, 500px) max-content max-content;
 }
 
-.emotion-31.has-sso {
+.emotion-32.has-sso {
   grid-template-columns: 455px 1fr;
 }
 
-.emotion-32 {
+.emotion-33 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -526,16 +536,16 @@ exports[`MyOrganization Component renders correctly 1`] = `
   margin-right: 8px;
 }
 
-.emotion-32 iconButton {
+.emotion-33 iconButton {
   margin-right: 8px;
 }
 
-.emotion-33 {
+.emotion-34 {
   margin-left: 4px;
   margin-right: 4px;
 }
 
-.emotion-36 {
+.emotion-37 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -588,23 +598,23 @@ exports[`MyOrganization Component renders correctly 1`] = `
   margin-right: 4px;
 }
 
-.emotion-36::-moz-focus-inner {
+.emotion-37::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-36.Mui-disabled {
+.emotion-37.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-36 {
+  .emotion-37 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-36:hover {
+.emotion-37:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -612,43 +622,43 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-36:hover {
+  .emotion-37:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-36:active {
+.emotion-37:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-36.Mui-focusVisible {
+.emotion-37.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-36.Mui-disabled {
+.emotion-37.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-36:hover {
+.emotion-37:hover {
   colors: #337a87;
 }
 
-.emotion-36.MuiButton-text {
+.emotion-37.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-37 {
+.emotion-38 {
   color: rgba(0, 0, 0, 0.38);
   margin: 15px 0;
 }
 
-.emotion-38 {
+.emotion-39 {
   gap: 8px;
 }
 
-.emotion-39 {
+.emotion-40 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -665,17 +675,17 @@ exports[`MyOrganization Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-39 iconButton {
+.emotion-40 iconButton {
   margin-right: 8px;
 }
 
-.emotion-40 {
+.emotion-41 {
   background-color: #f7f7f7;
   margin-top: 48px;
   padding: 16px;
 }
 
-.emotion-40>h5 {
+.emotion-41>h5 {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -709,7 +719,16 @@ exports[`MyOrganization Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary two-columns emotion-4"
           >
             <div>
-              test
+              <div
+                class="clickable emotion-5"
+              >
+                test
+                <span>
+                  (
+                  1
+                  )
+                </span>
+              </div>
             </div>
             <a
               class="align-right"
@@ -717,7 +736,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-5"
+          class="MuiDivider-root MuiDivider-fullWidth emotion-6"
         />
       </div>
     </li>
@@ -728,7 +747,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
         class="MuiListItem-root flexbox column MuiListItem-gutters MuiListItem-padding MuiListItem-alignItemsFlexStart emotion-1"
       >
         <div
-          class="MuiListItemText-root MuiListItemText-multiline emotion-7"
+          class="MuiListItemText-root MuiListItemText-multiline emotion-8"
         >
           <span
             class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary emotion-3"
@@ -737,7 +756,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               class="flexbox center-aligned"
             >
               <div
-                class="emotion-9"
+                class="emotion-10"
               >
                 Organization token
               </div>
@@ -747,7 +766,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-11"
                   data-testid="InfoIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -763,13 +782,13 @@ exports[`MyOrganization Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
           >
             <div
-              class="emotion-12"
+              class="emotion-13"
             >
               <div
-                class="MuiListItem-root attributes MuiListItem-padding emotion-13"
+                class="MuiListItem-root attributes MuiListItem-padding emotion-14"
               >
                 <div
-                  class="MuiListItemText-root emotion-14"
+                  class="MuiListItemText-root emotion-15"
                 >
                   <div
                     class="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary emotion-4"
@@ -788,21 +807,21 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <hr
-          class="MuiDivider-root MuiDivider-fullWidth emotion-5"
+          class="MuiDivider-root MuiDivider-fullWidth emotion-6"
         />
       </div>
       <div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-17"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-18"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-18"
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-19"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-11"
               data-testid="FileCopyIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -814,11 +833,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </span>
           Copy to clipboard
           <span
-            class="MuiTouchRipple-root emotion-20"
+            class="MuiTouchRipple-root emotion-21"
           />
         </button>
         <div
-          class="emotion-21"
+          class="emotion-22"
         />
       </div>
     </li>
@@ -827,19 +846,19 @@ exports[`MyOrganization Component renders correctly 1`] = `
     class="flexbox center-aligned"
   >
     <label
-      class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd margin-bottom-small emotion-22"
+      class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd margin-bottom-small emotion-23"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-23"
+        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-24"
       >
         <input
-          class="PrivateSwitchBase-input emotion-24"
+          class="PrivateSwitchBase-input emotion-25"
           data-indeterminate="false"
           type="checkbox"
         />
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-11"
           data-testid="CheckBoxOutlineBlankIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -849,28 +868,28 @@ exports[`MyOrganization Component renders correctly 1`] = `
           />
         </svg>
         <span
-          class="MuiTouchRipple-root emotion-20"
+          class="MuiTouchRipple-root emotion-21"
         />
       </span>
       <span
-        class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-27"
+        class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-28"
       >
         Enable SAML single sign-on
       </span>
     </label>
   </div>
   <div
-    class="MuiCollapse-root MuiCollapse-vertical margin-left-large MuiCollapse-hidden emotion-28"
+    class="MuiCollapse-root MuiCollapse-vertical margin-left-large MuiCollapse-hidden emotion-29"
     style="min-height: 0px;"
   >
     <div
-      class="MuiCollapse-wrapper MuiCollapse-vertical emotion-29"
+      class="MuiCollapse-wrapper MuiCollapse-vertical emotion-30"
     >
       <div
-        class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-30"
+        class="MuiCollapse-wrapperInner MuiCollapse-vertical emotion-31"
       >
         <div
-          class="flexbox center-aligned emotion-31 "
+          class="flexbox center-aligned emotion-32 "
         >
           <div
             class="dropzone onboard dashboard-placeholder flexbox centered"
@@ -884,7 +903,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             />
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-32"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-33"
               data-testid="CloudUploadIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -895,7 +914,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </svg>
              Drag here or 
             <a
-              class="emotion-33"
+              class="emotion-34"
             >
               browse
             </a>
@@ -911,17 +930,17 @@ exports[`MyOrganization Component renders correctly 1`] = `
             class="flexbox"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-17"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-18"
               tabindex="0"
               type="button"
             >
               Cancel
               <span
-                class="MuiTouchRipple-root emotion-20"
+                class="MuiTouchRipple-root emotion-21"
               />
             </button>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-36"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-37"
               disabled=""
               tabindex="-1"
               type="button"
@@ -931,11 +950,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
           </div>
         </div>
         <p
-          class="emotion-37 icon flexbox center-aligned emotion-38 "
+          class="emotion-38 icon flexbox center-aligned emotion-39 "
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-40"
             data-testid="InfoOutlinedIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -950,7 +969,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="emotion-40"
+    class="emotion-41"
   >
     <h5>
       Billing
@@ -989,14 +1008,14 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </div>
           </div>
           <hr
-            class="MuiDivider-root MuiDivider-fullWidth emotion-5"
+            class="MuiDivider-root MuiDivider-fullWidth emotion-6"
           />
           <div
             class="flexbox centered muted"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-40"
               data-testid="ErrorIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1048,14 +1067,14 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </div>
           </div>
           <hr
-            class="MuiDivider-root MuiDivider-fullWidth emotion-5"
+            class="MuiDivider-root MuiDivider-fullWidth emotion-6"
           />
           <div
             class="flexbox centered muted"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-40"
               data-testid="ErrorIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -1094,7 +1113,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             </div>
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-39"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-40"
               data-testid="OpenInNewIcon"
               focusable="false"
               viewBox="0 0 24 24"

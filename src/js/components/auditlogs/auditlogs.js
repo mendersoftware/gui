@@ -26,7 +26,7 @@ import { getUserList } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
-import { createDownload, getISOStringBoundaries, toggle } from '../../helpers';
+import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
@@ -72,14 +72,13 @@ export const AuditLogs = ({
 }) => {
   const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
-  const [filterReset, setFilterReset] = useState(false);
 
   const [date] = useState(getISOStringBoundaries(new Date()));
   const { start: today, end: tonight } = date;
 
-  const [detailValue, setDetailValue] = useState('');
-  const [userValue, setUserValue] = useState('');
-  const [typeValue, setTypeValue] = useState('');
+  const [detailValue, setDetailValue] = useState(null);
+  const [userValue, setUserValue] = useState(null);
+  const [typeValue, setTypeValue] = useState(null);
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
   const { canReadUsers } = userCapabilities;
   const { hasAuditlogs } = tenantCapabilities;
@@ -129,17 +128,27 @@ export const AuditLogs = ({
     setLocationParams({ pageState: selectionState });
   }, [detail, endDate, hasAuditlogs, JSON.stringify(sort), perPage, selectionState.page, selectionState.selectedId, startDate, type, user]);
 
+  useEffect(() => {
+    const user = users[debouncedUser];
+    if (debouncedUser?.id || !user) {
+      return;
+    }
+    setUserValue(user);
+  }, [debouncedUser, JSON.stringify(users)]);
+
   const reset = () => {
     setAuditlogsState({
-      detail: '',
+      detail: null,
       endDate: tonight,
       page: 1,
       reset: !resetList,
       startDate: today,
-      type: '',
-      user: ''
+      type: null,
+      user: null
     });
-    setFilterReset(toggle);
+    setDetailValue(null);
+    setTypeValue(null);
+    setUserValue(null);
     navigate('/auditlog');
   };
 
@@ -163,7 +172,7 @@ export const AuditLogs = ({
     if (!e || reason === 'blur') {
       return;
     }
-    setUserValue(value || '');
+    setUserValue(value);
   };
 
   const onTypeFilterChange = (e, value, reason) => {
@@ -171,16 +180,16 @@ export const AuditLogs = ({
       return;
     }
     if (!value) {
-      setDetailValue('');
+      setDetailValue(null);
     }
-    setTypeValue(value || '');
+    setTypeValue(value);
   };
 
   const onDetailFilterChange = (e, value) => {
     if (!e) {
       return;
     }
-    setDetailValue(value || '');
+    setDetailValue(value);
   };
 
   const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) =>
@@ -205,7 +214,8 @@ export const AuditLogs = ({
           freeSolo
           options={Object.values(users)}
           onChange={onUserFilterChange}
-          value={user}
+          isOptionEqualToValue={({ email, id }, value) => id === value || email === value || email === value.email}
+          value={userValue}
           renderInput={params => (
             <TextField
               {...params}
@@ -220,20 +230,21 @@ export const AuditLogs = ({
         <Autocomplete
           {...autoSelectProps}
           id="audit-log-type-selection"
-          key={`audit-log-type-selection-${filterReset}`}
           onChange={onTypeFilterChange}
           options={AUDIT_LOGS_TYPES}
           renderInput={params => (
             <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
           )}
           style={{ marginLeft: 7.5 }}
-          value={type}
+          value={typeValue}
         />
         <Autocomplete
           {...autoSelectProps}
           id="audit-log-type-details-selection"
+          key={`audit-log-type-details-selection-${type}`}
           disabled={!type}
-          inputValue={detail}
+          freeSolo
+          value={detailValue}
           onInputChange={onDetailFilterChange}
           options={detailOptions}
           renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
