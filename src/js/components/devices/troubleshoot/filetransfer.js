@@ -17,32 +17,58 @@ import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 import { Button, IconButton, Tab, Tabs, TextField, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { canAccess } from '../../../constants/appConstants';
 import FileUpload from '../../common/forms/fileupload';
 import InfoText from '../../common/infotext';
 
-const tabs = ['upload', 'download'];
+const tabs = [
+  { key: 'upload', canAccess: ({ userCapabilities: { canTroubleshoot, canWriteDevices } }) => canTroubleshoot && canWriteDevices },
+  { key: 'download', canAccess }
+];
 
 const maxWidth = 400;
 
 const useStyles = makeStyles()(theme => ({
   column: { maxWidth },
   inputWrapper: { display: 'grid', gridTemplateColumns: `${maxWidth}px max-content` },
-  tab: {
-    alignItems: 'flex-start'
-  },
+  tab: { alignItems: 'flex-start' },
   fileDestination: { marginTop: theme.spacing(2) }
 }));
 
-export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUpload, setFile, setDownloadPath, setSnackbar, setUploadPath, uploadPath }) => {
+export const FileTransfer = ({
+  deviceId,
+  downloadPath,
+  file,
+  onDownload,
+  onUpload,
+  setFile,
+  setDownloadPath,
+  setSnackbar,
+  setUploadPath,
+  uploadPath,
+  userCapabilities
+}) => {
   const { classes } = useStyles();
-  const [currentTab, setCurrentTab] = useState(tabs[0]);
+  const [currentTab, setCurrentTab] = useState(tabs[0].key);
   const [isValidDestination, setIsValidDestination] = useState(true);
+  const [availableTabs, setAvailableTabs] = useState(tabs);
 
   useEffect(() => {
     let destination = currentTab === 'download' ? downloadPath : uploadPath;
     const isValid = destination.length ? /^(?:\/|[a-z]+:\/\/)/.test(destination) : true;
     setIsValidDestination(isValid);
   }, [currentTab, downloadPath, uploadPath]);
+
+  useEffect(() => {
+    const availableTabs = tabs.reduce((accu, item) => {
+      if (item.canAccess({ userCapabilities })) {
+        accu.push(item);
+      }
+      return accu;
+    }, []);
+    setAvailableTabs(availableTabs);
+    setCurrentTab(availableTabs[0].key);
+  }, [JSON.stringify(userCapabilities)]);
 
   const onPasteDownloadClick = async () => {
     const path = await navigator.clipboard.readText();
@@ -68,8 +94,8 @@ export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUploa
   return (
     <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
       <Tabs orientation="vertical" className="leftFixed" onChange={(e, item) => setCurrentTab(item)} value={currentTab}>
-        {tabs.map(item => (
-          <Tab className={`${classes.tab} capitalized`} key={item} label={item} value={item} />
+        {availableTabs.map(({ key }) => (
+          <Tab className={`${classes.tab} capitalized`} key={key} label={key} value={key} />
         ))}
       </Tabs>
       <div className="rightFluid padding-right">

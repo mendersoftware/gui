@@ -21,8 +21,9 @@ import { useTheme } from '@mui/material/styles';
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
 import { BEGINNING_OF_TIME } from '../../../constants/appConstants';
-import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
+import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
+import { checkPermissionsObject, uiPermissionsById } from '../../../constants/userConstants';
 import { formatAuditlogs } from '../../../utils/locationutils';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
@@ -116,11 +117,14 @@ const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device'
 export const DeviceConnection = ({ className = '', device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
 
-  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess } = userCapabilities;
+  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess, groupsPermissions } = userCapabilities;
 
   useEffect(() => {
     const allowedTabs = troubleshootingTools.reduce((accu, tab) => {
-      if ((tab.needsWriteAccess && !hasWriteAccess) || (tab.needsTroubleshoot && !canTroubleshoot)) {
+      if (
+        (tab.needsWriteAccess && (!hasWriteAccess || !checkPermissionsObject(groupsPermissions, uiPermissionsById.connect.value, device.group, ALL_DEVICES))) ||
+        (tab.needsTroubleshoot && !canTroubleshoot)
+      ) {
         return accu;
       }
       accu.push(tab);

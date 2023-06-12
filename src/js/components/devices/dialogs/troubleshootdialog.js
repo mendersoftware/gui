@@ -278,6 +278,7 @@ export const TroubleshootDialog = ({
             setSnackbar={setSnackbar}
             setUploadPath={setUploadPath}
             uploadPath={uploadPath}
+            userCapabilities={userCapabilities}
           />
         )}
         <div className={`${classes.terminalContent} ${socketInitialized ? 'device-connected' : ''} ${currentTab === tabs.terminal.value ? '' : 'hidden'}`}>

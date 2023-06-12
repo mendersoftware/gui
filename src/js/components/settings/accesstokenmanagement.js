@@ -36,6 +36,7 @@ import {
 import { makeStyles } from 'tss-react/mui';
 
 import { generateToken, getTokens, revokeToken } from '../../actions/userActions';
+import { canAccess as canShow } from '../../constants/appConstants';
 import { customSort, toggle } from '../../helpers';
 import { getCurrentUser, getTenantCapabilities } from '../../selectors';
 import CopyCode from '../common/copy-code';
@@ -58,12 +59,12 @@ const useStyles = makeStyles()(theme => ({
 
 const creationTimeAttribute = 'created_ts';
 const columnData = [
-  { id: 'token', label: 'Token', canShow: () => true, render: ({ token }) => token.name },
-  { id: creationTimeAttribute, label: 'Date created', canShow: () => true, render: ({ token }) => <Time value={token[creationTimeAttribute]} /> },
+  { id: 'token', label: 'Token', canShow, render: ({ token }) => token.name },
+  { id: creationTimeAttribute, label: 'Date created', canShow, render: ({ token }) => <Time value={token[creationTimeAttribute]} /> },
   {
     id: 'expiration_date',
     label: 'Expires',
-    canShow: () => true,
+    canShow,
     render: ({ token }) => <RelativeTime updateTime={token.expiration_date} shouldCount="up" />
   },
   {
@@ -75,7 +76,7 @@ const columnData = [
   {
     id: 'actions',
     label: 'Manage',
-    canShow: () => true,
+    canShow,
     render: ({ onRevokeTokenClick, token }) => <Button onClick={() => onRevokeTokenClick(token)}>Revoke</Button>
   }
 ];

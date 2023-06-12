@@ -44,6 +44,7 @@ import {
   UploadPreparedArtifactTip,
   WelcomeSnackTip
 } from '../components/helptips/onboardingtips';
+import { yes } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { onboardingSteps as stepNames } from '../constants/onboardingConstants';
 
@@ -212,7 +213,7 @@ export const onboardingSteps = {
     specialComponent: <WelcomeSnackTip progress={4} />
   },
   [stepNames.ONBOARDING_CANCELED]: {
-    condition: { extra: () => true },
+    condition: { extra: yes },
     specialComponent: <div />,
     progress: 3
   }

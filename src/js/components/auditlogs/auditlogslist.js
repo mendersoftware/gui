@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
 
-import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, canAccess } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -52,7 +52,7 @@ const fallbackFormatter = data => {
   return result;
 };
 
-const defaultAccess = () => true;
+const defaultAccess = canAccess;
 const changeMap = {
   default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle', accessCheck: defaultAccess },
   artifact: { actionFormatter: data => decodeURIComponent(data.artifact.name), component: ArtifactLink, accessCheck: ({ canReadReleases }) => canReadReleases },

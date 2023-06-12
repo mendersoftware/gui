@@ -132,3 +132,6 @@ export const ADDONS = {
     eligible: ['professional', 'enterprise']
   }
 };
+
+export const yes = () => true;
+export const canAccess = yes;

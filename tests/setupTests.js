@@ -23,6 +23,7 @@ import { setupServer } from 'msw/node';
 import { TextEncoder } from 'util';
 import { MessageChannel } from 'worker_threads';
 
+import { yes } from '../src/js/constants/appConstants';
 import { light as lightTheme } from '../src/js/themes/Mender';
 import handlers from './__mocks__/requestHandlers';
 import { menderEnvironment, mockDate, token as mockToken } from './mockData';
@@ -69,7 +70,7 @@ beforeAll(async () => {
   delete window.sessionStorage;
   window.sessionStorage = {
     ...oldWindowSessionStorage,
-    getItem: jest.fn(() => true),
+    getItem: jest.fn(yes),
     setItem: jest.fn(),
     removeItem: jest.fn()
   };

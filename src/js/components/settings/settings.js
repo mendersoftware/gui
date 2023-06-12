@@ -20,7 +20,7 @@ import { Payment as PaymentIcon } from '@mui/icons-material';
 
 import { Elements } from '@stripe/react-stripe-js';
 
-import { TIMEOUTS } from '../../constants/appConstants';
+import { TIMEOUTS, canAccess } from '../../constants/appConstants';
 import { versionCompare } from '../../helpers';
 import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
 import LeftNav from '../common/left-nav';
@@ -35,8 +35,8 @@ import Upgrade from './upgrade';
 let stripePromise = null;
 
 const sectionMap = {
-  'global-settings': { component: Global, text: () => 'Global settings', canAccess: () => true },
-  'my-profile': { component: SelfUserManagement, text: () => 'My profile', canAccess: () => true },
+  'global-settings': { component: Global, text: () => 'Global settings', canAccess },
+  'my-profile': { component: SelfUserManagement, text: () => 'My profile', canAccess },
   'organization-and-billing': {
     component: Organization,
     text: () => 'Organization and billing',

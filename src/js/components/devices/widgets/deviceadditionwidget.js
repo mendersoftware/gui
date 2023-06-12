@@ -17,6 +17,8 @@ import { ArrowDropDown as ArrowDropDownIcon, Launch as LaunchIcon } from '@mui/i
 import { Button, ButtonGroup, Menu, MenuItem } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { canAccess } from '../../../constants/appConstants';
+
 const useStyles = makeStyles()(() => ({
   buttonStyle: { textTransform: 'none' }
 }));
@@ -27,8 +29,8 @@ export const DeviceAdditionWidget = ({ docsVersion, features, onConnectClick, on
   const { classes } = useStyles();
 
   const options = [
-    { action: onConnectClick, title: 'Connect a new device', value: 'connect', canAccess: () => true },
-    { action: onPreauthClick, title: 'Preauthorize a device', value: 'preauth', canAccess: () => true },
+    { action: onConnectClick, title: 'Connect a new device', value: 'connect', canAccess },
+    { action: onPreauthClick, title: 'Preauthorize a device', value: 'preauth', canAccess },
     {
       action: onMakeGatewayClick,
       title: 'Promote a device to gateway',
@@ -41,7 +43,7 @@ export const DeviceAdditionWidget = ({ docsVersion, features, onConnectClick, on
       target: '_blank',
       title: 'Learn how to connect devices',
       value: 'learntoconnect',
-      canAccess: () => true
+      canAccess
     }
   ];
 
