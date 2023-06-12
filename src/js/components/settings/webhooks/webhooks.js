@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
@@ -44,24 +44,23 @@ const columns = [
   }
 ];
 
-export const Webhooks = ({
-  changeIntegration,
-  createIntegration,
-  deleteIntegration,
-  docsVersion,
-  events,
-  eventTotal,
-  getIntegrations,
-  getWebhookEvents,
-  webhook = { ...emptyWebhook },
-  webhooks
-}) => {
+export const Webhooks = ({ webhook = { ...emptyWebhook } }) => {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const [selectedWebhook, setSelectedWebhook] = useState(webhook);
+  const dispatch = useDispatch();
+  const { events, webhooks } = useSelector(state => {
+    const webhooks = state.organization.externalDeviceIntegrations.filter(
+      integration => integration.id && integration.provider === EXTERNAL_PROVIDER.webhook.provider
+    );
+    const events = webhooks.length ? state.organization.webhooks.events : [];
+    return { events, webhooks };
+  });
+  const docsVersion = useSelector(getDocsVersion);
+  const eventTotal = useSelector(state => state.organization.webhooks.eventTotal);
 
   useEffect(() => {
-    getIntegrations();
+    dispatch(getIntegrations());
   }, []);
 
   useEffect(() => {
@@ -81,15 +80,15 @@ export const Webhooks = ({
 
   const onSubmit = item => {
     if (adding) {
-      createIntegration(item);
+      dispatch(createIntegration(item));
     } else {
-      changeIntegration(item);
+      dispatch(changeIntegration(item));
     }
     setAdding(false);
     setEditing(false);
   };
 
-  const onRemoveClick = () => deleteIntegration(selectedWebhook);
+  const onRemoveClick = () => dispatch(deleteIntegration(selectedWebhook));
 
   const { mappedWebhooks, relevantColumns } = useMemo(() => {
     const mappedWebhooks = webhooks.map(item => ({ ...item, url: item.credentials[EXTERNAL_PROVIDER.webhook.credentialsType].url, status: 'enabled' }));
@@ -120,7 +119,7 @@ export const Webhooks = ({
         editing={editing}
         events={events}
         eventTotal={eventTotal}
-        getWebhookEvents={getWebhookEvents}
+        getWebhookEvents={options => dispatch(getWebhookEvents(options))}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onRemove={onRemoveClick}
@@ -130,19 +129,4 @@ export const Webhooks = ({
   );
 };
 
-const actionCreators = { changeIntegration, createIntegration, deleteIntegration, getIntegrations, getWebhookEvents };
-
-const mapStateToProps = state => {
-  const webhooks = state.organization.externalDeviceIntegrations.filter(
-    integration => integration.id && integration.provider === EXTERNAL_PROVIDER.webhook.provider
-  );
-  const events = webhooks.length ? state.organization.webhooks.events : [];
-  return {
-    docsVersion: getDocsVersion(state),
-    events,
-    eventTotal: state.organization.webhooks.eventTotal,
-    webhooks
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Webhooks);
+export default Webhooks;

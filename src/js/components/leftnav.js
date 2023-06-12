@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 
 // material ui
@@ -24,7 +24,7 @@ import copy from 'copy-to-clipboard';
 import { setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS, canAccess } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../selectors';
+import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities, getVersionInformation } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 
 const listItems = [
@@ -58,10 +58,15 @@ const linkables = {
   'GUI': 'gui'
 };
 
-const VersionInfo = ({ isHosted, setSnackbar, setVersionInfo, versionInformation }) => {
+const VersionInfo = () => {
   const [clicks, setClicks] = useState(0);
   const timer = useRef();
   const { classes } = useStyles();
+
+  const dispatch = useDispatch();
+  const { isHosted } = useSelector(getFeatures);
+  // eslint-disable-next-line no-unused-vars
+  const { latestRelease, ...versionInformation } = useSelector(getVersionInformation);
 
   useEffect(() => {
     return () => {
@@ -71,7 +76,7 @@ const VersionInfo = ({ isHosted, setSnackbar, setVersionInfo, versionInformation
 
   const onVersionClick = () => {
     copy(JSON.stringify(versionInformation));
-    setSnackbar('Version information copied to clipboard');
+    dispatch(setSnackbar('Version information copied to clipboard'));
   };
 
   const versions = (
@@ -105,7 +110,7 @@ const VersionInfo = ({ isHosted, setSnackbar, setVersionInfo, versionInformation
       setClicks(0);
     }, TIMEOUTS.threeSeconds);
     if (clicks > 5) {
-      setVersionInfo({ Integration: 'next' });
+      dispatch(setVersionInfo({ Integration: 'next' }));
     }
     onVersionClick();
   };
@@ -123,12 +128,14 @@ const VersionInfo = ({ isHosted, setSnackbar, setVersionInfo, versionInformation
   );
 };
 
-export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, setVersionInfo, tenantCapabilities, userCapabilities, versionInformation }) => {
+export const LeftNav = () => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
-  // eslint-disable-next-line no-unused-vars
-  const { latestRelease, ...versionInfo } = versionInformation;
+  const docsVersion = useSelector(getDocsVersion);
+  const onboardingState = useSelector(getOnboardingState);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const userCapabilities = useSelector(getUserCapabilities);
 
   const licenseLink = (
     <a
@@ -179,28 +186,11 @@ export const LeftNav = ({ docsVersion, isHosted, onboardingState, setSnackbar, s
           <ListItemText primary="Help & support" />
         </ListItem>
         <ListItem className={classes.listItem}>
-          <ListItemText
-            primary={<VersionInfo isHosted={isHosted} setSnackbar={setSnackbar} setVersionInfo={setVersionInfo} versionInformation={versionInfo} />}
-            secondary={licenseLink}
-          />
+          <ListItemText primary={<VersionInfo />} secondary={licenseLink} />
         </ListItem>
       </List>
     </div>
   );
 };
 
-const actionCreators = { setSnackbar, setVersionInfo };
-
-const mapStateToProps = state => {
-  const { isHosted } = getFeatures(state);
-  return {
-    docsVersion: getDocsVersion(state),
-    isHosted,
-    onboardingState: getOnboardingState(state),
-    userCapabilities: getUserCapabilities(state),
-    tenantCapabilities: getTenantCapabilities(state),
-    versionInformation: state.app.versionInformation
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(LeftNav);
+export default LeftNav;

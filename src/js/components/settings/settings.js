@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 
 // material ui
@@ -22,7 +22,16 @@ import { Elements } from '@stripe/react-stripe-js';
 
 import { TIMEOUTS, canAccess } from '../../constants/appConstants';
 import { versionCompare } from '../../helpers';
-import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
+import {
+  getCurrentUser,
+  getFeatures,
+  getIsEnterprise,
+  getOrganization,
+  getTenantCapabilities,
+  getUserCapabilities,
+  getUserRoles,
+  getVersionInformation
+} from '../../selectors';
 import LeftNav from '../common/left-nav';
 import SelfUserManagement from '../settings/user-management/selfusermanagement';
 import UserManagement from '../settings/user-management/usermanagement';
@@ -65,7 +74,17 @@ const sectionMap = {
   }
 };
 
-export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, stripeAPIKey, tenantCapabilities, userCapabilities, userRoles, version }) => {
+export const Settings = () => {
+  const currentUser = useSelector(getCurrentUser);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const { hasMultitenancy } = useSelector(getFeatures);
+  const { trial: isTrial = false } = useSelector(getOrganization);
+  const stripeAPIKey = useSelector(state => state.app.stripeAPIKey);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const userCapabilities = useSelector(getUserCapabilities);
+  const userRoles = useSelector(getUserRoles);
+  const { Integration: version } = useSelector(getVersionInformation);
+
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
   const { section: sectionParam } = useParams();
 
@@ -82,7 +101,7 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
       const notStripePromise = new Promise(resolve => setTimeout(resolve, TIMEOUTS.debounceDefault));
       Promise.race([stripePromise, notStripePromise]).then(result => setLoadingFinished(result !== notStripePromise));
     }
-  }, []);
+  }, [stripeAPIKey]);
 
   const checkDenyAccess = item =>
     currentUser.id && !item.canAccess({ currentUser, hasMultitenancy, isEnterprise, isTrial, tenantCapabilities, userCapabilities, userRoles, version });
@@ -124,19 +143,4 @@ export const Settings = ({ currentUser, hasMultitenancy, isEnterprise, isTrial, 
   );
 };
 
-const mapStateToProps = state => {
-  const { trial: isTrial = false } = state.organization.organization;
-  return {
-    currentUser: getCurrentUser(state),
-    hasMultitenancy: state.app.features.hasMultitenancy,
-    isEnterprise: getIsEnterprise(state),
-    isTrial,
-    stripeAPIKey: state.app.stripeAPIKey,
-    tenantCapabilities: getTenantCapabilities(state),
-    userCapabilities: getUserCapabilities(state),
-    userRoles: getUserRoles(state),
-    version: state.app.versionInformation.Integration
-  };
-};
-
-export default connect(mapStateToProps)(Settings);
+export default Settings;

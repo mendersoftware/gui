@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Autocomplete, Button, TextField } from '@mui/material';
@@ -58,18 +58,7 @@ const autoSelectProps = {
   renderOption
 };
 
-export const AuditLogs = ({
-  events,
-  getAuditLogsCsvLink,
-  getUserList,
-  groups,
-  selectionState,
-  setAuditlogsState,
-  tenantCapabilities,
-  userCapabilities,
-  users,
-  ...props
-}) => {
+export const AuditLogs = props => {
   const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
 
@@ -80,9 +69,20 @@ export const AuditLogs = ({
   const [userValue, setUserValue] = useState(null);
   const [typeValue, setTypeValue] = useState(null);
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
+  const { classes } = useStyles();
+  const dispatch = useDispatch();
+  const events = useSelector(state => state.organization.auditlog.events);
+  const groups = useSelector(state => {
+    // eslint-disable-next-line no-unused-vars
+    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    return [ALL_DEVICES, ...Object.keys(groups).sort()];
+  });
+  const selectionState = useSelector(state => state.organization.auditlog.selectionState);
+  const userCapabilities = useSelector(getUserCapabilities);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const users = useSelector(state => state.users.byId);
   const { canReadUsers } = userCapabilities;
   const { hasAuditlogs } = tenantCapabilities;
-  const { classes } = useStyles();
 
   const debouncedDetail = useDebounce(detailValue, TIMEOUTS.debounceDefault);
   const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
@@ -104,7 +104,7 @@ export const AuditLogs = ({
         state.startDate = start;
       }
     }
-    setAuditlogsState(state);
+    dispatch(setAuditlogsState(state));
     Object.entries({ detail: setDetailValue, user: setUserValue, type: setTypeValue }).map(([key, setter]) => (state[key] ? setter(state[key]) : undefined));
   }, [hasAuditlogs]);
 
@@ -112,12 +112,12 @@ export const AuditLogs = ({
     if (!hasAuditlogs) {
       return;
     }
-    setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser });
+    dispatch(setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser }));
   }, [debouncedDetail, debouncedType, debouncedUser, hasAuditlogs]);
 
   useEffect(() => {
     if (canReadUsers) {
-      getUserList();
+      dispatch(getUserList());
     }
   }, [canReadUsers]);
 
@@ -137,15 +137,17 @@ export const AuditLogs = ({
   }, [debouncedUser, JSON.stringify(users)]);
 
   const reset = () => {
-    setAuditlogsState({
-      detail: null,
-      endDate: tonight,
-      page: 1,
-      reset: !resetList,
-      startDate: today,
-      type: null,
-      user: null
-    });
+    dispatch(
+      setAuditlogsState({
+        detail: null,
+        endDate: tonight,
+        page: 1,
+        reset: !resetList,
+        startDate: today,
+        type: null,
+        user: null
+      })
+    );
     setDetailValue(null);
     setTypeValue(null);
     setUserValue(null);
@@ -154,7 +156,7 @@ export const AuditLogs = ({
 
   const createCsvDownload = () => {
     setCsvLoading(true);
-    getAuditLogsCsvLink().then(address => {
+    dispatch(getAuditLogsCsvLink()).then(address => {
       createDownload(
         encodeURI(address),
         `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`
@@ -165,7 +167,7 @@ export const AuditLogs = ({
 
   const onChangeSorting = () => {
     const currentSorting = sort.direction === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
-    setAuditlogsState({ page: 1, sort: { direction: currentSorting } });
+    dispatch(setAuditlogsState({ page: 1, sort: { direction: currentSorting } }));
   };
 
   const onUserFilterChange = (e, value, reason) => {
@@ -193,9 +195,9 @@ export const AuditLogs = ({
   };
 
   const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) =>
-    setAuditlogsState({ page: 1, startDate: currentStartDate, endDate: currentEndDate });
+    dispatch(setAuditlogsState({ page: 1, startDate: currentStartDate, endDate: currentEndDate }));
 
-  const onChangePagination = (page, currentPerPage = perPage) => setAuditlogsState({ page, perPage: currentPerPage });
+  const onChangePagination = (page, currentPerPage = perPage) => dispatch(setAuditlogsState({ page, perPage: currentPerPage }));
 
   const typeOptionsMap = {
     Deployment: groups,
@@ -276,7 +278,7 @@ export const AuditLogs = ({
           onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
           onChangeSorting={onChangeSorting}
           selectionState={selectionState}
-          setAuditlogsState={setAuditlogsState}
+          setAuditlogsState={state => dispatch(setAuditlogsState(state))}
           userCapabilities={userCapabilities}
         />
       )}
@@ -291,19 +293,4 @@ export const AuditLogs = ({
   );
 };
 
-const actionCreators = { getAuditLogsCsvLink, getUserList, setAuditlogsState };
-
-const mapStateToProps = state => {
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  return {
-    events: state.organization.auditlog.events,
-    groups: [ALL_DEVICES, ...Object.keys(groups).sort()],
-    selectionState: state.organization.auditlog.selectionState,
-    userCapabilities: getUserCapabilities(state),
-    tenantCapabilities: getTenantCapabilities(state),
-    users: state.users.byId
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(AuditLogs);
+export default AuditLogs;

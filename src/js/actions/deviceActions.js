@@ -18,6 +18,7 @@ import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import {
+  getDeviceFilters,
   getDeviceTwinIntegrations,
   getGroups as getGroupsSelector,
   getIdAttribute,
@@ -53,13 +54,9 @@ const defaultAttributes = [
   { scope: 'tags', attribute: 'name' }
 ];
 
-export const getSearchEndpoint = hasReporting => {
-  return hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`;
-};
+export const getSearchEndpoint = hasReporting => (hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`);
 
-const getAttrsEndpoint = hasReporting => {
-  return hasReporting ? `${reportingApiUrl}/devices/search/attributes` : `${inventoryApiUrlV2}/filters/attributes`;
-};
+const getAttrsEndpoint = hasReporting => (hasReporting ? `${reportingApiUrl}/devices/search/attributes` : `${inventoryApiUrlV2}/filters/attributes`);
 
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
@@ -452,8 +449,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
 };
 
 export const setDeviceFilters = filters => (dispatch, getState) => {
-  const state = getState();
-  if (deepCompare(filters, state.devices.filters)) {
+  if (deepCompare(filters, getDeviceFilters(getState()))) {
     return Promise.resolve();
   }
   return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters }));
@@ -644,7 +640,7 @@ export const getDevicesByStatus =
   (dispatch, getState) => {
     const { filterSelection, group, selectedIssues = [], page = defaultPage, perPage = defaultPerPage, sortOptions = [], selectedAttributes = [] } = options;
     const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({
-      filters: filterSelection ?? getState().devices.filters,
+      filters: filterSelection ?? getDeviceFilters(getState()),
       group: group ?? getState().devices.groups.selectedGroup,
       groups: getState().devices.groups,
       offlineThreshold: getState().app.offlineThreshold,
@@ -1085,7 +1081,7 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
       { headers }
     )
       .catch(err => commonErrorHandler(err, `There was an error setting tags for device ${deviceId}.`, dispatch, 'Please check your connection.'))
-      .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
+      .then(() => Promise.all([dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } }), dispatch(setSnackbar('Device name changed'))]));
   });
 
 export const getDeviceTwin = (deviceId, integration) => (dispatch, getState) => {

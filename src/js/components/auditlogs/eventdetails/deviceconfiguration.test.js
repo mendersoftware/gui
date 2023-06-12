@@ -12,20 +12,27 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
+
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import { DeviceConfiguration } from './deviceconfiguration';
+import DeviceConfiguration from './deviceconfiguration';
+
+const mockStore = configureStore([thunk]);
+const store = mockStore({ ...defaultState });
 
 describe('DeviceConfiguration Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <DeviceConfiguration
-        canReadDevices
-        device={defaultState.devices.byId.a1}
-        item={{ ...defaultState.organization.auditlog.events[2], change: '{"something":"here"}' }}
-        onClose={jest.fn}
-      />
+      <Provider store={store}>
+        <DeviceConfiguration
+          item={{ ...defaultState.organization.auditlog.events[2], object: { id: defaultState.devices.byId.a1.id }, change: '{"something":"here"}' }}
+          onClose={jest.fn}
+        />
+      </Provider>
     );
 
     const view = baseElement.firstChild.firstChild;

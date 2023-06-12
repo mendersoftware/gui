@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon, Info as InfoIcon } from '@mui/icons-material';
 // material ui
@@ -63,13 +63,15 @@ const useStyles = makeStyles()(theme => ({
   summary: { padding: 0, marginBottom: theme.spacing() }
 }));
 
-export const ReportingLimits = ({ getReportingLimits, config = {}, isHosted = false }) => {
+export const ReportingLimits = () => {
   const [open, setOpen] = useState(false);
   const { classes } = useStyles();
-  const { attributes = {}, count = 0, limit = 100 } = config;
+  const dispatch = useDispatch();
+  const { isHosted = false } = useSelector(getFeatures);
+  const { attributes = {}, count = 0, limit = 100 } = useSelector(state => state.devices.filteringAttributesConfig);
 
   useEffect(() => {
-    getReportingLimits();
+    dispatch(getReportingLimits());
   }, []);
 
   const toggleOpen = () => setOpen(toggle);
@@ -124,14 +126,4 @@ export const ReportingLimits = ({ getReportingLimits, config = {}, isHosted = fa
   );
 };
 
-const actionCreators = { getReportingLimits };
-
-const mapStateToProps = state => {
-  const { isHosted } = getFeatures(state);
-  return {
-    config: state.devices.filteringAttributesConfig,
-    isHosted: isHosted
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(ReportingLimits);
+export default ReportingLimits;

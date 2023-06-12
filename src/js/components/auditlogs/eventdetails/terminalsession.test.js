@@ -12,12 +12,19 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
 
-import { act, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import { TerminalSession } from './terminalsession';
+import * as DeviceActions from '../../../actions/deviceActions';
+import TerminalSession from './terminalsession';
+
+const mockStore = configureStore([thunk]);
+const store = mockStore({ ...defaultState });
 
 describe('TerminalSession Component', () => {
   let socketSpyFactory;
@@ -54,21 +61,21 @@ describe('TerminalSession Component', () => {
   });
 
   it('renders correctly', async () => {
-    const detailsMock = jest.fn();
-    detailsMock.mockResolvedValue({ start: defaultState.organization.auditlog.events[2].time, end: defaultState.organization.auditlog.events[1].time });
+    const sessionSpy = jest.spyOn(DeviceActions, 'getSessionDetails');
     const ui = (
-      <TerminalSession
-        canReadDevices
-        item={defaultState.organization.auditlog.events[2]}
-        device={defaultState.devices.byId.a1}
-        idAttribute="Device ID"
-        getSessionDetails={detailsMock}
-      />
+      <Provider store={store}>
+        <TerminalSession item={defaultState.organization.auditlog.events[2]} />
+      </Provider>
     );
     const { baseElement, rerender } = render(ui);
     await waitFor(() => rerender(ui));
-    act(() => jest.advanceTimersByTime(150));
-    expect(detailsMock).toHaveBeenCalled();
+    await act(async () => {
+      jest.runAllTimers();
+      jest.runAllTicks();
+    });
+    expect(sessionSpy).toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByText(/Device type/i)).toBeVisible());
+
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

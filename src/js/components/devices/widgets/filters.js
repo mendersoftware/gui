@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Add as AddIcon } from '@mui/icons-material';
 // material ui
@@ -22,7 +22,7 @@ import { getDeviceAttributes, setDeviceFilters, setDeviceListState } from '../..
 import { saveGlobalSettings } from '../../../actions/userActions';
 import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
 import { deepCompare } from '../../../helpers';
-import { getFilterAttributes } from '../../../selectors';
+import { getDeviceFilters, getFilterAttributes, getIsEnterprise, getOrganization, getSelectedGroupInfo, getTenantCapabilities } from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import MenderTooltip from '../../common/mendertooltip';
 import FilterItem from './filteritem';
@@ -34,35 +34,24 @@ export const getFilterLabelByKey = (key, attributes) => {
 
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
 
-export const Filters = ({
-  attributes,
-  canFilterMultiple,
-  className = '',
-  filters,
-  getDeviceAttributes,
-  groupFilters,
-  isEnterprise,
-  isHosted,
-  isModification = true,
-  onFilterChange,
-  onGroupClick,
-  open,
-  plan,
-  previousFilters,
-  saveGlobalSettings,
-  selectedGroup,
-  setDeviceFilters,
-  setDeviceListState
-}) => {
+export const Filters = ({ className = '', filters: propsFilters, isModification = true, onFilterChange, onGroupClick, open }) => {
   const [adding, setAdding] = useState(isModification);
   const [newFilter, setNewFilter] = useState(emptyFilter);
   const [currentFilters, setCurrentFilters] = useState([]);
   const [editedIndex, setEditedIndex] = useState(0);
+  const dispatch = useDispatch();
+  const { plan = 'os' } = useSelector(getOrganization);
+  const { groupFilters, selectedGroup } = useSelector(getSelectedGroupInfo);
+  const attributes = useSelector(getFilterAttributes);
+  const { hasFullFiltering: canFilterMultiple } = useSelector(getTenantCapabilities);
+  const filters = propsFilters || useSelector(getDeviceFilters);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const previousFilters = useSelector(state => state.users.globalSettings.previousFilters);
 
   useEffect(() => {
     setCurrentFilters(filters);
     setEditedIndex(filters.length);
-    getDeviceAttributes();
+    dispatch(getDeviceAttributes());
   }, [open]);
 
   useEffect(() => {
@@ -86,11 +75,11 @@ export const Filters = ({
     let changedPreviousFilters = [...previousFilters];
     if (!changedPreviousFilters.find(filter => deepCompare(filter, newFilter))) {
       changedPreviousFilters.push(newFilter);
-      saveGlobalSettings({ previousFilters: changedPreviousFilters.slice(-1 * MAX_PREVIOUS_FILTERS_COUNT) });
+      dispatch(saveGlobalSettings({ previousFilters: changedPreviousFilters.slice(-1 * MAX_PREVIOUS_FILTERS_COUNT) }));
     }
   };
 
-  const resetIdFilter = () => setDeviceListState({ selectedId: undefined, setOnly: true });
+  const resetIdFilter = () => dispatch(setDeviceListState({ selectedId: undefined, setOnly: true }));
 
   const removeFilter = removedFilter => {
     if (removedFilter.key === 'id') {
@@ -128,7 +117,7 @@ export const Filters = ({
 
   const handleFilterChange = filters => {
     const activeFilters = filters.filter(item => item.value !== '');
-    setDeviceFilters(activeFilters);
+    dispatch(setDeviceFilters(activeFilters));
     onFilterChange();
     if (activeFilters.length === 0) {
       setAdding(true);
@@ -172,10 +161,10 @@ export const Filters = ({
             </span>
           )}
           <EnterpriseNotification
-            isEnterprise={isEnterprise || (isHosted && plan === 'enterprise')}
+            isEnterprise={isEnterprise}
             benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
           />
-          {canFilterMultiple && (plan === 'enterprise' || isEnterprise) && filters.length >= 1 && (
+          {canFilterMultiple && isEnterprise && filters.length >= 1 && (
             <>
               {selectedGroup ? (
                 !!groupFilters.length && (
@@ -201,28 +190,4 @@ export const Filters = ({
   );
 };
 
-const actionCreators = {
-  getDeviceAttributes,
-  saveGlobalSettings,
-  setDeviceFilters,
-  setDeviceListState
-};
-
-const mapStateToProps = (state, ownProps) => {
-  const { plan = 'os' } = state.organization.organization;
-  const selectedGroup = state.devices.groups.selectedGroup;
-  const groupFilters = state.devices.groups.byId[selectedGroup]?.filters ?? [];
-  return {
-    attributes: getFilterAttributes(state),
-    canFilterMultiple: state.app.features.isEnterprise || (state.app.features.isHosted && plan !== 'os'),
-    filters: ownProps.filters || state.devices.filters || [],
-    groupFilters,
-    isHosted: state.app.features.isHosted,
-    isEnterprise: state.app.features.isEnterprise,
-    plan,
-    previousFilters: state.users.globalSettings.previousFilters,
-    selectedGroup
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Filters);
+export default Filters;

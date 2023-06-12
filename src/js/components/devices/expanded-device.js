@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
@@ -41,9 +41,13 @@ import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstant
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import {
   getDeviceTwinIntegrations,
+  getDevicesById,
   getDocsVersion,
   getFeatures,
+  getGlobalSettings,
   getIdAttribute,
+  getSelectedGroupInfo,
+  getShowHelptips,
   getTenantCapabilities,
   getUserCapabilities,
   getUserSettings
@@ -201,49 +205,33 @@ const tabs = [
   }
 ];
 
-export const ExpandedDevice = ({
-  abortDeployment,
-  actionCallbacks,
-  applyDeviceConfig,
-  columnSelection,
-  decommissionDevice,
-  defaultConfig,
-  device,
-  deviceConfigDeployment,
-  deviceId,
-  devicesById,
-  docsVersion,
-  features,
-  getDeviceDeployments,
-  getDeviceInfo,
-  getDeviceLog,
-  getDeviceTwin,
-  getGatewayDevices,
-  getSingleDeployment,
-  groupFilters,
-  idAttribute,
-  integrations,
-  latestAlerts,
-  onClose,
-  refreshDevices,
-  resetDeviceDeployments,
-  saveGlobalSettings,
-  selectedGroup,
-  setDetailsTab,
-  setDeviceConfig,
-  setDeviceTags,
-  setDeviceTwin,
-  setSnackbar,
-  showHelptips,
-  tabSelection,
-  tenantCapabilities,
-  userCapabilities
-}) => {
+export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, refreshDevices, setDetailsTab, tabSelection }) => {
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
+
+  const { latest: latestAlerts = [] } = useSelector(state => state.monitor.alerts.byDeviceId[deviceId]) || {};
+  const { selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
+  const { columnSelection = [] } = useSelector(getUserSettings);
+  const { defaultDeviceConfig: defaultConfig } = useSelector(getGlobalSettings);
+  const { device, deviceConfigDeployment } = useSelector(state => {
+    const device = state.devices.byId[deviceId] || {};
+    const { config = {} } = device;
+    const { deployment_id: configDeploymentId } = config;
+    const deviceConfigDeployment = state.deployments.byId[configDeploymentId] || {};
+    return { device, deviceConfigDeployment };
+  });
+  const devicesById = useSelector(getDevicesById);
+  const docsVersion = useSelector(getDocsVersion);
+  const features = useSelector(getFeatures);
+  const idAttribute = useSelector(getIdAttribute);
+  const integrations = useSelector(getDeviceTwinIntegrations);
+  const showHelptips = useSelector(getShowHelptips);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const userCapabilities = useSelector(getUserCapabilities);
+  const dispatch = useDispatch();
 
   const { attributes = {}, isOffline, gatewayIds = [] } = device;
   const { mender_is_gateway, mender_gateway_system_id } = attributes;
@@ -256,8 +244,8 @@ export const ExpandedDevice = ({
       return;
     }
     clearInterval(timer.current);
-    timer.current = setInterval(() => getDeviceInfo(deviceId), refreshDeviceLength);
-    getDeviceInfo(deviceId);
+    timer.current = setInterval(() => dispatch(getDeviceInfo(deviceId)), refreshDeviceLength);
+    dispatch(getDeviceInfo(deviceId));
     return () => {
       clearInterval(timer.current);
     };
@@ -267,14 +255,14 @@ export const ExpandedDevice = ({
     if (!(device.id && mender_gateway_system_id)) {
       return;
     }
-    getGatewayDevices(device.id);
+    dispatch(getGatewayDevices(device.id));
   }, [device.id, mender_gateway_system_id]);
 
   const onDecommissionDevice = device_id => {
     // close dialog!
     // close expanded device
     // trigger reset of list!
-    return decommissionDevice(device_id).finally(() => {
+    return dispatch(decommissionDevice(device_id)).finally(() => {
       refreshDevices();
       onClose();
     });
@@ -319,30 +307,30 @@ export const ExpandedDevice = ({
   const { component: SelectedTab, value: selectedTab } = availableTabs.find(tab => tab.value === tabSelection) ?? tabs[0];
 
   const commonProps = {
-    abortDeployment,
-    applyDeviceConfig,
+    abortDeployment: id => dispatch(abortDeployment(id)),
+    applyDeviceConfig: (...args) => dispatch(applyDeviceConfig(...args)),
     classes,
     columnSelection,
     defaultConfig,
     device,
     deviceConfigDeployment,
     docsVersion,
-    getDeviceDeployments,
-    getDeviceLog,
-    getDeviceTwin,
-    getSingleDeployment,
+    getDeviceDeployments: (...args) => dispatch(getDeviceDeployments(...args)),
+    getDeviceLog: (...args) => dispatch(getDeviceLog(...args)),
+    getDeviceTwin: (...args) => dispatch(getDeviceTwin(...args)),
+    getSingleDeployment: id => dispatch(getSingleDeployment(id)),
     integrations,
     latestAlerts,
     launchTroubleshoot,
     onDecommissionDevice,
     refreshDevices,
-    resetDeviceDeployments,
-    saveGlobalSettings,
+    resetDeviceDeployments: id => dispatch(resetDeviceDeployments(id)),
+    saveGlobalSettings: settings => dispatch(saveGlobalSettings(settings)),
     setDetailsTab,
-    setDeviceConfig,
-    setDeviceTags,
-    setDeviceTwin,
-    setSnackbar,
+    setDeviceConfig: (...args) => dispatch(setDeviceConfig(...args)),
+    setDeviceTags: (...args) => dispatch(setDeviceTags(...args)),
+    setDeviceTwin: (...args) => dispatch(setDeviceTwin(...args)),
+    setSnackbar: (...args) => dispatch(setSnackbar(...args)),
     setSocketClosed,
     setTroubleshootType,
     showHelptips,
@@ -403,55 +391,4 @@ export const ExpandedDevice = ({
   );
 };
 
-const actionCreators = {
-  abortDeployment,
-  applyDeviceConfig,
-  decommissionDevice,
-  getDeviceDeployments,
-  getDeviceLog,
-  getDeviceInfo,
-  getDeviceTwin,
-  getGatewayDevices,
-  getSingleDeployment,
-  resetDeviceDeployments,
-  saveGlobalSettings,
-  setDeviceConfig,
-  setDeviceTags,
-  setDeviceTwin,
-  setSnackbar
-};
-
-const mapStateToProps = (state, ownProps) => {
-  const device = state.devices.byId[ownProps.deviceId] || {};
-  const { config = {} } = device;
-  const { deployment_id: configDeploymentId } = config;
-  const { latest = [] } = state.monitor.alerts.byDeviceId[ownProps.deviceId] || {};
-  let selectedGroup;
-  let groupFilters = [];
-  if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
-    selectedGroup = state.devices.groups.selectedGroup;
-    groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
-  }
-  const { columnSelection = [] } = getUserSettings(state);
-  return {
-    alertListState: state.monitor.alerts.alertList,
-    columnSelection,
-    defaultConfig: state.users.globalSettings.defaultDeviceConfig,
-    device,
-    deviceConfigDeployment: state.deployments.byId[configDeploymentId] || {},
-    devicesById: state.devices.byId,
-    docsVersion: getDocsVersion(state),
-    features: getFeatures(state),
-    groupFilters,
-    idAttribute: getIdAttribute(state),
-    integrations: getDeviceTwinIntegrations(state),
-    latestAlerts: latest,
-    onboardingComplete: state.onboarding.complete,
-    selectedGroup,
-    showHelptips: state.users.showHelptips,
-    tenantCapabilities: getTenantCapabilities(state),
-    userCapabilities: getUserCapabilities(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(ExpandedDevice);
+export default ExpandedDevice;

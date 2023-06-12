@@ -12,13 +12,13 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 
 import { Launch as LaunchIcon } from '@mui/icons-material';
 import { ListItemIcon, useTheme } from '@mui/material';
 
-import { getDocsVersion } from '../../selectors';
+import { getDocsVersion, getFeatures } from '../../selectors';
 import LeftNav from '../common/left-nav';
 import Downloads from './downloads';
 import GetStarted from './getting-started';
@@ -81,11 +81,14 @@ const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
   }, accu);
 
 const helpPath = 'help/';
-export const Help = ({ docsVersion, isHosted }) => {
+export const Help = () => {
   const theme = useTheme();
   const [links, setLinks] = useState([]);
   const { pathname } = useLocation();
   const { section } = useParams();
+
+  const docsVersion = useSelector(getDocsVersion);
+  const { isHosted } = useSelector(getFeatures);
 
   useEffect(() => {
     // generate sidebar links
@@ -128,11 +131,4 @@ export const Help = ({ docsVersion, isHosted }) => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    docsVersion: getDocsVersion(state),
-    isHosted: state.app.features.isHosted
-  };
-};
-
-export default connect(mapStateToProps)(Help);
+export default Help;

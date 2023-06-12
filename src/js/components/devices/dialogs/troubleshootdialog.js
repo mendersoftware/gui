@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
@@ -26,8 +26,8 @@ import momentDurationFormatSetup from 'moment-duration-format';
 import { setSnackbar } from '../../../actions/appActions';
 import { deviceFileUpload, getDeviceFileDownloadLink } from '../../../actions/deviceActions';
 import { BEGINNING_OF_TIME, TIMEOUTS } from '../../../constants/appConstants';
-import { createDownload, versionCompare } from '../../../helpers';
-import { getFeatures, getIdAttribute, getIsEnterprise, getUserRoles } from '../../../selectors';
+import { createDownload } from '../../../helpers';
+import { getFeatures, getIdAttribute, getIsEnterprise, getIsPreview, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import { useSession } from '../../../utils/sockethook';
 import { TwoColumns } from '../../common/configurationobject';
 import MaterialDesignIcon from '../../common/materialdesignicon';
@@ -80,24 +80,7 @@ const tabs = {
   transfer: { link: 'file transfer logs', title: () => 'File transfer', value: 'transfer', canShow: ({ canTroubleshoot }) => canTroubleshoot }
 };
 
-export const TroubleshootDialog = ({
-  canPreview,
-  device,
-  deviceFileUpload,
-  getDeviceFileDownloadLink,
-  hasAuditlogs,
-  isEnterprise,
-  isHosted,
-  idAttribute,
-  onCancel,
-  open,
-  setSnackbar,
-  setSocketClosed,
-  type = tabs.terminal.value,
-  userCapabilities
-}) => {
-  const { canAuditlog, canTroubleshoot, canWriteDevices } = userCapabilities;
-
+export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, type = tabs.terminal.value }) => {
   const [currentTab, setCurrentTab] = useState(type);
   const [availableTabs, setAvailableTabs] = useState(Object.values(tabs));
   const [downloadPath, setDownloadPath] = useState('');
@@ -113,6 +96,15 @@ export const TroubleshootDialog = ({
   const timer = useRef();
   const termRef = useRef({ terminal: React.createRef(), terminalRef: React.createRef() });
   const { classes } = useStyles();
+  const { isHosted } = useSelector(getFeatures);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const canPreview = useSelector(getIsPreview);
+  const idAttribute = useSelector(getIdAttribute);
+  const userCapabilities = useSelector(getUserCapabilities);
+  const { canAuditlog, canTroubleshoot, canWriteDevices } = userCapabilities;
+  const { hasAuditlogs } = useSelector(getTenantCapabilities);
+  const dispatch = useDispatch();
+  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
 
   useEffect(() => {
     if (open) {
@@ -130,7 +122,7 @@ export const TroubleshootDialog = ({
 
   useEffect(() => {
     const allowedTabs = Object.values(tabs).reduce((accu, tab) => {
-      if (tab.canShow({ canTroubleshoot, canWriteDevices })) {
+      if (tab.canShow(userCapabilities)) {
         accu.push(tab);
       }
       return accu;
@@ -184,20 +176,20 @@ export const TroubleshootDialog = ({
 
   const onDownloadClick = path => {
     setDownloadPath(path);
-    getDeviceFileDownloadLink(device.id, path).then(address => {
+    dispatch(getDeviceFileDownloadLink(device.id, path)).then(address => {
       const filename = path.substring(path.lastIndexOf('/') + 1) || 'file';
       createDownload(address, filename);
     });
   };
 
   const onSocketOpen = () => {
-    setSnackbar('Connection with the device established.', 5000);
     setSocketInitialized(true);
+    dispatch(setSnackbar('Connection with the device established.', 5000));
   };
 
   const onNotify = content => {
     setSnackbarAlreadySet(true);
-    setSnackbar(content, 5000);
+    dispatch(setSnackbar(content, 5000));
     snackTimer.current = setTimeout(() => setSnackbarAlreadySet(false), TIMEOUTS.fiveSeconds + TIMEOUTS.debounceShort);
   };
 
@@ -272,10 +264,10 @@ export const TroubleshootDialog = ({
             downloadPath={downloadPath}
             file={file}
             onDownload={onDownloadClick}
-            onUpload={deviceFileUpload}
+            onUpload={(...args) => dispatch(deviceFileUpload(...args))}
             setDownloadPath={setDownloadPath}
             setFile={setFile}
-            setSnackbar={setSnackbar}
+            setSnackbar={dispatchedSetSnackbar}
             setUploadPath={setUploadPath}
             uploadPath={uploadPath}
             userCapabilities={userCapabilities}
@@ -297,7 +289,7 @@ export const TroubleshootDialog = ({
                   onDownloadClick={onDownloadClick}
                   sendMessage={sendMessage}
                   sessionId={sessionId}
-                  setSnackbar={setSnackbar}
+                  setSnackbar={dispatchedSetSnackbar}
                   socketInitialized={socketInitialized}
                   style={{ position: 'absolute', width: '100%', height: '100%', ...visibilityToggle }}
                   textInput={terminalInput}
@@ -339,17 +331,4 @@ export const TroubleshootDialog = ({
   );
 };
 
-const actionCreators = { getDeviceFileDownloadLink, deviceFileUpload, setSnackbar };
-
-const mapStateToProps = state => {
-  const { isHosted } = getFeatures(state);
-  return {
-    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
-    idAttribute: getIdAttribute(state),
-    isEnterprise: getIsEnterprise(state),
-    isHosted,
-    userRoles: getUserRoles(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(TroubleshootDialog);
+export default TroubleshootDialog;

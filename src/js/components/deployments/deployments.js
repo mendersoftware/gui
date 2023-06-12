@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@mui/material';
@@ -25,7 +25,7 @@ import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, listDefaultsByState } from '../..
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getISOStringBoundaries } from '../../helpers';
-import { getIsEnterprise, getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getDevicesById, getIsEnterprise, getOnboardingState, getReleasesById, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -52,22 +52,21 @@ const routes = {
 
 export const defaultRefreshDeploymentsLength = 30000;
 
-export const Deployments = ({
-  abortDeployment,
-  advanceOnboarding,
-  devicesById,
-  getDynamicGroups,
-  getGroups,
-  groupsById,
-  isEnterprise,
-  onboardingState,
-  pastCount,
-  releases,
-  selectionState,
-  setDeploymentsState,
-  setSnackbar,
-  userCapabilities
-}) => {
+export const Deployments = () => {
+  const groupsById = useSelector(state => {
+    // eslint-disable-next-line no-unused-vars
+    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    return groups;
+  });
+  const devicesById = useSelector(getDevicesById);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const onboardingState = useSelector(getOnboardingState);
+  const pastCount = useSelector(state => state.deployments.byStatus.finished.total);
+  const releases = useSelector(getReleasesById);
+  const selectionState = useSelector(state => state.deployments.selectionState);
+  const userCapabilities = useSelector(getUserCapabilities);
+  const dispatch = useDispatch();
+
   const [deploymentObject, setDeploymentObject] = useState({});
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
@@ -106,16 +105,16 @@ export const Deployments = ({
   ]);
 
   useEffect(() => {
-    getGroups();
+    dispatch(getGroups());
     if (isEnterprise) {
-      getDynamicGroups();
+      dispatch(getDynamicGroups());
     }
     const { deploymentObject = {}, id: selectedId = [], ...remainder } = locationParams;
     const { devices: selectedDevices = [], release: releaseName } = deploymentObject;
     const release = releaseName ? { ...(releases[releaseName] ?? { Name: releaseName }) } : undefined;
     const devices = selectedDevices.length ? selectedDevices.map(device => ({ ...device, ...devicesById[device.id] })) : [];
     setDeploymentObject({ devices, release });
-    setDeploymentsState({ selectedId: selectedId[0], ...remainder });
+    dispatch(setDeploymentsState({ selectedId: selectedId[0], ...remainder }));
     isInitialized.current = true;
   }, []);
 
@@ -137,11 +136,11 @@ export const Deployments = ({
       ...enterpriseSettings
     };
     setDeploymentObject(deploymentObject);
-    setDeploymentsState({ general: { showCreationDialog: true, showReportDialog: false } });
+    dispatch(setDeploymentsState({ general: { showCreationDialog: true, showReportDialog: false } }));
   };
 
   const onScheduleSubmit = () => {
-    setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } });
+    dispatch(setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } }));
     setDeploymentObject({});
     // successfully retrieved new deployment
     if (routes.active.key !== state) {
@@ -151,34 +150,34 @@ export const Deployments = ({
   };
 
   const onAbortDeployment = id =>
-    abortDeployment(id).then(() => {
-      setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } });
+    dispatch(abortDeployment(id)).then(() => {
+      dispatch(setDeploymentsState({ general: { showCreationDialog: false, showReportDialog: false } }));
       return Promise.resolve();
     });
 
   const changeTab = (_, tabIndex) => {
-    setDeploymentsState({ general: { state: tabIndex } });
-    setSnackbar('');
+    dispatch(setDeploymentsState({ general: { state: tabIndex } }));
+    dispatch(setSnackbar(''));
     if (pastCount && !onboardingState.complete) {
-      advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST);
+      dispatch(advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST));
     }
   };
 
   const showReport = (reportType, selectedId) => {
     if (!onboardingState.complete) {
-      advanceOnboarding(onboardingSteps.DEPLOYMENTS_INPROGRESS);
+      dispatch(advanceOnboarding(onboardingSteps.DEPLOYMENTS_INPROGRESS));
     }
-    setDeploymentsState({ general: { reportType, showCreationDialog: false, showReportDialog: true }, selectedId });
+    dispatch(setDeploymentsState({ general: { reportType, showCreationDialog: false, showReportDialog: true }, selectedId }));
   };
 
-  const closeReport = () => setDeploymentsState({ general: { reportType: undefined, showReportDialog: false }, selectedId: undefined });
+  const closeReport = () => dispatch(setDeploymentsState({ general: { reportType: undefined, showReportDialog: false }, selectedId: undefined }));
 
   const onCreationDismiss = () => {
-    setDeploymentsState({ general: { showCreationDialog: false } });
+    dispatch(setDeploymentsState({ general: { showCreationDialog: false } }));
     setDeploymentObject({});
   };
 
-  const onCreationShow = () => setDeploymentsState({ general: { showCreationDialog: true } });
+  const onCreationShow = () => dispatch(setDeploymentsState({ general: { showCreationDialog: true } }));
 
   let onboardingComponent = null;
   // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
@@ -224,29 +223,4 @@ export const Deployments = ({
   );
 };
 
-const actionCreators = {
-  abortDeployment,
-  advanceOnboarding,
-  getGroups,
-  getDynamicGroups,
-  setDeploymentsState,
-  setSnackbar
-};
-
-const mapStateToProps = state => {
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  return {
-    devicesById: state.devices.byId,
-    groupsById: groups,
-    isEnterprise: getIsEnterprise(state),
-    onboardingState: getOnboardingState(state),
-    pastCount: state.deployments.byStatus.finished.total,
-    releases: state.releases.byId,
-    selectionState: state.deployments.selectionState,
-    settings: state.users.globalSettings,
-    userCapabilities: getUserCapabilities(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Deployments);
+export default Deployments;

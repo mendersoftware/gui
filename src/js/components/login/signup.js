@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 
 import { makeStyles } from 'tss-react/mui';
@@ -55,7 +55,7 @@ const useStyles = makeStyles()(theme => ({
   logo: { marginLeft: '5vw', marginTop: 45, maxHeight: 50 }
 }));
 
-export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKey, setSnackbar }) => {
+export const Signup = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
@@ -68,6 +68,11 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
   const [tos, setTos] = useState(false);
   const [redirectOnLogin, setRedirectOnLogin] = useState(false);
   const { campaign = '' } = useParams();
+  const dispatch = useDispatch();
+  const currentUserId = useSelector(state => state.users.currentUserId);
+  const recaptchaSiteKey = useSelector(state => state.app.recaptchaSiteKey);
+
+  const dispatchedSetSnackbar = message => dispatch(setSnackbar(message));
 
   useEffect(() => {
     const usedOauthProvider = cookies.get('oauth');
@@ -82,7 +87,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
 
   useEffect(() => {
     if (currentUserId) {
-      setSnackbar('');
+      dispatchedSetSnackbar('');
       setRedirectOnLogin(true);
     }
   }, [currentUserId]);
@@ -110,7 +115,7 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
       ts: captchaTimestamp,
       campaign
     };
-    return createOrganizationTrial(signup).catch(() => {
+    return dispatch(createOrganizationTrial(signup)).catch(() => {
       setStep(1);
       setOrganization(formData.name);
       setTos(formData.tos);
@@ -125,11 +130,13 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
   const { classes } = useStyles();
 
   const steps = {
-    1: <UserDataEntry classes={classes} setSnackbar={setSnackbar} data={{ email, password, password_confirmation: password }} onSubmit={handleStep1} />,
+    1: (
+      <UserDataEntry classes={classes} setSnackbar={dispatchedSetSnackbar} data={{ email, password, password_confirmation: password }} onSubmit={handleStep1} />
+    ),
     2: (
       <OrgDataEntry
         classes={classes}
-        setSnackbar={setSnackbar}
+        setSnackbar={dispatchedSetSnackbar}
         data={{ name: organization, email, emailVerified, tos, marketing }}
         onSubmit={handleSignup}
         recaptchaSiteKey={recaptchaSiteKey}
@@ -146,13 +153,4 @@ export const Signup = ({ createOrganizationTrial, currentUserId, recaptchaSiteKe
   );
 };
 
-const actionCreators = { createOrganizationTrial, setSnackbar };
-
-const mapStateToProps = state => {
-  return {
-    currentUserId: state.users.currentUserId,
-    recaptchaSiteKey: state.app.recaptchaSiteKey
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Signup);
+export default Signup;

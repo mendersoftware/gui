@@ -901,7 +901,8 @@ describe('device config ', () => {
     const { attributes, id } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
-      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id, tags: { something: 'asdl' } } }
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id, tags: { something: 'asdl' } } },
+      { type: SET_SNACKBAR, snackbar: { message: 'Device name changed' } }
     ];
     await store.dispatch(setDeviceTags(defaultState.devices.byId.a1.id, { something: 'asdl' }));
     const storeActions = store.getActions();
@@ -913,7 +914,7 @@ describe('device config ', () => {
 describe('troubleshooting related actions', () => {
   it('should allow session info retrieval', async () => {
     const store = mockStore({ ...defaultState });
-    const endDate = '2019-01-01T12:10:22.669Z';
+    const endDate = '2019-01-01T12:16:22.667Z';
     const sessionId = 'abd313a8-ee88-48ab-9c99-fbcd80048e6e';
     const result = await store.dispatch(getSessionDetails(sessionId, defaultState.devices.byId.a1.id, defaultState.users.currentUser, undefined, endDate));
 

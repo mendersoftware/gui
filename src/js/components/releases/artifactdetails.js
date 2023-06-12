@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import {
@@ -31,7 +31,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { getArtifactInstallCount, getArtifactUrl } from '../../actions/releaseActions';
+import { editArtifact, getArtifactInstallCount, getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftware, extractSoftwareItem, toggle } from '../../helpers';
 import { getUserCapabilities } from '../../selectors';
 import ExpandableAttribute from '../common/expandable-attribute';
@@ -124,12 +124,16 @@ const DevicesLink = ({ artifact: { installCount }, softwareItem: { key, name, ve
   );
 };
 
-export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, getArtifactInstallCount, getArtifactUrl, open, showRemoveArtifactDialog }) => {
+export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
   const [descEdit, setDescEdit] = useState(false);
   const [description, setDescription] = useState(artifact.description);
   const [showPayloads, setShowPayloads] = useState(false);
   const [showProvidesDepends, setShowProvidesDepends] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { canManageReleases } = useSelector(getUserCapabilities);
 
   const softwareVersions = useMemo(() => {
     const { software } = extractSoftware(artifact.artifact_provides);
@@ -147,7 +151,7 @@ export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, get
     if (artifact.url || !open) {
       return;
     }
-    getArtifactUrl(artifact.id);
+    dispatch(getArtifactUrl(artifact.id));
   }, [artifact.id, artifact.url, open]);
 
   useEffect(() => {
@@ -156,7 +160,7 @@ export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, get
     }
     const { version } = softwareVersions.sort((a, b) => a.nestingLevel - b.nestingLevel).reduce((accu, item) => accu ?? item, undefined) ?? {};
     if (version) {
-      getArtifactInstallCount(artifact.id);
+      dispatch(getArtifactInstallCount(artifact.id));
     }
   }, [artifact.id, artifact.installCount, open, softwareVersions.length]);
 
@@ -166,12 +170,12 @@ export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, get
       if (event.keyCode === 13 || !event.keyCode) {
         if (descEdit) {
           // save change
-          editArtifact(artifact.id, description);
+          dispatch(editArtifact(artifact.id, { description }));
         }
         setDescEdit(!descEdit);
       }
     },
-    [descEdit, description, editArtifact, setDescEdit]
+    [descEdit, description, setDescEdit]
   );
 
   const softwareItem = extractSoftwareItem(artifact.artifact_provides);
@@ -284,13 +288,4 @@ export const ArtifactDetails = ({ artifact, canManageReleases, editArtifact, get
   );
 };
 
-const actionCreators = { getArtifactInstallCount, getArtifactUrl };
-
-const mapStateToProps = state => {
-  const { canManageReleases } = getUserCapabilities(state);
-  return {
-    canManageReleases
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(ArtifactDetails);
+export default ArtifactDetails;

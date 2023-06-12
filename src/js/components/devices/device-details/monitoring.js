@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useTheme } from '@mui/material/styles';
 
@@ -57,27 +57,22 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
 };
 
 const paginationCutoff = defaultPerPage;
-export const DeviceMonitoring = ({
-  alertListState = {},
-  alerts,
-  device,
-  docsVersion,
-  getAlerts,
-  latestAlerts,
-  offlineThresholdSettings,
-  onDetailsClick,
-  setAlertListState
-}) => {
-  const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
+export const DeviceMonitoring = ({ device, onDetailsClick }) => {
   const theme = useTheme();
+  const { alerts = [], latest: latestAlerts = [] } = useSelector(state => state.monitor.alerts.byDeviceId[device.id]) ?? {};
+  const alertListState = useSelector(state => state.monitor.alerts.alertList) ?? {};
+  const docsVersion = useSelector(getDocsVersion);
+  const offlineThresholdSettings = useSelector(getOfflineThresholdSettings);
+  const dispatch = useDispatch();
+  const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
 
   useEffect(() => {
-    getAlerts(device.id, alertListState);
+    dispatch(getDeviceAlerts(device.id, alertListState));
   }, [device.id, pageNo, pageLength]);
 
-  const onChangePage = page => setAlertListState({ page });
+  const onChangePage = page => dispatch(setAlertListState({ page }));
 
-  const onChangeRowsPerPage = perPage => setAlertListState({ page: 1, perPage });
+  const onChangeRowsPerPage = perPage => dispatch(setAlertListState({ page: 1, perPage }));
 
   const { monitors = [], isOffline, updated_ts = '' } = device;
   const hasMonitorsDefined = !!(monitors.length || alerts.length || latestAlerts.length);
@@ -137,38 +132,15 @@ export const DeviceMonitoring = ({
   );
 };
 
-export const MonitoringTab = ({ alertListState, alerts, device, docsVersion, getDeviceAlerts, latestAlerts, offlineThresholdSettings, setAlertListState }) => {
+export const MonitoringTab = ({ device }) => {
   const [monitorDetails, setMonitorDetails] = useState();
 
   return (
     <>
-      <DeviceMonitoring
-        alertListState={alertListState}
-        alerts={alerts}
-        device={device}
-        docsVersion={docsVersion}
-        getAlerts={getDeviceAlerts}
-        latestAlerts={latestAlerts}
-        onDetailsClick={setMonitorDetails}
-        setAlertListState={setAlertListState}
-        offlineThresholdSettings={offlineThresholdSettings}
-      />
+      <DeviceMonitoring device={device} onDetailsClick={setMonitorDetails} />
       <MonitorDetailsDialog alert={monitorDetails} onClose={() => setMonitorDetails()} />
     </>
   );
 };
 
-const actionCreators = { getDeviceAlerts, setAlertListState };
-
-const mapStateToProps = (state, ownProps) => {
-  const { alerts = [], latest = [] } = state.monitor.alerts.byDeviceId[ownProps.device.id] || {};
-  return {
-    alertListState: state.monitor.alerts.alertList,
-    alerts,
-    docsVersion: getDocsVersion(state),
-    latestAlerts: latest,
-    offlineThresholdSettings: getOfflineThresholdSettings(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(MonitoringTab);
+export default MonitoringTab;

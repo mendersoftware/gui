@@ -157,7 +157,11 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
   const connect = useCallback(deviceId => {
     const uri = `wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`;
     setSessionId();
-    socketRef.current = new WebSocket(uri);
+    try {
+      socketRef.current = new WebSocket(uri);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return [connect, sendMessage, close, socketRef.current?.readyState, sessionId];

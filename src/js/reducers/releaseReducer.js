@@ -70,8 +70,7 @@ export const initialState = {
    * Return single release with corresponding Artifacts
    */
   selectedRelease: null,
-  selectedArtifact: null,
-  showRemoveDialog: false
+  selectedArtifact: null
 };
 
 const releaseReducer = (state = initialState, action) => {
@@ -106,11 +105,6 @@ const releaseReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedArtifact: action.artifact
-      };
-    case ReleaseConstants.SHOW_REMOVE_DIALOG:
-      return {
-        ...state,
-        showRemoveDialog: action.showRemoveDialog
       };
     case ReleaseConstants.SELECTED_RELEASE:
       return {

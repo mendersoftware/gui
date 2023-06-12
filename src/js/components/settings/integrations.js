@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Divider, MenuItem, Select, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
@@ -20,7 +20,8 @@ import { makeStyles } from 'tss-react/mui';
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations } from '../../actions/organizationActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
-import { customSort, versionCompare } from '../../helpers';
+import { customSort } from '../../helpers';
+import { getExternalIntegrations, getIsPreview } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import Confirm from '../common/confirm';
 import InfoHint from '../common/info-hint';
@@ -196,10 +197,13 @@ const determineAvailableIntegrations = (integrations, isPreRelease) =>
     return accu;
   }, []);
 
-export const Integrations = ({ changeIntegration, createIntegration, deleteIntegration, getIntegrations, integrations = [], isPreRelease }) => {
+export const Integrations = () => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
   const [isConfiguringWebhook, setIsConfiguringWebhook] = useState(false);
+  const integrations = useSelector(getExternalIntegrations) ?? [];
+  const isPreRelease = useSelector(getIsPreview);
+  const dispatch = useDispatch();
 
   const { classes } = useStyles();
 
@@ -210,7 +214,7 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
   }, [integrations, isPreRelease]);
 
   useEffect(() => {
-    getIntegrations();
+    dispatch(getIntegrations());
   }, []);
 
   const onConfigureIntegration = ({ target: { value: provider = '' } }) => {
@@ -236,9 +240,9 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
   const onSaveClick = integration => {
     if (integration.id === 'new') {
       setIsConfiguringWebhook(false);
-      return createIntegration(integration);
+      return dispatch(createIntegration(integration));
     }
-    changeIntegration(integration);
+    dispatch(changeIntegration(integration));
   };
 
   const configuredWebhook = useMemo(() => integrations.find(integration => integration.provider === EXTERNAL_PROVIDER.webhook.provider), [integrations]);
@@ -251,7 +255,7 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
           integration={integration}
           isLast={configuredIntegrations.length === index + 1}
           onCancel={onCancelClick}
-          onDelete={deleteIntegration}
+          onDelete={integration => dispatch(deleteIntegration(integration))}
           onSave={onSaveClick}
         />
       ))}
@@ -272,13 +276,4 @@ export const Integrations = ({ changeIntegration, createIntegration, deleteInteg
   );
 };
 
-const actionCreators = { changeIntegration, createIntegration, deleteIntegration, getIntegrations };
-
-const mapStateToProps = state => {
-  return {
-    integrations: state.organization.externalDeviceIntegrations,
-    isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Integrations);
+export default Integrations;

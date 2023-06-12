@@ -127,7 +127,15 @@ export const organizationHandlers = [
     }
     return res(ctx.status(200));
   }),
-  rest.get(`${auditLogsApiUrl}/logs`, (req, res, ctx) => {
+  rest.get(`${auditLogsApiUrl}/logs`, ({ url: { searchParams } }, res, ctx) => {
+    const perPage = Number(searchParams.get('per_page'));
+    if (perPage === 500) {
+      return res(
+        ctx.json([
+          { meta: defaultState.organization.auditlog.events[2].meta, time: defaultState.organization.auditlog.events[1].time, action: 'close_terminal' }
+        ])
+      );
+    }
     return res(ctx.set(headerNames.total, defaultState.organization.auditlog.events.length), ctx.json(defaultState.organization.auditlog.events));
   }),
   rest.get(`${auditLogsApiUrl}/logs/export`, (req, res, ctx) => {

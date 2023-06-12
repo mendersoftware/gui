@@ -19,10 +19,11 @@ import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { adminUserCapabilities, defaultState, undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
-import Authorized, { Authorized as AuthorizedDevices } from './authorized-devices';
+import * as DeviceActions from '../../actions/deviceActions';
+import * as UserActions from '../../actions/userActions';
+import Authorized from './authorized-devices';
 import { routes } from './base-devices';
 
 const mockStore = configureStore([thunk]);
@@ -48,7 +49,7 @@ describe('AuthorizedDevices Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <Provider store={store}>
-        <Authorized onFilterChange={jest.fn} states={routes} />
+        <Authorized states={routes} />
       </Provider>
     );
     const view = baseElement.firstChild;
@@ -58,68 +59,67 @@ describe('AuthorizedDevices Component', () => {
 
   it('behaves as expected', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const submitMock = jest.fn();
-    const setUserSettingsMock = jest.fn();
-    const setListStateMock = jest.fn().mockResolvedValue();
+    const setListStateSpy = jest.spyOn(DeviceActions, 'setDeviceListState');
+    const setUserSettingsSpy = jest.spyOn(UserActions, 'saveUserSettings');
+    const setColumnsSpy = jest.spyOn(UserActions, 'updateUserColumnSettings');
+
     const testKey = 'testKey';
     const attributeNames = {
       artifact: 'rootfs-image.version',
       deviceType: 'device_type',
       updateTime: 'updated_ts'
     };
-    const devices = defaultState.devices.byStatus.accepted.deviceIds.map(id => defaultState.devices.byId[id]);
-    const pageTotal = devices.length;
-    const deviceListState = { isLoading: false, selectedState: DEVICE_STATES.accepted, selection: [], sort: {} };
-    store = mockStore({ ...defaultState });
+    // const devices = defaultState.devices.byStatus.accepted.deviceIds.map(id => defaultState.devices.byId[id]);
+    const pageTotal = defaultState.devices.byStatus.accepted.deviceIds.length;
+    // const deviceListState = { isLoading: false, selectedState: DEVICE_STATES.accepted, selection: [], sort: {} };
+    store = mockStore({
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          // hasReporting: true,
+          hasAddons: true,
+          isEnterprise: true
+        }
+      },
+      devices: {
+        ...defaultState.devices,
+        deviceList: { ...defaultState.devices.deviceList, deviceIds: defaultState.devices.byStatus.accepted.deviceIds },
+        byStatus: {
+          ...defaultState.devices.byStatus,
+          accepted: { ...defaultState.devices.byStatus.accepted, total: pageTotal },
+          pending: { ...defaultState.devices.byStatus.pending, total: 4 },
+          rejected: { ...defaultState.devices.byStatus.rejected, total: 38 }
+        }
+      },
+      users: {
+        ...defaultState.users,
+        customColumns: [{ attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 }]
+      }
+    });
     let ui = (
       <Provider store={store}>
-        <AuthorizedDevices
-          acceptedCount={pageTotal}
+        <Authorized
           addDevicesToGroup={jest.fn}
-          advanceOnboarding={jest.fn}
-          allCount={40}
-          attributes={[]}
-          availableIssueOptions={[{ key: 'offline' }]}
-          columnSelection={[]}
-          currentUser={defaultState.users.byId[defaultState.users.currentUser]}
-          customColumnSizes={[{ attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 }]}
-          deleteAuthset={jest.fn}
-          deviceCount={pageTotal}
-          deviceListState={deviceListState}
-          devices={devices}
-          features={{}}
-          filters={[]}
-          getIssueCountsByType={jest.fn}
-          groupFilters={[]}
-          idAttribute={'id'}
-          onboardingState={{}}
           onGroupClick={jest.fn}
           onGroupRemoval={jest.fn}
+          onMakeGatewayClick={jest.fn}
           onPreauthClick={jest.fn}
           openSettingsDialog={jest.fn}
-          pendingCount={4}
           removeDevicesFromGroup={jest.fn}
-          saveUserSettings={setUserSettingsMock}
-          selectedGroup={undefined}
-          setDeviceFilters={jest.fn}
-          setDeviceListState={setListStateMock}
-          setSnackbar={jest.fn}
-          settingsInitialized={true}
-          showHelptips={jest.fn}
-          tenantCapabilities={{ hasMonitor: true }}
-          updateDevicesAuth={jest.fn}
-          updateUserColumnSettings={submitMock}
-          userCapabilities={adminUserCapabilities}
+          showsDialog={false}
         />
       </Provider>
     );
     const { rerender } = render(ui);
+    await waitFor(() => expect(screen.getAllByRole('checkbox').length).toBeTruthy());
     await user.click(screen.getAllByRole('checkbox')[0]);
-    expect(setListStateMock).toHaveBeenCalledWith({ selection: [0, 1], setOnly: true });
+    expect(setListStateSpy).toHaveBeenCalledWith({ selection: [0, 1], setOnly: true });
     await user.click(screen.getByRole('button', { name: /all/i }));
     await user.click(screen.getByRole('option', { name: /devices with issues/i }));
     await user.keyboard('{Escape}');
-    expect(setListStateMock).toHaveBeenCalledWith({ page: 1, refreshTrigger: true, selectedIssues: ['offline'] });
+    expect(setListStateSpy).toHaveBeenCalledWith({ page: 1, refreshTrigger: true, selectedIssues: ['offline', 'monitoring'] });
     await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /table options/i }));
     await waitFor(() => rerender(ui));
@@ -135,13 +135,13 @@ describe('AuthorizedDevices Component', () => {
     expect(button).not.toBeDisabled();
     await user.click(button);
 
-    expect(submitMock).toHaveBeenCalledWith([
+    expect(setColumnsSpy).toHaveBeenCalledWith([
       { attribute: { name: attributeNames.deviceType, scope: 'inventory' }, size: 150 },
       { attribute: { name: attributeNames.artifact, scope: 'inventory' }, size: 150 },
       { attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 },
       { attribute: { name: testKey, scope: 'inventory' }, size: 150 }
     ]);
-    expect(setListStateMock).toHaveBeenCalledWith({
+    expect(setListStateSpy).toHaveBeenCalledWith({
       selectedAttributes: [
         { attribute: attributeNames.deviceType, scope: 'inventory' },
         { attribute: attributeNames.artifact, scope: 'inventory' },
@@ -149,7 +149,7 @@ describe('AuthorizedDevices Component', () => {
         { attribute: testKey, scope: 'inventory' }
       ]
     });
-    expect(setUserSettingsMock).toHaveBeenCalledWith({
+    expect(setUserSettingsSpy).toHaveBeenCalledWith({
       columnSelection: [
         { id: 'inventory-device_type', key: attributeNames.deviceType, name: attributeNames.deviceType, scope: 'inventory', title: 'Device type' },
         { id: 'inventory-rootfs-image.version', key: attributeNames.artifact, name: attributeNames.artifact, scope: 'inventory', title: 'Current software' },

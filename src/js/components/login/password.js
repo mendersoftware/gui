@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import LoginLogo from '../../../assets/img/loginlogo.svg';
@@ -46,14 +46,16 @@ const texts = {
   ]
 };
 
-export const Password = ({ passwordResetStart }) => {
+export const Password = () => {
   const [confirm, setConfirm] = useState(false);
 
-  const _handleSubmit = formData => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = formData => {
     if (!formData.hasOwnProperty('email')) {
       return;
     }
-    passwordResetStart(formData.email).then(() => setConfirm(true));
+    dispatch(passwordResetStart(formData.email)).then(() => setConfirm(true));
   };
 
   return (
@@ -71,7 +73,7 @@ export const Password = ({ passwordResetStart }) => {
               {text}
             </p>
           ))}
-          <Form showButtons={true} buttonColor="primary" onSubmit={_handleSubmit} submitLabel="Send password reset link" submitButtonId="password_button">
+          <Form showButtons={true} buttonColor="primary" onSubmit={handleSubmit} submitLabel="Send password reset link" submitButtonId="password_button">
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
           </Form>
         </>
@@ -80,6 +82,4 @@ export const Password = ({ passwordResetStart }) => {
   );
 };
 
-const actionCreators = { passwordResetStart };
-
-export default connect(null, actionCreators)(Password);
+export default Password;

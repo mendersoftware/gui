@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { Error as ErrorIcon } from '@mui/icons-material';
@@ -22,16 +22,19 @@ import { confirmCardUpdate, getCurrentCard, startCardUpdate } from '../../../act
 import CardSection from '../cardsection';
 import OrganizationSettingsItem from './organizationsettingsitem';
 
-export const OrganizationPaymentSettings = ({ card, confirmCardUpdate, getCurrentCard, hasUnpaid, setSnackbar, startCardUpdate }) => {
+export const OrganizationPaymentSettings = () => {
   const [isUpdatingPaymentDetails, setIsUpdatingPaymentDetails] = useState(false);
+  const card = useSelector(state => state.organization.card);
+  const hasUnpaid = useSelector(state => state.organization.billing);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getCurrentCard();
+    dispatch(getCurrentCard());
   }, []);
 
   const onCardConfirm = async () => {
-    await confirmCardUpdate();
-    getCurrentCard();
+    await dispatch(confirmCardUpdate());
+    dispatch(getCurrentCard());
     setIsUpdatingPaymentDetails(false);
   };
 
@@ -69,7 +72,12 @@ export const OrganizationPaymentSettings = ({ card, confirmCardUpdate, getCurren
         }}
         secondary={
           isUpdatingPaymentDetails && (
-            <CardSection onCancel={() => setIsUpdatingPaymentDetails(false)} onComplete={onCardConfirm} onSubmit={startCardUpdate} setSnackbar={setSnackbar} />
+            <CardSection
+              onCancel={() => setIsUpdatingPaymentDetails(false)}
+              onComplete={onCardConfirm}
+              onSubmit={() => dispatch(startCardUpdate())}
+              setSnackbar={text => dispatch(setSnackbar(text))}
+            />
           )
         }
         notification={
@@ -85,13 +93,4 @@ export const OrganizationPaymentSettings = ({ card, confirmCardUpdate, getCurren
   );
 };
 
-const actionCreators = { confirmCardUpdate, getCurrentCard, startCardUpdate, setSnackbar };
-
-const mapStateToProps = state => {
-  return {
-    card: state.organization.card,
-    hasUnpaid: state.organization.billing
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(OrganizationPaymentSettings);
+export default OrganizationPaymentSettings;

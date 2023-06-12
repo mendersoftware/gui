@@ -12,17 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Switch, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
-import { editUser, saveGlobalSettings, saveUserSettings } from '../../../actions/userActions';
+import { editUser, saveUserSettings } from '../../../actions/userActions';
 import { getToken } from '../../../auth';
 import * as UserConstants from '../../../constants/userConstants';
 import { toggle } from '../../../helpers';
-import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../../selectors';
+import { getCurrentUser, getFeatures, getIsEnterprise, getUserSettings } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Form from '../../common/forms/form';
 import PasswordInput from '../../common/forms/passwordinput';
@@ -42,27 +42,25 @@ const useStyles = makeStyles()(() => ({
   widthLimit: { maxWidth: 750 }
 }));
 
-export const SelfUserManagement = ({
-  canHave2FA,
-  currentUser,
-  editUser,
-  hasTracking,
-  hasTrackingConsent,
-  isEnterprise,
-  mode,
-  saveUserSettings,
-  setSnackbar
-}) => {
+export const SelfUserManagement = () => {
   const [editEmail, setEditEmail] = useState(false);
   const [editPass, setEditPass] = useState(false);
   const [emailFormId, setEmailFormId] = useState(new Date());
   const { classes } = useStyles();
+  const dispatch = useDispatch();
+
+  const { isHosted } = useSelector(getFeatures);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const canHave2FA = isEnterprise || isHosted;
+  const currentUser = useSelector(getCurrentUser);
+  const hasTracking = useSelector(state => !!state.app.trackerCode);
+  const { trackingConsentGiven: hasTrackingConsent, mode } = useSelector(getUserSettings);
 
   const editSubmit = userData => {
     if (userData.password != userData.password_confirmation) {
-      setSnackbar(`The passwords don't match`);
+      dispatch(setSnackbar(`The passwords don't match`));
     } else {
-      editUser(UserConstants.OWN_USER_ID, userData).then(() => {
+      dispatch(editUser(UserConstants.OWN_USER_ID, userData)).then(() => {
         setEditEmail(false);
         setEditPass(false);
       });
@@ -81,7 +79,7 @@ export const SelfUserManagement = ({
 
   const toggleMode = () => {
     const newMode = mode === 'dark' ? 'light' : 'dark';
-    saveUserSettings({ mode: newMode });
+    dispatch(saveUserSettings({ mode: newMode }));
   };
 
   const handlePass = () => setEditPass(toggle);
@@ -181,7 +179,7 @@ export const SelfUserManagement = ({
       {!isOAuth2 && <AccessTokenManagement />}
       {isEnterprise && hasTracking && (
         <div className="margin-top">
-          <div className="clickable flexbox space-between" onClick={() => saveUserSettings({ trackingConsentGiven: !hasTrackingConsent })}>
+          <div className="clickable flexbox space-between" onClick={() => dispatch(saveUserSettings({ trackingConsentGiven: !hasTrackingConsent }))}>
             <p className="help-content">Help us improve Mender</p>
             <Switch checked={!!hasTrackingConsent} />
           </div>
@@ -192,18 +190,4 @@ export const SelfUserManagement = ({
   );
 };
 
-const actionCreators = { editUser, saveGlobalSettings, saveUserSettings, setSnackbar };
-
-const mapStateToProps = state => {
-  const isEnterprise = getIsEnterprise(state);
-  return {
-    canHave2FA: isEnterprise || state.app.features.isHosted,
-    currentUser: getCurrentUser(state),
-    hasTracking: !!state.app.trackerCode,
-    hasTrackingConsent: getUserSettings(state).trackingConsentGiven,
-    mode: getUserSettings(state).mode,
-    isEnterprise
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(SelfUserManagement);
+export default SelfUserManagement;
