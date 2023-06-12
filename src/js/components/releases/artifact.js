@@ -28,7 +28,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Artifact = ({ artifact, columns, expanded, index, onEdit, onRowSelection, showRemoveArtifactDialog }) => {
+export const Artifact = ({ artifact, columns, expanded, index, onRowSelection, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
 
   return (
@@ -44,7 +44,7 @@ export const Artifact = ({ artifact, columns, expanded, index, onEdit, onRowSele
           </IconButton>
         </AccordionSummary>
         <AccordionDetails>
-          <ArtifactDetails artifact={artifact} editArtifact={onEdit} open={expanded} showRemoveArtifactDialog={showRemoveArtifactDialog} />
+          <ArtifactDetails artifact={artifact} open={expanded} showRemoveArtifactDialog={showRemoveArtifactDialog} />
         </AccordionDetails>
       </Accordion>
     </div>

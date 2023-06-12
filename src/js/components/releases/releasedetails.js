@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useMemo, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // material ui
@@ -32,11 +32,11 @@ import copy from 'copy-to-clipboard';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { editArtifact, removeArtifact, removeRelease, selectArtifact, selectRelease, uploadArtifact } from '../../actions/releaseActions';
+import { removeArtifact, removeRelease, selectArtifact, selectRelease } from '../../actions/releaseActions';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getFeatures, getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getFeatures, getOnboardingState, getShowHelptips, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
@@ -215,7 +215,7 @@ const ReleaseTags = ({ existingTags = [] }) => {
   );
 };
 
-const ArtifactsList = ({ artifacts, editArtifact, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog, showHelptips }) => {
+const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog, showHelptips }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
 
@@ -265,7 +265,6 @@ const ArtifactsList = ({ artifacts, editArtifact, selectArtifact, selectedArtifa
               columns={columns}
               expanded={expanded}
               index={index}
-              onEdit={editArtifact}
               onRowSelection={() => onRowSelection(pkg)}
               // this will be run after expansion + collapse and both need some time to fully settle
               // otherwise the measurements are off
@@ -283,22 +282,7 @@ const ArtifactsList = ({ artifacts, editArtifact, selectArtifact, selectedArtifa
   );
 };
 
-export const ReleaseDetails = ({
-  advanceOnboarding,
-  editArtifact,
-  features,
-  onboardingState,
-  pastDeploymentsCount,
-  release,
-  removeArtifact,
-  removeRelease,
-  selectArtifact,
-  selectedArtifact,
-  selectRelease,
-  setSnackbar,
-  showHelptips,
-  userCapabilities
-}) => {
+export const ReleaseDetails = () => {
   const [showRemoveDialog, setShowRemoveArtifactDialog] = useState(false);
   const [confirmReleaseDeletion, setConfirmReleaseDeletion] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -306,26 +290,30 @@ export const ReleaseDetails = ({
   const creationRef = useRef();
   const drawerRef = useRef();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { hasReleaseTags } = useSelector(getFeatures);
+  const onboardingState = useSelector(getOnboardingState);
+  const pastDeploymentsCount = useSelector(state => state.deployments.byStatus.finished.total);
+  const release = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
+  const selectedArtifact = useSelector(state => state.releases.selectedArtifact);
+  const showHelptips = useSelector(getShowHelptips);
+  const userCapabilities = useSelector(getUserCapabilities);
 
-  const { hasReleaseTags } = features;
-
-  const editArtifactData = (id, description) => editArtifact(id, { description });
-
-  const onRemoveArtifact = artifact => removeArtifact(artifact.id).finally(() => setShowRemoveArtifactDialog(false));
+  const onRemoveArtifact = artifact => dispatch(removeArtifact(artifact.id)).finally(() => setShowRemoveArtifactDialog(false));
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/releases') + '/releases'.length);
     copy(`${location}/${release.Name}`);
-    setSnackbar('Link copied to clipboard');
+    dispatch(setSnackbar('Link copied to clipboard'));
   };
 
-  const onCloseClick = () => selectRelease();
+  const onCloseClick = () => dispatch(selectRelease());
 
   const onCreateDeployment = () => {
     if (!onboardingState.complete) {
-      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING);
+      dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING));
       if (pastDeploymentsCount === 1) {
-        advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING);
+        dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING));
       }
     }
     navigate(`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(release.Name)}`);
@@ -333,7 +321,7 @@ export const ReleaseDetails = ({
 
   const onToggleReleaseDeletion = () => setConfirmReleaseDeletion(toggle);
 
-  const onDeleteRelease = () => removeRelease(release.Name).then(() => setConfirmReleaseDeletion(false));
+  const onDeleteRelease = () => dispatch(removeRelease(release.Name)).then(() => setConfirmReleaseDeletion(false));
 
   const artifacts = release.Artifacts ?? [];
   return (
@@ -361,8 +349,7 @@ export const ReleaseDetails = ({
       {hasReleaseTags && <ReleaseTags />}
       <ArtifactsList
         artifacts={artifacts}
-        editArtifact={editArtifactData}
-        selectArtifact={selectArtifact}
+        selectArtifact={artifact => dispatch(selectArtifact(artifact))}
         selectedArtifact={selectedArtifact}
         setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
         showHelptips={showHelptips}
@@ -385,18 +372,4 @@ export const ReleaseDetails = ({
   );
 };
 
-const actionCreators = { advanceOnboarding, editArtifact, removeArtifact, removeRelease, selectArtifact, selectRelease, setSnackbar, uploadArtifact };
-
-const mapStateToProps = state => {
-  return {
-    features: getFeatures(state),
-    onboardingState: getOnboardingState(state),
-    pastDeploymentsCount: state.deployments.byStatus.finished.total,
-    release: state.releases.byId[state.releases.selectedRelease] ?? {},
-    selectedArtifact: state.releases.selectedArtifact,
-    showHelptips: state.users.showHelptips,
-    userCapabilities: getUserCapabilities(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(ReleaseDetails);
+export default ReleaseDetails;

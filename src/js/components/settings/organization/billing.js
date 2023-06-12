@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 // material ui
@@ -25,7 +25,7 @@ import moment from 'moment';
 import { cancelRequest } from '../../../actions/organizationActions';
 import { ADDONS, PLANS } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
-import { getIsEnterprise, getUserRoles } from '../../../selectors';
+import { getAcceptedDevices, getDeviceLimit, getIsEnterprise, getOrganization, getUserRoles } from '../../../selectors';
 import Alert from '../../common/alert';
 import CancelRequestDialog from '../dialogs/cancelrequest';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
@@ -87,9 +87,16 @@ export const CancelSubscriptionButton = ({ handleCancelSubscription, isTrial }) 
   </p>
 );
 
-export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLimit, isAdmin, isEnterprise, organization }) => {
+export const Billing = () => {
   const [cancelSubscription, setCancelSubscription] = useState(false);
   const [cancelSubscriptionConfirmation, setCancelSubscriptionConfirmation] = useState(false);
+  const { isAdmin } = useSelector(getUserRoles);
+  const { total: acceptedDevices = 0 } = useSelector(getAcceptedDevices);
+  const deviceLimit = useSelector(getDeviceLimit);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const organization = useSelector(getOrganization);
+  const { plan: currentPlan = 'os' } = organization;
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { classes } = useStyles();
 
@@ -110,7 +117,7 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
     }, []) || [];
 
   const cancelSubscriptionSubmit = async reason =>
-    cancelRequest(organization.id, reason).then(() => {
+    dispatch(cancelRequest(organization.id, reason)).then(() => {
       setCancelSubscription(false);
       setCancelSubscriptionConfirmation(true);
     });
@@ -169,18 +176,4 @@ export const Billing = ({ acceptedDevices, cancelRequest, currentPlan, deviceLim
   );
 };
 
-const actionCreators = { cancelRequest };
-
-const mapStateToProps = state => {
-  const currentPlan = state.organization.organization.plan || 'os';
-  const { isAdmin } = getUserRoles(state);
-  return {
-    acceptedDevices: state.devices.byStatus.accepted.total,
-    currentPlan,
-    deviceLimit: state.devices.limit,
-    isAdmin,
-    isEnterprise: getIsEnterprise(state),
-    organization: state.organization.organization
-  };
-};
-export default connect(mapStateToProps, actionCreators)(Billing);
+export default Billing;

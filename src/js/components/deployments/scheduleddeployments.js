@@ -14,7 +14,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as RefreshIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
@@ -64,14 +64,25 @@ const tabs = {
 
 const type = DEPLOYMENT_STATES.scheduled;
 
-export const Scheduled = props => {
+export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [tabIndex, setTabIndex] = useState(tabs.list.index);
   const timer = useRef();
-
+  const items = useSelector(state => state.deployments.selectionState.scheduled.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments);
+  const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
+  const count = useSelector(state => state.deployments.byStatus.scheduled.total);
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const devices = useSelector(state => state.devices.byId);
+  // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
+  const isEnterprise = useSelector(state => {
+    const { plan = 'os' } = state.organization.organization;
+    return getIsEnterprise(state) || plan !== 'os';
+  });
+  const scheduledState = useSelector(state => state.deployments.selectionState.scheduled);
+  const dispatch = useDispatch();
+  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
   const { classes } = useStyles();
 
-  const { abort, canDeploy, createClick, getDeploymentsByStatus, isEnterprise, items, openReport, scheduledState, setDeploymentsState, setSnackbar } = props;
   const { page, perPage } = scheduledState;
 
   useEffect(() => {
@@ -80,7 +91,7 @@ export const Scheduled = props => {
     }
     refreshDeployments();
     return () => {
-      clearAllRetryTimers(setSnackbar);
+      clearAllRetryTimers(dispatchedSetSnackbar);
     };
   }, [isEnterprise]);
 
@@ -120,19 +131,31 @@ export const Scheduled = props => {
   }, [tabIndex]);
 
   const refreshDeployments = useCallback(() => {
-    return getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, page, perPage)
+    return dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, page, perPage))
       .then(deploymentsAction => {
-        clearRetryTimer(type, setSnackbar);
+        clearRetryTimer(type, dispatchedSetSnackbar);
         const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
         if (total && !deploymentIds.length) {
           return refreshDeployments();
         }
       })
-      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar));
+      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar));
   }, [page, perPage]);
 
   const abortDeployment = id => abort(id).then(refreshDeployments);
 
+  const props = {
+    ...remainder,
+    canDeploy,
+    canConfigure,
+    count,
+    devices,
+    idAttribute,
+    isEnterprise,
+    items,
+    openReport,
+    page
+  };
   return (
     <div className="fadeIn margin-left">
       {items.length ? (
@@ -156,8 +179,8 @@ export const Scheduled = props => {
               abort={abortDeployment}
               headers={headers}
               type={type}
-              onChangeRowsPerPage={perPage => setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page: 1, perPage } })}
-              onChangePage={page => setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page } })}
+              onChangeRowsPerPage={perPage => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page: 1, perPage } }))}
+              onChangePage={page => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.scheduled]: { page } }))}
             />
           )}
           {tabIndex === tabs.calendar.index && (
@@ -195,23 +218,4 @@ export const Scheduled = props => {
   );
 };
 
-const actionCreators = { getDeploymentsByStatus, setSnackbar, setDeploymentsState };
-
-const mapStateToProps = state => {
-  const scheduled = state.deployments.selectionState.scheduled.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  const { plan = 'os' } = state.organization.organization;
-  const { canConfigure, canDeploy } = getUserCapabilities(state);
-  return {
-    canConfigure,
-    canDeploy,
-    count: state.deployments.byStatus.scheduled.total,
-    devices: state.devices.byId,
-    idAttribute: getIdAttribute(state).attribute,
-    // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
-    isEnterprise: getIsEnterprise(state) || plan !== 'os',
-    items: scheduled,
-    scheduledState: state.deployments.selectionState.scheduled
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Scheduled);
+export default Scheduled;

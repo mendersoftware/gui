@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { Autocomplete, TextField } from '@mui/material';
@@ -54,18 +54,7 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 export const Past = props => {
-  const {
-    advanceOnboarding,
-    createClick,
-    getDeploymentsByStatus,
-    groups,
-    isShowingDetails,
-    onboardingState,
-    past,
-    pastSelectionState,
-    setDeploymentsState,
-    setSnackbar
-  } = props;
+  const { createClick, isShowingDetails } = props;
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const [tonight] = useState(getISOStringBoundaries(new Date()).end);
@@ -76,6 +65,21 @@ export const Past = props => {
   const [typeValue, setTypeValue] = useState('');
   const { classes } = useStyles();
 
+  const dispatch = useDispatch();
+  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
+
+  const past = useSelector(state => state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments);
+  const groups = useSelector(state => {
+    // eslint-disable-next-line no-unused-vars
+    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    return [ALL_DEVICES, ...Object.keys(groups)];
+  });
+  const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const onboardingState = useSelector(getOnboardingState);
+  const pastSelectionState = useSelector(state => state.deployments.selectionState.finished);
+  const devices = useSelector(state => state.devices.byId);
+
   const debouncedSearch = useDebounce(searchValue, TIMEOUTS.debounceDefault);
   const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
 
@@ -85,18 +89,18 @@ export const Past = props => {
     const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
     setLoading(true);
-    getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_OPTIONS.desc)
+    dispatch(getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_OPTIONS.desc))
       .then(deploymentsAction => {
         const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
         if (deploymentsList.length) {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
           const { start: startDate } = getISOStringBoundaries(newStartDate);
-          setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate } });
+          dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate } }));
         }
       })
       .finally(() => setLoading(false));
     return () => {
-      clearAllRetryTimers(setSnackbar);
+      clearAllRetryTimers(dispatchedSetSnackbar);
     };
   }, []);
 
@@ -122,25 +126,27 @@ export const Past = props => {
         accu,
       false
     );
+    let onboardingStep = onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION;
     if (pastDeploymentsFailed) {
-      advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
-    } else {
-      advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION);
+      onboardingStep = onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE;
     }
+    dispatch(advanceOnboarding(onboardingStep));
     setTimeout(() => {
-      let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState, { setSnackbar });
+      let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState, {
+        setSnackbar: dispatchedSetSnackbar
+      });
       // the following extra check is needed since this component will still be mounted if a user returns to the initial tab after the first
       // onboarding deployment & thus the effects will still run, so only ever consider the notification for the second deployment
       notification =
         past.length > 1
-          ? getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar }, notification)
+          ? getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar: dispatchedSetSnackbar }, notification)
           : notification;
-      !!notification && setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
+      !!notification && dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true));
     }, 400);
   }, [past.length, onboardingState.complete]);
 
   useEffect(() => {
-    setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, search: debouncedSearch, type: debouncedType } });
+    dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, search: debouncedSearch, type: debouncedType } }));
   }, [debouncedSearch, debouncedType]);
 
   /*
@@ -157,15 +163,15 @@ export const Past = props => {
   ) => {
     const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
     const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
-    return getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType)
+    return dispatch(getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType))
       .then(deploymentsAction => {
-        clearRetryTimer(type, setSnackbar);
+        clearRetryTimer(type, dispatchedSetSnackbar);
         const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
         if (total && !deploymentIds.length) {
           return refreshPast(currentPage, currentPerPage, currentStartDate, currentEndDate, currentDeviceGroup);
         }
       })
-      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar));
+      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar));
   };
 
   let onboardingComponent = null;
@@ -175,7 +181,10 @@ export const Past = props => {
       ? deploymentsRef.current.offsetLeft + detailsButtons[0].offsetLeft + detailsButtons[0].offsetWidth / 2 + 15
       : deploymentsRef.current.offsetWidth;
     let anchor = { left: deploymentsRef.current.offsetWidth / 2, top: deploymentsRef.current.offsetTop };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor, setSnackbar });
+    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, {
+      anchor,
+      setSnackbar: dispatchedSetSnackbar
+    });
     onboardingComponent = getOnboardingComponentFor(
       onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE,
       onboardingState,
@@ -199,7 +208,7 @@ export const Past = props => {
     setTypeValue(value);
   };
 
-  const onTimeFilterChange = (startDate, endDate) => setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, startDate, endDate } });
+  const onTimeFilterChange = (startDate, endDate) => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, startDate, endDate } }));
 
   return (
     <div className="fadeIn margin-left margin-top-large">
@@ -242,13 +251,17 @@ export const Past = props => {
         {!!past.length && (
           <DeploymentsList
             {...props}
+            canConfigure={canConfigure}
+            canDeploy={canDeploy}
+            devices={devices}
+            idAttribute={idAttribute}
             componentClass="margin-left-small"
             count={count}
             headers={headers}
             items={past}
             page={page}
-            onChangeRowsPerPage={perPage => setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, perPage } })}
-            onChangePage={page => setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page } })}
+            onChangeRowsPerPage={perPage => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, perPage } }))}
+            onChangePage={page => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page } }))}
             pageSize={perPage}
             rootRef={deploymentsRef}
             showPagination
@@ -269,23 +282,4 @@ export const Past = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, getDeploymentsByStatus, setDeploymentsState, setSnackbar };
-
-const mapStateToProps = state => {
-  const past = state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments;
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  const { canConfigure, canDeploy } = getUserCapabilities(state);
-  return {
-    canConfigure,
-    canDeploy,
-    devices: state.devices.byId,
-    groups: [ALL_DEVICES, ...Object.keys(groups)],
-    idAttribute: getIdAttribute(state).attribute,
-    onboardingState: getOnboardingState(state),
-    past,
-    pastSelectionState: state.deployments.selectionState.finished
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Past);
+export default Past;

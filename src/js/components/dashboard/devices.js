@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { getDeviceCount } from '../../actions/deviceActions';
@@ -21,7 +21,14 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getAvailableIssueOptionsByType, getOnboardingState, getUserCapabilities } from '../../selectors';
+import {
+  getAcceptedDevices,
+  getAvailableIssueOptionsByType,
+  getDeviceCountsByStatus,
+  getOnboardingState,
+  getShowHelptips,
+  getUserCapabilities
+} from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -29,27 +36,20 @@ import ActionableDevices from './widgets/actionabledevices';
 import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 
-export const Devices = props => {
+export const Devices = ({ clickHandle }) => {
   const [loading, setLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const anchor = useRef();
   const pendingsRef = useRef();
   const navigate = useNavigate();
-
-  const {
-    acceptedDevicesCount,
-    advanceOnboarding,
-    availableIssueOptions,
-    canManageDevices,
-    clickHandle,
-    getDeviceCount,
-    getIssueCountsByType,
-    onboardingState,
-    pendingDevicesCount,
-    setShowConnectingDialog,
-    showHelptips
-  } = props;
+  const dispatch = useDispatch();
+  const { total: acceptedDevicesCount } = useSelector(getAcceptedDevices);
+  const availableIssueOptions = useSelector(getAvailableIssueOptionsByType);
+  const { canManageDevices } = useSelector(getUserCapabilities);
+  const onboardingState = useSelector(getOnboardingState);
+  const { pending: pendingDevicesCount } = useSelector(getDeviceCountsByStatus);
+  const showHelptips = useSelector(getShowHelptips);
 
   useEffect(() => {
     // on render the store might not be updated so we resort to the API and let all later request go through the store
@@ -65,13 +65,15 @@ export const Devices = props => {
     if (loading) {
       return;
     }
-    const issueRequests = Object.keys(availableIssueOptions).map(key => getIssueCountsByType(key, { filters: [], selectedIssues: [key] }));
+    const issueRequests = Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters: [], selectedIssues: [key] })));
     setLoading(true);
-    return Promise.all([getDeviceCount(DEVICE_STATES.accepted), getDeviceCount(DEVICE_STATES.pending), ...issueRequests]).finally(() => setLoading(false));
+    return Promise.all([dispatch(getDeviceCount(DEVICE_STATES.accepted)), dispatch(getDeviceCount(DEVICE_STATES.pending)), ...issueRequests]).finally(() =>
+      setLoading(false)
+    );
   };
 
   const onConnectClick = () => {
-    setShowConnectingDialog(true);
+    dispatch(setShowConnectingDialog(true));
     navigate('/devices/accepted');
   };
 
@@ -96,7 +98,7 @@ export const Devices = props => {
         {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} />}
         {!!pendingDevicesCount && !acceptedDevicesCount && (
           <PendingDevices
-            advanceOnboarding={advanceOnboarding}
+            advanceOnboarding={step => dispatch(advanceOnboarding(step))}
             innerRef={pendingsRef}
             isActive={pendingDevicesCount > 0}
             onboardingState={onboardingState}
@@ -114,18 +116,4 @@ export const Devices = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, getDeviceCount, getIssueCountsByType, setShowConnectingDialog };
-
-const mapStateToProps = state => {
-  const { canManageDevices } = getUserCapabilities(state);
-  return {
-    canManageDevices,
-    acceptedDevicesCount: state.devices.byStatus.accepted.total,
-    availableIssueOptions: getAvailableIssueOptionsByType(state),
-    onboardingState: getOnboardingState(state),
-    pendingDevicesCount: state.devices.byStatus.pending.total,
-    showHelptips: state.users.showHelptips
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Devices);
+export default Devices;

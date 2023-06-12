@@ -100,10 +100,6 @@ describe('release reducer', () => {
       ).selectedRelease
     ).toEqual('test2');
   });
-  it('should handle SHOW_REMOVE_DIALOG', async () => {
-    expect(reducer(undefined, { type: ReleaseConstants.SHOW_REMOVE_DIALOG, showRemoveDialog: true }).showRemoveDialog).toEqual(true);
-    expect(reducer(initialState, { type: ReleaseConstants.SHOW_REMOVE_DIALOG, showRemoveDialog: true }).showRemoveDialog).toEqual(true);
-  });
   it('should handle SELECTED_ARTIFACT', async () => {
     expect(reducer(undefined, { type: ReleaseConstants.SELECTED_ARTIFACT, artifact: testRelease.Artifacts[0] }).selectedArtifact.name).toEqual('test');
     expect(reducer(initialState, { type: ReleaseConstants.SELECTED_ARTIFACT, artifact: testRelease.Artifacts[0] }).selectedArtifact.name).toEqual('test');

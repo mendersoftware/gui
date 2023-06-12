@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '@mui/icons-material';
@@ -23,6 +23,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { cancelUpgrade, completeUpgrade, getUserOrganization, requestPlanChange, startUpgrade } from '../../actions/organizationActions';
 import { PLANS, TIMEOUTS } from '../../constants/appConstants';
+import { getFeatures, getOrganization } from '../../selectors';
 import InfoText from '../common/infotext';
 import Loader from '../common/loader';
 import AddOnSelection from './addonselection';
@@ -71,26 +72,18 @@ const upgradeNotes = {
   }
 };
 
-export const Upgrade = ({
-  cancelUpgrade,
-  completeUpgrade,
-  features,
-  getDeviceLimit,
-  getUserOrganization,
-  org,
-  requestPlanChange,
-  setSnackbar,
-  startUpgrade
-}) => {
+export const Upgrade = () => {
   const offerValid = moment().isBefore('2021-01-01');
-
   const [addOns, setAddOns] = useState([]);
   const [updatedPlan, setUpdatedPlan] = useState('os');
   const [upgraded, setUpgraded] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const features = useSelector(getFeatures);
+  const org = useSelector(getOrganization);
 
   useEffect(() => {
-    getUserOrganization();
+    dispatch(getUserOrganization());
   }, []);
 
   useEffect(() => {
@@ -111,10 +104,10 @@ export const Upgrade = ({
   }
 
   const handleUpgrade = async () =>
-    completeUpgrade(org.id, updatedPlan).then(() => {
+    dispatch(completeUpgrade(org.id, updatedPlan)).then(() => {
       setUpgraded(true);
       setTimeout(() => {
-        getDeviceLimit();
+        dispatch(getDeviceLimit());
         navigate('/settings/organization-and-billing');
       }, TIMEOUTS.threeSeconds);
     });
@@ -130,13 +123,15 @@ export const Upgrade = ({
       .join(', ');
 
   const onSendRequest = (message, addons = addOns) =>
-    requestPlanChange(org.id, {
-      current_plan: PLANS[org.plan || 'os'].name,
-      requested_plan: PLANS[updatedPlan].name,
-      current_addons: addOnsToString(org.addons) || '-',
-      requested_addons: addOnsToString(addons) || '-',
-      user_message: message
-    });
+    dispatch(
+      requestPlanChange(org.id, {
+        current_plan: PLANS[org.plan || 'os'].name,
+        requested_plan: PLANS[updatedPlan].name,
+        current_addons: addOnsToString(org.addons) || '-',
+        requested_addons: addOnsToString(addons) || '-',
+        user_message: message
+      })
+    );
 
   const { plan: currentPlan = 'os', trial: isTrial = true } = org;
   const { description, title } = isTrial ? upgradeNotes.trial : upgradeNotes.default;
@@ -181,10 +176,10 @@ export const Upgrade = ({
             for <b>{PLANS[updatedPlan].price}</b>
           </p>
           <CardSection
-            onCancel={() => Promise.resolve(cancelUpgrade(org.id))}
+            onCancel={() => Promise.resolve(dispatch(cancelUpgrade(org.id)))}
             onComplete={handleUpgrade}
-            onSubmit={() => Promise.resolve(startUpgrade(org.id))}
-            setSnackbar={setSnackbar}
+            onSubmit={() => Promise.resolve(dispatch(startUpgrade(org.id)))}
+            setSnackbar={message => dispatch(setSnackbar(message))}
             isSignUp={true}
           />
         </>
@@ -196,13 +191,4 @@ export const Upgrade = ({
   );
 };
 
-const actionCreators = { cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, requestPlanChange, setSnackbar, startUpgrade };
-
-const mapStateToProps = state => {
-  return {
-    features: state.app.features,
-    org: state.organization.organization
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Upgrade);
+export default Upgrade;

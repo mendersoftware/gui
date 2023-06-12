@@ -105,7 +105,7 @@ export const logoutUser = reason => (dispatch, getState) => {
 };
 
 export const passwordResetStart = email => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err =>
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email }).catch(err =>
     commonErrorHandler(err, `The password reset request cannot be processed:`, dispatch, undefined, true)
   );
 

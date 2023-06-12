@@ -14,14 +14,16 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import { DeviceNameInput } from './devicenameinput';
+import * as AppActions from '../../actions/appActions';
+import * as DeviceActions from '../../actions/deviceActions';
+import DeviceNameInput from './devicenameinput';
 
 const mockStore = configureStore([thunk]);
 
@@ -31,7 +33,11 @@ describe('DeviceNameInput Component', () => {
     store = mockStore({ ...defaultState });
   });
   it('renders correctly', async () => {
-    const { baseElement } = render(<DeviceNameInput device={defaultState.devices.byId.a1} isHovered setSnackbar={jest.fn} setDeviceTags={jest.fn} />);
+    const { baseElement } = render(
+      <Provider store={store}>
+        <DeviceNameInput device={defaultState.devices.byId.a1} isHovered />
+      </Provider>
+    );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -39,17 +45,11 @@ describe('DeviceNameInput Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const submitCheck = jest.fn();
-    submitCheck.mockResolvedValue();
-    const snackCheck = jest.fn();
+    const deviceTagsSpy = jest.spyOn(DeviceActions, 'setDeviceTags');
+    const snackbarSpy = jest.spyOn(AppActions, 'setSnackbar');
     const ui = (
       <Provider store={store}>
-        <DeviceNameInput
-          device={{ ...defaultState.devices.byId.a1, tags: { name: 'testname' } }}
-          isHovered
-          setSnackbar={snackCheck}
-          setDeviceTags={submitCheck}
-        />
+        <DeviceNameInput device={{ ...defaultState.devices.byId.a1, tags: { name: 'testname' } }} isHovered />
       </Provider>
     );
     const { rerender } = render(ui);
@@ -58,7 +58,8 @@ describe('DeviceNameInput Component', () => {
     await waitFor(() => rerender(ui));
     await user.type(screen.getByDisplayValue(/testname/i), 'something');
     await user.click(screen.getAllByRole('button')[0]);
-    expect(submitCheck).toHaveBeenCalledWith(defaultState.devices.byId.a1.id, { name: 'testnamesomething' });
-    expect(snackCheck).toHaveBeenCalled();
+    await act(async () => jest.runAllTicks());
+    await waitFor(() => expect(snackbarSpy).toHaveBeenCalledWith('Device name changed'));
+    expect(deviceTagsSpy).toHaveBeenCalledWith(defaultState.devices.byId.a1.id, { name: 'testnamesomething' });
   });
 });

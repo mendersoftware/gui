@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useTheme } from '@mui/material/styles';
 
@@ -21,12 +21,18 @@ import { getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 
-export const DeviceConfiguration = ({ canReadDevices, device, idAttribute, item, getDeviceById, onClose }) => {
+export const DeviceConfiguration = ({ item, onClose }) => {
+  const { object = {} } = item;
+  const { canReadDevices } = useSelector(getUserCapabilities);
+  const device = useSelector(state => state.devices.byId[object.id]);
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const dispatch = useDispatch();
+
   const theme = useTheme();
   useEffect(() => {
     const { object } = item;
     if (!device && canReadDevices) {
-      getDeviceById(object.id);
+      dispatch(getDeviceById(object.id));
     }
   }, []);
 
@@ -52,17 +58,4 @@ export const DeviceConfiguration = ({ canReadDevices, device, idAttribute, item,
   );
 };
 
-const actionCreators = { getDeviceById };
-
-const mapStateToProps = (state, ownProps) => {
-  const { item = {} } = ownProps;
-  const deviceId = item.object.id;
-  const { canReadDevices } = getUserCapabilities(state);
-  return {
-    canReadDevices,
-    device: state.devices.byId[deviceId],
-    idAttribute: getIdAttribute(state).attribute
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(DeviceConfiguration);
+export default DeviceConfiguration;

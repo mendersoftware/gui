@@ -32,7 +32,14 @@ const mockStore = configureStore([thunk]);
 describe('Help Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = mockStore({
+      ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: { ...defaultState.app.features, hasAddons: true, isEnterprise: true },
+        versionInformation: { latestRelease: helpProps.versions }
+      }
+    });
   });
 
   it('renders correctly', async () => {
@@ -55,7 +62,11 @@ describe('Help Component', () => {
   describe('static components', () => {
     [Downloads, GettingStarted, MenderHub, Support].forEach(Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
-        const { baseElement } = render(<Component {...helpProps} />);
+        const { baseElement } = render(
+          <Provider store={store}>
+            <Component {...helpProps} />
+          </Provider>
+        );
         const view = baseElement.firstChild.firstChild;
         expect(view).toMatchSnapshot();
         expect(view).toEqual(expect.not.stringMatching(undefineds));

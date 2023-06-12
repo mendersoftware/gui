@@ -21,7 +21,8 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import Login, { Login as LoginComponent } from './login';
+import * as UserActions from '../../actions/userActions';
+import Login from './login';
 
 const mockStore = configureStore([thunk]);
 
@@ -53,20 +54,26 @@ describe('Login Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const submitCheck = jest.fn().mockResolvedValue();
-    const ui = <LoginComponent isHosted={true} currentUser={{}} loginUser={submitCheck} logoutUser={jest.fn} setSnackbar={jest.fn} />;
+    const loginSpy = jest.spyOn(UserActions, 'loginUser');
+    const origDispatch = store.dispatch;
+    store.dispatch = jest.fn(origDispatch);
+    const ui = (
+      <Provider store={store}>
+        <Login />
+      </Provider>
+    );
     const { rerender } = render(ui);
 
     await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
     await user.type(screen.queryByLabelText(/password/i), 'mysecretpassword!123');
     expect(screen.queryByLabelText(/Two Factor Authentication Code/i)).not.toBeInTheDocument();
-    submitCheck.mockRejectedValueOnce({ error: '2fa needed' });
+    store.dispatch.mockRejectedValueOnce({ error: '2fa needed' });
     await user.click(screen.getByRole('button', { name: /Log in/i }));
-    expect(submitCheck).toHaveBeenCalled();
+    expect(loginSpy).toHaveBeenCalled();
     await waitFor(() => rerender(ui));
     expect(screen.queryByLabelText(/Two Factor Authentication Code/i)).toBeInTheDocument();
     await user.type(screen.queryByLabelText(/Two Factor Authentication Code/i), '123456');
     await user.click(screen.getByRole('button', { name: /Log in/i }));
-    expect(submitCheck).toHaveBeenCalled();
+    expect(loginSpy).toHaveBeenCalledWith({ email: 'something@example.com', password: 'mysecretpassword!123', token2fa: '123456' }, false);
   });
 });

@@ -19,7 +19,7 @@ import https from 'https';
 import md5 from 'md5';
 
 import test, { expect } from '../fixtures/fixtures';
-import { selectors } from '../utils/constants';
+import { selectors, timeouts } from '../utils/constants';
 
 dayjs.extend(isBetween);
 
@@ -34,7 +34,7 @@ test.describe('Files', () => {
     await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
     await page.click(`.MuiDialog-paper button:has-text('Upload')`);
     // give some extra time for the upload
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(timeouts.fiveSeconds);
   });
 
   // test('allows uploading custom file creations', () => {
@@ -55,7 +55,7 @@ test.describe('Files', () => {
     await page.click(`.leftNav :text('Releases')`);
     await page.click(`text=/mender-demo-artifact/i`);
     await page.click('.expandButton');
-    await page.waitForSelector(`text=Download Artifact`, { timeout: 2000 });
+    await page.waitForSelector(`text=Download Artifact`, { timeout: timeouts.default });
     expect(await page.isVisible(`text=Download Artifact`)).toBeTruthy();
     // unfortunately the firefox integration gets flaky with the download attribute set + the chrome + webkit integrations time out
     // waiting for the download event almost every time => work around by getting the file
@@ -74,9 +74,9 @@ test.describe('Files', () => {
     await page.click(`.deviceListItem div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
-    await page.waitForSelector('text=/file transfer/i', { timeout: 10000 });
+    await page.waitForSelector('text=/file transfer/i', { timeout: timeouts.tenSeconds });
     await page.click(`css=.expandedDevice >> text=file transfer`);
-    await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });
+    await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
     await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
     await page.click(selectors.placeholderExample, { clickCount: 3 });
     await page.type(selectors.placeholderExample, `/tmp/${fileName}`);

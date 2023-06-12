@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Cancel as CancelIcon } from '@mui/icons-material';
 import { Drawer, IconButton, LinearProgress, Tooltip, drawerClasses } from '@mui/material';
@@ -63,9 +63,10 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const UploadProgressBar = ({ cancelFileUpload, classes, upload, uploadId }) => {
+const UploadProgressBar = ({ classes, upload, uploadId }) => {
   const { name, size, uploadProgress } = upload;
-  const onCancelClick = useCallback(() => cancelFileUpload(uploadId), [uploadId]);
+  const dispatch = useDispatch();
+  const onCancelClick = useCallback(() => dispatch(cancelFileUpload(uploadId)), [uploadId]);
   return (
     <div className={classes.progressContainer}>
       <div className="info flexbox centered">
@@ -81,9 +82,11 @@ const UploadProgressBar = ({ cancelFileUpload, classes, upload, uploadId }) => {
   );
 };
 
-const Uploads = ({ cancelFileUpload, uploads }) => {
+const Uploads = () => {
   const [isHovering, setIsHovering] = useState(false);
   const { classes } = useStyles();
+
+  const uploads = useSelector(state => state.app.uploadsById);
 
   const isUploading = !!Object.keys(uploads).length;
   const uploadProgress = Object.values(uploads).reduce((accu, item, currentIndex, items) => {
@@ -103,19 +106,11 @@ const Uploads = ({ cancelFileUpload, uploads }) => {
       <Drawer anchor="bottom" className={classes.drawer} open={isUploading && isHovering} onClose={onClose}>
         <h3>{pluralize('Upload', Object.keys(uploads).length)} in progress</h3>
         {Object.entries(uploads).map(([uploadId, upload]) => (
-          <UploadProgressBar cancelFileUpload={cancelFileUpload} classes={classes} key={uploadId} upload={upload} uploadId={uploadId} />
+          <UploadProgressBar classes={classes} key={uploadId} upload={upload} uploadId={uploadId} />
         ))}
       </Drawer>
     </div>
   );
 };
 
-const actionCreators = { cancelFileUpload };
-
-const mapStateToProps = state => {
-  return {
-    uploads: state.app.uploadsById
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Uploads);
+export default Uploads;

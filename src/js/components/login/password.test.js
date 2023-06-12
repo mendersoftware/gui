@@ -21,7 +21,7 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import Password, { Password as PasswordComponent } from './password';
+import Password from './password';
 
 const mockStore = configureStore([thunk]);
 
@@ -45,7 +45,11 @@ describe('Password Component', () => {
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const submitCheck = jest.fn().mockResolvedValue(true);
-    const ui = <PasswordComponent passwordResetStart={submitCheck} />;
+    const ui = (
+      <Provider store={store}>
+        <Password passwordResetStart={submitCheck} />
+      </Provider>
+    );
     const { rerender } = render(ui);
 
     await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');

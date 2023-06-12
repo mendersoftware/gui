@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { Add as AddIcon, ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
@@ -40,17 +40,27 @@ const columns = [
   }
 ];
 
-export const RoleManagement = ({ createRole, editRole, features, getDynamicGroups, getGroups, getRoles, groups, releaseTags, removeRole, roles }) => {
+export const RoleManagement = () => {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const [role, setRole] = useState({ ...emptyRole });
+  const dispatch = useDispatch();
+  const features = useSelector(getFeatures);
+  const groups = useSelector(state => {
+    // eslint-disable-next-line no-unused-vars
+    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    return groups;
+  });
+  const releaseTags = useSelector(state => state.releases.releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}));
+  const roles = useSelector(state => Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })));
 
   useEffect(() => {
-    if (!Object.keys(groups).length) {
-      getDynamicGroups();
-      getGroups();
-      getRoles();
+    if (Object.keys(groups).length) {
+      return;
     }
+    dispatch(getDynamicGroups());
+    dispatch(getGroups());
+    dispatch(getRoles());
   }, []);
 
   const addRole = () => {
@@ -72,9 +82,9 @@ export const RoleManagement = ({ createRole, editRole, features, getDynamicGroup
 
   const onSubmit = submittedRole => {
     if (adding) {
-      createRole(submittedRole);
+      dispatch(createRole(submittedRole));
     } else {
-      editRole(submittedRole);
+      dispatch(editRole(submittedRole));
     }
     onCancel();
   };
@@ -102,7 +112,7 @@ export const RoleManagement = ({ createRole, editRole, features, getDynamicGroup
         features={features}
         onCancel={onCancel}
         onSubmit={onSubmit}
-        removeRole={removeRole}
+        removeRole={name => dispatch(removeRole(name))}
         selectedRole={role}
         stateGroups={groups}
         stateReleaseTags={releaseTags}
@@ -111,17 +121,4 @@ export const RoleManagement = ({ createRole, editRole, features, getDynamicGroup
   );
 };
 
-const actionCreators = { createRole, editRole, getDynamicGroups, getGroups, getRoles, removeRole };
-
-const mapStateToProps = state => {
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  return {
-    features: getFeatures(state),
-    groups,
-    releaseTags: state.releases.releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}),
-    roles: Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role }))
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(RoleManagement);
+export default RoleManagement;

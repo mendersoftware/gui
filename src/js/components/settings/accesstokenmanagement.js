@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import {
@@ -38,7 +38,7 @@ import { makeStyles } from 'tss-react/mui';
 import { generateToken, getTokens, revokeToken } from '../../actions/userActions';
 import { canAccess as canShow } from '../../constants/appConstants';
 import { customSort, toggle } from '../../helpers';
-import { getCurrentUser, getTenantCapabilities } from '../../selectors';
+import { getCurrentUser, getIsEnterprise } from '../../selectors';
 import CopyCode from '../common/copy-code';
 import Time, { RelativeTime } from '../common/time';
 
@@ -100,7 +100,7 @@ const expirationTimes = {
   'a year': { value: 365 * A_DAY }
 };
 
-export const AccessTokenCreationDialog = ({ onCancel, generateToken, isEnterprise, rolesById, setToken, token, userRoles }) => {
+export const AccessTokenCreationDialog = ({ onCancel, generateToken, isEnterprise, rolesById, token, userRoles }) => {
   const [name, setName] = useState('');
   const [expirationTime, setExpirationTime] = useState(expirationTimes['a year'].value);
   const [expirationDate, setExpirationDate] = useState(new Date());
@@ -115,10 +115,7 @@ export const AccessTokenCreationDialog = ({ onCancel, generateToken, isEnterpris
     setHint(hint);
   }, [expirationTime]);
 
-  const onGenerateClick = useCallback(
-    () => generateToken({ name, expiresIn: expirationTime }).then(results => setToken(results[results.length - 1])),
-    [name, expirationTime]
-  );
+  const onGenerateClick = useCallback(() => generateToken({ name, expiresIn: expirationTime }), [name, expirationTime]);
 
   const onChangeExpirationTime = ({ target: { value } }) => setExpirationTime(value);
 
@@ -192,15 +189,19 @@ export const AccessTokenRevocationDialog = ({ onCancel, revokeToken, token }) =>
   </Dialog>
 );
 
-export const AccessTokenManagement = ({ generateToken, getTokens, revokeToken, isEnterprise, rolesById, tokens = [], userRoles = [] }) => {
+export const AccessTokenManagement = () => {
   const [showGeneration, setShowGeneration] = useState(false);
   const [showRevocation, setShowRevocation] = useState(false);
   const [currentToken, setCurrentToken] = useState(null);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const { tokens = [], roles: userRoles = [] } = useSelector(getCurrentUser);
+  const rolesById = useSelector(state => state.users.rolesById);
+  const dispatch = useDispatch();
 
   const { classes } = useStyles();
 
   useEffect(() => {
-    getTokens();
+    dispatch(getTokens());
   }, []);
 
   const toggleGenerateClick = () => {
@@ -213,12 +214,14 @@ export const AccessTokenManagement = ({ generateToken, getTokens, revokeToken, i
     setShowRevocation(toggle);
   };
 
-  const onRevokeClick = token => revokeToken(token).then(() => toggleRevocationClick());
+  const onRevokeClick = token => dispatch(revokeToken(token)).then(() => toggleRevocationClick());
 
   const onRevokeTokenClick = token => {
     toggleRevocationClick();
     setCurrentToken(token);
   };
+
+  const onGenerateClick = config => dispatch(generateToken(config)).then(results => setCurrentToken(results[results.length - 1]));
 
   const hasLastUsedInfo = useMemo(() => tokens.some(token => !!token.last_used), [tokens]);
 
@@ -265,10 +268,9 @@ export const AccessTokenManagement = ({ generateToken, getTokens, revokeToken, i
       {showGeneration && (
         <AccessTokenCreationDialog
           onCancel={toggleGenerateClick}
-          generateToken={generateToken}
+          generateToken={onGenerateClick}
           isEnterprise={isEnterprise}
           rolesById={rolesById}
-          setToken={setCurrentToken}
           token={currentToken}
           userRoles={userRoles}
         />
@@ -278,17 +280,4 @@ export const AccessTokenManagement = ({ generateToken, getTokens, revokeToken, i
   );
 };
 
-const actionCreators = { generateToken, getTokens, revokeToken };
-
-const mapStateToProps = state => {
-  const { isEnterprise } = getTenantCapabilities(state);
-  const { tokens, roles: userRoles } = getCurrentUser(state);
-  return {
-    isEnterprise,
-    rolesById: state.users.rolesById,
-    tokens,
-    userRoles
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(AccessTokenManagement);
+export default AccessTokenManagement;

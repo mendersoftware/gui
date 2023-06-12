@@ -190,12 +190,10 @@ export const TroubleshootTab = ({
     />
     <Troubleshootdialog
       device={device}
-      hasAuditlogs={hasAuditlogs}
       open={Boolean(troubleshootType)}
       onCancel={() => setTroubleshootType()}
       setSocketClosed={setSocketClosed}
       type={troubleshootType}
-      userCapabilities={userCapabilities}
     />
   </>
 );

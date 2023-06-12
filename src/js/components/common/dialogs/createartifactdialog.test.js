@@ -30,7 +30,7 @@ describe('CreateArtifactDialog Component', () => {
       ...defaultState,
       onboarding: {
         ...defaultState.onboarding,
-        showCreateArtifactDialog: undefined
+        showCreateArtifactDialog: true
       }
     });
   });

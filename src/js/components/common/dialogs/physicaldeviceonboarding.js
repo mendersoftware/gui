@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
@@ -23,7 +23,7 @@ import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } fro
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
-import { getDocsVersion, getIsEnterprise, getOnboardingState } from '../../../selectors';
+import { getDocsVersion, getFeatures, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization, getVersionInformation } from '../../../selectors';
 import CopyCode from '../copy-code';
 import { MenderTooltipClickable } from '../mendertooltip';
 
@@ -181,35 +181,35 @@ const steps = {
   2: InstallationStep
 };
 
-export const PhysicalDeviceOnboarding = ({
-  advanceOnboarding,
-  docsVersion,
-  hasExternalIntegration,
-  integrationProvider,
-  ipAddress,
-  isHosted,
-  isEnterprise,
-  isDemoMode,
-  isPreRelease,
-  onboardingState,
-  progress,
-  setOnboardingApproach,
-  setOnboardingDeviceType,
-  tenantToken,
-  version
-}) => {
+const integrationProvider = EXTERNAL_PROVIDER['iot-hub'].provider;
+
+export const PhysicalDeviceOnboarding = ({ progress }) => {
   const [selection, setSelection] = useState('');
+  const hasExternalIntegration = useSelector(state => {
+    const { credentials = {} } = state.organization.externalDeviceIntegrations.find(integration => integration.provider === integrationProvider) ?? {};
+    const { [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: azureConnectionString = '' } = credentials;
+    return !!azureConnectionString;
+  });
+  const docsVersion = useSelector(getDocsVersion);
+  const ipAddress = useSelector(state => state.app.hostAddress);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const { isDemoMode, isHosted } = useSelector(getFeatures);
+  const isPreRelease = useSelector(getIsPreview);
+  const onboardingState = useSelector(getOnboardingState);
+  const { tenant_token: tenantToken } = useSelector(getOrganization);
+  const { Integration: version } = useSelector(getVersionInformation);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setOnboardingApproach('physical');
+    dispatch(setOnboardingApproach('physical'));
   }, []);
 
   const onSelect = (e, deviceType, reason) => {
     if (reason === 'selectOption') {
-      setOnboardingDeviceType(deviceType.value);
+      dispatch(setOnboardingDeviceType(deviceType.value));
       setSelection(deviceType.value);
     } else if (reason === 'clear') {
-      setOnboardingDeviceType('');
+      dispatch(setOnboardingDeviceType(''));
       setSelection('');
     }
   };
@@ -219,7 +219,7 @@ export const PhysicalDeviceOnboarding = ({
   const ComponentToShow = steps[progress];
   return (
     <ComponentToShow
-      advanceOnboarding={advanceOnboarding}
+      advanceOnboarding={step => dispatch(advanceOnboarding(step))}
       hasExternalIntegration={hasExternalIntegration}
       docsVersion={docsVersion}
       hasConvertedImage={hasConvertedImage}
@@ -238,25 +238,4 @@ export const PhysicalDeviceOnboarding = ({
   );
 };
 
-const actionCreators = { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType };
-
-const mapStateToProps = state => {
-  const integrationProvider = EXTERNAL_PROVIDER['iot-hub'].provider;
-  const { credentials = {} } = state.organization.externalDeviceIntegrations.find(integration => integration.provider === integrationProvider) ?? {};
-  const { [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: azureConnectionString = '' } = credentials;
-  return {
-    docsVersion: getDocsVersion(state),
-    hasExternalIntegration: azureConnectionString,
-    integrationProvider,
-    ipAddress: state.app.hostAddress,
-    isEnterprise: getIsEnterprise(state),
-    isHosted: state.app.features.isHosted,
-    isDemoMode: state.app.features.isDemoMode,
-    isPreRelease: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
-    onboardingState: getOnboardingState(state),
-    tenantToken: state.organization.organization.tenant_token,
-    version: state.app.versionInformation.Integration
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(PhysicalDeviceOnboarding);
+export default PhysicalDeviceOnboarding;
