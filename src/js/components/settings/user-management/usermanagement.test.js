@@ -21,6 +21,7 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds, userId } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import { yes } from '../../../constants/appConstants';
 import UserManagement from './usermanagement';
 
 const mockStore = configureStore([thunk]);
@@ -62,7 +63,7 @@ describe('UserManagement Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const copyCheck = jest.fn(() => true);
+    const copyCheck = jest.fn(yes);
     document.execCommand = copyCheck;
     render(
       <Provider store={store}>

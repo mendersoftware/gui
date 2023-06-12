@@ -36,7 +36,7 @@ import {
   setDeviceTwin
 } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
-import { TIMEOUTS } from '../../constants/appConstants';
+import { TIMEOUTS, yes } from '../../constants/appConstants';
 import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import {
@@ -143,7 +143,7 @@ const GatewayNotification = ({ device, docsVersion, onClick }) => {
 const deviceStatusCheck = ({ device: { status = DEVICE_STATES.accepted } }, states = [DEVICE_STATES.accepted]) => states.includes(status);
 
 const tabs = [
-  { component: IdentityTab, title: () => 'Identity', value: 'identity', isApplicable: () => true },
+  { component: IdentityTab, title: () => 'Identity', value: 'identity', isApplicable: yes },
   {
     component: DeviceInventory,
     title: () => 'Inventory',

@@ -278,6 +278,13 @@ export const emptyRole = Object.freeze({
 const permissionMapper = permission => permission.value;
 export const itemUiPermissionsReducer = (accu, { item, uiPermissions }) => (item ? { ...accu, [item]: uiPermissions } : accu);
 
+const checkSinglePermission = (permission, requiredPermission) =>
+  requiredPermission === permission || uiPermissionsById[permission].permissionLevel > uiPermissionsById[requiredPermission].permissionLevel;
+
+export const checkPermissionsObject = (permissions, requiredPermission, scopedAccess, superAccess) =>
+  permissions[superAccess]?.some(permission => checkSinglePermission(permission, requiredPermission)) ||
+  permissions[scopedAccess]?.some(permission => checkSinglePermission(permission, requiredPermission));
+
 export const rolesById = Object.freeze({
   [staticRolesByName.admin]: {
     name: 'Admin',

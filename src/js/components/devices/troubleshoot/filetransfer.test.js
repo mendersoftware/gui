@@ -30,6 +30,7 @@ describe('FileTransfer Component', () => {
         setSnackbar={jest.fn}
         setUploadPath={jest.fn}
         uploadPath={''}
+        userCapabilities={{ canTroubleshoot: true, canWriteDevices: true }}
       />
     );
     const view = baseElement.firstChild;

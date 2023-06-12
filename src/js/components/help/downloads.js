@@ -22,6 +22,7 @@ import Cookies from 'universal-cookie';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getToken } from '../../auth';
+import { canAccess } from '../../constants/appConstants';
 import { detectOsIdentifier, toggle } from '../../helpers';
 import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
 import Tracking from '../../tracking';
@@ -144,7 +145,7 @@ const tools = [
     packageExtras: [{ packageId: 'mender-client-dev', archList: [architectures.all] }],
     title: 'Mender Client Debian package',
     getLocations: multiArchLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: defaultOSVersions,
     archList: defaultArchitectures
   },
@@ -152,7 +153,7 @@ const tools = [
     id: 'mender-artifact',
     title: 'Mender Artifact',
     getLocations: defaultLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: [osMap.MacOs, osMap.Linux]
   },
   {
@@ -166,7 +167,7 @@ const tools = [
     id: 'mender-cli',
     title: 'Mender CLI',
     getLocations: defaultLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: [osMap.MacOs, osMap.Linux]
   },
   {
@@ -186,7 +187,7 @@ const tools = [
     id: 'mender-connect',
     title: 'Mender Connect',
     getLocations: multiArchLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: defaultOSVersions,
     archList: defaultArchitectures
   },
@@ -201,7 +202,7 @@ const tools = [
         }
       ]
     }),
-    canAccess: () => true
+    canAccess
   },
   {
     id: 'mender-gateway',

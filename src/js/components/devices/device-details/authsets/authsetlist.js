@@ -16,6 +16,7 @@ import React, { useState } from 'react';
 import { accordionClasses, accordionDetailsClasses, accordionSummaryClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { canAccess } from '../../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { customSort } from '../../../../helpers';
 import { AuthExplainButton } from '../../../helptips/helptooltips';
@@ -52,7 +53,6 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const canAccess = () => true;
 export const defaultColumns = [
   { title: '', canAccess },
   { title: 'Status', canAccess },

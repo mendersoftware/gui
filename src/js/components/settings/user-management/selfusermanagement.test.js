@@ -21,6 +21,7 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import { yes } from '../../../constants/appConstants';
 import SelfUserManagement from './selfusermanagement';
 
 const mockStore = configureStore([thunk]);
@@ -59,7 +60,7 @@ describe('SelfUserManagement Component', () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     store = mockStore({ ...defaultState, app: { ...defaultState.app, features: { ...defaultState.app.features, isEnterprise: true } } });
 
-    const copyCheck = jest.fn(() => true);
+    const copyCheck = jest.fn(yes);
     document.execCommand = copyCheck;
     const ui = (
       <Provider store={store}>
