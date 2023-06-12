@@ -15,7 +15,7 @@ import * as path from 'path';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
-import { selectors } from '../utils/constants';
+import { selectors, timeouts } from '../utils/constants';
 
 const terminalReferenceFileMap = {
   default: 'terminalContent.png',
@@ -39,14 +39,14 @@ test.describe('Device details', () => {
     await page.click(`.deviceListItem div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
-    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: 10000 });
+    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: timeouts.tenSeconds });
     await terminalLaunchButton.scrollIntoViewIfNeeded();
     await page.click(`css=.expandedDevice >> text=Remote Terminal session`);
-    await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });
+    await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
     expect(await page.isVisible('.terminal.xterm canvas')).toBeTruthy();
 
     // the terminal content might take a bit to get painted - thus the waiting
-    await page.click(selectors.terminalElement, { timeout: 3000 });
+    await page.click(selectors.terminalElement, { timeout: timeouts.default });
 
     // the terminal content differs a bit depending on the device id, thus the higher threshold allowed
     // NB! without the screenshot-name argument the options don't seem to be applied
@@ -65,7 +65,7 @@ test.describe('Device details', () => {
 
       await page.type(selectors.terminalText, 'top');
       await page.keyboard.press('Enter');
-      await page.waitForTimeout(3000);
+      await page.waitForTimeout(timeouts.default);
 
       await elementHandle.screenshot({ path: screenShotPath });
       const { pass: pass2 } = compareImages(expectedPath, screenShotPath);

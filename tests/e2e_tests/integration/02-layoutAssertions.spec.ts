@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
-import { selectors } from '../utils/constants';
+import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Layout assertions', () => {
   const navbar = '.leftFixed.leftNav';
@@ -36,7 +36,8 @@ test.describe('Layout assertions', () => {
   });
 
   test('can authorize a device', async ({ loggedInPage: page }) => {
-    test.setTimeout(140000);
+    // allow twice the device interaction time + roughly a regular test execution time
+    test.setTimeout(2 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
     await page.click(`.leftNav :text('Devices')`);
     let hasAcceptedDevice = false;
     try {
@@ -46,7 +47,7 @@ test.describe('Layout assertions', () => {
     }
     if (!hasAcceptedDevice) {
       const pendingMessage = await page.locator(`text=/pending authorization/i`);
-      await pendingMessage.waitFor({ timeout: 60000 });
+      await pendingMessage.waitFor({ timeout: timeouts.sixtySeconds });
       await pendingMessage.click();
       await page.click(selectors.deviceListCheckbox);
       await page.hover('.MuiSpeedDial-fab');
@@ -54,7 +55,7 @@ test.describe('Layout assertions', () => {
     }
     await page.locator(`input:near(:text("Status:"))`).first().click({ force: true });
     await page.click(`css=.MuiPaper-root >> text=/Accepted/i`);
-    await page.waitForSelector(`css=.deviceListItem >> text=/original/`, { timeout: 60000 });
+    await page.waitForSelector(`css=.deviceListItem >> text=/original/`, { timeout: timeouts.sixtySeconds });
     const element = await page.textContent('.deviceListItem');
     expect(element.includes('original')).toBeTruthy();
     await page.click(`.deviceListItem div:last-child`);

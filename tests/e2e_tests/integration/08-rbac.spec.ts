@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
-import { selectors } from '../utils/constants';
+import { selectors, timeouts } from '../utils/constants';
 
 test.describe('RBAC functionality', () => {
   test('allows access to user management', async ({ baseUrl, loggedInPage: page }) => {
@@ -84,7 +84,7 @@ test.describe('RBAC functionality', () => {
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
     await page.click(`button:has-text('Log in')`);
-    await page.waitForSelector('text=License information');
+    await page.waitForSelector(selectors.loggedInText);
   });
 
   test('has working RBAC limitations', async ({ baseUrl, environment, page, password, username }) => {
@@ -98,10 +98,10 @@ test.describe('RBAC functionality', () => {
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
     await page.click(`button:has-text('Log in')`);
-    await page.waitForSelector('text=License information');
+    await page.waitForSelector(selectors.loggedInText);
     await page.reload();
     const releasesButton = page.getByText(/releases/i);
-    await releasesButton.waitFor({ timeout: 7000 });
+    await releasesButton.waitFor({ timeout: timeouts.tenSeconds });
     await releasesButton.click();
 
     // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
@@ -111,6 +111,6 @@ test.describe('RBAC functionality', () => {
     await page.click(`.deviceListItem div:last-child`);
     // the created role does have permission to configure devices, so the section should be visible
     await page.click(`text=/configuration/i`);
-    await page.waitForSelector('text=/Device configuration/i', { timeout: 10000 });
+    await page.waitForSelector('text=/Device configuration/i', { timeout: timeouts.tenSeconds });
   });
 });

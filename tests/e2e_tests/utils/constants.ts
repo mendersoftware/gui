@@ -15,6 +15,7 @@ export const selectors = {
   deviceGroupSelect: '#deployment-device-group-selection',
   deviceListCheckbox: '.deviceListItem input',
   email: '[name=email]',
+  loggedInText: 'text=/License information/i',
   password: '[name=password]',
   passwordConfirmation: '[name=password_confirmation]',
   passwordCurrent: '[name=current_password]',
@@ -23,4 +24,13 @@ export const selectors = {
   releaseSelect: '#deployment-release-selection',
   terminalElement: '.terminal.xterm',
   terminalText: '.terminal.xterm textarea'
+};
+
+const oneSecond = 1000;
+export const timeouts = {
+  default: 3 * oneSecond,
+  fiveSeconds: 5 * oneSecond,
+  tenSeconds: 10 * oneSecond,
+  fifteenSeconds: 15 * oneSecond,
+  sixtySeconds: 60 * oneSecond
 };
