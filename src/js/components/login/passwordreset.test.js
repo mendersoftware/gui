@@ -80,9 +80,9 @@ describe('PasswordReset Component', () => {
     await user.type(passwordInput, goodPassword, { skipClick: true });
     await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /Save password/i }));
+    await waitFor(() => expect(completeSpy).toHaveBeenCalledWith(secretHash, goodPassword));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Your password has been updated./i)).toBeInTheDocument();
-    expect(completeSpy).toHaveBeenCalledWith(secretHash, goodPassword);
     jest.useRealTimers();
   });
 });

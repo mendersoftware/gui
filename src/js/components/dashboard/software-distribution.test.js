@@ -20,7 +20,8 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import { chartTypes } from '../../constants/appConstants';
+import * as DeviceActions from '../../actions/deviceActions';
+import { TIMEOUTS, chartTypes } from '../../constants/appConstants';
 import { rootfsImageVersion } from '../../constants/releaseConstants';
 import SoftwareDistribution from './software-distribution';
 
@@ -64,6 +65,8 @@ const state = {
   }
 };
 
+const reportsSpy = jest.spyOn(DeviceActions, 'deriveReportsData');
+
 describe('Devices Component', () => {
   it('renders correctly', async () => {
     let store = mockStore(state);
@@ -72,12 +75,19 @@ describe('Devices Component', () => {
         <SoftwareDistribution />
       </Provider>
     );
+
     const { baseElement, rerender } = render(ui);
+    await act(async () => {
+      jest.runAllTimers();
+      jest.runAllTicks();
+      return new Promise(resolve => resolve(), TIMEOUTS.threeSeconds);
+    });
+    await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
-    await act(async () => {});
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    reportsSpy.mockClear();
   });
 
   it('renders correctly for enterprise', async () => {
@@ -97,8 +107,13 @@ describe('Devices Component', () => {
       </Provider>
     );
     const { baseElement, rerender } = render(ui);
+    await act(async () => {
+      jest.runAllTimers();
+      jest.runAllTicks();
+      return new Promise(resolve => resolve(), TIMEOUTS.threeSeconds);
+    });
+    await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
-    await act(async () => {});
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

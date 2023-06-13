@@ -57,26 +57,18 @@ export const Password = () => {
     }
     dispatch(passwordResetStart(formData.email)).then(() => setConfirm(true));
   };
-
+  const content = confirm ? texts.confirmation : texts.request;
   return (
     <PasswordScreenContainer title="Reset your password">
-      {confirm ? (
-        texts.confirmation.map((text, index) => (
-          <p className="align-center" key={index}>
-            {text}
-          </p>
-        ))
-      ) : (
-        <>
-          {texts.request.map((text, index) => (
-            <p className="align-center" key={index}>
-              {text}
-            </p>
-          ))}
-          <Form showButtons={true} buttonColor="primary" onSubmit={handleSubmit} submitLabel="Send password reset link" submitButtonId="password_button">
-            <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
-          </Form>
-        </>
+      {content.map((text, index) => (
+        <p className="align-center" key={index}>
+          {text}
+        </p>
+      ))}
+      {!confirm && (
+        <Form showButtons={true} buttonColor="primary" onSubmit={handleSubmit} submitLabel="Send password reset link" submitButtonId="password_button">
+          <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
+        </Form>
       )}
     </PasswordScreenContainer>
   );
