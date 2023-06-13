@@ -21,6 +21,7 @@ import { withStyles } from 'tss-react/mui';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
+import { selectRelease } from '../../actions/releaseActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
@@ -50,6 +51,7 @@ export const DeploymentCompleteTip = ({ anchor, targetUrl }) => {
   const onClick = () => {
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
     window.open(parametrizedAddress, '_blank');
+    dispatch(selectRelease());
     dispatch(advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE));
     dispatch(setOnboardingComplete(false));
     dispatch(setShowCreateArtifactDialog(true));
