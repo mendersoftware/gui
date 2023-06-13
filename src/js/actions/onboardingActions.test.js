@@ -178,8 +178,7 @@ describe('onboarding actions', () => {
   });
   it('should disable helptips and store a canceled state', async () => {
     const store = mockStore({ ...defaultState });
-    const stepNames = Object.keys(onboardingSteps);
-    await store.dispatch(setOnboardingCanceled(stepNames[0]));
+    await store.dispatch(setOnboardingCanceled());
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
       { type: UserConstants.SET_SHOW_HELP, show: false },

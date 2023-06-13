@@ -62,8 +62,11 @@ export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
 };
 
 export const getDeploymentTargetText = ({ deployment, devicesById, idAttribute }) => {
-  const { devices = [], group = '', name = '', type = DEPLOYMENT_TYPES.software } = deployment;
-  const deviceList = (isUUID(name) && devicesById[name] ? [devicesById[name]] : Array.isArray(devices) ? devices : Object.values(devices)) ?? [];
+  const { devices = {}, group = '', name = '', type = DEPLOYMENT_TYPES.software } = deployment;
+  let deviceList = Array.isArray(devices) ? devices : Object.values(devices);
+  if (isUUID(name) && devicesById[name]) {
+    deviceList = [devicesById[name]];
+  }
   if (type !== DEPLOYMENT_TYPES.configuration && (!deviceList.length || group || (deployment.name !== undefined && !isUUID(name)))) {
     return (group || name) ?? '';
   }

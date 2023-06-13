@@ -77,8 +77,6 @@ class Tracker {
   pageview(data) {
     if (data) {
       this.currentPageView = data;
-    } else {
-      data = this.currentPageView;
     }
   }
   set(value) {

@@ -446,14 +446,14 @@ exports[`Devices Component renders correctly for enterprise 1`] = `
             <span
               aria-valuemax="100"
               aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuenow="48"
               class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-a31773 emotion-12"
               role="progressbar"
               style="height: 8px;"
             >
               <span
                 class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-13"
-                style="transform: translateX(-100%);"
+                style="transform: translateX(-52.38095238095239%);"
               />
             </span>
           </div>
@@ -465,14 +465,14 @@ exports[`Devices Component renders correctly for enterprise 1`] = `
             <span
               aria-valuemax="100"
               aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuenow="29"
               class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-d5d5d5 emotion-12"
               role="progressbar"
               style="height: 8px;"
             >
               <span
                 class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-13"
-                style="transform: translateX(-100%);"
+                style="transform: translateX(-71.42857142857143%);"
               />
             </span>
           </div>
@@ -484,14 +484,14 @@ exports[`Devices Component renders correctly for enterprise 1`] = `
             <span
               aria-valuemax="100"
               aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuenow="24"
               class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-337a87 emotion-12"
               role="progressbar"
               style="height: 8px;"
             >
               <span
                 class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-13"
-                style="transform: translateX(-100%);"
+                style="transform: translateX(-76.19047619047619%);"
               />
             </span>
           </div>

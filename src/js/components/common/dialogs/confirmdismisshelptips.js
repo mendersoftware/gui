@@ -34,7 +34,7 @@ export const ConfirmDismissHelptips = () => {
       <DialogActions>
         <Button onClick={() => dispatch(setShowDismissOnboardingTipsDialog(false))}>Cancel</Button>
         <div style={{ flexGrow: 1 }} />
-        <Button variant="contained" color="secondary" onClick={() => dispatch(setOnboardingCanceled(true))}>
+        <Button variant="contained" color="secondary" onClick={() => dispatch(setOnboardingCanceled())}>
           Yes, hide the help
         </Button>
       </DialogActions>
