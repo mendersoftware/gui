@@ -17,7 +17,7 @@ import * as readline from 'readline';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
-import { selectors } from '../utils/constants';
+import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Auditlogs', () => {
   test.use({ storageState: 'storage.json' });

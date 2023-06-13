@@ -1,7 +1,6 @@
 import autoprefixer from 'autoprefixer';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import { EsbuildPlugin } from 'esbuild-loader';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import HtmlWebPackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
