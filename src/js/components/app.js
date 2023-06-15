@@ -101,6 +101,15 @@ export const AppRoot = () => {
   const trackingCode = useSelector(state => state.app.trackerCode);
   const { mode } = useSelector(getUserSettings);
 
+  const alwaysForward = () => navigate(1);
+
+  useEffect(() => {
+    window.addEventListener('popstate', alwaysForward);
+    return () => {
+      window.removeEventListener('popstate', alwaysForward);
+    };
+  }, []);
+
   useEffect(() => {
     dispatch(parseEnvironmentInfo());
     if (!trackingCode) {
