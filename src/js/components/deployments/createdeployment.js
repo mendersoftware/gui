@@ -49,6 +49,7 @@ import {
   getDevicesById,
   getDocsVersion,
   getGlobalSettings,
+  getGroupNames,
   getIdAttribute,
   getIsEnterprise,
   getOnboardingState,
@@ -126,6 +127,7 @@ export const CreateDeployment = props => {
   const { complete: isOnboardingComplete } = onboardingState;
   const releases = useSelector(state => state.releases.releasesList.searchedIds);
   const releasesById = useSelector(getReleasesById);
+  const groupNames = useSelector(getGroupNames);
   const dispatch = useDispatch();
 
   const isCreating = useRef(false);
@@ -258,6 +260,7 @@ export const CreateDeployment = props => {
     canRetry,
     canSchedule,
     docsVersion,
+    groupNames,
     getReleases: (...args) => dispatch(getReleases(...args)),
     groupRef,
     groups,

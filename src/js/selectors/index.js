@@ -17,6 +17,7 @@ import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import {
+  ALL_DEVICES,
   ATTRIBUTE_SCOPES,
   DEVICE_ISSUE_OPTIONS,
   DEVICE_LIST_MAXIMUM_LENGTH,
@@ -315,6 +316,22 @@ export const getDeviceTypes = createSelector([getAcceptedDevices, getDevicesById
     }, {})
   )
 );
+
+export const getGroupNames = createSelector([getGroupsById, getUserRoles, (_, options = {}) => options], (groupsById, { uiPermissions }, { staticOnly }) => {
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = groupsById;
+  if (staticOnly) {
+    return Object.keys(uiPermissions.groups).sort();
+  }
+  return Object.keys(
+    Object.entries(groups).reduce((accu, [groupName, group]) => {
+      if (group.filterId || uiPermissions.groups[ALL_DEVICES]) {
+        accu[groupName] = group;
+      }
+      return accu;
+    }, uiPermissions.groups)
+  ).sort();
+});
 
 const getReleaseMappingDefaults = () => ({});
 export const getReleasesList = createSelector([getReleasesById, getListedReleases, getReleaseMappingDefaults], listItemMapper);

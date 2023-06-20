@@ -330,6 +330,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.status = status ? status : device.status || identity.status;
       device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
       device.updated_ts = getLatestTs(getLatestTs(system.updated_ts, device.updated_ts), stateDevice.updated_ts);
+      device.isNew = new Date(device.created_ts) > new Date(state.app.newThreshold);
       device.isOffline = new Date(device.updated_ts) < new Date(state.app.offlineThreshold);
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
@@ -1217,5 +1218,32 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
     let tasks = ids.map(deviceId => dispatch(getDeviceInfo(deviceId)));
     tasks.push(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...getState().devices.byId[deviceId], gatewayIds: ids } }));
     return Promise.all(tasks);
+  });
+};
+
+export const geoAttributes = ['geo-lat', 'geo-lon'].map(attribute => ({ attribute, scope: 'inventory' }));
+export const getDevicesInBounds = (bounds, group) => (dispatch, getState) => {
+  const state = getState();
+  const { filterTerms } = convertDeviceListStateToFilters({
+    group: group === DeviceConstants.ALL_DEVICES ? undefined : group,
+    groups: state.devices.groups,
+    status: DEVICE_STATES.accepted
+  });
+  return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+    page: 1,
+    per_page: MAX_PAGE_SIZE,
+    filters: filterTerms,
+    attributes: geoAttributes,
+    geo_bounding_box_filter: {
+      geo_bounding_box: {
+        location: {
+          top_left: { lat: bounds._northEast.lat, lon: bounds._southWest.lng },
+          bottom_right: { lat: bounds._southWest.lat, lon: bounds._northEast.lng }
+        }
+      }
+    }
+  }).then(({ data }) => {
+    const { devicesById } = reduceReceivedDevices(data, [], getState());
+    return Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICES, devicesById }));
   });
 };
