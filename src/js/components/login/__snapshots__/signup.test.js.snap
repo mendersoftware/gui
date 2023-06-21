@@ -13,13 +13,19 @@ exports[`Signup Component renders correctly 1`] = `
   height: calc(100vh - 56px);
 }
 
-.emotion-1#signup-box {
-  max-width: initial;
+.emotion-1 .MuiFormControl-root {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.emotion-1>div {
+  display: grid;
+  grid-template-columns: minmax(min-content, 500px);
+  place-content: center;
 }
 
 .emotion-2 {
   display: grid;
-  grid-template-columns: min-content;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   -webkit-justify-content: center;
@@ -29,10 +35,8 @@ exports[`Signup Component renders correctly 1`] = `
   align-content: center;
 }
 
-.emotion-2.right {
-  background: #f7f7f7;
-  row-gap: 20px;
-  grid-template-rows: min-content min-content min-content;
+.emotion-2>button {
+  justify-self: flex-start;
 }
 
 .emotion-3 {
@@ -607,122 +611,128 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
   margin-right: 8px;
 }
 
+.emotion-41 {
+  background: #f7f7f7;
+  grid-template-rows: min-content min-content min-content;
+  padding: 80px 0;
+}
+
 <div>
   <svg
     class="emotion-0"
     id="Loginlogo"
   />
   <div
-    class="content emotion-1"
+    class="emotion-1 two-columns"
     id="signup-box"
   >
-    <div
-      class="two-columns full-height"
-    >
-      <div
-        class="emotion-2"
+    <div>
+      <form
+        class=""
+        novalidate=""
       >
-        <h1
-          class="flexbox centered"
-        >
-          Create your account
-        </h1>
         <div
-          class="flexbox centered margin-bottom"
+          class="emotion-2"
         >
-          Sign up
-           with:
-        </div>
-        <div
-          class="flexbox centered"
-        >
-          <a
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-3"
-            href="/api/management/v1/useradm/oauth2/github"
-            tabindex="0"
+          <h1
+            class="flexbox centered"
           >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
+            Create your account
+          </h1>
+          <div
+            class="flexbox centered margin-bottom"
+          >
+            Sign up
+             with:
+          </div>
+          <div
+            class="flexbox centered"
+          >
+            <a
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-3"
+              href="/api/management/v1/useradm/oauth2/github"
+              tabindex="0"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-5"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <span
+                class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
               >
-                <path
-                  d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"
-                />
-              </svg>
-            </span>
-            Github
-            <span
-              class="MuiTouchRipple-root emotion-6"
-            />
-          </a>
-          <a
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-3"
-            href="/api/management/v1/useradm/oauth2/google"
-            tabindex="0"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-5"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"
+                  />
+                </svg>
+              </span>
+              Github
+              <span
+                class="MuiTouchRipple-root emotion-6"
+              />
+            </a>
+            <a
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-3"
+              href="/api/management/v1/useradm/oauth2/google"
+              tabindex="0"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-5"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <span
+                class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
               >
-                <path
-                  d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"
-                />
-              </svg>
-            </span>
-            Google
-            <span
-              class="MuiTouchRipple-root emotion-6"
-            />
-          </a>
-          <a
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-3"
-            href="/api/management/v1/useradm/oauth2/microsoft"
-            tabindex="0"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-5"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"
+                  />
+                </svg>
+              </span>
+              Google
+              <span
+                class="MuiTouchRipple-root emotion-6"
+              />
+            </a>
+            <a
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium oauth-provider emotion-3"
+              href="/api/management/v1/useradm/oauth2/microsoft"
+              tabindex="0"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-5"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <span
+                class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
               >
-                <path
-                  d="M2,3H11V12H2V3M11,22H2V13H11V22M21,3V12H12V3H21M21,22H12V13H21V22Z"
-                />
-              </svg>
-            </span>
-            Microsoft
-            <span
-              class="MuiTouchRipple-root emotion-6"
-            />
-          </a>
-        </div>
-        <h4
-          class="dashboard-header emotion-15 margin-top-large flexbox centered"
-        >
-          <span
-            style="padding: 15px; top: -24px;"
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-5"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M2,3H11V12H2V3M11,22H2V13H11V22M21,3V12H12V3H21M21,22H12V13H21V22Z"
+                  />
+                </svg>
+              </span>
+              Microsoft
+              <span
+                class="MuiTouchRipple-root emotion-6"
+              />
+            </a>
+          </div>
+          <h4
+            class="dashboard-header emotion-15 margin-top-large flexbox centered"
           >
-            or your email address
-          </span>
-        </h4>
-        <form
-          class=""
-        >
+            <span
+              style="padding: 15px; top: -24px;"
+            >
+              or your email address
+            </span>
+          </h4>
           <div
             class="MuiFormControl-root  required emotion-16"
+            style="width: 400px;"
           >
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-17"
@@ -734,7 +744,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
             <div
               class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-18"
               required=""
-              style="width: 400px; max-width: 100%;"
             >
               <input
                 aria-invalid="false"
@@ -749,36 +758,34 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
             </div>
             <p
               class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-20"
-              id="component-error-text"
             />
           </div>
           <div
             class="margin-bottom-small"
-            id="password_new-holder"
           >
             <div
               class="password-wrapper"
             >
               <div
                 class="MuiFormControl-root required emotion-16"
+                style="width: 400px;"
               >
                 <label
                   class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-17"
                   data-shrink="false"
-                  for="password_new"
+                  for="password"
                 >
                   Password *
                 </label>
                 <div
                   class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-18"
                   required=""
-                  style="width: 400px;"
                 >
                   <input
                     aria-invalid="false"
                     class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-19"
-                    id="password_new"
-                    name="password_new"
+                    id="password"
+                    name="password"
                     required=""
                     type="password"
                     value=""
@@ -810,35 +817,31 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                 </div>
                 <p
                   class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-20"
-                  id="component-error-text"
                 />
               </div>
             </div>
-            <div>
-              <div
-                class="help-text"
-                id="pass-strength"
-              >
-                Strength: 
-                <meter
-                  high="3.9"
-                  low="2.5"
-                  max="4"
-                  min="0"
-                  optimum="4"
-                  value=""
-                />
-              </div>
+            <div
+              class="help-text"
+              id="pass-strength"
+            >
+              Strength: 
+              <meter
+                high="3.9"
+                low="2.5"
+                max="4"
+                min="0"
+                optimum="4"
+                value=""
+              />
             </div>
           </div>
-          <div
-            id="password_confirmation-holder"
-          >
+          <div>
             <div
               class="password-wrapper"
             >
               <div
                 class="MuiFormControl-root required emotion-16"
+                style="width: 400px;"
               >
                 <label
                   class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-17"
@@ -850,7 +853,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                 <div
                   class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-18"
                   required=""
-                  style="width: 400px;"
                 >
                   <input
                     aria-invalid="false"
@@ -888,74 +890,63 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                 </div>
                 <p
                   class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-20"
-                  id="component-error-text"
                 />
               </div>
             </div>
           </div>
-          <div
-            class="flexbox"
-            style="justify-content: flex-end; margin-top: 32px;"
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium margin-top emotion-3"
+            disabled=""
+            tabindex="-1"
+            type="button"
           >
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-3"
-              disabled=""
-              id="login_button"
-              tabindex="-1"
-              type="button"
-            >
-              Sign up
-            </button>
-          </div>
-        </form>
-        <div
-          class="margin-top margin-bottom flexbox centered "
-        >
-          <div
-            class="muted margin-right"
-          >
-            Already have an account?
-          </div>
-          <a
-            class="flexbox center-aligned"
-            href="/login"
-          >
-            Log in
-             
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-40"
-              data-testid="ChevronRightIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-              />
-            </svg>
-          </a>
+            Sign up
+          </button>
         </div>
-      </div>
+      </form>
       <div
-        class="emotion-2 right"
+        class="margin-top margin-bottom flexbox centered "
       >
         <div
-          class="flexbox column"
+          class="muted margin-right"
         >
-          <h2>
-            Connect up to 10 devices free for 12 months – no credit card required.
-          </h2>
-          <p>
-            Mender provides a complete over-the-air update infrastructure for all device software. Whether in the field or the factory, you can remotely and easily manage device software without the need for manual labor.
-          </p>
-          <div
-            class="svg-container margin-top"
-          >
-            <svg
-              id="Signuphero"
-            />
-          </div>
+          Already have an account?
         </div>
+        <a
+          class="flexbox center-aligned"
+          href="/login"
+        >
+          Log in
+           
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-40"
+            data-testid="ChevronRightIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div
+      class="emotion-41"
+    >
+      <h2>
+        Connect up to 10 devices free for 12 months – no credit card required.
+      </h2>
+      <p>
+        Mender provides a complete over-the-air update infrastructure for all device software. Whether in the field or the factory, you can remotely and easily manage device software without the need for manual labor.
+      </p>
+      <div
+        class="svg-container margin-top"
+      >
+        <svg
+          id="Signuphero"
+        />
       </div>
     </div>
   </div>
