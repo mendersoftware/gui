@@ -11,7 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { CheckCircle as CheckIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon } from '@mui/icons-material';
 import { Button, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel } from '@mui/material';
@@ -20,6 +21,8 @@ import copy from 'copy-to-clipboard';
 import generator from 'generate-password';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
+import { toggle } from '../../../helpers';
+import { runValidations } from './form';
 
 const PasswordGenerateButtons = ({ clearPass, edit, generatePass }) => (
   <div className="pass-buttons">
@@ -30,72 +33,15 @@ const PasswordGenerateButtons = ({ clearPass, edit, generatePass }) => (
   </div>
 );
 
-export default class PasswordInput extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getState();
-  }
+const SCORE_THRESHOLD = 3;
 
-  componentDidMount() {
-    this.props.attachToForm(this); // Attaching the component to the form
-  }
-  componentWillUnmount() {
-    this.props.detachFromForm(this); // Detaching if unmounting
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.className !== this.props.className) {
-      // resets state when "cancel" pressed
-      this.setState(this._getState());
-    }
-  }
-  _getState() {
-    return {
-      value: this.props.value || '',
-      errortext: null,
-      isValid: true,
-      score: '',
-      feedback: [],
-      visible: false,
-      copied: false
-    };
-  }
-  setValue(event) {
-    const value = event ? event.currentTarget.value : '';
-    this.setState({ value });
-    if (this.props.create) {
-      import(/* webpackChunkName: "zxcvbn" */ 'zxcvbn').then(({ default: zxcvbn }) => {
-        const strength = zxcvbn(value);
-        const score = strength.score;
-        const feedback = strength.feedback.suggestions || [];
-        this.setState({ score, feedback });
-        if (score > 3) {
-          this.props.validate(this, value);
-        } else {
-          // if some weak pass exists, pass it to validate as "0", otherwise leave empty- if not required, blank is allowed but weak is not
-          this.props.validate(this, value ? '0' : '');
-        }
-      });
-    } else {
-      this.props.validate(this, value);
-    }
-  }
-  clearPass() {
-    this.setValue();
-    this.props.onClear();
-    this.setState({ copied: false });
-  }
-  generatePass() {
-    const self = this;
-    const password = generator.generate({ length: 16, numbers: true });
-    self.setValue({ currentTarget: { value: password } });
-    copy(password);
-    self.setState({ copied: true, visible: true });
-    setTimeout(() => self.setState({ copied: false }), TIMEOUTS.fiveSeconds);
-  }
-  render() {
-    const { className, create, defaultValue, disabled, edit, generate, handleKeyPress, id, InputLabelProps = {}, label, placeholder, required } = this.props;
-    const { copied, errortext, feedback, score, visible, value } = this.state;
-    const feedbackMessages = Boolean(errortext) && (
+const PasswordGenerationControls = ({ score, feedback }) => (
+  <>
+    <div className="help-text" id="pass-strength">
+      Strength: <meter max={4} min={0} value={score} high={3.9} optimum={4} low={2.5} />
+      {score > SCORE_THRESHOLD ? <CheckIcon className="fadeIn green" style={{ height: 18, marginTop: -3, marginBottom: -3 }} /> : null}
+    </div>
+    {!!feedback.length && (
       <p className="help-text">
         {feedback.map((message, index) => (
           <React.Fragment key={`feedback-${index}`}>
@@ -104,51 +50,143 @@ export default class PasswordInput extends React.Component {
           </React.Fragment>
         ))}
       </p>
-    );
+    )}
+  </>
+);
 
-    return (
-      <div id={`${id}-holder`} className={className}>
-        <div className="password-wrapper">
-          <FormControl error={Boolean(errortext)} className={required ? 'required' : ''}>
-            <InputLabel htmlFor={id} {...InputLabelProps}>
-              {label}
-            </InputLabel>
-            <Input
-              id={id}
-              name={id}
-              type={visible ? 'text' : 'password'}
-              defaultValue={defaultValue}
-              placeholder={placeholder}
-              value={value}
-              disabled={disabled}
-              style={{ width: 400 }}
-              required={required}
-              onChange={e => this.setValue(e)}
-              onKeyPress={handleKeyPress}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={() => this.setState({ visible: !visible })} size="large">
-                    {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-            <FormHelperText id="component-error-text">{errortext}</FormHelperText>
-          </FormControl>
-          {generate && !required && <PasswordGenerateButtons clearPass={() => this.clearPass()} edit={edit} generatePass={() => this.generatePass()} />}
-        </div>
-        {copied ? <div className="green fadeIn margin-bottom-small">Copied to clipboard</div> : null}
-        {create ? (
-          <div>
-            <div className="help-text" id="pass-strength">
-              Strength: <meter max={4} min={0} value={score} high={3.9} optimum={4} low={2.5} />
-              {score > 3 ? <CheckIcon className="fadeIn green" style={{ height: '18px', marginTop: '-3px', marginBottom: '-3px' }} /> : null}
-            </div>
-            {feedbackMessages}
-            {generate && required && <PasswordGenerateButtons clearPass={() => this.clearPass()} edit={edit} generatePass={() => this.generatePass()} />}
-          </div>
-        ) : null}
+export const PasswordInput = ({
+  autocomplete,
+  className,
+  control,
+  create,
+  defaultValue,
+  disabled,
+  edit,
+  generate,
+  id,
+  InputLabelProps = {},
+  label,
+  onClear,
+  placeholder,
+  required,
+  validations = ''
+}) => {
+  const [score, setScore] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [feedback, setFeedback] = useState([]);
+  const [confirmationId] = useState(id.includes('current') ? '' : ['password', 'password_confirmation'].find(thing => thing !== id));
+  const timer = useRef();
+  const {
+    clearErrors,
+    formState: { errors },
+    setError,
+    setValue,
+    trigger,
+    getValues
+  } = useFormContext();
+  const confirmation = useWatch({ name: confirmationId });
+  const errorKey = `${id}-error`;
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  });
+
+  const clearPassClick = () => {
+    setValue(id, '');
+    onClear();
+    setCopied(false);
+  };
+
+  const generatePassClick = () => {
+    const password = generator.generate({ length: 16, numbers: true });
+    setValue(id, password);
+    const form = getValues();
+    if (form.hasOwnProperty(`${id}_confirmation`)) {
+      setValue(`${id}_confirmation`, password);
+    }
+    copy(password);
+    setCopied(true);
+    setVisible(true);
+    timer.current = setTimeout(() => setCopied(false), TIMEOUTS.fiveSeconds);
+    trigger();
+  };
+
+  const validate = async (value = '') => {
+    let { isValid, errortext } = runValidations({ id, required, validations, value });
+    if (confirmation && value !== confirmation) {
+      isValid = false;
+      errortext = 'The passwords you provided do not match, please check again.';
+    }
+    if (isValid) {
+      clearErrors(errorKey);
+    } else {
+      setError(errorKey, { type: 'validate', message: errortext });
+    }
+    if (!create || (!required && !value)) {
+      return isValid;
+    }
+    const { default: zxcvbn } = await import(/* webpackChunkName: "zxcvbn" */ 'zxcvbn');
+    const strength = zxcvbn(value);
+    const score = strength.score;
+    setFeedback(strength.feedback.suggestions || []);
+    setScore(score);
+    return score > SCORE_THRESHOLD && isValid;
+  };
+
+  return (
+    <div className={className}>
+      <div className="password-wrapper">
+        <Controller
+          name={id}
+          control={control}
+          rules={{ required, validate }}
+          render={({ field: { value, onChange, onBlur, ref }, fieldState: { error } }) => (
+            <FormControl className={required ? 'required' : ''} error={Boolean(error?.message || errors[errorKey])} style={{ width: 400 }}>
+              <InputLabel htmlFor={id} {...InputLabelProps}>
+                {label}
+              </InputLabel>
+              <Input
+                autoComplete={autocomplete}
+                id={id}
+                name={id}
+                type={visible ? 'text' : 'password'}
+                defaultValue={defaultValue}
+                placeholder={placeholder}
+                value={value ?? ''}
+                disabled={disabled}
+                inputRef={ref}
+                required={required}
+                onChange={({ target: { value } }) => {
+                  setValue(id, value);
+                  onChange(value);
+                }}
+                onBlur={onBlur}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton onClick={() => setVisible(toggle)} size="large">
+                      {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText>{(errors[errorKey] || error)?.message}</FormHelperText>
+            </FormControl>
+          )}
+        />
+        {generate && !required && <PasswordGenerateButtons clearPass={clearPassClick} edit={edit} generatePass={generatePassClick} />}
       </div>
-    );
-  }
-}
+      {copied ? <div className="green fadeIn margin-bottom-small">Copied to clipboard</div> : null}
+      {create && (
+        <>
+          <PasswordGenerationControls feedback={feedback} score={score} />
+          {generate && required && <PasswordGenerateButtons clearPass={clearPassClick} edit={edit} generatePass={generatePassClick} />}
+        </>
+      )}
+    </div>
+  );
+};
+
+export default PasswordInput;

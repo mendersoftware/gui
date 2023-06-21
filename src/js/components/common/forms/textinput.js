@@ -12,71 +12,77 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
 
-export default class TextInput extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      errortext: null,
-      // the following is needed for the form validation to work if the field is not required
-      isValid: true, // lgtm [js/react/unused-or-undefined-state-property]
-      value: this.props.value || ''
-    };
-  }
+import { runValidations } from './form';
 
-  componentWillUnmount() {
-    this.props.detachFromForm(this); // Detaching if unmounting
-  }
-  componentDidMount() {
-    this.props.attachToForm(this); // Attaching the component to the form
-    if (this.props.value) {
-      this.props.validate(this, this.props.value);
-    }
-    if (this.props.setControlRef) {
-      this.props.setControlRef(this.input);
-    }
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.focus) {
-      this.input.focus();
-    }
-    var self = this;
-    if (prevProps.value !== this.props.value) {
-      this.setState({ value: this.props.value }, self.props.validate(self, self.props.value));
-    }
-  }
+export const TextInput = ({
+  autocomplete,
+  className = '',
+  disabled,
+  id,
+  InputLabelProps = {},
+  label,
+  hint,
+  required,
+  controlRef,
+  value: passedValue = '',
+  type,
+  control,
+  validations
+}) => {
+  const {
+    clearErrors,
+    formState: { errors },
+    setError
+  } = useFormContext();
+  const errorKey = `${id}-error`;
 
-  setValue(event) {
-    this.setState({
-      value: event.currentTarget.value
-    });
-    this.props.validate(this, event.currentTarget.value);
-  }
-  render() {
-    let { className = '' } = this.props;
-    className = this.props.required ? `${className} required` : className;
-    return (
-      <FormControl className={className} error={Boolean(this.state.errortext)}>
-        <InputLabel htmlFor={this.props.id} {...this.props.InputLabelProps}>
-          {this.props.label}
-        </InputLabel>
-        <Input
-          id={this.props.id}
-          name={this.props.id}
-          disabled={this.props.disabled}
-          inputRef={input => (this.input = input)}
-          value={this.state.value}
-          onKeyPress={this.props.handleKeyPress}
-          onChange={e => this.setValue(e)}
-          placeholder={this.props.hint}
-          required={this.props.required}
-          style={{ width: '400px', maxWidth: '100%' }}
-          type={this.props.type}
-        />
-        <FormHelperText id="component-error-text">{this.state.errortext}</FormHelperText>
-      </FormControl>
-    );
-  }
-}
+  const validate = value => {
+    const { isValid, errortext } = runValidations({ id, required, validations, value });
+    if (isValid) {
+      clearErrors(errorKey);
+    } else {
+      setError(errorKey, { type: 'validate', message: errortext });
+    }
+    return isValid;
+  };
+
+  return (
+    <Controller
+      name={id}
+      control={control}
+      rules={{ required, validate }}
+      render={({ field: { value, onChange, onBlur, ref }, fieldState: { error } }) => (
+        <FormControl className={`${className} ${required ? 'required' : ''}`} error={Boolean(error?.message || errors[errorKey])} style={{ width: 400 }}>
+          <InputLabel htmlFor={id} {...InputLabelProps}>
+            {label}
+          </InputLabel>
+          <Input
+            autoComplete={autocomplete}
+            id={id}
+            name={id}
+            disabled={disabled}
+            inputRef={inputRef => {
+              ref(inputRef);
+              if (controlRef) {
+                controlRef.current = inputRef;
+              }
+            }}
+            value={value ?? passedValue}
+            onChange={({ target: { value } }) => onChange(value)}
+            onBlur={onBlur}
+            placeholder={hint}
+            required={required}
+            type={type}
+          />
+          <FormHelperText>{(errors[errorKey] || error)?.message}</FormHelperText>
+        </FormControl>
+      )}
+    />
+  );
+};
+
+export default TextInput;
