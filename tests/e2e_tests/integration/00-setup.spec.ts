@@ -58,9 +58,9 @@ test.describe('Test setup', () => {
       await page.click(`text=/Sign up/i`);
       console.log(`creating user with username: ${username} and password: ${password}`);
       await page.fill(selectors.email, username);
-      await page.fill(selectors.passwordNew, password);
-      await page.fill(selectors.passwordNew, '');
-      await page.fill(selectors.passwordNew, password);
+      await page.fill(selectors.password, password);
+      await page.fill(selectors.password, '');
+      await page.fill(selectors.password, password);
       await page.fill(selectors.passwordConfirmation, password);
 
       await page.click(`button:has-text('Sign up')`);

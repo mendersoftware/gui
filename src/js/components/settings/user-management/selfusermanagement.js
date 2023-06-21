@@ -45,7 +45,6 @@ const useStyles = makeStyles()(() => ({
 export const SelfUserManagement = () => {
   const [editEmail, setEditEmail] = useState(false);
   const [editPass, setEditPass] = useState(false);
-  const [emailFormId, setEmailFormId] = useState(new Date());
   const { classes } = useStyles();
   const dispatch = useDispatch();
 
@@ -67,15 +66,7 @@ export const SelfUserManagement = () => {
     }
   };
 
-  const handleEmail = () => {
-    let uniqueId = emailFormId;
-    if (editEmail) {
-      // changing unique id will reset form values
-      uniqueId = new Date();
-    }
-    setEditEmail(toggle);
-    setEmailFormId(uniqueId);
-  };
+  const handleEmail = () => setEditEmail(toggle);
 
   const toggleMode = () => {
     const newMode = mode === 'dark' ? 'light' : 'dark';
@@ -99,24 +90,15 @@ export const SelfUserManagement = () => {
         </div>
       ) : (
         <Form
+          defaultValues={{ email }}
           onSubmit={editSubmit}
           handleCancel={handleEmail}
           submitLabel="Save"
           showButtons={editEmail}
           buttonColor="secondary"
           submitButtonId="submit_email"
-          uniqueId={emailFormId}
         >
-          <TextInput
-            disabled={false}
-            focus
-            hint="Email"
-            id="email"
-            InputLabelProps={{ shrink: !!email }}
-            label="Email"
-            validations="isLength:1,isEmail"
-            value={email}
-          />
+          <TextInput disabled={false} hint="Email" id="email" InputLabelProps={{ shrink: !!email }} label="Email" validations="isLength:1,isEmail" />
           <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required={true} />
         </Form>
       )}

@@ -51,12 +51,8 @@ export const Password = () => {
 
   const dispatch = useDispatch();
 
-  const handleSubmit = formData => {
-    if (!formData.hasOwnProperty('email')) {
-      return;
-    }
-    dispatch(passwordResetStart(formData.email)).then(() => setConfirm(true));
-  };
+  const handleSubmit = formData => dispatch(passwordResetStart(formData.email)).then(() => setConfirm(true));
+
   const content = confirm ? texts.confirmation : texts.request;
   return (
     <PasswordScreenContainer title="Reset your password">

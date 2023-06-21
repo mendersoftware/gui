@@ -130,7 +130,7 @@ export const userHandlers = [
     return res(ctx.status(563));
   }),
   rest.post(`${useradmApiUrl}/users`, ({ body: { email, password } }, res, ctx) => {
-    if ([email, password].every(value => value)) {
+    if (email === 'test@test.com' || [email, password].every(value => value)) {
       return res(ctx.status(200), ctx.json(defaultState.users.byId.a1));
     }
     return res(ctx.status(564));

@@ -19,7 +19,6 @@ export const selectors = {
   password: '[name=password]',
   passwordConfirmation: '[name=password_confirmation]',
   passwordCurrent: '[name=current_password]',
-  passwordNew: '[name=password_new]',
   placeholderExample: '[placeholder*=Example]',
   releaseSelect: '#deployment-release-selection',
   terminalElement: '.terminal.xterm',
