@@ -13,6 +13,10 @@ export type Release = {
    */
   name?: string;
   /**
+   * Last modification time for the release.
+   */
+  modified?: string;
+  /**
    * List of artifacts for this release.
    */
   artifacts?: Array<Artifact>;
