@@ -173,17 +173,7 @@ const deviceListColumns = [
 
 const ValueFileSize = ({ value, ...props }) => <FileSize fileSize={value} {...props} />;
 
-export const DeploymentDeviceList = ({
-  deployment,
-  getDeploymentDevices,
-  getDeviceAuth,
-  getDeviceById,
-  idAttribute,
-  selectedDeviceIds,
-  selectedDevices,
-  userCapabilities,
-  viewLog
-}) => {
+export const DeploymentDeviceList = ({ deployment, getDeploymentDevices, idAttribute, selectedDevices, userCapabilities, viewLog }) => {
   const [currentPage, setCurrentPage] = useState(defaultPage);
   const [loadingDone, setLoadingDone] = useState(false);
   const [perPage, setPerPage] = useState(10);
@@ -196,18 +186,6 @@ export const DeploymentDeviceList = ({
   useEffect(() => {
     setCurrentPage(defaultPage);
   }, [perPage]);
-
-  useEffect(() => {
-    // only update those that have changed & lack data
-    const lackingData = selectedDevices.reduce((accu, device) => {
-      if (!device.identity_data || !device.attributes || Object.keys(device.attributes).length === 0) {
-        accu.push(device.id);
-      }
-      return accu;
-    }, []);
-    // get device artifact, inventory and identity details not listed in schedule data
-    lackingData.map(deviceId => Promise.all([getDeviceById(deviceId), getDeviceAuth(deviceId)]));
-  }, [selectedDeviceIds]);
 
   useEffect(() => {
     if (!(deployment.id && loadingDone)) {

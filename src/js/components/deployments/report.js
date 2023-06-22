@@ -31,7 +31,6 @@ import momentDurationFormatSetup from 'moment-duration-format';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
-import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 import { getAuditLogs } from '../../actions/organizationActions';
 import { getRelease } from '../../actions/releaseActions';
 import { TIMEOUTS } from '../../constants/appConstants';
@@ -90,14 +89,13 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
   const timer = useRef();
   const { classes } = useStyles();
   const dispatch = useDispatch();
-  const { deployment, selectedDevices, selectedDeviceIds } = useSelector(state => {
+  const { deployment, selectedDevices } = useSelector(state => {
     const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
     const { devices = {} } = deployment;
     const { selectedDeviceIds } = state.deployments;
     return {
       deployment,
-      selectedDevices: selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] })),
-      selectedDeviceIds
+      selectedDevices: selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] }))
     };
   });
   const devicesById = useSelector(getDevicesById);
@@ -211,10 +209,7 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
   const props = {
     deployment,
     getDeploymentDevices: (id, options) => dispatch(getDeploymentDevices(id, options)),
-    getDeviceAuth: id => dispatch(getDeviceAuth(id)),
-    getDeviceById: id => dispatch(getDeviceById(id)),
     idAttribute,
-    selectedDeviceIds,
     selectedDevices,
     userCapabilities,
     viewLog
