@@ -64,6 +64,7 @@ import {
   setSnackbar,
   setVersionInfo
 } from './appActions';
+import { expectedOnboardingActions } from './onboardingActions.test';
 import { tenantDataDivergedMessage } from './organizationActions';
 
 export const attributeReducer = (accu, item) => {
@@ -368,7 +369,8 @@ describe('app actions', () => {
           state: 'accepted',
           total: 2
         }
-      }
+      },
+      ...expectedOnboardingActions
     ];
     await store.dispatch(initializeAppData());
     const storeActions = store.getActions();
