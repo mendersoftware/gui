@@ -501,7 +501,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 <div
                   class="flexbox center-aligned"
                 >
-                  Last check-in
+                  Latest activity
                   <svg
                     aria-hidden="true"
                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true css-1lqc678-MuiSvgIcon-root"

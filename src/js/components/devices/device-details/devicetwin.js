@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 
 import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
@@ -32,8 +31,11 @@ import DeviceDataCollapse from './devicedatacollapse';
 
 loader.config({ paths: { vs: '/ui/vs' } });
 
-const diffStatusStyle = makeStyles()(theme => ({
-  root: {
+const useStyles = makeStyles()(theme => ({
+  buttonSpacer: { marginLeft: theme.spacing(2) },
+  title: { alignItems: 'baseline' },
+  titleContainer: { width: '100%' },
+  diffStatus: {
     minHeight: 75,
     display: 'grid',
     gridTemplateColumns: 'min-content 300px max-content',
@@ -44,19 +46,18 @@ const diffStatusStyle = makeStyles()(theme => ({
   }
 }));
 
-const LastSyncNote = ({ updateTime }) => (
-  <div className="muted slightly-smaller" style={{ alignContent: 'flex-end', marginBottom: -10 }}>
+export const LastSyncNote = ({ updateTime }) => (
+  <div className="muted slightly-smaller" style={{ marginTop: 2 }}>
     Last synced: <Time value={updateTime} />
   </div>
 );
 
-const NoDiffStatus = ({ updateTime }) => {
-  const { classes } = diffStatusStyle();
+const NoDiffStatus = () => {
+  const { classes } = useStyles();
   return (
-    <div className={['padding', classes.root]}>
+    <div className={['padding', classes.diffStatus]}>
       <CheckCircleOutlined className="green" />
       <div>No difference between desired and reported configuration</div>
-      <LastSyncNote updateTime={updateTime} />
     </div>
   );
 };
@@ -75,14 +76,14 @@ export const TwinError = ({ providerTitle, twinError }) => (
 );
 
 export const TwinSyncStatus = ({ diffCount, providerTitle, twinError, updateTime }) => {
-  const classes = diffStatusStyle();
+  const classes = useStyles();
   if (twinError) {
     return <TwinError providerTitle={providerTitle} twinError={twinError} />;
   }
   return !diffCount ? (
-    <NoDiffStatus updateTime={updateTime} />
+    <NoDiffStatus />
   ) : (
-    <div className={['padding', classes.root]}>
+    <div className={['padding', classes.diffStatus]}>
       <CloudUpload />
       <div>
         <b>
@@ -95,14 +96,20 @@ export const TwinSyncStatus = ({ diffCount, providerTitle, twinError, updateTime
   );
 };
 
-export const Title = ({ providerTitle, twinTitle }) => (
-  <div className="flexbox center-aligned">
-    <h4 className="margin-right">
-      {providerTitle} {twinTitle}
-    </h4>
-    <Link to="/settings/integrations">Integration settings</Link>
-  </div>
-);
+export const Title = ({ providerTitle, twinTitle, updateTime }) => {
+  const { classes } = useStyles();
+  return (
+    <div className={`flexbox center-aligned space-between ${classes.titleContainer}`}>
+      <div className={`flexbox ${classes.title}`}>
+        <h4 className="margin-right">
+          {providerTitle} {twinTitle}
+        </h4>
+        <LastSyncNote updateTime={updateTime} />
+      </div>
+      <Link to="/settings/integrations">Integration settings</Link>
+    </div>
+  );
+};
 
 const editorProps = {
   height: 500,
@@ -131,7 +138,6 @@ const indentation = 4; // number of spaces, tab based indentation won't show in 
 const stringifyTwin = twin => JSON.stringify(twin, undefined, indentation) ?? '';
 
 export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }) => {
-  const theme = useTheme();
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -142,6 +148,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
   const [updated, setUpdated] = useState('');
   const [isSync, setIsSync] = useState(true);
   const editorRef = useRef(null);
+  const { classes } = useStyles();
 
   const externalProvider = EXTERNAL_PROVIDER[integration.provider];
   const { [integration.id]: deviceTwin = {} } = device.twinsByIntegration ?? {};
@@ -226,7 +233,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
           )}
         </div>
       }
-      title={<Title providerTitle={externalProvider.title} twinTitle={externalProvider.twinTitle} />}
+      title={<Title providerTitle={externalProvider.title} twinTitle={externalProvider.twinTitle} updateTime={updateTime} />}
     >
       <div className={`flexbox column ${isEditing ? 'twin-editing' : ''}`}>
         <div style={widthStyle}>
@@ -270,7 +277,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
             {isEditing ? (
               <>
                 <Button onClick={onCancelClick}>Cancel</Button>
-                <Button color="secondary" onClick={onApplyClick} style={{ marginLeft: theme.spacing(2) }} variant="contained">
+                <Button className={classes.buttonSpacer} color="secondary" onClick={onApplyClick} variant="contained">
                   Save
                 </Button>
               </>
