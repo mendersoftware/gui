@@ -35,6 +35,9 @@ const endAdornment = (
   </InputAdornment>
 );
 
+// due to search not working reliably for single letter searches, only start at 2
+const MINIMUM_SEARCH_LENGTH = 2;
+
 const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchTerm, style = {} }) => {
   const [searchValue, setSearchValue] = useState('');
   const { classes } = useStyles();
@@ -42,6 +45,9 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
   const debouncedSearchTerm = useDebounce(searchValue, TIMEOUTS.debounceDefault);
 
   useEffect(() => {
+    if (debouncedSearchTerm.length < MINIMUM_SEARCH_LENGTH) {
+      return;
+    }
     onSearch(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
@@ -52,6 +58,12 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
   }, [searchTerm]);
 
   const onSearchUpdated = ({ target: { value } }) => setSearchValue(value);
+
+  const onTriggerSearch = ({ key }) => {
+    if (key === 'Enter' && searchValue >= MINIMUM_SEARCH_LENGTH) {
+      onSearch(searchValue);
+    }
+  };
 
   const adornment = isSearching ? { endAdornment } : {};
   return (
@@ -66,6 +78,7 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
         ...adornment
       }}
       onChange={onSearchUpdated}
+      onKeyPress={onTriggerSearch}
       placeholder={placeholder}
       size="small"
       style={style}

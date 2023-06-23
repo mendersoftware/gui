@@ -21,7 +21,6 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import * as AppConstants from '../../constants/appConstants';
 import * as UserConstants from '../../constants/userConstants';
 import Header from './header';
 
@@ -82,7 +81,7 @@ describe('Header Component', () => {
     // await fireEvent.mouseDown(listItem);
     await waitFor(() => rerender(view));
     const storeActions = store.getActions();
-    const expectedActions = [{ type: AppConstants.SET_SEARCH_STATE }, { type: UserConstants.USER_LOGOUT }];
+    const expectedActions = [{ type: UserConstants.USER_LOGOUT }];
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
 });
