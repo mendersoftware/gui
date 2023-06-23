@@ -52,7 +52,8 @@ export const TIMEOUTS = {
   twoSeconds: 2 * oneSecond,
   threeSeconds: 3 * oneSecond,
   fiveSeconds: 5 * oneSecond,
-  refreshDefault: 10 * oneSecond
+  refreshDefault: 10 * oneSecond,
+  refreshLong: 60 * oneSecond
 };
 export const locations = {
   eu: { key: 'eu', title: 'EU', location: 'eu.hosted.mender.io', icon: FlagEU },
