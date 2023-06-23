@@ -32,7 +32,7 @@ const states = {
   preauthorized: <CheckIcon style={iconStyle} />
 };
 
-export const AuthStatus = ({ decommission, device, deviceListRefresh, showHelptips }) => {
+export const AuthStatus = ({ decommission, device, showHelptips }) => {
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
   let hasPending = '';
@@ -61,7 +61,7 @@ export const AuthStatus = ({ decommission, device, deviceListRefresh, showHelpti
         </div>
       }
     >
-      <Authsets decommission={decommission} device={device} deviceListRefresh={deviceListRefresh} showHelptips={showHelptips} />
+      <Authsets decommission={decommission} device={device} showHelptips={showHelptips} />
     </DeviceDataCollapse>
   );
 };
