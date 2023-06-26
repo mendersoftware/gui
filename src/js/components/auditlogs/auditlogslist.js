@@ -171,8 +171,17 @@ export const AuditLogsList = ({ items, loading, onChangePage, onChangeRowsPerPag
             );
           })}
         </div>
-        <Loader show={loading} />
-        <Pagination count={count} rowsPerPage={perPage} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
+        <div className="flexbox margin-top">
+          <Pagination
+            className="margin-top-none"
+            count={count}
+            rowsPerPage={perPage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            page={page}
+            onChangePage={onChangePage}
+          />
+          <Loader show={loading} small />
+        </div>
         <EventDetailsDrawer eventItem={eventItem} open={Boolean(eventItem)} onClose={() => onIssueSelection()} />
       </div>
     )
