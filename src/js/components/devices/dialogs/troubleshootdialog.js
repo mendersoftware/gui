@@ -184,12 +184,12 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
 
   const onSocketOpen = () => {
     setSocketInitialized(true);
-    dispatch(setSnackbar('Connection with the device established.', 5000));
+    dispatch(setSnackbar('Connection with the device established.', TIMEOUTS.fiveSeconds));
   };
 
   const onNotify = content => {
     setSnackbarAlreadySet(true);
-    dispatch(setSnackbar(content, 5000));
+    dispatch(setSnackbar(content, TIMEOUTS.fiveSeconds));
     snackTimer.current = setTimeout(() => setSnackbarAlreadySet(false), TIMEOUTS.fiveSeconds + TIMEOUTS.debounceShort);
   };
 

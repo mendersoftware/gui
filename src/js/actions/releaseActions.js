@@ -154,7 +154,7 @@ export const createArtifact = (meta, file) => (dispatch, getState) => {
     })
     .catch(err => {
       if (isCancel(err)) {
-        return dispatch(setSnackbar('The artifact generation has been cancelled', 5000));
+        return dispatch(setSnackbar('The artifact generation has been cancelled', TIMEOUTS.fiveSeconds));
       }
       return commonErrorHandler(err, `Artifact couldn't be generated.`, dispatch);
     })
@@ -175,7 +175,7 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => {
-      const tasks = [dispatch(setSnackbar('Upload successful', 5000)), dispatch(getReleases())];
+      const tasks = [dispatch(setSnackbar('Upload successful', TIMEOUTS.fiveSeconds)), dispatch(getReleases())];
       if (meta.name) {
         tasks.push(dispatch(selectRelease(meta.name)));
       }
@@ -183,7 +183,7 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
     })
     .catch(err => {
       if (isCancel(err)) {
-        return dispatch(setSnackbar('The upload has been cancelled', 5000));
+        return dispatch(setSnackbar('The upload has been cancelled', TIMEOUTS.fiveSeconds));
       }
       return commonErrorHandler(err, `Artifact couldn't be uploaded.`, dispatch);
     })
@@ -215,7 +215,7 @@ export const editArtifact = (id, body) => (dispatch, getState) =>
       release.Artifacts[index].description = body.description;
       return Promise.all([
         dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release }),
-        dispatch(setSnackbar('Artifact details were updated successfully.', 5000, '')),
+        dispatch(setSnackbar('Artifact details were updated successfully.', TIMEOUTS.fiveSeconds, '')),
         dispatch(getRelease(release.Name)),
         dispatch(selectRelease(release.Name))
       ]);
@@ -242,7 +242,10 @@ export const removeArtifact = id => (dispatch, getState) =>
           )
         ]);
       }
-      return Promise.all([dispatch(setSnackbar('Artifact was removed', 5000, '')), dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })]);
+      return Promise.all([
+        dispatch(setSnackbar('Artifact was removed', TIMEOUTS.fiveSeconds, '')),
+        dispatch({ type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release })
+      ]);
     })
     .catch(err => commonErrorHandler(err, `Error removing artifact:`, dispatch));
 
