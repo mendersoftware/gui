@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -61,7 +61,13 @@ import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
 import ListOptions from './widgets/listoptions';
 
-const refreshDeviceLength = TIMEOUTS.refreshDefault;
+const deviceRefreshTimes = {
+  [DEVICE_STATES.accepted]: TIMEOUTS.refreshLong,
+  [DEVICE_STATES.pending]: TIMEOUTS.refreshDefault,
+  [DEVICE_STATES.preauth]: TIMEOUTS.refreshLong,
+  [DEVICE_STATES.rejected]: TIMEOUTS.refreshLong,
+  default: TIMEOUTS.refreshDefault
+};
 
 const idAttributeTitleMap = {
   id: 'Device ID',
@@ -281,19 +287,21 @@ export const Authorized = ({
     setShowFilters(false);
   }, [selectedGroup]);
 
+  const refreshDevices = useCallback(() => {
+    const refreshLength = deviceRefreshTimes[selectedState] ?? deviceRefreshTimes.default;
+    return dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger })).catch(err =>
+      setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshLength, dispatchedSetSnackbar)
+    );
+  }, [refreshTrigger, selectedState]);
+
   useEffect(() => {
     if (!devicesInitialized) {
       return;
     }
+    const refreshLength = deviceRefreshTimes[selectedState] ?? deviceRefreshTimes.default;
     clearInterval(timer.current);
-    timer.current = setInterval(
-      () =>
-        dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger })).catch(err =>
-          setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshDeviceLength, dispatchedSetSnackbar)
-        ),
-      refreshDeviceLength
-    );
-  }, [devicesInitialized, refreshTrigger]);
+    timer.current = setInterval(() => refreshDevices(), refreshLength);
+  }, [devicesInitialized, selectedState]);
 
   useEffect(() => {
     Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState })));
@@ -340,8 +348,6 @@ export const Authorized = ({
   const handlePageChange = page => dispatch(setDeviceListState({ selectedId: undefined, page, refreshTrigger: !refreshTrigger }));
 
   const onPageLengthChange = perPage => dispatch(setDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger }));
-
-  const refreshDevices = () => dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger }));
 
   const onSortChange = attribute => {
     let changedSortCol = attribute.name;
@@ -510,7 +516,6 @@ export const Authorized = ({
         actionCallbacks={actionCallbacks}
         deviceId={openedDevice}
         onClose={() => dispatch(setDeviceListState({ selectedId: undefined }))}
-        refreshDevices={refreshDevices}
         setDetailsTab={setDetailsTab}
         tabSelection={tabSelection}
       />

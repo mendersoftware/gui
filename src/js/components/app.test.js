@@ -22,6 +22,7 @@ import Cookies from 'universal-cookie';
 
 import { defaultState, mockDate, token, undefineds } from '../../../tests/mockData';
 import { render } from '../../../tests/setupTests';
+import { TIMEOUTS } from '../constants/appConstants';
 import { getConfiguredStore } from '../reducers';
 import App, { timeout } from './app';
 
@@ -49,10 +50,6 @@ const state = {
       }
     },
     deploymentDeviceLimit: null
-  },
-  users: {
-    ...defaultState.users,
-    currentUser: null
   }
 };
 
@@ -66,12 +63,20 @@ describe('App Component', () => {
     const store = mockStore(state);
 
     window.localStorage.getItem.mockReturnValueOnce('false');
-    const { baseElement } = render(
+    const ui = (
       <Provider store={store}>
         <App />
       </Provider>
     );
-    const view = baseElement;
+    const { asFragment, rerender } = render(ui);
+    await waitFor(() => expect(screen.queryByText(/see all deployments/i)).toBeInTheDocument(), { timeout: TIMEOUTS.fiveSeconds });
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+      return new Promise(resolve => resolve(), TIMEOUTS.threeSeconds);
+    });
+    await waitFor(() => rerender(ui));
+    const view = asFragment();
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
@@ -100,12 +105,19 @@ describe('App Component', () => {
     });
     cookies.get.mockReturnValue('');
     await waitFor(() => rerender(ui));
-    act(() => {
+    await act(async () => {
       jest.runOnlyPendingTimers();
       jest.runAllTicks();
+      return new Promise(resolve => resolve(), TIMEOUTS.threeSeconds);
     });
-    await waitFor(() => expect(screen.queryByText(/Version:/i)).not.toBeInTheDocument(), { timeout: 5000 });
+    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(screen.queryByText(/Version:/i)).not.toBeInTheDocument(), { timeout: TIMEOUTS.fiveSeconds });
     expect(screen.queryByText(/Northern.tech/i)).toBeInTheDocument();
     expect(screen.queryByText(`© ${mockDate.getFullYear()} Northern.tech`)).toBeInTheDocument();
-  }, 7000);
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+      return new Promise(resolve => resolve(), TIMEOUTS.fiveSeconds);
+    });
+  }, 10000);
 });

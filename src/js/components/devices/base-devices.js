@@ -175,7 +175,7 @@ export const defaultHeaders = {
     textRender: getDeviceTypeText
   },
   lastCheckIn: {
-    title: 'Last check-in',
+    title: 'Latest activity',
     attribute: { name: 'updated_ts', scope: 'system' },
     component: RelativeDeviceTime,
     sortable: true
