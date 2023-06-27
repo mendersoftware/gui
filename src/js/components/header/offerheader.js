@@ -15,7 +15,9 @@ import React from 'react';
 
 import { Announcement as AnnouncmentIcon, Close as CloseIcon } from '@mui/icons-material';
 
-const OfferHeader = ({ docsVersion, onHide }) => (
+import DocsLink from '../common/docslink';
+
+const OfferHeader = ({ onHide }) => (
   <div id="offerHeader" className="offerBox">
     <AnnouncmentIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
     <span>
@@ -24,9 +26,7 @@ const OfferHeader = ({ docsVersion, onHide }) => (
         mender.io/plans/pricing
       </a>
       .&nbsp;
-      <a href={`https://docs.mender.io/${docsVersion}add-ons/`} target="_blank" rel="noreferrer">
-        Visit our documentation
-      </a>
+      <DocsLink path="add-ons" title="Visit our documentation" />
       &nbsp;to learn how to enable add-on features
     </span>
     <CloseIcon style={{ marginLeft: '4px', height: '16px', cursor: 'pointer' }} onClick={onHide} />

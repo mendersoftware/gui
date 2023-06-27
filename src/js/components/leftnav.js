@@ -24,8 +24,9 @@ import copy from 'copy-to-clipboard';
 import { setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS, canAccess } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { getDocsVersion, getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities, getVersionInformation } from '../selectors';
+import { getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities, getVersionInformation } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import DocsLink from './common/docslink';
 
 const listItems = [
   { route: '/', text: 'Dashboard', canAccess },
@@ -132,21 +133,9 @@ export const LeftNav = () => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
-  const docsVersion = useSelector(getDocsVersion);
   const onboardingState = useSelector(getOnboardingState);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
-
-  const licenseLink = (
-    <a
-      className={classes.licenseLink}
-      href={`https://docs.mender.io/${docsVersion}release-information/open-source-licenses`}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      License information
-    </a>
-  );
 
   let onboardingComponent;
   if (releasesRef.current) {
@@ -186,7 +175,10 @@ export const LeftNav = () => {
           <ListItemText primary="Help & support" />
         </ListItem>
         <ListItem className={classes.listItem}>
-          <ListItemText primary={<VersionInfo />} secondary={licenseLink} />
+          <ListItemText
+            primary={<VersionInfo />}
+            secondary={<DocsLink className={classes.licenseLink} path="release-information/open-source-licenses" title="License information" />}
+          />
         </ListItem>
       </List>
     </div>

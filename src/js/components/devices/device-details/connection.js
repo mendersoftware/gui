@@ -25,6 +25,7 @@ import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceCon
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
 import { checkPermissionsObject, uiPermissionsById } from '../../../constants/userConstants';
 import { formatAuditlogs } from '../../../utils/locationutils';
+import DocsLink from '../../common/docslink';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
@@ -32,7 +33,7 @@ import Troubleshootdialog from '../dialogs/troubleshootdialog';
 import DeviceDataCollapse from './devicedatacollapse';
 
 const buttonStyle = { textTransform: 'none', textAlign: 'left' };
-export const PortForwardLink = ({ docsVersion }) => (
+export const PortForwardLink = () => (
   <MenderTooltip
     arrow
     title={
@@ -46,10 +47,10 @@ export const PortForwardLink = ({ docsVersion }) => (
       </div>
     }
   >
-    <a href={`https://docs.mender.io/${docsVersion}add-ons/port-forward`} className="flexbox centered margin-left" target="_blank" rel="noopener noreferrer">
+    <DocsLink className="flexbox centered margin-left" path="add-ons/port-forward">
       Enable port forwarding
       <LaunchIcon className="margin-left-small" fontSize="small" />
-    </a>
+    </DocsLink>
   </MenderTooltip>
 );
 
@@ -65,27 +66,19 @@ export const DeviceConnectionNote = ({ children, style = buttonStyle }) => {
   );
 };
 
-export const DeviceConnectionMissingNote = ({ docsVersion }) => (
+export const DeviceConnectionMissingNote = () => (
   <DeviceConnectionNote>
     The troubleshoot add-on does not seem to be enabled on this device.
     <br />
-    Please{' '}
-    <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`}>
-      see the documentation
-    </a>{' '}
-    for a description on how it works and how to enable it.
+    Please <DocsLink path="add-ons/remote-terminal" title="see the documentation" /> for a description on how it works and how to enable it.
   </DeviceConnectionNote>
 );
 
-export const DeviceDisconnectedNote = ({ docsVersion, lastConnectionTs }) => (
+export const DeviceDisconnectedNote = ({ lastConnectionTs }) => (
   <DeviceConnectionNote>
     The troubleshoot add-on is not currently connected on this device, it was last connected on <Time value={lastConnectionTs} />.
     <br />
-    Please{' '}
-    <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/remote-terminal`}>
-      see the documentation
-    </a>{' '}
-    for more information.
+    Please <DocsLink path="add-ons/remote-terminal" title="see the documentation" /> for more information.
   </DeviceConnectionNote>
 );
 
@@ -114,7 +107,7 @@ const troubleshootingTools = [
 
 const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device');
 
-export const DeviceConnection = ({ className = '', device, docsVersion = '', hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
+export const DeviceConnection = ({ className = '', device, hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
   const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
 
   const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess, groupsPermissions } = userCapabilities;
@@ -138,15 +131,15 @@ export const DeviceConnection = ({ className = '', device, docsVersion = '', has
     <DeviceDataCollapse
       header={
         <div className={`flexbox ${className}`}>
-          {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote docsVersion={docsVersion} />}
-          {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote docsVersion={docsVersion} lastConnectionTs={connect_updated_ts} />}
+          {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote />}
+          {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote lastConnectionTs={connect_updated_ts} />}
           {connect_status === DEVICE_CONNECT_STATES.connected &&
             availableTabs.map(item => {
               let Component = TroubleshootButton;
               if (item.component) {
                 Component = item.component;
               }
-              return <Component key={item.key} docsVersion={docsVersion} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
+              return <Component key={item.key} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
             })}
           {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
             <Link
@@ -169,7 +162,6 @@ export default DeviceConnection;
 export const TroubleshootTab = ({
   classes,
   device,
-  docsVersion,
   tenantCapabilities: { hasAuditlogs },
   socketClosed,
   launchTroubleshoot,
@@ -182,7 +174,6 @@ export const TroubleshootTab = ({
     <DeviceConnection
       className={classes.deviceConnection}
       device={device}
-      docsVersion={docsVersion}
       hasAuditlogs={hasAuditlogs}
       socketClosed={socketClosed}
       startTroubleshoot={launchTroubleshoot}

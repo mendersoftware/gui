@@ -54,22 +54,23 @@ describe('PhysicalDeviceOnboarding Component', () => {
       async (Component, index) => {
         it(`renders ${Component.displayName || Component.name} correctly`, () => {
           const { baseElement } = render(
-            <Component
-              advanceOnboarding={jest.fn}
-              connectionString="test"
-              docsVersion={''}
-              hasConvertedImage={true}
-              integrationProvider={EXTERNAL_PROVIDER['iot-hub'].provider}
-              hasExternalIntegration={index % 2}
-              ipAddress="test.address"
-              isEnterprise={false}
-              isHosted={true}
-              isDemoMode={false}
-              onboardingState={{ complete: false, showTips: true, showHelptips: true }}
-              onSelect={jest.fn}
-              selection="raspberrypi7"
-              tenantToken="testtoken"
-            />
+            <Provider store={store}>
+              <Component
+                advanceOnboarding={jest.fn}
+                connectionString="test"
+                hasConvertedImage={true}
+                integrationProvider={EXTERNAL_PROVIDER['iot-hub'].provider}
+                hasExternalIntegration={index % 2}
+                ipAddress="test.address"
+                isEnterprise={false}
+                isHosted={true}
+                isDemoMode={false}
+                onboardingState={{ complete: false, showTips: true, showHelptips: true }}
+                onSelect={jest.fn}
+                selection="raspberrypi7"
+                tenantToken="testtoken"
+              />
+            </Provider>
           );
           const view = baseElement.firstChild;
           expect(view).toMatchSnapshot();

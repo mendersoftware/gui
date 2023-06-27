@@ -1491,14 +1491,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
 }
 
 <div>
-  <div>
-    <h1
-      class="flexbox centered"
-    >
+  <div
+    class="flexbox column centered test"
+  >
+    <h1>
       Setting up your Account
     </h1>
     <h2
-      class="flexbox centered margin-bottom-large"
+      class="margin-bottom-large"
     >
       To finish creating your account,
       <br />
@@ -1575,8 +1575,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           Choose a hosting region for your account.
         </p>
         <a
-          href="https://docs.mender.io/general/hosted-mender-regions"
-          rel="noopener noreferrer"
+          class=""
+          href="https://docs.mender.io/development/general/hosted-mender-regions"
+          rel=""
           target="_blank"
         >
           Learn more

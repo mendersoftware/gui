@@ -219,8 +219,9 @@ exports[`Help Component renders correctly 1`] = `
           To quickly get started with the common use cases of Mender, follow the
            
           <a
+            class=""
             href="https://docs.mender.io/development/get-started"
-            rel="noopener noreferrer"
+            rel=""
             target="_blank"
           >
             Get Started chapter in our documentation 
@@ -246,8 +247,9 @@ exports[`Help Component renders correctly 1`] = `
           We support several ways of integrating your devices with Mender. For a detailed introduction read the
            
           <a
+            class=""
             href="https://docs.mender.io/development/client-installation"
-            rel="noopener noreferrer"
+            rel=""
             target="_blank"
           >
             Client Installation documentation 
@@ -296,8 +298,9 @@ exports[`Help Component renders correctly 1`] = `
           Everything you need to package your software for deployment with Mender can be found here:
            
           <a
+            class=""
             href="https://docs.mender.io/development/artifact-creation"
-            rel="noopener noreferrer"
+            rel=""
             target="_blank"
           >
             Artifact Creation documentation 
@@ -1538,7 +1541,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-client"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -1698,7 +1701,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-artifact"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -1824,7 +1827,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-binary-delta"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -1984,7 +1987,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-cli"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -2494,7 +2497,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-configure"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -2994,7 +2997,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-connect"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -3120,7 +3123,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-convert"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -3620,7 +3623,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-gateway"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -3848,7 +3851,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
               <a
                 class=""
                 href="https://docs.mender.io/development/release-information/release-notes-changelog/mender-monitor"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 Changelog
@@ -3878,7 +3881,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
     <a
       class=""
       href="https://docs.mender.io/development/downloads"
-      rel="noopener noreferrer"
+      rel=""
       target="_blank"
     >
       Downloads section in our documentation
@@ -3930,8 +3933,9 @@ exports[`Help Component static components renders GettingStarted correctly 1`] =
     To quickly get started with the common use cases of Mender, follow the
      
     <a
-      href="https://docs.mender.io/get-started"
-      rel="noopener noreferrer"
+      class=""
+      href="https://docs.mender.io/development/get-started"
+      rel=""
       target="_blank"
     >
       Get Started chapter in our documentation 
@@ -3957,8 +3961,9 @@ exports[`Help Component static components renders GettingStarted correctly 1`] =
     We support several ways of integrating your devices with Mender. For a detailed introduction read the
      
     <a
-      href="https://docs.mender.io/client-installation"
-      rel="noopener noreferrer"
+      class=""
+      href="https://docs.mender.io/development/client-installation"
+      rel=""
       target="_blank"
     >
       Client Installation documentation 
@@ -4007,8 +4012,9 @@ exports[`Help Component static components renders GettingStarted correctly 1`] =
     Everything you need to package your software for deployment with Mender can be found here:
      
     <a
-      href="https://docs.mender.io/artifact-creation"
-      rel="noopener noreferrer"
+      class=""
+      href="https://docs.mender.io/development/artifact-creation"
+      rel=""
       target="_blank"
     >
       Artifact Creation documentation 

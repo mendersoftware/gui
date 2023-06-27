@@ -380,6 +380,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
           <ol>
             <li>
               <a
+                class=""
                 href="https://docs.mender.io/get-started/deploy-an-operating-system-update"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -389,6 +390,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
             </li>
             <li>
               <a
+                class=""
                 href="https://docs.mender.io/get-started/deploy-a-container-update"
                 rel="noopener noreferrer"
                 target="_blank"

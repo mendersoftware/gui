@@ -53,6 +53,7 @@ import {
 } from '../../selectors';
 import Tracking from '../../tracking';
 import DeviceIdentityDisplay from '../common/deviceidentity';
+import DocsLink from '../common/docslink';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import DeviceConfiguration from './device-details/configuration';
@@ -118,7 +119,7 @@ const GatewayConnectionNotification = ({ gatewayDevices, onClick }) => {
   );
 };
 
-const GatewayNotification = ({ device, docsVersion, onClick }) => {
+const GatewayNotification = ({ device, onClick }) => {
   const ipAddress = getDemoDeviceAddress([device]);
   const { classes } = useStyles();
   return (
@@ -127,10 +128,7 @@ const GatewayNotification = ({ device, docsVersion, onClick }) => {
       title={
         <div style={{ maxWidth: 350 }}>
           For information about connecting other devices to this gateway, please refer to the{' '}
-          <a href={`https://docs.mender.io/${docsVersion}get-started/mender-gateway`} target="_blank" rel="noopener noreferrer">
-            Mender Gateway documentation
-          </a>
-          . This device is reachable via <i>{ipAddress}</i>.
+          <DocsLink path="get-started/mender-gateway" title="Mender Gateway documentation" />. This device is reachable via <i>{ipAddress}</i>.
         </div>
       }
     >
@@ -337,7 +335,7 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
           </IconButton>
         </div>
         <div className="flexbox center-aligned">
-          {isGateway && <GatewayNotification device={device} docsVersion={docsVersion} onClick={() => scrollToDeviceSystem()} />}
+          {isGateway && <GatewayNotification device={device} onClick={() => scrollToDeviceSystem()} />}
           {!!gatewayIds.length && (
             <GatewayConnectionNotification gatewayDevices={gatewayIds.map(gatewayId => devicesById[gatewayId])} onClick={scrollToDeviceSystem} />
           )}

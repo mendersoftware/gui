@@ -12,14 +12,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
 
-import { undefineds } from '../../../../../tests/mockData';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import MakeGatewayDialog from './make-gateway-dialog';
 
+const mockStore = configureStore([thunk]);
+
 describe('CreateGroupExplainerContent Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<MakeGatewayDialog docsVersion="" onCancel={jest.fn} />);
+    const store = mockStore({ ...defaultState });
+    const { baseElement } = render(
+      <Provider store={store}>
+        <MakeGatewayDialog onCancel={jest.fn} />
+      </Provider>
+    );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

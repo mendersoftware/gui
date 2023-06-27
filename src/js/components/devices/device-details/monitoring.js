@@ -18,7 +18,8 @@ import { useTheme } from '@mui/material/styles';
 
 import { getDeviceAlerts, setAlertListState } from '../../../actions/monitorActions';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
-import { getDocsVersion, getOfflineThresholdSettings } from '../../../selectors';
+import { getOfflineThresholdSettings } from '../../../selectors';
+import DocsLink from '../../common/docslink';
 import Pagination from '../../common/pagination';
 import Time from '../../common/time';
 import MonitorDetailsDialog from '../dialogs/monitordetailsdialog';
@@ -28,15 +29,11 @@ import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMa
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
-export const DeviceMonitorsMissingNote = ({ docsVersion }) => (
+export const DeviceMonitorsMissingNote = () => (
   <DeviceConnectionNote>
     No alert monitor is currently configured for this device.
     <br />
-    Please{' '}
-    <a target="_blank" rel="noopener noreferrer" href={`https://docs.mender.io/${docsVersion}add-ons/monitor`}>
-      see the documentation
-    </a>{' '}
-    for a description on how to configure different kinds of monitors.
+    Please <DocsLink path="add-ons/monitor" title="see the documentation" /> for a description on how to configure different kinds of monitors.
   </DeviceConnectionNote>
 );
 
@@ -61,7 +58,6 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
   const theme = useTheme();
   const { alerts = [], latest: latestAlerts = [] } = useSelector(state => state.monitor.alerts.byDeviceId[device.id]) ?? {};
   const alertListState = useSelector(state => state.monitor.alerts.alertList) ?? {};
-  const docsVersion = useSelector(getDocsVersion);
   const offlineThresholdSettings = useSelector(getOfflineThresholdSettings);
   const dispatch = useDispatch();
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
@@ -89,7 +85,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
             {isOffline && <DeviceOfflineHeaderNotification offlineThresholdSettings={offlineThresholdSettings} />}
           </>
         ) : (
-          <DeviceMonitorsMissingNote docsVersion={docsVersion} />
+          <DeviceMonitorsMissingNote />
         )
       }
       isAddOn
