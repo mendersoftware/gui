@@ -3,11 +3,12 @@ import isUUID from 'validator/lib/isUUID';
 
 import { commonErrorHandler, setSnackbar } from '../actions/appActions';
 import GeneralApi, { apiUrl, headerNames } from '../api/general-api';
-import { SORTING_OPTIONS } from '../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS, RECEIVE_DEVICE } from '../constants/deviceConstants';
 import { deepCompare, isEmpty, standardizePhases, startTimeSort } from '../helpers';
 import Tracking from '../tracking';
+import { getDeviceAuth, getDeviceById } from './deviceActions';
 import { saveGlobalSettings } from './userActions';
 
 export const deploymentsApiUrl = `${apiUrl.v1}/deployments`;
@@ -136,7 +137,7 @@ export const createDeployment =
         let tasks = [
           dispatch({ type: CREATE_DEPLOYMENT, deployment, deploymentId }),
           dispatch(getSingleDeployment(deploymentId)),
-          dispatch(setSnackbar('Deployment created successfully', 8000))
+          dispatch(setSnackbar('Deployment created successfully', TIMEOUTS.fiveSeconds))
         ];
         // track in GA
         trackDeploymentCreation(totalDeploymentCount, hasDeployments, trial_expiration);
@@ -172,15 +173,28 @@ export const getDeploymentDevices =
         }
         return accu;
       }, {});
-      return Promise.resolve(
+      const selectedDeviceIds = Object.keys(devices);
+      let tasks = [
         dispatch({
           type: RECEIVE_DEPLOYMENT_DEVICES,
           deploymentId: id,
           devices,
-          selectedDeviceIds: Object.keys(devices),
+          selectedDeviceIds,
           totalDeviceCount: Number(response.headers[headerNames.total])
         })
-      );
+      ];
+      const devicesById = getState().devices.byId;
+      // only update those that have changed & lack data
+      const lackingData = selectedDeviceIds.reduce((accu, deviceId) => {
+        const device = devicesById[deviceId];
+        if (!device || !device.identity_data || !device.attributes || Object.keys(device.attributes).length === 0) {
+          accu.push(deviceId);
+        }
+        return accu;
+      }, []);
+      // get device artifact, inventory and identity details not listed in schedule data
+      tasks = lackingData.reduce((accu, deviceId) => [...accu, dispatch(getDeviceById(deviceId)), dispatch(getDeviceAuth(deviceId))], tasks);
+      return Promise.all(tasks);
     });
   };
 

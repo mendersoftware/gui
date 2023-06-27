@@ -5,9 +5,9 @@
 import type { FilterPredicate } from "./FilterPredicate";
 
 /**
- * Filter definition
+ * Inventory filter assigned to the deployment
  */
-export type Filter = {
+export type FilterDeployments = {
   /**
    * Unique identifier of the saved filter.
    */

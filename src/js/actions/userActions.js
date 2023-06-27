@@ -162,6 +162,8 @@ export const getUser = id => dispatch =>
     ])
   );
 
+export const initializeSelf = () => dispatch => dispatch(getUser(UserConstants.OWN_USER_ID)).then(() => dispatch(initializeAppData()));
+
 export const updateUserColumnSettings = (columns, currentUserId) => (dispatch, getState) => {
   const userId = currentUserId ?? getCurrentUser(getState()).id;
   const storageKey = `${userId}-column-widths`;

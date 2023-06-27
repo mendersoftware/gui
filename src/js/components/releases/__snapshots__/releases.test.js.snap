@@ -1300,81 +1300,65 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-41:focus::-ms-input-
           </tbody>
         </table>
         <div
-          class="MuiTablePagination-root flexbox margin-top margin-top-none emotion-36"
+          class="flexbox"
         >
           <div
-            class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar emotion-37"
+            class="MuiTablePagination-root flexbox margin-top margin-top-none emotion-36"
           >
             <div
-              class="MuiTablePagination-spacer flexbox no-basis emotion-38"
-            />
-            <p
-              class="MuiTablePagination-selectLabel emotion-39"
-              id="mui-4"
-            >
-              Rows
-            </p>
-            <div
-              class="MuiInputBase-root MuiInputBase-colorPrimary emotion-40"
+              class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar emotion-37"
             >
               <div
-                aria-expanded="false"
-                aria-haspopup="listbox"
-                aria-labelledby="mui-4 mui-3"
-                class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input emotion-41"
-                id="mui-3"
-                role="button"
-                tabindex="0"
-              >
-                20
-              </div>
-              <input
-                aria-hidden="true"
-                aria-invalid="false"
-                class="MuiSelect-nativeInput emotion-42"
-                tabindex="-1"
-                value="20"
+                class="MuiTablePagination-spacer flexbox no-basis emotion-38"
               />
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard emotion-43"
-                data-testid="ArrowDropDownIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <p
+                class="MuiTablePagination-selectLabel emotion-39"
+                id="mui-4"
               >
-                <path
-                  d="M7 10l5 5 5-5z"
+                Rows
+              </p>
+              <div
+                class="MuiInputBase-root MuiInputBase-colorPrimary emotion-40"
+              >
+                <div
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-labelledby="mui-4 mui-3"
+                  class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input emotion-41"
+                  id="mui-3"
+                  role="button"
+                  tabindex="0"
+                >
+                  20
+                </div>
+                <input
+                  aria-hidden="true"
+                  aria-invalid="false"
+                  class="MuiSelect-nativeInput emotion-42"
+                  tabindex="-1"
+                  value="20"
                 />
-              </svg>
-            </div>
-            <p
-              class="MuiTablePagination-displayedRows emotion-44"
-            />
-            <div
-              class="flexbox center-aligned"
-            >
-              <div>
-                1-1 of 1
-              </div>
-              <button
-                class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge emotion-45"
-                disabled=""
-                tabindex="-1"
-                type="button"
-              >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
-                  data-testid="KeyboardArrowLeftIcon"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard emotion-43"
+                  data-testid="ArrowDropDownIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
+                    d="M7 10l5 5 5-5z"
                   />
                 </svg>
-              </button>
-              <div>
+              </div>
+              <p
+                class="MuiTablePagination-displayedRows emotion-44"
+              />
+              <div
+                class="flexbox center-aligned"
+              >
+                <div>
+                  1-1 of 1
+                </div>
                 <button
                   class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge emotion-45"
                   disabled=""
@@ -1384,16 +1368,56 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-41:focus::-ms-input-
                   <svg
                     aria-hidden="true"
                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
-                    data-testid="KeyboardArrowRightIcon"
+                    data-testid="KeyboardArrowLeftIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                      d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
                     />
                   </svg>
                 </button>
+                <div>
+                  <button
+                    class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge emotion-45"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-27"
+                      data-testid="KeyboardArrowRightIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
+            </div>
+          </div>
+          <div
+            class="loaderContainer shrunk"
+          >
+            <div
+              class="small  loader"
+            >
+              <span
+                class="dot dot_1"
+              />
+              <span
+                class="dot dot_2"
+              />
+              <span
+                class="dot dot_3"
+              />
+              <span
+                class="dot dot_4"
+              />
             </div>
           </div>
         </div>

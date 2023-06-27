@@ -30,7 +30,7 @@ import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { SET_SHOW_HELP } from '../constants/userConstants';
 import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
-import { getCurrentUser, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getCurrentUser, getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeploymentsByStatus } from './deploymentActions';
 import {
@@ -43,7 +43,7 @@ import {
   searchDevices,
   setDeviceListState
 } from './deviceActions';
-import { setDemoArtifactPort, setOnboardingComplete } from './onboardingActions';
+import { getOnboardingState, setDemoArtifactPort, setOnboardingComplete } from './onboardingActions';
 import { getIntegrations, getUserOrganization } from './organizationActions';
 import { getReleases } from './releaseActions';
 import { getGlobalSettings, getRoles, getUserSettings, saveGlobalSettings, saveUserSettings } from './userActions';
@@ -173,7 +173,39 @@ const processUserCookie = (user, showHelptips) => {
   return showHelptips;
 };
 
-export const initializeAppData = () => (dispatch, getState) => {
+const interpretAppData = () => (dispatch, getState) => {
+  const state = getState();
+  const user = getCurrentUser(state);
+  let tasks = [];
+  let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettingsSelector(state);
+  tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
+  // checks if user id is set and if cookie for helptips exists for that user
+  showHelptips = processUserCookie(user, showHelptips);
+  tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
+  tasks.push(Promise.resolve(dispatch({ type: SET_SHOW_HELP, show: showHelptips })));
+  let settings = { showHelptips };
+  if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
+    settings.trackingConsentGiven = true;
+  }
+  tasks.push(dispatch(saveUserSettings(settings)));
+  // the following is used as a migration and initialization of the stored identity attribute
+  // changing the default device attribute to the first non-deviceId attribute, unless a stored
+  // id attribute setting exists
+  const identityOptions = state.devices.filteringAttributes.identityAttributes.filter(attribute => !['id', 'Device ID', 'status'].includes(attribute));
+  const { id_attribute } = state.users.globalSettings;
+  if (!id_attribute && identityOptions.length) {
+    tasks.push(dispatch(saveGlobalSettings({ id_attribute: { attribute: identityOptions[0], scope: 'identity' } })));
+  } else if (typeof id_attribute === 'string') {
+    let attribute = id_attribute;
+    if (attribute === 'Device ID') {
+      attribute = 'id';
+    }
+    tasks.push(dispatch(saveGlobalSettings({ id_attribute: { attribute, scope: 'identity' } })));
+  }
+  return Promise.all(tasks);
+};
+
+const retrieveAppData = () => (dispatch, getState) => {
   let tasks = [
     dispatch(parseEnvironmentInfo()),
     dispatch(getUserSettings()),
@@ -193,42 +225,20 @@ export const initializeAppData = () => (dispatch, getState) => {
     dispatch(getRoles()),
     dispatch(setFirstLoginAfterSignup(cookies.get('firstLoginAfterSignup')))
   ];
-  const multitenancy = getState().app.features.hasMultitenancy || getState().app.features.isEnterprise || getState().app.features.isHosted;
+  const { hasMultitenancy, isHosted } = getFeatures(getState());
+  const multitenancy = hasMultitenancy || isHosted || getIsEnterprise(getState());
   if (multitenancy) {
     tasks.push(dispatch(getUserOrganization()));
   }
-  return Promise.all(tasks).then(() => {
-    const state = getState();
-    const user = getCurrentUser(state);
-    let tasks = [];
-    let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettingsSelector(state);
-    tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
-    // checks if user id is set and if cookie for helptips exists for that user
-    showHelptips = processUserCookie(user, showHelptips);
-    tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
-    tasks.push(dispatch({ type: SET_SHOW_HELP, show: showHelptips }));
-    let settings = { showHelptips };
-    if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
-      settings.trackingConsentGiven = true;
-    }
-    tasks.push(dispatch(saveUserSettings(settings)));
-    // the following is used as a migration and initialization of the stored identity attribute
-    // changing the default device attribute to the first non-deviceId attribute, unless a stored
-    // id attribute setting exists
-    const identityOptions = state.devices.filteringAttributes.identityAttributes.filter(attribute => !['id', 'Device ID', 'status'].includes(attribute));
-    const { id_attribute } = state.users.globalSettings;
-    if (!id_attribute && identityOptions.length) {
-      tasks.push(dispatch(saveGlobalSettings({ id_attribute: { attribute: identityOptions[0], scope: 'identity' } })));
-    } else if (typeof id_attribute === 'string') {
-      let attribute = id_attribute;
-      if (attribute === 'Device ID') {
-        attribute = 'id';
-      }
-      tasks.push(dispatch(saveGlobalSettings({ id_attribute: { attribute, scope: 'identity' } })));
-    }
-    return Promise.all(tasks);
-  });
+  return Promise.all(tasks);
 };
+
+export const initializeAppData = () => dispatch =>
+  dispatch(retrieveAppData())
+    .then(() => dispatch(interpretAppData()))
+    // this is allowed to fail if no user information are available
+    .catch(err => console.log(extractErrorMessage(err)))
+    .then(() => dispatch(getOnboardingState()));
 
 /*
   General

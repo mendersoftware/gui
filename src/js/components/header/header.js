@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -31,13 +31,12 @@ import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import logo from '../../../assets/img/headerlogo.png';
 import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
-import { initializeAppData, setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
-import { getOnboardingState } from '../../actions/onboardingActions';
-import { getUser, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
+import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
+import { getAllDeviceCounts } from '../../actions/deviceActions';
+import { initializeSelf, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
-import * as UserConstants from '../../constants/userConstants';
-import { decodeSessionToken, extractErrorMessage } from '../../helpers';
+import { decodeSessionToken } from '../../helpers';
 import {
   getAcceptedDevices,
   getCurrentUser,
@@ -122,13 +121,13 @@ export const Header = ({ mode }) => {
   const inProgress = useSelector(state => state.deployments.byStatus.inprogress.total);
   const isEnterprise = useSelector(getIsEnterprise);
   const { isDemoMode: demo, hasMultitenancy, isHosted } = useSelector(getFeatures);
-  const isSearching = useSelector(state => state.app.searchState.isSearching);
+  const { isSearching, searchTerm, refreshTrigger } = useSelector(state => state.app.searchState);
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
-  const searchTerm = useSelector(state => state.app.searchState.searchTerm);
   const showHelptips = useSelector(getShowHelptips);
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
   const dispatch = useDispatch();
+  const deviceTimer = useRef();
 
   useEffect(() => {
     if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
@@ -146,9 +145,13 @@ export const Header = ({ mode }) => {
   }, [sessionId, user.id, user.email, gettingUser, loggingOut]);
 
   useEffect(() => {
-    // updateUsername();
     const showOfferCookie = cookies.get('offer') === currentOffer.name;
     setHasOfferCookie(showOfferCookie);
+    clearInterval(deviceTimer.current);
+    deviceTimer.current = setInterval(() => dispatch(getAllDeviceCounts()), TIMEOUTS.refreshDefault);
+    return () => {
+      clearInterval(deviceTimer.current);
+    };
   }, []);
 
   const updateUsername = () => {
@@ -158,14 +161,7 @@ export const Header = ({ mode }) => {
     }
     setGettingUser(true);
     // get current user
-    return (
-      dispatch(getUser(UserConstants.OWN_USER_ID))
-        .then(() => dispatch(initializeAppData()))
-        // this is allowed to fail if no user information are available
-        .catch(err => console.log(extractErrorMessage(err)))
-        .then(() => dispatch(getOnboardingState()))
-        .finally(() => setGettingUser(false))
-    );
+    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
   };
 
   const onLogoutClick = () => {
@@ -175,7 +171,7 @@ export const Header = ({ mode }) => {
     dispatch(logoutUser());
   };
 
-  const onSearch = searchTerm => dispatch(setSearchState({ searchTerm, page: 1 }));
+  const onSearch = searchTerm => dispatch(setSearchState({ refreshTrigger: !refreshTrigger, searchTerm, page: 1 }));
 
   const setHideOffer = () => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });

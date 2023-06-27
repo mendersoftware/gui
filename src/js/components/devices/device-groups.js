@@ -24,7 +24,6 @@ import { setOfflineThreshold, setSnackbar } from '../../actions/appActions';
 import {
   addDynamicGroup,
   addStaticGroup,
-  getAllDeviceCounts,
   preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
@@ -35,7 +34,7 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
 import { toggle } from '../../helpers';
 import {
@@ -65,8 +64,6 @@ import CreateGroupExplainer from './group-management/create-group-explainer';
 import RemoveGroup from './group-management/remove-group';
 import Groups from './groups';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
-
-const refreshLength = TIMEOUTS.refreshDefault;
 
 export const DeviceGroups = () => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
@@ -160,12 +157,7 @@ export const DeviceGroups = () => {
       dispatch(setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]));
     }
     dispatch(setDeviceListState(listState));
-    clearInterval(deviceTimer.current);
-    deviceTimer.current = setInterval(() => dispatch(getAllDeviceCounts()), refreshLength);
     dispatch(setOfflineThreshold());
-    return () => {
-      clearInterval(deviceTimer.current);
-    };
   }, []);
 
   /*

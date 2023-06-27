@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
-import { Chip, Divider, Drawer, IconButton, Tab, Tabs, chipClasses } from '@mui/material';
+import { Chip, Divider, Drawer, IconButton, Tab, Tabs, Tooltip, chipClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
@@ -205,7 +205,7 @@ const tabs = [
   }
 ];
 
-export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, refreshDevices, setDetailsTab, tabSelection }) => {
+export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsTab, tabSelection }) => {
   const [socketClosed, setSocketClosed] = useState(true);
   const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
@@ -258,15 +258,8 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, refreshDevi
     dispatch(getGatewayDevices(device.id));
   }, [device.id, mender_gateway_system_id]);
 
-  const onDecommissionDevice = device_id => {
-    // close dialog!
-    // close expanded device
-    // trigger reset of list!
-    return dispatch(decommissionDevice(device_id)).finally(() => {
-      refreshDevices();
-      onClose();
-    });
-  };
+  // close expanded device
+  const onDecommissionDevice = device_id => dispatch(decommissionDevice(device_id)).finally(onClose);
 
   const launchTroubleshoot = type => {
     Tracking.event({ category: 'devices', action: 'open_terminal' });
@@ -323,7 +316,6 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, refreshDevi
     latestAlerts,
     launchTroubleshoot,
     onDecommissionDevice,
-    refreshDevices,
     resetDeviceDeployments: id => dispatch(resetDeviceDeployments(id)),
     saveGlobalSettings: settings => dispatch(saveGlobalSettings(settings)),
     setDetailsTab,
@@ -361,7 +353,9 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, refreshDevi
             />
           )}
           <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right flexbox`}>
-            <div className="margin-right-small">Last check-in:</div>
+            <Tooltip title="The last time the device communicated with the Mender server" placement="bottom">
+              <div className="margin-right-small">Last check-in:</div>
+            </Tooltip>
             <RelativeTime updateTime={device.updated_ts} />
           </div>
           <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">

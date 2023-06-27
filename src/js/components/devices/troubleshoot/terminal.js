@@ -16,6 +16,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_MESSAGE_TYPES as MessageTypes } from '../../../constants/deviceConstants';
 import useWindowSize from '../../../utils/resizehook';
 import XTerm from '../../common/xterm';
@@ -41,7 +42,7 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
     try {
       fitAddon.fit();
     } catch {
-      setSnackbar('Fit not possible, terminal not yet visible', 5000);
+      setSnackbar('Fit not possible, terminal not yet visible', TIMEOUTS.fiveSeconds);
     }
   }, [fitAddon, setSnackbar]);
 
