@@ -120,9 +120,8 @@ export const Header = ({ mode }) => {
   const inProgress = useSelector(state => state.deployments.byStatus.inprogress.total);
   const isEnterprise = useSelector(getIsEnterprise);
   const { isDemoMode: demo, hasMultitenancy, isHosted } = useSelector(getFeatures);
-  const isSearching = useSelector(state => state.app.searchState.isSearching);
+  const { isSearching, searchTerm, refreshTrigger } = useSelector(state => state.app.searchState);
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
-  const searchTerm = useSelector(state => state.app.searchState.searchTerm);
   const showHelptips = useSelector(getShowHelptips);
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
@@ -166,7 +165,7 @@ export const Header = ({ mode }) => {
     dispatch(logoutUser());
   };
 
-  const onSearch = searchTerm => dispatch(setSearchState({ searchTerm, page: 1 }));
+  const onSearch = searchTerm => dispatch(setSearchState({ refreshTrigger: !refreshTrigger, searchTerm, page: 1 }));
 
   const setHideOffer = () => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
