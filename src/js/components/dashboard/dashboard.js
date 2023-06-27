@@ -82,7 +82,7 @@ export const Dashboard = () => {
         setSnackbar: (...args) => dispatch(setSnackbar(...args))
       });
       !!notification && dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true));
-    }, 400);
+    }, TIMEOUTS.debounceDefault);
   }, [currentUser, JSON.stringify(onboardingState)]);
 
   useEffect(() => {

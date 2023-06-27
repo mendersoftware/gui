@@ -430,180 +430,162 @@ Devices that are in the middle of the deployment at the time of abort will finis
             Devices
           </span>
         </h4>
-        <div
-          class="loaderContainer shrunk"
+        <table
+          class="MuiTable-root margin-bottom css-1m40mow-MuiTable-root-table"
         >
-          <div
-            class="  loader"
+          <thead
+            class="MuiTableHead-root css-jko6xl-MuiTableHead-root-header"
           >
-            <span
-              class="dot dot_1"
-            />
-            <span
-              class="dot dot_2"
-            />
-            <span
-              class="dot dot_3"
-            />
-            <span
-              class="dot dot_4"
-            />
-          </div>
-        </div>
-        <div>
-          <table
-            class="MuiTable-root margin-bottom css-1m40mow-MuiTable-root-table"
+            <tr
+              class="MuiTableRow-root MuiTableRow-head css-cmdtp3-MuiTableRow-root"
+            >
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                id
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                Device Type
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                Current software
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                Started
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                Finished
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                Artifact size
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                Deployment status
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
+                scope="col"
+              >
+                
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="MuiTableBody-root css-apqrd9-MuiTableBody-root"
           >
-            <thead
-              class="MuiTableHead-root css-jko6xl-MuiTableHead-root-header"
+            <tr
+              class="MuiTableRow-root MuiTableRow-hover css-cmdtp3-MuiTableRow-root"
             >
-              <tr
-                class="MuiTableRow-root MuiTableRow-head css-cmdtp3-MuiTableRow-root"
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
               >
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
+                <a
+                  href="/devices?id=a1"
+                  style="font-weight: initial; opacity: 1;"
                 >
-                  id
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  Device Type
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  Current software
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  Started
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  Finished
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  Artifact size
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  Deployment status
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader nonSortable css-rgvxci-MuiTableCell-root"
-                  scope="col"
-                >
-                  
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              class="MuiTableBody-root css-apqrd9-MuiTableBody-root"
-            >
-              <tr
-                class="MuiTableRow-root MuiTableRow-hover css-cmdtp3-MuiTableRow-root"
-              >
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
-                >
-                  <a
-                    href="/devices?id=a1"
-                    style="font-weight: initial; opacity: 1;"
+                  <div
+                    class="flexbox space-between"
                   >
-                    <div
-                      class="flexbox space-between"
-                    >
-                      <div>
-                        a1
-                      </div>
+                    <div>
+                      a1
                     </div>
-                  </a>
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+                  </div>
+                </a>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              >
+                -
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              >
+                -
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              >
+                <div
+                  class=""
                 >
                   -
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+                </div>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              >
+                <div
+                  class=""
                 >
                   -
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+                </div>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              >
+                <div>
+                  123.00 Bytes
+                </div>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              >
+                installing
+                <div
+                  style="position: absolute; bottom: 0px; width: 100%;"
                 >
-                  <div
-                    class=""
-                  >
-                    -
-                  </div>
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
-                >
-                  <div
-                    class=""
-                  >
-                    -
-                  </div>
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
-                >
-                  <div>
-                    123.00 Bytes
-                  </div>
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
-                />
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
-                >
-                  installing
-                  <div
-                    style="position: absolute; bottom: 0px; width: 100%;"
+                  <span
+                    class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate css-1pt8ui5-MuiLinearProgress-root"
+                    role="progressbar"
                   >
                     <span
-                      class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate css-1pt8ui5-MuiLinearProgress-root"
-                      role="progressbar"
-                    >
-                      <span
-                        class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate css-1hkl6bl-MuiLinearProgress-bar1"
-                      />
-                      <span
-                        class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate css-18y399u-MuiLinearProgress-bar2"
-                      />
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
-                />
-              </tr>
-            </tbody>
-          </table>
+                      class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate css-1hkl6bl-MuiLinearProgress-bar1"
+                    />
+                    <span
+                      class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate css-18y399u-MuiLinearProgress-bar2"
+                    />
+                  </span>
+                </div>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative css-b25y0t-MuiTableCell-root"
+              />
+            </tr>
+          </tbody>
+        </table>
+        <div
+          class="flexbox space-between center-aligned margin-top"
+        >
           <div
-            class="flexbox space-between center-aligned margin-top"
+            class="flexbox"
           >
             <div
               class="MuiTablePagination-root flexbox margin-top margin-top-none css-1s8wd9s-MuiTablePagination-root"
@@ -704,18 +686,38 @@ Devices that are in the middle of the deployment at the time of abort will finis
               </div>
             </div>
             <div
-              class="break-all two-columns css-lcys7r-root compact "
+              class="loaderContainer"
             >
               <div
-                class="align-right  muted"
+                class="small  loader"
               >
-                <b>
-                  Total download size
-                </b>
+                <span
+                  class="dot dot_1"
+                />
+                <span
+                  class="dot dot_2"
+                />
+                <span
+                  class="dot dot_3"
+                />
+                <span
+                  class="dot dot_4"
+                />
               </div>
-              <div>
-                1.21 KB
-              </div>
+            </div>
+          </div>
+          <div
+            class="break-all two-columns css-lcys7r-root compact "
+          >
+            <div
+              class="align-right  muted"
+            >
+              <b>
+                Total download size
+              </b>
+            </div>
+            <div>
+              1.21 KB
             </div>
           </div>
         </div>

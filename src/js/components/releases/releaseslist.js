@@ -106,14 +106,17 @@ export const ReleasesList = ({ artifactIncluded, features, onboardingState, onSe
       ) : (
         <>
           <DetailsTable columns={applicableColumns} items={releases} onItemClick={onSelect} sort={sort} onChangeSorting={onChangeSorting} tableRef={repoRef} />
-          <Pagination
-            className="margin-top-none"
-            count={potentialTotal}
-            rowsPerPage={perPage}
-            onChangePage={onChangePagination}
-            onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
-            page={page}
-          />
+          <div className="flexbox">
+            <Pagination
+              className="margin-top-none"
+              count={potentialTotal}
+              rowsPerPage={perPage}
+              onChangePage={onChangePagination}
+              onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
+              page={page}
+            />
+            <Loader show={isLoading} small />
+          </div>
           {onboardingComponent}
         </>
       )}

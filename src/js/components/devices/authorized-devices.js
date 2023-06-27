@@ -273,7 +273,7 @@ export const Authorized = ({
           setSnackbar: dispatchedSetSnackbar
         });
         !!notification && dispatchedSetSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
-      }, 400);
+      }, TIMEOUTS.debounceDefault);
     }
   }, [acceptedCount, allCount, pendingCount, onboardingState.complete]);
 

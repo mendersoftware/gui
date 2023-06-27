@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import Api, { apiUrl, headerNames } from '../api/general-api';
+import { TIMEOUTS } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import * as MonitorConstants from '../constants/monitorConstants';
 import { getDeviceFilters } from '../selectors';
@@ -136,7 +137,7 @@ export const changeNotificationSetting =
             channel,
             enabled
           }),
-          dispatch(setSnackbar(`Successfully ${enabled ? 'en' : 'dis'}abled ${channel} alerts`, 5000))
+          dispatch(setSnackbar(`Successfully ${enabled ? 'en' : 'dis'}abled ${channel} alerts`, TIMEOUTS.fiveSeconds))
         ])
       );
   };
