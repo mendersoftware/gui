@@ -257,7 +257,6 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
           creator={creator}
           deployment={deployment}
           devicesById={devicesById}
-          idAttribute={idAttribute}
           onScheduleClick={scrollToBottom}
           tenantCapabilities={tenantCapabilities}
         />
