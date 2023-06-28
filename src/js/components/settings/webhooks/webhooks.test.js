@@ -12,10 +12,6 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
-
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds, webhookEvents } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
@@ -25,23 +21,16 @@ import { WebhookCreation } from './configuration';
 import Management from './management';
 import Webhooks from './webhooks';
 
-const mockStore = configureStore([thunk]);
-
 describe('Webhooks Component', () => {
   it('renders correctly', async () => {
-    const store = mockStore({ ...defaultState });
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Webhooks />
-      </Provider>
-    );
+    const { baseElement } = render(<Webhooks />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
   it('renders correctly with entries ', async () => {
-    const store = mockStore({
+    const preloadedState = {
       ...defaultState,
       organization: {
         ...defaultState.organization,
@@ -57,12 +46,8 @@ describe('Webhooks Component', () => {
           events: webhookEvents
         }
       }
-    });
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Webhooks />
-      </Provider>
-    );
+    };
+    const { baseElement } = render(<Webhooks />, { preloadedState });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

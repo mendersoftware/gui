@@ -12,54 +12,41 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import * as UserConstants from '../../constants/userConstants';
 import Header from './header';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  deployments: {
+    ...defaultState.deployments,
+    byStatus: {
+      ...defaultState.deployments.byStatus,
+      inprogress: {
+        ...defaultState.deployments.byStatus.inprogress,
+        total: 0
+      }
+    }
+  },
+  users: {
+    ...defaultState.users,
+    globalSettings: {
+      ...defaultState.users.globalSettings,
+      [defaultState.users.currentUser]: {
+        ...defaultState.users.globalSettings[defaultState.users.currentUser],
+        trackingConsentGiven: true
+      }
+    }
+  }
+};
 
 describe('Header Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      deployments: {
-        ...defaultState.deployments,
-        byStatus: {
-          ...defaultState.deployments.byStatus,
-          inprogress: {
-            ...defaultState.deployments.byStatus.inprogress,
-            total: 0
-          }
-        }
-      },
-      users: {
-        ...defaultState.users,
-        globalSettings: {
-          ...defaultState.users.globalSettings,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.globalSettings[defaultState.users.currentUser],
-            trackingConsentGiven: true
-          }
-        }
-      }
-    });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Header />
-      </Provider>
-    );
+    const { baseElement } = render(<Header />, { preloadedState });
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -67,21 +54,15 @@ describe('Header Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const view = (
-      <Provider store={store}>
-        <Header />
-      </Provider>
-    );
-    const { rerender } = render(view);
+    const view = <Header />;
+    const { rerender } = render(view, { preloadedState });
+    expect(screen.queryByText(defaultState.users.byId[defaultState.users.currentUser].email)).toBeInTheDocument();
     const selectButton = screen.getByRole('button', { name: defaultState.users.byId[defaultState.users.currentUser].email });
     await user.click(selectButton);
     const listbox = document.body.querySelector('ul[role=menu]');
     const listItem = within(listbox).getByText(/log out/i);
     await user.click(listItem);
-    // await fireEvent.mouseDown(listItem);
     await waitFor(() => rerender(view));
-    const storeActions = store.getActions();
-    const expectedActions = [{ type: UserConstants.USER_LOGOUT }];
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    expect(screen.queryByText(defaultState.users.byId[defaultState.users.currentUser].email)).not.toBeInTheDocument();
   });
 });

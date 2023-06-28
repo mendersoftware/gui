@@ -1401,7 +1401,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-41:focus::-ms-input-
             </div>
           </div>
           <div
-            class="loaderContainer shrunk"
+            class="loaderContainer"
           >
             <div
               class="small  loader"

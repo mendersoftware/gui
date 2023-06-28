@@ -12,10 +12,6 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
-
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
@@ -34,8 +30,8 @@ const integrations = [
     credentials: { type: EXTERNAL_PROVIDER['iot-core'].credentialsType, aws: 'something else' }
   }
 ];
-const mockStore = configureStore([thunk]);
-const store = mockStore({ ...defaultState, organization: { ...defaultState.organization, externalDeviceIntegrations: integrations } });
+
+const preloadedState = { ...defaultState, organization: { ...defaultState.organization, externalDeviceIntegrations: integrations } };
 
 describe('IntegrationConfiguration Component', () => {
   it('renders correctly', async () => {
@@ -50,11 +46,7 @@ describe('IntegrationConfiguration Component', () => {
 
 describe('Integrations Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Integrations />
-      </Provider>
-    );
+    const { baseElement } = render(<Integrations />, { preloadedState });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

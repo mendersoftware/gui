@@ -120,7 +120,7 @@ export const Organization = () => {
   useEffect(() => {
     setHasSingleSignOn(!!samlConfigs.length);
     setIsConfiguringSSO(!!samlConfigs.length);
-  }, [samlConfigs]);
+  }, [samlConfigs.length]);
 
   const onSSOClick = () => {
     if (hasSingleSignOn) {

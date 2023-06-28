@@ -12,34 +12,19 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import RolloutSteps from './rolloutsteps';
 
-const mockStore = configureStore([thunk]);
-
 describe('RolloutSteps Component', () => {
   it('renders correctly', async () => {
-    const store = mockStore({ ...defaultState });
-    let tree = render(
-      <Provider store={store}>
-        <RolloutSteps onStepChange={jest.fn} steps={[]} />
-      </Provider>
-    );
+    let tree = render(<RolloutSteps onStepChange={jest.fn} steps={[]} />);
     let view = tree.baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
 
-    tree = render(
-      <Provider store={store}>
-        <RolloutSteps steps={[]} />
-      </Provider>
-    );
+    tree = render(<RolloutSteps steps={[]} />);
     view = tree.baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

@@ -12,31 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import DeviceConnectionDialog from './deviceconnectiondialog';
 
-const mockStore = configureStore([thunk]);
-
 describe('DeviceConnectionDialog Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <DeviceConnectionDialog onCancel={jest.fn} />
-      </Provider>
-    );
+    const { baseElement } = render(<DeviceConnectionDialog onCancel={jest.fn} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -44,11 +30,7 @@ describe('DeviceConnectionDialog Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    render(
-      <Provider store={store}>
-        <DeviceConnectionDialog onCancel={jest.fn} />
-      </Provider>
-    );
+    render(<DeviceConnectionDialog onCancel={jest.fn} />);
     await user.click(screen.getByText(/get started/i));
     expect(screen.getByText(/Enter your device type/i)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /back/i }));

@@ -13,6 +13,7 @@
 //    limitations under the License.
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
+import { defaultState } from '../../../tests/mockData';
 import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
 import { USER_LOGOUT } from '../constants/userConstants';
@@ -36,16 +37,18 @@ const rootReducer = combineReducers({
   users: userReducer
 });
 
-const sessionReducer = (state, action) => {
+export const sessionReducer = (state, action) => {
   if (action.type === USER_LOGOUT) {
     state = undefined;
   }
   return rootReducer(state, action);
 };
 
-export const getConfiguredStore = config =>
-  configureStore({
+export const getConfiguredStore = (options = {}) => {
+  const { preloadedState = { ...defaultState }, ...config } = options;
+  return configureStore({
     ...config,
+    preloadedState,
     reducer: sessionReducer,
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({
@@ -59,5 +62,6 @@ export const getConfiguredStore = config =>
         }
       })
   });
+};
 
-export default getConfiguredStore();
+export default getConfiguredStore({ preloadedState: {} });

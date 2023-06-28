@@ -12,25 +12,14 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { undefineds } from '../../../../../tests/mockData';
 import { formRenderWrapper } from '../../common/forms/form.test';
 import OrgDataEntry from './orgdata-entry';
 
-const mockStore = configureStore([thunk]);
-
 describe('Login Component', () => {
   it('renders correctly', async () => {
-    const store = mockStore({ ...defaultState });
-    const { baseElement } = formRenderWrapper(
-      <Provider store={store}>
-        <OrgDataEntry classes={{ orgData: 'test' }} recaptchaSiteKey="test" />
-      </Provider>
-    );
+    const { baseElement } = formRenderWrapper(<OrgDataEntry classes={{ orgData: 'test' }} recaptchaSiteKey="test" />);
     const view = baseElement.getElementsByTagName('div')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

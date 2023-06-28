@@ -95,7 +95,7 @@ export const Devices = ({ clickHandle }) => {
     <>
       <div className="dashboard" ref={anchor}>
         <AcceptedDevices devicesCount={acceptedDevicesCount} onClick={clickHandle} />
-        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} />}
+        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} onClick={clickHandle} />}
         {!!pendingDevicesCount && !acceptedDevicesCount && (
           <PendingDevices
             advanceOnboarding={step => dispatch(advanceOnboarding(step))}

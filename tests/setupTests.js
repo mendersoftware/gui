@@ -13,6 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 import { createMocks } from 'react-idle-timer';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -24,9 +25,10 @@ import { TextEncoder } from 'util';
 import { MessageChannel } from 'worker_threads';
 
 import { yes } from '../src/js/constants/appConstants';
+import { getConfiguredStore } from '../src/js/reducers';
 import { light as lightTheme } from '../src/js/themes/Mender';
 import handlers from './__mocks__/requestHandlers';
-import { menderEnvironment, mockDate, token as mockToken } from './mockData';
+import { defaultState, menderEnvironment, mockDate, token as mockToken } from './mockData';
 
 export const RETRY_TIMES = 3;
 export const TEST_LOCATION = 'localhost';
@@ -144,15 +146,17 @@ export const selectMaterialUiSelectOption = async (element, optionText, user) =>
 
 const theme = createTheme(lightTheme);
 
-const AllTheProviders = ({ children }) => {
-  return (
+const customRender = (ui, options = {}) => {
+  const { preloadedState = { ...defaultState }, store = getConfiguredStore({ preloadedState }), ...remainder } = options;
+  const AllTheProviders = ({ children }) => (
     <ThemeProvider theme={theme}>
-      <MemoryRouter>{children}</MemoryRouter>
+      <MemoryRouter>
+        <Provider store={store}>{children}</Provider>
+      </MemoryRouter>
     </ThemeProvider>
   );
+  return { store, ...render(ui, { wrapper: AllTheProviders, ...remainder }) };
 };
-
-const customRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });
 
 // re-export everything
 // eslint-disable-next-line import/export

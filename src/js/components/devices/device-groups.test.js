@@ -12,43 +12,31 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { prettyDOM } from '@testing-library/dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import DeviceGroups from './device-groups';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  devices: {
+    ...defaultState.devices,
+    groups: {
+      ...defaultState.devices.groups,
+      selectedGroup: 'testGroup'
+    },
+    deviceList: {
+      ...defaultState.devices.deviceList,
+      deviceIds: defaultState.devices.byStatus.accepted.deviceIds
+    }
+  }
+};
 
 describe('DeviceGroups Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      devices: {
-        ...defaultState.devices,
-        groups: {
-          ...defaultState.devices.groups,
-          selectedGroup: 'testGroup'
-        },
-        deviceList: {
-          ...defaultState.devices.deviceList,
-          deviceIds: defaultState.devices.byStatus.accepted.deviceIds
-        }
-      }
-    });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <DeviceGroups />
-      </Provider>
-    );
+    const { baseElement } = render(<DeviceGroups />, { preloadedState });
     // special snapshot handling here to work around unstable ids in mui code...
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
       .replace(/id="mui-[0-9]*"/g, '')
