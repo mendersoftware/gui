@@ -135,7 +135,6 @@ export const OAuthHeader = ({ buttonProps, type }) => (
 
 export const Login = () => {
   const [noExpiry, setNoExpiry] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const [has2FA, setHas2FA] = useState(false);
   const twoFARef = useRef();
   const dispatch = useDispatch();
@@ -174,14 +173,6 @@ export const Login = () => {
       });
     },
     [noExpiry]
-  );
-
-  const onSetRef = useCallback(
-    ref => {
-      twoFARef.current = ref;
-      setRefresh(!refresh);
-    },
-    [refresh]
   );
 
   const onOAuthClick = ({ target: { textContent } }) => {
@@ -231,7 +222,7 @@ export const Login = () => {
                   id="token2fa"
                   validations="isLength:6,isNumeric"
                   required={true}
-                  setControlRef={onSetRef}
+                  controlRef={twoFARef}
                 />
               ) : (
                 <div />

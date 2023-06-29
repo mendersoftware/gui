@@ -15,14 +15,13 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { screen, render as testingLibRender, waitFor } from '@testing-library/react';
+import { act, screen, render as testingLibRender, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import * as AppActions from '../../actions/appActions';
 import * as UserActions from '../../actions/userActions';
 import Password from './password';
 import PasswordReset from './passwordreset';
@@ -51,8 +50,6 @@ describe('PasswordReset Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    jest.useFakeTimers();
-    const snackbarSpy = jest.spyOn(AppActions, 'setSnackbar');
     const completeSpy = jest.spyOn(UserActions, 'passwordResetComplete');
 
     const secretHash = 'leHash';
@@ -74,15 +71,20 @@ describe('PasswordReset Component', () => {
     await waitFor(() => rerender(ui));
     await user.type(passwordInput, badPassword);
     await user.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
-    await user.click(screen.getByRole('button', { name: /Save password/i }));
-    expect(snackbarSpy).toHaveBeenCalledWith('The passwords you provided do not match, please check again.', 5000, '');
+    await waitFor(() => rerender(ui));
+    expect(screen.getByRole('button', { name: /Save password/i })).toBeDisabled();
+    expect(screen.getByText('The passwords you provided do not match, please check again.')).toBeVisible();
     await user.clear(passwordInput);
-    await user.type(passwordInput, goodPassword, { skipClick: true });
+    await user.type(passwordInput, goodPassword);
     await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /Save password/i }));
     await waitFor(() => expect(completeSpy).toHaveBeenCalledWith(secretHash, goodPassword));
+    await act(async () => {
+      jest.runAllTimers();
+      jest.runAllTicks();
+      return Promise.resolve();
+    });
     await waitFor(() => rerender(ui));
     expect(screen.queryByText(/Your password has been updated./i)).toBeInTheDocument();
-    jest.useRealTimers();
   });
 });

@@ -631,9 +631,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             Type in the generated code in the input field below and click Verify.
             <form
               class=""
+              novalidate=""
             >
               <div
                 class="MuiFormControl-root  required emotion-0"
+                style="width: 400px;"
               >
                 <label
                   class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-1"
@@ -645,7 +647,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
                 <div
                   class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
                   required=""
-                  style="width: 400px; max-width: 100%;"
                 >
                   <input
                     aria-invalid="false"
@@ -660,7 +661,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
                 </div>
                 <p
                   class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-4"
-                  id="component-error-text"
                 />
               </div>
               <div
@@ -672,7 +672,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
                   disabled=""
                   id="confirm-button"
                   tabindex="-1"
-                  type="button"
+                  type="submit"
                 >
                   Verify
                 </button>

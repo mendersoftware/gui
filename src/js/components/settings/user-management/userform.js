@@ -145,7 +145,7 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
   };
 
   const onSubmit = data => {
-    const { password_new: password, ...remainder } = data;
+    const { password, ...remainder } = data;
     const roleData = hadRoleChanges ? { roles: selectedRoles } : {};
     return submit({ ...remainder, ...roleData, password }, 'create');
   };
@@ -156,19 +156,10 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
     <Dialog open={true} fullWidth={true} maxWidth="sm">
       <DialogTitle>Create new user</DialogTitle>
       <DialogContent style={{ overflowY: 'initial' }}>
-        <Form
-          uniqueId="usereditform"
-          dialog={true}
-          onSubmit={onSubmit}
-          handleCancel={closeDialog}
-          submitLabel="Create user"
-          submitButtonId="submit_button"
-          showButtons={true}
-          autocomplete="off"
-        >
+        <Form onSubmit={onSubmit} handleCancel={closeDialog} submitLabel="Create user" submitButtonId="submit_button" showButtons={true} autocomplete="off">
           <TextInput hint="Email" label="Email" id="email" validations="isLength:1,isEmail" required autocomplete="off" />
           <PasswordInput
-            id="password_new"
+            id="password"
             className="edit-pass"
             autocomplete="off"
             create

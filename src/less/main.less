@@ -986,39 +986,15 @@ div:focus {
 }
 
 /* sign up */
-#signup-box .MuiFormControl-root {
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
 #signup-box {
   min-height: 870px;
   @media (max-width: 1064px) {
-    height: min-content;
-  }
-}
-
-#signup-box>div {
-  .right {
     grid-template-columns: auto;
-    padding: 60px;
-
-    >div {
-      max-width: 500px;
-    }
-  }
-  @media (max-width: 1064px) {
     padding: 80px 0 0;
-    grid-template-columns: 1fr;
-
-    &.full-height {
-      height: auto;
-    }
-    .right>div {
-      max-width: 420px;
+    >div{
+      grid-template-columns: minmax(min-content, 420px);
       text-align: center;
     }
-
   }
 }
 
@@ -1027,7 +1003,7 @@ div:focus {
   display: inline-block;
   position: relative;
   width: 100%;
-  vertical-align: middle; 
+  vertical-align: middle;
   overflow: hidden;
 }
 

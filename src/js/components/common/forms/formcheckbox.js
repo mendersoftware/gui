@@ -12,58 +12,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Controller } from 'react-hook-form';
 
 import { Checkbox, FormControlLabel } from '@mui/material';
 
-export default class FormCheckbox extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      checked: this.props.checked,
-      // the following is needed for the form validation to work if the field is not required
-      isValid: true, // lgtm [js/react/unused-or-undefined-state-property]
-      value: this.props.checked ? this.props.value : ''
-    };
-  }
+export const FormCheckbox = ({ className, control, id, handleClick, style, label, required }) => (
+  <Controller
+    name={id}
+    rules={{ required }}
+    control={control}
+    render={({ field: { value, onChange } }) => {
+      return (
+        <FormControlLabel
+          className={className}
+          control={<Checkbox name={id} onClick={handleClick} style={style} color="primary" onChange={() => onChange(!value)} />}
+          label={label}
+        />
+      );
+    }}
+  />
+);
 
-  componentDidMount() {
-    this.props.attachToForm(this); // Attaching the component to the form
-    if (this.props.value) {
-      this.props.validate(this, this.props.value);
-    }
-    if (this.props.setControlRef) {
-      this.props.setControlRef(this.input);
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.detachFromForm(this); // Detaching if unmounting
-  }
-
-  updateCheck(checked) {
-    const value = checked ? this.props.value : '';
-    this.setState({ checked, value });
-    this.props.validate(this, value);
-  }
-
-  render() {
-    return (
-      <FormControlLabel
-        className={this.props.className}
-        control={
-          <Checkbox
-            id={this.props.id}
-            name={this.props.id}
-            ref={this.props.id}
-            onChange={(e, checked) => this.updateCheck(checked)}
-            onClick={this.props.handleClick}
-            style={this.props.style}
-            color="primary"
-            checked={this.state.checked}
-          />
-        }
-        label={this.props.label}
-      />
-    );
-  }
-}
+export default FormCheckbox;
