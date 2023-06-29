@@ -106,8 +106,7 @@ test.describe('Settings', () => {
   });
 
   test.describe('2FA setup', () => {
-    test('supports regular 2fa setup', async ({ baseUrl, context, environment, username, password }) => {
-      test.skip(environment !== 'staging');
+    test('supports regular 2fa setup', async ({ baseUrl, context, username, password }) => {
       const { token, userId } = await login(username, password, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
       context = await prepareCookies(context, domain, userId, token);
@@ -145,8 +144,7 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
     });
-    test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
-      test.skip(environment !== 'staging');
+    test(`prevents from logging in without 2fa code`, async ({ baseUrl, page, password, username }) => {
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
       // enter valid username and password
@@ -160,8 +158,7 @@ test.describe('Settings', () => {
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
       await page.waitForSelector('text=/There was a problem logging in/', { timeout: timeouts.default });
     });
-    test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
-      test.skip(environment !== 'staging');
+    test('allows turning 2fa off again', async ({ baseUrl, page, password, username }) => {
       await page.goto(`${baseUrl}ui/login`);
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
@@ -174,8 +171,7 @@ test.describe('Settings', () => {
       await page.click('text=/Enable Two Factor/');
       await page.waitForTimeout(timeouts.default);
     });
-    test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
-      test.skip(environment !== 'staging');
+    test('allows logging in without 2fa after deactivation', async ({ baseUrl, page, password, username }) => {
       await page.goto(`${baseUrl}ui/login`);
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
