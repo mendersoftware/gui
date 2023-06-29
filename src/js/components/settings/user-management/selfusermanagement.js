@@ -20,8 +20,9 @@ import { makeStyles } from 'tss-react/mui';
 import { setSnackbar } from '../../../actions/appActions';
 import { editUser, saveUserSettings } from '../../../actions/userActions';
 import { getToken } from '../../../auth';
+import { DARK_MODE, LIGHT_MODE } from '../../../constants/appConstants';
 import * as UserConstants from '../../../constants/userConstants';
-import { toggle } from '../../../helpers';
+import { isDarkMode, toggle } from '../../../helpers';
 import { getCurrentUser, getFeatures, getIsEnterprise, getUserSettings } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Form from '../../common/forms/form';
@@ -78,7 +79,7 @@ export const SelfUserManagement = () => {
   };
 
   const toggleMode = () => {
-    const newMode = mode === 'dark' ? 'light' : 'dark';
+    const newMode = isDarkMode(mode) ? LIGHT_MODE : DARK_MODE;
     dispatch(saveUserSettings({ mode: newMode }));
   };
 
@@ -147,7 +148,7 @@ export const SelfUserManagement = () => {
         ))}
       <div className="clickable flexbox space-between margin-top" onClick={toggleMode}>
         <p className="help-content">Enable dark theme</p>
-        <Switch checked={mode === 'dark'} />
+        <Switch checked={isDarkMode(mode)} />
       </div>
       {!isOAuth2 ? (
         canHave2FA && <TwoFactorAuthSetup />

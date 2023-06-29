@@ -20,7 +20,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { deepCompare, toggle } from '../../helpers';
+import { deepCompare, isDarkMode, toggle } from '../../helpers';
 import useWindowSize from '../../utils/resizehook';
 import Loader from '../common/loader';
 import MenderTooltip from '../common/mendertooltip';
@@ -43,7 +43,7 @@ const useStyles = makeStyles()(theme => ({
       background: theme.palette.grey[600]
     },
     ['&.resizing']: {
-      background: theme.palette.mode === 'dark' ? theme.palette.grey[200] : theme.palette.grey[900]
+      background: isDarkMode(theme.palette.mode) ? theme.palette.grey[200] : theme.palette.grey[900]
     }
   }
 }));
