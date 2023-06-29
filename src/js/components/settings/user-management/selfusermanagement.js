@@ -23,7 +23,7 @@ import { getToken } from '../../../auth';
 import { DARK_MODE, LIGHT_MODE } from '../../../constants/appConstants';
 import * as UserConstants from '../../../constants/userConstants';
 import { isDarkMode, toggle } from '../../../helpers';
-import { getCurrentUser, getFeatures, getIsEnterprise, getUserSettings } from '../../../selectors';
+import { getCurrentUser, getIsEnterprise, getUserSettings } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Form from '../../common/forms/form';
 import PasswordInput from '../../common/forms/passwordinput';
@@ -50,9 +50,7 @@ export const SelfUserManagement = () => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
 
-  const { isHosted } = useSelector(getFeatures);
   const isEnterprise = useSelector(getIsEnterprise);
-  const canHave2FA = isEnterprise || isHosted;
   const currentUser = useSelector(getCurrentUser);
   const hasTracking = useSelector(state => !!state.app.trackerCode);
   const { trackingConsentGiven: hasTrackingConsent, mode } = useSelector(getUserSettings);
@@ -151,7 +149,7 @@ export const SelfUserManagement = () => {
         <Switch checked={isDarkMode(mode)} />
       </div>
       {!isOAuth2 ? (
-        canHave2FA && <TwoFactorAuthSetup />
+        <TwoFactorAuthSetup />
       ) : (
         <div className="flexbox margin-top">
           <div className={classes.oauthIcon}>{provider.icon}</div>
