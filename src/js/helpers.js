@@ -17,6 +17,7 @@ import jwtDecode from 'jwt-decode';
 import pluralize from 'pluralize';
 
 import { getToken } from './auth';
+import { DARK_MODE } from './constants/appConstants';
 import {
   DEPLOYMENT_STATES,
   defaultStats,
@@ -538,3 +539,5 @@ export const getISOStringBoundaries = currentDate => {
   const date = [currentDate.getUTCFullYear(), `0${currentDate.getUTCMonth() + 1}`.slice(-2), `0${currentDate.getUTCDate()}`.slice(-2)].join('-');
   return { start: `${date}T00:00:00.000Z`, end: `${date}T23:59:59.999Z` };
 };
+
+export const isDarkMode = mode => mode === DARK_MODE;

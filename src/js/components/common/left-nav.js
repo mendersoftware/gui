@@ -19,13 +19,15 @@ import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/
 import { listItemTextClasses } from '@mui/material/ListItemText';
 import { makeStyles } from 'tss-react/mui';
 
+import { isDarkMode } from '../../helpers.js';
+
 const useStyles = makeStyles()(theme => ({
   list: {
     [`&.navLink .${listItemTextClasses.root}`]: {
-      color: theme.palette.mode === 'light' ? theme.palette.grey[900] : theme.palette.text.primary
+      color: isDarkMode(theme.palette.mode) ? theme.palette.text.primary : theme.palette.grey[900]
     },
     [`&.navLink.active .${listItemTextClasses.root}`]: {
-      color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.grey[900]
+      color: isDarkMode(theme.palette.mode) ? theme.palette.grey[900] : theme.palette.text.primary
     },
     '&.active': {
       background: theme.palette.grey[400]

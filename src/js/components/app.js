@@ -30,7 +30,7 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import ErrorBoundary from '../errorboundary';
-import { toggle } from '../helpers';
+import { isDarkMode, toggle } from '../helpers';
 import { getOnboardingState, getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
@@ -154,7 +154,7 @@ export const AppRoot = () => {
   const onToggleSearchResult = () => setShowSearchResult(toggle);
 
   const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
-  const theme = createTheme(mode === 'dark' ? darkTheme : lightTheme);
+  const theme = createTheme(isDarkMode(mode) ? darkTheme : lightTheme);
 
   const { classes } = useStyles();
 
