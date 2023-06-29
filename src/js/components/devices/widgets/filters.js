@@ -44,7 +44,8 @@ export const Filters = ({ className = '', filters: propsFilters, isModification 
   const { groupFilters, selectedGroup } = useSelector(getSelectedGroupInfo);
   const attributes = useSelector(getFilterAttributes);
   const { hasFullFiltering: canFilterMultiple } = useSelector(getTenantCapabilities);
-  const filters = propsFilters || useSelector(getDeviceFilters);
+  const stateFilters = useSelector(getDeviceFilters);
+  const filters = propsFilters || stateFilters;
   const isEnterprise = useSelector(getIsEnterprise);
   const previousFilters = useSelector(state => state.users.globalSettings.previousFilters);
 
@@ -52,12 +53,12 @@ export const Filters = ({ className = '', filters: propsFilters, isModification 
     setCurrentFilters(filters);
     setEditedIndex(filters.length);
     dispatch(getDeviceAttributes());
-  }, [open]);
+  }, [dispatch, filters, open]);
 
   useEffect(() => {
     setAdding(adding && groupFilters.length ? isModification : true);
     setNewFilter(emptyFilter);
-  }, [isModification, groupFilters.length]);
+  }, [isModification, groupFilters.length, adding]);
 
   const updateFilter = newFilter => {
     setNewFilter(newFilter);

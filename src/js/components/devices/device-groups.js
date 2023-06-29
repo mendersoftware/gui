@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -20,11 +20,10 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 import pluralize from 'pluralize';
 
-import { setOfflineThreshold, setSnackbar } from '../../actions/appActions';
+import { setOfflineThreshold } from '../../actions/appActions';
 import {
   addDynamicGroup,
   addStaticGroup,
-  preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
@@ -74,7 +73,6 @@ export const DeviceGroups = () => {
   const [showMakeGateway, setShowMakeGateway] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
-  const deviceTimer = useRef();
   const { status: statusParam } = useParams();
 
   const { groupCount, selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
@@ -97,6 +95,7 @@ export const DeviceGroups = () => {
   const showHelptips = useSelector(getShowHelptips);
   const isEnterprise = useSelector(getIsEnterprise);
   const dispatch = useDispatch();
+  const isInitialized = useRef(false);
 
   const [locationParams, setLocationParams] = useLocationParams('devices', {
     filteringAttributes,
@@ -106,36 +105,28 @@ export const DeviceGroups = () => {
 
   const { refreshTrigger, selectedId, state: selectedState } = deviceListState;
 
+  const refreshListState = useCallback(() => dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger })), [dispatch, refreshTrigger]);
+
   useEffect(() => {
-    if (!deviceTimer.current) {
+    if (!isInitialized.current) {
       return;
     }
     setLocationParams({ pageState: deviceListState, filters, selectedGroup });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     deviceListState.detailsTab,
     deviceListState.page,
     deviceListState.perPage,
     deviceListState.selectedIssues,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(deviceListState.sort),
+    refreshTrigger,
     selectedId,
     filters,
     selectedGroup,
-    selectedState
+    selectedState,
+    setLocationParams
   ]);
-
-  useEffect(() => {
-    if (locationParams.groupName) {
-      dispatch(selectGroup(locationParams.groupName));
-    }
-    let listState = { setOnly: true };
-    if (locationParams.open && locationParams.id.length) {
-      listState = { ...listState, selectedId: locationParams.id[0], detailsTab: locationParams.detailsTab };
-    }
-    if (!locationParams.id?.length && selectedId) {
-      listState = { ...listState, detailsTab: 'identity' };
-    }
-    dispatch(setDeviceListState(listState));
-  }, [locationParams.detailsTab, locationParams.groupName, JSON.stringify(locationParams.id), locationParams.open]);
 
   useEffect(() => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
@@ -145,16 +136,25 @@ export const DeviceGroups = () => {
     } else if (filters.length) {
       dispatch(setDeviceFilters(filters));
     }
-    const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
-    let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
+    let listState = { ...remainder };
+    if (statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam)) {
+      listState.state = statusParam;
+    }
     if (id.length === 1 && Boolean(locationParams.open)) {
       listState.selectedId = id[0];
     } else if (id.length && hasFullFiltering) {
       dispatch(setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]));
     }
-    dispatch(setDeviceListState(listState));
-    dispatch(setOfflineThreshold());
-  }, []);
+    dispatch(setDeviceListState(listState)).then(() => {
+      if (isInitialized.current) {
+        return;
+      }
+      isInitialized.current = true;
+      refreshListState();
+      dispatch(setOfflineThreshold());
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(tenantCapabilities), JSON.stringify(locationParams), statusParam]);
 
   /*
    * Groups
@@ -309,10 +309,8 @@ export const DeviceGroups = () => {
             acceptedDevices={acceptedCount}
             deviceLimit={deviceLimit}
             limitMaxed={limitMaxed}
-            preauthDevice={authset => dispatch(preauthDevice(authset))}
             onSubmit={onPreauthSaved}
             onCancel={() => setOpenPreauth(false)}
-            setSnackbar={message => dispatch(setSnackbar(message))}
           />
         )}
         {showMakeGateway && <MakeGatewayDialog isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}

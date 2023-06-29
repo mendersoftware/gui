@@ -64,7 +64,7 @@ const NumberInputLimited = ({ limit, onChange, value: propsValue, ...remainder }
       return;
     }
     onChange(allowedValue);
-  }, [debouncedValue]);
+  }, [debouncedValue, max, min, onChange]);
 
   return (
     <TextField
@@ -91,8 +91,8 @@ export const ArtifactGenerationSettings = () => {
   const [inputWindow, setInputWindow] = useState(deltaConfig.inputWindow);
   const [duplicatesWindow, setDuplicatesWindow] = useState(deltaConfig.duplicatesWindow);
   const [instructionBuffer, setInstructionBuffer] = useState(deltaConfig.instructionBuffer);
-  const [isInitialized, setIsInitialized] = useState(false);
   const timer = useRef(null);
+  const isInitialized = useRef(false);
 
   const { classes } = useStyles();
 
@@ -109,15 +109,16 @@ export const ArtifactGenerationSettings = () => {
     setInputWindow(inputWindow);
     setDuplicatesWindow(duplicatesWindow);
     setInstructionBuffer(instructionBuffer);
-    setTimeout(() => setIsInitialized(true), 0);
+    setTimeout(() => (isInitialized.current = true), TIMEOUTS.debounceShort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(deltaConfig), JSON.stringify(deltaLimits)]);
 
   useEffect(() => {
     dispatch(getDeploymentsConfig());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (!isInitialized) {
+    if (!isInitialized.current) {
       return;
     }
     clearTimeout(timer.current);
@@ -140,7 +141,7 @@ export const ArtifactGenerationSettings = () => {
     return () => {
       clearTimeout(timer.current);
     };
-  }, [compressionLevel, disableChecksum, disableDecompression, duplicatesWindow, inputWindow, instructionBuffer, sourceWindow, timeoutValue]);
+  }, [compressionLevel, disableChecksum, disableDecompression, dispatch, duplicatesWindow, inputWindow, instructionBuffer, sourceWindow, timeoutValue]);
 
   const numberInputs = useMemo(() => {
     return [
@@ -150,6 +151,7 @@ export const ArtifactGenerationSettings = () => {
       { ...numberFields.duplicatesWindow, setter: setDuplicatesWindow, value: duplicatesWindow, ...deltaLimits.duplicatesWindow },
       { ...numberFields.instructionBuffer, setter: setInstructionBuffer, value: instructionBuffer, ...deltaLimits.instructionBuffer }
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     compressionLevel,
     setCompressionLevel,
@@ -161,6 +163,7 @@ export const ArtifactGenerationSettings = () => {
     duplicatesWindow,
     setInstructionBuffer,
     instructionBuffer,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(deltaLimits)
   ]);
 

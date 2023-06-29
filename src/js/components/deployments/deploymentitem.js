@@ -11,19 +11,16 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 
 // material ui
 import { CancelOutlined as CancelOutlinedIcon } from '@mui/icons-material';
 import { Button, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import isUUID from 'validator/lib/isUUID';
-
-import { getDeviceById } from '../../actions/deviceActions';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { FileSize, getDeploymentState } from '../../helpers';
+import { useDeploymentDevice } from '../../utils/deploymentdevicehook';
 import Confirm from '../common/confirm';
 import { RelativeTime } from '../common/time';
 import { PhaseProgressDisplay } from './deployment-report/phaseprogress';
@@ -104,19 +101,12 @@ export const DeploymentItem = ({
   type
 }) => {
   const [abort, setAbort] = useState(null);
+  useDeploymentDevice(deployment.name);
 
   const { classes } = useStyles();
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isUUID(deployment.name) && !devices[deployment.name]) {
-      dispatch(getDeviceById(deployment.name));
-    }
-  }, [deployment.name]);
+  const toggleConfirm = id => setTimeout(() => setAbort(abort ? null : id), 150);
 
-  const toggleConfirm = id => {
-    setTimeout(() => setAbort(abort ? null : id), 150);
-  };
   const { created, id, phases } = deployment;
 
   let confirmation;

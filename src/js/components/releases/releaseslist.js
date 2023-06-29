@@ -85,6 +85,7 @@ export const ReleasesList = ({ artifactIncluded, features, onboardingState, onSe
         }
         return accu;
       }, []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(features)]
   );
 

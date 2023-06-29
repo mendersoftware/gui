@@ -64,7 +64,7 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
         resizeRef.current = e.clientX;
       }
     },
-    [onResizeChange, resizable, resizeRef.current]
+    [column, index, onResizeChange, resizable]
   );
 
   const removeListeners = useCallback(() => {
@@ -84,7 +84,7 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
         removeListeners();
       }
     },
-    [onResizeFinish, removeListeners, resizeRef.current]
+    [column, index, onResizeFinish, removeListeners]
   );
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
     return () => {
       removeListeners();
     };
-  }, [resizeRef.current, mouseMove, mouseUp, removeListeners]);
+  }, [mouseMove, mouseUp, removeListeners]);
 
   let resizeHandleClassName = resizable && isHovering ? 'hovering' : '';
   resizeHandleClassName = resizeRef.current ? 'resizing' : resizeHandleClassName;
@@ -196,7 +196,7 @@ export const DeviceList = ({
     }
     const relevantColumns = getRelevantColumns(deviceListRef.current.querySelector('.deviceListRow').children, selectable);
     deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes.length ? customColumnSizes : relevantColumns, '1.5fr', selectable);
-  }, [deviceListRef.current, customColumnSizes, columnHeaders, selectable, resizeTrigger, size.width]);
+  }, [customColumnSizes, columnHeaders, selectable, resizeTrigger, size.width]);
 
   useEffect(() => {
     clearTimeout(initRef.current);

@@ -19,6 +19,7 @@ import { SearchAddon } from 'xterm-addon-search';
 import 'xterm/css/xterm.css';
 
 const searchAddon = new SearchAddon();
+const canvasAddon = new CanvasAddon();
 
 const defaultAddons = [searchAddon];
 const defaultOptions = { allowProposedApi: true, scrollback: 5000 };
@@ -29,42 +30,45 @@ export const Xterm = ({ addons, className, customKeyEventHandler, options = {}, 
    */
   // This is assigned in the setupTerminal() which is called from the constructor
   // terminal: Terminal
-  // const terminal = ref.current.terminal;
+  // const terminal = ref.current.terminal.current;
 
   /**
    * The ref for the containing element.
    */
-  // const terminalRef = ref.current.terminalRef;
+  // const terminalRef = ref.current.terminalRef.current;
 
   useEffect(() => {
+    let { terminal, terminalRef } = xtermRef.current;
     // Setup the XTerm terminal.
-    xtermRef.current.terminal = new Terminal({ ...defaultOptions, ...options });
+    terminal.current = new Terminal({ ...defaultOptions, ...options });
     // Load addons
-    defaultAddons.forEach(addon => xtermRef.current.terminal.loadAddon(addon));
+    defaultAddons.forEach(addon => terminal.current.loadAddon(addon));
     if (addons.length) {
-      addons.forEach(addon => xtermRef.current.terminal.loadAddon(addon));
+      addons.forEach(addon => terminal.current.loadAddon(addon));
     }
 
     // Create Listeners
-    Object.entries(remainingProps).map(([key, value]) => (value ? xtermRef.current.terminal[key](value) : undefined));
+    Object.entries(remainingProps).map(([key, value]) => (value ? terminal.current[key](value) : undefined));
 
     // Add Custom Key Event Handler
     if (customKeyEventHandler) {
-      xtermRef.current.terminal.attachCustomKeyEventHandler(customKeyEventHandler);
+      terminal.current.attachCustomKeyEventHandler(customKeyEventHandler);
     }
 
-    if (xtermRef.current.terminalRef.current) {
+    if (terminalRef.current) {
       // Creates the terminal within the container element.
-      xtermRef.current.terminal.open(xtermRef.current.terminalRef.current);
+      terminal.current.open(terminalRef.current);
       // we need to stick to the canvas addon, due to a lack of WebGL support in Safari
       // + to still have proper rendering performance
-      xtermRef.current.terminal.loadAddon(new CanvasAddon());
+      terminal.current.loadAddon(canvasAddon);
     }
     return () => {
       // When the component unmounts dispose of the terminal and all of its listeners.
-      xtermRef.current.terminal.dispose();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      terminal.current.dispose();
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addons, customKeyEventHandler, JSON.stringify(options), Object.keys(remainingProps).join('')]);
 
   return <div className={className} ref={xtermRef.current.terminalRef} style={style} />;
 };

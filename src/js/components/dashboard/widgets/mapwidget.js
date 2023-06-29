@@ -33,6 +33,7 @@ const MapWrapper = ({ groups, groupNames, devicesById, getGroupDevices, getDevic
     if (groupNames.length && !groupNames.includes(ALL_DEVICES)) {
       setGroup(groupNames[0]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupNames.join('')]);
 
   useEffect(() => {
@@ -41,7 +42,8 @@ const MapWrapper = ({ groups, groupNames, devicesById, getGroupDevices, getDevic
       return;
     }
     getDevicesInBounds(bounds, group);
-  }, [group, JSON.stringify(bounds)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getDevicesInBounds, getGroupDevices, group, JSON.stringify(bounds)]);
 
   const deviceIds = group !== ALL_DEVICES ? groups[group].deviceIds : Object.keys(devicesById);
   useEffect(() => {
@@ -54,6 +56,7 @@ const MapWrapper = ({ groups, groupNames, devicesById, getGroupDevices, getDevic
       return accu;
     }, []);
     setItems(items);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceIds.join('')]);
 
   const boundaries = useMemo(() => {
@@ -65,6 +68,7 @@ const MapWrapper = ({ groups, groupNames, devicesById, getGroupDevices, getDevic
       return accu;
     }, []);
     return Leaflet.latLngBounds(boundaries);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(items)]);
 
   const onGroupSelect = ({ target: { value } }) => {

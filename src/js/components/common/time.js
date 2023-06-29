@@ -46,9 +46,7 @@ export const RelativeTime = ({ className, shouldCount = 'both', updateTime }) =>
   const [updatedTime, setUpdatedTime] = useState();
 
   useEffect(() => {
-    if (updateTime !== updatedTime) {
-      setUpdatedTime(moment(updateTime));
-    }
+    setUpdatedTime(updatedTime => (updateTime !== updatedTime ? moment(updateTime) : updatedTime));
   }, [updateTime]);
 
   let timeDisplay = <MaybeTime className={className} value={updatedTime} />;
@@ -76,9 +74,7 @@ export const ApproximateRelativeDate = ({ className, updateTime }) => {
   const [updatedTime, setUpdatedTime] = useState();
 
   useEffect(() => {
-    if (updateTime !== updatedTime) {
-      setUpdatedTime(moment(updateTime, defaultDateFormat));
-    }
+    setUpdatedTime(updatedTime => (updateTime !== updatedTime ? moment(updateTime, defaultDateFormat) : updatedTime));
   }, [updateTime]);
 
   const diff = updatedTime ? Math.abs(updatedTime.diff(moment(), 'days')) : 0;

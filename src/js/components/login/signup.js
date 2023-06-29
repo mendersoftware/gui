@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 
@@ -85,7 +85,7 @@ export const Signup = () => {
   const dispatch = useDispatch();
   const { classes } = useStyles();
 
-  const dispatchedSetSnackbar = message => dispatch(setSnackbar(message));
+  const dispatchedSetSnackbar = useCallback(message => dispatch(setSnackbar(message)), [dispatch]);
 
   useEffect(() => {
     const usedOauthProvider = cookies.get('oauth');
@@ -103,7 +103,7 @@ export const Signup = () => {
       dispatchedSetSnackbar('');
       setRedirectOnLogin(true);
     }
-  }, [currentUserId]);
+  }, [currentUserId, dispatchedSetSnackbar]);
 
   const handleSignup = formData => {
     if (recaptchaSiteKey !== '' && recaptcha === '') {

@@ -148,7 +148,8 @@ const EventsLayer = ({ onMapMoved }) => {
     if (debouncedBounds) {
       onMapMoved(debouncedBounds);
     }
-  }, [JSON.stringify(debouncedBounds)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(debouncedBounds), onMapMoved]);
 
   useMapEvent('moveend', ({ target }) => setBounds(target.getBounds()));
   return null;
@@ -169,6 +170,7 @@ const Map = ({ items = [], mapProps = {}, onMapMoved }) => {
       return;
     }
     mapRef.current.fitBounds(bounds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(mapProps.bounds)]);
 
   const onMapReady = map => (mapRef.current = map.target);

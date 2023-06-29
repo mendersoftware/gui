@@ -13,7 +13,7 @@
 //    limitations under the License.
 import { routes } from '../components/devices/base-devices';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../constants/deploymentConstants';
-import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP, emptyFilter } from '../constants/deviceConstants';
+import { ALL_DEVICES, ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP, emptyFilter } from '../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../constants/organizationConstants';
 import { deepCompare, getISOStringBoundaries } from '../helpers';
 
@@ -199,7 +199,7 @@ const formatFilters = filters => {
 
 export const formatDeviceSearch = ({ pageState, filters, selectedGroup }) => {
   let activeFilters = [...filters];
-  if (selectedGroup) {
+  if (selectedGroup && selectedGroup !== ALL_DEVICES) {
     const isUngroupedGroup = selectedGroup === UNGROUPED_GROUP.id;
     activeFilters = isUngroupedGroup
       ? activeFilters.filter(

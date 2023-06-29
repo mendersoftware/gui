@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
@@ -26,6 +26,17 @@ export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify
   const [validated2fa, setValidated2fa] = useState(false);
   const [validating2fa, setValidating2fa] = useState(false);
 
+  const onUnload = useCallback(
+    e => {
+      if (!e || (validated2fa && has2FA) || !qrImage) {
+        return;
+      }
+      e.returnValue = '2fa setup incomplete';
+      return e.returnValue;
+    },
+    [has2FA, qrImage, validated2fa]
+  );
+
   useEffect(() => {
     window.addEventListener('beforeunload', onUnload);
     return () => {
@@ -34,19 +45,11 @@ export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify
       }
       window.removeEventListener('beforeunload', onUnload);
     };
-  }, []);
+  }, [handle2FAState, onUnload, qrImage]);
 
   useEffect(() => {
     current2FA.current = has2FA;
   }, [has2FA]);
-
-  const onUnload = e => {
-    if (!e || (validated2fa && has2FA) || !qrImage) {
-      return;
-    }
-    e.returnValue = '2fa setup incomplete';
-    return e.returnValue;
-  };
 
   const validate2faSetup = formData => {
     setValidating2fa(true);

@@ -48,7 +48,7 @@ export const ExpandableAttribute = ({
         setOverflowActive(overflowActiveCurrently);
       }
     }
-  }, [textContent]);
+  }, [expanded, overflowActive, textContent]);
 
   const onClick = () => {
     if (copyToClipboard) {

@@ -73,6 +73,7 @@ export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFi
     setKey('');
     setScope(defaultScope);
     setOptions(attributes.sort((a, b) => a.priority - b.priority));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attributes.length, reset]);
 
   useEffect(() => {
@@ -82,7 +83,10 @@ export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFi
   useEffect(() => {
     clearTimeout(timer.current);
     timer.current = setTimeout(() => onSelect({ key, scope }), TIMEOUTS.debounceDefault);
-  }, [key, scope]);
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, [key, onSelect, scope]);
 
   const updateFilterKey = (value, selectedScope) => {
     if (!value) {

@@ -84,7 +84,7 @@ export const Upgrade = () => {
 
   useEffect(() => {
     dispatch(getUserOrganization());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const { addons: orgAddOns = [], plan: orgPlan = 'os', trial = false } = org;

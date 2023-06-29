@@ -50,7 +50,8 @@ export const AsyncAutocomplete = ({
     } else {
       onChange(debouncedValue);
     }
-  }, [debouncedValue, JSON.stringify(options), selectionAttribute]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedValue, JSON.stringify(options), onChange, onChangeSelection, selectionAttribute]);
 
   const onInputChange = (e, value, reason) => {
     if (reason === 'clear') {

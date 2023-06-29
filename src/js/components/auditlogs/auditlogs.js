@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,6 +57,8 @@ const autoSelectProps = {
   renderOption
 };
 
+const locationDefaults = { sort: { direction: SORTING_OPTIONS.desc } };
+
 export const AuditLogs = props => {
   const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
@@ -67,7 +69,8 @@ export const AuditLogs = props => {
   const [detailValue, setDetailValue] = useState(null);
   const [userValue, setUserValue] = useState(null);
   const [typeValue, setTypeValue] = useState(null);
-  const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
+  const isInitialized = useRef();
+  const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: locationDefaults });
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const events = useSelector(state => state.organization.auditlog.events);
@@ -86,10 +89,40 @@ export const AuditLogs = props => {
   const { detail, isLoading, perPage, endDate, user, reset: resetList, sort, startDate, total, type } = selectionState;
 
   useEffect(() => {
+    if (!hasAuditlogs || !isInitialized.current) {
+      return;
+    }
+    setLocationParams({ pageState: selectionState });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detail, endDate, hasAuditlogs, perPage, selectionState.page, selectionState.selectedId, setLocationParams, startDate, type, user]);
+
+  useEffect(() => {
+    if (!hasAuditlogs || !isInitialized.current) {
+      return;
+    }
+    dispatch(setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser }));
+  }, [debouncedDetail, debouncedType, debouncedUser, dispatch, hasAuditlogs]);
+
+  useEffect(() => {
+    if (canReadUsers) {
+      dispatch(getUserList());
+    }
+  }, [canReadUsers, dispatch]);
+
+  useEffect(() => {
+    const user = users[debouncedUser?.id];
+    if (debouncedUser?.id || !user) {
+      return;
+    }
+    setUserValue(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedUser, JSON.stringify(users)]);
+
+  useEffect(() => {
     if (!hasAuditlogs) {
       return;
     }
-    let state = { ...locationParams, reset: !resetList };
+    let state = { ...locationParams };
     if (locationParams.id && Boolean(locationParams.open)) {
       state.selectedId = locationParams.id[0];
       const [eventAction, eventTime] = atob(state.selectedId).split('|');
@@ -101,35 +134,9 @@ export const AuditLogs = props => {
     }
     dispatch(setAuditlogsState(state));
     Object.entries({ detail: setDetailValue, user: setUserValue, type: setTypeValue }).map(([key, setter]) => (state[key] ? setter(state[key]) : undefined));
-  }, [hasAuditlogs]);
-
-  useEffect(() => {
-    if (!hasAuditlogs) {
-      return;
-    }
-    dispatch(setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser }));
-  }, [debouncedDetail, debouncedType, debouncedUser, hasAuditlogs]);
-
-  useEffect(() => {
-    if (canReadUsers) {
-      dispatch(getUserList());
-    }
-  }, [canReadUsers]);
-
-  useEffect(() => {
-    if (!hasAuditlogs) {
-      return;
-    }
-    setLocationParams({ pageState: selectionState });
-  }, [detail, endDate, hasAuditlogs, JSON.stringify(sort), perPage, selectionState.page, selectionState.selectedId, startDate, type, user]);
-
-  useEffect(() => {
-    const user = users[debouncedUser];
-    if (debouncedUser?.id || !user) {
-      return;
-    }
-    setUserValue(user);
-  }, [debouncedUser, JSON.stringify(users)]);
+    setTimeout(() => (isInitialized.current = true), TIMEOUTS.debounceDefault);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, hasAuditlogs, JSON.stringify(events), JSON.stringify(locationParams)]);
 
   const reset = () => {
     dispatch(

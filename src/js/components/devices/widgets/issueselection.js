@@ -94,6 +94,7 @@ const DeviceIssuesSelection = ({ onChange, options, selection }) => {
     setOpen(true);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const groupedOptions = useMemo(() => groupOptions(options, selection), [options.join(''), selection.join('')]);
 
   const onSelectionChange = useCallback(
@@ -115,7 +116,7 @@ const DeviceIssuesSelection = ({ onChange, options, selection }) => {
       }
       onChange({ target: { value: [...new Set(selectedOptions)] } });
     },
-    [options, selection]
+    [onChange, options, selection]
   );
 
   return (

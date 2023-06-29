@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
@@ -119,6 +119,13 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
   const { status: stats = {} } = statistics;
   const totalDeviceCount = totalDevices ?? device_count;
 
+  const refreshDeployment = useCallback(() => {
+    if (!deployment.id) {
+      return;
+    }
+    return dispatch(getSingleDeployment(deployment.id));
+  }, [deployment.id, dispatch]);
+
   useEffect(() => {
     if (!open) {
       return;
@@ -146,7 +153,21 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
     return () => {
       clearInterval(timer.current);
     };
-  }, [deployment.id, open]);
+  }, [
+    canAuditlog,
+    deployment.artifact_name,
+    deployment.finished,
+    deployment.id,
+    deployment.name,
+    deployment.status,
+    deployment.type,
+    dispatch,
+    hasAuditlogs,
+    open,
+    past,
+    refreshDeployment,
+    release.device_types_compatible.length
+  ]);
 
   useEffect(() => {
     const progressCount =
@@ -162,20 +183,12 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
         clearTimeout(timer.current);
       };
     }
-  }, [deployment.id, device_count, JSON.stringify(stats)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deployment.id, device_count, JSON.stringify(stats), refreshDeployment]);
 
-  const scrollToBottom = () => {
-    rolloutSchedule.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const scrollToBottom = () => rolloutSchedule.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const refreshDeployment = () => {
-    if (!deployment.id) {
-      return;
-    }
-    return dispatch(getSingleDeployment(deployment.id));
-  };
-
-  const viewLog = id => dispatch(getDeviceLog(deployment.id, id)).then(() => setDeviceId(id));
+  const viewLog = useCallback(id => dispatch(getDeviceLog(deployment.id, id)).then(() => setDeviceId(id)), [deployment.id, dispatch]);
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/deployments') + '/deployments'.length);
@@ -204,7 +217,7 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
 
   const props = {
     deployment,
-    getDeploymentDevices: (id, options) => dispatch(getDeploymentDevices(id, options)),
+    getDeploymentDevices: useCallback((id, options) => dispatch(getDeploymentDevices(id, options)), [dispatch]),
     idAttribute,
     selectedDevices,
     userCapabilities,

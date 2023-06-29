@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 // material ui
@@ -26,7 +26,8 @@ const DraggableListItem = ({ item, index, onRemove }) => {
   const title = useMemo(() => {
     const header = Object.values(defaultHeaders).find(thing => thing.attribute === item.key);
     return item.title || header?.title || item.key;
-  }, [item]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.key, item.title]);
 
   const onClick = () => onRemove(item, index);
 
@@ -69,13 +70,14 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
         return accu;
       },
       {
-        attributeOptions: [...attributes.filter(item => !([idAttribute, 'status'].includes(item.key) && item.scope === ATTRIBUTE_SCOPES.identity))],
+        attributeOptions: [...attributes.filter(item => !([idAttribute.attribute, 'status'].includes(item.key) && item.scope === ATTRIBUTE_SCOPES.identity))],
         selectedAttributes: []
       }
     );
     setSelectedAttributes(selectedAttributes);
     setAttributeOptions(attributeOptions);
-  }, [attributes, columnHeaders]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(attributes), JSON.stringify(columnHeaders), idAttribute.attribute, setSelectedAttributes]);
 
   useEffect(() => {
     const isAtColumnLimit = selectedAttributes.length >= columnLimit;
@@ -83,7 +85,7 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
       buttonRef.current.focus();
     }
     setIsAtColumnLimit(isAtColumnLimit);
-  }, [selectedAttributes.length]);
+  }, [buttonRef, selectedAttributes.length]);
 
   const onDragEnd = ({ destination, source }) => {
     if (!destination) {
@@ -109,16 +111,20 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
     setAttributeOptions([...attributeOptions, removed]);
   };
 
-  const onSelect = attribute => {
-    if (attribute.key) {
-      const existingAttribute = attributeOptions.find(item => item.key === attribute.key && item.scope === attribute.scope) || attribute;
-      setSelectedAttributes([
-        ...selectedAttributes,
-        { ...existingAttribute, title: existingAttribute.value ?? existingAttribute.key, id: `${attribute.scope}-${attribute.key}` }
-      ]);
-      setAttributeOptions(filterAttributes(attributeOptions, attribute));
-    }
-  };
+  const onSelect = useCallback(
+    attribute => {
+      if (attribute.key) {
+        const existingAttribute = attributeOptions.find(item => item.key === attribute.key && item.scope === attribute.scope) || attribute;
+        setSelectedAttributes(current => [
+          ...current,
+          { ...existingAttribute, title: existingAttribute.value ?? existingAttribute.key, id: `${attribute.scope}-${attribute.key}` }
+        ]);
+        setAttributeOptions(filterAttributes(attributeOptions, attribute));
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(attributeOptions), setSelectedAttributes]
+  );
 
   return (
     <DialogContent>

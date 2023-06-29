@@ -83,7 +83,8 @@ export const Dashboard = () => {
       });
       !!notification && dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true));
     }, TIMEOUTS.debounceDefault);
-  }, [currentUser, JSON.stringify(onboardingState)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, dispatch, JSON.stringify(onboardingState)]);
 
   useEffect(() => {
     return () => {

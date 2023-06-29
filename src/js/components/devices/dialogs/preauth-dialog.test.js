@@ -12,21 +12,35 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import * as DeviceActions from '../../../actions/deviceActions';
 import PreauthDialog from './preauth-dialog';
+
+const mockStore = configureStore([thunk]);
 
 const errorText = 'test-errortext';
 const dropzone = '.dropzone input';
 
+let store;
+
 describe('PreauthDialog Component', () => {
+  beforeEach(() => {
+    store = mockStore({ ...defaultState });
+  });
+
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <PreauthDialog deviceLimitWarning={<div>I should not be rendered/ undefined</div>} limitMaxed={false} onSubmit={jest.fn} onCancel={jest.fn} />
+      <Provider store={store}>
+        <PreauthDialog deviceLimitWarning={<div>I should not be rendered/ undefined</div>} limitMaxed={false} onSubmit={jest.fn} onCancel={jest.fn} />
+      </Provider>
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
@@ -35,19 +49,13 @@ describe('PreauthDialog Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const uploadMock = jest.fn();
     const submitMock = jest.fn();
     const menderFile = new File(['testContent plain'], 'test.pem');
-    uploadMock.mockRejectedValueOnce(errorText);
-
+    const preAuthSpy = jest.spyOn(DeviceActions, 'preauthDevice');
     const ui = (
-      <PreauthDialog
-        deviceLimitWarning={<div>I should not be rendered/ undefined</div>}
-        limitMaxed={false}
-        onSubmit={submitMock}
-        onCancel={jest.fn}
-        preauthDevice={uploadMock}
-      />
+      <Provider store={store}>
+        <PreauthDialog limitMaxed={false} onSubmit={submitMock} onCancel={jest.fn} />
+      </Provider>
     );
     const { rerender } = render(ui);
     expect(screen.getByText(/upload a public key file/i)).toBeInTheDocument();
@@ -67,21 +75,27 @@ describe('PreauthDialog Component', () => {
     await user.click(document.querySelector(fabSelector));
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(errorText)).not.toBeInTheDocument());
+    submitMock.mockRejectedValueOnce(errorText);
     await user.click(screen.getByRole('button', { name: 'Save' }));
-    await waitFor(() => expect(screen.queryAllByText(errorText)).toBeTruthy());
-    uploadMock.mockClear();
+    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(screen.queryByText(errorText)).toBeTruthy());
     await user.type(screen.getByDisplayValue('testValue'), 'testValues');
     await waitFor(() => expect(screen.queryByText(errorText)).not.toBeInTheDocument());
-    uploadMock.mockResolvedValue(true);
     await user.click(screen.getByRole('button', { name: 'Save and add another' }));
     await waitFor(() => rerender(ui));
-    expect(uploadMock).toHaveBeenCalled();
+    expect(screen.queryByText('reached your limit')).toBeFalsy();
+    expect(preAuthSpy).toHaveBeenCalled();
   });
 
   it('prevents preauthorizations when device limit was reached', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const menderFile = new File(['testContent plain'], 'test.pem');
-    const ui = <PreauthDialog acceptedDevices={100} deviceLimit={2} limitMaxed={true} />;
+    const ui = (
+      <Provider store={store}>
+        <PreauthDialog acceptedDevices={100} deviceLimit={2} limitMaxed={true} />
+      </Provider>
+    );
+
     const { rerender } = render(ui);
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector(dropzone);

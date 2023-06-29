@@ -61,31 +61,26 @@ export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
     onSelect(newlySelectedRoles, hadRoleChanges);
   };
 
-  const editableRoles = useMemo(
-    () =>
-      Object.entries(roles).map(([id, role]) => {
-        const enabled = selectedRoleIds.some(roleId => id === roleId);
-        return { enabled, id, ...role };
-      }),
-    [roles, selectedRoleIds]
-  );
-
-  const showRoleUsageNotification = useMemo(
-    () =>
-      selectedRoleIds.reduce((accu, roleId) => {
-        const { permissions, uiPermissions } = roles[roleId];
-        const hasUiApiAccess = [rolesByName.ci].includes(roleId)
-          ? false
-          : roleId === rolesByName.admin ||
-            permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action)) ||
-            uiPermissions.userManagement.includes(uiPermissionsById.read.value);
-        if (hasUiApiAccess) {
-          return false;
-        }
-        return typeof accu !== 'undefined' ? accu : true;
-      }, undefined),
-    [selectedRoleIds]
-  );
+  const { editableRoles, showRoleUsageNotification } = useMemo(() => {
+    const editableRoles = Object.entries(roles).map(([id, role]) => {
+      const enabled = selectedRoleIds.some(roleId => id === roleId);
+      return { enabled, id, ...role };
+    });
+    const showRoleUsageNotification = selectedRoleIds.reduce((accu, roleId) => {
+      const { permissions, uiPermissions } = roles[roleId];
+      const hasUiApiAccess = [rolesByName.ci].includes(roleId)
+        ? false
+        : roleId === rolesByName.admin ||
+          permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action)) ||
+          uiPermissions.userManagement.includes(uiPermissionsById.read.value);
+      if (hasUiApiAccess) {
+        return false;
+      }
+      return typeof accu !== 'undefined' ? accu : true;
+    }, undefined);
+    return { editableRoles, showRoleUsageNotification };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(roles), selectedRoleIds]);
 
   return (
     <FormControl id="roles-form" style={{ maxWidth: 400 }}>

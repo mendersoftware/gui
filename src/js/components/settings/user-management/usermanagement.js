@@ -56,11 +56,11 @@ export const UserManagement = () => {
 
   useEffect(() => {
     dispatch(getUserList());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getUserList());
-  }, [currentUser.id, users.length]);
+  }, [currentUser.id, dispatch, users.length]);
 
   const openEdit = user => {
     setUser(user);

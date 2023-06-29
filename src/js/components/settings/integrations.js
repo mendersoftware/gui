@@ -61,7 +61,7 @@ const ConnectionDetailsInput = ({ connectionConfig, isEditing, setConnectionConf
         device_policy_name: debounced
       }
     });
-  }, [debounced, debouncedRegion, debouncedId, debouncedSecret]);
+  }, [debounced, debouncedRegion, debouncedId, debouncedSecret, setConnectionConfig]);
 
   useEffect(() => {
     setKeyId(access_key_id);
@@ -94,7 +94,7 @@ const ConnectionStringInput = ({ connectionConfig, isEditing, setConnectionConfi
 
   useEffect(() => {
     setConnectionConfig({ connection_string: debouncedValue });
-  }, [debouncedValue]);
+  }, [debouncedValue, setConnectionConfig]);
 
   useEffect(() => {
     setValue(connectionConfig.connection_string);
@@ -201,7 +201,7 @@ export const Integrations = () => {
   const [availableIntegrations, setAvailableIntegrations] = useState([]);
   const [configuredIntegrations, setConfiguredIntegrations] = useState([]);
   const [isConfiguringWebhook, setIsConfiguringWebhook] = useState(false);
-  const integrations = useSelector(getExternalIntegrations) ?? [];
+  const integrations = useSelector(getExternalIntegrations);
   const isPreRelease = useSelector(getIsPreview);
   const dispatch = useDispatch();
 
@@ -215,7 +215,7 @@ export const Integrations = () => {
 
   useEffect(() => {
     dispatch(getIntegrations());
-  }, []);
+  }, [dispatch]);
 
   const onConfigureIntegration = ({ target: { value: provider = '' } }) => {
     if (provider === EXTERNAL_PROVIDER.webhook.provider) {

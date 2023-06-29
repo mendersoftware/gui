@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,7 +37,6 @@ import PendingDevices from './widgets/pendingdevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 
 export const Devices = ({ clickHandle }) => {
-  const [loading, setLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const anchor = useRef();
@@ -51,26 +50,22 @@ export const Devices = ({ clickHandle }) => {
   const { pending: pendingDevicesCount } = useSelector(getDeviceCountsByStatus);
   const showHelptips = useSelector(getShowHelptips);
 
+  const refreshDevices = useCallback(() => {
+    const issueRequests = Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters: [], selectedIssues: [key] })));
+    return Promise.all([dispatch(getDeviceCount(DEVICE_STATES.accepted)), dispatch(getDeviceCount(DEVICE_STATES.pending)), ...issueRequests]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(availableIssueOptions), dispatch]);
+
   useEffect(() => {
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
     refreshDevices();
-  }, []);
+  }, [refreshDevices]);
 
   useEffect(() => {
     refreshDevices();
-  }, [JSON.stringify(availableIssueOptions)]);
-
-  const refreshDevices = () => {
-    if (loading) {
-      return;
-    }
-    const issueRequests = Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters: [], selectedIssues: [key] })));
-    setLoading(true);
-    return Promise.all([dispatch(getDeviceCount(DEVICE_STATES.accepted)), dispatch(getDeviceCount(DEVICE_STATES.pending)), ...issueRequests]).finally(() =>
-      setLoading(false)
-    );
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(availableIssueOptions), refreshDevices]);
 
   const onConnectClick = () => {
     dispatch(setShowConnectingDialog(true));

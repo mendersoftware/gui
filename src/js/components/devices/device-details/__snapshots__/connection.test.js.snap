@@ -439,7 +439,19 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   line-height: 1.57;
 }
 
-.emotion-7 {
+.emotion-5 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-8 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -456,11 +468,11 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-7 iconButton {
+.emotion-8 iconButton {
   margin-right: 8px;
 }
 
-.emotion-9 {
+.emotion-11 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -477,7 +489,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-9 iconButton {
+.emotion-11 iconButton {
   margin-right: 8px;
 }
 
@@ -512,10 +524,9 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
         class="flexbox "
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
-          disabled=""
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
           style="margin-right: 16px;"
-          tabindex="-1"
+          tabindex="0"
           type="button"
         >
           <span
@@ -538,12 +549,14 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
           >
             Launch a new Remote Terminal session
           </h6>
+          <span
+            class="MuiTouchRipple-root emotion-5"
+          />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
-          disabled=""
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
           style="margin-right: 16px;"
-          tabindex="-1"
+          tabindex="0"
           type="button"
         >
           <span
@@ -551,7 +564,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
               data-testid="ImportExportIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -567,6 +580,9 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
           >
             Launch File Transfer
           </h6>
+          <span
+            class="MuiTouchRipple-root emotion-5"
+          />
         </button>
         <a
           class="flexbox centered margin-left"
@@ -577,7 +593,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
           Enable port forwarding
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-9"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-11"
             data-testid="LaunchIcon"
             focusable="false"
             viewBox="0 0 24 24"
