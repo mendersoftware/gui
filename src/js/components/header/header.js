@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -32,7 +32,6 @@ import logo from '../../../assets/img/headerlogo.png';
 import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
-import { getAllDeviceCounts } from '../../actions/deviceActions';
 import { initializeSelf, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
@@ -127,7 +126,6 @@ export const Header = ({ mode }) => {
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
   const dispatch = useDispatch();
-  const deviceTimer = useRef();
 
   useEffect(() => {
     if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
@@ -145,13 +143,9 @@ export const Header = ({ mode }) => {
   }, [sessionId, user.id, user.email, gettingUser, loggingOut]);
 
   useEffect(() => {
+    // updateUsername();
     const showOfferCookie = cookies.get('offer') === currentOffer.name;
     setHasOfferCookie(showOfferCookie);
-    clearInterval(deviceTimer.current);
-    deviceTimer.current = setInterval(() => dispatch(getAllDeviceCounts()), TIMEOUTS.refreshDefault);
-    return () => {
-      clearInterval(deviceTimer.current);
-    };
   }, []);
 
   const updateUsername = () => {
