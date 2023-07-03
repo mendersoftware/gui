@@ -26,11 +26,7 @@ export type Attribute = {
    * Attribute type is implicit, inferred from the JSON type.
    *
    * Supported types: number, string, array of numbers, array of strings.
-   * Mixed type arrays are not allowed.
+   * Mixed arrays are not allowed.
    */
   value: string;
-  /**
-   * The date and time of last tag update in RFC3339 format.
-   */
-  timestamp?: string;
 };

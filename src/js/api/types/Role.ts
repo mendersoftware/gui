@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { RolePermission } from "./RolePermission";
+import type { PermissionSetWithScope } from "./PermissionSetWithScope";
 
 /**
  * Role descriptor.
@@ -16,5 +16,5 @@ export type Role = {
    * Description of the role, as shown in the UI.
    */
   description?: string;
-  permissions?: Array<RolePermission>;
+  permission_sets_with_scope?: Array<PermissionSetWithScope>;
 };
