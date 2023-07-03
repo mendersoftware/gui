@@ -48,7 +48,7 @@
     "universal-cookie": "^4.0.4",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",
-    "victory": "^36.6.10",
+    "victory": "^36.6.11",
     "xterm": "^5.1.0",
     "xterm-addon-canvas": "^0.4.0",
     "xterm-addon-fit": "^0.7.0",
