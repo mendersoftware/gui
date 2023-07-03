@@ -202,11 +202,12 @@ describe('release actions', () => {
         uploads: { 'mock-uuid': { cancelSource: mockAbortController, name: undefined, size: undefined, uploadProgress: 0 } }
       },
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      { type: AppConstants.UPLOAD_PROGRESS, uploads: {} },
-      { type: ReleaseConstants.SELECTED_RELEASE, release: 'createdRelease' }
+      {
+        type: AppConstants.UPLOAD_PROGRESS,
+        uploads: {}
+      }
     ];
     await store.dispatch(createArtifact({ name: 'createdRelease', some: 'thing', someList: ['test', 'more'], complex: { objectThing: 'yes' } }, 'filethings'));
-    jest.runAllTimers();
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

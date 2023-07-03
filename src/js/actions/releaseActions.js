@@ -27,7 +27,7 @@ import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActi
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 const flattenRelease = (release, stateRelease) => {
-  const updatedArtifacts = release.Artifacts?.sort(customSort(1, 'modified')) || [];
+  const updatedArtifacts = release.Artifacts.sort(customSort(1, 'modified'));
   const { Artifacts, deviceTypes, modified } = updatedArtifacts.reduce(
     (accu, item) => {
       accu.deviceTypes.push(...item.device_types_compatible);
@@ -146,11 +146,8 @@ export const createArtifact = (meta, file) => (dispatch, getState) => {
     GeneralApi.upload(`${deploymentsApiUrl}/artifacts/generate`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
     .then(() => {
-      setTimeout(() => {
-        dispatch(getReleases());
-        dispatch(selectRelease(meta.name));
-      }, TIMEOUTS.oneSecond);
-      return Promise.resolve(dispatch(setSnackbar('Upload successful', TIMEOUTS.fiveSeconds)));
+      setTimeout(() => dispatch(selectRelease(meta.name)), TIMEOUTS.oneSecond);
+      return Promise.resolve([dispatch(setSnackbar('Upload successful', 5000))]);
     })
     .catch(err => {
       if (isCancel(err)) {
