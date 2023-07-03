@@ -24,9 +24,10 @@ import historyImage from '../../../assets/img/history.png';
 import { getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { createDownload, getISOStringBoundaries } from '../../helpers';
-import { getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import Loader from '../common/loader';
@@ -71,7 +72,11 @@ export const AuditLogs = props => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const events = useSelector(state => state.organization.auditlog.events);
-  const groups = useSelector(getGroupNames);
+  const groups = useSelector(state => {
+    // eslint-disable-next-line no-unused-vars
+    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    return [ALL_DEVICES, ...Object.keys(groups).sort()];
+  });
   const selectionState = useSelector(state => state.organization.auditlog.selectionState);
   const userCapabilities = useSelector(getUserCapabilities);
   const tenantCapabilities = useSelector(getTenantCapabilities);

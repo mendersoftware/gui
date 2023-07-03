@@ -24,9 +24,10 @@ import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deplo
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { BEGINNING_OF_TIME, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
+import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getISOStringBoundaries, tryMapDeployments } from '../../helpers';
-import { getGroupNames, getIdAttribute, getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getIdAttribute, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -68,12 +69,16 @@ export const Past = props => {
   const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
 
   const past = useSelector(state => state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments);
+  const groups = useSelector(state => {
+    // eslint-disable-next-line no-unused-vars
+    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    return [ALL_DEVICES, ...Object.keys(groups)];
+  });
   const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const onboardingState = useSelector(getOnboardingState);
   const pastSelectionState = useSelector(state => state.deployments.selectionState.finished);
   const devices = useSelector(state => state.devices.byId);
-  const groupNames = useSelector(getGroupNames);
 
   const debouncedSearch = useDebounce(searchValue, TIMEOUTS.debounceDefault);
   const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
@@ -218,7 +223,7 @@ export const Past = props => {
           freeSolo
           handleHomeEndKeys
           inputValue={deviceGroup}
-          options={groupNames}
+          options={groups}
           onInputChange={onGroupFilterChange}
           renderInput={params => (
             <TextField {...params} label="Filter by device group" placeholder="Select a group" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />

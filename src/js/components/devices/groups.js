@@ -18,7 +18,6 @@ import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { ALL_DEVICES } from '../../constants/deviceConstants';
 import { AddGroup } from '../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
@@ -57,7 +56,7 @@ export const Groups = ({ acceptedCount, changeGroup, className, groups, openGrou
       <div className="muted margin-bottom-small">Groups</div>
       <List>
         <ListItem classes={{ root: 'grouplist' }} button key="All" selected={!selectedGroup} onClick={() => changeGroup()}>
-          <ListItemText primary={ALL_DEVICES} />
+          <ListItemText primary="All devices" />
         </ListItem>
         {!!dynamicGroups.length && <GroupsSubheader heading="Dynamic" />}
         {dynamicGroups.map(({ groupId, name }, index) => (
