@@ -2,17 +2,6 @@
 
 exports[`DeviceTwin Component renders correctly 1`] = `
 .emotion-0 {
-  width: 100%;
-}
-
-.emotion-1 {
-  -webkit-align-items: baseline;
-  -webkit-box-align: baseline;
-  -ms-flex-align: baseline;
-  align-items: baseline;
-}
-
-.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -63,23 +52,23 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   font-weight: bold;
 }
 
-.emotion-2::-moz-focus-inner {
+.emotion-0::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-2.Mui-disabled {
+.emotion-0.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-2 {
+  .emotion-0 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-2:hover {
+.emotion-0:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(65, 10, 46);
@@ -87,34 +76,34 @@ exports[`DeviceTwin Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-2:hover {
+  .emotion-0:hover {
     background-color: #5d0f43;
   }
 }
 
-.emotion-2:active {
+.emotion-0:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-2.Mui-focusVisible {
+.emotion-0.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-2.Mui-disabled {
+.emotion-0.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-2:hover {
+.emotion-0:hover {
   colors: #337a87;
 }
 
-.emotion-2.MuiButton-text {
+.emotion-0.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-3 {
+.emotion-1 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -126,7 +115,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-4 {
+.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -176,57 +165,57 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-4::-moz-focus-inner {
+.emotion-2::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-4.Mui-disabled {
+.emotion-2.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-4 {
+  .emotion-2 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-4:hover {
+.emotion-2:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-4:hover {
+  .emotion-2:hover {
     background-color: transparent;
   }
 }
 
-.emotion-4.Mui-disabled {
+.emotion-2.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-4:hover {
+.emotion-2:hover {
   colors: #337a87;
 }
 
-.emotion-4.MuiButton-text {
+.emotion-2.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-5 {
+.emotion-3 {
   display: inherit;
   margin-right: 8px;
   margin-left: -4px;
 }
 
-.emotion-5>*:nth-of-type(1) {
+.emotion-3>*:nth-of-type(1) {
   font-size: 20px;
 }
 
-.emotion-6 {
+.emotion-4 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -243,7 +232,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-6 iconButton {
+.emotion-4 iconButton {
   margin-right: 8px;
 }
 
@@ -255,30 +244,15 @@ exports[`DeviceTwin Component renders correctly 1`] = `
     style="align-items: flex-start;"
   >
     <div
-      class="flexbox center-aligned space-between emotion-0"
+      class="flexbox center-aligned"
     >
-      <div
-        class="flexbox emotion-1"
+      <h4
+        class="margin-right"
       >
-        <h4
-          class="margin-right"
-        >
-          Azure IoT Hub
-           
-          Device Twin
-        </h4>
-        <div
-          class="muted slightly-smaller"
-          style="margin-top: 2px;"
-        >
-          Last synced: 
-          <time
-            datetime="2019-01-13T06:25:00+00:00"
-          >
-            2019-01-13 06:25
-          </time>
-        </div>
-      </div>
+        Azure IoT Hub
+         
+        Device Twin
+      </h4>
       <a
         href="/settings/integrations"
       >
@@ -372,13 +346,13 @@ exports[`DeviceTwin Component renders correctly 1`] = `
         style="align-items: flex-start; justify-content: flex-end;"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-2"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
           tabindex="0"
           type="button"
         >
           Edit desired configuration
           <span
-            class="MuiTouchRipple-root emotion-3"
+            class="MuiTouchRipple-root emotion-1"
           />
         </button>
       </div>
@@ -407,16 +381,16 @@ exports[`DeviceTwin Component renders correctly 1`] = `
           </div>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-4"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-2"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-5"
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-3"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
               data-testid="RefreshIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -428,7 +402,7 @@ exports[`DeviceTwin Component renders correctly 1`] = `
           </span>
           Refresh
           <span
-            class="MuiTouchRipple-root emotion-3"
+            class="MuiTouchRipple-root emotion-1"
           />
         </button>
       </div>
@@ -438,42 +412,16 @@ exports[`DeviceTwin Component renders correctly 1`] = `
 `;
 
 exports[`DeviceTwin Component renders sub component Title correctly 1`] = `
-.emotion-0 {
-  width: 100%;
-}
-
-.emotion-1 {
-  -webkit-align-items: baseline;
-  -webkit-box-align: baseline;
-  -ms-flex-align: baseline;
-  align-items: baseline;
-}
-
 <div
-  class="flexbox center-aligned space-between emotion-0"
+  class="flexbox center-aligned"
 >
-  <div
-    class="flexbox emotion-1"
+  <h4
+    class="margin-right"
   >
-    <h4
-      class="margin-right"
-    >
-      Test
-       
-      Device Twin
-    </h4>
-    <div
-      class="muted slightly-smaller"
-      style="margin-top: 2px;"
-    >
-      Last synced: 
-      <time
-        datetime="2019-01-01T09:25:00+00:00"
-      >
-        2019-01-01 09:25
-      </time>
-    </div>
-  </div>
+    Test
+     
+    Device Twin
+  </h4>
   <a
     href="/settings/integrations"
   >
@@ -564,7 +512,7 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`]
 }
 
 <div
-  class="padding,css-1hs2uht-diffStatus"
+  class="padding,css-8wzxjs-root"
 >
   <svg
     aria-hidden="true"
@@ -579,6 +527,17 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 1`]
   </svg>
   <div>
     No difference between desired and reported configuration
+  </div>
+  <div
+    class="muted slightly-smaller"
+    style="align-content: flex-end; margin-bottom: -10px;"
+  >
+    Last synced: 
+    <time
+      datetime="2019-01-01T09:25:00+00:00"
+    >
+      2019-01-01 09:25
+    </time>
   </div>
 </div>
 `;
@@ -631,7 +590,7 @@ exports[`DeviceTwin Component renders sub component TwinSyncStatus correctly 2`]
   </div>
   <div
     class="muted slightly-smaller"
-    style="margin-top: 2px;"
+    style="align-content: flex-end; margin-bottom: -10px;"
   >
     Last synced: 
     <time

@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon, Link as LinkIcon } from '@mui/icons-material';
-import { Chip, Divider, Drawer, IconButton, Tab, Tabs, Tooltip, chipClasses } from '@mui/material';
+import { Chip, Divider, Drawer, IconButton, Tab, Tabs, chipClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
@@ -353,9 +353,7 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
             />
           )}
           <div className={`${isOffline ? 'red' : 'muted'} margin-left margin-right flexbox`}>
-            <Tooltip title="The last time the device communicated with the Mender server" placement="bottom">
-              <div className="margin-right-small">Last check-in:</div>
-            </Tooltip>
+            <div className="margin-right-small">Last check-in:</div>
             <RelativeTime updateTime={device.updated_ts} />
           </div>
           <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">

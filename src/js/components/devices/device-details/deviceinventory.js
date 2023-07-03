@@ -17,19 +17,9 @@ import { extractSoftware } from '../../../helpers';
 import { TwoColumnDataMultiple } from '../../common/configurationobject';
 import DeviceDataCollapse from './devicedatacollapse';
 import DeviceInventoryLoader from './deviceinventoryloader';
-import { LastSyncNote } from './devicetwin';
-
-export const Title = ({ updateTime }) => {
-  return (
-    <div className="flexbox" style={{ alignItems: 'baseline' }}>
-      <h4 className="margin-right">Device Inventory</h4>
-      <LastSyncNote updateTime={updateTime} />
-    </div>
-  );
-};
 
 export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
-  const { attributes = {}, updated_ts: updateTime } = device;
+  const { attributes = {} } = device;
 
   const { device_type, ...remainingAttributes } = attributes;
 
@@ -63,7 +53,7 @@ export const DeviceInventory = ({ device, docsVersion, setSnackbar }) => {
           <TwoColumnDataMultiple config={keyContent} setSnackbar={setSnackbar} style={{ marginBottom: 5 }} />
         )
       }
-      title={<Title updateTime={updateTime} />}
+      title="Device inventory"
     >
       <TwoColumnDataMultiple config={deviceInventory} setSnackbar={setSnackbar} />
     </DeviceDataCollapse>

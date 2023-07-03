@@ -50,7 +50,6 @@ const defaultAttributes = [
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },
-  { scope: 'system', attribute: 'check_in_time' },
   { scope: 'system', attribute: 'group' },
   { scope: 'tags', attribute: 'name' }
 ];
@@ -330,7 +329,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.identity_data = { ...storedIdentity, ...identity, ...(device.identity_data ? device.identity_data : {}) };
       device.status = status ? status : device.status || identity.status;
       device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
-      device.updated_ts = getLatestTs(getLatestTs(getLatestTs(device.check_in_time, device.updated_ts), system.updated_ts), stateDevice.updated_ts);
+      device.updated_ts = getLatestTs(getLatestTs(system.updated_ts, device.updated_ts), stateDevice.updated_ts);
       device.isNew = new Date(device.created_ts) > new Date(state.app.newThreshold);
       device.isOffline = new Date(device.updated_ts) < new Date(state.app.offlineThreshold);
       accu.devicesById[device.id] = { ...stateDevice, ...device };

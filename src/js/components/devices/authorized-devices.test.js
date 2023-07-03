@@ -153,7 +153,7 @@ describe('AuthorizedDevices Component', () => {
       columnSelection: [
         { id: 'inventory-device_type', key: attributeNames.deviceType, name: attributeNames.deviceType, scope: 'inventory', title: 'Device type' },
         { id: 'inventory-rootfs-image.version', key: attributeNames.artifact, name: attributeNames.artifact, scope: 'inventory', title: 'Current software' },
-        { id: 'system-updated_ts', key: attributeNames.updateTime, name: attributeNames.updateTime, scope: 'system', title: 'Latest activity' },
+        { id: 'system-updated_ts', key: attributeNames.updateTime, name: attributeNames.updateTime, scope: 'system', title: 'Last check-in' },
         { id: 'inventory-testKey', key: testKey, name: testKey, scope: 'inventory', title: testKey }
       ]
     });

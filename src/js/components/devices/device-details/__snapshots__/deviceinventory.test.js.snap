@@ -35,27 +35,11 @@ exports[`DeviceInventory Component renders correctly 1`] = `
     class="flexbox space-between"
     style="align-items: flex-start;"
   >
-    <div
-      class="flexbox"
-      style="align-items: baseline;"
+    <h4
+      class="margin-bottom-small"
     >
-      <h4
-        class="margin-right"
-      >
-        Device Inventory
-      </h4>
-      <div
-        class="muted slightly-smaller"
-        style="margin-top: 2px;"
-      >
-        Last synced: 
-        <time
-          datetime="2019-01-13T13:00:00+00:00"
-        >
-          2019-01-13 13:00
-        </time>
-      </div>
-    </div>
+      Device inventory
+    </h4>
     <div
       class="flexbox centered"
     />
