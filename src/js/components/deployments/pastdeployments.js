@@ -136,7 +136,7 @@ export const Past = props => {
           ? getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar: dispatchedSetSnackbar }, notification)
           : notification;
       !!notification && dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true));
-    }, TIMEOUTS.debounceDefault);
+    }, 400);
   }, [past.length, onboardingState.complete]);
 
   useEffect(() => {

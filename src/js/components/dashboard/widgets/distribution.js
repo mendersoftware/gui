@@ -21,7 +21,7 @@ import { makeStyles } from 'tss-react/mui';
 import { VictoryBar, VictoryContainer, VictoryPie, VictoryStack } from 'victory';
 
 import { ensureVersionString } from '../../../actions/deviceActions';
-import { TIMEOUTS, chartTypes } from '../../../constants/appConstants';
+import { chartTypes } from '../../../constants/appConstants';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { rootfsImageVersion, softwareTitleMap } from '../../../constants/releaseConstants';
 import { isEmpty, toggle } from '../../../helpers';
@@ -106,7 +106,7 @@ const BarChart = ({ data, events }) => {
   useEffect(() => {
     setChartData(data.map(item => ({ ...item, y: 0 })));
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => setChartData(data), TIMEOUTS.debounceDefault);
+    timer.current = setTimeout(() => setChartData(data), 700);
     return () => {
       clearTimeout(timer.current);
     };

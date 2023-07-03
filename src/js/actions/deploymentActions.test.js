@@ -165,7 +165,7 @@ describe('deployment actions', () => {
         ...defaultResponseActions.snackbar,
         snackbar: {
           ...defaultResponseActions.snackbar.snackbar,
-          autoHideDuration: AppConstants.TIMEOUTS.fiveSeconds
+          autoHideDuration: 8000
         }
       },
       defaultResponseActions.receive,
@@ -188,7 +188,7 @@ describe('deployment actions', () => {
         ...defaultResponseActions.snackbar,
         snackbar: {
           ...defaultResponseActions.snackbar.snackbar,
-          autoHideDuration: AppConstants.TIMEOUTS.fiveSeconds
+          autoHideDuration: 8000
         }
       },
       defaultResponseActions.receive,
@@ -211,7 +211,7 @@ describe('deployment actions', () => {
         ...defaultResponseActions.snackbar,
         snackbar: {
           ...defaultResponseActions.snackbar.snackbar,
-          autoHideDuration: AppConstants.TIMEOUTS.fiveSeconds
+          autoHideDuration: 8000
         }
       },
       defaultResponseActions.receive,

@@ -13,7 +13,7 @@ import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
-import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
+import { SORTING_OPTIONS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
@@ -110,14 +110,14 @@ export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
         group,
         deviceIds
       }),
-      dispatch(setSnackbar(`The ${pluralize('devices', deviceIds.length)} ${pluralize('were', deviceIds.length)} removed from the group`, TIMEOUTS.fiveSeconds))
+      dispatch(setSnackbar(`The ${pluralize('devices', deviceIds.length)} ${pluralize('were', deviceIds.length)} removed from the group`, 5000))
     ])
   );
 
 const getGroupNotification = (newGroup, selectedGroup) => {
   const successMessage = 'The group was updated successfully';
   if (newGroup === selectedGroup) {
-    return [successMessage, TIMEOUTS.fiveSeconds];
+    return [successMessage, 5000];
   }
   return [
     <>
@@ -169,7 +169,7 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
       }),
       dispatch(getGroups()),
       dispatch(selectGroup(selectedGroup)),
-      dispatch(setSnackbar('Group was removed successfully', TIMEOUTS.fiveSeconds))
+      dispatch(setSnackbar('Group was removed successfully', 5000))
     ]);
   });
 };
@@ -270,7 +270,7 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
         type: DeviceConstants.REMOVE_DYNAMIC_GROUP,
         groups
       }),
-      dispatch(setSnackbar('Group was removed successfully', TIMEOUTS.fiveSeconds))
+      dispatch(setSnackbar('Group was removed successfully', 5000))
     ]);
   });
 };
@@ -925,10 +925,10 @@ export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) =
     dispatch({ type: UPLOAD_PROGRESS, uploads }),
     GeneralApi.uploadPut(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
-    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', TIMEOUTS.fiveSeconds))))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
     .catch(err => {
       if (isCancel(err)) {
-        return dispatch(setSnackbar('The upload has been cancelled', TIMEOUTS.fiveSeconds));
+        return dispatch(setSnackbar('The upload has been cancelled', 5000));
       }
       return commonErrorHandler(err, `Error uploading file to device.`, dispatch);
     })
@@ -1031,7 +1031,7 @@ export const preauthDevice = authset => dispatch =>
       commonErrorHandler(err, 'The device could not be added:', dispatch);
       return Promise.reject();
     })
-    .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', TIMEOUTS.fiveSeconds))));
+    .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
 export const decommissionDevice = (deviceId, authId) => (dispatch, getState) =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
