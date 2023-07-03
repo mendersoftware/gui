@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // material ui
@@ -19,7 +19,7 @@ import { Button, LinearProgress } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import DeltaIcon from '../../../../assets/img/deltaicon.svg';
-import { canAccess as canShow } from '../../../constants/appConstants';
+import { TIMEOUTS, canAccess as canShow } from '../../../constants/appConstants';
 import { deploymentSubstates } from '../../../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { rootfsImageVersion as rootfsImageVersionAttribute } from '../../../constants/releaseConstants';
@@ -175,11 +175,12 @@ const ValueFileSize = ({ value, ...props }) => <FileSize fileSize={value} {...pr
 
 export const DeploymentDeviceList = ({ deployment, getDeploymentDevices, idAttribute, selectedDevices, userCapabilities, viewLog }) => {
   const [currentPage, setCurrentPage] = useState(defaultPage);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingDone, setLoadingDone] = useState(false);
   const [perPage, setPerPage] = useState(10);
   const { device_count = 0, totalDeviceCount: totalDevices, statistics = {} } = deployment;
   const totalSize = statistics.total_size ?? 0;
   const totalDeviceCount = totalDevices ?? device_count;
+  const timer = useRef();
   const { classes } = useStyles();
 
   useEffect(() => {
@@ -187,32 +188,44 @@ export const DeploymentDeviceList = ({ deployment, getDeploymentDevices, idAttri
   }, [perPage]);
 
   useEffect(() => {
-    if (!deployment.id || isLoading) {
+    if (!(deployment.id && loadingDone)) {
       return;
     }
-    setIsLoading(true);
-    getDeploymentDevices(deployment.id, { page: currentPage, perPage }).then(() => setIsLoading(false));
-  }, [currentPage, deployment.status, JSON.stringify(statistics.status)]);
+    getDeploymentDevices(deployment.id, { page: currentPage, perPage });
+  }, [currentPage, deployment.status, JSON.stringify(statistics.status), loadingDone]);
+
+  useEffect(() => {
+    timer.current = setTimeout(() => setLoadingDone(true), TIMEOUTS.oneSecond);
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
+  const onChangeSorting = sortingColumn => {
+    console.log(sortingColumn);
+  };
 
   const columns = deviceListColumns.reduce((accu, column) => (column.canShow({ deployment }) ? [...accu, { ...column, extras: { idAttribute } }] : accu), []);
   const items = selectedDevices.map(device => ({ device, id: device.id, idAttribute, userCapabilities, viewLog }));
   return (
     <>
-      <DetailsTable className={classes.table} columns={columns} items={items} />
-      <div className="flexbox space-between center-aligned margin-top">
-        <div className="flexbox">
-          <Pagination
-            className="margin-top-none"
-            count={totalDeviceCount}
-            rowsPerPage={perPage}
-            onChangePage={setCurrentPage}
-            onChangeRowsPerPage={setPerPage}
-            page={currentPage}
-          />
-          <Loader show={isLoading} small />
+      <Loader show={!loadingDone} />
+      {!!totalDeviceCount && (
+        <div>
+          <DetailsTable className={classes.table} columns={columns} items={items} onChangeSorting={onChangeSorting} />
+          <div className="flexbox space-between center-aligned margin-top">
+            <Pagination
+              className="margin-top-none"
+              count={totalDeviceCount}
+              rowsPerPage={perPage}
+              onChangePage={setCurrentPage}
+              onChangeRowsPerPage={setPerPage}
+              page={currentPage}
+            />
+            <TwoColumns chipLikeKey={false} compact items={{ 'Total download size': totalSize }} ValueComponent={ValueFileSize} />
+          </div>
         </div>
-        <TwoColumns chipLikeKey={false} compact items={{ 'Total download size': totalSize }} ValueComponent={ValueFileSize} />
-      </div>
+      )}
     </>
   );
 };

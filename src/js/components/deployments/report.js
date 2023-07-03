@@ -120,9 +120,8 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
 
   const { canAuditlog } = userCapabilities;
   const { hasAuditlogs } = tenantCapabilities;
-  const { devices = {}, device_count = 0, totalDeviceCount: totalDevices, statistics = {}, type: deploymentType } = deployment;
+  const { devices = {}, device_count, statistics = {}, type: deploymentType } = deployment;
   const { status: stats = {} } = statistics;
-  const totalDeviceCount = totalDevices ?? device_count;
 
   useEffect(() => {
     if (!open) {
@@ -213,7 +212,6 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
     idAttribute,
     selectedDevices,
     userCapabilities,
-    totalDeviceCount,
     viewLog
   };
 
@@ -269,12 +267,8 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
         )}
         <LinedHeader className={classes.header} heading="Status" />
         <DeploymentStatus deployment={deployment} />
-        {!!totalDeviceCount && (
-          <>
-            <LinedHeader className={classes.header} heading="Devices" />
-            <DeviceList {...props} viewLog={viewLog} />
-          </>
-        )}
+        <LinedHeader className={classes.header} heading="Devices" />
+        <DeviceList {...props} viewLog={viewLog} />
         <RolloutSchedule
           deployment={deployment}
           headerClass={classes.header}

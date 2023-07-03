@@ -34,13 +34,14 @@ describe('ProgressDeviceList Component', () => {
   afterEach(cleanup);
 
   it('renders correctly', async () => {
-    const getDeploymentDevicesMock = jest.fn().mockResolvedValue(true);
     const ui = (
       <Provider store={store}>
         <ProgressDeviceList
           selectedDevices={Object.values(defaultState.deployments.byId.d1.devices)}
           deployment={defaultState.deployments.byId.d1}
-          getDeploymentDevices={getDeploymentDevicesMock}
+          getDeploymentDevices={jest.fn}
+          getDeviceById={jest.fn}
+          getDeviceAuth={jest.fn}
           userCapabilities={adminUserCapabilities}
         />
       </Provider>
