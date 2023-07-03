@@ -516,6 +516,7 @@ export const Authorized = ({
         actionCallbacks={actionCallbacks}
         deviceId={openedDevice}
         onClose={() => dispatch(setDeviceListState({ selectedId: undefined }))}
+        refreshDevices={refreshDevices}
         setDetailsTab={setDetailsTab}
         tabSelection={tabSelection}
       />

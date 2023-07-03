@@ -40,7 +40,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Authsets = ({ decommission, device, showHelptips }) => {
+export const Authsets = ({ decommission, device, deviceListRefresh, showHelptips }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -53,10 +53,25 @@ export const Authsets = ({ decommission, device, showHelptips }) => {
 
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);
-    // call API to update authset
-    const request = status === DEVICE_DISMISSAL_STATE ? dispatch(deleteAuthset(device_id, auth_id)) : dispatch(updateDeviceAuth(device_id, auth_id, status));
-    // on finish, change "loading" back to null
-    return request.finally(() => setLoading(null));
+    const postUpdateSteps = () => {
+      deviceListRefresh();
+      setLoading(null);
+    };
+
+    if (status === DEVICE_DISMISSAL_STATE) {
+      return (
+        dispatch(deleteAuthset(device_id, auth_id))
+          // on finish, change "loading" back to null
+          .finally(postUpdateSteps)
+      );
+    } else {
+      // call API to update authset
+      return (
+        dispatch(updateDeviceAuth(device_id, auth_id, status))
+          // on finish, change "loading" back to null
+          .finally(postUpdateSteps)
+      );
+    }
   };
 
   const { canManageDevices } = userCapabilities;

@@ -971,12 +971,11 @@ const maybeUpdateDevicesByStatus = (deviceId, authId) => (dispatch, getState) =>
   return Promise.resolve();
 };
 
-export const updateDeviceAuth = (deviceId, authId, status) => (dispatch, getState) =>
+export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
   GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status })
     .then(() => Promise.all([dispatch(getDeviceAuth(deviceId)), dispatch(setSnackbar('Device authorization status was updated successfully'))]))
     .catch(err => commonErrorHandler(err, 'There was a problem updating the device authorization status:', dispatch))
-    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))))
-    .finally(() => dispatch(setDeviceListState({ refreshTrigger: !getState().devices.deviceList.refreshTrigger })));
+    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
 
 export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => {
   let devices = getState().devices.byId;
@@ -1014,12 +1013,11 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
   });
 };
 
-export const deleteAuthset = (deviceId, authId) => (dispatch, getState) =>
+export const deleteAuthset = (deviceId, authId) => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`)
     .then(() => Promise.all([dispatch(setSnackbar('Device authorization status was updated successfully'))]))
     .catch(err => commonErrorHandler(err, 'There was a problem updating the device authorization status:', dispatch))
-    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))))
-    .finally(() => dispatch(setDeviceListState({ refreshTrigger: !getState().devices.deviceList.refreshTrigger })));
+    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
 
 export const preauthDevice = authset => dispatch =>
   GeneralApi.post(`${deviceAuthV2}/devices`, authset)
@@ -1032,13 +1030,11 @@ export const preauthDevice = authset => dispatch =>
     })
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
 
-export const decommissionDevice = (deviceId, authId) => (dispatch, getState) =>
+export const decommissionDevice = (deviceId, authId) => dispatch =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was decommissioned successfully'))))
     .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch))
-    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))))
-    // trigger reset of device list list!
-    .finally(() => dispatch(setDeviceListState({ refreshTrigger: !getState().devices.deviceList.refreshTrigger })));
+    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
 
 export const getDeviceConfig = deviceId => dispatch =>
   GeneralApi.get(`${deviceConfig}/${deviceId}`)

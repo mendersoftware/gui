@@ -67,26 +67,6 @@ const getGroupSuccessNotification = groupName => (
   </>
 );
 
-// eslint-disable-next-line no-unused-vars
-const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
-const receivedExpectedDevice = { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } };
-const defaultDeviceListState = {
-  type: DeviceConstants.SET_DEVICE_LIST_STATE,
-  state: {
-    ...defaultState.devices.deviceList,
-    perPage: 20,
-    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
-    isLoading: false,
-    total: 2
-  }
-};
-const acceptedDevices = {
-  type: DeviceConstants.SET_ACCEPTED_DEVICES,
-  deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
-  status: DeviceConstants.DEVICE_STATES.accepted,
-  total: defaultState.devices.byStatus.accepted.total
-};
-
 const defaultResults = {
   receivedDynamicGroups: {
     type: DeviceConstants.RECEIVE_DYNAMIC_GROUPS,
@@ -102,21 +82,7 @@ const defaultResults = {
         total: 0
       }
     }
-  },
-  receiveDefaultDevice: { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: defaultState.devices.byId.a1 } },
-  acceptedDevices,
-  receivedExpectedDevice,
-  defaultDeviceListState,
-  postDeviceAuthActions: [
-    { type: DeviceConstants.SET_DEVICE_LIST_STATE, state: { deviceIds: [], isLoading: true, refreshTrigger: true } },
-    {
-      type: DeviceConstants.RECEIVE_DEVICES,
-      devicesById: { [defaultState.devices.byId.a1.id]: { ...defaultState.devices.byId.a1, updated_ts: inventoryDevice.updated_ts } }
-    },
-    acceptedDevices,
-    receivedExpectedDevice,
-    defaultDeviceListState
-  ]
+  }
 };
 
 /* eslint-disable sonarjs/no-identical-functions */
@@ -410,15 +376,17 @@ describe('device auth handling', () => {
   });
   it('should allow single device auth updates', async () => {
     const store = mockStore({ ...defaultState });
+    // eslint-disable-next-line no-unused-vars
+    const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
-      defaultResults.receivedExpectedDevice,
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: expectedDevice } },
       {
-        ...defaultResults.acceptedDevices,
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
+        status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
-      },
-      ...defaultResults.postDeviceAuthActions
+      }
     ];
     await store.dispatch(
       updateDeviceAuth(defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.auth_sets[0].id, DeviceConstants.DEVICE_STATES.pending)
@@ -429,15 +397,17 @@ describe('device auth handling', () => {
   });
   it('should allow multiple device auth updates', async () => {
     const store = mockStore({ ...defaultState });
+    // eslint-disable-next-line no-unused-vars
+    const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
-      defaultResults.receivedExpectedDevice,
+      { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: expectedDevice } },
       {
-        ...defaultResults.acceptedDevices,
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: [defaultState.devices.byId.b1.id],
+        status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
       },
-      ...defaultResults.postDeviceAuthActions,
       {
         type: SET_SNACKBAR,
         snackbar: {
@@ -474,14 +444,16 @@ describe('device auth handling', () => {
   });
   it('should allow single device auth set deletion', async () => {
     const store = mockStore({ ...defaultState });
+    // eslint-disable-next-line no-unused-vars
+    const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: SET_SNACKBAR, snackbar: { message: deviceUpdateSuccessMessage } },
       {
-        ...defaultResults.acceptedDevices,
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
+        status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
-      },
-      ...defaultResults.postDeviceAuthActions
+      }
     ];
     await store.dispatch(deleteAuthset(defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.auth_sets[0].id));
     const storeActions = store.getActions();
@@ -490,14 +462,16 @@ describe('device auth handling', () => {
   });
   it('should allow single device decomissioning', async () => {
     const store = mockStore({ ...defaultState });
+    // eslint-disable-next-line no-unused-vars
+    const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
     const expectedActions = [
       { type: SET_SNACKBAR, snackbar: { message: 'Device was decommissioned successfully' } },
       {
-        ...defaultResults.acceptedDevices,
+        type: DeviceConstants.SET_ACCEPTED_DEVICES,
         deviceIds: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id),
+        status: DeviceConstants.DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.deviceIds.filter(id => id !== defaultState.devices.byId.a1.id).length
-      },
-      ...defaultResults.postDeviceAuthActions
+      }
     ];
     await store.dispatch(decommissionDevice(defaultState.devices.byId.a1.id));
     const storeActions = store.getActions();
