@@ -288,7 +288,7 @@ export const DeviceList = ({
           onChangePage={onPageChange}
           {...PaginationProps}
         />
-        <Loader show={pageLoading} small />
+        {pageLoading && <Loader show small />}
       </div>
     </div>
   );
