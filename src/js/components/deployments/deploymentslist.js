@@ -13,7 +13,6 @@
 //    limitations under the License.
 import React from 'react';
 
-import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import DeploymentItem, {
   DeploymentDeviceCount,
@@ -48,7 +47,6 @@ export const DeploymentsList = ({
   isEnterprise,
   items,
   listClass = '',
-  loading,
   openReport,
   onChangePage,
   onChangeRowsPerPage,
@@ -84,19 +82,9 @@ export const DeploymentsList = ({
           />
         ))}
       </div>
-      <div className="flexbox">
-        {(count > items.length || items.length > defaultRowsPerPage || showPagination) && (
-          <Pagination
-            className="margin-top-none"
-            count={count}
-            rowsPerPage={pageSize}
-            onChangeRowsPerPage={onChangeRowsPerPage}
-            page={page}
-            onChangePage={onChangePage}
-          />
-        )}
-        <Loader show={loading} small />
-      </div>
+      {(count > items.length || items.length > defaultRowsPerPage || showPagination) && (
+        <Pagination count={count} rowsPerPage={pageSize} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
+      )}
     </div>
   );
 

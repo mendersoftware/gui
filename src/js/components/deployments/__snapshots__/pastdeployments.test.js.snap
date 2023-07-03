@@ -1020,6 +1020,27 @@ label+.emotion-20 {
   </div>
   <div
     class="deploy-table-contain"
-  />
+  >
+    <div
+      class="loaderContainer"
+    >
+      <div
+        class="  loader"
+      >
+        <span
+          class="dot dot_1"
+        />
+        <span
+          class="dot dot_2"
+        />
+        <span
+          class="dot dot_3"
+        />
+        <span
+          class="dot dot_4"
+        />
+      </div>
+    </div>
+  </div>
 </div>
 `;
