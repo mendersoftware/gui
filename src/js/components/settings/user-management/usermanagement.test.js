@@ -14,13 +14,15 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, undefineds, userId } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import * as UserActions from '../../../actions/userActions';
+import { yes } from '../../../constants/appConstants';
 import UserManagement from './usermanagement';
 
 const mockStore = configureStore([thunk]);
@@ -62,7 +64,7 @@ describe('UserManagement Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const copyCheck = jest.fn(() => true);
+    const copyCheck = jest.fn(yes);
     document.execCommand = copyCheck;
     render(
       <Provider store={store}>
@@ -75,8 +77,6 @@ describe('UserManagement Component', () => {
     await user.click(list[list.length - 1]);
     await user.click(screen.getByRole('button', { name: /delete user/i }));
     expect(screen.queryByText(/remove the user with email/i)).toBeInTheDocument();
-    // const userView = screen.getByText(defaultState.users.byId[userId].email).parentElement;
-    // await user.click(within(userView).getByRole('button', { name: /edit/i }));
     await user.click(screen.getByRole('button', { name: /cancel/i }));
     await user.click(list[list.length - 1]);
     const input = screen.getByDisplayValue(defaultState.users.byId[userId].email);
@@ -95,6 +95,39 @@ describe('UserManagement Component', () => {
     await user.click(listItem);
     await user.type(listbox, '{Escape}');
     await user.click(screen.getByRole('button', { name: /Save/i }));
+  });
+
+  it('supports user creation', async () => {
+    const createUserSpy = jest.spyOn(UserActions, 'createUser');
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const copyCheck = jest.fn(yes);
+    document.execCommand = copyCheck;
+    const ui = (
+      <Provider store={store}>
+        <UserManagement />
+      </Provider>
+    );
+    const { rerender } = render(ui);
+    expect(screen.queryByText(/send an email/i)).not.toBeInTheDocument();
+    const userCreationButton = screen.getByRole('button', { name: /create new user/i });
+    await user.click(userCreationButton);
+    expect(screen.queryByText(/send an email/i)).toBeInTheDocument();
+    const submitButton = screen.getByRole('button', { name: /create user/i });
+    expect(submitButton).toBeDisabled();
+    const input = screen.getByPlaceholderText(/email/i);
+    await user.type(input, 'test@test');
+    expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
+    await user.type(input, '.com');
+    expect(submitButton).toBeEnabled();
+    await user.click(screen.getByRole('button', { name: /generate/i }));
+    expect(copyCheck).toHaveBeenCalled();
+    expect(submitButton).toBeEnabled();
+    const passwordInput = screen.getByPlaceholderText(/password/i);
+    await user.clear(passwordInput);
+    expect(submitButton).toBeEnabled();
+    await user.click(submitButton);
+    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(createUserSpy).toHaveBeenCalled(), { timeout: 3000 });
   });
 
   it('allows role adjustments', async () => {

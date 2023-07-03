@@ -4,11 +4,30 @@
 
 export type DeviceState = {
   /**
-   * The desired state for the device, as reported by the cloud/user.
+   * Device ID.
    */
-  desired?: any;
+  device_id?: string;
   /**
-   * State reported by the device, this cannot be changed from the cloud.
+   * Device status.
    */
-  reported?: any;
+  status?: DeviceState.status;
+  /**
+   * Server-side timestamp of the last device information update.
+   */
+  updated_ts?: string;
+  /**
+   * Server-side timestamp of the device creation.
+   */
+  created_ts?: string;
 };
+
+export namespace DeviceState {
+  /**
+   * Device status.
+   */
+  export enum status {
+    CONNECTED = "connected",
+    DISCONNECTED = "disconnected",
+    UNKNOWN = "unknown",
+  }
+}

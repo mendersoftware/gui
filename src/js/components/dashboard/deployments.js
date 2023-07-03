@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -36,18 +36,14 @@ const stateMap = {
   [DEPLOYMENT_STATES.finished]: CompletedDeployments
 };
 
-export const Deployments = ({
-  canDeploy,
-  className = '',
-  clickHandle,
-  deployments,
-  deploymentsCount,
-  devicesById,
-  getDeploymentsByStatus,
-  idAttribute,
-  onboardingState,
-  setSnackbar
-}) => {
+export const Deployments = ({ className = '', clickHandle }) => {
+  const dispatch = useDispatch();
+  const setSnackbarDispatched = message => dispatch(setSnackbar(message));
+  const { canDeploy } = useSelector(getUserCapabilities);
+  const { total: deploymentsCount, ...deployments } = useSelector(getRecentDeployments);
+  const onboardingState = useSelector(getOnboardingState);
+  const devicesById = useSelector(state => state.devices.byId);
+  const idAttribute = useSelector(getIdAttribute);
   const [loading, setLoading] = useState(!deploymentsCount);
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
@@ -55,19 +51,19 @@ export const Deployments = ({
   const timer = useRef();
 
   useEffect(() => {
-    clearAllRetryTimers(setSnackbar);
+    clearAllRetryTimers(setSnackbarDispatched);
     clearInterval(timer.current);
     timer.current = setInterval(getDeployments, refreshDeploymentsLength);
     getDeployments();
     return () => {
       clearInterval(timer.current);
-      clearAllRetryTimers(setSnackbar);
+      clearAllRetryTimers(setSnackbarDispatched);
     };
   }, []);
 
   const getDeployments = () =>
-    Promise.all(Object.keys(stateMap).map(status => getDeploymentsByStatus(status, 1, DEPLOYMENT_CUTOFF)))
-      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbar))
+    Promise.all(Object.keys(stateMap).map(status => dispatch(getDeploymentsByStatus(status, 1, DEPLOYMENT_CUTOFF))))
+      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbarDispatched))
       .finally(() => setLoading(false));
 
   let onboardingComponent;
@@ -120,19 +116,4 @@ export const Deployments = ({
   );
 };
 
-const actionCreators = { getDeploymentsByStatus, setSnackbar };
-
-const mapStateToProps = state => {
-  const { canDeploy } = getUserCapabilities(state);
-  const { total: deploymentsCount, ...deployments } = getRecentDeployments(state);
-  return {
-    canDeploy,
-    deploymentsCount,
-    deployments,
-    devicesById: state.devices.byId,
-    idAttribute: getIdAttribute(state),
-    onboardingState: getOnboardingState(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Deployments);
+export default Deployments;

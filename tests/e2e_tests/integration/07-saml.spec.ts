@@ -17,8 +17,8 @@ import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
 import { getStorageState } from '../utils/commands';
+import { selectors, timeouts } from '../utils/constants';
 
-const timeoutFourSeconds = 4000;
 const samlSettings = {
   credentials: {
     chromium: { login: 'morty', password: 'panic', email: 'msmith@samltest.id' },
@@ -64,7 +64,8 @@ test.describe('SAML Login via sso/id/login', () => {
     test.skip(browserName === 'webkit');
 
     test.skip(environment !== 'staging');
-    test.setTimeout(320000);
+    // allow a lot of time to enter metadata + then some to handle uploading the config to the external service
+    test.setTimeout(5 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
 
     const { data: metadata, status } = await axios({ url: samlSettings.idp_url, method: 'GET' });
     expect(status).toBeGreaterThanOrEqual(200);
@@ -133,8 +134,8 @@ test.describe('SAML Login via sso/id/login', () => {
     await page.locator('input:has-text("Upload")').click();
     await expect(page).toHaveURL('https://samltest.id/upload.php');
 
-    console.log('uploaded file, making screen shot, after waiting 4s');
-    await page.waitForTimeout(timeoutFourSeconds);
+    console.log('uploaded file, making screen shot, after waiting 5s');
+    await page.waitForTimeout(timeouts.fiveSeconds);
     // Let's save the image after the upload
     await page.screenshot({ path: './test-results/saml-uploaded.png' });
   });
@@ -172,10 +173,10 @@ test.describe('SAML Login via sso/id/login', () => {
     test.skip(browserName === 'webkit');
 
     test.skip(environment !== 'staging');
-    test.setTimeout(30000);
+    test.setTimeout(2 * timeouts.fifteenSeconds);
 
     await loggedInPage.goto(`${baseUrl}ui/settings/organization-and-billing`);
-    await loggedInPage.waitForSelector('text=View metadata in the text editor', { timeout: 6000 });
+    await loggedInPage.waitForSelector('text=View metadata in the text editor', { timeout: timeouts.tenSeconds });
     let loginUrl = '';
     let loginThing = await loggedInPage.locator('*:below(:text("Start URL"))').first();
     loginUrl = await loginThing.getAttribute('title');
@@ -187,7 +188,7 @@ test.describe('SAML Login via sso/id/login', () => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto(loginUrl);
-    await page.waitForTimeout(timeoutFourSeconds);
+    await page.waitForSelector(selectors.loggedInText);
     // This screenshot saves the view right after the first redirection
     await page.screenshot({ path: './test-results/saml-redirected.png' });
 
@@ -205,6 +206,6 @@ test.describe('SAML Login via sso/id/login', () => {
     await page.locator('text=Accept').click();
     // confirm we have logged in successfully
     await page.screenshot({ path: './test-results/saml-logging-in-accept.png' });
-    await page.waitForSelector('text=License information');
+    await page.waitForSelector(selectors.loggedInText);
   });
 });

@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { makeStyles } from 'tss-react/mui';
@@ -21,7 +21,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingState } from '../../selectors';
+import { getCurrentUser, getOnboardingState } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 import Deployments from './deployments';
@@ -64,10 +64,13 @@ const useStyles = makeStyles()(theme => ({
   row: { flexWrap: 'wrap', maxWidth: '85vw' }
 }));
 
-export const Dashboard = ({ currentUser, onboardingState, setSnackbar }) => {
+export const Dashboard = () => {
   const timer = useRef();
   const { classes } = useStyles();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const currentUser = useSelector(getCurrentUser);
+  const onboardingState = useSelector(getOnboardingState);
 
   useEffect(() => {
     if (!currentUser || !onboardingState.showTips) {
@@ -75,10 +78,13 @@ export const Dashboard = ({ currentUser, onboardingState, setSnackbar }) => {
     }
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState, { setSnackbar });
-      !!notification && setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
-    }, 400);
+      const notification = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, onboardingState, {
+        setSnackbar: (...args) => dispatch(setSnackbar(...args))
+      });
+      !!notification && dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true));
+    }, TIMEOUTS.debounceDefault);
   }, [currentUser, JSON.stringify(onboardingState)]);
+
   useEffect(() => {
     return () => {
       clearTimeout(timer.current);
@@ -115,13 +121,4 @@ export const Dashboard = ({ currentUser, onboardingState, setSnackbar }) => {
   );
 };
 
-const actionCreators = { setSnackbar };
-
-const mapStateToProps = state => {
-  return {
-    currentUser: state.users.currentUser,
-    onboardingState: getOnboardingState(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Dashboard);
+export default Dashboard;

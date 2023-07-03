@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
 
-import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, canAccess } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -52,7 +52,7 @@ const fallbackFormatter = data => {
   return result;
 };
 
-const defaultAccess = () => true;
+const defaultAccess = canAccess;
 const changeMap = {
   default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle', accessCheck: defaultAccess },
   artifact: { actionFormatter: data => decodeURIComponent(data.artifact.name), component: ArtifactLink, accessCheck: ({ canReadReleases }) => canReadReleases },
@@ -171,8 +171,17 @@ export const AuditLogsList = ({ items, loading, onChangePage, onChangeRowsPerPag
             );
           })}
         </div>
-        <Loader show={loading} />
-        <Pagination count={count} rowsPerPage={perPage} onChangeRowsPerPage={onChangeRowsPerPage} page={page} onChangePage={onChangePage} />
+        <div className="flexbox margin-top">
+          <Pagination
+            className="margin-top-none"
+            count={count}
+            rowsPerPage={perPage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            page={page}
+            onChangePage={onChangePage}
+          />
+          <Loader show={loading} small />
+        </div>
         <EventDetailsDrawer eventItem={eventItem} open={Boolean(eventItem)} onClose={() => onIssueSelection()} />
       </div>
     )

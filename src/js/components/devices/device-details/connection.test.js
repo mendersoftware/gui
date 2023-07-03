@@ -15,7 +15,8 @@ import React from 'react';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
+import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
+import { uiPermissionsById } from '../../../constants/userConstants';
 import DeviceConnection, { DeviceConnectionMissingNote, DeviceDisconnectedNote, PortForwardLink } from './connection';
 
 describe('tiny DeviceConnection components', () => {
@@ -30,7 +31,12 @@ describe('tiny DeviceConnection components', () => {
 });
 
 describe('DeviceConnection Component', () => {
-  const userCapabilities = { canAuditlog: true, canTroubleshoot: true, canWriteDevices: true };
+  const userCapabilities = {
+    canAuditlog: true,
+    canTroubleshoot: true,
+    canWriteDevices: true,
+    groupsPermissions: { [ALL_DEVICES]: [uiPermissionsById.connect.value, uiPermissionsById.manage.value] }
+  };
   it('renders correctly', async () => {
     const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} />);
     const view = baseElement.firstChild;

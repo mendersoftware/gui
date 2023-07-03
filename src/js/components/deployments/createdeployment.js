@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon, ExpandMore } from '@mui/icons-material';
@@ -43,7 +43,19 @@ import { getReleases } from '../../actions/releaseActions';
 import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle, validatePhases } from '../../helpers';
-import { getDocsVersion, getIdAttribute, getIsEnterprise, getOnboardingState, getTenantCapabilities } from '../../selectors';
+import {
+  getAcceptedDevices,
+  getDeviceCountsByStatus,
+  getDevicesById,
+  getDocsVersion,
+  getGlobalSettings,
+  getGroupNames,
+  getIdAttribute,
+  getIsEnterprise,
+  getOnboardingState,
+  getReleasesById,
+  getTenantCapabilities
+} from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Confirm from '../common/confirm';
 import { RolloutPatternSelection } from './deployment-wizard/phasesettings';
@@ -92,30 +104,31 @@ export const getPhaseStartTime = (phases, index, startDate) => {
 };
 
 export const CreateDeployment = props => {
-  const {
-    acceptedDeviceCount,
-    advanceOnboarding,
-    canRetry,
-    createdGroup,
-    createDeployment,
-    deploymentObject = {},
-    devicesById,
-    getDeploymentsConfig,
-    getGroupDevices,
-    getReleases,
-    groups,
-    hasDeltaEnabled,
-    hasDevices,
-    isOnboardingComplete,
-    onboardingState,
-    onDismiss,
-    onScheduleSubmit,
-    open = true,
-    needsCheck,
-    releases,
-    releasesById,
-    setDeploymentObject
-  } = props;
+  const { deploymentObject = {}, onDismiss, onScheduleSubmit, open = true, setDeploymentObject } = props;
+
+  const { canRetry, canSchedule, hasFullFiltering } = useSelector(getTenantCapabilities);
+  const { createdGroup, groups, hasDynamicGroups } = useSelector(state => {
+    // eslint-disable-next-line no-unused-vars
+    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    const createdGroup = Object.keys(groups).length ? Object.keys(groups)[0] : undefined;
+    const hasDynamicGroups = Object.values(groups).some(group => !!group.id);
+    return { createdGroup, hasDynamicGroups, groups };
+  });
+  const { hasDelta: hasDeltaEnabled } = useSelector(state => state.deployments.config) ?? {};
+  const { total: acceptedDeviceCount } = useSelector(getAcceptedDevices);
+  const hasDevices = !!acceptedDeviceCount;
+  const devicesById = useSelector(getDevicesById);
+  const docsVersion = useSelector(getDocsVersion);
+  const { pending: hasPending } = useSelector(getDeviceCountsByStatus);
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const { needsDeploymentConfirmation: needsCheck, previousPhases = [], retries: previousRetries = 0 } = useSelector(getGlobalSettings);
+  const onboardingState = useSelector(getOnboardingState) || {};
+  const { complete: isOnboardingComplete } = onboardingState;
+  const releases = useSelector(state => state.releases.releasesList.searchedIds);
+  const releasesById = useSelector(getReleasesById);
+  const groupNames = useSelector(getGroupNames);
+  const dispatch = useDispatch();
 
   const isCreating = useRef(false);
   const [releaseSelectionLocked, setReleaseSelectionLocked] = useState(Boolean(deploymentObject.release));
@@ -129,23 +142,23 @@ export const CreateDeployment = props => {
   const { classes } = useStyles();
 
   useEffect(() => {
-    getReleases({ page: 1, perPage: 100, searchOnly: true });
-    getDeploymentsConfig();
+    dispatch(getReleases({ page: 1, perPage: 100, searchOnly: true }));
+    dispatch(getDeploymentsConfig());
   }, []);
 
   useEffect(() => {
     const { devices = [], group, release } = deploymentObject;
     if (release) {
-      advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION);
       setReleaseSelectionLocked(Boolean(deploymentObject.release));
+      dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION));
     }
     if (!group) {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: devices.length ? devices.length : 0 });
       return;
     }
-    advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION);
+    dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION));
     if (group === ALL_DEVICES) {
-      advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION);
+      dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION));
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
       return;
     }
@@ -153,7 +166,7 @@ export const CreateDeployment = props => {
       setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: devices.length ? devices.length : 0 });
       return;
     }
-    getGroupDevices(group, { perPage: 1 }).then(({ group: { total: deploymentDeviceCount } }) =>
+    dispatch(getGroupDevices(group, { perPage: 1 })).then(({ group: { total: deploymentDeviceCount } }) =>
       setDeploymentObject(deploymentObject => ({ ...deploymentObject, deploymentDeviceCount }))
     );
   }, [deploymentObject.group, deploymentObject.release]);
@@ -216,9 +229,9 @@ export const CreateDeployment = props => {
       update_control_map
     };
     if (!isOnboardingComplete) {
-      advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES);
+      dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_RELEASE_TO_DEVICES));
     }
-    return createDeployment(newDeployment, hasNewRetryDefault)
+    return dispatch(createDeployment(newDeployment, hasNewRetryDefault))
       .then(() => {
         // successfully retrieved new deployment
         cleanUpDeploymentsStatus();
@@ -243,6 +256,25 @@ export const CreateDeployment = props => {
 
   const sharedProps = {
     ...props,
+    getSystemDevices: (...args) => dispatch(getSystemDevices(...args)),
+    canRetry,
+    canSchedule,
+    docsVersion,
+    groupNames,
+    getReleases: (...args) => dispatch(getReleases(...args)),
+    groupRef,
+    groups,
+    hasDevices,
+    hasDynamicGroups,
+    hasFullFiltering,
+    hasPending,
+    idAttribute,
+    isEnterprise,
+    previousPhases,
+    previousRetries,
+    releaseRef,
+    releases,
+    releasesById,
     commonClasses: classes,
     deploymentObject: deploymentSettings,
     hasNewRetryDefault,
@@ -330,40 +362,7 @@ export const CreateDeployment = props => {
   );
 };
 
-const actionCreators = { advanceOnboarding, createDeployment, getDeploymentsConfig, getGroupDevices, getReleases, getSystemDevices };
-
-export const mapStateToProps = state => {
-  const { canRetry, canSchedule, hasFullFiltering } = getTenantCapabilities(state);
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  const { hasDelta } = state.deployments.config ?? {};
-  return {
-    acceptedDeviceCount: state.devices.byStatus.accepted.total,
-    canRetry,
-    canSchedule,
-    createdGroup: Object.keys(groups).length ? Object.keys(groups)[0] : undefined,
-    devicesById: state.devices.byId,
-    docsVersion: getDocsVersion(state),
-    groups,
-    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
-    hasDeltaEnabled: hasDelta,
-    hasDynamicGroups: Object.values(groups).some(group => !!group.id),
-    hasFullFiltering,
-    hasPending: state.devices.byStatus.pending.total,
-    idAttribute: getIdAttribute(state).attribute,
-    isEnterprise: getIsEnterprise(state),
-    isHosted: state.app.features.isHosted,
-    isOnboardingComplete: state.onboarding.complete,
-    needsCheck: state.users.globalSettings.needsDeploymentConfirmation,
-    onboardingState: getOnboardingState(state),
-    previousPhases: state.users.globalSettings.previousPhases || [],
-    previousRetries: state.users.globalSettings.retries || 0,
-    releases: state.releases.releasesList.searchedIds,
-    releasesById: state.releases.byId
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(CreateDeployment);
+export default CreateDeployment;
 
 const OnboardingComponent = ({
   releaseRef,

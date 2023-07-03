@@ -12,17 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon } from '@mui/icons-material';
 // material ui
-import { Drawer, IconButton, Typography } from '@mui/material';
+import { ClickAwayListener, Drawer, IconButton, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { setSearchState, setSnackbar } from '../actions/appActions';
+import { setSearchState } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import { getIdAttribute, getMappedDevicesList, getOnboardingState, getUserSettings } from '../selectors';
@@ -63,20 +63,16 @@ const ResultTitle = ({ onClick, term, total }) => {
   );
 };
 
-export const SearchResult = ({
-  columnSelection,
-  customColumnSizes,
-  devices,
-  idAttribute,
-  onboardingState,
-  onToggleSearchResult,
-  open = true,
-  searchState,
-  setDeviceListState,
-  setSearchState,
-  setSnackbar
-}) => {
+export const SearchResult = ({ onToggleSearchResult, open = true }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { columnSelection } = useSelector(getUserSettings);
+  const customColumnSizes = useSelector(state => state.users.customColumns);
+  const devices = useSelector(state => getMappedDevicesList(state, 'search'));
+  const idAttribute = useSelector(getIdAttribute);
+  const onboardingState = useSelector(getOnboardingState);
+  const searchState = useSelector(state => state.app.searchState);
 
   const { classes } = useStyles();
 
@@ -103,13 +99,13 @@ export const SearchResult = ({
   }, [open, searchTerm]);
 
   const onDeviceSelect = device => {
-    setDeviceListState({ selectedId: device.id });
+    dispatch(setDeviceListState({ selectedId: device.id }));
     onToggleSearchResult();
     setTimeout(() => navigate(`/devices/${device.status}?id=${device.id}`), TIMEOUTS.debounceShort);
   };
 
   const handlePageChange = page => {
-    setSearchState({ page });
+    dispatch(setSearchState({ page }));
   };
 
   const onSortChange = attribute => {
@@ -118,64 +114,51 @@ export const SearchResult = ({
     if (changedSortCol !== sortCol) {
       changedSortDown = SORTING_OPTIONS.desc;
     }
-    setSearchState({ page: 1, sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope } });
+    dispatch(setSearchState({ page: 1, sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope } }));
   };
 
   const onClearClick = () => {
-    setSearchState({ searchTerm: '' });
+    dispatch(setSearchState({ searchTerm: '' }));
     onToggleSearchResult();
   };
 
   return (
-    <Drawer
-      anchor="top"
-      classes={classes}
-      disableEnforceFocus
-      open={open}
-      ModalProps={{ className: classes.drawerOffset, BackdropProps: { className: classes.drawerOffset } }}
-      PaperProps={{ className: `${classes.drawerOffset} ${classes.paper}` }}
-      SlideProps={{ direction: 'left' }}
-    >
-      <div className="flexbox center-aligned margin-bottom-small space-between">
-        <ResultTitle onClick={onClearClick} term={searchTerm} total={searchTotal} />
-        <IconButton onClick={onToggleSearchResult} aria-label="close" size="large">
-          <CloseIcon />
-        </IconButton>
-      </div>
-      {!!searchTotal && (
-        <Devicelist
-          className=""
-          columnHeaders={columnHeaders}
-          customColumnSizes={customColumnSizes}
-          deviceListState={{ perPage: 10, sort: {} }}
-          devices={devices}
-          idAttribute={idAttribute}
-          onboardingState={onboardingState}
-          onSort={onSortChange}
-          PaginationProps={{ rowsPerPageOptions: [10] }}
-          pageTotal={searchTotal}
-          onPageChange={handlePageChange}
-          pageLoading={isSearching}
-          onExpandClick={onDeviceSelect}
-          setSnackbar={setSnackbar}
-        />
-      )}
-    </Drawer>
+    <ClickAwayListener onClickAway={onToggleSearchResult}>
+      <Drawer
+        anchor="top"
+        classes={classes}
+        disableEnforceFocus
+        open={open}
+        ModalProps={{ className: classes.drawerOffset, BackdropProps: { className: classes.drawerOffset } }}
+        PaperProps={{ className: `${classes.drawerOffset} ${classes.paper}` }}
+        SlideProps={{ direction: 'left' }}
+      >
+        <div className="flexbox center-aligned margin-bottom-small space-between">
+          <ResultTitle onClick={onClearClick} term={searchTerm} total={searchTotal} />
+          <IconButton onClick={onToggleSearchResult} aria-label="close" size="large">
+            <CloseIcon />
+          </IconButton>
+        </div>
+        {!!searchTotal && (
+          <Devicelist
+            className=""
+            columnHeaders={columnHeaders}
+            customColumnSizes={customColumnSizes}
+            deviceListState={{ perPage: 10, sort: {} }}
+            devices={devices}
+            idAttribute={idAttribute}
+            onboardingState={onboardingState}
+            onSort={onSortChange}
+            PaginationProps={{ rowsPerPageOptions: [10] }}
+            pageTotal={searchTotal}
+            onPageChange={handlePageChange}
+            pageLoading={isSearching}
+            onExpandClick={onDeviceSelect}
+          />
+        )}
+      </Drawer>
+    </ClickAwayListener>
   );
 };
 
-const actionCreators = { setDeviceListState, setSearchState, setSnackbar };
-
-const mapStateToProps = state => {
-  const { columnSelection } = getUserSettings(state);
-  return {
-    columnSelection,
-    customColumnSizes: state.users.customColumns,
-    devices: getMappedDevicesList(state, 'search'),
-    idAttribute: getIdAttribute(state),
-    onboardingState: getOnboardingState(state),
-    searchState: state.app.searchState
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(SearchResult);
+export default SearchResult;

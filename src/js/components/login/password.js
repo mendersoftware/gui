@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import LoginLogo from '../../../assets/img/loginlogo.svg';
@@ -46,40 +46,28 @@ const texts = {
   ]
 };
 
-export const Password = ({ passwordResetStart }) => {
+export const Password = () => {
   const [confirm, setConfirm] = useState(false);
 
-  const _handleSubmit = formData => {
-    if (!formData.hasOwnProperty('email')) {
-      return;
-    }
-    passwordResetStart(formData.email).then(() => setConfirm(true));
-  };
+  const dispatch = useDispatch();
 
+  const handleSubmit = formData => dispatch(passwordResetStart(formData.email)).then(() => setConfirm(true));
+
+  const content = confirm ? texts.confirmation : texts.request;
   return (
     <PasswordScreenContainer title="Reset your password">
-      {confirm ? (
-        texts.confirmation.map((text, index) => (
-          <p className="align-center" key={index}>
-            {text}
-          </p>
-        ))
-      ) : (
-        <>
-          {texts.request.map((text, index) => (
-            <p className="align-center" key={index}>
-              {text}
-            </p>
-          ))}
-          <Form showButtons={true} buttonColor="primary" onSubmit={_handleSubmit} submitLabel="Send password reset link" submitButtonId="password_button">
-            <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
-          </Form>
-        </>
+      {content.map((text, index) => (
+        <p className="align-center" key={index}>
+          {text}
+        </p>
+      ))}
+      {!confirm && (
+        <Form showButtons={true} buttonColor="primary" onSubmit={handleSubmit} submitLabel="Send password reset link" submitButtonId="password_button">
+          <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
+        </Form>
       )}
     </PasswordScreenContainer>
   );
 };
 
-const actionCreators = { passwordResetStart };
-
-export default connect(null, actionCreators)(Password);
+export default Password;

@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { AddCircle as AddIcon } from '@mui/icons-material';
@@ -24,7 +24,6 @@ import { setOfflineThreshold, setSnackbar } from '../../actions/appActions';
 import {
   addDynamicGroup,
   addStaticGroup,
-  getAllDeviceCounts,
   preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
@@ -35,10 +34,25 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
-import { toggle, versionCompare } from '../../helpers';
-import { getDocsVersion, getFeatures, getGroups as getGroupsSelector, getLimitMaxed, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { toggle } from '../../helpers';
+import {
+  getAcceptedDevices,
+  getDeviceCountsByStatus,
+  getDeviceFilters,
+  getDeviceLimit,
+  getDocsVersion,
+  getFeatures,
+  getGroups as getGroupsSelector,
+  getIsEnterprise,
+  getIsPreview,
+  getLimitMaxed,
+  getSelectedGroupInfo,
+  getShowHelptips,
+  getTenantCapabilities,
+  getUserCapabilities
+} from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
@@ -51,45 +65,7 @@ import RemoveGroup from './group-management/remove-group';
 import Groups from './groups';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
 
-const refreshLength = TIMEOUTS.refreshDefault;
-
-export const DeviceGroups = ({
-  acceptedCount,
-  addDynamicGroup,
-  addStaticGroup,
-  authRequestCount,
-  canPreview,
-  canManageDevices,
-  deviceLimit,
-  deviceListState,
-  docsVersion,
-  features,
-  filteringAttributes,
-  filters,
-  getAllDeviceCounts,
-  groupCount,
-  groupFilters,
-  groups,
-  groupsByType,
-  hasReporting,
-  limitMaxed,
-  pendingCount,
-  preauthDevice,
-  removeDevicesFromGroup,
-  removeDynamicGroup,
-  removeStaticGroup,
-  selectedGroup,
-  selectGroup,
-  setDeviceFilters,
-  setDeviceListState,
-  setShowConnectingDialog,
-  setOfflineThreshold,
-  setSnackbar,
-  showDeviceConnectionDialog,
-  showHelptips,
-  tenantCapabilities,
-  updateDynamicGroup
-}) => {
+export const DeviceGroups = () => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);
   const [fromFilters, setFromFilters] = useState(false);
   const [modifyGroupDialog, setModifyGroupDialog] = useState(false);
@@ -99,8 +75,32 @@ export const DeviceGroups = ({
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
   const deviceTimer = useRef();
-  const { isEnterprise } = tenantCapabilities;
   const { status: statusParam } = useParams();
+
+  const { groupCount, selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
+  const filteringAttributes = useSelector(state => ({
+    ...state.devices.filteringAttributes,
+    identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id']
+  }));
+  const { canManageDevices } = useSelector(getUserCapabilities);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const { groupNames, ...groupsByType } = useSelector(getGroupsSelector);
+  const groups = groupNames;
+  const { total: acceptedCount = 0 } = useSelector(getAcceptedDevices);
+  const authRequestCount = useSelector(state => state.monitor.issueCounts.byType[DEVICE_ISSUE_OPTIONS.authRequests.key].total);
+  const canPreview = useSelector(getIsPreview);
+  const deviceLimit = useSelector(getDeviceLimit);
+  const deviceListState = useSelector(state => state.devices.deviceList);
+  const docsVersion = useSelector(getDocsVersion);
+  const features = useSelector(getFeatures);
+  const { hasReporting } = features;
+  const filters = useSelector(getDeviceFilters);
+  const limitMaxed = useSelector(getLimitMaxed);
+  const { pending: pendingCount } = useSelector(getDeviceCountsByStatus);
+  const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
+  const showHelptips = useSelector(getShowHelptips);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const dispatch = useDispatch();
 
   const [locationParams, setLocationParams] = useLocationParams('devices', {
     filteringAttributes,
@@ -129,7 +129,7 @@ export const DeviceGroups = ({
 
   useEffect(() => {
     if (locationParams.groupName) {
-      selectGroup(locationParams.groupName);
+      dispatch(selectGroup(locationParams.groupName));
     }
     let listState = { setOnly: true };
     if (locationParams.open && locationParams.id.length) {
@@ -138,38 +138,33 @@ export const DeviceGroups = ({
     if (!locationParams.id?.length && selectedId) {
       listState = { ...listState, detailsTab: 'identity' };
     }
-    setDeviceListState(listState);
+    dispatch(setDeviceListState(listState));
   }, [locationParams.detailsTab, locationParams.groupName, JSON.stringify(locationParams.id), locationParams.open]);
 
   useEffect(() => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
     const { hasFullFiltering } = tenantCapabilities;
     if (groupName) {
-      selectGroup(groupName, filters);
+      dispatch(selectGroup(groupName, filters));
     } else if (filters.length) {
-      setDeviceFilters(filters);
+      dispatch(setDeviceFilters(filters));
     }
     const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
     let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
     if (id.length === 1 && Boolean(locationParams.open)) {
       listState.selectedId = id[0];
     } else if (id.length && hasFullFiltering) {
-      setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]);
+      dispatch(setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]));
     }
-    setDeviceListState(listState);
-    clearInterval(deviceTimer.current);
-    deviceTimer.current = setInterval(getAllDeviceCounts, refreshLength);
-    setOfflineThreshold();
-    return () => {
-      clearInterval(deviceTimer.current);
-    };
+    dispatch(setDeviceListState(listState));
+    dispatch(setOfflineThreshold());
   }, []);
 
   /*
    * Groups
    */
   const removeCurrentGroup = () => {
-    const request = groupFilters.length ? removeDynamicGroup(selectedGroup) : removeStaticGroup(selectedGroup);
+    const request = groupFilters.length ? dispatch(removeDynamicGroup(selectedGroup)) : dispatch(removeStaticGroup(selectedGroup));
     return request.then(toggleGroupRemoval).catch(console.log);
   };
 
@@ -181,7 +176,7 @@ export const DeviceGroups = ({
   };
 
   const createGroupFromDialog = (devices, group) => {
-    let request = fromFilters ? addDynamicGroup(group, filters) : addStaticGroup(group, devices);
+    let request = fromFilters ? dispatch(addDynamicGroup(group, filters)) : dispatch(addStaticGroup(group, devices));
     return request.then(() => {
       // reached end of list
       setCreateGroupExplanation(false);
@@ -192,7 +187,7 @@ export const DeviceGroups = ({
 
   const onGroupClick = () => {
     if (selectedGroup && groupFilters.length) {
-      return updateDynamicGroup(selectedGroup, filters);
+      return dispatch(updateDynamicGroup(selectedGroup, filters));
     }
     setModifyGroupDialog(true);
     setFromFilters(true);
@@ -202,9 +197,9 @@ export const DeviceGroups = ({
     const isGroupRemoval = devices.length >= groupCount;
     let request;
     if (isGroupRemoval) {
-      request = removeStaticGroup(selectedGroup);
+      request = dispatch(removeStaticGroup(selectedGroup));
     } else {
-      request = removeDevicesFromGroup(selectedGroup, devices);
+      request = dispatch(removeDevicesFromGroup(selectedGroup, devices));
     }
     return request.catch(console.log);
   };
@@ -222,22 +217,22 @@ export const DeviceGroups = ({
 
   const onPreauthSaved = addMore => {
     setOpenPreauth(!addMore);
-    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger });
+    dispatch(setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger }));
   };
 
   const onShowDeviceStateClick = state => {
-    selectGroup();
-    setDeviceListState({ state });
+    dispatch(selectGroup());
+    dispatch(setDeviceListState({ state }));
   };
 
   const onGroupSelect = groupName => {
-    selectGroup(groupName);
-    setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger, selection: [] });
+    dispatch(selectGroup(groupName));
+    dispatch(setDeviceListState({ page: 1, refreshTrigger: !refreshTrigger, selection: [] }));
   };
 
   const onShowAuthRequestDevicesClick = () => {
-    setDeviceFilters([]);
-    setDeviceListState({ selectedIssues: [DEVICE_ISSUE_OPTIONS.authRequests.key], page: 1 });
+    dispatch(setDeviceFilters([]));
+    dispatch(setDeviceListState({ selectedIssues: [DEVICE_ISSUE_OPTIONS.authRequests.key], page: 1 }));
   };
 
   const toggleGroupRemoval = () => setRemoveGroup(toggle);
@@ -264,7 +259,7 @@ export const DeviceGroups = ({
             <DeviceAdditionWidget
               docsVersion={docsVersion}
               features={features}
-              onConnectClick={setShowConnectingDialog}
+              onConnectClick={() => dispatch(setShowConnectingDialog(true))}
               onMakeGatewayClick={toggleMakeGatewayClick}
               onPreauthClick={setOpenPreauth}
               tenantCapabilities={tenantCapabilities}
@@ -300,7 +295,6 @@ export const DeviceGroups = ({
           <CreateGroup
             addListOfDevices={createGroupFromDialog}
             fromFilters={fromFilters}
-            groups={groups}
             isCreation={fromFilters || !groups.length}
             selectedDevices={tmpDevices}
             onClose={onCreateGroupClose}
@@ -320,10 +314,10 @@ export const DeviceGroups = ({
             acceptedDevices={acceptedCount}
             deviceLimit={deviceLimit}
             limitMaxed={limitMaxed}
-            preauthDevice={preauthDevice}
+            preauthDevice={authset => dispatch(preauthDevice(authset))}
             onSubmit={onPreauthSaved}
             onCancel={() => setOpenPreauth(false)}
-            setSnackbar={setSnackbar}
+            setSnackbar={message => dispatch(setSnackbar(message))}
           />
         )}
         {showMakeGateway && <MakeGatewayDialog docsVersion={docsVersion} isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}
@@ -332,59 +326,4 @@ export const DeviceGroups = ({
   );
 };
 
-const actionCreators = {
-  addDynamicGroup,
-  addStaticGroup,
-  getAllDeviceCounts,
-  preauthDevice,
-  removeDevicesFromGroup,
-  removeDynamicGroup,
-  removeStaticGroup,
-  selectGroup,
-  setDeviceFilters,
-  setDeviceListState,
-  setOfflineThreshold,
-  setShowConnectingDialog,
-  setSnackbar,
-  updateDynamicGroup
-};
-
-const mapStateToProps = state => {
-  let groupCount = state.devices.byStatus.accepted.total;
-  let selectedGroup;
-  let groupFilters = [];
-  if (state.devices.groups.selectedGroup && state.devices.groups.byId[state.devices.groups.selectedGroup]) {
-    selectedGroup = state.devices.groups.selectedGroup;
-    groupCount = state.devices.groups.byId[selectedGroup].total;
-    groupFilters = state.devices.groups.byId[selectedGroup].filters || [];
-  }
-  const filteringAttributes = { ...state.devices.filteringAttributes, identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id'] };
-  const { canManageDevices } = getUserCapabilities(state);
-  const tenantCapabilities = getTenantCapabilities(state);
-  const { groupNames, ...groupsByType } = getGroupsSelector(state);
-  return {
-    acceptedCount: state.devices.byStatus.accepted.total || 0,
-    authRequestCount: state.monitor.issueCounts.byType[DEVICE_ISSUE_OPTIONS.authRequests.key].total,
-    canPreview: versionCompare(state.app.versionInformation.Integration, 'next') > -1,
-    canManageDevices,
-    deviceLimit: state.devices.limit,
-    deviceListState: state.devices.deviceList,
-    docsVersion: getDocsVersion(state),
-    features: getFeatures(state),
-    filteringAttributes,
-    filters: state.devices.filters || [],
-    groups: groupNames,
-    groupsByType,
-    groupCount,
-    groupFilters,
-    hasReporting: state.app.features.hasReporting,
-    limitMaxed: getLimitMaxed(state),
-    pendingCount: state.devices.byStatus.pending.total || 0,
-    selectedGroup,
-    showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
-    showHelptips: state.users.showHelptips,
-    tenantCapabilities
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(DeviceGroups);
+export default DeviceGroups;

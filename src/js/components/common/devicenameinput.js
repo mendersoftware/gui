@@ -12,14 +12,13 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 // material ui
 import { Check as CheckIcon, Clear as ClearIcon, Edit as EditIcon } from '@mui/icons-material';
 import { IconButton, Input, InputAdornment } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../../actions/appActions';
 import { setDeviceTags } from '../../actions/deviceActions';
 
 const useStyles = makeStyles()(theme => ({
@@ -32,10 +31,12 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags }) => {
+export const DeviceNameInput = ({ device, isHovered }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
   const { classes } = useStyles();
+
+  const dispatch = useDispatch();
 
   const { id = '', tags = {} } = device;
   const { name = '' } = tags;
@@ -46,16 +47,7 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags 
     }
   }, [device, isEditing]);
 
-  const onSubmit = () => {
-    const changedTags = {
-      ...tags,
-      name: value
-    };
-    setDeviceTags(id, changedTags).then(() => {
-      setSnackbar('Device name changed');
-      setIsEditing(false);
-    });
-  };
+  const onSubmit = () => dispatch(setDeviceTags(id, { ...tags, name: value })).then(() => setIsEditing(false));
 
   const onCancel = () => {
     setValue(name);
@@ -103,9 +95,4 @@ export const DeviceNameInput = ({ device, isHovered, setSnackbar, setDeviceTags 
   );
 };
 
-const actionCreators = {
-  setDeviceTags,
-  setSnackbar
-};
-
-export default connect(undefined, actionCreators)(DeviceNameInput);
+export default DeviceNameInput;

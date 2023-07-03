@@ -12,8 +12,12 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
 
-import { undefineds } from '../../../../tests/mockData';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
+import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import { IntegrationConfiguration, Integrations } from './integrations';
@@ -30,6 +34,8 @@ const integrations = [
     credentials: { type: EXTERNAL_PROVIDER['iot-core'].credentialsType, aws: 'something else' }
   }
 ];
+const mockStore = configureStore([thunk]);
+const store = mockStore({ ...defaultState, organization: { ...defaultState.organization, externalDeviceIntegrations: integrations } });
 
 describe('IntegrationConfiguration Component', () => {
   it('renders correctly', async () => {
@@ -45,7 +51,9 @@ describe('IntegrationConfiguration Component', () => {
 describe('Integrations Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <Integrations integrations={integrations} changeIntegration={jest.fn} deleteIntegration={jest.fn} getIntegrations={jest.fn} />
+      <Provider store={store}>
+        <Integrations />
+      </Provider>
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

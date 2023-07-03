@@ -12,14 +12,14 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
-import { getCurrentUser, getFeatures, getIsEnterprise, getUserCapabilities } from '../../../selectors';
+import { getCurrentUser, getFeatures, getIsEnterprise, getRolesById, getUserCapabilities } from '../../../selectors';
 import { UserDefinition } from './userdefinition';
 import UserForm from './userform';
 import UserList from './userlist';
@@ -30,28 +30,46 @@ const actions = {
   remove: 'removeUser'
 };
 
-export const UserManagement = props => {
-  const { currentUser, getUserList, isEnterprise, passwordResetStart, roles, setSnackbar, users } = props;
+export const UserManagement = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [removeDialog, setRemoveDialog] = useState(false);
   const [user, setUser] = useState({});
+  const dispatch = useDispatch();
+
+  const { canManageUsers } = useSelector(getUserCapabilities);
+  const { isHosted } = useSelector(getFeatures);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const currentUser = useSelector(getCurrentUser);
+  const roles = useSelector(getRolesById);
+  const users = useSelector(state => Object.values(state.users.byId));
+  const props = {
+    canManageUsers,
+    createUser: userData => dispatch(createUser(userData)),
+    currentUser,
+    editUser: (id, userData) => dispatch(editUser(id, userData)),
+    isEnterprise,
+    isHosted,
+    removeUser: id => dispatch(removeUser(id)),
+    roles,
+    users
+  };
 
   useEffect(() => {
-    getUserList();
+    dispatch(getUserList());
   }, []);
 
   useEffect(() => {
-    getUserList();
+    dispatch(getUserList());
   }, [currentUser.id, users.length]);
 
   const openEdit = user => {
     setUser(user);
     setRemoveDialog(false);
-    setSnackbar('');
+    dispatch(setSnackbar(''));
   };
 
   const openRemove = () => {
-    setSnackbar('');
+    dispatch(setSnackbar(''));
     setRemoveDialog(true);
   };
 
@@ -71,13 +89,13 @@ export const UserManagement = props => {
       }
       return request.then(() => {
         if (passwordResetEmail) {
-          passwordResetStart(passwordResetEmail);
+          dispatch(passwordResetStart(passwordResetEmail));
         }
         dialogDismiss();
       });
     }
     if (passwordResetEmail) {
-      passwordResetStart(passwordResetEmail);
+      dispatch(passwordResetStart(passwordResetEmail));
     }
     return dialogDismiss();
   };
@@ -126,19 +144,4 @@ export const UserManagement = props => {
   );
 };
 
-const actionCreators = { createUser, editUser, getUserList, passwordResetStart, removeUser, setSnackbar };
-
-const mapStateToProps = state => {
-  const { canManageUsers } = getUserCapabilities(state);
-  const { isHosted } = getFeatures(state);
-  return {
-    currentUser: getCurrentUser(state),
-    canManageUsers,
-    isEnterprise: getIsEnterprise(state),
-    isHosted,
-    roles: state.users.rolesById,
-    users: Object.values(state.users.byId)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(UserManagement);
+export default UserManagement;

@@ -2059,7 +2059,9 @@ label+.emotion-62 {
             class="muted margin-left margin-right flexbox"
           >
             <div
+              aria-label="The last time the device communicated with the Mender server"
               class="margin-right-small"
+              data-mui-internal-clone-element="true"
             >
               Last check-in:
             </div>

@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useTheme } from '@mui/material/styles';
 
@@ -28,21 +28,22 @@ import TerminalPlayer from './terminalplayer';
 
 momentDurationFormatSetup(moment);
 
-export const TerminalSession = ({ canReadDevices, device, idAttribute, item, getDeviceById, getSessionDetails, onClose }) => {
+export const TerminalSession = ({ item, onClose }) => {
   const theme = useTheme();
   const [sessionDetails, setSessionDetails] = useState();
+  const dispatch = useDispatch();
+  const { object = {} } = item;
+  const { canReadDevices } = useSelector(getUserCapabilities);
+  const device = useSelector(state => state.devices.byId[object.id]);
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
 
   useEffect(() => {
     const { action, actor, meta, object, time } = item;
     if (canReadDevices && !device) {
-      getDeviceById(object.id);
+      dispatch(getDeviceById(object.id));
     }
-    getSessionDetails(
-      meta.session_id[0],
-      object.id,
-      actor.id,
-      action.startsWith('open') ? time : undefined,
-      action.startsWith('close') ? time : undefined
+    dispatch(
+      getSessionDetails(meta.session_id[0], object.id, actor.id, action.startsWith('open') ? time : undefined, action.startsWith('close') ? time : undefined)
     ).then(setSessionDetails);
   }, []);
 
@@ -69,17 +70,4 @@ export const TerminalSession = ({ canReadDevices, device, idAttribute, item, get
   );
 };
 
-const actionCreators = { getDeviceById, getSessionDetails };
-
-const mapStateToProps = (state, ownProps) => {
-  const { item = {} } = ownProps;
-  const deviceId = item.object.id;
-  const { canReadDevices } = getUserCapabilities(state);
-  return {
-    canReadDevices,
-    device: state.devices.byId[deviceId],
-    idAttribute: getIdAttribute(state).attribute
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(TerminalSession);
+export default TerminalSession;

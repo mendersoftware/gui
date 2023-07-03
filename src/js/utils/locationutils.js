@@ -243,9 +243,9 @@ const paramReducer = (accu, [key, value]) => {
 };
 
 export const formatAuditlogs = ({ pageState }, { today, tonight }) => {
-  const { detail, endDate, startDate, type = '', user = '' } = pageState;
+  const { detail, endDate, startDate, type = null, user = null } = pageState;
   let params = new URLSearchParams();
-  params = Object.entries({ objectId: detail, userId: user.id ?? user }).reduce(paramReducer, params);
+  params = Object.entries({ objectId: detail, userId: user ? user.id ?? user : user }).reduce(paramReducer, params);
   if (type) {
     params.set('objectType', type.value ?? type);
   }
@@ -266,14 +266,14 @@ const parseDateParams = (params, today, tonight) => {
 };
 
 export const parseAuditlogsQuery = (params, { today, tonight }) => {
-  const type = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('objectType')) || '';
+  const type = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('objectType')) || null;
   const { endDate, startDate } = parseDateParams(params, today, tonight);
   return {
-    detail: params.get('objectId') || '',
+    detail: params.get('objectId'),
     endDate,
     startDate,
     type,
-    user: params.get('userId') || ''
+    user: params.get('userId')
   };
 };
 

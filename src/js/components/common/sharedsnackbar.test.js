@@ -21,6 +21,7 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import { yes } from '../../constants/appConstants';
 import SharedSnackbar from './sharedsnackbar';
 
 const mockStore = configureStore([thunk]);
@@ -45,7 +46,7 @@ describe('SharedSnackbar Component', () => {
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const actionCheck = jest.fn();
-    const copyCheck = jest.fn(() => true);
+    const copyCheck = jest.fn(yes);
     document.execCommand = copyCheck;
 
     render(<SharedSnackbar snackbar={{ maxWidth: 200, open: true, message: 'test' }} setSnackbar={actionCheck} />);
@@ -58,7 +59,7 @@ describe('SharedSnackbar Component', () => {
   it('works as intended with a click listener', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const actionCheck = jest.fn();
-    const copyCheck = jest.fn(() => true);
+    const copyCheck = jest.fn(yes);
     const onClickCheck = jest.fn();
     document.execCommand = copyCheck;
 

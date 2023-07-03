@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
@@ -22,7 +22,7 @@ import { makeStyles } from 'tss-react/mui';
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { getDeploymentsConfig, saveDeltaDeploymentsConfig } from '../../actions/deploymentActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { getTenantCapabilities } from '../../selectors';
+import { getIsEnterprise } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import InfoText from '../common/infotext';
@@ -79,7 +79,10 @@ const NumberInputLimited = ({ limit, onChange, value: propsValue, ...remainder }
   );
 };
 
-export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLimits, getDeploymentsConfig, isEnterprise, saveDeltaDeploymentsConfig }) => {
+export const ArtifactGenerationSettings = () => {
+  const { binaryDelta: deltaConfig = {}, binaryDeltaLimits: deltaLimits = {}, hasDelta: deltaEnabled } = useSelector(state => state.deployments.config) ?? {};
+  const isEnterprise = useSelector(getIsEnterprise);
+  const dispatch = useDispatch();
   const [timeoutValue, setTimeoutValue] = useState(deltaConfig.timeout);
   const [disableChecksum, setDisableChecksum] = useState(deltaConfig.disableChecksum);
   const [disableDecompression, setDisableDecompression] = useState(deltaConfig.disableChecksum);
@@ -110,7 +113,7 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
   }, [JSON.stringify(deltaConfig), JSON.stringify(deltaLimits)]);
 
   useEffect(() => {
-    getDeploymentsConfig();
+    dispatch(getDeploymentsConfig());
   }, []);
 
   useEffect(() => {
@@ -120,16 +123,18 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
     clearTimeout(timer.current);
     timer.current = setTimeout(
       () =>
-        saveDeltaDeploymentsConfig({
-          timeout: timeoutValue,
-          duplicatesWindow,
-          compressionLevel,
-          disableChecksum,
-          disableDecompression,
-          inputWindow,
-          instructionBuffer,
-          sourceWindow
-        }),
+        dispatch(
+          saveDeltaDeploymentsConfig({
+            timeout: timeoutValue,
+            duplicatesWindow,
+            compressionLevel,
+            disableChecksum,
+            disableDecompression,
+            inputWindow,
+            instructionBuffer,
+            sourceWindow
+          })
+        ),
       TIMEOUTS.twoSeconds
     );
     return () => {
@@ -219,17 +224,4 @@ export const ArtifactGenerationSettings = ({ deltaConfig, deltaEnabled, deltaLim
   );
 };
 
-const actionCreators = { getDeploymentsConfig, saveDeltaDeploymentsConfig };
-
-const mapStateToProps = state => {
-  const { binaryDelta = {}, binaryDeltaLimits = {}, hasDelta } = state.deployments.config ?? {};
-  const { isEnterprise } = getTenantCapabilities(state);
-  return {
-    deltaConfig: binaryDelta,
-    deltaEnabled: hasDelta,
-    deltaLimits: binaryDeltaLimits,
-    isEnterprise
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(ArtifactGenerationSettings);
+export default ArtifactGenerationSettings;

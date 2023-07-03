@@ -12,17 +12,16 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { withStyles } from 'tss-react/mui';
 
-import { bindActionCreators } from 'redux';
-
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import { advanceOnboarding, setOnboardingComplete, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
+import { selectRelease } from '../../actions/releaseActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDemoDeviceAddress } from '../../selectors';
@@ -39,19 +38,23 @@ export const CompletionButton = withStyles(Button, ({ palette }) => ({
   }
 }));
 
-export const DeploymentCompleteTip = ({ advanceOnboarding, anchor, getDevicesByStatus, setShowCreateArtifactDialog, setOnboardingComplete, url }) => {
+export const DeploymentCompleteTip = ({ anchor, targetUrl }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const url = useSelector(getDemoDeviceAddress) || targetUrl;
+
   useEffect(() => {
-    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
+    dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
     Tracking.event({ category: 'onboarding', action: onboardingSteps.DEPLOYMENTS_PAST_COMPLETED });
   }, []);
 
   const onClick = () => {
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
     window.open(parametrizedAddress, '_blank');
-    advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE);
-    setOnboardingComplete(false);
-    setShowCreateArtifactDialog(true);
+    dispatch(selectRelease());
+    dispatch(advanceOnboarding(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE));
+    dispatch(setOnboardingComplete(false));
+    dispatch(setShowCreateArtifactDialog(true));
     navigate('/releases');
   };
 
@@ -81,14 +84,4 @@ export const DeploymentCompleteTip = ({ advanceOnboarding, anchor, getDevicesByS
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ advanceOnboarding, getDevicesByStatus, setOnboardingComplete, setShowCreateArtifactDialog }, dispatch);
-};
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    url: getDemoDeviceAddress(state) || ownProps.targetUrl
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeploymentCompleteTip);
+export default DeploymentCompleteTip;

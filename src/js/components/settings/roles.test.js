@@ -21,9 +21,10 @@ import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
+import * as UserActions from '../../actions/userActions';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
 import { ALL_RELEASES } from '../../constants/releaseConstants';
-import Roles, { RoleManagement } from './roles';
+import Roles from './roles';
 
 const mockStore = configureStore([thunk]);
 
@@ -46,25 +47,13 @@ describe('Roles Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const createRoleMock = jest.fn();
-    const editRoleMock = jest.fn();
-    const removeRoleMock = jest.fn();
-    const groups = defaultState.devices.groups.byId;
-    const roles = Object.entries(defaultState.users.rolesById).map(([id, role]) => ({ id, ...role }));
+    const editRoleSpy = jest.spyOn(UserActions, 'editRole');
+    const removeRoleSpy = jest.spyOn(UserActions, 'removeRole');
 
     const ui = (
-      <RoleManagement
-        createRole={createRoleMock}
-        editRole={editRoleMock}
-        features={{}}
-        getDynamicGroups={jest.fn}
-        getGroups={jest.fn}
-        getRoles={jest.fn}
-        groups={groups}
-        releaseTags={{}}
-        removeRole={removeRoleMock}
-        roles={roles}
-      />
+      <Provider store={store}>
+        <Roles />
+      </Provider>
     );
     render(ui);
 
@@ -72,13 +61,13 @@ describe('Roles Component', () => {
     await user.click(within(role).getByText(/view details/i));
     let collapse = screen.getByText(/edit role/i).parentElement.parentElement;
     await user.click(screen.getByRole('button', { name: /delete/i }));
-    expect(removeRoleMock).toHaveBeenCalled();
+    expect(removeRoleSpy).toHaveBeenCalled();
     // expect(screen.getByLabelText(/Role name/i)).toBeDisabled();
     // userEvent.type(within(collapse).getByLabelText(/Name/i), 'test');
     await user.click(within(role).getByText(/view details/i));
     collapse = screen.getByText(/edit role/i).parentElement.parentElement;
     await user.type(within(collapse).getByLabelText(/Description/i), 'something');
-    const groupSelect = within(collapse).getByText(Object.keys(groups)[0]);
+    const groupSelect = within(collapse).getByText(Object.keys(defaultState.devices.groups.byId)[0]);
     await selectMaterialUiSelectOption(groupSelect, ALL_DEVICES, user);
     expect(screen.getByText(/For 'All devices',/)).toBeVisible();
 
@@ -101,7 +90,7 @@ describe('Roles Component', () => {
     expect(submitButton).not.toBeDisabled();
     await user.click(submitButton);
 
-    expect(editRoleMock).toHaveBeenCalledWith({
+    expect(editRoleSpy).toHaveBeenCalledWith({
       allowUserManagement: false,
       description: `${defaultState.users.rolesById.test.description}something`,
       name: 'test',

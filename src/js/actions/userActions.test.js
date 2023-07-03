@@ -77,6 +77,7 @@ import {
   uiPermissionsById
 } from '../constants/userConstants';
 import { attributeReducer, receivedInventoryDevice } from './appActions.test';
+import { expectedOnboardingActions } from './onboardingActions.test';
 import {
   createRole,
   createUser,
@@ -364,7 +365,8 @@ const appInitActions = [
       state: 'accepted',
       total: 2
     }
-  }
+  },
+  ...expectedOnboardingActions
 ];
 
 /* eslint-disable sonarjs/no-identical-functions */
@@ -777,7 +779,7 @@ describe('user actions', () => {
     const result = await store.dispatch(generateToken({ name: 'name' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
-    expect(result[result.length - 1]).toEqual(token);
+    expect(result[result.length - 1]).toEqual('aNewToken');
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should allow token removal', async () => {

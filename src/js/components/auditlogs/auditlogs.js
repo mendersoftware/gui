@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Autocomplete, Button, TextField } from '@mui/material';
@@ -24,10 +24,9 @@ import historyImage from '../../../assets/img/history.png';
 import { getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
-import { createDownload, getISOStringBoundaries, toggle } from '../../helpers';
-import { getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { createDownload, getISOStringBoundaries } from '../../helpers';
+import { getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import Loader from '../common/loader';
@@ -58,32 +57,27 @@ const autoSelectProps = {
   renderOption
 };
 
-export const AuditLogs = ({
-  events,
-  getAuditLogsCsvLink,
-  getUserList,
-  groups,
-  selectionState,
-  setAuditlogsState,
-  tenantCapabilities,
-  userCapabilities,
-  users,
-  ...props
-}) => {
+export const AuditLogs = props => {
   const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
-  const [filterReset, setFilterReset] = useState(false);
 
   const [date] = useState(getISOStringBoundaries(new Date()));
   const { start: today, end: tonight } = date;
 
-  const [detailValue, setDetailValue] = useState('');
-  const [userValue, setUserValue] = useState('');
-  const [typeValue, setTypeValue] = useState('');
+  const [detailValue, setDetailValue] = useState(null);
+  const [userValue, setUserValue] = useState(null);
+  const [typeValue, setTypeValue] = useState(null);
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: { sort: { direction: SORTING_OPTIONS.desc } } });
+  const { classes } = useStyles();
+  const dispatch = useDispatch();
+  const events = useSelector(state => state.organization.auditlog.events);
+  const groups = useSelector(getGroupNames);
+  const selectionState = useSelector(state => state.organization.auditlog.selectionState);
+  const userCapabilities = useSelector(getUserCapabilities);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const users = useSelector(state => state.users.byId);
   const { canReadUsers } = userCapabilities;
   const { hasAuditlogs } = tenantCapabilities;
-  const { classes } = useStyles();
 
   const debouncedDetail = useDebounce(detailValue, TIMEOUTS.debounceDefault);
   const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
@@ -105,7 +99,7 @@ export const AuditLogs = ({
         state.startDate = start;
       }
     }
-    setAuditlogsState(state);
+    dispatch(setAuditlogsState(state));
     Object.entries({ detail: setDetailValue, user: setUserValue, type: setTypeValue }).map(([key, setter]) => (state[key] ? setter(state[key]) : undefined));
   }, [hasAuditlogs]);
 
@@ -113,12 +107,12 @@ export const AuditLogs = ({
     if (!hasAuditlogs) {
       return;
     }
-    setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser });
+    dispatch(setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser }));
   }, [debouncedDetail, debouncedType, debouncedUser, hasAuditlogs]);
 
   useEffect(() => {
     if (canReadUsers) {
-      getUserList();
+      dispatch(getUserList());
     }
   }, [canReadUsers]);
 
@@ -129,23 +123,35 @@ export const AuditLogs = ({
     setLocationParams({ pageState: selectionState });
   }, [detail, endDate, hasAuditlogs, JSON.stringify(sort), perPage, selectionState.page, selectionState.selectedId, startDate, type, user]);
 
+  useEffect(() => {
+    const user = users[debouncedUser];
+    if (debouncedUser?.id || !user) {
+      return;
+    }
+    setUserValue(user);
+  }, [debouncedUser, JSON.stringify(users)]);
+
   const reset = () => {
-    setAuditlogsState({
-      detail: '',
-      endDate: tonight,
-      page: 1,
-      reset: !resetList,
-      startDate: today,
-      type: '',
-      user: ''
-    });
-    setFilterReset(toggle);
+    dispatch(
+      setAuditlogsState({
+        detail: null,
+        endDate: tonight,
+        page: 1,
+        reset: !resetList,
+        startDate: today,
+        type: null,
+        user: null
+      })
+    );
+    setDetailValue(null);
+    setTypeValue(null);
+    setUserValue(null);
     navigate('/auditlog');
   };
 
   const createCsvDownload = () => {
     setCsvLoading(true);
-    getAuditLogsCsvLink().then(address => {
+    dispatch(getAuditLogsCsvLink()).then(address => {
       createDownload(
         encodeURI(address),
         `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`
@@ -156,14 +162,14 @@ export const AuditLogs = ({
 
   const onChangeSorting = () => {
     const currentSorting = sort.direction === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
-    setAuditlogsState({ page: 1, sort: { direction: currentSorting } });
+    dispatch(setAuditlogsState({ page: 1, sort: { direction: currentSorting } }));
   };
 
   const onUserFilterChange = (e, value, reason) => {
     if (!e || reason === 'blur') {
       return;
     }
-    setUserValue(value || '');
+    setUserValue(value);
   };
 
   const onTypeFilterChange = (e, value, reason) => {
@@ -171,22 +177,22 @@ export const AuditLogs = ({
       return;
     }
     if (!value) {
-      setDetailValue('');
+      setDetailValue(null);
     }
-    setTypeValue(value || '');
+    setTypeValue(value);
   };
 
   const onDetailFilterChange = (e, value) => {
     if (!e) {
       return;
     }
-    setDetailValue(value || '');
+    setDetailValue(value);
   };
 
   const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) =>
-    setAuditlogsState({ page: 1, startDate: currentStartDate, endDate: currentEndDate });
+    dispatch(setAuditlogsState({ page: 1, startDate: currentStartDate, endDate: currentEndDate }));
 
-  const onChangePagination = (page, currentPerPage = perPage) => setAuditlogsState({ page, perPage: currentPerPage });
+  const onChangePagination = (page, currentPerPage = perPage) => dispatch(setAuditlogsState({ page, perPage: currentPerPage }));
 
   const typeOptionsMap = {
     Deployment: groups,
@@ -205,7 +211,8 @@ export const AuditLogs = ({
           freeSolo
           options={Object.values(users)}
           onChange={onUserFilterChange}
-          value={user}
+          isOptionEqualToValue={({ email, id }, value) => id === value || email === value || email === value.email}
+          value={userValue}
           renderInput={params => (
             <TextField
               {...params}
@@ -220,20 +227,21 @@ export const AuditLogs = ({
         <Autocomplete
           {...autoSelectProps}
           id="audit-log-type-selection"
-          key={`audit-log-type-selection-${filterReset}`}
           onChange={onTypeFilterChange}
           options={AUDIT_LOGS_TYPES}
           renderInput={params => (
             <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
           )}
           style={{ marginLeft: 7.5 }}
-          value={type}
+          value={typeValue}
         />
         <Autocomplete
           {...autoSelectProps}
           id="audit-log-type-details-selection"
+          key={`audit-log-type-details-selection-${type}`}
           disabled={!type}
-          inputValue={detail}
+          freeSolo
+          value={detailValue}
           onInputChange={onDetailFilterChange}
           options={detailOptions}
           renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
@@ -265,7 +273,7 @@ export const AuditLogs = ({
           onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
           onChangeSorting={onChangeSorting}
           selectionState={selectionState}
-          setAuditlogsState={setAuditlogsState}
+          setAuditlogsState={state => dispatch(setAuditlogsState(state))}
           userCapabilities={userCapabilities}
         />
       )}
@@ -280,19 +288,4 @@ export const AuditLogs = ({
   );
 };
 
-const actionCreators = { getAuditLogsCsvLink, getUserList, setAuditlogsState };
-
-const mapStateToProps = state => {
-  // eslint-disable-next-line no-unused-vars
-  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-  return {
-    events: state.organization.auditlog.events,
-    groups: [ALL_DEVICES, ...Object.keys(groups).sort()],
-    selectionState: state.organization.auditlog.selectionState,
-    userCapabilities: getUserCapabilities(state),
-    tenantCapabilities: getTenantCapabilities(state),
-    users: state.users.byId
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(AuditLogs);
+export default AuditLogs;

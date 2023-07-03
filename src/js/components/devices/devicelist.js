@@ -20,7 +20,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { deepCompare, toggle } from '../../helpers';
+import { deepCompare, isDarkMode, toggle } from '../../helpers';
 import useWindowSize from '../../utils/resizehook';
 import Loader from '../common/loader';
 import MenderTooltip from '../common/mendertooltip';
@@ -43,7 +43,7 @@ const useStyles = makeStyles()(theme => ({
       background: theme.palette.grey[600]
     },
     ['&.resizing']: {
-      background: theme.palette.mode === 'dark' ? theme.palette.grey[200] : theme.palette.grey[900]
+      background: isDarkMode(theme.palette.mode) ? theme.palette.grey[200] : theme.palette.grey[900]
     }
   }
 }));
@@ -159,26 +159,23 @@ const getColumnsStyle = (columns, defaultSize, selectable) => {
   return getTemplateColumns(template.join(' '), selectable);
 };
 
-export const DeviceList = props => {
-  const {
-    columnHeaders,
-    customColumnSizes,
-    devices,
-    deviceListState,
-    idAttribute,
-    onChangeRowsPerPage,
-    PaginationProps = {},
-    onExpandClick,
-    onResizeColumns,
-    onPageChange,
-    onSelect,
-    onSort,
-    pageLoading,
-    pageTotal
-  } = props;
-
+export const DeviceList = ({
+  columnHeaders,
+  customColumnSizes,
+  devices,
+  deviceListState,
+  idAttribute,
+  onChangeRowsPerPage,
+  PaginationProps = {},
+  onExpandClick,
+  onResizeColumns,
+  onPageChange,
+  onSelect,
+  onSort,
+  pageLoading,
+  pageTotal
+}) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, selection: selectedRows = [], sort = {} } = deviceListState;
-
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const deviceListRef = useRef();
   const selectedRowsRef = useRef(selectedRows);
@@ -291,7 +288,7 @@ export const DeviceList = props => {
           onChangePage={onPageChange}
           {...PaginationProps}
         />
-        {pageLoading && <Loader show small />}
+        <Loader show={pageLoading} small />
       </div>
     </div>
   );

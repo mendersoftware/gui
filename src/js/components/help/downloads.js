@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ArrowDropDown, ExpandMore, FileDownloadOutlined as FileDownloadIcon, Launch } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Chip, Menu, MenuItem, Typography } from '@mui/material';
@@ -22,8 +22,9 @@ import Cookies from 'universal-cookie';
 
 import { setSnackbar } from '../../actions/appActions';
 import { getToken } from '../../auth';
+import { canAccess } from '../../constants/appConstants';
 import { detectOsIdentifier, toggle } from '../../helpers';
-import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities } from '../../selectors';
+import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities, getVersionInformation } from '../../selectors';
 import Tracking from '../../tracking';
 import Time from '../common/time';
 
@@ -144,7 +145,7 @@ const tools = [
     packageExtras: [{ packageId: 'mender-client-dev', archList: [architectures.all] }],
     title: 'Mender Client Debian package',
     getLocations: multiArchLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: defaultOSVersions,
     archList: defaultArchitectures
   },
@@ -152,7 +153,7 @@ const tools = [
     id: 'mender-artifact',
     title: 'Mender Artifact',
     getLocations: defaultLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: [osMap.MacOs, osMap.Linux]
   },
   {
@@ -166,7 +167,7 @@ const tools = [
     id: 'mender-cli',
     title: 'Mender CLI',
     getLocations: defaultLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: [osMap.MacOs, osMap.Linux]
   },
   {
@@ -186,7 +187,7 @@ const tools = [
     id: 'mender-connect',
     title: 'Mender Connect',
     getLocations: multiArchLocationFormatter,
-    canAccess: () => true,
+    canAccess,
     osList: defaultOSVersions,
     archList: defaultArchitectures
   },
@@ -201,7 +202,7 @@ const tools = [
         }
       ]
     }),
-    canAccess: () => true
+    canAccess
   },
   {
     id: 'mender-gateway',
@@ -297,10 +298,16 @@ const DownloadSection = ({ docsVersion, item, isEnterprise, onMenuClick, os, ver
   );
 };
 
-export const Downloads = ({ docsVersion = '', isEnterprise, setSnackbar, tenantCapabilities, tokens = [], versions = { repos: {}, releaseDate: '' } }) => {
+export const Downloads = () => {
   const [anchorEl, setAnchorEl] = useState();
   const [currentLocation, setCurrentLocation] = useState('');
   const [os] = useState(detectOsIdentifier());
+  const dispatch = useDispatch();
+  const { tokens = [] } = useSelector(getCurrentUser);
+  const docsVersion = useSelector(getDocsVersion);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const { latestRelease: versions = { repos: {}, releaseDate: '' } } = useSelector(getVersionInformation);
 
   const availableTools = useMemo(
     () =>
@@ -326,7 +333,7 @@ export const Downloads = ({ docsVersion = '', isEnterprise, setSnackbar, tenantC
       const value = event?.target.getAttribute('value') || 'curl';
       const option = copyOptions.find(item => item.id === value);
       copy(option.format({ location: currentLocation, tokens }));
-      setSnackbar('Copied to clipboard');
+      dispatch(setSnackbar('Copied to clipboard'));
     },
     [currentLocation, tokens]
   );
@@ -361,18 +368,4 @@ export const Downloads = ({ docsVersion = '', isEnterprise, setSnackbar, tenantC
   );
 };
 
-const actionCreators = { setSnackbar };
-
-const mapStateToProps = state => {
-  const { tokens } = getCurrentUser(state);
-  return {
-    docsVersion: getDocsVersion(state),
-    isEnterprise: getIsEnterprise(state),
-    isHosted: state.app.features.isHosted,
-    tenantCapabilities: getTenantCapabilities(state),
-    tokens,
-    versions: state.app.versionInformation.latestRelease
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Downloads);
+export default Downloads;

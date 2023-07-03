@@ -12,8 +12,10 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import Api, { apiUrl, headerNames } from '../api/general-api';
+import { TIMEOUTS } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import * as MonitorConstants from '../constants/monitorConstants';
+import { getDeviceFilters } from '../selectors';
 import { commonErrorFallback, commonErrorHandler, setSnackbar } from './appActions';
 import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
@@ -77,7 +79,7 @@ export const getIssueCountsByType =
   (type, options = {}) =>
   (dispatch, getState) => {
     const state = getState();
-    const { filters = state.devices.filters, group, status, ...remainder } = options;
+    const { filters = getDeviceFilters(state), group, status, ...remainder } = options;
     const { applicableFilters: nonMonitorFilters, filterTerms } = convertDeviceListStateToFilters({
       ...remainder,
       filters,
@@ -135,7 +137,7 @@ export const changeNotificationSetting =
             channel,
             enabled
           }),
-          dispatch(setSnackbar(`Successfully ${enabled ? 'en' : 'dis'}abled ${channel} alerts`, 5000))
+          dispatch(setSnackbar(`Successfully ${enabled ? 'en' : 'dis'}abled ${channel} alerts`, TIMEOUTS.fiveSeconds))
         ])
       );
   };

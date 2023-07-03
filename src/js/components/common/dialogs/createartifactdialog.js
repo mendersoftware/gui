@@ -12,13 +12,14 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../../actions/onboardingActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
+import { getOnboardingState } from '../../../selectors';
 import CopyCode from '../copy-code';
 
 const file_modification = `cat >index.html <<EOF
@@ -26,13 +27,17 @@ Hello World!
 EOF
 `;
 
-export const CreateArtifactDialog = ({ advanceOnboarding, setShowCreateArtifactDialog, showCreateArtifactDialog = true }) => {
+export const CreateArtifactDialog = () => {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const { showCreateArtifactDialog } = useSelector(getOnboardingState);
 
   const onClose = () => {
     navigate('/releases');
-    setShowCreateArtifactDialog(false);
-    advanceOnboarding(onboardingSteps.ARTIFACT_CREATION_DIALOG);
+    dispatch(setShowCreateArtifactDialog(false));
+    dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_CREATION_DIALOG));
   };
 
   return (
@@ -60,12 +65,4 @@ export const CreateArtifactDialog = ({ advanceOnboarding, setShowCreateArtifactD
   );
 };
 
-const actionCreators = { advanceOnboarding, setShowCreateArtifactDialog };
-
-const mapStateToProps = state => {
-  return {
-    showCreateArtifactDialog: state.onboarding.showCreateArtifactDialog
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(CreateArtifactDialog);
+export default CreateArtifactDialog;

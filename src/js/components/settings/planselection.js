@@ -16,6 +16,7 @@ import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { PLANS } from '../../constants/appConstants';
+import { isDarkMode } from '../../helpers.js';
 import InfoText from '../common/infotext';
 
 export const useStyles = makeStyles()(theme => ({
@@ -27,7 +28,7 @@ export const useStyles = makeStyles()(theme => ({
       boxShadow: '0 1px 6px rgba(0, 0, 0, 0.15)'
     },
     ['&.active']: {
-      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[50] : theme.palette.grey[400]
+      backgroundColor: isDarkMode(theme.palette.mode) ? theme.palette.grey[50] : theme.palette.grey[400]
     },
     '&.addon': {
       alignItems: 'center',

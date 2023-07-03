@@ -16,7 +16,7 @@ import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
 import { baseUrlToDomain, login, prepareCookies, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
-import { selectors } from '../utils/constants';
+import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Test setup', () => {
   test.describe('basic window checks', () => {
@@ -58,9 +58,9 @@ test.describe('Test setup', () => {
       await page.click(`text=/Sign up/i`);
       console.log(`creating user with username: ${username} and password: ${password}`);
       await page.fill(selectors.email, username);
-      await page.fill(selectors.passwordNew, password);
-      await page.fill(selectors.passwordNew, '');
-      await page.fill(selectors.passwordNew, password);
+      await page.fill(selectors.password, password);
+      await page.fill(selectors.password, '');
+      await page.fill(selectors.password, password);
       await page.fill(selectors.passwordConfirmation, password);
 
       await page.click(`button:has-text('Sign up')`);
@@ -73,10 +73,9 @@ test.describe('Test setup', () => {
       await recaptchaFrame.waitForSelector('#recaptcha-anchor');
       const recaptcha = await recaptchaFrame.$('#recaptcha-anchor');
       await recaptcha.click();
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(timeouts.default);
       await page.click(`button:has-text('Complete')`);
-      await page.waitForTimeout(5000);
-      await page.waitForSelector('text=/License information/i', { timeout: 15000 });
+      await page.waitForSelector(selectors.loggedInText, { timeout: timeouts.fifteenSeconds });
 
       // the following sets the UI up for easier navigation by disabling onboarding
       const domain = baseUrlToDomain(baseUrl);
@@ -85,7 +84,7 @@ test.describe('Test setup', () => {
       const newPage = await context.newPage();
       await newPage.goto(baseUrl);
       await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
-      await newPage.waitForSelector('text=/License information/i');
+      await newPage.waitForSelector(selectors.loggedInText);
       await context.storageState({ path: 'storage.json' });
     });
   });

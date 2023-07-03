@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { Button } from '@mui/material';
@@ -22,7 +22,7 @@ import pluralize from 'pluralize';
 
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
-import { getLimitMaxed, getUserCapabilities } from '../../../../selectors';
+import { getAcceptedDevices, getDeviceLimit, getLimitMaxed, getUserCapabilities } from '../../../../selectors';
 import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
 import Confirm from './../../../common/confirm';
 import Authsetlist from './authsetlist';
@@ -40,43 +40,23 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Authsets = ({
-  acceptedDevices,
-  decommission,
-  deleteAuthset,
-  device,
-  deviceLimit,
-  deviceListRefresh,
-  limitMaxed,
-  showHelptips,
-  updateDeviceAuth,
-  userCapabilities
-}) => {
+export const Authsets = ({ decommission, device, showHelptips }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { total: acceptedDevices = 0 } = useSelector(getAcceptedDevices);
+  const deviceLimit = useSelector(getDeviceLimit);
+  const limitMaxed = useSelector(getLimitMaxed);
+  const userCapabilities = useSelector(getUserCapabilities);
+
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);
-    const postUpdateSteps = () => {
-      deviceListRefresh();
-      setLoading(null);
-    };
-
-    if (status === DEVICE_DISMISSAL_STATE) {
-      return (
-        deleteAuthset(device_id, auth_id)
-          // on finish, change "loading" back to null
-          .finally(postUpdateSteps)
-      );
-    } else {
-      // call API to update authset
-      return (
-        updateDeviceAuth(device_id, auth_id, status)
-          // on finish, change "loading" back to null
-          .finally(postUpdateSteps)
-      );
-    }
+    // call API to update authset
+    const request = status === DEVICE_DISMISSAL_STATE ? dispatch(deleteAuthset(device_id, auth_id)) : dispatch(updateDeviceAuth(device_id, auth_id, status));
+    // on finish, change "loading" back to null
+    return request.finally(() => setLoading(null));
   };
 
   const { canManageDevices } = userCapabilities;
@@ -111,17 +91,4 @@ export const Authsets = ({
   );
 };
 
-const actionCreators = { deleteAuthset, updateDeviceAuth };
-
-const mapStateToProps = (state, ownProps) => {
-  const device = state.devices.byId[ownProps.device.id] || {};
-  return {
-    acceptedCount: state.devices.byStatus.accepted.total || 0,
-    device,
-    deviceLimit: state.devices.limit,
-    limitMaxed: getLimitMaxed(state),
-    userCapabilities: getUserCapabilities(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Authsets);
+export default Authsets;

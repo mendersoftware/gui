@@ -17,7 +17,7 @@ import * as readline from 'readline';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
-import { selectors } from '../utils/constants';
+import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Auditlogs', () => {
   test.use({ storageState: 'storage.json' });
@@ -29,14 +29,14 @@ test.describe('Auditlogs', () => {
     await page.click(`.deviceListItem div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
-    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: 10000 });
+    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: timeouts.tenSeconds });
     await terminalLaunchButton.scrollIntoViewIfNeeded();
     await page.click(`css=.expandedDevice >> text=Remote Terminal session`);
-    await page.waitForSelector(`text=Connection with the device established`, { timeout: 10000 });
+    await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
     expect(await page.isVisible('.terminal.xterm canvas')).toBeTruthy();
 
     // the terminal content might take a bit to get painted - thus the waiting
-    await page.click(selectors.terminalElement, { timeout: 3000 });
+    await page.click(selectors.terminalElement, { timeout: timeouts.default });
 
     await page.type(selectors.terminalText, 'passwd');
     await page.keyboard.press('Enter');

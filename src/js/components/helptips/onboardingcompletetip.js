@@ -12,12 +12,10 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
-
-import { bindActionCreators } from 'redux';
 
 import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/onboardingActions';
@@ -28,18 +26,22 @@ import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { CompletionButton } from './deploymentcompletetip';
 
-export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getDevicesByStatus, setOnboardingComplete, url }) => {
+export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
   const timer = useRef();
+  const dispatch = useDispatch();
+  const docsVersion = useSelector(getDocsVersion);
+  const url = useSelector(getDemoDeviceAddress) || targetUrl;
+
   useEffect(() => {
-    getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted)
+    dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted))
       .then(tasks => {
-        return Promise.all(tasks[tasks.length - 1].deviceAccu.ids.map(getDeviceById));
+        return Promise.all(tasks[tasks.length - 1].deviceAccu.ids.map(id => dispatch(getDeviceById(id))));
       })
       .finally(() => {
-        timer.current = setTimeout(() => setOnboardingComplete(true), 120000);
+        timer.current = setTimeout(() => dispatch(setOnboardingComplete(true)), 120000);
       });
     return () => {
-      setOnboardingComplete(true);
+      dispatch(setOnboardingComplete(true));
       clearTimeout(timer.current);
     };
   }, []);
@@ -91,7 +93,7 @@ export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getD
           </div>
           <div className="flexbox">
             <div style={{ flexGrow: 1 }} />
-            <Button variant="contained" color="secondary" onClick={() => setOnboardingComplete(true)}>
+            <Button variant="contained" color="secondary" onClick={() => dispatch(setOnboardingComplete(true))}>
               Close
             </Button>
           </div>
@@ -103,15 +105,4 @@ export const OnboardingCompleteTip = ({ anchor, docsVersion, getDeviceById, getD
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getDeviceById, getDevicesByStatus, setOnboardingComplete }, dispatch);
-};
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    docsVersion: getDocsVersion(state),
-    url: getDemoDeviceAddress(state) || ownProps.targetUrl
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingCompleteTip);
+export default OnboardingCompleteTip;

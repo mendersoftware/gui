@@ -17,41 +17,48 @@ import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import {
+  ALL_DEVICES,
   ATTRIBUTE_SCOPES,
   DEVICE_ISSUE_OPTIONS,
   DEVICE_LIST_MAXIMUM_LENGTH,
   DEVICE_ONLINE_CUTOFF,
+  DEVICE_STATES,
   EXTERNAL_PROVIDER,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
 import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
-import { attributeDuplicateFilter, duplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
+import { attributeDuplicateFilter, duplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper, versionCompare } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
 export const getFeatures = state => state.app.features;
-const getRolesById = state => state.users.rolesById;
-const getOrganization = state => state.organization.organization;
-const getAcceptedDevices = state => state.devices.byStatus.accepted;
-const getDevicesById = state => state.devices.byId;
+export const getRolesById = state => state.users.rolesById;
+export const getOrganization = state => state.organization.organization;
+export const getAcceptedDevices = state => state.devices.byStatus.accepted;
+const getDevicesByStatus = state => state.devices.byStatus;
+export const getDevicesById = state => state.devices.byId;
 const getGroupsById = state => state.devices.groups.byId;
+const getSelectedGroup = state => state.devices.groups.selectedGroup;
 const getSearchedDevices = state => state.app.searchState.deviceIds;
 const getListedDevices = state => state.devices.deviceList.deviceIds;
 const getFilteringAttributes = state => state.devices.filteringAttributes;
+export const getDeviceFilters = state => state.devices.filters || [];
 const getFilteringAttributesFromConfig = state => state.devices.filteringAttributesConfig.attributes;
-const getDeviceLimit = state => state.devices.limit;
+export const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
-const getShowHelptips = state => state.users.showHelptips;
-const getGlobalSettings = state => state.users.globalSettings;
+export const getShowHelptips = state => state.users.showHelptips;
+export const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
-const getReleasesById = state => state.releases.byId;
+export const getReleasesById = state => state.releases.byId;
 const getListedReleases = state => state.releases.releasesList.releaseIds;
-const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
+export const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
 const getDeploymentsById = state => state.deployments.byId;
 const getDeploymentsByStatus = state => state.deployments.byStatus;
+export const getVersionInformation = state => state.app.versionInformation;
 
 export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
 export const getUserSettings = state => state.users.userSettings;
+export const getIsPreview = createSelector([getVersionInformation], ({ Integration }) => versionCompare(Integration, 'next') > -1);
 
 export const getHas2FA = createSelector(
   [getCurrentUser],
@@ -82,6 +89,26 @@ export const getMappedDevicesList = createSelector(
   listItemMapper
 );
 
+export const getDeviceCountsByStatus = createSelector([getDevicesByStatus], byStatus =>
+  Object.values(DEVICE_STATES).reduce((accu, state) => {
+    accu[state] = byStatus[state].total || 0;
+    return accu;
+  }, {})
+);
+
+export const getSelectedGroupInfo = createSelector(
+  [getAcceptedDevices, getGroupsById, getSelectedGroup],
+  ({ total: acceptedDeviceTotal }, groupsById, selectedGroup) => {
+    let groupCount = acceptedDeviceTotal;
+    let groupFilters = [];
+    if (selectedGroup && groupsById[selectedGroup]) {
+      groupCount = groupsById[selectedGroup].total;
+      groupFilters = groupsById[selectedGroup].filters || [];
+    }
+    return { groupCount, selectedGroup, groupFilters };
+  }
+);
+
 const defaultIdAttribute = Object.freeze({ attribute: 'id', scope: ATTRIBUTE_SCOPES.identity });
 export const getIdAttribute = createSelector([getGlobalSettings], ({ id_attribute = { ...defaultIdAttribute } }) => id_attribute);
 
@@ -94,7 +121,8 @@ export const getFilterAttributes = createSelector(
   ({ previousFilters }, { identityAttributes, inventoryAttributes, systemAttributes, tagAttributes }) => {
     const deviceNameAttribute = { key: 'name', value: 'Name', scope: ATTRIBUTE_SCOPES.tags, category: ATTRIBUTE_SCOPES.tags, priority: 1 };
     const deviceIdAttribute = { key: 'id', value: 'Device ID', scope: ATTRIBUTE_SCOPES.identity, category: ATTRIBUTE_SCOPES.identity, priority: 1 };
-    const checkInAttribute = { key: 'updated_ts', value: 'Last check-in', scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 };
+    const checkInAttribute = { key: 'check_in_time', value: 'Latest activity', scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 };
+    const updateAttribute = { ...checkInAttribute, key: 'updated_ts', value: 'Last inventory update' };
     const firstRequestAttribute = { key: 'created_ts', value: 'First request', scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 };
     const attributes = [
       ...previousFilters.map(item => ({
@@ -109,6 +137,7 @@ export const getFilterAttributes = createSelector(
       ...inventoryAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.inventory, category: ATTRIBUTE_SCOPES.inventory, priority: 2 })),
       ...tagAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.tags, category: ATTRIBUTE_SCOPES.tags, priority: 3 })),
       checkInAttribute,
+      updateAttribute,
       firstRequestAttribute,
       ...systemAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 }))
     ];
@@ -149,7 +178,8 @@ export const getOfflineThresholdSettings = createSelector([getGlobalSettings], (
   intervalUnit: offlineThreshold?.intervalUnit || DEVICE_ONLINE_CUTOFF.intervalName
 }));
 
-export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips }, showHelptips) => ({
+export const getOnboardingState = createSelector([getOnboarding, getShowHelptips], ({ complete, progress, showTips, ...remainder }, showHelptips) => ({
+  ...remainder,
   complete,
   progress,
   showHelptips,
@@ -222,7 +252,9 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
     canReadUsers,
     canTroubleshoot,
     canUploadReleases,
-    canWriteDevices
+    canWriteDevices,
+    groupsPermissions: uiPermissions.groups,
+    releasesPermissions: uiPermissions.releases
   };
 });
 
@@ -230,6 +262,7 @@ export const getTenantCapabilities = createSelector(
   [getFeatures, getOrganization, getIsEnterprise],
   (
     {
+      hasAddons,
       hasAuditlogs: isAuditlogEnabled,
       hasDeviceConfig: isDeviceConfigEnabled,
       hasDeviceConnect: isDeviceConnectEnabled,
@@ -241,9 +274,10 @@ export const getTenantCapabilities = createSelector(
   ) => {
     const canDelta = isEnterprise || plan === PLANS.professional.value;
     const hasAuditlogs = isAuditlogEnabled && (!isHosted || isEnterprise || plan === PLANS.professional.value);
-    const hasDeviceConfig = isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled)));
-    const hasDeviceConnect = isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled)));
-    const hasMonitor = isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled)));
+    const hasDeviceConfig = hasAddons || (isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled))));
+    const hasDeviceConnect =
+      hasAddons || (isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled))));
+    const hasMonitor = hasAddons || (isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled))));
     return {
       canDelta,
       canRetry: canDelta,
@@ -284,6 +318,22 @@ export const getDeviceTypes = createSelector([getAcceptedDevices, getDevicesById
     }, {})
   )
 );
+
+export const getGroupNames = createSelector([getGroupsById, getUserRoles, (_, options = {}) => options], (groupsById, { uiPermissions }, { staticOnly }) => {
+  // eslint-disable-next-line no-unused-vars
+  const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = groupsById;
+  if (staticOnly) {
+    return Object.keys(uiPermissions.groups).sort();
+  }
+  return Object.keys(
+    Object.entries(groups).reduce((accu, [groupName, group]) => {
+      if (group.filterId || uiPermissions.groups[ALL_DEVICES]) {
+        accu[groupName] = group;
+      }
+      return accu;
+    }, uiPermissions.groups)
+  ).sort();
+});
 
 const getReleaseMappingDefaults = () => ({});
 export const getReleasesList = createSelector([getReleasesById, getListedReleases, getReleaseMappingDefaults], listItemMapper);

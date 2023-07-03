@@ -164,6 +164,26 @@ exports[`DeviceList Component renders correctly 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="loaderContainer shrunk"
+      >
+        <div
+          class="small  loader"
+        >
+          <span
+            class="dot dot_1"
+          />
+          <span
+            class="dot dot_2"
+          />
+          <span
+            class="dot dot_3"
+          />
+          <span
+            class="dot dot_4"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </div>"

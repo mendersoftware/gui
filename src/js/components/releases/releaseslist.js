@@ -15,7 +15,7 @@ import React, { useMemo, useRef } from 'react';
 
 import { makeStyles } from 'tss-react/mui';
 
-import { SORTING_OPTIONS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, canAccess as canShow } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -23,8 +23,6 @@ import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import { RelativeTime } from '../common/time';
-
-const canShow = () => true;
 
 const columns = [
   {
@@ -108,14 +106,17 @@ export const ReleasesList = ({ artifactIncluded, features, onboardingState, onSe
       ) : (
         <>
           <DetailsTable columns={applicableColumns} items={releases} onItemClick={onSelect} sort={sort} onChangeSorting={onChangeSorting} tableRef={repoRef} />
-          <Pagination
-            className="margin-top-none"
-            count={potentialTotal}
-            rowsPerPage={perPage}
-            onChangePage={onChangePagination}
-            onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
-            page={page}
-          />
+          <div className="flexbox">
+            <Pagination
+              className="margin-top-none"
+              count={potentialTotal}
+              rowsPerPage={perPage}
+              onChangePage={onChangePagination}
+              onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}
+              page={page}
+            />
+            <Loader show={isLoading} small />
+          </div>
           {onboardingComponent}
         </>
       )}

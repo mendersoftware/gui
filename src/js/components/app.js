@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
 import { useIdleTimer, workerTimers } from 'react-idle-timer';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { CssBaseline } from '@mui/material';
@@ -24,14 +24,13 @@ import { makeStyles } from 'tss-react/mui';
 import Cookies from 'universal-cookie';
 
 import { parseEnvironmentInfo, setSnackbar } from '../actions/appActions';
-import { cancelFileUpload } from '../actions/releaseActions';
-import { logoutUser, saveUserSettings, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
+import { logoutUser, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
 import { expirySet, getToken, updateMaxAge } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import ErrorBoundary from '../errorboundary';
-import { toggle } from '../helpers';
+import { isDarkMode, toggle } from '../helpers';
 import { getOnboardingState, getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
@@ -88,26 +87,22 @@ const useStyles = makeStyles()(() => ({
   }
 }));
 
-export const AppRoot = ({
-  currentUser,
-  logoutUser,
-  mode,
-  onboardingState,
-  parseEnvironmentInfo,
-  setAccountActivationCode,
-  setShowConnectingDialog,
-  showDeviceConnectionDialog,
-  showDismissHelptipsDialog,
-  setSnackbar,
-  snackbar,
-  trackingCode
-}) => {
+export const AppRoot = () => {
   const [showSearchResult, setShowSearchResult] = useState(false);
   const navigate = useNavigate();
   const { pathname = '', hash } = useLocation();
 
+  const dispatch = useDispatch();
+  const currentUser = useSelector(state => state.users.currentUser);
+  const onboardingState = useSelector(getOnboardingState);
+  const showDismissHelptipsDialog = useSelector(state => !state.onboarding.complete && state.onboarding.showTipsDialog);
+  const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
+  const snackbar = useSelector(state => state.app.snackbar);
+  const trackingCode = useSelector(state => state.app.trackerCode);
+  const { mode } = useSelector(getUserSettings);
+
   useEffect(() => {
-    parseEnvironmentInfo();
+    dispatch(parseEnvironmentInfo());
     if (!trackingCode) {
       return;
     }
@@ -141,7 +136,7 @@ export const AppRoot = ({
       const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
       page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
     } else if (page.startsWith(activationPath)) {
-      setAccountActivationCode(page.substring(activationPath.length + 1));
+      dispatch(setAccountActivationCode(page.substring(activationPath.length + 1)));
       navigate('/settings/my-profile', { replace: true });
     }
     Tracking.pageview(page);
@@ -150,7 +145,7 @@ export const AppRoot = ({
   const onIdle = () => {
     if (expirySet() && currentUser) {
       // logout user and warn
-      return logoutUser('Your session has expired. You have been automatically logged out due to inactivity.').catch(updateMaxAge);
+      return dispatch(logoutUser('Your session has expired. You have been automatically logged out due to inactivity.')).catch(updateMaxAge);
     }
   };
 
@@ -159,7 +154,7 @@ export const AppRoot = ({
   const onToggleSearchResult = () => setShowSearchResult(toggle);
 
   const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
-  const theme = createTheme(mode === 'dark' ? darkTheme : lightTheme);
+  const theme = createTheme(isDarkMode(mode) ? darkTheme : lightTheme);
 
   const { classes } = useStyles();
 
@@ -179,7 +174,7 @@ export const AppRoot = ({
             </div>
             {onboardingComponent ? onboardingComponent : null}
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
-            {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => setShowConnectingDialog(false)} />}
+            {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => dispatch(setShowConnectingDialog(false))} />}
           </div>
         ) : (
           <div className={classes.public}>
@@ -187,25 +182,11 @@ export const AppRoot = ({
             <Footer />
           </div>
         )}
-        <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
+        <SharedSnackbar snackbar={snackbar} setSnackbar={message => dispatch(setSnackbar(message))} />
         <Uploads />
       </>
     </ThemeProvider>
   );
 };
 
-const actionCreators = { cancelFileUpload, logoutUser, parseEnvironmentInfo, saveUserSettings, setAccountActivationCode, setShowConnectingDialog, setSnackbar };
-
-const mapStateToProps = state => {
-  return {
-    currentUser: state.users.currentUser,
-    onboardingState: getOnboardingState(state),
-    showDismissHelptipsDialog: !state.onboarding.complete && state.onboarding.showTipsDialog,
-    showDeviceConnectionDialog: state.users.showConnectDeviceDialog,
-    snackbar: state.app.snackbar,
-    trackingCode: state.app.trackerCode,
-    mode: getUserSettings(state).mode
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(AppRoot);
+export default AppRoot;

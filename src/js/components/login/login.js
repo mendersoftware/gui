@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { ChevronRight, Help as HelpIcon } from '@mui/icons-material';
@@ -28,7 +28,7 @@ import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS, locations } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
-import { getCurrentUser } from '../../selectors';
+import { getCurrentUser, getFeatures } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
@@ -133,37 +133,39 @@ export const OAuthHeader = ({ buttonProps, type }) => (
   </>
 );
 
-export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackbar }) => {
+export const Login = () => {
   const [noExpiry, setNoExpiry] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const [has2FA, setHas2FA] = useState(false);
   const twoFARef = useRef();
+  const dispatch = useDispatch();
+  const currentUser = useSelector(getCurrentUser);
+  const { isHosted } = useSelector(getFeatures);
 
   useEffect(() => {
-    clearAllRetryTimers(setSnackbar);
+    clearAllRetryTimers(message => dispatch(setSnackbar(message)));
     if (getToken()) {
-      logoutUser();
+      dispatch(logoutUser());
     }
     const loginError = cookies.get('error');
     if (loginError) {
-      setSnackbar(loginError, TIMEOUTS.refreshDefault);
+      dispatch(setSnackbar(loginError, TIMEOUTS.refreshDefault));
       cookies.remove('error');
     }
     return () => {
-      setSnackbar('');
+      dispatch(setSnackbar(''));
     };
   }, []);
 
   useEffect(() => {
     if (currentUser.id) {
-      setSnackbar('');
+      dispatch(setSnackbar(''));
     }
   }, [currentUser]);
 
   const onLoginClick = useCallback(
     loginData => {
       // set no expiry in localstorage to remember checkbox value and avoid any influence of expiration time that might occur with cookies
-      loginUser(loginData, noExpiry).catch(err => {
+      dispatch(loginUser(loginData, noExpiry)).catch(err => {
         // don't reset the state once it was set - thus not setting `has2FA` solely based on the existence of 2fa in the error
         if (err?.error?.includes('2fa')) {
           setHas2FA(true);
@@ -171,14 +173,6 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
       });
     },
     [noExpiry]
-  );
-
-  const onSetRef = useCallback(
-    ref => {
-      twoFARef.current = ref;
-      setRefresh(!refresh);
-    },
-    [refresh]
   );
 
   const onOAuthClick = ({ target: { textContent } }) => {
@@ -228,7 +222,7 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
                   id="token2fa"
                   validations="isLength:6,isNumeric"
                   required={true}
-                  setControlRef={onSetRef}
+                  controlRef={twoFARef}
                 />
               ) : (
                 <div />
@@ -260,13 +254,4 @@ export const Login = ({ currentUser, isHosted, loginUser, logoutUser, setSnackba
   );
 };
 
-const actionCreators = { loginUser, logoutUser, setSnackbar };
-
-const mapStateToProps = state => {
-  return {
-    currentUser: getCurrentUser(state),
-    isHosted: state.app.features.isHosted
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Login);
+export default Login;

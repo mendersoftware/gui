@@ -5,7 +5,7 @@
 import type { FilterPredicate } from "./FilterPredicate";
 
 /**
- * Inventory filter assigned to the deployment
+ * Filter definition
  */
 export type Filter = {
   /**

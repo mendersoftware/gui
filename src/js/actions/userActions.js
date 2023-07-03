@@ -105,7 +105,7 @@ export const logoutUser = reason => (dispatch, getState) => {
 };
 
 export const passwordResetStart = email => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email: email }).catch(err =>
+  GeneralApi.post(`${useradmApiUrl}/auth/password-reset/start`, { email }).catch(err =>
     commonErrorHandler(err, `The password reset request cannot be processed:`, dispatch, undefined, true)
   );
 
@@ -161,6 +161,8 @@ export const getUser = id => dispatch =>
       user
     ])
   );
+
+export const initializeSelf = () => dispatch => dispatch(getUser(UserConstants.OWN_USER_ID)).then(() => dispatch(initializeAppData()));
 
 export const updateUserColumnSettings = (columns, currentUserId) => (dispatch, getState) => {
   const userId = currentUserId ?? getCurrentUser(getState()).id;

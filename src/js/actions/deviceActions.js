@@ -13,11 +13,12 @@ import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
-import { SORTING_OPTIONS, UPLOAD_PROGRESS, emptyChartSelection } from '../constants/appConstants';
+import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
 import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
 import {
+  getDeviceFilters,
   getDeviceTwinIntegrations,
   getGroups as getGroupsSelector,
   getIdAttribute,
@@ -49,17 +50,14 @@ const defaultAttributes = [
   { scope: 'monitor', attribute: 'alerts' },
   { scope: 'system', attribute: 'created_ts' },
   { scope: 'system', attribute: 'updated_ts' },
+  { scope: 'system', attribute: 'check_in_time' },
   { scope: 'system', attribute: 'group' },
   { scope: 'tags', attribute: 'name' }
 ];
 
-export const getSearchEndpoint = hasReporting => {
-  return hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`;
-};
+export const getSearchEndpoint = hasReporting => (hasReporting ? `${reportingApiUrl}/devices/search` : `${inventoryApiUrlV2}/filters/search`);
 
-const getAttrsEndpoint = hasReporting => {
-  return hasReporting ? `${reportingApiUrl}/devices/search/attributes` : `${inventoryApiUrlV2}/filters/attributes`;
-};
+const getAttrsEndpoint = hasReporting => (hasReporting ? `${reportingApiUrl}/devices/search/attributes` : `${inventoryApiUrlV2}/filters/attributes`);
 
 export const getGroups = () => (dispatch, getState) =>
   GeneralApi.get(`${inventoryApiUrl}/groups`).then(res => {
@@ -112,14 +110,14 @@ export const removeDevicesFromGroup = (group, deviceIds) => dispatch =>
         group,
         deviceIds
       }),
-      dispatch(setSnackbar(`The ${pluralize('devices', deviceIds.length)} ${pluralize('were', deviceIds.length)} removed from the group`, 5000))
+      dispatch(setSnackbar(`The ${pluralize('devices', deviceIds.length)} ${pluralize('were', deviceIds.length)} removed from the group`, TIMEOUTS.fiveSeconds))
     ])
   );
 
 const getGroupNotification = (newGroup, selectedGroup) => {
   const successMessage = 'The group was updated successfully';
   if (newGroup === selectedGroup) {
-    return [successMessage, 5000];
+    return [successMessage, TIMEOUTS.fiveSeconds];
   }
   return [
     <>
@@ -171,7 +169,7 @@ export const removeStaticGroup = groupName => (dispatch, getState) => {
       }),
       dispatch(getGroups()),
       dispatch(selectGroup(selectedGroup)),
-      dispatch(setSnackbar('Group was removed successfully', 5000))
+      dispatch(setSnackbar('Group was removed successfully', TIMEOUTS.fiveSeconds))
     ]);
   });
 };
@@ -184,7 +182,7 @@ const filterProcessors = {
   $lte: val => Number(val) || val,
   $in: val => ('' + val).split(',').map(i => i.trim()),
   $nin: val => ('' + val).split(',').map(i => i.trim()),
-  $exists: () => true,
+  $exists: yes,
   $nexists: () => false
 };
 const filterAliases = {
@@ -272,7 +270,7 @@ export const removeDynamicGroup = groupName => (dispatch, getState) => {
         type: DeviceConstants.REMOVE_DYNAMIC_GROUP,
         groups
       }),
-      dispatch(setSnackbar('Group was removed successfully', 5000))
+      dispatch(setSnackbar('Group was removed successfully', TIMEOUTS.fiveSeconds))
     ]);
   });
 };
@@ -332,7 +330,8 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.identity_data = { ...storedIdentity, ...identity, ...(device.identity_data ? device.identity_data : {}) };
       device.status = status ? status : device.status || identity.status;
       device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
-      device.updated_ts = getLatestTs(getLatestTs(system.updated_ts, device.updated_ts), stateDevice.updated_ts);
+      device.updated_ts = getLatestTs(getLatestTs(getLatestTs(device.check_in_time, device.updated_ts), system.updated_ts), stateDevice.updated_ts);
+      device.isNew = new Date(device.created_ts) > new Date(state.app.newThreshold);
       device.isOffline = new Date(device.updated_ts) < new Date(state.app.offlineThreshold);
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
@@ -452,8 +451,7 @@ export const getAllDynamicGroupDevices = group => (dispatch, getState) => {
 };
 
 export const setDeviceFilters = filters => (dispatch, getState) => {
-  const state = getState();
-  if (deepCompare(filters, state.devices.filters)) {
+  if (deepCompare(filters, getDeviceFilters(getState()))) {
     return Promise.resolve();
   }
   return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_FILTERS, filters }));
@@ -644,7 +642,7 @@ export const getDevicesByStatus =
   (dispatch, getState) => {
     const { filterSelection, group, selectedIssues = [], page = defaultPage, perPage = defaultPerPage, sortOptions = [], selectedAttributes = [] } = options;
     const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({
-      filters: filterSelection ?? getState().devices.filters,
+      filters: filterSelection ?? getDeviceFilters(getState()),
       group: group ?? getState().devices.groups.selectedGroup,
       groups: getState().devices.groups,
       offlineThreshold: getState().app.offlineThreshold,
@@ -927,10 +925,10 @@ export const deviceFileUpload = (deviceId, path, file) => (dispatch, getState) =
     dispatch({ type: UPLOAD_PROGRESS, uploads }),
     GeneralApi.uploadPut(`${deviceConnect}/devices/${deviceId}/upload`, formData, e => dispatch(progress(e, uploadId)), cancelSource.signal)
   ])
-    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', 5000))))
+    .then(() => Promise.resolve(dispatch(setSnackbar('Upload successful', TIMEOUTS.fiveSeconds))))
     .catch(err => {
       if (isCancel(err)) {
-        return dispatch(setSnackbar('The upload has been cancelled', 5000));
+        return dispatch(setSnackbar('The upload has been cancelled', TIMEOUTS.fiveSeconds));
       }
       return commonErrorHandler(err, `Error uploading file to device.`, dispatch);
     })
@@ -974,11 +972,12 @@ const maybeUpdateDevicesByStatus = (deviceId, authId) => (dispatch, getState) =>
   return Promise.resolve();
 };
 
-export const updateDeviceAuth = (deviceId, authId, status) => dispatch =>
+export const updateDeviceAuth = (deviceId, authId, status) => (dispatch, getState) =>
   GeneralApi.put(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}/status`, { status })
     .then(() => Promise.all([dispatch(getDeviceAuth(deviceId)), dispatch(setSnackbar('Device authorization status was updated successfully'))]))
     .catch(err => commonErrorHandler(err, 'There was a problem updating the device authorization status:', dispatch))
-    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
+    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))))
+    .finally(() => dispatch(setDeviceListState({ refreshTrigger: !getState().devices.deviceList.refreshTrigger })));
 
 export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => {
   let devices = getState().devices.byId;
@@ -1016,11 +1015,12 @@ export const updateDevicesAuth = (deviceIds, status) => (dispatch, getState) => 
   });
 };
 
-export const deleteAuthset = (deviceId, authId) => dispatch =>
+export const deleteAuthset = (deviceId, authId) => (dispatch, getState) =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}/auth/${authId}`)
     .then(() => Promise.all([dispatch(setSnackbar('Device authorization status was updated successfully'))]))
     .catch(err => commonErrorHandler(err, 'There was a problem updating the device authorization status:', dispatch))
-    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
+    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))))
+    .finally(() => dispatch(setDeviceListState({ refreshTrigger: !getState().devices.deviceList.refreshTrigger })));
 
 export const preauthDevice = authset => dispatch =>
   GeneralApi.post(`${deviceAuthV2}/devices`, authset)
@@ -1031,13 +1031,15 @@ export const preauthDevice = authset => dispatch =>
       commonErrorHandler(err, 'The device could not be added:', dispatch);
       return Promise.reject();
     })
-    .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', 5000))));
+    .then(() => Promise.resolve(dispatch(setSnackbar('Device was successfully added to the preauthorization list', TIMEOUTS.fiveSeconds))));
 
-export const decommissionDevice = (deviceId, authId) => dispatch =>
+export const decommissionDevice = (deviceId, authId) => (dispatch, getState) =>
   GeneralApi.delete(`${deviceAuthV2}/devices/${deviceId}`)
     .then(() => Promise.resolve(dispatch(setSnackbar('Device was decommissioned successfully'))))
     .catch(err => commonErrorHandler(err, 'There was a problem decommissioning the device:', dispatch))
-    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))));
+    .then(() => Promise.resolve(dispatch(maybeUpdateDevicesByStatus(deviceId, authId))))
+    // trigger reset of device list list!
+    .finally(() => dispatch(setDeviceListState({ refreshTrigger: !getState().devices.deviceList.refreshTrigger })));
 
 export const getDeviceConfig = deviceId => dispatch =>
   GeneralApi.get(`${deviceConfig}/${deviceId}`)
@@ -1085,7 +1087,7 @@ export const setDeviceTags = (deviceId, tags) => dispatch =>
       { headers }
     )
       .catch(err => commonErrorHandler(err, `There was an error setting tags for device ${deviceId}.`, dispatch, 'Please check your connection.'))
-      .then(() => Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } })));
+      .then(() => Promise.all([dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, tags } }), dispatch(setSnackbar('Device name changed'))]));
   });
 
 export const getDeviceTwin = (deviceId, integration) => (dispatch, getState) => {
@@ -1221,5 +1223,32 @@ export const getGatewayDevices = deviceId => (dispatch, getState) => {
     let tasks = ids.map(deviceId => dispatch(getDeviceInfo(deviceId)));
     tasks.push(dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...getState().devices.byId[deviceId], gatewayIds: ids } }));
     return Promise.all(tasks);
+  });
+};
+
+export const geoAttributes = ['geo-lat', 'geo-lon'].map(attribute => ({ attribute, scope: 'inventory' }));
+export const getDevicesInBounds = (bounds, group) => (dispatch, getState) => {
+  const state = getState();
+  const { filterTerms } = convertDeviceListStateToFilters({
+    group: group === DeviceConstants.ALL_DEVICES ? undefined : group,
+    groups: state.devices.groups,
+    status: DEVICE_STATES.accepted
+  });
+  return GeneralApi.post(getSearchEndpoint(state.app.features.hasReporting), {
+    page: 1,
+    per_page: MAX_PAGE_SIZE,
+    filters: filterTerms,
+    attributes: geoAttributes,
+    geo_bounding_box_filter: {
+      geo_bounding_box: {
+        location: {
+          top_left: { lat: bounds._northEast.lat, lon: bounds._southWest.lng },
+          bottom_right: { lat: bounds._southWest.lat, lon: bounds._northEast.lng }
+        }
+      }
+    }
+  }).then(({ data }) => {
+    const { devicesById } = reduceReceivedDevices(data, [], getState());
+    return Promise.resolve(dispatch({ type: DeviceConstants.RECEIVE_DEVICES, devicesById }));
   });
 };

@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { CloudUpload } from '@mui/icons-material';
 import { Button, Tab, Tabs } from '@mui/material';
@@ -23,7 +23,7 @@ import pluralize from 'pluralize';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
-import { createArtifact, getReleases, removeArtifact, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
+import { createArtifact, getReleases, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getDeviceTypes, getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
@@ -137,27 +137,25 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
   );
 };
 
-export const Releases = props => {
-  const {
-    advanceOnboarding,
-    artifactIncluded,
-    demoArtifactLink,
-    getReleases,
-    onboardingState,
-    features,
-    hasReleases,
-    releases,
-    releasesListState,
-    releaseTags,
-    selectedRelease,
-    selectRelease,
-    setReleasesListState,
-    setShowCreateArtifactDialog,
-    tenantCapabilities,
-    uploading,
-    userCapabilities
-  } = props;
+export const Releases = () => {
+  const demoArtifactLink = useSelector(state => state.app.demoArtifactLink);
+  const deviceTypes = useSelector(getDeviceTypes);
+  const features = useSelector(getFeatures);
+  const hasReleases = useSelector(
+    state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
+  );
+  const onboardingState = useSelector(getOnboardingState);
+  const { artifactIncluded } = onboardingState;
+  const pastCount = useSelector(state => state.deployments.byStatus.finished.total);
+  const releases = useSelector(getReleasesList);
+  const releasesListState = useSelector(state => state.releases.releasesList);
+  const releaseTags = useSelector(state => state.releases.releaseTags);
+  const selectedRelease = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
+  const tenantCapabilities = useSelector(getTenantCapabilities);
+  const uploading = useSelector(state => state.app.uploading);
+  const userCapabilities = useSelector(getUserCapabilities);
   const { canUploadReleases } = userCapabilities;
+  const dispatch = useDispatch();
 
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
@@ -177,9 +175,9 @@ export const Releases = props => {
   }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, tab, JSON.stringify(selectedTags)]);
 
   useEffect(() => {
-    setReleasesListState({ selectedTags: locationParams.tags });
+    dispatch(setReleasesListState({ selectedTags: locationParams.tags }));
     if (locationParams.selectedRelease) {
-      selectRelease(locationParams.selectedRelease);
+      dispatch(selectRelease(locationParams.selectedRelease));
     }
   }, [JSON.stringify(locationParams.tags), locationParams.selectedRelease]);
 
@@ -188,21 +186,21 @@ export const Releases = props => {
       return;
     }
     if (releases.length === 1) {
-      advanceOnboarding(onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP);
+      dispatch(advanceOnboarding(onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP));
     }
     if (selectedRelease.Name) {
-      advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING);
+      dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING));
     }
   }, [onboardingState.complete, onboardingState.progress, releases.length, selectedRelease.Name]);
 
   useEffect(() => {
     const { selectedRelease, tags, ...remainder } = locationParams;
     if (selectedRelease) {
-      selectRelease(selectedRelease);
+      dispatch(selectRelease(selectedRelease));
     }
-    setReleasesListState({ ...remainder, selectedTags: tags });
+    dispatch(setReleasesListState({ ...remainder, selectedTags: tags }));
     clearInterval(artifactTimer.current);
-    artifactTimer.current = setInterval(getReleases, refreshArtifactsLength);
+    artifactTimer.current = setInterval(() => dispatch(getReleases()), refreshArtifactsLength);
     return () => {
       clearInterval(artifactTimer.current);
     };
@@ -210,7 +208,7 @@ export const Releases = props => {
 
   const onUploadClick = () => {
     if (releases.length) {
-      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
+      dispatch(advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP));
     }
     setShowAddArtifactDialog(true);
   };
@@ -220,7 +218,7 @@ export const Releases = props => {
       onFileUploadClick(acceptedFiles[0]);
     }
     if (rejectedFiles.length) {
-      setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null);
+      dispatch(setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null));
     }
   };
 
@@ -245,7 +243,7 @@ export const Releases = props => {
     );
     uploadArtifactOnboardingComponent = getOnboardingComponentFor(
       onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP,
-      { ...onboardingState, setShowCreateArtifactDialog },
+      { ...onboardingState, setShowCreateArtifactDialog: state => dispatch(setShowCreateArtifactDialog(state)) },
       anchor,
       uploadArtifactOnboardingComponent
     );
@@ -262,17 +260,17 @@ export const Releases = props => {
           hasReleases={hasReleases}
           onUploadClick={onUploadClick}
           releasesListState={releasesListState}
-          setReleasesListState={setReleasesListState}
+          setReleasesListState={state => dispatch(setReleasesListState(state))}
         />
         {hasReleases ? (
           <ContentComponent
             artifactIncluded={artifactIncluded}
             features={features}
             onboardingState={onboardingState}
-            onSelect={selectRelease}
+            onSelect={id => dispatch(selectRelease(id))}
             releases={releases}
             releasesListState={releasesListState}
-            setReleasesListState={setReleasesListState}
+            setReleasesListState={state => dispatch(setReleasesListState(state))}
             tenantCapabilities={tenantCapabilities}
           />
         ) : (
@@ -290,7 +288,14 @@ export const Releases = props => {
       {!showAddArtifactDialog && uploadArtifactOnboardingComponent}
       {showAddArtifactDialog && (
         <AddArtifactDialog
-          {...props}
+          advanceOnboarding={step => dispatch(advanceOnboarding(step))}
+          createArtifact={(meta, file) => dispatch(createArtifact(meta, file))}
+          deviceTypes={deviceTypes}
+          onboardingState={onboardingState}
+          pastCount={pastCount}
+          releases={releases}
+          setSnackbar={(...args) => dispatch(setSnackbar(...args))}
+          uploadArtifact={(meta, file) => dispatch(uploadArtifact(meta, file))}
           onCancel={() => setShowAddArtifactDialog(false)}
           onUploadStarted={() => setShowAddArtifactDialog(false)}
           selectedFile={selectedFile}
@@ -300,36 +305,4 @@ export const Releases = props => {
   );
 };
 
-const actionCreators = {
-  advanceOnboarding,
-  createArtifact,
-  getReleases,
-  removeArtifact,
-  selectRelease,
-  setReleasesListState,
-  setShowCreateArtifactDialog,
-  setSnackbar,
-  uploadArtifact
-};
-
-const mapStateToProps = state => {
-  return {
-    artifactIncluded: state.onboarding.artifactIncluded,
-    demoArtifactLink: state.app.demoArtifactLink,
-    deviceTypes: getDeviceTypes(state),
-    features: getFeatures(state),
-    hasReleases: !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal),
-    onboardingState: getOnboardingState(state),
-    pastCount: state.deployments.byStatus.finished.total,
-    releases: getReleasesList(state),
-    releasesListState: state.releases.releasesList,
-    releaseTags: state.releases.releaseTags,
-    selectedRelease: state.releases.byId[state.releases.selectedRelease] ?? {},
-    showRemoveDialog: state.releases.showRemoveDialog,
-    tenantCapabilities: getTenantCapabilities(state),
-    uploading: state.app.uploading,
-    userCapabilities: getUserCapabilities(state)
-  };
-};
-
-export default connect(mapStateToProps, actionCreators)(Releases);
+export default Releases;

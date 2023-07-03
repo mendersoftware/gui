@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 /**
- * Status of a tenant account.
+ * Admission status of the device.
  */
 export type Status = {
   status: Status.status;
@@ -11,8 +11,9 @@ export type Status = {
 
 export namespace Status {
   export enum status {
-    ACTIVE = "active",
-    INACTIVE = "inactive",
-    SUSPENDED = "suspended",
+    PENDING = "pending",
+    ACCEPTED = "accepted",
+    REJECTED = "rejected",
+    PREAUTHORIZED = "preauthorized",
   }
 }

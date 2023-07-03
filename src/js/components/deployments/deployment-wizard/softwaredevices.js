@@ -62,8 +62,11 @@ export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
 };
 
 export const getDeploymentTargetText = ({ deployment, devicesById, idAttribute }) => {
-  const { devices = [], group = '', name = '', type = DEPLOYMENT_TYPES.software } = deployment;
-  const deviceList = (isUUID(name) && devicesById[name] ? [devicesById[name]] : Array.isArray(devices) ? devices : Object.values(devices)) ?? [];
+  const { devices = {}, group = '', name = '', type = DEPLOYMENT_TYPES.software } = deployment;
+  let deviceList = Array.isArray(devices) ? devices : Object.values(devices);
+  if (isUUID(name) && devicesById[name]) {
+    deviceList = [devicesById[name]];
+  }
   if (type !== DEPLOYMENT_TYPES.configuration && (!deviceList.length || group || (deployment.name !== undefined && !isUUID(name)))) {
     return (group || name) ?? '';
   }
@@ -84,7 +87,7 @@ export const Devices = ({
   deploymentObject,
   getSystemDevices,
   groupRef,
-  groups,
+  groupNames,
   hasDevices,
   hasDynamicGroups,
   hasFullFiltering,
@@ -116,7 +119,6 @@ export const Devices = ({
     setDeploymentSettings(update);
   };
 
-  const groupItems = [ALL_DEVICES, ...Object.keys(groups)];
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
     const devicesLink = getDevicesLink({ devices, group, hasFullFiltering });
     let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
@@ -155,7 +157,7 @@ export const Devices = ({
               filterSelectedOptions
               handleHomeEndKeys
               disabled={!(hasDevices || hasDynamicGroups)}
-              options={groupItems}
+              options={groupNames}
               onChange={deploymentSettingsUpdate}
               renderInput={params => (
                 <TextField {...params} placeholder="Select a device group" InputProps={{ ...params.InputProps }} className={classes.textField} />

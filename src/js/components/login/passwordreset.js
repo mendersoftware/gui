@@ -12,31 +12,20 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { setSnackbar } from '../../actions/appActions';
 import { passwordResetComplete } from '../../actions/userActions';
-import { TIMEOUTS } from '../../constants/appConstants';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 import { PasswordScreenContainer } from './password';
 
-export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
+export const PasswordReset = () => {
   const [confirm, setConfirm] = useState(false);
   const { secretHash } = useParams();
+  const dispatch = useDispatch();
 
-  const _handleSubmit = formData => {
-    if (!formData.hasOwnProperty('password_new')) {
-      return;
-    }
-    if (formData.password_new != formData.password_confirmation) {
-      setSnackbar('The passwords you provided do not match, please check again.', TIMEOUTS.fiveSeconds, '');
-      return;
-    }
-
-    passwordResetComplete(secretHash, formData.password_new).then(() => setConfirm(true));
-  };
+  const handleSubmit = formData => dispatch(passwordResetComplete(secretHash, formData.password)).then(() => setConfirm(true));
 
   return (
     <PasswordScreenContainer title="Change your password">
@@ -49,14 +38,8 @@ export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
             <br />
             Enter a new, secure password of your choice below.
           </p>
-          <Form
-            showButtons={true}
-            buttonColor="primary"
-            onSubmit={formdata => _handleSubmit(formdata)}
-            submitLabel="Save password"
-            submitButtonId="password_button"
-          >
-            <PasswordInput id="password_new" label="Password *" validations="isLength:8" create={true} generate={false} required={true} />
+          <Form showButtons={true} buttonColor="primary" onSubmit={handleSubmit} submitLabel="Save password" submitButtonId="password_button">
+            <PasswordInput id="password" label="Password *" validations="isLength:8" create={true} generate={false} required={true} />
             <PasswordInput id="password_confirmation" label="Confirm password *" validations="isLength:8" required={true} />
           </Form>
         </>
@@ -65,6 +48,4 @@ export const PasswordReset = ({ passwordResetComplete, setSnackbar }) => {
   );
 };
 
-const actionCreators = { passwordResetComplete, setSnackbar };
-
-export default connect(null, actionCreators)(PasswordReset);
+export default PasswordReset;
