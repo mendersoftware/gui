@@ -77,7 +77,6 @@ import {
   uiPermissionsById
 } from '../constants/userConstants';
 import { attributeReducer, receivedInventoryDevice } from './appActions.test';
-import { expectedOnboardingActions } from './onboardingActions.test';
 import {
   createRole,
   createUser,
@@ -365,8 +364,7 @@ const appInitActions = [
       state: 'accepted',
       total: 2
     }
-  },
-  ...expectedOnboardingActions
+  }
 ];
 
 /* eslint-disable sonarjs/no-identical-functions */

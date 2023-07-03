@@ -43,34 +43,6 @@ const defaultOnboardingState = {
   something: 'here'
 };
 
-export const expectedOnboardingActions = [
-  { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: false },
-  { type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value: ['raspberrypi4'] },
-  { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' },
-  { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: null },
-  { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
-  { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'application-update-reminder-tip' },
-  { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false },
-  { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-  {
-    type: UserConstants.SET_USER_SETTINGS,
-    settings: {
-      ...defaultState.users.userSettings,
-      onboarding: {
-        address: 'http://192.168.10.141:85',
-        approach: 'physical',
-        artifactIncluded: null,
-        complete: false,
-        deviceType: ['raspberrypi4'],
-        progress: 'application-update-reminder-tip',
-        showArtifactCreation: false,
-        showTips: true,
-        something: 'here'
-      }
-    }
-  }
-];
-
 describe('onboarding actions', () => {
   it('should pass on onboarding completion', async () => {
     const store = mockStore({ ...defaultState });
@@ -245,7 +217,33 @@ describe('onboarding actions', () => {
     const store = mockStore({ ...defaultState });
     const stepNames = Object.keys(onboardingSteps);
     await store.dispatch(getOnboardingState(stepNames[0]));
-    const expectedActions = expectedOnboardingActions;
+    const expectedActions = [
+      { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: false },
+      { type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value: ['raspberrypi4'] },
+      { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' },
+      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: null },
+      { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
+      { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'application-update-reminder-tip' },
+      { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false },
+      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      {
+        type: UserConstants.SET_USER_SETTINGS,
+        settings: {
+          ...defaultState.users.userSettings,
+          onboarding: {
+            address: 'http://192.168.10.141:85',
+            approach: 'physical',
+            artifactIncluded: null,
+            complete: false,
+            deviceType: ['raspberrypi4'],
+            progress: 'application-update-reminder-tip',
+            showArtifactCreation: false,
+            showTips: true,
+            something: 'here'
+          }
+        }
+      }
+    ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));

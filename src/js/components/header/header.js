@@ -31,11 +31,13 @@ import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
 import logo from '../../../assets/img/headerlogo.png';
 import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
-import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
-import { initializeSelf, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
+import { initializeAppData, setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
+import { getOnboardingState } from '../../actions/onboardingActions';
+import { getUser, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { decodeSessionToken } from '../../helpers';
+import * as UserConstants from '../../constants/userConstants';
+import { decodeSessionToken, extractErrorMessage } from '../../helpers';
 import {
   getAcceptedDevices,
   getCurrentUser,
@@ -156,7 +158,14 @@ export const Header = ({ mode }) => {
     }
     setGettingUser(true);
     // get current user
-    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
+    return (
+      dispatch(getUser(UserConstants.OWN_USER_ID))
+        .then(() => dispatch(initializeAppData()))
+        // this is allowed to fail if no user information are available
+        .catch(err => console.log(extractErrorMessage(err)))
+        .then(() => dispatch(getOnboardingState()))
+        .finally(() => setGettingUser(false))
+    );
   };
 
   const onLogoutClick = () => {
