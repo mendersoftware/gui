@@ -55,7 +55,6 @@ export const CreateArtifactDialog = () => {
         </>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setShowCreateArtifactDialog(false)}>Cancel</Button>
         <div style={{ flexGrow: 1 }} />
         <Button variant="contained" onClick={onClose}>
           Next
