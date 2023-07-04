@@ -284,7 +284,7 @@ exports[`CreateArtifactDialog Component renders correctly 1`] = `
   margin-left: 8px;
 }
 
-.emotion-14 {
+.emotion-12 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -335,23 +335,23 @@ exports[`CreateArtifactDialog Component renders correctly 1`] = `
   font-weight: bold;
 }
 
-.emotion-14::-moz-focus-inner {
+.emotion-12::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-14.Mui-disabled {
+.emotion-12.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-14 {
+  .emotion-12 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-14:hover {
+.emotion-12:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -359,30 +359,30 @@ exports[`CreateArtifactDialog Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-14:hover {
+  .emotion-12:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-14:active {
+.emotion-12:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-14.Mui-focusVisible {
+.emotion-12.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-14.Mui-disabled {
+.emotion-12.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-14:hover {
+.emotion-12:hover {
   colors: #337a87;
 }
 
-.emotion-14.MuiButton-text {
+.emotion-12.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
@@ -473,21 +473,11 @@ EOF
       <div
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-11"
       >
-        <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-7"
-          tabindex="0"
-          type="button"
-        >
-          Cancel
-          <span
-            class="MuiTouchRipple-root emotion-10"
-          />
-        </button>
         <div
           style="flex-grow: 1;"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-14"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-12"
           tabindex="0"
           type="button"
         >
