@@ -40,7 +40,7 @@ import TextInput from '../../common/forms/textinput';
 
 export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
   const [selectedRoleIds, setSelectedRoleIds] = useState(
-    (user.roles || []).reduce((accu, roleId) => {
+    (user.roles || [rolesByName.admin]).reduce((accu, roleId) => {
       const foundRole = roles[roleId];
       if (foundRole) {
         accu.push(roleId);

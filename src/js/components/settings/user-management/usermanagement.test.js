@@ -27,6 +27,8 @@ import UserManagement from './usermanagement';
 
 const mockStore = configureStore([thunk]);
 
+const dropDownSelector = 'ul[role=listbox]';
+
 describe('UserManagement Component', () => {
   let store;
   // eslint-disable-next-line no-unused-vars
@@ -90,8 +92,8 @@ describe('UserManagement Component', () => {
     expect(screen.getByRole('button', { name: /Save/i })).toBeDisabled();
     const selectButton = screen.getByText(/roles/i).parentNode.querySelector('[role=button]');
     await user.click(selectButton);
-    const listbox = document.body.querySelector('ul[role=listbox]');
-    const listItem = within(listbox).getByText(/admin/i);
+    const listbox = document.body.querySelector(dropDownSelector);
+    const listItem = within(listbox).getByText(/read access/i);
     await user.click(listItem);
     await user.type(listbox, '{Escape}');
     await user.click(screen.getByRole('button', { name: /Save/i }));
@@ -141,10 +143,18 @@ describe('UserManagement Component', () => {
     await user.click(list[list.length - 1]);
     const selectButton = screen.getByText(/roles/i).parentNode.querySelector('[role=button]');
     await user.click(selectButton);
-    const listbox = document.body.querySelector('ul[role=listbox]');
+    let listbox = document.body.querySelector(dropDownSelector);
+    const adminItem = within(listbox).getByText(/admin/i);
+    await user.click(adminItem);
+    await user.type(listbox, '{Escape}');
+    expect(screen.getByRole('button', { name: /Save/i })).toBeDisabled();
+    await user.click(selectButton);
+    listbox = document.body.querySelector(dropDownSelector);
     const listItem = within(listbox).getByText(/releases/i);
     await user.click(listItem);
     await user.click(screen.getByDisplayValue(defaultState.users.byId[userId].email));
     expect(screen.getByText(/the selected role may prevent/i)).toBeInTheDocument();
+    await user.type(listbox, '{Escape}');
+    expect(screen.getByRole('button', { name: /Save/i })).not.toBeDisabled();
   });
 });
