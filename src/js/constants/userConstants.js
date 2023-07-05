@@ -214,7 +214,8 @@ export const uiPermissionsByArea = {
   deployments: {
     endpoints: [
       { path: /\/(deployments\/deployments)/i, types: [PermissionTypes.Post, PermissionTypes.Put], uiPermissions: [uiPermissionsById.deploy] },
-      { path: /\/(deployments\/deployments)/i, types: [PermissionTypes.Get], uiPermissions: [uiPermissionsById.read] }
+      { path: /\/(deployments\/deployments)/i, types: [PermissionTypes.Get], uiPermissions: [uiPermissionsById.read] },
+      { path: /\/(deployments\/config)/i, types: [PermissionTypes.Get, PermissionTypes.Put], uiPermissions: [uiPermissionsById.manage] }
     ],
     explanation: 'Providing deploy permissions will allow deployments to be created using the releases and devices a user has access to.',
     uiPermissions: [uiPermissionsById.read, uiPermissionsById.deploy],

@@ -666,6 +666,7 @@ export const permissionSets = [
     permissions: [
       { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/auditlogs/.*' } },
       { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/config/.*' } },
       { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/deployments/.*' } },
       { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/deployments/releases/.*' } },
       { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/devauth/.*' } },
@@ -795,7 +796,7 @@ const expectedParsedRoles = {
     uiPermissions: {
       ...emptyUiPermissions,
       auditlog: [uiPermissionsById.read.value],
-      deployments: [uiPermissionsById.deploy.value, uiPermissionsById.read.value],
+      deployments: [uiPermissionsById.manage.value, uiPermissionsById.deploy.value, uiPermissionsById.read.value],
       groups: {
         [DeviceConstants.ALL_DEVICES]: [
           uiPermissionsById.read.value,
