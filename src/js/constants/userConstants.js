@@ -76,7 +76,7 @@ export const uiPermissionsById = {
   deploy: {
     explanations: { groups: `'Deploy' allows the user to deploy software or configuration updates to devices.` },
     permissionLevel: 2,
-    permissionSets: { groups: permissionSetIds.DeployToDevices },
+    permissionSets: { deployments: permissionSetIds.DeployToDevices, groups: permissionSetIds.DeployToDevices },
     title: 'Deploy',
     value: 'deploy',
     verbs: [PermissionTypes.Post]
@@ -162,25 +162,27 @@ export const defaultPermissionSets = {
   [permissionSetIds.ConfigureDevices]: {
     name: permissionSetIds.ConfigureDevices,
     result: {
-      groups: { [ALL_DEVICES]: [uiPermissionsById.configure.value] }
+      deployments: [uiPermissionsById.read.value, uiPermissionsById.deploy.value],
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.configure.value] }
     }
   },
   [permissionSetIds.ConnectToDevices]: {
     name: permissionSetIds.ConnectToDevices,
     result: {
-      groups: { [ALL_DEVICES]: [uiPermissionsById.connect.value] }
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.connect.value] }
     }
   },
   [permissionSetIds.DeployToDevices]: {
     name: permissionSetIds.DeployToDevices,
     result: {
-      groups: { [ALL_DEVICES]: [uiPermissionsById.deploy.value] }
+      deployments: [uiPermissionsById.deploy.value, uiPermissionsById.manage.value, uiPermissionsById.read.value],
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.deploy.value] }
     }
   },
   [permissionSetIds.ManageDevices]: {
     name: permissionSetIds.ManageDevices,
     result: {
-      groups: { [ALL_DEVICES]: [uiPermissionsById.manage.value] }
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.manage.value] }
     }
   },
   [permissionSetIds.ReadDevices]: {
@@ -196,6 +198,11 @@ export const defaultPermissionSets = {
  *              functionality might be affected
  *
  */
+export const scopedPermissionAreas = {
+  groups: { key: 'groups', excessiveAccessSelector: ALL_DEVICES, scopeType: 'DeviceGroups' },
+  releases: { key: 'releases', excessiveAccessSelector: ALL_RELEASES, scopeType: 'Releases' }
+};
+
 export const uiPermissionsByArea = {
   auditlog: {
     endpoints: [{ path: /\/(auditlog)/i, types: [PermissionTypes.Get], uiPermissions: [uiPermissionsById.read] }],
@@ -225,7 +232,7 @@ export const uiPermissionsByArea = {
       { path: /\/(deviceconnect\/devices)/i, types: [PermissionTypes.Get, PermissionTypes.Post], uiPermissions: [uiPermissionsById.connect] }
     ],
     explanation: 'Device group management permissions control the degree to which devices in a group can be accessed and moved to other groups.',
-    scope: 'DeviceGroups',
+    scope: scopedPermissionAreas.groups.scopeType,
     uiPermissions: [uiPermissionsById.read, uiPermissionsById.manage, uiPermissionsById.deploy, uiPermissionsById.configure, uiPermissionsById.connect],
     title: 'Group Management'
   },
