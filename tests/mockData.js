@@ -31,7 +31,6 @@ import { initialState as initialOnboardingState } from '../src/js/reducers/onboa
 import { initialState as initialOrganizationState } from '../src/js/reducers/organizationReducer';
 import { initialState as initialReleasesState } from '../src/js/reducers/releaseReducer';
 import { initialState as initialUsersState } from '../src/js/reducers/userReducer';
-import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
 
 export const undefineds = /undefined|\[object Object\]/;
 export const menderEnvironment = {
@@ -656,6 +655,67 @@ export const permissionSets = [
       { action: 'http', object: { type: 'GET', value: commonEndpoints.artifacts } },
       { action: 'http', object: { type: 'GET', value: commonEndpoints.artifactDetails } },
       { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+/download' } }
+    ]
+  }
+];
+
+export const rbacRoles = [
+  {
+    name: 'dyn',
+    description: '',
+    permissions: [
+      { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: 'dyn' } },
+      { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: 'dyn' } }
+    ]
+  },
+  { name: 'asdasd', description: '123', permissions: [{ action: 'http', object: { type: 'any', value: '/api/management/v1/useradm/.*' } }] },
+  {
+    name: '141sasd',
+    description: '1313adg',
+    permission_sets_with_scope: [
+      { ...defaultPermissionSets.ReadDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
+      { ...defaultPermissionSets.ConnectToDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
+      { ...defaultPermissionSets.ManageUsers }
+    ]
+  },
+  {
+    name: 'kljlkk',
+    description: 'lkl',
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } }]
+  },
+  {
+    name: 'yyyyy',
+    description: 'asd',
+    permission_sets_with_scope: [
+      { ...defaultPermissionSets.ManageDevices, scope: { type: 'DeviceGroups', value: ['dockerclient'] } },
+      { ...defaultPermissionSets.ManageReleases }
+    ]
+  },
+  {
+    name: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
+    description: 'Intended for users responsible for managing deployments, this role can create and abort deployments',
+    permission_sets_with_scope: [{ ...defaultPermissionSets.DeployToDevices }]
+  },
+  {
+    name: 'RBAC_ROLE_REMOTE_TERMINAL',
+    description: `Intended for tech support accounts, this role can access the devices' Remote Terminal.`,
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices }]
+  },
+  { name: 'RBAC_ROLE_PERMIT_ALL', description: '', permission_sets_with_scope: [{ ...defaultPermissionSets.SuperUser }] },
+  {
+    name: 'RBAC_ROLE_OBSERVER',
+    description:
+      'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ReadReleases }, { ...defaultPermissionSets.ReadDevices }]
+  },
+  {
+    name: 'RBAC_ROLE_CI',
+    description:
+      'Intended for automation accounts building software (e.g. CI/CD systems), this role can only manage Artifacts, including upload new Artifacts and delete Artifacts. It does not have access to Devices or Deployments.',
+    permission_sets_with_scope: [
+      { ...defaultPermissionSets.ReadReleases },
+      { ...defaultPermissionSets.ManageReleases },
+      { ...defaultPermissionSets.UploadArtifacts }
     ]
   }
 ];
