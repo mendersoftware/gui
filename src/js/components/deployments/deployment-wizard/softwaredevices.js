@@ -70,7 +70,7 @@ export const getDeploymentTargetText = ({ deployment, devicesById, idAttribute }
   if (type !== DEPLOYMENT_TYPES.configuration && (!deviceList.length || group || (deployment.name !== undefined && !isUUID(name)))) {
     return (group || name) ?? '';
   }
-  return deviceList.map(device => getDeviceIdentityText({ device, idAttribute }) ?? device?.id).join(', ');
+  return deviceList.map(device => getDeviceIdentityText({ device, idAttribute }) ?? device?.id).join(', ') || name;
 };
 
 export const ReleasesWarning = ({ lacksReleases }) => (
