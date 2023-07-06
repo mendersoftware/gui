@@ -967,9 +967,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
         <form
           autocomplete="off"
           class=""
+          novalidate=""
         >
           <div
             class="MuiFormControl-root  required emotion-6"
+            style="width: 400px;"
           >
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-7"
@@ -981,10 +983,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             <div
               class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-8"
               required=""
-              style="width: 400px; max-width: 100%;"
             >
               <input
                 aria-invalid="false"
+                autocomplete="off"
                 class="MuiInputBase-input MuiInput-input emotion-9"
                 id="email"
                 name="email"
@@ -996,23 +998,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             </div>
             <p
               class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-10"
-              id="component-error-text"
             />
           </div>
           <div
             class="edit-pass"
-            id="password_new-holder"
           >
             <div
               class="password-wrapper"
             >
               <div
                 class="MuiFormControl-root emotion-6"
+                style="width: 400px;"
               >
                 <label
                   class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-12"
                   data-shrink="true"
-                  for="password_new"
+                  for="password"
                 >
                   <div
                     class="flexbox center-aligned"
@@ -1034,13 +1035,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                 </label>
                 <div
                   class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-8"
-                  style="width: 400px;"
                 >
                   <input
                     aria-invalid="false"
+                    autocomplete="off"
                     class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-9"
-                    id="password_new"
-                    name="password_new"
+                    id="password"
+                    name="password"
                     placeholder="Password"
                     type="password"
                     value=""
@@ -1072,7 +1073,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                 </div>
                 <p
                   class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-10"
-                  id="component-error-text"
                 />
               </div>
               <div
@@ -1090,26 +1090,23 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
                 </button>
               </div>
             </div>
-            <div>
-              <div
-                class="help-text"
-                id="pass-strength"
-              >
-                Strength: 
-                <meter
-                  high="3.9"
-                  low="2.5"
-                  max="4"
-                  min="0"
-                  optimum="4"
-                  value=""
-                />
-              </div>
+            <div
+              class="help-text"
+              id="pass-strength"
+            >
+              Strength: 
+              <meter
+                high="3.9"
+                low="2.5"
+                max="4"
+                min="0"
+                optimum="4"
+                value=""
+              />
             </div>
           </div>
           <label
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-23"
-            validations=""
           >
             <span
               class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-24"
@@ -1142,14 +1139,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
           </label>
           <div
             class="flexbox"
-            style="justify-content: flex-end; margin: 24px 0px -16px 0px;"
+            style="justify-content: flex-end; margin-top: 32px;"
           >
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-29"
               disabled=""
               id="submit_button"
               tabindex="-1"
-              type="button"
+              type="submit"
             >
               Create user
             </button>

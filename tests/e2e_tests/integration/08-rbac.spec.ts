@@ -67,6 +67,8 @@ test.describe('RBAC functionality', () => {
     if (['enterprise', 'staging'].includes(environment)) {
       const roleInput = await page.locator('label:has-text("Roles") >> ..');
       await roleInput.locator('[role="button"]').click();
+      // first we need to deselect the default admin role
+      await page.getByRole('option', { name: 'Admin' }).click();
       await page.locator('text=testRole').click();
       await page.press('body', 'Escape');
     }

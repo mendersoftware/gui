@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Close as CloseIcon } from '@mui/icons-material';
 // material ui
-import { Drawer, IconButton, Typography } from '@mui/material';
+import { ClickAwayListener, Drawer, IconButton, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
@@ -123,39 +123,41 @@ export const SearchResult = ({ onToggleSearchResult, open = true }) => {
   };
 
   return (
-    <Drawer
-      anchor="top"
-      classes={classes}
-      disableEnforceFocus
-      open={open}
-      ModalProps={{ className: classes.drawerOffset, BackdropProps: { className: classes.drawerOffset } }}
-      PaperProps={{ className: `${classes.drawerOffset} ${classes.paper}` }}
-      SlideProps={{ direction: 'left' }}
-    >
-      <div className="flexbox center-aligned margin-bottom-small space-between">
-        <ResultTitle onClick={onClearClick} term={searchTerm} total={searchTotal} />
-        <IconButton onClick={onToggleSearchResult} aria-label="close" size="large">
-          <CloseIcon />
-        </IconButton>
-      </div>
-      {!!searchTotal && (
-        <Devicelist
-          className=""
-          columnHeaders={columnHeaders}
-          customColumnSizes={customColumnSizes}
-          deviceListState={{ perPage: 10, sort: {} }}
-          devices={devices}
-          idAttribute={idAttribute}
-          onboardingState={onboardingState}
-          onSort={onSortChange}
-          PaginationProps={{ rowsPerPageOptions: [10] }}
-          pageTotal={searchTotal}
-          onPageChange={handlePageChange}
-          pageLoading={isSearching}
-          onExpandClick={onDeviceSelect}
-        />
-      )}
-    </Drawer>
+    <ClickAwayListener onClickAway={onToggleSearchResult}>
+      <Drawer
+        anchor="top"
+        classes={classes}
+        disableEnforceFocus
+        open={open}
+        ModalProps={{ className: classes.drawerOffset, BackdropProps: { className: classes.drawerOffset } }}
+        PaperProps={{ className: `${classes.drawerOffset} ${classes.paper}` }}
+        SlideProps={{ direction: 'left' }}
+      >
+        <div className="flexbox center-aligned margin-bottom-small space-between">
+          <ResultTitle onClick={onClearClick} term={searchTerm} total={searchTotal} />
+          <IconButton onClick={onToggleSearchResult} aria-label="close" size="large">
+            <CloseIcon />
+          </IconButton>
+        </div>
+        {!!searchTotal && (
+          <Devicelist
+            className=""
+            columnHeaders={columnHeaders}
+            customColumnSizes={customColumnSizes}
+            deviceListState={{ perPage: 10, sort: {} }}
+            devices={devices}
+            idAttribute={idAttribute}
+            onboardingState={onboardingState}
+            onSort={onSortChange}
+            PaginationProps={{ rowsPerPageOptions: [10] }}
+            pageTotal={searchTotal}
+            onPageChange={handlePageChange}
+            pageLoading={isSearching}
+            onExpandClick={onDeviceSelect}
+          />
+        )}
+      </Drawer>
+    </ClickAwayListener>
   );
 };
 

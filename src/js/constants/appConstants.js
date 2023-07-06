@@ -136,3 +136,6 @@ export const ADDONS = {
 
 export const yes = () => true;
 export const canAccess = yes;
+
+export const DARK_MODE = 'dark';
+export const LIGHT_MODE = 'light';

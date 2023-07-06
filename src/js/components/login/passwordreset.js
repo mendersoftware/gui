@@ -15,9 +15,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { setSnackbar } from '../../actions/appActions';
 import { passwordResetComplete } from '../../actions/userActions';
-import { TIMEOUTS } from '../../constants/appConstants';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 import { PasswordScreenContainer } from './password';
@@ -27,15 +25,7 @@ export const PasswordReset = () => {
   const { secretHash } = useParams();
   const dispatch = useDispatch();
 
-  const handleSubmit = formData => {
-    if (!formData.hasOwnProperty('password_new')) {
-      return;
-    }
-    if (formData.password_new != formData.password_confirmation) {
-      return dispatch(setSnackbar('The passwords you provided do not match, please check again.', TIMEOUTS.fiveSeconds, ''));
-    }
-    dispatch(passwordResetComplete(secretHash, formData.password_new)).then(() => setConfirm(true));
-  };
+  const handleSubmit = formData => dispatch(passwordResetComplete(secretHash, formData.password)).then(() => setConfirm(true));
 
   return (
     <PasswordScreenContainer title="Change your password">
@@ -49,7 +39,7 @@ export const PasswordReset = () => {
             Enter a new, secure password of your choice below.
           </p>
           <Form showButtons={true} buttonColor="primary" onSubmit={handleSubmit} submitLabel="Save password" submitButtonId="password_button">
-            <PasswordInput id="password_new" label="Password *" validations="isLength:8" create={true} generate={false} required={true} />
+            <PasswordInput id="password" label="Password *" validations="isLength:8" create={true} generate={false} required={true} />
             <PasswordInput id="password_confirmation" label="Confirm password *" validations="isLength:8" required={true} />
           </Form>
         </>

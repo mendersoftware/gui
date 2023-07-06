@@ -11,7 +11,7 @@ COPY . ./
 RUN npm run build
 
 
-FROM nginxinc/nginx-unprivileged:1.25.0-alpine AS unprivileged
+FROM nginxinc/nginx-unprivileged:1.25.1-alpine AS unprivileged
 EXPOSE 8090
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG
@@ -25,7 +25,7 @@ HEALTHCHECK --interval=8s --timeout=15s --start-period=120s --retries=128 CMD wg
 CMD ["nginx"]
 
 
-FROM nginx:1.25.0-alpine AS production
+FROM nginx:1.25.1-alpine AS production
 EXPOSE 8080
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG

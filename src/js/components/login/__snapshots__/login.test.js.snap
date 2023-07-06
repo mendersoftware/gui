@@ -906,9 +906,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
         </h4>
         <form
           class="emotion-16"
+          novalidate=""
         >
           <div
             class="MuiFormControl-root  required emotion-17"
+            style="width: 400px;"
           >
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-18"
@@ -920,7 +922,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
             <div
               class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-19"
               required=""
-              style="width: 400px; max-width: 100%;"
             >
               <input
                 aria-invalid="false"
@@ -935,18 +936,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
             </div>
             <p
               class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-21"
-              id="component-error-text"
             />
           </div>
           <div
             class="margin-bottom-small"
-            id="password-holder"
           >
             <div
               class="password-wrapper"
             >
               <div
                 class="MuiFormControl-root required emotion-17"
+                style="width: 400px;"
               >
                 <label
                   class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-18"
@@ -958,7 +958,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
                 <div
                   class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd emotion-19"
                   required=""
-                  style="width: 400px;"
                 >
                   <input
                     aria-invalid="false"
@@ -996,14 +995,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
                 </div>
                 <p
                   class="MuiFormHelperText-root MuiFormHelperText-sizeMedium emotion-21"
-                  id="component-error-text"
                 />
               </div>
             </div>
           </div>
           <div
             class="flexbox"
-            validations=""
           >
             <a
               class="emotion-31"
@@ -1012,12 +1009,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
               Forgot your password?
             </a>
           </div>
-          <div
-            validations=""
-          />
+          <div />
           <label
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-32"
-            validations=""
           >
             <span
               class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-33"
@@ -1057,7 +1051,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
               disabled=""
               id="login_button"
               tabindex="-1"
-              type="button"
+              type="submit"
             >
               Log in
             </button>

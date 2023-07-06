@@ -20,11 +20,9 @@ import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
 import { cleanUp, logout } from '../auth';
 import * as AppConstants from '../constants/appConstants';
-import { ALL_DEVICES } from '../constants/deviceConstants';
 import * as OnboardingConstants from '../constants/onboardingConstants';
-import { ALL_RELEASES } from '../constants/releaseConstants';
 import * as UserConstants from '../constants/userConstants';
-import { duplicateFilter, extractErrorMessage, preformatWithRequestID } from '../helpers';
+import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 import { commonErrorFallback, commonErrorHandler, initializeAppData, setOfflineThreshold, setSnackbar } from './appActions';
@@ -38,6 +36,7 @@ const {
   OWN_USER_ID,
   PermissionTypes,
   rolesById: defaultRolesById,
+  scopedPermissionAreas,
   twoFAStates,
   uiPermissionsByArea,
   uiPermissionsById,
@@ -241,23 +240,51 @@ export const disableUser2fa =
 
 /* RBAC related things follow:  */
 
+const mergePermissions = (existingPermissions = { ...emptyUiPermissions }, addedPermissions) =>
+  Object.entries(existingPermissions).reduce(
+    (accu, [key, value]) => {
+      let values;
+      if (!accu[key]) {
+        accu[key] = value;
+        return accu;
+      }
+      if (Array.isArray(value)) {
+        values = [...value, ...accu[key]].filter(duplicateFilter);
+      } else {
+        values = mergePermissions(accu[key], { ...value });
+      }
+      accu[key] = values;
+      return accu;
+    },
+    { ...addedPermissions }
+  );
+
 const mapHttpPermission = permission =>
-  Object.entries(uiPermissionsByArea).reduce((accu, [area, definition]) => {
-    const endpointMatches = definition.endpoints.filter(
-      endpoint => endpoint.path.test(permission.value) && (endpoint.types.includes(permission.type) || permission.type === PermissionTypes.Any)
-    );
-    if (permission.value === PermissionTypes.Any || (permission.value.includes(apiRoot) && endpointMatches.length)) {
-      const collector = accu[area] || [];
-      const endpointUiPermission = endpointMatches.reduce((endpointAccu, endpoint) => [...endpointAccu, ...endpoint.uiPermissions], []);
-      accu[area] = (endpointUiPermission || definition.uiPermissions).reduce((permissionsAccu, uiPermission) => {
-        if (permission.type === PermissionTypes.Any || (!endpointMatches.length && uiPermission.verbs.some(verb => verb === permission.type))) {
-          permissionsAccu.push(uiPermission.value);
+  Object.entries(uiPermissionsByArea).reduce(
+    (accu, [area, definition]) => {
+      const endpointMatches = definition.endpoints.filter(
+        endpoint => endpoint.path.test(permission.value) && (endpoint.types.includes(permission.type) || permission.type === PermissionTypes.Any)
+      );
+      if (permission.value === PermissionTypes.Any || (permission.value.includes(apiRoot) && endpointMatches.length)) {
+        const endpointUiPermission = endpointMatches.reduce((endpointAccu, endpoint) => [...endpointAccu, ...endpoint.uiPermissions], []);
+        const collector = (endpointUiPermission || definition.uiPermissions)
+          .reduce((permissionsAccu, uiPermission) => {
+            if (permission.type === PermissionTypes.Any || (!endpointMatches.length && uiPermission.verbs.some(verb => verb === permission.type))) {
+              permissionsAccu.push(uiPermission.value);
+            }
+            return permissionsAccu;
+          }, [])
+          .filter(duplicateFilter);
+        if (Array.isArray(accu[area])) {
+          accu[area] = [...accu[area], ...collector].filter(duplicateFilter);
+        } else {
+          accu[area] = mergePermissions(accu[area], { [scopedPermissionAreas[area].excessiveAccessSelector]: collector });
         }
-        return permissionsAccu;
-      }, collector);
-    }
-    return accu;
-  }, {});
+      }
+      return accu;
+    },
+    { ...emptyUiPermissions }
+  );
 
 const permissionActionTypes = {
   any: mapHttpPermission,
@@ -290,22 +317,6 @@ const combinePermissions = (existingPermissions, additionalPermissions = {}) =>
     return accu;
   }, existingPermissions);
 
-const mergePermissions = (existingPermissions = { ...emptyUiPermissions }, addedPermissions) =>
-  Object.entries(existingPermissions).reduce((accu, [key, value]) => {
-    let values;
-    if (!addedPermissions[key]) {
-      accu[key] = value;
-      return accu;
-    }
-    if (Array.isArray(value)) {
-      values = [...value, ...addedPermissions[key]].filter(duplicateFilter);
-    } else {
-      values = combinePermissions({ ...value }, addedPermissions[key]);
-    }
-    accu[key] = values;
-    return accu;
-  }, {});
-
 const tryParseCustomPermission = permission => {
   const uiPermissions = permissionActionTypes[permission.action](permission.object);
   const result = mergePermissions({ ...emptyUiPermissions }, uiPermissions);
@@ -321,11 +332,19 @@ const customPermissionHandler = (accu, permission) => {
   };
 };
 
-const mapPermissionSet = (permissionSetName, names, existingGroupsPermissions = {}, scope) => {
+const mapPermissionSet = (permissionSetName, names, scope, existingGroupsPermissions = {}) => {
   const permission = Object.values(uiPermissionsById).find(permission => permission.permissionSets[scope] === permissionSetName).value;
   const scopedPermissions = names.reduce((accu, name) => combinePermissions(accu, { [name]: [permission] }), existingGroupsPermissions);
   return Object.entries(scopedPermissions).reduce((accu, [key, permissions]) => ({ ...accu, [key]: deriveImpliedAreaPermissions(scope, permissions) }), {});
 };
+
+const isEmptyPermissionSet = permissionSet =>
+  !Object.values(permissionSet).reduce((accu, permissions) => {
+    if (Array.isArray(permissions)) {
+      return accu || !!permissions.length;
+    }
+    return accu || !isEmpty(permissions);
+  }, false);
 
 const parseRolePermissions = ({ permission_sets_with_scope = [], permissions = [] }, permissionSets) => {
   const preliminaryResult = permission_sets_with_scope.reduce(
@@ -336,9 +355,9 @@ const parseRolePermissions = ({ permission_sets_with_scope = [], permissions = [
       }
       const scope = Object.keys(scopedPermissionAreas).find(scope => uiPermissionsByArea[scope].scope === permissionSet.scope?.type);
       if (scope) {
-        const result = mapPermissionSet(permissionSet.name, permissionSet.scope.value, accu.uiPermissions[scope], scope);
+        const result = mapPermissionSet(permissionSet.name, permissionSet.scope.value, scope, accu.uiPermissions[scope]);
         return { ...accu, uiPermissions: { ...accu.uiPermissions, [scope]: result } };
-      } else if (!processor.result) {
+      } else if (isEmptyPermissionSet(processor.result)) {
         return processor.permissions.reduce(customPermissionHandler, accu);
       }
       return {
@@ -395,11 +414,6 @@ export const mapUserRolesToUiPermissions = (userRoles, roles) =>
     { ...emptyUiPermissions }
   );
 
-const scopedPermissionAreas = {
-  groups: { key: 'groups', excessiveAccessSelector: ALL_DEVICES },
-  releases: { key: 'releases', excessiveAccessSelector: ALL_RELEASES }
-};
-
 export const getPermissionSets = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrlv2}/permission_sets?per_page=500`)
     .then(({ data }) => {
@@ -420,9 +434,14 @@ export const getPermissionSets = () => (dispatch, getState) =>
               }, accu),
             { ...emptyUiPermissions, ...(permissionSetObject.result ?? {}) }
           );
-          const scopes = Object.keys(scopedPermissionAreas).filter(key => permissionSetObject.supported_scope_types?.includes(key));
+          const scopes = Object.values(scopedPermissionAreas).reduce((accu, { key, scopeType }) => {
+            if (permissionSetObject.supported_scope_types?.includes(key) || permissionSetObject.supported_scope_types?.includes(scopeType)) {
+              accu.push(key);
+            }
+            return accu;
+          }, []);
           permissionSetObject = scopes.reduce((accu, scope) => {
-            accu.result[scope] = mapPermissionSet(permissionSetObject.name, scopedPermissionAreas[scope].excessiveAccessSelector, scope);
+            accu.result[scope] = mapPermissionSet(permissionSetObject.name, [scopedPermissionAreas[scope].excessiveAccessSelector], scope);
             return accu;
           }, permissionSetObject);
           accu[permissionSet.name] = permissionSetObject;

@@ -17,6 +17,7 @@ import Cookies from 'universal-cookie';
 
 import { defaultState, token, undefineds, userId } from '../../tests/mockData';
 import { render } from '../../tests/setupTests';
+import { DARK_MODE, LIGHT_MODE } from './constants/appConstants.js';
 import {
   FileSize,
   customSort,
@@ -35,6 +36,7 @@ import {
   getRemainderPercent,
   groupDeploymentDevicesStats,
   groupDeploymentStats,
+  isDarkMode,
   isEmpty,
   mapDeviceAttributes,
   preformatWithRequestID,
@@ -597,5 +599,14 @@ describe('deployment stats grouping functions', () => {
       }
     };
     expect(groupDeploymentDevicesStats(deployment)).toEqual({ inprogress: 3, paused: 0, pending: 1, successes: 3, failures: 3 });
+  });
+});
+
+describe('isDarkMode function', () => {
+  it('should return `true` if DARK_MODE was passed in', () => {
+    expect(isDarkMode(DARK_MODE)).toEqual(true);
+  });
+  it('should return `false` if LIGHT_MODE was passed in', () => {
+    expect(isDarkMode(LIGHT_MODE)).toEqual(false);
   });
 });

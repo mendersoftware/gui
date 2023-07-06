@@ -13,69 +13,8 @@
 //    limitations under the License.
 import { rest } from 'msw';
 
-import { defaultPermissionSets, useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
-import { accessTokens, defaultPassword, defaultState, userId as defaultUserId, permissionSets, token } from '../mockData';
-
-export const roles = [
-  {
-    name: 'dyn',
-    description: '',
-    permissions: [
-      { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: 'dyn' } },
-      { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: 'dyn' } }
-    ]
-  },
-  { name: 'asdasd', description: '123', permissions: [{ action: 'http', object: { type: 'any', value: '/api/management/v1/useradm/.*' } }] },
-  {
-    name: '141sasd',
-    description: '1313adg',
-    permission_sets_with_scope: [
-      { ...defaultPermissionSets.ReadDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
-      { ...defaultPermissionSets.ConnectToDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } },
-      { ...defaultPermissionSets.ManageUsers }
-    ]
-  },
-  {
-    name: 'kljlkk',
-    description: 'lkl',
-    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices, scope: { type: 'DeviceGroups', value: ['bestgroup'] } }]
-  },
-  {
-    name: 'yyyyy',
-    description: 'asd',
-    permission_sets_with_scope: [
-      { ...defaultPermissionSets.ManageDevices, scope: { type: 'DeviceGroups', value: ['dockerclient'] } },
-      { ...defaultPermissionSets.ManageReleases }
-    ]
-  },
-  {
-    name: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
-    description: 'Intended for users responsible for managing deployments, this role can create and abort deployments',
-    permission_sets_with_scope: [{ ...defaultPermissionSets.DeployToDevices }]
-  },
-  {
-    name: 'RBAC_ROLE_REMOTE_TERMINAL',
-    description: `Intended for tech support accounts, this role can access the devices' Remote Terminal.`,
-    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices }]
-  },
-  { name: 'RBAC_ROLE_PERMIT_ALL', description: '', permission_sets_with_scope: [{ ...defaultPermissionSets.SuperUser }] },
-  {
-    name: 'RBAC_ROLE_OBSERVER',
-    description:
-      'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
-    permission_sets_with_scope: [{ ...defaultPermissionSets.ReadReleases }, { ...defaultPermissionSets.ReadDevices }]
-  },
-  {
-    name: 'RBAC_ROLE_CI',
-    description:
-      'Intended for automation accounts building software (e.g. CI/CD systems), this role can only manage Artifacts, including upload new Artifacts and delete Artifacts. It does not have access to Devices or Deployments.',
-    permission_sets_with_scope: [
-      { ...defaultPermissionSets.ReadReleases },
-      { ...defaultPermissionSets.ManageReleases },
-      { ...defaultPermissionSets.UploadArtifacts }
-    ]
-  }
-];
+import { useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
+import { accessTokens, defaultPassword, defaultState, userId as defaultUserId, permissionSets, rbacRoles, token } from '../mockData';
 
 export const userHandlers = [
   rest.post(`${useradmApiUrl}/auth/login`, ({ headers }, res, ctx) => {
@@ -130,7 +69,7 @@ export const userHandlers = [
     return res(ctx.status(563));
   }),
   rest.post(`${useradmApiUrl}/users`, ({ body: { email, password } }, res, ctx) => {
-    if ([email, password].every(value => value)) {
+    if (email === 'test@test.com' || [email, password].every(value => value)) {
       return res(ctx.status(200), ctx.json(defaultState.users.byId.a1));
     }
     return res(ctx.status(564));
@@ -147,7 +86,7 @@ export const userHandlers = [
     }
     return res(ctx.status(566));
   }),
-  rest.get(`${useradmApiUrl}/roles`, (req, res, ctx) => res(ctx.json(roles))),
+  rest.get(`${useradmApiUrl}/roles`, (req, res, ctx) => res(ctx.json(rbacRoles))),
   rest.post(`${useradmApiUrl}/roles`, ({ body: { name, permissions } }, res, ctx) => {
     if (
       [name, permissions].every(value => value) &&
@@ -169,7 +108,7 @@ export const userHandlers = [
     }
     return res(ctx.status(569));
   }),
-  rest.get(`${useradmApiUrlv2}/roles`, (req, res, ctx) => res(ctx.json(roles))),
+  rest.get(`${useradmApiUrlv2}/roles`, (req, res, ctx) => res(ctx.json(rbacRoles))),
   rest.post(`${useradmApiUrlv2}/roles`, ({ body: { name, permission_sets_with_scope } }, res, ctx) => {
     if (
       !!name &&

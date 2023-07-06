@@ -20,8 +20,9 @@ import { makeStyles } from 'tss-react/mui';
 import { setSnackbar } from '../../../actions/appActions';
 import { editUser, saveUserSettings } from '../../../actions/userActions';
 import { getToken } from '../../../auth';
+import { DARK_MODE, LIGHT_MODE } from '../../../constants/appConstants';
 import * as UserConstants from '../../../constants/userConstants';
-import { toggle } from '../../../helpers';
+import { isDarkMode, toggle } from '../../../helpers';
 import { getCurrentUser, getFeatures, getIsEnterprise, getUserSettings } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Form from '../../common/forms/form';
@@ -45,7 +46,6 @@ const useStyles = makeStyles()(() => ({
 export const SelfUserManagement = () => {
   const [editEmail, setEditEmail] = useState(false);
   const [editPass, setEditPass] = useState(false);
-  const [emailFormId, setEmailFormId] = useState(new Date());
   const { classes } = useStyles();
   const dispatch = useDispatch();
 
@@ -67,18 +67,10 @@ export const SelfUserManagement = () => {
     }
   };
 
-  const handleEmail = () => {
-    let uniqueId = emailFormId;
-    if (editEmail) {
-      // changing unique id will reset form values
-      uniqueId = new Date();
-    }
-    setEditEmail(toggle);
-    setEmailFormId(uniqueId);
-  };
+  const handleEmail = () => setEditEmail(toggle);
 
   const toggleMode = () => {
-    const newMode = mode === 'dark' ? 'light' : 'dark';
+    const newMode = isDarkMode(mode) ? LIGHT_MODE : DARK_MODE;
     dispatch(saveUserSettings({ mode: newMode }));
   };
 
@@ -99,24 +91,15 @@ export const SelfUserManagement = () => {
         </div>
       ) : (
         <Form
+          defaultValues={{ email }}
           onSubmit={editSubmit}
           handleCancel={handleEmail}
           submitLabel="Save"
           showButtons={editEmail}
           buttonColor="secondary"
           submitButtonId="submit_email"
-          uniqueId={emailFormId}
         >
-          <TextInput
-            disabled={false}
-            focus
-            hint="Email"
-            id="email"
-            InputLabelProps={{ shrink: !!email }}
-            label="Email"
-            validations="isLength:1,isEmail"
-            value={email}
-          />
+          <TextInput disabled={false} hint="Email" id="email" InputLabelProps={{ shrink: !!email }} label="Email" validations="isLength:1,isEmail" />
           <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required={true} />
         </Form>
       )}
@@ -147,7 +130,7 @@ export const SelfUserManagement = () => {
         ))}
       <div className="clickable flexbox space-between margin-top" onClick={toggleMode}>
         <p className="help-content">Enable dark theme</p>
-        <Switch checked={mode === 'dark'} />
+        <Switch checked={isDarkMode(mode)} />
       </div>
       {!isOAuth2 ? (
         canHave2FA && <TwoFactorAuthSetup />

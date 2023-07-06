@@ -20,6 +20,7 @@ import {
   emptyUiPermissions,
   rolesById,
   rolesByName,
+  scopedPermissionAreas,
   twoFAStates,
   uiPermissionsById
 } from '../src/js/constants/userConstants';
@@ -31,7 +32,6 @@ import { initialState as initialOnboardingState } from '../src/js/reducers/onboa
 import { initialState as initialOrganizationState } from '../src/js/reducers/organizationReducer';
 import { initialState as initialReleasesState } from '../src/js/reducers/releaseReducer';
 import { initialState as initialUsersState } from '../src/js/reducers/userReducer';
-import { roles as rbacRoles } from '../tests/__mocks__/userHandlers';
 
 export const undefineds = /undefined|\[object Object\]/;
 export const menderEnvironment = {
@@ -583,7 +583,7 @@ export const permissionSets = [
     object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to deploy to devices',
     permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/(deployments|deviceconfig)/' } }],
-    supported_scope_types: ['DeviceGroups']
+    supported_scope_types: [scopedPermissionAreas.groups.scopeType]
   },
   {
     ...defaultPermissionSets.ConfigureDevices,
@@ -591,7 +591,7 @@ export const permissionSets = [
     object: permissionSetObjectTypes.groups,
     description: 'Set of permissions which allows user to manage configuration of the devices',
     permissions: [{ action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deviceconfig/' } }],
-    supported_scope_types: ['DeviceGroups']
+    supported_scope_types: [scopedPermissionAreas.groups.scopeType]
   },
   {
     ...defaultPermissionSets.ConnectToDevices,
@@ -603,7 +603,7 @@ export const permissionSets = [
       { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+/download\\?path=[^\u0026]+$' } },
       { action: 'http', object: { type: 'PUT', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+/upload$' } }
     ],
-    supported_scope_types: ['DeviceGroups']
+    supported_scope_types: [scopedPermissionAreas.groups.scopeType]
   },
   {
     ...defaultPermissionSets.SuperUser,
@@ -633,7 +633,7 @@ export const permissionSets = [
       { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9])/(deployments|devauth|inventory|deviceconfig|devicemonitor)/' } },
       { action: 'http', object: { type: 'GET', value: '^/api/management/(v[1-9]|0.1.0)/deviceconnect/devices/[^/]+$' } }
     ],
-    supported_scope_types: ['DeviceGroups']
+    supported_scope_types: [scopedPermissionAreas.groups.scopeType]
   },
   {
     ...defaultPermissionSets.ManageDevices,
@@ -645,7 +645,7 @@ export const permissionSets = [
       { action: 'http', object: { type: 'PUT', value: commonEndpoints.deviceManagement } },
       { action: 'http', object: { type: 'DELETE', value: commonEndpoints.deviceManagement } }
     ],
-    supported_scope_types: ['DeviceGroups']
+    supported_scope_types: [scopedPermissionAreas.groups.scopeType]
   },
   {
     ...defaultPermissionSets.ReadReleases,
@@ -657,6 +657,98 @@ export const permissionSets = [
       { action: 'http', object: { type: 'GET', value: commonEndpoints.artifactDetails } },
       { action: 'http', object: { type: 'GET', value: '^/api/management/v1/deployments/artifacts/[^/]+/download' } }
     ]
+  },
+  {
+    ...defaultPermissionSets.Basic,
+    name: 'almostAdmin',
+    object: permissionSetObjectTypes.empty,
+    description: 'Set containing all the permissions.',
+    permissions: [
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/auditlogs/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/config/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/deployments/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deployments/deployments/releases/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/devauth/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deviceconfig/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deviceconnect/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/deviceconnect/devices' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/inventory/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/iot-manager/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/monitor/.*' } },
+      { action: 'http', object: { type: 'any', value: '^/api/management/(v[1-9])/useradm/.*' } }
+    ]
+  }
+];
+
+export const rbacRoles = [
+  {
+    name: 'dyn',
+    description: '',
+    permissions: [
+      { action: 'CREATE_DEPLOYMENT', object: { type: 'DEVICE_GROUP', value: 'dyn' } },
+      { action: 'VIEW_DEVICE', object: { type: 'DEVICE_GROUP', value: 'dyn' } }
+    ]
+  },
+  { name: 'asdasd', description: '123', permissions: [{ action: 'http', object: { type: 'any', value: '/api/management/v1/useradm/.*' } }] },
+  {
+    name: '141sasd',
+    description: '1313adg',
+    permission_sets_with_scope: [
+      { ...defaultPermissionSets.ReadDevices, scope: { type: scopedPermissionAreas.groups.scopeType, value: ['bestgroup'] } },
+      { ...defaultPermissionSets.ConnectToDevices, scope: { type: scopedPermissionAreas.groups.scopeType, value: ['bestgroup'] } },
+      { ...defaultPermissionSets.ManageUsers }
+    ]
+  },
+  {
+    name: 'kljlkk',
+    description: 'lkl',
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices, scope: { type: scopedPermissionAreas.groups.scopeType, value: ['bestgroup'] } }]
+  },
+  {
+    name: 'yyyyy',
+    description: 'asd',
+    permission_sets_with_scope: [
+      { ...defaultPermissionSets.ManageDevices, scope: { type: scopedPermissionAreas.groups.scopeType, value: ['dockerclient'] } },
+      { ...defaultPermissionSets.ManageReleases }
+    ]
+  },
+  {
+    name: 'RBAC_ROLE_DEPLOYMENTS_MANAGER',
+    description: 'Intended for users responsible for managing deployments, this role can create and abort deployments',
+    permission_sets_with_scope: [{ ...defaultPermissionSets.DeployToDevices }]
+  },
+  {
+    name: 'RBAC_ROLE_REMOTE_TERMINAL',
+    description: `Intended for tech support accounts, this role can access the devices' Remote Terminal.`,
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ConnectToDevices }]
+  },
+  { name: 'RBAC_ROLE_PERMIT_ALL', description: '', permission_sets_with_scope: [{ ...defaultPermissionSets.SuperUser }] },
+  {
+    name: 'RBAC_ROLE_OBSERVER',
+    description:
+      'Intended for team leaders or limited tech support accounts, this role can see all Devices, Artifacts and Deployment reports but not make any changes.',
+    permission_sets_with_scope: [{ ...defaultPermissionSets.ReadReleases }, { ...defaultPermissionSets.ReadDevices }]
+  },
+  {
+    name: 'RBAC_ROLE_CI',
+    description:
+      'Intended for automation accounts building software (e.g. CI/CD systems), this role can only manage Artifacts, including upload new Artifacts and delete Artifacts. It does not have access to Devices or Deployments.',
+    permission_sets_with_scope: [
+      { ...defaultPermissionSets.ReadReleases },
+      { ...defaultPermissionSets.ManageReleases },
+      { ...defaultPermissionSets.UploadArtifacts }
+    ]
+  },
+  {
+    name: 'almostAdmin',
+    description: 'almost admin rights',
+    permissions: permissionSets.find(item => item.name === 'almostAdmin')?.permissions
+  },
+  {
+    name: 'almostAdminNew',
+    description: 'almost admin rights',
+    permission_sets_with_scope: Object.values(defaultPermissionSets)
   }
 ];
 
@@ -696,6 +788,51 @@ const expectedParsedRoles = {
       ...emptyUiPermissions,
       groups: { dockerclient: [uiPermissionsById.read.value, uiPermissionsById.manage.value] },
       releases: { [ALL_RELEASES]: [uiPermissionsById.manage.value] }
+    }
+  },
+  almostAdmin: {
+    editable: false,
+    isCustom: true,
+    uiPermissions: {
+      ...emptyUiPermissions,
+      auditlog: [uiPermissionsById.read.value],
+      deployments: [uiPermissionsById.manage.value, uiPermissionsById.deploy.value, uiPermissionsById.read.value],
+      groups: {
+        [DeviceConstants.ALL_DEVICES]: [
+          uiPermissionsById.read.value,
+          // we can't assign deployment permissions to devices here, since the old path based rbac controls don't allow the scoped permissions
+          // uiPermissionsById.deploy.value,
+          uiPermissionsById.manage.value,
+          uiPermissionsById.connect.value,
+          uiPermissionsById.configure.value
+        ]
+      },
+      releases: {
+        [ALL_RELEASES]: [uiPermissionsById.read.value, uiPermissionsById.upload.value, uiPermissionsById.manage.value]
+      },
+      userManagement: [uiPermissionsById.read.value, uiPermissionsById.manage.value]
+    }
+  },
+  almostAdminNew: {
+    editable: false,
+    isCustom: true,
+    uiPermissions: {
+      ...emptyUiPermissions,
+      auditlog: [uiPermissionsById.read.value],
+      deployments: [uiPermissionsById.read.value, uiPermissionsById.deploy.value, uiPermissionsById.manage.value],
+      groups: {
+        [DeviceConstants.ALL_DEVICES]: [
+          uiPermissionsById.read.value,
+          uiPermissionsById.manage.value,
+          uiPermissionsById.deploy.value,
+          uiPermissionsById.connect.value,
+          uiPermissionsById.configure.value
+        ]
+      },
+      releases: {
+        [ALL_RELEASES]: [uiPermissionsById.manage.value, uiPermissionsById.upload.value, uiPermissionsById.read.value]
+      },
+      userManagement: [uiPermissionsById.read.value, uiPermissionsById.manage.value]
     }
   }
 };
