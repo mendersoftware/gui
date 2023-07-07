@@ -20,7 +20,7 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
-import { getIdAttribute, getUserCapabilities } from '../../../selectors';
+import { getDeviceById as getDeviceByIdSelector, getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
 import DeviceDetails, { DetailInformation } from './devicedetails';
@@ -33,7 +33,7 @@ export const PortForward = ({ item, onClose }) => {
   const dispatch = useDispatch();
   const { object = {} } = item;
   const { canReadDevices } = useSelector(getUserCapabilities);
-  const device = useSelector(state => state.devices.byId[object.id]);
+  const device = useSelector(state => getDeviceByIdSelector(state, object.id));
   const { attribute: idAttribute } = useSelector(getIdAttribute);
 
   useEffect(() => {

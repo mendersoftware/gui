@@ -320,13 +320,6 @@ export const generateDeploymentGroupDetails = (filter, groupName) =>
         .join(', ')})`
     : groupName;
 
-export const tryMapDeployments = (accu, id) => {
-  if (accu.state.deployments.byId[id]) {
-    accu.deployments.push(accu.state.deployments.byId[id]);
-  }
-  return accu;
-};
-
 export const mapDeviceAttributes = (attributes = []) =>
   attributes.reduce(
     (accu, attribute) => {

@@ -20,9 +20,8 @@ import { Chip } from '@mui/material';
 
 import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
-import { UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { emptyRole, rolesById } from '../../constants/userConstants';
-import { getFeatures } from '../../selectors';
+import { getFeatures, getGroupsByIdWithoutUngrouped, getReleaseTagsById, getRolesList } from '../../selectors';
 import DetailsTable from '../common/detailstable';
 import RoleDefinition from './roledefinition';
 
@@ -46,13 +45,9 @@ export const RoleManagement = () => {
   const [role, setRole] = useState({ ...emptyRole });
   const dispatch = useDispatch();
   const features = useSelector(getFeatures);
-  const groups = useSelector(state => {
-    // eslint-disable-next-line no-unused-vars
-    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-    return groups;
-  });
-  const releaseTags = useSelector(state => state.releases.releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}));
-  const roles = useSelector(state => Object.entries(state.users.rolesById).map(([id, role]) => ({ id, ...role })));
+  const groups = useSelector(getGroupsByIdWithoutUngrouped);
+  const releaseTags = useSelector(getReleaseTagsById);
+  const roles = useSelector(getRolesList);
 
   useEffect(() => {
     if (Object.keys(groups).length) {

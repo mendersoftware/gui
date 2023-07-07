@@ -22,10 +22,10 @@ import { abortDeployment, setDeploymentsState } from '../../actions/deploymentAc
 import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, listDefaultsByState } from '../../constants/deploymentConstants';
-import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getISOStringBoundaries } from '../../helpers';
-import { getDevicesById, getIsEnterprise, getOnboardingState, getReleasesById, getUserCapabilities } from '../../selectors';
+import { getDevicesById, getGroupsByIdWithoutUngrouped, getIsEnterprise, getOnboardingState, getReleasesById, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -53,11 +53,7 @@ const routes = {
 export const defaultRefreshDeploymentsLength = 30000;
 
 export const Deployments = () => {
-  const groupsById = useSelector(state => {
-    // eslint-disable-next-line no-unused-vars
-    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
-    return groups;
-  });
+  const groupsById = useSelector(getGroupsByIdWithoutUngrouped);
   const devicesById = useSelector(getDevicesById);
   const isEnterprise = useSelector(getIsEnterprise);
   const onboardingState = useSelector(getOnboardingState);

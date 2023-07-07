@@ -13,6 +13,7 @@
 //    limitations under the License.
 import { createSelector } from '@reduxjs/toolkit';
 
+import { defaultReports } from '../actions/deviceActions';
 import { mapUserRolesToUiPermissions } from '../actions/userActions';
 import { PLANS } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
@@ -36,13 +37,18 @@ export const getOrganization = state => state.organization.organization;
 export const getAcceptedDevices = state => state.devices.byStatus.accepted;
 const getDevicesByStatus = state => state.devices.byStatus;
 export const getDevicesById = state => state.devices.byId;
-const getGroupsById = state => state.devices.groups.byId;
+export const getDeviceReports = state => state.devices.reports;
+export const getGroupsById = state => state.devices.groups.byId;
 const getSelectedGroup = state => state.devices.groups.selectedGroup;
 const getSearchedDevices = state => state.app.searchState.deviceIds;
 const getListedDevices = state => state.devices.deviceList.deviceIds;
 const getFilteringAttributes = state => state.devices.filteringAttributes;
 export const getDeviceFilters = state => state.devices.filters || [];
 const getFilteringAttributesFromConfig = state => state.devices.filteringAttributesConfig.attributes;
+export const getSortedFilteringAttributes = createSelector([getFilteringAttributes], filteringAttributes => ({
+  ...filteringAttributes,
+  identityAttributes: [...filteringAttributes.identityAttributes, 'id']
+}));
 export const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
@@ -50,15 +56,40 @@ export const getShowHelptips = state => state.users.showHelptips;
 export const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
 export const getReleasesById = state => state.releases.byId;
+const getReleaseTags = state => state.releases.releaseTags;
 const getListedReleases = state => state.releases.releasesList.releaseIds;
 export const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
 const getDeploymentsById = state => state.deployments.byId;
-const getDeploymentsByStatus = state => state.deployments.byStatus;
+export const getDeploymentsByStatus = state => state.deployments.byStatus;
 export const getVersionInformation = state => state.app.versionInformation;
-
-export const getCurrentUser = state => state.users.byId[state.users.currentUser] || {};
+const getCurrentUserId = state => state.users.currentUser;
+const getUsersById = state => state.users.byId;
+export const getCurrentUser = createSelector([getUsersById, getCurrentUserId], (usersById, userId) => usersById[userId] ?? {});
 export const getUserSettings = state => state.users.userSettings;
 export const getIsPreview = createSelector([getVersionInformation], ({ Integration }) => versionCompare(Integration, 'next') > -1);
+
+export const getDeploymentsSelectionState = state => state.deployments.selectionState;
+
+export const getMappedDeploymentSelection = createSelector(
+  [getDeploymentsSelectionState, (_, deploymentsState) => deploymentsState, getDeploymentsById],
+  (selectionState, deploymentsState, deploymentsById) => {
+    const { selection = [] } = selectionState[deploymentsState] ?? {};
+    return selection.reduce((accu, id) => {
+      if (deploymentsById[id]) {
+        accu.push(deploymentsById[id]);
+      }
+      return accu;
+    }, []);
+  }
+);
+
+export const getDeploymentRelease = createSelector(
+  [getDeploymentsById, getDeploymentsSelectionState, getReleasesById],
+  (deploymentsById, { selectedId }, releasesById) => {
+    const deployment = deploymentsById[selectedId] || {};
+    return deployment.artifact_name && releasesById[deployment.artifact_name] ? releasesById[deployment.artifact_name] : { device_types_compatible: [] };
+  }
+);
 
 export const getHas2FA = createSelector(
   [getCurrentUser],
@@ -69,6 +100,13 @@ export const getDemoDeviceAddress = createSelector([getDevicesList, getOnboardin
   const demoDeviceAddress = `http://${getDemoDeviceAddressHelper(devices, approach)}`;
   return demoArtifactPort ? `${demoDeviceAddress}:${demoArtifactPort}` : demoDeviceAddress;
 });
+
+export const getDeviceReportsForUser = createSelector(
+  [getUserSettings, getCurrentUserId, getGlobalSettings, getDevicesById],
+  ({ reports }, currentUserId, globalSettings, devicesById) => {
+    return reports || globalSettings[`${currentUserId}-reports`] || (Object.keys(devicesById).length ? defaultReports : []);
+  }
+);
 
 const listItemMapper = (byId, ids, { defaultObject = {}, cutOffSize = DEVICE_LIST_MAXIMUM_LENGTH }) => {
   return ids.slice(0, cutOffSize).reduce((accu, id) => {
@@ -95,6 +133,15 @@ export const getDeviceCountsByStatus = createSelector([getDevicesByStatus], bySt
     return accu;
   }, {})
 );
+
+export const getDeviceById = createSelector([getDevicesById, (_, deviceId) => deviceId], (devicesById, deviceId = '') => devicesById[deviceId] ?? {});
+
+export const getDeviceConfigDeployment = createSelector([getDeviceById, getDeploymentsById], (device, deploymentsById) => {
+  const { config = {} } = device;
+  const { deployment_id: configDeploymentId } = config;
+  const deviceConfigDeployment = deploymentsById[configDeploymentId] || {};
+  return { device, deviceConfigDeployment };
+});
 
 export const getSelectedGroupInfo = createSelector(
   [getAcceptedDevices, getGroupsById, getSelectedGroup],
@@ -144,6 +191,9 @@ export const getFilterAttributes = createSelector(
     return attributeDuplicateFilter(attributes, 'key');
   }
 );
+
+// eslint-disable-next-line no-unused-vars
+export const getGroupsByIdWithoutUngrouped = createSelector([getGroupsById], ({ [UNGROUPED_GROUP.id]: ungrouped, ...groups }) => groups);
 
 export const getGroups = createSelector([getGroupsById], groupsById => {
   const groupNames = Object.keys(groupsById).sort();
@@ -202,6 +252,8 @@ export const getAttributesList = createSelector(
   ({ identityAttributes = [], inventoryAttributes = [] }, { identity = [], inventory = [] }) =>
     [...identityAttributes, ...inventoryAttributes, ...identity, ...inventory].filter(duplicateFilter)
 );
+
+export const getRolesList = createSelector([getRolesById], rolesById => Object.entries(rolesById).map(([id, role]) => ({ id, ...role })));
 
 export const getUserRoles = createSelector(
   [getCurrentUser, getRolesById, getIsEnterprise, getFeatures, getOrganization],
@@ -337,6 +389,8 @@ export const getGroupNames = createSelector([getGroupsById, getUserRoles, (_, op
 
 const getReleaseMappingDefaults = () => ({});
 export const getReleasesList = createSelector([getReleasesById, getListedReleases, getReleaseMappingDefaults], listItemMapper);
+
+export const getReleaseTagsById = createSelector([getReleaseTags], releaseTags => releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}));
 
 const relevantDeploymentStates = [DEPLOYMENT_STATES.pending, DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.finished];
 export const DEPLOYMENT_CUTOFF = 3;

@@ -19,18 +19,13 @@ import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material'
 
 import { setSnackbar } from '../../actions/appActions';
 import { toggleHelptips } from '../../actions/userActions';
+import { getDeviceById } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import DocsLink from '../common/docslink';
 import MenderTooltip, { MenderTooltipClickable } from '../common/mendertooltip';
 
 const actionCreators = { setSnackbar, toggleHelptips };
-const mapStateToProps = (state, ownProps) => {
-  let device = {};
-  if (ownProps.deviceId) {
-    device = state.devices.byId[ownProps.deviceId];
-  }
-  return { device };
-};
+const mapStateToProps = (state, ownProps) => ({ device: getDeviceById(state, ownProps.deviceId) });
 
 const HideHelptipsButton = ({ toggleHelptips }) => (
   <p>
