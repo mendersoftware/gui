@@ -27,6 +27,7 @@ import { getReleases } from '../../../actions/releaseActions';
 import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { stringToBoolean } from '../../../helpers';
+import { formatDeviceSearch } from '../../../utils/locationutils';
 import useWindowSize from '../../../utils/resizehook';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
@@ -47,7 +48,7 @@ const hardCodedStyle = {
   }
 };
 
-export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
+export const getDevicesLink = ({ devices, filter, group, hasFullFiltering, name }) => {
   let devicesLink = '/devices';
   if (devices.length && (!name || isUUID(name))) {
     devicesLink = `${devicesLink}?id=${devices[0].id}`;
@@ -58,8 +59,8 @@ export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
       const { systemDeviceIds = [] } = devices[0];
       devicesLink = `${devicesLink}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
     }
-  } else if (group && group !== ALL_DEVICES) {
-    devicesLink = `${devicesLink}?inventory=group:eq:${group}`;
+  } else if (group || filter) {
+    devicesLink = `${devicesLink}?${formatDeviceSearch({ pageState: {}, filters: filter ? [filter] : [], selectedGroup: group })}`;
   }
   return devicesLink;
 };
@@ -102,7 +103,7 @@ export const Devices = ({
   const size = useWindowSize();
   const dispatch = useDispatch();
 
-  const { deploymentDeviceCount = 0, devices = [], group = null } = deploymentObject;
+  const { deploymentDeviceCount = 0, devices = [], filter, group = null } = deploymentObject;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const device = useMemo(() => (devices.length === 1 ? devices[0] : {}), [devices.length]);
 
@@ -125,7 +126,7 @@ export const Devices = ({
   };
 
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
-    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering });
+    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering, filter });
     let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
     let targetDeviceCount = deploymentDeviceCount;
     let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;
@@ -145,7 +146,7 @@ export const Devices = ({
       }
     }
     return { deviceText, devicesLink, targetDeviceCount, targetDevicesText };
-  }, [devices, group, hasFullFiltering, deploymentObject, idAttribute, deploymentDeviceCount, device]);
+  }, [devices, filter, group, hasFullFiltering, deploymentObject, idAttribute, deploymentDeviceCount, device]);
 
   return (
     <>
