@@ -11,8 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
@@ -29,9 +29,11 @@ import { setSnackbar } from '../../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../../actions/deploymentActions';
 import { applyDeviceConfig, setDeviceConfig } from '../../../actions/deviceActions';
 import { saveGlobalSettings } from '../../../actions/userActions';
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
+import { getDeviceConfigDeployment } from '../../../selectors';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
@@ -135,31 +137,27 @@ export const ConfigUpdateFailureActions = ({ hasLog, onSubmit, onCancel, setShow
   </>
 );
 
-export const DeviceConfiguration = ({ defaultConfig = {}, device, deployment = {}, showHelptips }) => {
+export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId }, showHelptips }) => {
+  const { device, deviceConfigDeployment: deployment } = useSelector(state => getDeviceConfigDeployment(state, deviceId));
   const { config = {}, status } = device;
   const { configured = {}, deployment_id, reported = {}, reported_ts, updated_ts } = config;
+  const isRelevantDeployment = deployment.created > updated_ts && (!reported_ts || deployment.finished > reported_ts);
 
   const [changedConfig, setChangedConfig] = useState();
   const [editableConfig, setEditableConfig] = useState();
-  const [isEditDisabled, setIsEditDisabled] = useState(false);
   const [isAborting, setIsAborting] = useState(false);
   const [isEditingConfig, setIsEditingConfig] = useState(false);
   const [isSetAsDefault, setIsSetAsDefault] = useState(false);
   const [isUpdatingConfig, setIsUpdatingConfig] = useState(false);
-  const [shouldUpdateEditor, setShouldUpdateEditor] = useState(false);
   const [showConfigImport, setShowConfigImport] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [updateFailed, setUpdateFailed] = useState();
   const [updateLog, setUpdateLog] = useState();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setShouldUpdateEditor(toggle);
-  }, [isEditingConfig, isUpdatingConfig]);
+  const deploymentTimer = useRef();
 
   useEffect(() => {
     if (!isEmpty(config) && !isEmpty(changedConfig) && !isEditingConfig) {
-      setIsEditDisabled(isUpdatingConfig);
       setIsEditingConfig(isUpdatingConfig || updateFailed);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,48 +167,65 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device, deployment = {
     if (deployment.devices && deployment.devices[device.id]?.log) {
       setUpdateLog(deployment.devices[device.id].log);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(deployment.devices), device.id]);
 
   useEffect(() => {
+    clearInterval(deploymentTimer.current);
+    if (isRelevantDeployment && deployment.status !== DEPLOYMENT_STATES.finished) {
+      deploymentTimer.current = setInterval(() => dispatch(getSingleDeployment(deployment_id)), TIMEOUTS.refreshDefault);
+    } else if (deployment_id && !isRelevantDeployment) {
+      dispatch(getSingleDeployment(deployment_id));
+    }
+    return () => {
+      clearInterval(deploymentTimer.current);
+    };
+  }, [deployment.status, deployment_id, dispatch, isRelevantDeployment]);
+
+  useEffect(() => {
+    if (!isRelevantDeployment) {
+      return;
+    }
     if (deployment.status === DEPLOYMENT_STATES.finished) {
       // we have to rely on the device stats here as the state change might not have propagated to the deployment status
       // leaving all stats at 0 and giving a false impression of deployment success
       const stats = groupDeploymentStats(deployment);
       const deviceStats = groupDeploymentDevicesStats(deployment);
-      setUpdateFailed(deployment.created > updated_ts && deployment.finished > reported_ts && (stats.failures || deviceStats.failures));
+      const updateFailed = !!((stats.failures || deviceStats.failures) && deployment.device_count);
+      setUpdateFailed(updateFailed);
+      setIsEditingConfig(updateFailed);
       setIsUpdatingConfig(false);
     } else if (deployment.status) {
       setChangedConfig(configured);
+      setEditableConfig(configured);
       // we can't rely on the deployment.status to be !== 'finished' since `deployment` is initialized as an empty object
       // and thus the undefined status would also point to an ongoing update
       setIsUpdatingConfig(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(configured), JSON.stringify(deployment), reported_ts, updated_ts]);
+  }, [JSON.stringify(configured), JSON.stringify(deployment.stats), deployment.created, deployment.status, deployment.finished, isRelevantDeployment]);
 
   useEffect(() => {
-    if (!changedConfig && !isEmpty(config) && (!deployment_id || deployment.status)) {
-      let currentConfig = reported;
-      const stats = groupDeploymentStats(deployment);
-      if (deployment.status !== DEPLOYMENT_STATES.finished || (deployment.finished > reported_ts && stats.failures)) {
-        currentConfig = configured;
-      }
-      setChangedConfig(currentConfig);
-      setEditableConfig(currentConfig);
+    if (!isRelevantDeployment) {
+      return;
     }
-    if (deployment.status !== DEPLOYMENT_STATES.finished && deployment_id) {
-      dispatch(getSingleDeployment(deployment_id));
+    if (!changedConfig && !isEmpty(config) && (!deployment_id || deployment.status)) {
+      // let currentConfig = reported;
+      const stats = groupDeploymentStats(deployment);
+      if (deployment.status !== DEPLOYMENT_STATES.finished || stats.failures) {
+        setEditableConfig(configured);
+        setChangedConfig(configured);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, JSON.stringify(config), deployment.status, !changedConfig, deployment_id, JSON.stringify(deployment)]);
+  }, [dispatch, JSON.stringify(config), deployment.status, !changedConfig, JSON.stringify(deployment), isRelevantDeployment]);
 
   const onConfigImport = ({ config, importType }) => {
     let updatedConfig = config;
     if (importType === 'default') {
       updatedConfig = defaultConfig.current;
     }
-    setShouldUpdateEditor(toggle);
     setChangedConfig(updatedConfig);
     setEditableConfig(updatedConfig);
     setShowConfigImport(false);
@@ -220,12 +235,11 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device, deployment = {
 
   const onSetAsDefaultChange = () => setIsSetAsDefault(toggle);
 
-  const onShowLog = () => {
+  const onShowLog = () =>
     dispatch(getDeviceLog(deployment_id, device.id)).then(result => {
       setShowLog(true);
       setUpdateLog(result[1]);
     });
-  };
 
   const onCancel = () => {
     if (!isEmpty(reported)) {
@@ -258,7 +272,6 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device, deployment = {
     return dispatch(setDeviceConfig(device.id, changedConfig))
       .then(() => dispatch(applyDeviceConfig(device.id, { retries: 0 }, isSetAsDefault, changedConfig)))
       .catch(() => {
-        setIsEditDisabled(false);
         setIsEditingConfig(true);
         setUpdateFailed(true);
         setIsUpdatingConfig(false);
@@ -357,12 +370,11 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device, deployment = {
       <div className="relative">
         {isEditingConfig ? (
           <KeyValueEditor
-            disabled={isEditDisabled}
+            disabled={isUpdatingConfig}
             errortext=""
             initialInput={editableConfig}
             inputHelpTipsMap={helpTipsMap}
             onInputChange={setChangedConfig}
-            reset={shouldUpdateEditor}
             showHelptips={showHelptips}
           />
         ) : (

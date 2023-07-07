@@ -18,7 +18,7 @@ import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import * as DeviceActions from '../../../actions/deviceActions';
+import { TIMEOUTS } from '../../../constants/appConstants';
 import Configuration, { ConfigEditingActions, ConfigEmptyNote, ConfigUpToDateNote, ConfigUpdateFailureActions, ConfigUpdateNote } from './configuration';
 
 describe('tiny components', () => {
@@ -44,41 +44,55 @@ describe('tiny components', () => {
 });
 
 describe('Configuration Component', () => {
+  let preloadedState;
   const reportedTime = '2019-01-01T09:25:01.000Z';
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Configuration
-        device={{
-          ...defaultState.devices.byId.a1,
-          config: {
-            configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-            reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-            updated_ts: defaultState.devices.byId.a1.updated_ts,
-            reported_ts: reportedTime
+    preloadedState = {
+      ...defaultState,
+      devices: {
+        ...defaultState.devices,
+        byId: {
+          ...defaultState.devices.byId,
+          [defaultState.devices.byId.a1.id]: {
+            ...defaultState.devices.byId.a1,
+            config: {
+              configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+              reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+              updated_ts: defaultState.devices.byId.a1.updated_ts,
+              reported_ts: reportedTime
+            }
           }
-        }}
-      />
-    );
+        }
+      }
+    };
+    const { baseElement } = render(<Configuration device={preloadedState.devices.byId.a1} />, { preloadedState });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
-  it.only('works as expected', async () => {
+  it('works as expected', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const applyDeviceConfigSpy = jest.spyOn(DeviceActions, 'applyDeviceConfig').mockRejectedValueOnce({}).mockResolvedValue({});
-    const setDeviceConfigSpy = jest.spyOn(DeviceActions, 'setDeviceConfig');
-    let device = {
-      ...defaultState.devices.byId.a1,
-      config: {
-        configured: {},
-        reported: {},
-        updated_ts: defaultState.devices.byId.a1.updated_ts,
-        reported_ts: reportedTime
+    let preloadedState = {
+      ...defaultState,
+      devices: {
+        ...defaultState.devices,
+        byId: {
+          ...defaultState.devices.byId,
+          [defaultState.devices.byId.a1.id]: {
+            ...defaultState.devices.byId.a1,
+            config: {
+              configured: {},
+              reported: {},
+              updated_ts: defaultState.devices.byId.a1.updated_ts,
+              reported_ts: reportedTime
+            }
+          }
+        }
       }
     };
-    let ui = <Configuration device={device} />;
-    const { rerender } = render(ui);
+    let ui = <Configuration device={preloadedState.devices.byId.a1} />;
+    const { rerender } = render(ui, { preloadedState });
     expect(screen.queryByRole('button', { name: /import configuration/i })).not.toBeInTheDocument();
     while (screen.queryByRole('button', { name: /edit/i })) {
       await user.click(screen.getByRole('button', { name: /edit/i }));
@@ -88,7 +102,7 @@ describe('Configuration Component', () => {
     const fabButton = document.querySelector('.MuiFab-root');
     expect(fabButton).toBeDisabled();
     await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    await user.type(screen.getByPlaceholderText(/value/i), 'evilValue');
     expect(fabButton).not.toBeDisabled();
     await user.click(screen.getByRole('checkbox', { name: /save/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
@@ -105,19 +119,10 @@ describe('Configuration Component', () => {
     });
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(document.querySelector('.loaderContainer')).not.toBeInTheDocument());
-
-    expect(screen.getByText(/aNumber/i)).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /edit/i }));
-    await waitFor(() => expect(screen.getByDisplayValue(/something/i)).toBeInTheDocument(), { timeout: 3000 });
-    await user.type(screen.getByDisplayValue('something'), 'testKey');
-    await user.type(screen.getByDisplayValue('else'), 'testValue');
-    await user.click(screen.getByRole('button', { name: /Cancel/i }));
-    await waitFor(() => rerender(ui));
-    expect(screen.queryByText(/key/i)).not.toBeInTheDocument();
-
-    // await user.click(screen.getByRole('button', { name: /View log/i }));
-    // expect(screen.queryByText(logContent)).toBeInTheDocument();
-    // const logDialog = screen.getByText(/Config update log/i).parentElement.parentElement;
-    // await user.click(within(logDialog).getByText(/Cancel/i));
+    const valueInput = screen.getByDisplayValue('evilValue');
+    await user.clear(valueInput);
+    await user.type(valueInput, 'testValue');
+    await user.click(screen.getByRole('button', { name: /Retry/i }));
+    await waitFor(() => expect(screen.queryByText(/Updating configuration/i)).toBeInTheDocument());
   });
 });

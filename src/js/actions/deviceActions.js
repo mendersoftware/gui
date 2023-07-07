@@ -1076,7 +1076,7 @@ export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDef
         new Promise(resolve => setTimeout(() => resolve(dispatch(getSingleDeployment(data.deployment_id))), TIMEOUTS.oneSecond))
       ];
       if (isDefault) {
-        const { previous } = getState().users.globalSettings.defaultDeviceConfig;
+        const { previous } = getState().users.globalSettings.defaultDeviceConfig ?? {};
         tasks.push(dispatch(saveGlobalSettings({ defaultDeviceConfig: { current: config, previous } })));
       }
       return Promise.all(tasks);
