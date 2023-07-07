@@ -99,14 +99,14 @@ export const KeyValueEditor = ({ disabled, errortext, initialInput = {}, inputHe
         return (
           <div className="key-value-container relative" key={index}>
             <FormControl>
-              <Input value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
+              <Input disabled={disabled} value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
               {hasError && <FormHelperText>{errortext || error}</FormHelperText>}
             </FormControl>
             <FormControl>
-              <Input value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
+              <Input disabled={disabled} value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
             </FormControl>
             {inputs.length > 1 && !hasRemovalDisabled ? (
-              <IconButton disabled={disabled || hasRemovalDisabled} onClick={() => removeInput(index)} size="large">
+              <IconButton disabled={disabled} onClick={() => removeInput(index)} size="large">
                 <ClearIcon fontSize="small" />
               </IconButton>
             ) : (
