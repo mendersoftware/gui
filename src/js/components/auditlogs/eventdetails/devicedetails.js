@@ -50,7 +50,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
     ...nameContainer,
     [usesId ? 'Device ID' : idAttribute]: (
       <Link className={`flexbox center-aligned ${classes.deviceLink}`} to={`/devices?id=${device.id}`}>
-        <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
+        <DeviceIdentityDisplay device={device} isEditable={false} />
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
       </Link>
     ),

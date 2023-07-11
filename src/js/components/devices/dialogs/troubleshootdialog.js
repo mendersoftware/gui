@@ -27,7 +27,7 @@ import { setSnackbar } from '../../../actions/appActions';
 import { deviceFileUpload, getDeviceFileDownloadLink } from '../../../actions/deviceActions';
 import { BEGINNING_OF_TIME, TIMEOUTS } from '../../../constants/appConstants';
 import { createDownload } from '../../../helpers';
-import { getFeatures, getIdAttribute, getIsEnterprise, getIsPreview, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
+import { getFeatures, getIsEnterprise, getIsPreview, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import { useSession } from '../../../utils/sockethook';
 import { TwoColumns } from '../../common/configurationobject';
 import MaterialDesignIcon from '../../common/materialdesignicon';
@@ -99,7 +99,6 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
   const { isHosted } = useSelector(getFeatures);
   const isEnterprise = useSelector(getIsEnterprise);
   const canPreview = useSelector(getIsPreview);
-  const idAttribute = useSelector(getIdAttribute);
   const userCapabilities = useSelector(getUserCapabilities);
   const { canAuditlog, canTroubleshoot, canWriteDevices } = userCapabilities;
   const { hasAuditlogs } = useSelector(getTenantCapabilities);
@@ -250,7 +249,7 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
     <Dialog open={open} fullWidth={true} maxWidth="lg">
       <DialogTitle className="flexbox">
         <div className={classes.title}>Troubleshoot -</div>
-        <DeviceIdentityDisplay device={device} idAttribute={idAttribute} isEditable={false} />
+        <DeviceIdentityDisplay device={device} isEditable={false} />
       </DialogTitle>
       <DialogContent className={`dialog-content flexbox column ${classes.content}`}>
         <Tabs value={currentTab} onChange={(e, tab) => setCurrentTab(tab)} textColor="primary" TabIndicatorProps={{ className: 'hidden' }}>

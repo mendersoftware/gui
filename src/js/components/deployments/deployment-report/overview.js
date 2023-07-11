@@ -59,7 +59,7 @@ const defaultLinkProps = {
   rel: 'noopener noreferrer'
 };
 
-export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribute, onScheduleClick, tenantCapabilities }) => {
+export const DeploymentOverview = ({ creator, deployment, devicesById, onScheduleClick, tenantCapabilities }) => {
   const { classes } = useStyles();
   const {
     artifact_name,
@@ -89,7 +89,7 @@ export const DeploymentOverview = ({ creator, deployment, devicesById, idAttribu
   let targetDevices = (
     <Link {...defaultLinkProps} to={devicesLink}>
       {isDeviceDeployment && devicesById[name] ? (
-        <DeviceIdentityDisplay device={devicesById[name]} idAttribute={idAttribute} isEditable={false} />
+        <DeviceIdentityDisplay device={devicesById[name]} isEditable={false} />
       ) : isUUID(name) ? (
         Object.keys(devices).join(', ')
       ) : (

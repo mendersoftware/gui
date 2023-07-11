@@ -5,7 +5,7 @@ exports[`DeviceIdentityDisplay Component renders correctly 1`] = `
   class="flexbox space-between"
 >
   <div>
-    a1
+    dc:a6:32:12:ad:bf
   </div>
 </div>
 `;

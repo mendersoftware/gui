@@ -1996,15 +1996,14 @@ label+.emotion-62 {
           <h3
             class="flexbox"
           >
-            Device information for
-             
+            Device information for 
             <div
               class="flexbox space-between"
             >
               <div
                 style="margin-left: 4px;"
               >
-                dc:a6:32:12:ad:bf
+                a1
               </div>
             </div>
           </h3>

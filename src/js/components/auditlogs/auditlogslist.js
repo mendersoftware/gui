@@ -18,6 +18,7 @@ import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons
 
 import { SORTING_OPTIONS, canAccess } from '../../constants/appConstants';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
+import DeviceIdentityDisplay from '../common/deviceidentity';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import Time from '../common/time';
@@ -42,30 +43,35 @@ const UserChange = ({ item: { change = '-' } }) => {
   );
 };
 
-const fallbackFormatter = data => {
+const FallbackFormatter = props => {
   let result = '';
   try {
-    result = JSON.stringify(data);
+    result = JSON.stringify(props);
   } catch (error) {
     console.log(error);
   }
-  return result;
+  return <div>{result}</div>;
 };
+
+const ArtifactFormatter = ({ artifact }) => <div>{artifact.name}</div>;
+const DeploymentFormatter = ({ deployment }) => <div>{deployment.name}</div>;
+const DeviceFormatter = ({ id }) => <DeviceIdentityDisplay device={{ id }} />;
+const UserFormatter = ({ user }) => <div>{user.email}</div>;
 
 const defaultAccess = canAccess;
 const changeMap = {
-  default: { component: 'div', actionFormatter: fallbackFormatter, title: 'defaultTitle', accessCheck: defaultAccess },
-  artifact: { actionFormatter: data => decodeURIComponent(data.artifact.name), component: ArtifactLink, accessCheck: ({ canReadReleases }) => canReadReleases },
+  default: { component: 'div', actionFormatter: FallbackFormatter, title: 'defaultTitle', accessCheck: defaultAccess },
+  artifact: { actionFormatter: ArtifactFormatter, component: ArtifactLink, accessCheck: ({ canReadReleases }) => canReadReleases },
   deployment: {
-    actionFormatter: data => decodeURIComponent(data.deployment.name),
+    actionFormatter: DeploymentFormatter,
     component: DeploymentLink,
     accessCheck: ({ canReadDeployments }) => canReadDeployments
   },
-  deviceDecommissioned: { actionFormatter: data => decodeURIComponent(data.id), component: 'div', accessCheck: defaultAccess },
-  deviceRejected: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceRejectedLink, accessCheck: ({ canReadDevices }) => canReadDevices },
-  deviceGeneral: { actionFormatter: data => decodeURIComponent(data.id), component: DeviceLink, accessCheck: ({ canReadDevices }) => canReadDevices },
-  deviceTerminalSession: { actionFormatter: data => decodeURIComponent(data.id), component: TerminalSessionLink, accessCheck: defaultAccess },
-  user: { component: UserChange, actionFormatter: data => data.user.email, accessCheck: defaultAccess }
+  deviceDecommissioned: { actionFormatter: DeviceFormatter, component: 'div', accessCheck: defaultAccess },
+  deviceRejected: { actionFormatter: DeviceFormatter, component: DeviceRejectedLink, accessCheck: ({ canReadDevices }) => canReadDevices },
+  deviceGeneral: { actionFormatter: DeviceFormatter, component: DeviceLink, accessCheck: ({ canReadDevices }) => canReadDevices },
+  deviceTerminalSession: { actionFormatter: DeviceFormatter, component: TerminalSessionLink, accessCheck: defaultAccess },
+  user: { component: UserChange, actionFormatter: UserFormatter, accessCheck: defaultAccess }
 };
 
 const mapChangeToContent = item => {
@@ -102,7 +108,10 @@ const TypeDescriptor = (item, index) => (
     {item.object.type}
   </div>
 );
-const ChangeDescriptor = (item, index) => <div key={`${item.time}-${index}`}>{mapChangeToContent(item).actionFormatter(item.object)}</div>;
+const ChangeDescriptor = (item, index) => {
+  const FormatterComponent = mapChangeToContent(item).actionFormatter;
+  return <FormatterComponent key={`${item.time}-${index}`} {...item.object} />;
+};
 const ChangeDetailsDescriptor = (item, index, userCapabilities) => {
   const { component: Comp, accessCheck } = mapChangeToContent(item);
   const key = `${item.time}-${index}`;
