@@ -1,3 +1,4 @@
+/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -147,6 +148,7 @@ export type { StorageLimit } from "./StorageLimit";
 export type { SubscriptionData } from "./SubscriptionData";
 export type { SupportRequest } from "./SupportRequest";
 export type { Tag } from "./Tag";
+export type { Tags } from "./Tags";
 export { Tenant } from "./Tenant";
 export type { TenantApiLimits } from "./TenantApiLimits";
 export type { TenantShortInfo } from "./TenantShortInfo";
