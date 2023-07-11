@@ -1556,14 +1556,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           class="margin-top-small margin-bottom-small"
         >
           <a
+            class=""
             href="https://docs.mender.io/client-installation/identity"
             rel="noopener noreferrer"
             target="_blank"
           >
             Learn how to add custom identity attributes
           </a>
-           
-          to your devices.
+           to your devices.
         </div>
       </div>
     </div>

@@ -62,7 +62,7 @@ export const ForceDeploy = ({ deploymentObject, setDeploymentSettings }) => {
   );
 };
 
-export const RolloutOptions = ({ deploymentObject, docsVersion, isEnterprise, setDeploymentSettings }) => {
+export const RolloutOptions = ({ deploymentObject, isEnterprise, setDeploymentSettings }) => {
   const { phases = [], release = {} } = deploymentObject;
   const { classes } = useStyles();
 
@@ -88,14 +88,7 @@ export const RolloutOptions = ({ deploymentObject, docsVersion, isEnterprise, se
         }
       />
       <Collapse in={isPaused} className={classes.wrapper}>
-        <RolloutSteps
-          disabled={phases.length > 1 || !isEnterprise}
-          docsVersion={docsVersion}
-          isEnterprise={isEnterprise}
-          onStepChange={onStepChangeClick}
-          release={release}
-          steps={states}
-        />
+        <RolloutSteps disabled={phases.length > 1 || !isEnterprise} onStepChange={onStepChangeClick} release={release} steps={states} />
       </Collapse>
       <EnterpriseNotification isEnterprise={isEnterprise} benefit="granular control about update rollout to allow synchronization across your fleet" />
     </>

@@ -42,7 +42,6 @@ import {
   getDeviceCountsByStatus,
   getDeviceFilters,
   getDeviceLimit,
-  getDocsVersion,
   getFeatures,
   getGroups as getGroupsSelector,
   getIsEnterprise,
@@ -91,7 +90,6 @@ export const DeviceGroups = () => {
   const canPreview = useSelector(getIsPreview);
   const deviceLimit = useSelector(getDeviceLimit);
   const deviceListState = useSelector(state => state.devices.deviceList);
-  const docsVersion = useSelector(getDocsVersion);
   const features = useSelector(getFeatures);
   const { hasReporting } = features;
   const filters = useSelector(getDeviceFilters);
@@ -257,7 +255,6 @@ export const DeviceGroups = () => {
           )}
           {canManageDevices && (
             <DeviceAdditionWidget
-              docsVersion={docsVersion}
               features={features}
               onConnectClick={() => dispatch(setShowConnectingDialog(true))}
               onMakeGatewayClick={toggleMakeGatewayClick}
@@ -320,7 +317,7 @@ export const DeviceGroups = () => {
             setSnackbar={message => dispatch(setSnackbar(message))}
           />
         )}
-        {showMakeGateway && <MakeGatewayDialog docsVersion={docsVersion} isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}
+        {showMakeGateway && <MakeGatewayDialog isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}
       </div>
     </>
   );

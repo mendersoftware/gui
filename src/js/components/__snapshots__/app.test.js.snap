@@ -1137,7 +1137,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
               <a
                 class="emotion-36"
                 href="https://docs.mender.io/development/release-information/open-source-licenses"
-                rel="noopener noreferrer"
+                rel=""
                 target="_blank"
               >
                 License information

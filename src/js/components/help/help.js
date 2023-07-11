@@ -18,7 +18,7 @@ import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { Launch as LaunchIcon } from '@mui/icons-material';
 import { ListItemIcon, useTheme } from '@mui/material';
 
-import { getDocsVersion, getFeatures } from '../../selectors';
+import { getFeatures } from '../../selectors';
 import LeftNav from '../common/left-nav';
 import Downloads from './downloads';
 import GetStarted from './getting-started';
@@ -87,7 +87,6 @@ export const Help = () => {
   const { pathname } = useLocation();
   const { section } = useParams();
 
-  const docsVersion = useSelector(getDocsVersion);
   const { isHosted } = useSelector(getFeatures);
 
   useEffect(() => {
@@ -124,7 +123,7 @@ export const Help = () => {
       <div style={{ maxWidth: contentWidth }}>
         <p className="muted">Help & support {breadcrumbs}</p>
         <div className="help-content relative margin-top-small">
-          <ComponentToShow docsVersion={docsVersion} />
+          <ComponentToShow />
         </div>
       </div>
     </div>

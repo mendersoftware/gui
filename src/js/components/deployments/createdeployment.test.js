@@ -79,7 +79,9 @@ describe('CreateDeployment Component', () => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
         const { baseElement } = render(
           <LocalizationProvider dateAdapter={AdapterMoment}>
-            <Component {...props} />
+            <Provider store={store}>
+              <Component {...props} />
+            </Provider>
           </LocalizationProvider>
         );
         const view = baseElement.lastChild;
@@ -90,7 +92,9 @@ describe('CreateDeployment Component', () => {
       it(`renders ${Component.displayName || Component.name} correctly as enterprise`, () => {
         const { baseElement } = render(
           <LocalizationProvider dateAdapter={AdapterMoment}>
-            <Component {...props} isEnterprise />
+            <Provider store={store}>
+              <Component {...props} isEnterprise />
+            </Provider>
           </LocalizationProvider>
         );
         const view = baseElement.lastChild;

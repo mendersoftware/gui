@@ -20,6 +20,7 @@ import validator from 'validator';
 
 import { UNGROUPED_GROUP } from '../../../constants/deviceConstants';
 import { fullyDecodeURI } from '../../../helpers';
+import DocsLink from '../../common/docslink';
 import InfoText from '../../common/infotext';
 
 const filter = createFilterOptions();
@@ -49,7 +50,7 @@ export const validateGroupName = (encodedName, groups = [], selectedDevices = []
 
 const GroupOption = (props, option) => <li {...props}>{option.title}</li>;
 
-export const GroupDefinition = ({ docsVersion = '', isCreationDynamic, groups, newGroup, onInputChange, selectedDevices, selectedGroup }) => {
+export const GroupDefinition = ({ isCreationDynamic, groups, newGroup, onInputChange, selectedDevices, selectedGroup }) => {
   const [errortext, setErrorText] = useState('');
 
   const validateName = encodedName => {
@@ -106,9 +107,7 @@ export const GroupDefinition = ({ docsVersion = '', isCreationDynamic, groups, n
         <InfoText>
           Note: individual devices can&apos;t be added to dynamic groups.
           <br />
-          <a href={`https://docs.mender.io/${docsVersion}overview/device-group`} target="_blank" rel="noopener noreferrer">
-            Learn more about static vs. dynamic groups
-          </a>
+          <DocsLink path="overview/device-group" title="Learn more about static vs. dynamic groups" />
         </InfoText>
       )}
     </>

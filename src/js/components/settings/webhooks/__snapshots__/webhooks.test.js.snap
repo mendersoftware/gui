@@ -8,11 +8,11 @@ exports[`Webhooks Component renders correctly 1`] = `
   <div
     class="flexbox centered"
   >
-    No webhooks are configured yet. Learn more about webhooks in our
-     
+    No webhooks are configured yet. Learn more about webhooks in our 
     <a
+      class=""
       href="https://docs.mender.io/development/server-integration"
-      rel="noopener noreferrer"
+      rel=""
       target="_blank"
     >
       documentation

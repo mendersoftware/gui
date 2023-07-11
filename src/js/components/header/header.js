@@ -42,7 +42,6 @@ import {
   getCurrentUser,
   getDeviceCountsByStatus,
   getDeviceLimit,
-  getDocsVersion,
   getFeatures,
   getIsEnterprise,
   getOrganization,
@@ -115,7 +114,6 @@ export const Header = ({ mode }) => {
   const { total: acceptedDevices = 0 } = useSelector(getAcceptedDevices);
   const announcement = useSelector(state => state.app.hostedAnnouncement);
   const deviceLimit = useSelector(getDeviceLimit);
-  const docsVersion = useSelector(getDocsVersion);
   const firstLoginAfterSignup = useSelector(state => state.app.firstLoginAfterSignup);
   const { trackingConsentGiven: hasTrackingEnabled } = useSelector(getUserSettings);
   const inProgress = useSelector(state => state.deployments.byStatus.inprogress.total);
@@ -194,13 +192,13 @@ export const Header = ({ mode }) => {
           onHide={() => dispatch(setHideAnnouncement(true))}
         />
       )}
-      {showOffer && <OfferHeader docsVersion={docsVersion} onHide={setHideOffer} />}
+      {showOffer && <OfferHeader onHide={setHideOffer} />}
       <div className="flexbox space-between">
         <div className="flexbox center-aligned">
           <Link to="/">
             <img id="logo" src={headerLogo} />
           </Link>
-          {demo && <DemoNotification iconClassName={classes.demoAnnouncementIcon} sectionClassName={classes.demoTrialAnnouncement} docsVersion={docsVersion} />}
+          {demo && <DemoNotification iconClassName={classes.demoAnnouncementIcon} sectionClassName={classes.demoTrialAnnouncement} />}
           {organization.trial && (
             <TrialNotification
               expiration={organization.trial_expiration}

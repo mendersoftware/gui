@@ -16,10 +16,11 @@ import React from 'react';
 import { Info as InfoIcon } from '@mui/icons-material';
 import { List } from '@mui/material';
 
+import DocsLink from '../../common/docslink';
 import Loader from '../../common/loader';
 import { MenderTooltipClickable } from '../../common/mendertooltip';
 
-export const DeviceInventoryLoader = ({ docsVersion = '' }) => (
+export const DeviceInventoryLoader = () => (
   <List>
     <div className="waiting-inventory" key="waiting-inventory">
       <MenderTooltipClickable
@@ -30,15 +31,7 @@ export const DeviceInventoryLoader = ({ docsVersion = '' }) => (
             <h3>Waiting for inventory data</h3>
             <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
             <p>
-              Also see the documentation for{' '}
-              <a
-                href={`https://docs.mender.io/${docsVersion}client-installation/configuration-file/polling-intervals`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Polling intervals
-              </a>
-              .
+              Also see the documentation for <DocsLink path="client-installation/configuration-file/polling-intervals" title="Polling intervals" />.
             </p>
           </>
         }

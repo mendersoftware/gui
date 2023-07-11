@@ -27,7 +27,12 @@ const mockStore = configureStore([thunk]);
 describe('tiny components', () => {
   [DeviceMonitorsMissingNote].forEach(async Component => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
-      const { baseElement } = render(<Component docsVersion="" />);
+      const store = mockStore({ ...defaultState });
+      const { baseElement } = render(
+        <Provider store={store}>
+          <Component docsVersion="" />
+        </Provider>
+      );
       const view = baseElement.firstChild;
       expect(view).toMatchSnapshot();
       expect(view).toEqual(expect.not.stringMatching(undefineds));

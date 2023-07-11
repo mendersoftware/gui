@@ -26,6 +26,7 @@ import { canAccess } from '../../constants/appConstants';
 import { detectOsIdentifier, toggle } from '../../helpers';
 import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities, getVersionInformation } from '../../selectors';
 import Tracking from '../../tracking';
+import CommonDocsLink from '../common/docslink';
 import Time from '../common/time';
 
 const cookies = new Cookies();
@@ -231,10 +232,15 @@ const copyOptions = [
   { id: 'gitlab', title: 'Gitlab Job definition', format: defaultGitlabJob }
 ];
 
-const DocsLink = ({ className = '', docsVersion, path, title }) => (
-  <a className={className} href={`https://docs.mender.io/${docsVersion}${path}`} target="_blank" rel="noopener noreferrer">
-    {title} <Launch style={{ verticalAlign: 'text-bottom' }} fontSize="small" />
-  </a>
+const DocsLink = ({ title, ...remainder }) => (
+  <CommonDocsLink
+    {...remainder}
+    title={
+      <>
+        {title} <Launch style={{ verticalAlign: 'text-bottom' }} fontSize="small" />
+      </>
+    }
+  />
 );
 
 const DownloadableComponents = ({ locations, onMenuClick }) => {

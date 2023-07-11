@@ -15,9 +15,10 @@ import React from 'react';
 
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 
+import DocsLink from '../common/docslink';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
-const DemoNotification = ({ iconClassName, docsVersion = 'development/', sectionClassName }) => (
+const DemoNotification = ({ iconClassName, sectionClassName }) => (
   <MenderTooltipClickable
     className={`flexbox centered ${sectionClassName}`}
     title={
@@ -27,14 +28,7 @@ const DemoNotification = ({ iconClassName, docsVersion = 'development/', section
           Mender is currently running in <b>demo mode</b>.
         </p>
         <p>
-          <a
-            href={`https://docs.mender.io/${docsVersion}server-installation/production-installation-with-kubernetes`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            See the documentation for help switching to production mode
-          </a>
-          .
+          <DocsLink path="server-installation/production-installation-with-kubernetes" title="See the documentation for help switching to production mode" />.
         </p>
       </>
     }

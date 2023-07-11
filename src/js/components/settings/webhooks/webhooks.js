@@ -20,8 +20,8 @@ import { ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-material';
 import { changeIntegration, createIntegration, deleteIntegration, getIntegrations, getWebhookEvents } from '../../../actions/organizationActions';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { emptyWebhook } from '../../../constants/organizationConstants';
-import { getDocsVersion } from '../../../selectors';
 import DetailsTable from '../../common/detailstable';
+import DocsLink from '../../common/docslink';
 import Time from '../../common/time';
 import WebhookManagement from './management';
 
@@ -56,7 +56,6 @@ export const Webhooks = ({ webhook = { ...emptyWebhook } }) => {
     const events = webhooks.length ? state.organization.webhooks.events : [];
     return { events, webhooks };
   });
-  const docsVersion = useSelector(getDocsVersion);
   const eventTotal = useSelector(state => state.organization.webhooks.eventTotal);
 
   useEffect(() => {
@@ -108,10 +107,7 @@ export const Webhooks = ({ webhook = { ...emptyWebhook } }) => {
         <DetailsTable columns={relevantColumns} items={mappedWebhooks} onItemClick={onEdit} />
       ) : (
         <div className="flexbox centered">
-          No webhooks are configured yet. Learn more about webhooks in our{' '}
-          <a href={`https://docs.mender.io/${docsVersion}server-integration`} target="_blank" rel="noopener noreferrer">
-            documentation
-          </a>
+          No webhooks are configured yet. Learn more about webhooks in our <DocsLink path="server-integration" title="documentation" />
         </div>
       )}
       <WebhookManagement

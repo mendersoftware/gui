@@ -18,12 +18,13 @@ import { Button, ButtonGroup, Menu, MenuItem } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { canAccess } from '../../../constants/appConstants';
+import DocsLink from '../../common/docslink';
 
 const useStyles = makeStyles()(() => ({
   buttonStyle: { textTransform: 'none' }
 }));
 
-export const DeviceAdditionWidget = ({ docsVersion, features, onConnectClick, onMakeGatewayClick, onPreauthClick, tenantCapabilities }) => {
+export const DeviceAdditionWidget = ({ features, onConnectClick, onMakeGatewayClick, onPreauthClick, tenantCapabilities }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { classes } = useStyles();
@@ -38,9 +39,8 @@ export const DeviceAdditionWidget = ({ docsVersion, features, onConnectClick, on
       canAccess: ({ features, tenantCapabilities }) => features.isHosted && tenantCapabilities.isEnterprise
     },
     {
-      href: `https://docs.mender.io/${docsVersion}client-installation/overview`,
-      rel: 'noopener noreferrer',
-      target: '_blank',
+      component: DocsLink,
+      path: 'client-installation/overview',
       title: 'Learn how to connect devices',
       value: 'learntoconnect',
       canAccess
@@ -74,9 +74,9 @@ export const DeviceAdditionWidget = ({ docsVersion, features, onConnectClick, on
             return accu;
           }
           // eslint-disable-next-line no-unused-vars
-          const { canAccess, href, title, value, ...optionProps } = option;
-          const item = href ? (
-            <MenuItem {...optionProps} key={value} href={href} component="a">
+          const { canAccess, component, title, value, ...optionProps } = option;
+          const item = component ? (
+            <MenuItem {...optionProps} key={value} component={component}>
               {title}
               <LaunchIcon style={{ fontSize: '10pt' }} />
             </MenuItem>

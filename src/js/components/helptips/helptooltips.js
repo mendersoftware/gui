@@ -19,8 +19,8 @@ import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material'
 
 import { setSnackbar } from '../../actions/appActions';
 import { toggleHelptips } from '../../actions/userActions';
-import { getDocsVersion } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
+import DocsLink from '../common/docslink';
 import MenderTooltip, { MenderTooltipClickable } from '../common/mendertooltip';
 
 const actionCreators = { setSnackbar, toggleHelptips };
@@ -29,10 +29,7 @@ const mapStateToProps = (state, ownProps) => {
   if (ownProps.deviceId) {
     device = state.devices.byId[ownProps.deviceId];
   }
-  return {
-    device,
-    docsVersion: getDocsVersion(state)
-  };
+  return { device };
 };
 
 const HideHelptipsButton = ({ toggleHelptips }) => (
@@ -43,7 +40,7 @@ const HideHelptipsButton = ({ toggleHelptips }) => (
   </p>
 );
 
-const AuthExplainComponent = ({ docsVersion }) => (
+const AuthExplainComponent = () => (
   <MenderTooltipClickable
     placement="left"
     className="absolute clickable"
@@ -57,10 +54,7 @@ const AuthExplainComponent = ({ docsVersion }) => (
         </p>
         <p>
           In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
-          <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank" rel="noopener noreferrer">
-            Device authentication
-          </a>
-          .
+          <DocsLink path="overview/device-authentication" title="Device authentication" />.
         </p>
       </>
     }
@@ -70,7 +64,7 @@ const AuthExplainComponent = ({ docsVersion }) => (
 );
 export const AuthExplainButton = connect(mapStateToProps, actionCreators)(AuthExplainComponent);
 
-const AuthButtonComponent = ({ docsVersion, highlightHelp, toggleHelptips }) => (
+const AuthButtonComponent = ({ highlightHelp, toggleHelptips }) => (
   <MenderTooltipClickable
     className={highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
     style={{ left: '75%', top: 0 }}
@@ -83,11 +77,7 @@ const AuthButtonComponent = ({ docsVersion, highlightHelp, toggleHelptips }) => 
           for now.
         </p>
         <p>
-          See the documentation for more on{' '}
-          <a href={`https://docs.mender.io/${docsVersion}overview/device-authentication`} target="_blank" rel="noopener noreferrer">
-            Device authentication
-          </a>
-          .
+          See the documentation for more on <DocsLink path="overview/device-authentication" title="Device authentication" />.
         </p>
         <HideHelptipsButton toggleHelptips={toggleHelptips} />
       </div>
@@ -123,7 +113,7 @@ const AddGroupComponent = ({ toggleHelptips }) => (
 );
 export const AddGroup = connect(mapStateToProps, actionCreators)(AddGroupComponent);
 
-const ExpandDeviceComponent = ({ docsVersion, toggleHelptips }) => (
+const ExpandDeviceComponent = ({ toggleHelptips }) => (
   <MenderTooltipClickable
     className="tooltip help"
     style={{ left: 'inherit', right: '45px' }}
@@ -137,10 +127,7 @@ const ExpandDeviceComponent = ({ docsVersion, toggleHelptips }) => (
         </p>
         <p>
           Which information is collected about devices is fully configurable;{' '}
-          <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank" rel="noopener noreferrer">
-            see the documentation for how to configure this
-          </a>
-          .
+          <DocsLink path="client-installation/identity" title="see the documentation for how to configure this" />.
         </p>
         <HideHelptipsButton toggleHelptips={toggleHelptips} />
       </>
@@ -151,7 +138,7 @@ const ExpandDeviceComponent = ({ docsVersion, toggleHelptips }) => (
 );
 export const ExpandDevice = connect(mapStateToProps, actionCreators)(ExpandDeviceComponent);
 
-const ExpandArtifactComponent = ({ docsVersion, toggleHelptips }) => (
+const ExpandArtifactComponent = ({ toggleHelptips }) => (
   <MenderTooltipClickable
     className="tooltip help"
     title={
@@ -165,10 +152,7 @@ const ExpandArtifactComponent = ({ docsVersion, toggleHelptips }) => (
         <p>You can click on each Artifact in the Release to expand the row and view more information about it.</p>
         <p>
           For more information on how to specify the device type compatibility and other artifact metadata,{' '}
-          <a href={`https://docs.mender.io/${docsVersion}artifact-creation/create-an-artifact`} target="_blank" rel="noopener noreferrer">
-            see the documentation
-          </a>
-          .
+          <DocsLink path="artifact-creation/create-an-artifact" title="see the documentation" />.
         </p>
         <HideHelptipsButton toggleHelptips={toggleHelptips} />
       </>
@@ -179,18 +163,15 @@ const ExpandArtifactComponent = ({ docsVersion, toggleHelptips }) => (
 );
 export const ExpandArtifact = connect(mapStateToProps, actionCreators)(ExpandArtifactComponent);
 
-const DeviceSupportTipComponent = ({ docsVersion }) => (
+const DeviceSupportTipComponent = () => (
   <MenderTooltipClickable
     className="tooltip help"
     style={{ bottom: '2.5%', left: '88%' }}
     title={
       <p>
         The steps in the guide should work on most operating systems in the Debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or
-        newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit{' '}
-        <a href={`https://docs.mender.io/${docsVersion}overview/device-support`} target="_blank" rel="noopener noreferrer">
-          our documentation
-        </a>{' '}
-        for more information about device support.
+        newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit <DocsLink path="overview/device-support" title="our documentation" /> for more information about
+        device support.
       </p>
     }
   >
@@ -274,7 +255,7 @@ const ConfigureRaspberryLedComponent = ({ anchor, device, setSnackbar, toggleHel
 
 export const ConfigureRaspberryLedTip = connect(mapStateToProps, actionCreators)(ConfigureRaspberryLedComponent);
 
-const ConfigureAddOnTipComponent = ({ docsVersion }) => (
+const ConfigureAddOnTipComponent = () => (
   <MenderTooltipClickable
     className="tooltip help"
     style={{ top: '10%', left: '75%' }}
@@ -284,10 +265,7 @@ const ConfigureAddOnTipComponent = ({ docsVersion }) => (
         <code>/var/lib/mender-configure/device-config.json</code> on the device and then all the scripts in{' '}
         <code>/usr/lib/mender-configure/apply-device-config.d/</code> are executed to apply the configuration attributes. To add a new configuration attribute,
         you simply need to input it in the UI and add a script to that directory that applies it accordingly. Read more about how it works in the{' '}
-        <a href={`https://docs.mender.io/${docsVersion}add-ons/configure`} target="_blank" rel="noopener noreferrer">
-          Configure documentation
-        </a>
-        .
+        <DocsLink path="add-ons/configure" title="Configure documentation" />.
       </p>
     }
   >
