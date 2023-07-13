@@ -12,10 +12,6 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
-
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
@@ -23,17 +19,10 @@ import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceCon
 import { uiPermissionsById } from '../../../constants/userConstants';
 import DeviceConnection, { DeviceConnectionMissingNote, DeviceDisconnectedNote, PortForwardLink } from './connection';
 
-const mockStore = configureStore([thunk]);
-
 describe('tiny DeviceConnection components', () => {
-  const store = mockStore({ ...defaultState });
   [DeviceConnectionMissingNote, DeviceDisconnectedNote, PortForwardLink].forEach(async Component => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
-      const { baseElement } = render(
-        <Provider store={store}>
-          <Component lastConnectionTs={defaultState.devices.byId.a1.updated_ts} />
-        </Provider>
-      );
+      const { baseElement } = render(<Component lastConnectionTs={defaultState.devices.byId.a1.updated_ts} />);
       const view = baseElement.firstChild;
       expect(view).toMatchSnapshot();
       expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -42,34 +31,21 @@ describe('tiny DeviceConnection components', () => {
 });
 
 describe('DeviceConnection Component', () => {
-  let store;
   const userCapabilities = {
     canAuditlog: true,
     canTroubleshoot: true,
     canWriteDevices: true,
     groupsPermissions: { [ALL_DEVICES]: [uiPermissionsById.connect.value, uiPermissionsById.manage.value] }
   };
-  beforeAll(() => {
-    store = mockStore({ ...defaultState });
-  });
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} />
-      </Provider>
-    );
+    const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('renders correctly when disconnected', async () => {
     const { baseElement } = render(
-      <Provider store={store}>
-        <DeviceConnection
-          device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }}
-          userCapabilities={userCapabilities}
-        />
-      </Provider>
+      <DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }} userCapabilities={userCapabilities} />
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
@@ -77,13 +53,11 @@ describe('DeviceConnection Component', () => {
   });
   it('renders correctly when connected', async () => {
     const { baseElement } = render(
-      <Provider store={store}>
-        <DeviceConnection
-          device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }}
-          hasAuditlogs
-          userCapabilities={userCapabilities}
-        />
-      </Provider>
+      <DeviceConnection
+        device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }}
+        hasAuditlogs
+        userCapabilities={userCapabilities}
+      />
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();

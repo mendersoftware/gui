@@ -12,28 +12,18 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import { yes } from '../../../constants/appConstants';
 import SelfUserManagement from './selfusermanagement';
 
-const mockStore = configureStore([thunk]);
-
 describe('SelfUserManagement Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    store = mockStore({
+    const preloadedState = {
       ...defaultState,
       users: {
         ...defaultState.users,
@@ -45,12 +35,8 @@ describe('SelfUserManagement Component', () => {
           }
         }
       }
-    });
-    const { baseElement } = render(
-      <Provider store={store}>
-        <SelfUserManagement />
-      </Provider>
-    );
+    };
+    const { baseElement } = render(<SelfUserManagement />, { preloadedState });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -58,16 +44,12 @@ describe('SelfUserManagement Component', () => {
 
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    store = mockStore({ ...defaultState, app: { ...defaultState.app, features: { ...defaultState.app.features, isEnterprise: true } } });
+    const preloadedState = { ...defaultState, app: { ...defaultState.app, features: { ...defaultState.app.features, isEnterprise: true } } };
 
     const copyCheck = jest.fn(yes);
     document.execCommand = copyCheck;
-    const ui = (
-      <Provider store={store}>
-        <SelfUserManagement />
-      </Provider>
-    );
-    const { rerender } = render(ui);
+    const ui = <SelfUserManagement />;
+    const { rerender } = render(ui, { preloadedState });
 
     await user.click(screen.getByRole('button', { name: /email/i }));
     const input = screen.getByDisplayValue(defaultState.users.byId.a1.email);

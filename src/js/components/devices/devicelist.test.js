@@ -12,13 +12,10 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { prettyDOM } from '@testing-library/dom';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
@@ -26,26 +23,18 @@ import { getHeaders } from './authorized-devices';
 import { routes } from './base-devices';
 import DeviceList, { calculateResizeChange } from './devicelist';
 
-const mockStore = configureStore([thunk]);
-
 describe('DeviceList Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <Provider store={store}>
-        <DeviceList
-          columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
-          customColumnSizes={[]}
-          devices={[]}
-          deviceListState={defaultState.devices.deviceList}
-          selectedRows={[]}
-          onPageChange={jest.fn}
-          pageTotal={50}
-        />
-      </Provider>
+      <DeviceList
+        columnHeaders={[{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }]}
+        customColumnSizes={[]}
+        devices={[]}
+        deviceListState={defaultState.devices.deviceList}
+        selectedRows={[]}
+        onPageChange={jest.fn}
+        pageTotal={50}
+      />
     );
     // special snapshot handling here to work around unstable ids in mui code...
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
@@ -100,24 +89,22 @@ describe('DeviceList Component', () => {
     const pageTotal = devices.length;
     const headers = getHeaders([], routes.allDevices.defaultHeaders, 'id', jest.fn);
     const ui = (
-      <Provider store={store}>
-        <DeviceList
-          columnHeaders={headers}
-          customColumnSizes={[]}
-          devices={devices}
-          deviceListState={defaultState.devices.deviceList}
-          selectedRows={[]}
-          headerKeys="1-2-3-4"
-          idAttribute="id"
-          onExpandClick={onExpandClickMock}
-          onResizeColumns={onResizeColumns}
-          onPageChange={onPageChange}
-          onSelect={onSelect}
-          onSort={onSort}
-          pageTotal={pageTotal}
-          setSnackbar={jest.fn}
-        />
-      </Provider>
+      <DeviceList
+        columnHeaders={headers}
+        customColumnSizes={[]}
+        devices={devices}
+        deviceListState={defaultState.devices.deviceList}
+        selectedRows={[]}
+        headerKeys="1-2-3-4"
+        idAttribute="id"
+        onExpandClick={onExpandClickMock}
+        onResizeColumns={onResizeColumns}
+        onPageChange={onPageChange}
+        onSelect={onSelect}
+        onSort={onSort}
+        pageTotal={pageTotal}
+        setSnackbar={jest.fn}
+      />
     );
     render(ui);
     await user.click(screen.getByText(devices[0].id));

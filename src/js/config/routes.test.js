@@ -15,32 +15,31 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
-import { render, screen } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { screen, render as testingLibRender } from '@testing-library/react';
 
 import { defaultState } from '../../../tests/mockData';
+import { getConfiguredStore } from '../reducers';
 import { PublicRoutes } from './routes';
-
-const mockStore = configureStore([thunk]);
 
 describe('Router', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: {
-          ...defaultState.features,
-          isHosted: true
+    store = getConfiguredStore({
+      preloadedState: {
+        ...defaultState,
+        app: {
+          ...defaultState.app,
+          features: {
+            ...defaultState.features,
+            isHosted: true
+          }
         }
       }
     });
   });
 
   test('invalid path should redirect to Dashboard', async () => {
-    render(
+    testingLibRender(
       <MemoryRouter initialEntries={['/random']}>
         <Provider store={store}>
           <PublicRoutes />
@@ -52,7 +51,7 @@ describe('Router', () => {
   });
 
   test('valid path should not redirect to 404', async () => {
-    render(
+    testingLibRender(
       <MemoryRouter initialEntries={['/']}>
         <Provider store={store}>
           <PublicRoutes />

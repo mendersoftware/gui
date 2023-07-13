@@ -202,7 +202,7 @@ export const organizationHandlers = [
     if (!configId) {
       return res(ctx.status(550));
     }
-    return res(ctx.json({ email: 'user@acme.com', password: 'mypass1234', login: { google: 'bob@gmail.com' } }));
+    return res(ctx.json({ email: 'user@acme.com', password: 'mypass1234', login: { google: 'bob@gmail.com' }, config: '<div>not quite right</div>' }));
   }),
   rest.put(`${samlIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
     if (!configId) {

@@ -548,7 +548,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
   column-gap: 8px;
 }
 
-.emotion-16 {
+.emotion-15 {
   position: relative;
   overflow: hidden;
   display: block;
@@ -558,13 +558,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
 }
 
 @media print {
-  .emotion-16 {
+  .emotion-15 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-17 {
+.emotion-16 {
   width: 100%;
   position: absolute;
   left: 0;
@@ -576,7 +576,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
   background-color: #337a87;
 }
 
-.emotion-22 {
+.emotion-19 {
   font-size: 1rem;
   cursor: pointer;
 }
@@ -814,41 +814,28 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
         >
           <div
             class="clickable emotion-13 "
-            title="somethingMore"
+            title="undefined"
           >
             <div
               class="text-overflow"
             >
-              somethingMore
+              undefined
             </div>
             <div>
-              20
+              1
             </div>
           </div>
           <div
             class="clickable emotion-13 "
-            title="Other"
+            title="raspotifyInstaller"
           >
             <div
               class="text-overflow"
             >
-              Other
+              raspotifyInstaller
             </div>
             <div>
-              12
-            </div>
-          </div>
-          <div
-            class="clickable emotion-13 "
-            title="something"
-          >
-            <div
-              class="text-overflow"
-            >
-              something
-            </div>
-            <div>
-              10
+              1
             </div>
           </div>
         </div>
@@ -858,57 +845,38 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
           <div
             class="clickable flexbox column barchart"
             style="justify-content: center;"
-            title="somethingMore"
+            title="undefined"
           >
             <span
               aria-valuemax="100"
               aria-valuemin="0"
-              aria-valuenow="48"
-              class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-a31773 emotion-16"
+              aria-valuenow="0"
+              class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-a31773 emotion-15"
               role="progressbar"
               style="height: 8px;"
             >
               <span
-                class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-17"
-                style="transform: translateX(-52.38095238095239%);"
+                class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-16"
+                style="transform: translateX(-100%);"
               />
             </span>
           </div>
           <div
             class="clickable flexbox column barchart"
             style="justify-content: center;"
-            title="Other"
+            title="raspotifyInstaller"
           >
             <span
               aria-valuemax="100"
               aria-valuemin="0"
-              aria-valuenow="29"
-              class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-d5d5d5 emotion-16"
+              aria-valuenow="0"
+              class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-337a87 emotion-15"
               role="progressbar"
               style="height: 8px;"
             >
               <span
-                class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-17"
-                style="transform: translateX(-71.42857142857143%);"
-              />
-            </span>
-          </div>
-          <div
-            class="clickable flexbox column barchart"
-            style="justify-content: center;"
-            title="something"
-          >
-            <span
-              aria-valuemax="100"
-              aria-valuemin="0"
-              aria-valuenow="24"
-              class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate color-337a87 emotion-16"
-              role="progressbar"
-              style="height: 8px;"
-            >
-              <span
-                class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-17"
-                style="transform: translateX(-76.19047619047619%);"
+                class="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate emotion-16"
+                style="transform: translateX(-100%);"
               />
             </span>
           </div>
@@ -920,7 +888,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
     >
       <div />
       <div
-        class="flexbox centered muted emotion-22"
+        class="flexbox centered muted emotion-19"
       >
         <svg
           aria-hidden="true"
@@ -934,7 +902,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
           />
         </svg>
         <span
-          class="emotion-22"
+          class="emotion-19"
         >
           add a widget
         </span>

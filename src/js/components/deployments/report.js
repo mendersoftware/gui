@@ -37,7 +37,7 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { statCollector, toggle } from '../../helpers';
-import { getDevicesById, getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getDeploymentRelease, getDevicesById, getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import Confirm from '../common/confirm';
 import LogDialog from '../common/dialogs/log';
@@ -100,12 +100,7 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
   });
   const devicesById = useSelector(getDevicesById);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
-  const release = useSelector(state => {
-    const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
-    return deployment.artifact_name && state.releases.byId[deployment.artifact_name]
-      ? state.releases.byId[deployment.artifact_name]
-      : { device_types_compatible: [] };
-  });
+  const release = useSelector(getDeploymentRelease);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
   // we can't filter by auditlog action via the api, so

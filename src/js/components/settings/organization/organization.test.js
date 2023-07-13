@@ -12,31 +12,26 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import { CancelSubscriptionAlert, CancelSubscriptionButton, DeviceLimitExpansionNotification, TrialExpirationNote } from './billing';
 import MyOrganization, { OrgHeader } from './organization';
 
-const mockStore = configureStore([thunk]);
-
 describe('MyOrganization Component', () => {
-  let store;
+  let preloadedState;
   beforeEach(() => {
-    Date.now = jest.fn(() => new Date('2020-07-01T12:00:00.000Z'));
-    store = mockStore({
+    preloadedState = {
       ...defaultState,
       app: {
         ...defaultState.app,
         features: {
           ...defaultState.app.features,
           hasReporting: true,
+          isEnterprise: true,
           isHosted: true
         },
         versionInformation: { Integration: '1.2.3' }
@@ -80,46 +75,46 @@ describe('MyOrganization Component', () => {
           trial_expiration: new Date('2021-01-01T00:00:00Z')
         }
       }
-    });
+    };
+    Date.now = jest.fn(() => new Date('2020-07-01T12:00:00.000Z'));
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <MyOrganization />
-      </Provider>
-    );
+    const { baseElement } = render(<MyOrganization />, { preloadedState });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
 
   it('supports modifying SSO settings', async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const ui = (
-      <Provider store={store}>
-        <MyOrganization />
-      </Provider>
-    );
-    const { rerender } = render(ui);
-    await user.click(screen.getByRole('checkbox'));
-    await waitFor(() => rerender(ui));
-    await user.click(screen.getByText(/input with the text editor/i));
-
     const config = '<div>not quite right</div>';
     const str = JSON.stringify(config);
     const blob = new Blob([str]);
     const file = new File([blob], 'values.xml', { type: 'application/xml' });
     File.prototype.text = jest.fn().mockResolvedValue(str);
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const ui = <MyOrganization />;
+    const { rerender } = render(ui, { preloadedState });
+    await waitFor(() => rerender(ui));
+    expect(screen.getByText(/text editor/i)).toBeVisible();
+    await user.click(screen.getByText(/text editor/i));
+    await waitFor(() => rerender(ui));
+    expect(screen.getByText(/import from a file/i)).toBeVisible();
+    await user.upload(screen.getByText(/import from a file/i).previousSibling, file);
+    await waitFor(() => expect(document.querySelector('.MuiDrawer-root')).toBeVisible());
+    await user.click(screen.getByTestId('CloseIcon'));
+    await waitFor(() => rerender(ui));
+    await waitFor(() => expect(document.querySelector('.MuiDrawer-root')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('checkbox')).toBeChecked());
+    while (screen.queryByText(/entity id/i)) {
+      await user.click(screen.getByRole('checkbox'));
+      await user.click(screen.getByRole('button', { name: /save/i }));
+      await waitFor(() => rerender(ui));
+    }
     const input = document.querySelector('input[type=file]');
     await user.upload(input, file);
     await waitFor(() => rerender(ui));
-    expect(screen.getByText(/import from a file/i)).toBeVisible();
-    await waitFor(() => rerender(ui));
-    await user.upload(screen.getByText(/import from a file/i).previousSibling, file);
-    await user.click(screen.getByRole('button', { name: /cancel/i }));
-    await waitFor(() => rerender(ui));
-    expect(screen.getByRole('checkbox')).not.toBeChecked();
+    expect(screen.getByText(/Submit the metadata document/i)).toBeVisible();
   });
 });
 

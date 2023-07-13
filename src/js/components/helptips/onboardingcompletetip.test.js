@@ -13,41 +13,42 @@
 //    limitations under the License.
 import React from 'react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 
-import { act, waitFor } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { act, render as testingLibRender, waitFor } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
+import { getConfiguredStore } from '../../reducers';
 import OnboardingCompleteTip from './onboardingcompletetip';
-
-const mockStore = configureStore([thunk]);
 
 describe('OnboardingCompleteTip Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: {
-          ...defaultState.app.features,
-          hasMultitenancy: true,
-          isHosted: true
+    jest.spyOn(global, 'encodeURIComponent').mockImplementationOnce(() => 'http%3A%2F%2Ftest.com');
+    store = getConfiguredStore({
+      preloadedState: {
+        ...defaultState,
+        app: {
+          ...defaultState.app,
+          features: {
+            ...defaultState.app.features,
+            hasMultitenancy: true,
+            isHosted: true
+          }
         }
       }
     });
-    jest.spyOn(global, 'encodeURIComponent').mockImplementationOnce(() => 'http%3A%2F%2Ftest.com');
   });
 
   it('renders correctly', async () => {
     const ui = (
-      <Provider store={store}>
-        <OnboardingCompleteTip targetUrl="https://test.com" />
-      </Provider>
+      <MemoryRouter initialEntries={[`/password`]}>
+        <Provider store={store}>
+          <OnboardingCompleteTip targetUrl="https://test.com" />
+        </Provider>
+      </MemoryRouter>
     );
-    const { baseElement, rerender } = render(ui);
+    const { baseElement, rerender } = testingLibRender(ui);
     await act(async () => {});
     await waitFor(() => rerender(ui));
     const view = baseElement;

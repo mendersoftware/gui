@@ -12,25 +12,14 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
-import { defaultState, token, undefineds } from '../../../../../tests/mockData';
+import { token, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import ConnectToGatewayDialog from './connecttogatewaydialog';
 
-const mockStore = configureStore([thunk]);
-
 describe('ConnectToGatewayDialog Component', () => {
   it('renders correctly', async () => {
-    const store = mockStore({ ...defaultState });
-    const { baseElement } = render(
-      <Provider store={store}>
-        <ConnectToGatewayDialog gatewayIp="1.2.3.4" isPreRelease={false} docsVersion="" onCancel={jest.fn} tenantToken={token} />
-      </Provider>
-    );
+    const { baseElement } = render(<ConnectToGatewayDialog gatewayIp="1.2.3.4" isPreRelease={false} docsVersion="" onCancel={jest.fn} tenantToken={token} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

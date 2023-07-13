@@ -12,53 +12,41 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import Global from './global';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: {
+      ...defaultState.app.features,
+      hasReporting: true,
+      hasMultitenancy: true,
+      isEnterprise: true,
+      isHosted: true
+    }
+  },
+  deployments: {
+    ...defaultState.deployments,
+    config: {
+      ...defaultState.deployments.config,
+      binaryDelta: {
+        ...defaultState.deployments.config.binaryDelta,
+        timeout: 5
+      },
+      hasDelta: true
+    }
+  }
+};
 
 describe('GlobalSettings Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: {
-          ...defaultState.app.features,
-          hasReporting: true,
-          hasMultitenancy: true,
-          isEnterprise: true,
-          isHosted: true
-        }
-      },
-      deployments: {
-        ...defaultState.deployments,
-        config: {
-          ...defaultState.deployments.config,
-          binaryDelta: {
-            ...defaultState.deployments.config.binaryDelta,
-            timeout: 5
-          },
-          hasDelta: true
-        }
-      }
-    });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Global />
-      </Provider>
-    );
+    const { baseElement } = render(<Global />, { preloadedState });
     await waitFor(() => expect(screen.getByText(/xDelta3/i)).toBeVisible());
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

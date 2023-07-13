@@ -40,6 +40,7 @@ import { TIMEOUTS, yes } from '../../constants/appConstants';
 import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
 import { getDemoDeviceAddress, stringToBoolean } from '../../helpers';
 import {
+  getDeviceConfigDeployment,
   getDeviceTwinIntegrations,
   getDevicesById,
   getDocsVersion,
@@ -209,13 +210,7 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
   const { selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
   const { columnSelection = [] } = useSelector(getUserSettings);
   const { defaultDeviceConfig: defaultConfig } = useSelector(getGlobalSettings);
-  const { device, deviceConfigDeployment } = useSelector(state => {
-    const device = state.devices.byId[deviceId] || {};
-    const { config = {} } = device;
-    const { deployment_id: configDeploymentId } = config;
-    const deviceConfigDeployment = state.deployments.byId[configDeploymentId] || {};
-    return { device, deviceConfigDeployment };
-  });
+  const { device, deviceConfigDeployment } = useSelector(state => getDeviceConfigDeployment(state, deviceId));
   const devicesById = useSelector(getDevicesById);
   const docsVersion = useSelector(getDocsVersion);
   const features = useSelector(getFeatures);

@@ -12,32 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import { getConfiguredStore } from '../../reducers';
 import Releases from './releases';
 
-const mockStore = configureStore([thunk]);
-
 describe('Releases Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Releases />
-      </Provider>
-    );
+    const { baseElement } = render(<Releases />);
     await act(async () => jest.advanceTimersByTime(1000));
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
@@ -54,13 +39,8 @@ describe('Releases Component', () => {
         selectedRelease: defaultState.releases.byId.r1.Name
       }
     };
-    const store = getConfiguredStore({ preloadedState });
-    const ui = (
-      <Provider store={store}>
-        <Releases />
-      </Provider>
-    );
-    const { rerender } = render(ui);
+    const ui = <Releases />;
+    const { rerender } = render(ui, { preloadedState });
     await waitFor(() => expect(screen.queryAllByText(defaultState.releases.byId.r1.Name)[0]).toBeInTheDocument());
     await user.click(screen.getAllByText(defaultState.releases.byId.r1.Name)[0]);
     expect(screen.queryByDisplayValue(defaultState.releases.byId.r1.Artifacts[0].description)).toBeInTheDocument();
@@ -74,14 +54,7 @@ describe('Releases Component', () => {
   });
   it('has working search handling as expected', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const preloadedState = { ...defaultState };
-    const store = getConfiguredStore({ preloadedState });
-    const ui = (
-      <Provider store={store}>
-        <Releases />
-      </Provider>
-    );
-    render(ui);
+    render(<Releases />);
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
     await user.type(screen.getByPlaceholderText(/Search/i), 'b1');
     await waitFor(() => expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument(), { timeout: 2000 });

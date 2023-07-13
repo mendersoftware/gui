@@ -16,30 +16,29 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { render as testingLibRender } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { getConfiguredStore } from '../../reducers';
 import Settings from './settings';
-
-const mockStore = configureStore([thunk]);
 
 describe('Settings Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: {
-          ...defaultState.app.features,
-          isHosted: false,
-          hasMultitenancy: true
+    store = getConfiguredStore({
+      preloadedState: {
+        ...defaultState,
+        app: {
+          ...defaultState.app,
+          features: {
+            ...defaultState.app.features,
+            isHosted: false,
+            hasMultitenancy: true
+          }
+        },
+        organization: {
+          ...defaultState.organization,
+          organization: {}
         }
-      },
-      organization: {
-        ...defaultState.organization,
-        organization: {}
       }
     });
   });

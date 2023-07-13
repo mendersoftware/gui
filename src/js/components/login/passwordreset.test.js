@@ -17,16 +17,13 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { act, screen, render as testingLibRender, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import * as UserActions from '../../actions/userActions';
+import { getConfiguredStore } from '../../reducers';
 import Password from './password';
 import PasswordReset from './passwordreset';
-
-const mockStore = configureStore([thunk]);
 
 const goodPassword = 'mysecretpassword!123';
 const badPassword = 'mysecretpassword!546';
@@ -34,15 +31,11 @@ const badPassword = 'mysecretpassword!546';
 describe('PasswordReset Component', () => {
   let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
+    store = getConfiguredStore();
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <PasswordReset match={{ params: { secretHash: '' } }} />
-      </Provider>
-    );
+    const { baseElement } = render(<PasswordReset match={{ params: { secretHash: '' } }} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

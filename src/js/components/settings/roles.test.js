@@ -12,12 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
@@ -26,20 +23,9 @@ import { ALL_DEVICES } from '../../constants/deviceConstants';
 import { ALL_RELEASES } from '../../constants/releaseConstants';
 import Roles from './roles';
 
-const mockStore = configureStore([thunk]);
-
 describe('Roles Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Roles />
-      </Provider>
-    );
+    const { baseElement } = render(<Roles />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -50,12 +36,7 @@ describe('Roles Component', () => {
     const editRoleSpy = jest.spyOn(UserActions, 'editRole');
     const removeRoleSpy = jest.spyOn(UserActions, 'removeRole');
 
-    const ui = (
-      <Provider store={store}>
-        <Roles />
-      </Provider>
-    );
-    render(ui);
+    render(<Roles />);
 
     const role = screen.getByText(/test description/i).parentElement;
     await user.click(within(role).getByText(/view details/i));

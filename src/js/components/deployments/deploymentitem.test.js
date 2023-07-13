@@ -12,19 +12,11 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import DeploymentItem from './deploymentitem';
 import { defaultHeaders as columnHeaders } from './deploymentslist';
-
-const mockStore = configureStore([thunk]);
-
-const store = mockStore({ ...defaultState });
 
 describe('DeploymentItem Component', () => {
   it('renders correctly', async () => {
@@ -49,11 +41,7 @@ describe('DeploymentItem Component', () => {
         }
       }
     };
-    const { container } = render(
-      <Provider store={store}>
-        <DeploymentItem columnHeaders={columnHeaders} deployment={deployment} type="progress" />
-      </Provider>
-    );
+    const { container } = render(<DeploymentItem columnHeaders={columnHeaders} deployment={deployment} type="progress" />);
     expect(container.firstChild.firstChild).toMatchSnapshot();
     expect(container).toEqual(expect.not.stringMatching(undefineds));
   });

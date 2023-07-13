@@ -12,31 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import AddArtifact from './addartifact';
 
-const mockStore = configureStore([thunk]);
-
 describe('AddArtifact Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <AddArtifact onboardingState={{ complete: true }} />
-      </Provider>
-    );
+    const { baseElement } = render(<AddArtifact onboardingState={{ complete: true }} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -47,17 +33,15 @@ describe('AddArtifact Component', () => {
     const uploadMock = jest.fn(() => Promise.resolve());
     const menderFile = new File(['testContent'], 'test.mender');
     const ui = (
-      <Provider store={store}>
-        <AddArtifact
-          createArtifact={jest.fn}
-          onboardingState={{ complete: false }}
-          onUploadStarted={jest.fn}
-          uploadArtifact={uploadMock}
-          deviceTypes={['qemux86-64']}
-          advanceOnboarding={jest.fn}
-          releases={Object.values(defaultState.releases.byId)}
-        />
-      </Provider>
+      <AddArtifact
+        createArtifact={jest.fn}
+        onboardingState={{ complete: false }}
+        onUploadStarted={jest.fn}
+        uploadArtifact={uploadMock}
+        deviceTypes={['qemux86-64']}
+        advanceOnboarding={jest.fn}
+        releases={Object.values(defaultState.releases.byId)}
+      />
     );
     const { rerender } = render(ui);
     expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();
@@ -79,16 +63,14 @@ describe('AddArtifact Component', () => {
     const uploadMock = jest.fn(() => Promise.resolve());
     const menderFile = new File(['testContent plain'], 'testFile.txt');
     const ui = (
-      <Provider store={store}>
-        <AddArtifact
-          onUploadStarted={jest.fn}
-          onboardingState={{ complete: true }}
-          createArtifact={uploadMock}
-          deviceTypes={['qemux86-64']}
-          advanceOnboarding={jest.fn}
-          releases={Object.values(defaultState.releases.byId)}
-        />
-      </Provider>
+      <AddArtifact
+        onUploadStarted={jest.fn}
+        onboardingState={{ complete: true }}
+        createArtifact={uploadMock}
+        deviceTypes={['qemux86-64']}
+        advanceOnboarding={jest.fn}
+        releases={Object.values(defaultState.releases.byId)}
+      />
     );
     const { rerender } = render(ui);
     expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();

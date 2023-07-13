@@ -1,9 +1,927 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Dashboard Component renders correctly 1`] = `
-<h4
-  class="margin-left-small"
->
-  Dashboard
-</h4>
+.emotion-0 {
+  -webkit-column-gap: 48px;
+  column-gap: 48px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  min-height: 80vh;
+}
+
+.emotion-1 {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  -webkit-flex-basis: 0;
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  min-width: 60vw;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  row-gap: 48px;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+@media (min-width:1536px) {
+  .emotion-1 {
+    min-width: 50vw;
+  }
+}
+
+.emotion-2 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+}
+
+.emotion-2 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-3.widget {
+  max-width: initial!important;
+}
+
+.emotion-3 .widgetMainContent {
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+  -ms-flex-pack: space-evenly;
+  -webkit-justify-content: space-evenly;
+  justify-content: space-evenly;
+}
+
+.emotion-4 {
+  max-width: 6vh;
+}
+
+.emotion-4.red {
+  color: #5d0f43;
+}
+
+.emotion-4.green {
+  color: #337a87;
+}
+
+.emotion-5 {
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 2rem;
+  height: 5vh;
+  width: 5vh;
+  max-width: 3em;
+  max-height: 3em;
+}
+
+.emotion-6 {
+  display: grid;
+  place-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.emotion-7 {
+  bottom: -8px;
+  height: 20px;
+  width: 100%;
+}
+
+.emotion-7>div {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.emotion-7>div>div {
+  background: currentColor;
+  border-radius: 6px;
+  height: 100%;
+  width: 24px;
+}
+
+.emotion-7 svg {
+  fill: #fff;
+}
+
+.emotion-8 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.1607rem;
+}
+
+.emotion-8 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-14 {
+  color: rgba(0, 0, 0, 0.38);
+  margin: 15px 0;
+}
+
+.emotion-15 {
+  gap: 8px;
+}
+
+.emotion-17 {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  min-width: 400px;
+  border: none;
+  padding-left: 0;
+  padding-top: 0;
+}
+
+.emotion-17 .deployments .dashboard>h4 {
+  margin-top: 48px;
+}
+
+.emotion-17 .deployments .dashboard>h4.margin-top-none {
+  margin-top: 0;
+}
+
+@media (min-width:1536px) {
+  .emotion-17 {
+    border-left: 1px solid #e9e9e9;
+    margin-top: -16px;
+    padding-left: 48px;
+    padding-top: 16px;
+  }
+
+  .emotion-17 .deployments .dashboard>h4 {
+    margin-top: 0;
+  }
+}
+
+.emotion-18 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  max-width: 500px;
+  padding: 8px;
+}
+
+.emotion-18>div:last-child {
+  width: 100%;
+}
+
+.emotion-19 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: inherit;
+}
+
+.emotion-19 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-23 {
+  background-color: #f7f7f7;
+  padding: 10px 20px;
+  border-radius: 4px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  min-height: 70px;
+}
+
+.emotion-23 .chart-container {
+  min-height: 70px;
+}
+
+.emotion-23 .progress-chart {
+  min-height: 45px;
+}
+
+.emotion-23 .compact .progress-step,
+.emotion-23 .detailed .progress-step {
+  min-height: 45px;
+}
+
+.emotion-23 .progress-step,
+.emotion-23 .detailed .progress-step-total {
+  position: absolute;
+  border-right-style: none;
+}
+
+.emotion-23 .progress-step-total .progress-bar {
+  background-color: #d4e9e7;
+}
+
+.emotion-23 .progress-step-number {
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: flex-start;
+  align-self: flex-start;
+  margin-top: -4px;
+}
+
+.emotion-23.minimal {
+  padding: initial;
+}
+
+.emotion-23.no-background {
+  background: none;
+}
+
+.emotion-23.stepped-progress .progress-step-total {
+  margin-left: -0.25%;
+  width: 100.5%;
+}
+
+.emotion-23.stepped-progress .progress-step-total .progress-bar {
+  background-color: #fff;
+  border: 1px solid #a9a9a9;
+  border-radius: 2px;
+  height: 12px;
+}
+
+.emotion-23.stepped-progress .detailed .progress-step {
+  min-height: 20px;
+}
+
+.emotion-26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  max-width: 500px;
+}
+
+.emotion-26>time {
+  -webkit-align-self: flex-end;
+  -ms-flex-item-align: flex-end;
+  align-self: flex-end;
+  margin-right: 6px;
+}
+
+.emotion-28 {
+  background: #fff;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.emotion-29 {
+  -webkit-column-gap: 8px;
+  column-gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 32px);
+}
+
+.emotion-29>div {
+  -webkit-column-gap: 4px;
+  column-gap: 4px;
+}
+
+.emotion-29 .disabled {
+  opacity: 0.1;
+}
+
+<div>
+  <h4
+    class="margin-left-small"
+  >
+    Dashboard
+  </h4>
+  <div
+    class="emotion-0"
+  >
+    <div
+      class="emotion-1"
+    >
+      <div
+        class="dashboard"
+      >
+        <div
+          class="widget "
+        >
+          <div
+            class="flexbox widgetHeader"
+          >
+            <div
+              class="flexbox center-aligned"
+            >
+              Accepted devices 
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium margin-left-small green emotion-2"
+                data-testid="CheckCircleIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="flexbox column widgetMainContent"
+          >
+            <div
+              class="counter"
+            >
+              2
+            </div>
+          </div>
+        </div>
+        <div
+          class="widget emotion-3"
+        >
+          <div
+            class="flexbox widgetHeader"
+          >
+            Devices with issues
+          </div>
+          <div
+            class="widgetMainContent"
+          >
+            <a
+              class="flexbox center-aligned column emotion-4 green"
+              href="/devices?issues=offline"
+            >
+              <div
+                class="relative emotion-5"
+              >
+                <div
+                  class="emotion-6"
+                >
+                  0
+                </div>
+                <div
+                  class="absolute emotion-7"
+                >
+                  <div
+                    class="relative"
+                  >
+                    <div
+                      class="absolute"
+                    />
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall absolute emotion-8"
+                      data-testid="WifiOffIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M22.99 9C19.15 5.16 13.8 3.76 8.84 4.78l2.52 2.52c3.47-.17 6.99 1.05 9.63 3.7l2-2zm-4 4c-1.29-1.29-2.84-2.13-4.49-2.56l3.53 3.53.96-.97zM2 3.05 5.07 6.1C3.6 6.82 2.22 7.78 1 9l1.99 2c1.24-1.24 2.67-2.16 4.2-2.77l2.24 2.24C7.81 10.89 6.27 11.73 5 13v.01L6.99 15c1.36-1.36 3.14-2.04 4.92-2.06L18.98 20l1.27-1.26L3.29 1.79 2 3.05zM9 17l3 3 3-3c-1.65-1.66-4.34-1.66-6 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p
+                class="align-center slightly-smaller"
+              >
+                Offline
+              </p>
+            </a>
+            <a
+              class="flexbox center-aligned column emotion-4 green"
+              href="/devices?issues=authRequests"
+            >
+              <div
+                class="relative emotion-5"
+              >
+                <div
+                  class="emotion-6"
+                >
+                  0
+                </div>
+                <div
+                  class="absolute emotion-7"
+                >
+                  <div
+                    class="relative"
+                  >
+                    <div
+                      class="absolute"
+                    />
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall absolute emotion-8"
+                      data-testid="VpnKeyOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M22 19h-6v-4h-2.68c-1.14 2.42-3.6 4-6.32 4-3.86 0-7-3.14-7-7s3.14-7 7-7c2.72 0 5.17 1.58 6.32 4H24v6h-2v4zm-4-2h2v-4h2v-2H11.94l-.23-.67C11.01 8.34 9.11 7 7 7c-2.76 0-5 2.24-5 5s2.24 5 5 5c2.11 0 4.01-1.34 4.71-3.33l.23-.67H18v4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p
+                class="align-center slightly-smaller"
+              >
+                Authentication requests
+              </p>
+            </a>
+          </div>
+        </div>
+        <div
+          class="widget flexbox centered"
+        >
+          <p
+            class="muted"
+            style="max-width: 200px;"
+          >
+            + connect more devices
+          </p>
+        </div>
+      </div>
+      <div
+        class="flexbox centered"
+      >
+        <p
+          class="emotion-14 icon flexbox center-aligned emotion-15 "
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-8"
+            data-testid="InfoOutlinedIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
+          <span>
+            With a more advanced commercial Mender plan you get access to actionable insights into the devices you are updating with Mender. Get an overview of the Mender plans on the 
+            <a
+              href="https://mender.io/plans/features"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              features page
+            </a>
+            .
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="emotion-17 deployments"
+    >
+      <div
+        class="dashboard flexbox column"
+        style="grid-template-columns: 1fr; row-gap: 10px;"
+      >
+        <h4
+          class="margin-bottom-none margin-left-small"
+        >
+          Recent deployments
+        </h4>
+        <h5
+          class="margin-bottom-none"
+        >
+          Pending
+        </h5>
+        <div
+          class="clickable emotion-18"
+        >
+          <div>
+            <div>
+              r1
+            </div>
+            <div
+              class=""
+              title="test deployment"
+            >
+              test deployment
+            </div>
+          </div>
+          <div
+            class="flexbox center-aligned"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-19"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"
+              />
+            </svg>
+            <span
+              class="margin-left-small"
+            >
+              Queued to start
+            </span>
+          </div>
+        </div>
+        <div
+          class="clickable emotion-18"
+        >
+          <div>
+            <div>
+              r1
+            </div>
+            <div
+              class=""
+              title="test deployment 2"
+            >
+              test deployment 2
+            </div>
+          </div>
+          <div
+            class="flexbox center-aligned"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-19"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"
+              />
+            </svg>
+            <span
+              class="margin-left-small"
+            >
+              Queued to start
+            </span>
+          </div>
+        </div>
+        <h5
+          class="margin-bottom-none"
+        >
+          In Progress
+        </h5>
+        <div
+          class="clickable emotion-18"
+        >
+          <div>
+            <div>
+              r1
+            </div>
+            <div
+              class=""
+              title="test deployment"
+            >
+              test deployment
+            </div>
+          </div>
+          <div
+            class="relative emotion-23 minimal "
+          >
+            <div
+              class="chart-container"
+            >
+              <div
+                class="progress-chart relative detailed"
+              >
+                <div
+                  class="progress-step"
+                  style="left: 0%; width: 100%;"
+                >
+                  <div
+                    class="progress-bar"
+                    style="width: 100%; background-color: rgb(170, 170, 170);"
+                  />
+                  <div
+                    style="display: contents;"
+                  >
+                    <div
+                      class="progress-bar green"
+                      style="width: 0%;"
+                    />
+                    <div
+                      class="progress-bar warning"
+                      style="left: 0%; width: 0%;"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="progress-step relative flexbox progress-step-total"
+                >
+                  <div
+                    class="progress-bar"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="clickable emotion-18"
+        >
+          <div>
+            <div>
+              r1
+            </div>
+            <div
+              class=""
+              title="test deployment 2"
+            >
+              test deployment 2
+            </div>
+          </div>
+          <div
+            class="flexbox center-aligned"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-19"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"
+              />
+            </svg>
+            <span
+              class="margin-left-small"
+            >
+              Queued to start
+            </span>
+          </div>
+        </div>
+        <h5
+          class="margin-bottom-none"
+        >
+          Finished
+        </h5>
+        <div
+          class="emotion-26"
+        >
+          <time
+            class="muted slightly-smaller"
+            datetime="2019-01-13T13:00:00+00:00"
+          >
+            2019-01-13 13:00
+          </time>
+          <div
+            class="clickable emotion-18"
+          >
+            <div>
+              <div>
+                r1
+              </div>
+              <div
+                class=""
+                title="test deployment"
+              >
+                test deployment
+              </div>
+            </div>
+            <div
+              class="emotion-28"
+            >
+              <div
+                class="flexbox emotion-29 "
+              >
+                <div
+                  aria-label="Skipped"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="skipped_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+                <div
+                  aria-label="Pending"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="pending_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+                <div
+                  aria-label="In progress"
+                  class="flexbox centered "
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="progress_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    1
+                  </div>
+                </div>
+                <div
+                  aria-label="Successful"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="success_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+                <div
+                  aria-label="Failed"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="error_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="emotion-26"
+        >
+          <time
+            class="muted slightly-smaller"
+            datetime="2019-01-13T13:00:00+00:00"
+          >
+            2019-01-13 13:00
+          </time>
+          <div
+            class="clickable emotion-18"
+          >
+            <div>
+              <div>
+                r1
+              </div>
+              <div
+                class=""
+                title="test deployment 2"
+              >
+                test deployment 2
+              </div>
+            </div>
+            <div
+              class="emotion-28"
+            >
+              <div
+                class="flexbox emotion-29 "
+              >
+                <div
+                  aria-label="Skipped"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="skipped_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+                <div
+                  aria-label="Pending"
+                  class="flexbox centered "
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="pending_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    1
+                  </div>
+                </div>
+                <div
+                  aria-label="In progress"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="progress_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+                <div
+                  aria-label="Successful"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="success_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+                <div
+                  aria-label="Failed"
+                  class="flexbox centered disabled"
+                  data-mui-internal-clone-element="true"
+                >
+                  <img
+                    src="error_status.png"
+                  />
+                  <div
+                    class="status"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a
+          class="margin-top"
+          href="/deployments"
+        >
+          See all deployments
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 `;

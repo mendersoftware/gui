@@ -12,12 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
@@ -26,32 +23,23 @@ import * as UserActions from '../../actions/userActions';
 import Authorized from './authorized-devices';
 import { routes } from './base-devices';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  devices: {
+    ...defaultState.devices,
+    byStatus: {
+      ...defaultState.devices.byStatus,
+      accepted: {
+        deviceIds: [],
+        total: 0
+      }
+    }
+  }
+};
 
 describe('AuthorizedDevices Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      devices: {
-        ...defaultState.devices,
-        byStatus: {
-          ...defaultState.devices.byStatus,
-          accepted: {
-            deviceIds: [],
-            total: 0
-          }
-        }
-      }
-    });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Authorized states={routes} />
-      </Provider>
-    );
+    const { baseElement } = render(<Authorized states={routes} />, { preloadedState });
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -72,7 +60,7 @@ describe('AuthorizedDevices Component', () => {
     // const devices = defaultState.devices.byStatus.accepted.deviceIds.map(id => defaultState.devices.byId[id]);
     const pageTotal = defaultState.devices.byStatus.accepted.deviceIds.length;
     // const deviceListState = { isLoading: false, selectedState: DEVICE_STATES.accepted, selection: [], sort: {} };
-    store = mockStore({
+    const preloadedState = {
       ...defaultState,
       app: {
         ...defaultState.app,
@@ -97,22 +85,20 @@ describe('AuthorizedDevices Component', () => {
         ...defaultState.users,
         customColumns: [{ attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 }]
       }
-    });
+    };
     let ui = (
-      <Provider store={store}>
-        <Authorized
-          addDevicesToGroup={jest.fn}
-          onGroupClick={jest.fn}
-          onGroupRemoval={jest.fn}
-          onMakeGatewayClick={jest.fn}
-          onPreauthClick={jest.fn}
-          openSettingsDialog={jest.fn}
-          removeDevicesFromGroup={jest.fn}
-          showsDialog={false}
-        />
-      </Provider>
+      <Authorized
+        addDevicesToGroup={jest.fn}
+        onGroupClick={jest.fn}
+        onGroupRemoval={jest.fn}
+        onMakeGatewayClick={jest.fn}
+        onPreauthClick={jest.fn}
+        openSettingsDialog={jest.fn}
+        removeDevicesFromGroup={jest.fn}
+        showsDialog={false}
+      />
     );
-    const { rerender } = render(ui);
+    const { rerender } = render(ui, { preloadedState });
     await waitFor(() => expect(screen.getAllByRole('checkbox').length).toBeTruthy());
     await user.click(screen.getAllByRole('checkbox')[0]);
     expect(setListStateSpy).toHaveBeenCalledWith({ selection: [0, 1], setOnly: true });

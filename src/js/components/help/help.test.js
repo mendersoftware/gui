@@ -15,11 +15,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { render } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { render as testingLibRender } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { render } from '../../../../tests/setupTests';
+import { getConfiguredStore } from '../../reducers';
 import { Downloads } from './downloads';
 import GettingStarted from './getting-started';
 import Help from './help';
@@ -27,23 +27,19 @@ import MenderHub from './mender-hub';
 import { helpProps } from './mockData';
 import Support from './support';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: { ...defaultState.app.features, hasAddons: true, isEnterprise: true },
+    versionInformation: { latestRelease: helpProps.versions }
+  }
+};
 
 describe('Help Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: { ...defaultState.app.features, hasAddons: true, isEnterprise: true },
-        versionInformation: { latestRelease: helpProps.versions }
-      }
-    });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
+    const store = getConfiguredStore({ preloadedState });
+    const { baseElement } = testingLibRender(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/help/get-started']}>
           <Routes>
@@ -62,11 +58,7 @@ describe('Help Component', () => {
   describe('static components', () => {
     [Downloads, GettingStarted, MenderHub, Support].forEach(Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
-        const { baseElement } = render(
-          <Provider store={store}>
-            <Component {...helpProps} />
-          </Provider>
-        );
+        const { baseElement } = render(<Component {...helpProps} />, { preloadedState });
         const view = baseElement.firstChild.firstChild;
         expect(view).toMatchSnapshot();
         expect(view).toEqual(expect.not.stringMatching(undefineds));

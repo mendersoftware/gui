@@ -774,6 +774,534 @@ label+.emotion-20 {
   color: rgba(0, 0, 0, 0.26);
 }
 
+.emotion-31 {
+  -webkit-column-gap: 8px;
+  column-gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 32px);
+}
+
+.emotion-31>div {
+  -webkit-column-gap: 4px;
+  column-gap: 4px;
+}
+
+.emotion-31 .disabled {
+  opacity: 0.1;
+}
+
+.emotion-32 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #337a87;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: transparent;
+  color: rgba(10, 10, 11, 0.78);
+  justify-self: center;
+  text-transform: none;
+}
+
+.emotion-32::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-32.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-32 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-32:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(35, 85, 94);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-32:hover {
+    background-color: #337a87;
+  }
+}
+
+.emotion-32:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-32.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-32.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-32:hover {
+  colors: #337a87;
+}
+
+.emotion-32.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-32:hover {
+  background-color: transparent;
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-34 {
+  overflow: auto;
+  color: rgba(10, 10, 11, 0.78);
+  font-size: 0.8125rem;
+}
+
+.emotion-34:last-child {
+  padding: 0;
+}
+
+.emotion-35 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 56px;
+  min-height: 52px;
+  padding-right: 2px;
+}
+
+@media (min-width:600px) {
+  .emotion-35 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width:0px) {
+  @media (orientation: landscape) {
+    .emotion-35 {
+      min-height: 48px;
+    }
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-35 {
+    min-height: 64px;
+  }
+}
+
+@media (min-width:0px) and (orientation: landscape) {
+  .emotion-35 {
+    min-height: 52px;
+  }
+}
+
+@media (min-width:600px) {
+  .emotion-35 {
+    min-height: 52px;
+    padding-right: 2px;
+  }
+}
+
+.emotion-35 .MuiTablePagination-actions {
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.emotion-36 {
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
+}
+
+.emotion-37 {
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.8125rem;
+  line-height: 1.43;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-38 {
+  line-height: 1.4375em;
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.9286rem;
+  color: rgba(10, 10, 11, 0.78);
+  box-sizing: border-box;
+  position: relative;
+  cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: inherit;
+  font-size: inherit;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  margin-right: 32px;
+  margin-left: 8px;
+}
+
+.emotion-38.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+  cursor: default;
+}
+
+.emotion-38 .MuiTablePagination-select {
+  padding-left: 8px;
+  padding-right: 24px;
+  text-align: right;
+  -webkit-text-align-last: right;
+  text-align-last: right;
+}
+
+.emotion-39 {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-radius: 0;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentColor;
+  padding: 4px 0 5px;
+  border: 0;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  -webkit-animation-name: mui-auto-fill-cancel;
+  animation-name: mui-auto-fill-cancel;
+  -webkit-animation-duration: 10ms;
+  animation-duration: 10ms;
+}
+
+.emotion-39:focus {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0;
+}
+
+.emotion-39::-ms-expand {
+  display: none;
+}
+
+.emotion-39.Mui-disabled {
+  cursor: default;
+}
+
+.emotion-39[multiple] {
+  height: auto;
+}
+
+.emotion-39:not([multiple]) option,
+.emotion-39:not([multiple]) optgroup {
+  background-color: #fff;
+}
+
+.emotion-39.emotion-39.emotion-39 {
+  padding-right: 24px;
+  min-width: 16px;
+}
+
+.emotion-39.MuiSelect-select {
+  height: auto;
+  min-height: 1.4375em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.emotion-39::-webkit-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-39::-moz-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-39:-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-39::-ms-input-placeholder {
+  color: currentColor;
+  opacity: 0.42;
+  -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.emotion-39:focus {
+  outline: 0;
+}
+
+.emotion-39:invalid {
+  box-shadow: none;
+}
+
+.emotion-39::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39::-webkit-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39::-moz-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39::-ms-input-placeholder {
+  opacity: 0!important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-webkit-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-moz-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus:-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-placeholder {
+  opacity: 0.42;
+}
+
+.emotion-39.Mui-disabled {
+  opacity: 1;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-39:-webkit-autofill {
+  -webkit-animation-duration: 5000s;
+  animation-duration: 5000s;
+  -webkit-animation-name: mui-auto-fill;
+  animation-name: mui-auto-fill;
+}
+
+.emotion-40 {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.emotion-41 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+  position: absolute;
+  right: 0;
+  top: calc(50% - .5em);
+  pointer-events: none;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.emotion-41 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-41.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-42 {
+  font-family: Lato,sans-serif;
+  font-weight: 400;
+  font-size: 0.8125rem;
+  line-height: 1.43;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-43 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: 1.3929rem;
+  padding: 8px;
+  border-radius: 50%;
+  overflow: visible;
+  color: rgba(0, 0, 0, 0.54);
+  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 12px;
+  font-size: 1.625rem;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.emotion-43::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-43.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-43 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-43:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-43:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-43.Mui-disabled {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.26);
+}
+
 <div
   class="fadeIn margin-left margin-top-large"
 >
@@ -1020,6 +1548,359 @@ label+.emotion-20 {
   </div>
   <div
     class="deploy-table-contain"
-  />
+  >
+    <div
+      class="fadeIn deploy-table-contain margin-left-small"
+    >
+      <div
+        class="deployment-item deployment-header-item muted past-item"
+      >
+        <div
+          class=""
+        >
+          Release
+        </div>
+        <div
+          class=""
+        >
+          Target device(s)
+        </div>
+        <div
+          class=""
+        >
+          Start time
+        </div>
+        <div
+          class=""
+        >
+          End time
+        </div>
+        <div
+          class="align-right column-defined"
+        >
+          # devices
+        </div>
+        <div
+          class=""
+        >
+          Status
+        </div>
+        <div
+          class=""
+        >
+          Data downloaded
+        </div>
+      </div>
+      <div
+        class=""
+      >
+        <div
+          class="deployment-item past-item"
+        >
+          <div>
+            <span
+              class="deployment-item-title muted"
+            >
+              Release
+            </span>
+            <div
+              class="text-overflow "
+              title="r1"
+            >
+              r1
+            </div>
+          </div>
+          <div>
+            <span
+              class="deployment-item-title muted"
+            >
+              Target device(s)
+            </span>
+            <div
+              class="text-overflow "
+              title="test deployment"
+            >
+              test deployment
+            </div>
+          </div>
+          <div>
+            <span
+              class="deployment-item-title muted"
+            >
+              Start time
+            </span>
+            <span
+              aria-label="Tue Jan 01 2019 12:30:00 GMT+0000"
+              class=""
+              data-mui-internal-clone-element="true"
+            >
+              <time
+                datetime="2019-01-01T12:30:00+00:00"
+              >
+                2019-01-01 12:30
+              </time>
+            </span>
+          </div>
+          <div>
+            <span
+              class="deployment-item-title muted"
+            >
+              End time
+            </span>
+            <span
+              aria-label=""
+              class=""
+              data-mui-internal-clone-element="true"
+            >
+              <div
+                class=""
+              >
+                -
+              </div>
+            </span>
+          </div>
+          <div
+            class="align-right column-defined"
+          >
+            <span
+              class="deployment-item-title muted"
+            >
+              # devices
+            </span>
+            <div
+              class="align-right column-defined"
+            >
+              1
+            </div>
+          </div>
+          <div>
+            <span
+              class="deployment-item-title muted"
+            >
+              Status
+            </span>
+            <div
+              class="flexbox emotion-31 "
+            >
+              <div
+                aria-label="Skipped"
+                class="flexbox centered disabled"
+                data-mui-internal-clone-element="true"
+              >
+                <img
+                  src="skipped_status.png"
+                />
+                <div
+                  class="status"
+                >
+                  0
+                </div>
+              </div>
+              <div
+                aria-label="Pending"
+                class="flexbox centered disabled"
+                data-mui-internal-clone-element="true"
+              >
+                <img
+                  src="pending_status.png"
+                />
+                <div
+                  class="status"
+                >
+                  0
+                </div>
+              </div>
+              <div
+                aria-label="In progress"
+                class="flexbox centered "
+                data-mui-internal-clone-element="true"
+              >
+                <img
+                  src="progress_status.png"
+                />
+                <div
+                  class="status"
+                >
+                  1
+                </div>
+              </div>
+              <div
+                aria-label="Successful"
+                class="flexbox centered disabled"
+                data-mui-internal-clone-element="true"
+              >
+                <img
+                  src="success_status.png"
+                />
+                <div
+                  class="status"
+                >
+                  0
+                </div>
+              </div>
+              <div
+                aria-label="Failed"
+                class="flexbox centered disabled"
+                data-mui-internal-clone-element="true"
+              >
+                <img
+                  src="error_status.png"
+                />
+                <div
+                  class="status"
+                >
+                  0
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span
+              class="deployment-item-title muted"
+            >
+              Data downloaded
+            </span>
+            <div
+              class="align-right"
+            >
+              -
+            </div>
+          </div>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-32"
+            tabindex="0"
+            type="button"
+          >
+            View details
+            <span
+              class="MuiTouchRipple-root emotion-8"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="flexbox"
+      >
+        <div
+          class="MuiTablePagination-root flexbox margin-top margin-top-none emotion-34"
+        >
+          <div
+            class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar emotion-35"
+          >
+            <div
+              class="MuiTablePagination-spacer flexbox no-basis emotion-36"
+            />
+            <p
+              class="MuiTablePagination-selectLabel emotion-37"
+              id="mui-13"
+            >
+              Rows
+            </p>
+            <div
+              class="MuiInputBase-root MuiInputBase-colorPrimary emotion-38"
+            >
+              <div
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                aria-labelledby="mui-13 mui-12"
+                class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input emotion-39"
+                id="mui-12"
+                role="button"
+                tabindex="0"
+              >
+                20
+              </div>
+              <input
+                aria-hidden="true"
+                aria-invalid="false"
+                class="MuiSelect-nativeInput emotion-40"
+                tabindex="-1"
+                value="20"
+              />
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard emotion-41"
+                data-testid="ArrowDropDownIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </div>
+            <p
+              class="MuiTablePagination-displayedRows emotion-42"
+            />
+            <div
+              class="flexbox center-aligned"
+            >
+              <div>
+                1-1 of 1
+              </div>
+              <button
+                class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge emotion-43"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                  data-testid="KeyboardArrowLeftIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
+                  />
+                </svg>
+              </button>
+              <div>
+                <button
+                  class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge emotion-43"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                    data-testid="KeyboardArrowRightIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="loaderContainer"
+        >
+          <div
+            class="small  loader"
+          >
+            <span
+              class="dot dot_1"
+            />
+            <span
+              class="dot dot_2"
+            />
+            <span
+              class="dot dot_3"
+            />
+            <span
+              class="dot dot_4"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;

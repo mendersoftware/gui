@@ -21,8 +21,16 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { tryMapDeployments } from '../../helpers';
-import { getIdAttribute, getIsEnterprise, getOnboardingState, getUserCapabilities } from '../../selectors';
+import {
+  getDeploymentsByStatus as getDeploymentsByStatusSelector,
+  getDeploymentsSelectionState,
+  getDevicesById,
+  getIdAttribute,
+  getIsEnterprise,
+  getMappedDeploymentSelection,
+  getOnboardingState,
+  getUserCapabilities
+} from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
@@ -51,19 +59,19 @@ const useStyles = makeStyles()(theme => ({
 export const Progress = ({ abort, createClick, ...remainder }) => {
   const dispatch = useDispatch();
   const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
-  const progress = useSelector(
-    state => state.deployments.selectionState.inprogress.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments
-  );
-  const pending = useSelector(state => state.deployments.selectionState.pending.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments);
   const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const onboardingState = useSelector(getOnboardingState);
   const isEnterprise = useSelector(getIsEnterprise);
-  const pastDeploymentsCount = useSelector(state => state.deployments.byStatus.finished.total);
-  const pendingCount = useSelector(state => state.deployments.byStatus.pending.total);
-  const progressCount = useSelector(state => state.deployments.byStatus.inprogress.total);
-  const selectionState = useSelector(state => state.deployments.selectionState);
-  const devices = useSelector(state => state.devices.byId);
+  const {
+    finished: { total: pastDeploymentsCount },
+    pending: { total: pendingCount },
+    inprogress: { total: progressCount }
+  } = useSelector(getDeploymentsByStatusSelector);
+  const progress = useSelector(state => getMappedDeploymentSelection(state, DEPLOYMENT_STATES.inprogress));
+  const pending = useSelector(state => getMappedDeploymentSelection(state, DEPLOYMENT_STATES.pending));
+  const selectionState = useSelector(getDeploymentsSelectionState);
+  const devices = useSelector(getDevicesById);
 
   const { page: progressPage, perPage: progressPerPage } = selectionState.inprogress;
   const { page: pendingPage, perPage: pendingPerPage } = selectionState.pending;

@@ -12,10 +12,6 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
-
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { render } from '../../../../tests/setupTests';
 import {
@@ -46,21 +42,10 @@ import {
   WelcomeSnackTip
 } from './onboardingtips';
 
-const mockStore = configureStore([thunk]);
-
 describe('OnboardingTips Components', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   describe('DevicePendingTip', () => {
     it('renders correctly', async () => {
-      const { baseElement } = render(
-        <Provider store={store}>
-          <DevicePendingTip />
-        </Provider>
-      );
+      const { baseElement } = render(<DevicePendingTip />);
       const view = baseElement.firstChild.firstChild;
       expect(view).toMatchSnapshot();
     });
@@ -68,11 +53,7 @@ describe('OnboardingTips Components', () => {
 
   describe('WelcomeSnackTip', () => {
     it('renders correctly', async () => {
-      const { baseElement } = render(
-        <Provider store={store}>
-          <WelcomeSnackTip />
-        </Provider>
-      );
+      const { baseElement } = render(<WelcomeSnackTip />);
       const view = baseElement.firstChild.firstChild;
       expect(view).toMatchSnapshot();
     });
