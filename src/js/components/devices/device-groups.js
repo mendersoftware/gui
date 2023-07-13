@@ -237,9 +237,11 @@ export const DeviceGroups = () => {
 
   return (
     <>
-      <div className="tab-container with-sub-panels margin-bottom-small" style={{ padding: 0, minHeight: 'initial' }}>
-        <h3 style={{ marginBottom: 0 }}>Devices</h3>
-        <div className="flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small">
+      <div className="tab-container with-sub-panels" style={{ paddingTop: 0, paddingBottom: 45, minHeight: 'max-content', alignContent: 'center' }}>
+        <h3 className="flexbox center-aligned" style={{ marginBottom: 0, marginTop: 0, flexWrap: 'wrap' }}>
+          Devices
+        </h3>
+        <span className="flexbox space-between margin-left-large margin-right center-aligned">
           {hasReporting && !!authRequestCount && (
             <a className="flexbox center-aligned margin-right-large" onClick={onShowAuthRequestDevicesClick}>
               <AddIcon fontSize="small" style={{ marginRight: 6 }} />
@@ -260,7 +262,7 @@ export const DeviceGroups = () => {
               tenantCapabilities={tenantCapabilities}
             />
           )}
-        </div>
+        </span>
       </div>
       <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>
         <Groups
