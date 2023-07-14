@@ -21,7 +21,6 @@ import {
   SET_ONBOARDING_COMPLETE,
   SET_ONBOARDING_DEVICE_TYPE,
   SET_ONBOARDING_PROGRESS,
-  SET_SHOW_CREATE_ARTIFACT,
   SET_SHOW_ONBOARDING_HELP,
   SET_SHOW_ONBOARDING_HELP_DIALOG,
   onboardingSteps as onboardingStepNames
@@ -80,21 +79,9 @@ export const getOnboardingState = () => (dispatch, getState) => {
       userId
     });
   }
-  onboardingState.progress = onboardingState.progress || onboardingStepNames.ONBOARDING_START;
+  onboardingState.progress = onboardingState.progress || onboardingStepNames.DASHBOARD_ONBOARDING_START;
   const demoDeviceAddress = `http://${getDemoDeviceAddress(Object.values(store.devices.byId), onboardingState.approach)}`;
   onboardingState.address = store.onboarding.demoArtifactPort ? `${demoDeviceAddress}:${store.onboarding.demoArtifactPort}` : demoDeviceAddress;
-  const progress = Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ARTIFACT_CREATION_DIALOG);
-  const currentProgress = Object.keys(onboardingSteps).findIndex(step => step === onboardingState.progress);
-  onboardingState.showCreateArtifactDialog = Math.abs(currentProgress - progress) <= 1;
-  if (onboardingState.showCreateArtifactDialog && !onboardingState.complete && onboardingState.showTips && store.users.showHelptips) {
-    dispatch(setShowCreateArtifactDialog(true));
-    onboardingState.progress = onboardingStepNames.ARTIFACT_CREATION_DIALOG;
-    // although it would be more appropriate to do this in the app component, this happens here because in the app component we would need to track
-    // redirects, if we want to still allow navigation across the UI while the dialog is visible
-    if (!window.location.pathname.includes('/ui/releases')) {
-      window.location.replace('/ui/releases');
-    }
-  }
   return Promise.resolve(dispatch(setOnboardingState(onboardingState)));
 };
 
@@ -133,8 +120,6 @@ export const setOnboardingApproach =
 
 const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: SET_ONBOARDING_ARTIFACT_INCLUDED, value });
 
-export const setShowCreateArtifactDialog = show => dispatch => dispatch({ type: SET_SHOW_CREATE_ARTIFACT, show });
-
 export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({ type: SET_SHOW_ONBOARDING_HELP_DIALOG, show });
 
 export const setDemoArtifactPort = port => dispatch => dispatch({ type: SET_DEMO_ARTIFACT_PORT, value: port });
@@ -143,7 +128,7 @@ export const setOnboardingComplete = val => dispatch => {
   let tasks = [Promise.resolve(dispatch({ type: SET_ONBOARDING_COMPLETE, complete: val }))];
   if (val) {
     tasks.push(Promise.resolve(dispatch({ type: SET_SHOW_ONBOARDING_HELP, show: false })));
-    tasks.push(Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED))));
+    tasks.push(Promise.resolve(dispatch(advanceOnboarding(onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED))));
   }
   return Promise.all(tasks);
 };
@@ -154,9 +139,9 @@ export const setOnboardingCanceled = () => dispatch =>
     Promise.resolve(dispatch(setShowDismissOnboardingTipsDialog(false))),
     Promise.resolve(dispatch({ type: SET_ONBOARDING_COMPLETE, complete: true }))
   ])
-    // using ONBOARDING_FINISHED_NOTIFICATION to ensure we get the intended onboarding state set after
+    // using DEPLOYMENTS_PAST_COMPLETED to ensure we get the intended onboarding state set after
     // _advancing_ the onboarding progress
-    .then(() => dispatch(advanceOnboarding(onboardingStepNames.ONBOARDING_FINISHED_NOTIFICATION)))
+    .then(() => dispatch(advanceOnboarding(onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED_FAILURE)))
     // since we can't advance after ONBOARDING_CANCELED, track the step manually here
     .then(() => Tracking.event({ category: 'onboarding', action: onboardingSteps.ONBOARDING_CANCELED }));
 
@@ -168,7 +153,6 @@ const setOnboardingState = state => dispatch =>
     dispatch(setOnboardingArtifactIncluded(state.artifactIncluded)),
     dispatch(setShowOnboardingHelp(state.showTips, false)),
     dispatch(setOnboardingProgress(state.progress)),
-    dispatch(setShowCreateArtifactDialog(state.showCreateArtifactDialog && !state.complete && state.showTips)),
     dispatch(saveUserSettings({ onboarding: state }))
   ]);
 
@@ -183,7 +167,8 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
   }
   const madeProgress = steps[stepIndex + 1];
   const state = { ...getCurrentOnboardingState(getState()), progress: madeProgress };
-  state.complete = stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.ONBOARDING_FINISHED) ? true : state.complete;
+  state.complete =
+    stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED) ? true : state.complete;
   Tracking.event({ category: 'onboarding', action: stepId });
   return Promise.all([dispatch(setOnboardingProgress(madeProgress)), dispatch(saveUserSettings({ onboarding: state }))]);
 };
@@ -198,14 +183,6 @@ const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeploy
   progress =
     acceptedDevices.length > 1 && releases.length > 1 && pastDeployments.length > 1
       ? steps.findIndex(step => step === onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED)
-      : progress;
-  progress =
-    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 1
-      ? steps.findIndex(step => step === onboardingStepNames.ARTIFACT_MODIFIED_ONBOARDING)
-      : progress;
-  progress =
-    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2
-      ? steps.findIndex(step => step === onboardingStepNames.ONBOARDING_FINISHED)
       : progress;
   return steps[progress];
 };

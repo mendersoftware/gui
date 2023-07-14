@@ -323,7 +323,6 @@ export const defaultState = {
     progress: undefined,
     complete: false,
     demoArtifactPort: 85,
-    showCreateArtifactDialog: false,
     showConnectDeviceDialog: false,
     showTipsDialog: false
   },

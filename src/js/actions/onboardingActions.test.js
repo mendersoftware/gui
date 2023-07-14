@@ -25,7 +25,6 @@ import {
   setOnboardingCanceled,
   setOnboardingComplete,
   setOnboardingDeviceType,
-  setShowCreateArtifactDialog,
   setShowDismissOnboardingTipsDialog,
   setShowOnboardingHelp
 } from './onboardingActions';
@@ -53,8 +52,7 @@ export const expectedOnboardingActions = [
   { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' },
   { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: null },
   { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
-  { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'application-update-reminder-tip' },
-  { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false },
+  { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: OnboardingConstants.onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP },
   { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
   {
     type: UserConstants.SET_USER_SETTINGS,
@@ -79,7 +77,7 @@ describe('onboarding actions', () => {
     const expectedActions = [
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
-      { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-finished-notification' },
+      { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: OnboardingConstants.onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE },
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
         type: UserConstants.SET_USER_SETTINGS,
@@ -88,7 +86,7 @@ describe('onboarding actions', () => {
           onboarding: {
             ...defaultOnboardingState,
             complete: true,
-            progress: 'onboarding-finished-notification'
+            progress: OnboardingConstants.onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE
           }
         }
       }
@@ -137,19 +135,6 @@ describe('onboarding actions', () => {
             deviceType: 'testtype'
           }
         }
-      }
-    ];
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
-  });
-  it('should pass on onboarding artifact creation dialog', async () => {
-    const store = mockStore({ ...defaultState });
-    await store.dispatch(setShowCreateArtifactDialog(true));
-    const expectedActions = [
-      {
-        type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT,
-        show: true
       }
     ];
     const storeActions = store.getActions();

@@ -22,7 +22,6 @@ const getYesterday = () => {
 
 export const initialState = {
   cancelSource: undefined,
-  demoArtifactLink: 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender',
   hostAddress: null,
   snackbar: {
     open: false,

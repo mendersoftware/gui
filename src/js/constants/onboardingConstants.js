@@ -20,10 +20,6 @@ export const onboardingSteps = {
   DEVICES_ACCEPTED_ONBOARDING: 'devices-accepted-onboarding',
   DEVICES_PENDING_ACCEPTING_ONBOARDING: 'devices-pending-accepting-onboarding',
   DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION: 'devices-accepted-onboarding-notification',
-  UPLOAD_PREPARED_ARTIFACT_TIP: 'upload-prepared-artifact-tip',
-  APPLICATION_UPDATE_REMINDER_TIP: 'application-update-reminder-tip',
-  ARTIFACT_INCLUDED_ONBOARDING: 'artifact-included-onboarding',
-  ARTIFACT_INCLUDED_DEPLOY_ONBOARDING: 'artifact-included-deploy-onboarding',
   SCHEDULING_ARTIFACT_SELECTION: 'scheduling-artifact-selection',
   SCHEDULING_ALL_DEVICES_SELECTION: 'scheduling-all-devices-selection',
   SCHEDULING_GROUP_SELECTION: 'scheduling-group-selection',
@@ -33,16 +29,6 @@ export const onboardingSteps = {
   DEPLOYMENTS_PAST_COMPLETED: 'deployments-past-completed',
   DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION: 'deployments-past-completed-notification',
   DEPLOYMENTS_PAST_COMPLETED_FAILURE: 'deployments-past-completed-failure',
-  ARTIFACT_CREATION_DIALOG: 'artifact-creation-dialog',
-  UPLOAD_NEW_ARTIFACT_TIP: 'upload-new-artifact-tip',
-  UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD: 'upload-new-artifact-dialog-upload',
-  UPLOAD_NEW_ARTIFACT_DIALOG_DESTINATION: 'upload-new-artifact-dialog-destination',
-  UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE: 'upload-new-artifact-dialog-device-type',
-  UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME: 'upload-new-artifact-dialog-release-name',
-  UPLOAD_NEW_ARTIFACT_DIALOG_CLICK: 'upload-new-artifact-dialog-click',
-  ARTIFACT_MODIFIED_ONBOARDING: 'artifact-modified-onboarding',
-  ONBOARDING_FINISHED: 'onboarding-finished',
-  ONBOARDING_FINISHED_NOTIFICATION: 'onboarding-finished-notification',
   ONBOARDING_CANCELED: 'onboarding-canceled'
 };
 export const SET_DEMO_ARTIFACT_PORT = 'SET_DEMO_ARTIFACT_PORT';

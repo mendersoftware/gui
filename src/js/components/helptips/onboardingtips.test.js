@@ -15,10 +15,6 @@ import React from 'react';
 
 import { render } from '../../../../tests/setupTests';
 import {
-  ApplicationUpdateReminderTip,
-  ArtifactIncludedDeployOnboarding,
-  ArtifactIncludedOnboarding,
-  ArtifactModifiedOnboarding,
   DashboardOnboardingPendings,
   DashboardOnboardingState,
   DeploymentsInprogress,
@@ -32,13 +28,6 @@ import {
   SchedulingArtifactSelection,
   SchedulingGroupSelection,
   SchedulingReleaseToDevices,
-  UploadNewArtifactDialogClick,
-  UploadNewArtifactDialogDestination,
-  UploadNewArtifactDialogDeviceType,
-  UploadNewArtifactDialogReleaseName,
-  UploadNewArtifactDialogUpload,
-  UploadNewArtifactTip,
-  UploadPreparedArtifactTip,
   WelcomeSnackTip
 } from './onboardingtips';
 
@@ -61,10 +50,6 @@ describe('OnboardingTips Components', () => {
 
   describe('tiny onboarding tips', () => {
     [
-      ApplicationUpdateReminderTip,
-      ArtifactIncludedDeployOnboarding,
-      ArtifactIncludedOnboarding,
-      ArtifactModifiedOnboarding,
       DashboardOnboardingPendings,
       DashboardOnboardingState,
       DeploymentsInprogress,
@@ -76,25 +61,10 @@ describe('OnboardingTips Components', () => {
       SchedulingAllDevicesSelection,
       SchedulingArtifactSelection,
       SchedulingGroupSelection,
-      SchedulingReleaseToDevices,
-      UploadNewArtifactDialogClick,
-      UploadNewArtifactDialogDestination,
-      UploadNewArtifactDialogDeviceType,
-      UploadNewArtifactDialogReleaseName,
-      UploadNewArtifactDialogUpload,
-      UploadNewArtifactTip,
-      UploadPreparedArtifactTip
+      SchedulingReleaseToDevices
     ].forEach(async Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
-        const { baseElement } = render(
-          <Component
-            createdGroup="testgroup"
-            demoArtifactLink="http://somewhere.com"
-            progress={3}
-            selectedRelease={{ Name: 'test', toString: () => 'test' }}
-            setShowCreateArtifactDialog={jest.fn}
-          />
-        );
+        const { baseElement } = render(<Component createdGroup="testgroup" selectedRelease={{ Name: 'test', toString: () => 'test' }} />);
         const view = baseElement.firstChild.firstChild;
         expect(view).toMatchSnapshot();
       });

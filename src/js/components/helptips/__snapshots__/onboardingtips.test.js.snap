@@ -219,48 +219,6 @@ exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
 </div>
 `;
 
-exports[`OnboardingTips Components tiny onboarding tips renders ApplicationUpdateReminderTip correctly 1`] = `
-<div>
-  <b>
-    Deploy your first Application update
-  </b>
-  <p>
-    To continue to make a demo deployment to this device click the 
-    <a
-      href="/releases"
-    >
-      Releases
-    </a>
-     tab
-  </p>
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders ArtifactIncludedDeployOnboarding correctly 1`] = `
-<div>
-  Let's deploy this Release to your device now
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders ArtifactIncludedOnboarding correctly 1`] = `
-<div>
-  Now you have
-   a Mender artifact with a simple Application update for you to test with.
-  <p>
-    Click on it for more details.
-  </p>
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders ArtifactModifiedOnboarding correctly 1`] = `
-<div>
-  Your uploaded Artifact is now part of a new 'Release'.
-  <p>
-    Now create a deployment with this Release!
-  </p>
-</div>
-`;
-
 exports[`OnboardingTips Components tiny onboarding tips renders DashboardOnboardingPendings correctly 1`] = `
 <div>
   Next accept your device
@@ -343,74 +301,5 @@ exports[`OnboardingTips Components tiny onboarding tips renders SchedulingGroupS
 exports[`OnboardingTips Components tiny onboarding tips renders SchedulingReleaseToDevices correctly 1`] = `
 <div>
   Create the deployment! This will deploy the test Artifact to All devices
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogClick correctly 1`] = `
-<div>
-  Now click 'Upload Artifact' to finish this step!
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogDestination correctly 1`] = `
-<div>
-  We have prefilled this for you, for the demo - it is the destination on your device where the new 
-  <i>
-    index.html
-  </i>
-   file will be installed.
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogDeviceType correctly 1`] = `
-<div>
-  Enter the device types this will be compatible with. For the demo, you just need to select the device type of your demo device.
-  <br />
-  Then click 'Next' below.
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogReleaseName correctly 1`] = `
-<div>
-  Now name your Release: for the demo you could call it something like "hello-world".
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogUpload correctly 1`] = `
-<div>
-  Drag or select your new 
-  <i>
-    index.html
-  </i>
-   file here to upload it.
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactTip correctly 1`] = `
-<div>
-  Click 'Upload' to upload the file and create your new Release.
-  <p>
-    You can 
-    <a>
-      view the instructions again
-    </a>
-     if you need help creating the 
-    <i>
-      index.html
-    </i>
-     file.
-  </p>
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadPreparedArtifactTip correctly 1`] = `
-<div>
-  Download our prepared demo Artifact from 
-  <a
-    href="http://somewhere.com"
-  >
-    here
-  </a>
-   to upload it to your profile.
 </div>
 `;

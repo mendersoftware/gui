@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
+import { withStyles } from 'tss-react/mui';
 
 import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/onboardingActions';
@@ -25,7 +26,15 @@ import { getDemoDeviceAddress } from '../../selectors';
 import DocsLink from '../common/docslink';
 import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
-import { CompletionButton } from './deploymentcompletetip';
+
+export const CompletionButton = withStyles(Button, ({ palette }) => ({
+  root: {
+    backgroundColor: palette.background.default,
+    '&:hover': {
+      backgroundColor: palette.background.default
+    }
+  }
+}));
 
 export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
   const timer = useRef();
@@ -49,14 +58,15 @@ export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
   return (
     <MenderTooltipClickable
       className="tooltip onboard-icon onboard-tip"
-      id={onboardingSteps.ONBOARDING_FINISHED}
+      id={onboardingSteps.DEPLOYMENTS_PAST_COMPLETED}
       onboarding
       startOpen
       style={anchor}
       PopperProps={{ style: { marginLeft: -30, marginTop: -20 } }}
       title={
         <div className="content">
-          <p>Great work! You updated your device with the new Release!</p>
+          <p>Fantastic! You completed your first deployment!</p>
+          <p>Your deployment is finished and your device is now running the updated software!</p>
           <div className="margin-bottom-small margin-top-small">
             Your device is now running the updated version of the software. At
             <div className="flexbox centered" style={{ margin: '5px 0' }}>
@@ -71,9 +81,9 @@ export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
                 >{`Go to ${url}`}</CompletionButton>
               )}
             </div>
-            you should now see &quot;Hello world&quot; in place of the webpage you saw previously. If you continue to see the webpage you saw previously you
-            might have to refresh the page.
+            you should see the demo web application actually being run on the device.
           </div>
+          <p>NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.</p>
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>

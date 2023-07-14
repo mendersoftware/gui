@@ -73,16 +73,7 @@ export const OnboardingIndicator = React.forwardRef(({ className = '', orientati
 ));
 OnboardingIndicator.displayName = 'OnboardingIndicator';
 
-const BaseOnboardingTipComponent = ({
-  anchor,
-  component,
-  place = 'top',
-  progress,
-  progressTotal = 3,
-  id = '1',
-  setShowDismissOnboardingTipsDialog,
-  ...others
-}) => {
+const BaseOnboardingTipComponent = ({ anchor, component, place = 'top', id = '1', setShowDismissOnboardingTipsDialog, ...others }) => {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
@@ -120,7 +111,6 @@ const BaseOnboardingTipComponent = ({
         <div className="content">
           {React.cloneElement(component, others)}
           <div className="flexbox">
-            {progress ? <div>{`Progress: step ${progress} of ${progressTotal}`}</div> : null}
             <div style={{ flexGrow: 1 }} />
             <a onClick={() => setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
           </div>
