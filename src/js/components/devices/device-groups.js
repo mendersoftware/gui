@@ -42,7 +42,6 @@ import {
   getDeviceCountsByStatus,
   getDeviceFilters,
   getDeviceLimit,
-  getDocsVersion,
   getFeatures,
   getGroups as getGroupsSelector,
   getIsEnterprise,
@@ -50,6 +49,7 @@ import {
   getLimitMaxed,
   getSelectedGroupInfo,
   getShowHelptips,
+  getSortedFilteringAttributes,
   getTenantCapabilities,
   getUserCapabilities
 } from '../../selectors';
@@ -78,10 +78,7 @@ export const DeviceGroups = () => {
   const { status: statusParam } = useParams();
 
   const { groupCount, selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
-  const filteringAttributes = useSelector(state => ({
-    ...state.devices.filteringAttributes,
-    identityAttributes: [...state.devices.filteringAttributes.identityAttributes, 'id']
-  }));
+  const filteringAttributes = useSelector(getSortedFilteringAttributes);
   const { canManageDevices } = useSelector(getUserCapabilities);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const { groupNames, ...groupsByType } = useSelector(getGroupsSelector);
@@ -91,7 +88,6 @@ export const DeviceGroups = () => {
   const canPreview = useSelector(getIsPreview);
   const deviceLimit = useSelector(getDeviceLimit);
   const deviceListState = useSelector(state => state.devices.deviceList);
-  const docsVersion = useSelector(getDocsVersion);
   const features = useSelector(getFeatures);
   const { hasReporting } = features;
   const filters = useSelector(getDeviceFilters);
@@ -257,7 +253,6 @@ export const DeviceGroups = () => {
           )}
           {canManageDevices && (
             <DeviceAdditionWidget
-              docsVersion={docsVersion}
               features={features}
               onConnectClick={() => dispatch(setShowConnectingDialog(true))}
               onMakeGatewayClick={toggleMakeGatewayClick}
@@ -320,7 +315,7 @@ export const DeviceGroups = () => {
             setSnackbar={message => dispatch(setSnackbar(message))}
           />
         )}
-        {showMakeGateway && <MakeGatewayDialog docsVersion={docsVersion} isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}
+        {showMakeGateway && <MakeGatewayDialog isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}
       </div>
     </>
   );

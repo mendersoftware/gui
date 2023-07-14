@@ -12,12 +12,14 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { makeStyles } from 'tss-react/mui';
 
 import GatewayConnectionIcon from '../../../assets/img/gateway-connection.svg';
 import GatewayIcon from '../../../assets/img/gateway.svg';
 import { stringToBoolean } from '../../helpers';
+import { getIdAttribute } from '../../selectors';
 import { getDeviceIdentityText } from '../devices/base-devices';
 import DeviceNameInput from './devicenameinput';
 
@@ -45,8 +47,11 @@ const adornments = [
 ];
 
 export const DeviceIdentityDisplay = props => {
-  const { device, idAttribute, isEditable = true, hasAdornment = true } = props;
-  const idValue = getDeviceIdentityText({ device, idAttribute });
+  const { device = {}, isEditable = true, hasAdornment = true } = props;
+
+  const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const stateDevice = useSelector(state => state.devices.byId[device?.id]) || {};
+  const idValue = getDeviceIdentityText({ device: { ...device, ...stateDevice }, idAttribute });
   const { classes } = useStyles();
 
   const Component = !isEditable ? attributeComponentMap.default : attributeComponentMap[idAttribute] ?? attributeComponentMap.default;

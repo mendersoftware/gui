@@ -12,13 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
@@ -28,32 +24,21 @@ import { ForceDeploy, Retries, RolloutOptions } from './deployment-wizard/rollou
 import { ScheduleRollout } from './deployment-wizard/schedulerollout';
 import { Devices, ReleasesWarning, Software } from './deployment-wizard/softwaredevices';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: {
+      ...defaultState.features,
+      isEnterprise: false,
+      isHosted: false
+    }
+  }
+};
 
 describe('CreateDeployment Component', () => {
-  let store;
-  let mockState = {
-    ...defaultState,
-    app: {
-      ...defaultState.app,
-      features: {
-        ...defaultState.features,
-        isEnterprise: false,
-        isHosted: false
-      }
-    }
-  };
-
-  beforeEach(() => {
-    store = mockStore(mockState);
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <CreateDeployment deploymentObject={{}} setDeploymentObject={jest.fn} />
-      </Provider>
-    );
+    const { baseElement } = render(<CreateDeployment deploymentObject={{}} setDeploymentObject={jest.fn} />, { preloadedState });
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -80,7 +65,8 @@ describe('CreateDeployment Component', () => {
         const { baseElement } = render(
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <Component {...props} />
-          </LocalizationProvider>
+          </LocalizationProvider>,
+          { preloadedState }
         );
         const view = baseElement.lastChild;
         expect(view).toMatchSnapshot();
@@ -91,7 +77,8 @@ describe('CreateDeployment Component', () => {
         const { baseElement } = render(
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <Component {...props} isEnterprise />
-          </LocalizationProvider>
+          </LocalizationProvider>,
+          { preloadedState }
         );
         const view = baseElement.lastChild;
         expect(view).toMatchSnapshot();

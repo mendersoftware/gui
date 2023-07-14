@@ -641,14 +641,14 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders Convert
     We prepared an image, ready for Mender, for you to start with. You can find it in the
      
     <a
-      href="https://docs.mender.io/get-started/preparation/prepare-a-raspberry-pi-device"
-      rel="noopener noreferrer"
+      class=""
+      href="https://docs.mender.io/development/get-started/preparation/prepare-a-raspberry-pi-device"
+      rel=""
       target="_blank"
     >
       Prepare a Raspberry Pi device
     </a>
-     
-    documentation, which also contains instructions for initial device setup. Once you're done flashing you can go ahead and proceed to the next step.
+     documentation, which also contains instructions for initial device setup. Once you're done flashing you can go ahead and proceed to the next step.
   </p>
 </div>
 `;
@@ -1310,14 +1310,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
     We prepared an image, ready for Mender, for you to start with. You can find it in the
      
     <a
-      href="https://docs.mender.io/get-started/preparation/prepare-a-raspberry-pi-device"
-      rel="noopener noreferrer"
+      class=""
+      href="https://docs.mender.io/development/get-started/preparation/prepare-a-raspberry-pi-device"
+      rel=""
       target="_blank"
     >
       Prepare a Raspberry Pi device
     </a>
-     
-    documentation, which also contains instructions for initial device setup. Once you're done flashing you can go ahead and proceed to the next step.
+     documentation, which also contains instructions for initial device setup. Once you're done flashing you can go ahead and proceed to the next step.
   </p>
 </div>
 `;

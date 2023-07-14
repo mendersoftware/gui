@@ -12,38 +12,26 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { prettyDOM } from '@testing-library/dom';
 import { act, cleanup, waitFor } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { adminUserCapabilities, defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import ProgressDeviceList from './devicelist';
 
-const mockStore = configureStore([thunk]);
-
 describe('ProgressDeviceList Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   afterEach(cleanup);
 
   it('renders correctly', async () => {
     const getDeploymentDevicesMock = jest.fn().mockResolvedValue(true);
     const ui = (
-      <Provider store={store}>
-        <ProgressDeviceList
-          selectedDevices={Object.values(defaultState.deployments.byId.d1.devices)}
-          deployment={defaultState.deployments.byId.d1}
-          getDeploymentDevices={getDeploymentDevicesMock}
-          userCapabilities={adminUserCapabilities}
-        />
-      </Provider>
+      <ProgressDeviceList
+        selectedDevices={Object.values(defaultState.deployments.byId.d1.devices)}
+        deployment={defaultState.deployments.byId.d1}
+        getDeploymentDevices={getDeploymentDevicesMock}
+        userCapabilities={adminUserCapabilities}
+      />
     );
     const { asFragment, rerender } = render(ui);
     await act(async () => jest.advanceTimersByTime(5000));

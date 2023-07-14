@@ -168,8 +168,12 @@ exports[`Auditlogs Component renders correctly 1`] = `
         >
           device
         </div>
-        <div>
-          a1
+        <div
+          class="flexbox space-between"
+        >
+          <div>
+            a1
+          </div>
         </div>
         <a>
           View session log

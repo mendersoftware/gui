@@ -421,17 +421,16 @@ exports[`CreateGroupExplainerContent Component renders correctly 1`] = `
       >
         You can test Mender Gateway by promoting a device to a gateway device, enabling other devices to securely contact the Mender Server through it.
         <p>
-          On the device terminal, run the following command. You can use
-           
+          On the device terminal, run the following command. You can use 
           <a
-            href="https://docs.mender.io/add-ons/remote-terminal"
-            rel="noopener noreferrer"
+            class=""
+            href="https://docs.mender.io/development/add-ons/remote-terminal"
+            rel=""
             target="_blank"
           >
             Remote Terminal
           </a>
-           
-          if mender-connect is enabled on the device.
+           if mender-connect is enabled on the device.
         </p>
         <div
           class="code emotion-6 "
@@ -475,8 +474,9 @@ wget -O- https://get.mender.io | sudo bash -s -- --jwt-token $JWT_TOKEN mender-g
           Note: this is only intended for demo or testing purposes. For production installation please refer to the
            
           <a
-            href="https://docs.mender.io/get-started/mender-gateway"
-            rel="noopener noreferrer"
+            class=""
+            href="https://docs.mender.io/development/get-started/mender-gateway"
+            rel=""
             target="_blank"
           >
             full Mender Gateway documentation

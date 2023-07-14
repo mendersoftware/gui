@@ -42,13 +42,12 @@ export const getDeviceIdentityText = ({ device = {}, idAttribute }) => {
   // eslint-disable-next-line no-unused-vars
   const { status, ...remainingIds } = identity_data;
   const nonIdKey = Object.keys(remainingIds)[0];
-  let text = id;
   if (!idAttribute || idAttribute === 'id' || idAttribute === 'Device ID') {
-    return text;
+    return id;
   } else if (idAttribute === 'name') {
     return tags[idAttribute] ?? `${id.substring(0, 6)}...`;
   }
-  return identity_data[idAttribute] ?? identity_data[nonIdKey];
+  return identity_data[idAttribute] ?? identity_data[nonIdKey] ?? id;
 };
 
 const AttributeRenderer = ({ content, textContent }) => (

@@ -18,6 +18,7 @@ import { Chip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
+import DocsLink from '../../common/docslink';
 import InfoHint from '../../common/info-hint';
 import InfoText from '../../common/infotext';
 import MenderTooltip from '../../common/mendertooltip';
@@ -142,17 +143,14 @@ export const RolloutSteps = ({ disabled, onStepChange, release, steps = {} }) =>
   );
 };
 
-export const RolloutStepsContainer = ({ className = '', disabled, docsVersion, onStepChange, release, steps }) => (
+export const RolloutStepsContainer = ({ className = '', disabled, onStepChange, release, steps }) => (
   <div className={className}>
     <div className={disabled ? 'muted' : ''}>
       <RolloutSteps disabled={disabled} onStepChange={onStepChange} release={release} steps={steps} />
       {onStepChange && !disabled && (
         <InfoText>
           A &apos;pause&apos; means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant
-          approval by clicking &quot;continue&quot; in the deployment progress UI.{' '}
-          <a href={`https://docs.mender.io/${docsVersion}`} target="_blank" rel="noopener noreferrer">
-            Learn more
-          </a>
+          approval by clicking &quot;continue&quot; in the deployment progress UI. <DocsLink path="" title="Learn more" />
         </InfoText>
       )}
     </div>

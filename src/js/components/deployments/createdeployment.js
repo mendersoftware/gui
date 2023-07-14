@@ -40,7 +40,7 @@ import { createDeployment, getDeploymentsConfig } from '../../actions/deployment
 import { getGroupDevices, getSystemDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
-import { ALL_DEVICES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
+import { ALL_DEVICES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle, validatePhases } from '../../helpers';
 import {
@@ -50,6 +50,7 @@ import {
   getDocsVersion,
   getGlobalSettings,
   getGroupNames,
+  getGroupsByIdWithoutUngrouped,
   getIdAttribute,
   getIsEnterprise,
   getOnboardingState,
@@ -108,8 +109,7 @@ export const CreateDeployment = props => {
 
   const { canRetry, canSchedule, hasFullFiltering } = useSelector(getTenantCapabilities);
   const { createdGroup, groups, hasDynamicGroups } = useSelector(state => {
-    // eslint-disable-next-line no-unused-vars
-    const { [UNGROUPED_GROUP.id]: ungrouped, ...groups } = state.devices.groups.byId;
+    const groups = getGroupsByIdWithoutUngrouped(state);
     const createdGroup = Object.keys(groups).length ? Object.keys(groups)[0] : undefined;
     const hasDynamicGroups = Object.values(groups).some(group => !!group.id);
     return { createdGroup, hasDynamicGroups, groups };

@@ -21,7 +21,8 @@ import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/onboardingActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getDemoDeviceAddress, getDocsVersion } from '../../selectors';
+import { getDemoDeviceAddress } from '../../selectors';
+import DocsLink from '../common/docslink';
 import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { CompletionButton } from './deploymentcompletetip';
@@ -29,7 +30,6 @@ import { CompletionButton } from './deploymentcompletetip';
 export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
   const timer = useRef();
   const dispatch = useDispatch();
-  const docsVersion = useSelector(getDocsVersion);
   const url = useSelector(getDemoDeviceAddress) || targetUrl;
 
   useEffect(() => {
@@ -80,14 +80,10 @@ export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
             Proceed to one of the following tutorials (listed in recommended order):
             <ol>
               <li key="deploy-a-system-update">
-                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-an-operating-system-update`} target="_blank" rel="noopener noreferrer">
-                  Deploy an operating system update
-                </a>
+                <DocsLink path="get-started/deploy-an-operating-system-update" title="Deploy an operating system update" />
               </li>
               <li key="deploy-a-container-update">
-                <a href={`https://docs.mender.io/${docsVersion}get-started/deploy-a-container-update`} target="_blank" rel="noopener noreferrer">
-                  Deploy a container update
-                </a>
+                <DocsLink path="get-started/deploy-a-container-update" title="Deploy a container update" />
               </li>
             </ol>
           </div>

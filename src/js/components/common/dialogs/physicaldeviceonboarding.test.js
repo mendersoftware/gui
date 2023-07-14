@@ -12,13 +12,10 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { waitFor } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import { defaultState, undefineds } from '../../../../../tests/mockData';
+import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import PhysicalDeviceOnboarding, {
@@ -29,14 +26,10 @@ import PhysicalDeviceOnboarding, {
   InstallationStep
 } from './physicaldeviceonboarding';
 
-const mockStore = configureStore([thunk]);
-
 const oldHostname = window.location.hostname;
 
 describe('PhysicalDeviceOnboarding Component', () => {
-  let store;
   beforeEach(() => {
-    store = mockStore({ ...defaultState });
     window.location = {
       ...window.location,
       hostname: 'hosted.mender.io'
@@ -80,14 +73,10 @@ describe('PhysicalDeviceOnboarding Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <PhysicalDeviceOnboarding progress={1} />
-      </Provider>
-    );
+    const { baseElement, store } = render(<PhysicalDeviceOnboarding progress={1} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
-    await waitFor(() => expect(store.getActions().some(({ type, value }) => type === 'SET_ONBOARDING_APPROACH' && value === 'physical')).toBeTruthy());
+    await waitFor(() => expect(store.getState().onboarding.approach === 'physical').toBeTruthy());
   });
 });

@@ -12,33 +12,19 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import Signup from './signup';
 
-const mockStore = configureStore([thunk]);
-
 describe('Signup Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Signup match={{ params: { campaign: '' } }} />
-      </Provider>
-    );
+    const { baseElement } = render(<Signup match={{ params: { campaign: '' } }} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -47,12 +33,12 @@ describe('Signup Component', () => {
   it('allows signing up', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = (
-      <Provider store={store}>
+      <>
         <Signup location={{ state: { from: '' } }} match={{ params: {} }} />
         <Routes>
           <Route path="/" element={<div>signed up</div>} />
         </Routes>
-      </Provider>
+      </>
     );
     const { container, rerender } = render(ui);
     expect(screen.getByText('Sign up with:')).toBeInTheDocument();

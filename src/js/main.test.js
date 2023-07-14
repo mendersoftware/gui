@@ -16,7 +16,7 @@ import Linkify from 'react-linkify';
 import * as router from 'react-router-dom';
 
 import { prettyDOM } from '@testing-library/dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, render as testLibRender, waitFor } from '@testing-library/react';
 import 'jsdom-worker';
 
 import { mockDate, undefineds } from '../../tests/mockData';
@@ -37,7 +37,7 @@ describe('Main Component', () => {
     const ui = <AppProviders />;
     const post = jest.spyOn(GeneralApi, 'post');
     jest.setSystemTime(mockDate);
-    const { baseElement, rerender } = render(ui);
+    const { baseElement, rerender } = testLibRender(ui);
     await waitFor(() => screen.queryByText('Software distribution'), { timeout: 2000 });
     await waitFor(() => rerender(ui));
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })

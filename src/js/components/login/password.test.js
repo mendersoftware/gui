@@ -12,32 +12,18 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import * as UserActions from '../../actions/userActions';
 import Password from './password';
 
-const mockStore = configureStore([thunk]);
-
 describe('Password Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Password />
-      </Provider>
-    );
+    const { baseElement } = render(<Password />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -46,11 +32,7 @@ describe('Password Component', () => {
   it('works as intended', async () => {
     const startSpy = jest.spyOn(UserActions, 'passwordResetStart');
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    const ui = (
-      <Provider store={store}>
-        <Password />
-      </Provider>
-    );
+    const ui = <Password />;
     const { rerender } = render(ui);
     await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
     await user.click(screen.getByRole('button', { name: /Send password reset link/i }));

@@ -22,7 +22,7 @@ import DeviceConnection, { DeviceConnectionMissingNote, DeviceDisconnectedNote, 
 describe('tiny DeviceConnection components', () => {
   [DeviceConnectionMissingNote, DeviceDisconnectedNote, PortForwardLink].forEach(async Component => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
-      const { baseElement } = render(<Component docsVersion="" lastConnectionTs={defaultState.devices.byId.a1.updated_ts} />);
+      const { baseElement } = render(<Component lastConnectionTs={defaultState.devices.byId.a1.updated_ts} />);
       const view = baseElement.firstChild;
       expect(view).toMatchSnapshot();
       expect(view).toEqual(expect.not.stringMatching(undefineds));

@@ -569,7 +569,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
           class="flexbox space-between"
         >
           <div>
-            dc:a6:32:12:ad:bf
+            a1
           </div>
         </div>
       </h2>

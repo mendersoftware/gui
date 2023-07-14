@@ -23,8 +23,9 @@ import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } fro
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
-import { getDocsVersion, getFeatures, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization, getVersionInformation } from '../../../selectors';
+import { getFeatures, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization, getVersionInformation } from '../../../selectors';
 import CopyCode from '../copy-code';
+import DocsLink from '../docslink';
 import { MenderTooltipClickable } from '../mendertooltip';
 
 const filter = createFilterOptions();
@@ -34,13 +35,11 @@ const types = [
   { title: 'Raspberry Pi 4', value: 'raspberrypi4' }
 ];
 
-export const ConvertedImageNote = ({ docsVersion }) => (
+export const ConvertedImageNote = () => (
   <p>
     We prepared an image, ready for Mender, for you to start with. You can find it in the{' '}
-    <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-raspberry-pi-device`} target="_blank" rel="noopener noreferrer">
-      Prepare a Raspberry Pi device
-    </a>{' '}
-    documentation, which also contains instructions for initial device setup. Once you&apos;re done flashing you can go ahead and proceed to the next step.
+    <DocsLink path="get-started/preparation/prepare-a-raspberry-pi-device" title="Prepare a Raspberry Pi device" /> documentation, which also contains
+    instructions for initial device setup. Once you&apos;re done flashing you can go ahead and proceed to the next step.
   </p>
 );
 
@@ -97,7 +96,6 @@ export const DeviceTypeTip = () => (
 );
 
 export const DeviceTypeSelectionStep = ({
-  docsVersion,
   hasConvertedImage,
   hasExternalIntegration,
   integrationProvider,
@@ -154,7 +152,7 @@ export const DeviceTypeSelectionStep = ({
         {shouldShowOnboardingTip ? <DeviceTypeTip /> : <div />}
         {hasExternalIntegrationSupport && <ExternalProviderTip hasExternalIntegration={hasExternalIntegration} integrationProvider={integrationProvider} />}
       </div>
-      {hasConvertedImage && <ConvertedImageNote docsVersion={docsVersion} />}
+      {hasConvertedImage && <ConvertedImageNote />}
     </>
   );
 };
@@ -190,7 +188,6 @@ export const PhysicalDeviceOnboarding = ({ progress }) => {
     const { [EXTERNAL_PROVIDER['iot-hub'].credentialsAttribute]: azureConnectionString = '' } = credentials;
     return !!azureConnectionString;
   });
-  const docsVersion = useSelector(getDocsVersion);
   const ipAddress = useSelector(state => state.app.hostAddress);
   const isEnterprise = useSelector(getIsEnterprise);
   const { isDemoMode, isHosted } = useSelector(getFeatures);
@@ -221,7 +218,6 @@ export const PhysicalDeviceOnboarding = ({ progress }) => {
     <ComponentToShow
       advanceOnboarding={step => dispatch(advanceOnboarding(step))}
       hasExternalIntegration={hasExternalIntegration}
-      docsVersion={docsVersion}
       hasConvertedImage={hasConvertedImage}
       integrationProvider={integrationProvider}
       ipAddress={ipAddress}

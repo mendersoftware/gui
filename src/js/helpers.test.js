@@ -42,7 +42,6 @@ import {
   preformatWithRequestID,
   standardizePhases,
   stringToBoolean,
-  tryMapDeployments,
   unionizeStrings,
   validatePhases,
   versionCompare
@@ -548,15 +547,6 @@ describe('validatePhases function', () => {
         true
       )
     ).toEqual(true);
-  });
-});
-
-describe('tryMapDeployments function', () => {
-  it('works as expected', async () => {
-    expect(Object.keys(defaultState.deployments.byId).reduce(tryMapDeployments, { state: { ...defaultState }, deployments: [] }).deployments).toEqual(
-      Object.values(defaultState.deployments.byId)
-    );
-    expect(['unknownDeploymentId'].reduce(tryMapDeployments, { state: { ...defaultState }, deployments: [] }).deployments).toEqual([]);
   });
 });
 

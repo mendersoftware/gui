@@ -462,8 +462,9 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type
           Note: this is only intended for demo or testing purposes. For production installation please refer to the
            
           <a
-            href="https://docs.mender.io/get-started/mender-gateway"
-            rel="noopener noreferrer"
+            class=""
+            href="https://docs.mender.io/development/get-started/mender-gateway"
+            rel=""
             target="_blank"
           >
             full Mender Gateway documentation

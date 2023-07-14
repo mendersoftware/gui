@@ -16,8 +16,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { setOnboardingApproach } from '../../../actions/onboardingActions';
 import { initialState as onboardingReducerState } from '../../../reducers/onboardingReducer';
-import { getDocsVersion, getFeatures, getOrganization } from '../../../selectors';
+import { getFeatures, getOrganization } from '../../../selectors';
 import CopyCode from '../copy-code';
+import DocsLink from '../docslink';
 
 export const getDemoDeviceCreationCommand = tenantToken =>
   tenantToken
@@ -26,7 +27,6 @@ export const getDemoDeviceCreationCommand = tenantToken =>
 
 export const VirtualDeviceOnboarding = () => {
   const dispatch = useDispatch();
-  const docsVersion = useSelector(getDocsVersion);
   const { isHosted } = useSelector(getFeatures);
   const { tenant_token: tenantToken } = useSelector(getOrganization);
 
@@ -65,11 +65,8 @@ export const VirtualDeviceOnboarding = () => {
       <CopyCode code={codeToCopy} withDescription={true} />
       <p>The device should appear in the Pending devices view in a couple of minutes.</p>
       <p>
-        Visit{' '}
-        <a href={`https://docs.mender.io/${docsVersion}get-started/preparation/prepare-a-virtual-device`} target="_blank" rel="noopener noreferrer">
-          our documentation
-        </a>{' '}
-        for more information on managing the virtual device.
+        Visit <DocsLink path="get-started/preparation/prepare-a-virtual-device" title="our documentation" /> for more information on managing the virtual
+        device.
       </p>
     </div>
   );

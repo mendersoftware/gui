@@ -25,8 +25,15 @@ import moment from 'moment';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
-import { tryMapDeployments } from '../../helpers';
-import { getIdAttribute, getIsEnterprise, getUserCapabilities } from '../../selectors';
+import {
+  getDeploymentsByStatus as getDeploymentsByStatusSelector,
+  getDeploymentsSelectionState,
+  getDevicesById,
+  getIdAttribute,
+  getMappedDeploymentSelection,
+  getTenantCapabilities,
+  getUserCapabilities
+} from '../../selectors';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
@@ -68,17 +75,16 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [tabIndex, setTabIndex] = useState(tabs.list.index);
   const timer = useRef();
-  const items = useSelector(state => state.deployments.selectionState.scheduled.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments);
   const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
-  const count = useSelector(state => state.deployments.byStatus.scheduled.total);
+  const {
+    scheduled: { total: count }
+  } = useSelector(getDeploymentsByStatusSelector);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
-  const devices = useSelector(state => state.devices.byId);
+  const devices = useSelector(getDevicesById);
   // TODO: isEnterprise is misleading here, but is passed down to the DeploymentListItem, this should be renamed
-  const isEnterprise = useSelector(state => {
-    const { plan = 'os' } = state.organization.organization;
-    return getIsEnterprise(state) || plan !== 'os';
-  });
-  const scheduledState = useSelector(state => state.deployments.selectionState.scheduled);
+  const { canDelta: isEnterprise } = useSelector(getTenantCapabilities);
+  const { scheduled: scheduledState } = useSelector(getDeploymentsSelectionState);
+  const items = useSelector(state => getMappedDeploymentSelection(state, type));
   const dispatch = useDispatch();
   const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
   const { classes } = useStyles();

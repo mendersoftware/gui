@@ -12,51 +12,39 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { accessTokens, defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import * as UserActions from '../../actions/userActions';
 import AccessTokenManagement, { AccessTokenCreationDialog, AccessTokenRevocationDialog } from './accesstokenmanagement';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: {
+      ...defaultState.app.features,
+      isEnterprise: true
+    }
+  },
+  users: {
+    ...defaultState.users,
+    byId: {
+      ...defaultState.users.byId,
+      [defaultState.users.currentUser]: {
+        ...defaultState.users.byId[defaultState.users.currentUser],
+        tokens: accessTokens
+      }
+    }
+  }
+};
 
 describe('UserManagement Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: {
-          ...defaultState.app.features,
-          isEnterprise: true
-        }
-      },
-      users: {
-        ...defaultState.users,
-        byId: {
-          ...defaultState.users.byId,
-          [defaultState.users.currentUser]: {
-            ...defaultState.users.byId[defaultState.users.currentUser],
-            tokens: accessTokens
-          }
-        }
-      }
-    });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <AccessTokenManagement />
-      </Provider>
-    );
+    const { baseElement } = render(<AccessTokenManagement />, { preloadedState });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -65,12 +53,8 @@ describe('UserManagement Component', () => {
   it('works as expected', async () => {
     const getSpy = jest.spyOn(UserActions, 'getTokens');
     const createSpy = jest.spyOn(UserActions, 'generateToken');
-    const ui = (
-      <Provider store={store}>
-        <AccessTokenManagement />
-      </Provider>
-    );
-    const { rerender } = render(ui);
+    const ui = <AccessTokenManagement />;
+    const { rerender } = render(ui, { preloadedState });
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
     await user.click(screen.getByRole('button', { name: /generate a token/i }));

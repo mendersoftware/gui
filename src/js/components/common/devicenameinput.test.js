@@ -12,12 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
@@ -25,19 +22,9 @@ import * as AppActions from '../../actions/appActions';
 import * as DeviceActions from '../../actions/deviceActions';
 import DeviceNameInput from './devicenameinput';
 
-const mockStore = configureStore([thunk]);
-
 describe('DeviceNameInput Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <DeviceNameInput device={defaultState.devices.byId.a1} isHovered />
-      </Provider>
-    );
+    const { baseElement } = render(<DeviceNameInput device={defaultState.devices.byId.a1} isHovered />);
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -47,11 +34,7 @@ describe('DeviceNameInput Component', () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const deviceTagsSpy = jest.spyOn(DeviceActions, 'setDeviceTags');
     const snackbarSpy = jest.spyOn(AppActions, 'setSnackbar');
-    const ui = (
-      <Provider store={store}>
-        <DeviceNameInput device={{ ...defaultState.devices.byId.a1, tags: { name: 'testname' } }} isHovered />
-      </Provider>
-    );
+    const ui = <DeviceNameInput device={{ ...defaultState.devices.byId.a1, tags: { name: 'testname' } }} isHovered />;
     const { rerender } = render(ui);
     expect(screen.queryByDisplayValue(/testname/i)).toBeInTheDocument();
     await user.click(screen.getByRole('button'));

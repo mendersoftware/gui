@@ -12,18 +12,13 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import Configuration, { ConfigEditingActions, ConfigEmptyNote, ConfigUpToDateNote, ConfigUpdateFailureActions, ConfigUpdateNote } from './configuration';
-
-const mockStore = configureStore([thunk]);
 
 describe('tiny components', () => {
   [ConfigEditingActions, ConfigUpdateFailureActions, ConfigUpdateNote, ConfigEmptyNote, ConfigUpToDateNote].forEach(async Component => {
@@ -48,33 +43,27 @@ describe('tiny components', () => {
 });
 
 describe('Configuration Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
   const reportedTime = '2019-01-01T09:25:01.000Z';
   it('renders correctly', async () => {
     const setDeviceConfigMock = jest.fn().mockResolvedValue();
     const { baseElement } = render(
-      <Provider store={store}>
-        <Configuration
-          device={{
-            ...defaultState.devices.byId.a1,
-            config: {
-              configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-              reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-              updated_ts: defaultState.devices.byId.a1.updated_ts,
-              reported_ts: reportedTime
-            }
-          }}
-          abortDeployment={jest.fn}
-          applyDeviceConfig={setDeviceConfigMock}
-          getDeviceLog={jest.fn}
-          getSingleDeployment={jest.fn}
-          saveGlobalSettings={jest.fn}
-          setDeviceConfig={setDeviceConfigMock}
-        />
-      </Provider>
+      <Configuration
+        device={{
+          ...defaultState.devices.byId.a1,
+          config: {
+            configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+            reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+            updated_ts: defaultState.devices.byId.a1.updated_ts,
+            reported_ts: reportedTime
+          }
+        }}
+        abortDeployment={jest.fn}
+        applyDeviceConfig={setDeviceConfigMock}
+        getDeviceLog={jest.fn}
+        getSingleDeployment={jest.fn}
+        saveGlobalSettings={jest.fn}
+        setDeviceConfig={setDeviceConfigMock}
+      />
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -95,17 +84,15 @@ describe('Configuration Component', () => {
       }
     };
     let ui = (
-      <Provider store={store}>
-        <Configuration
-          device={device}
-          abortDeployment={jest.fn}
-          applyDeviceConfig={applyMock}
-          getDeviceLog={jest.fn}
-          getSingleDeployment={jest.fn}
-          saveGlobalSettings={jest.fn}
-          setDeviceConfig={submitMock}
-        />
-      </Provider>
+      <Configuration
+        device={device}
+        abortDeployment={jest.fn}
+        applyDeviceConfig={applyMock}
+        getDeviceLog={jest.fn}
+        getSingleDeployment={jest.fn}
+        saveGlobalSettings={jest.fn}
+        setDeviceConfig={submitMock}
+      />
     );
     const { rerender } = render(ui);
     expect(screen.queryByRole('button', { name: /import configuration/i })).not.toBeInTheDocument();
@@ -138,18 +125,16 @@ describe('Configuration Component', () => {
       }
     };
     ui = (
-      <Provider store={store}>
-        <Configuration
-          deployment={{ ...defaultState.deployments.byId.d1, created: device.config.updated_ts, finished: device.config.updated_ts, status: 'finished' }}
-          device={device}
-          abortDeployment={jest.fn}
-          applyDeviceConfig={applyMock}
-          getDeviceLog={jest.fn}
-          getSingleDeployment={jest.fn}
-          saveGlobalSettings={jest.fn}
-          setDeviceConfig={submitMock}
-        />
-      </Provider>
+      <Configuration
+        deployment={{ ...defaultState.deployments.byId.d1, created: device.config.updated_ts, finished: device.config.updated_ts, status: 'finished' }}
+        device={device}
+        abortDeployment={jest.fn}
+        applyDeviceConfig={applyMock}
+        getDeviceLog={jest.fn}
+        getSingleDeployment={jest.fn}
+        saveGlobalSettings={jest.fn}
+        setDeviceConfig={submitMock}
+      />
     );
     act(() => jest.advanceTimersByTime(2000));
     await waitFor(() => rerender(ui));

@@ -12,41 +12,34 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import Cookies from 'universal-cookie';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import * as UserActions from '../../actions/userActions';
 import Login from './login';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: Object.freeze({
+      ...defaultState.app.features,
+      isHosted: true
+    })
+  }
+};
 
 describe('Login Component', () => {
-  let store;
   beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      app: {
-        ...defaultState.app,
-        features: {
-          ...defaultState.app.features,
-          isHosted: true
-        }
-      }
-    });
+    const cookies = new Cookies();
+    cookies.get.mockReturnValue();
   });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <Login location={{ state: { from: '' } }} />
-      </Provider>
-    );
+    const { baseElement } = render(<Login />, { preloadedState });
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -55,25 +48,20 @@ describe('Login Component', () => {
   it('works as intended', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const loginSpy = jest.spyOn(UserActions, 'loginUser');
-    const origDispatch = store.dispatch;
-    store.dispatch = jest.fn(origDispatch);
-    const ui = (
-      <Provider store={store}>
-        <Login />
-      </Provider>
-    );
-    const { rerender } = render(ui);
-
-    await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
-    await user.type(screen.queryByLabelText(/password/i), 'mysecretpassword!123');
-    expect(screen.queryByLabelText(/Two Factor Authentication Code/i)).not.toBeInTheDocument();
-    store.dispatch.mockRejectedValueOnce({ error: '2fa needed' });
+    const ui = <Login />;
+    const { rerender } = render(ui, { preloadedState });
+    await user.type(screen.getByLabelText(/your email/i), 'something-2fa@example.com');
+    await user.type(screen.getByLabelText(/password/i), 'mysecretpassword!123');
+    expect(await screen.findByLabelText(/Two Factor Authentication Code/i)).not.toBeVisible();
     await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(loginSpy).toHaveBeenCalled();
     await waitFor(() => rerender(ui));
-    expect(screen.queryByLabelText(/Two Factor Authentication Code/i)).toBeInTheDocument();
-    await user.type(screen.queryByLabelText(/Two Factor Authentication Code/i), '123456');
+    expect(await screen.findByLabelText(/Two Factor Authentication Code/i)).toBeVisible();
+    const input = screen.getByDisplayValue('something-2fa@example.com');
+    await user.clear(input);
+    await user.type(input, 'something@example.com');
+    await user.type(screen.getByLabelText(/Two Factor Authentication Code/i), '123456');
     await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(loginSpy).toHaveBeenCalledWith({ email: 'something@example.com', password: 'mysecretpassword!123', token2fa: '123456' }, false);
-  });
+  }, 10000);
 });

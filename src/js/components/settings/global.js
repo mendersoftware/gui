@@ -25,7 +25,6 @@ import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
 import {
-  getDocsVersion,
   getFeatures,
   getGlobalSettings as getGlobalSettingsSelector,
   getIdAttribute,
@@ -35,6 +34,7 @@ import {
   getUserRoles
 } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
+import DocsLink from '../common/docslink';
 import InfoHint from '../common/info-hint';
 import ArtifactGenerationSettings from './artifactgeneration';
 import ReportingLimits from './reportinglimits';
@@ -53,7 +53,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
+export const IdAttributeSelection = ({ attributes, dialog, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
   const [attributeSelection, setAttributeSelection] = useState('name');
 
   useEffect(() => {
@@ -95,10 +95,7 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
         <FormHelperText className="info" component="div">
           <div className="margin-top-small margin-bottom-small">Choose a device identity attribute to use to identify your devices throughout the UI.</div>
           <div className="margin-top-small margin-bottom-small">
-            <a href={`https://docs.mender.io/${docsVersion}client-installation/identity`} target="_blank" rel="noopener noreferrer">
-              Learn how to add custom identity attributes
-            </a>{' '}
-            to your devices.
+            <DocsLink path="client-installation/identity" title="Learn how to add custom identity attributes" /> to your devices.
           </div>
         </FormHelperText>
       </FormControl>
@@ -118,7 +115,6 @@ export const IdAttributeSelection = ({ attributes, dialog, docsVersion, onCloseC
 
 export const GlobalSettingsDialog = ({
   attributes,
-  docsVersion,
   hasReporting,
   isAdmin,
   notificationChannelSettings,
@@ -189,13 +185,7 @@ export const GlobalSettingsDialog = ({
     <div style={{ maxWidth }} className="margin-top-small">
       <h2 className="margin-top-small">Global settings</h2>
       <InfoHint content="These settings apply to all users, so changes made here may affect other users' experience." style={{ marginBottom: 30 }} />
-      <IdAttributeSelection
-        attributes={attributes}
-        docsVersion={docsVersion}
-        onCloseClick={onCloseClick}
-        onSaveClick={onSaveClick}
-        selectedAttribute={selectedAttribute}
-      />
+      <IdAttributeSelection attributes={attributes} onCloseClick={onCloseClick} onSaveClick={onSaveClick} selectedAttribute={selectedAttribute} />
       {hasReporting && <ReportingLimits />}
       <InputLabel className="margin-top" shrink>
         Deployments
@@ -272,7 +262,6 @@ export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
   });
   const { hasReporting } = useSelector(getFeatures);
   const { isAdmin } = useSelector(getUserRoles);
-  const docsVersion = useSelector(getDocsVersion);
   const notificationChannelSettings = useSelector(state => state.monitor.settings.global.channels);
   const offlineThresholdSettings = useSelector(getOfflineThresholdSettings);
   const { attribute: selectedAttribute } = useSelector(getIdAttribute);
@@ -312,7 +301,6 @@ export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
       <IdAttributeSelection
         attributes={attributes}
         dialog
-        docsVersion={docsVersion}
         onCloseClick={onCloseClick}
         onSaveClick={saveAttributeSetting}
         selectedAttribute={selectedAttribute}
@@ -322,7 +310,6 @@ export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
   return (
     <GlobalSettingsDialog
       attributes={attributes}
-      docsVersion={docsVersion}
       hasReporting={hasReporting}
       isAdmin={isAdmin}
       notificationChannelSettings={notificationChannelSettings}

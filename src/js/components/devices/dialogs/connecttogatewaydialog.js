@@ -18,8 +18,9 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 
 import { getDebConfigurationCode } from '../../../helpers';
 import CopyCode from '../../common/copy-code';
+import DocsLink from '../../common/docslink';
 
-export const ConnectToGatewayDialog = ({ docsVersion, gatewayIp, isPreRelease, onCancel, tenantToken }) => (
+export const ConnectToGatewayDialog = ({ gatewayIp, isPreRelease, onCancel, tenantToken }) => (
   <Dialog open fullWidth maxWidth="md">
     <DialogTitle>Connecting a device to a gateway</DialogTitle>
     <DialogContent className="onboard-dialog dialog-content">
@@ -27,9 +28,7 @@ export const ConnectToGatewayDialog = ({ docsVersion, gatewayIp, isPreRelease, o
       <CopyCode code={getDebConfigurationCode({ ipAddress: gatewayIp, isDemoMode: true, tenantToken, isPreRelease })} withDescription />
       <p>
         Note: this is only intended for demo or testing purposes. For production installation please refer to the{' '}
-        <a href={`https://docs.mender.io/${docsVersion}get-started/mender-gateway`} target="_blank" rel="noopener noreferrer">
-          full Mender Gateway documentation
-        </a>
+        <DocsLink path="get-started/mender-gateway" title="full Mender Gateway documentation" />
       </p>
     </DialogContent>
     <DialogActions>

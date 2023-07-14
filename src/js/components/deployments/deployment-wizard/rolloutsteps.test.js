@@ -19,17 +19,12 @@ import RolloutSteps from './rolloutsteps';
 
 describe('RolloutSteps Component', () => {
   it('renders correctly', async () => {
-    let tree = render(<RolloutSteps isEnterprise onStepChange={jest.fn} steps={[]} />);
+    let tree = render(<RolloutSteps onStepChange={jest.fn} steps={[]} />);
     let view = tree.baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
 
-    tree = render(<RolloutSteps isEnterprise steps={[]} />);
-    view = tree.baseElement.firstChild;
-    expect(view).toMatchSnapshot();
-    expect(view).toEqual(expect.not.stringMatching(undefineds));
-
-    tree = render(<RolloutSteps disabled steps={[]} />);
+    tree = render(<RolloutSteps steps={[]} />);
     view = tree.baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

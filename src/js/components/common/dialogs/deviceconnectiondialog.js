@@ -26,9 +26,10 @@ import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getDeviceCountsByStatus, getDocsVersion, getOnboardingState, getTenantCapabilities } from '../../../selectors';
+import { getDeviceCountsByStatus, getOnboardingState, getTenantCapabilities } from '../../../selectors';
 import InfoText from '../../common/infotext';
 import { DeviceSupportTip } from '../../helptips/helptooltips';
+import DocsLink from '../docslink';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
@@ -39,7 +40,7 @@ const useStyles = makeStyles()(theme => ({
   virtualLogo: { height: 40, marginLeft: theme.spacing(2) }
 }));
 
-const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVirtualDevice }) => {
+const DeviceConnectionExplainer = ({ hasMonitor, setOnDevice, setVirtualDevice }) => {
   const { classes } = useStyles();
   return (
     <>
@@ -82,13 +83,11 @@ const DeviceConnectionExplainer = ({ docsVersion, hasMonitor, setOnDevice, setVi
           <div>See the documentation to integrate the following with Mender:</div>
           <ul>
             {[
-              { key: 'debian', target: `https://docs.mender.io/${docsVersion}operating-system-updates-debian-family`, title: 'Debian family' },
-              { key: 'yocto', target: `https://docs.mender.io/${docsVersion}operating-system-updates-yocto-project`, title: 'Yocto OSes' }
+              { key: 'debian', target: 'operating-system-updates-debian-family', title: 'Debian family' },
+              { key: 'yocto', target: 'operating-system-updates-yocto-project', title: 'Yocto OSes' }
             ].map(item => (
               <li key={item.key}>
-                <a href={item.target} target="_blank" rel="noopener noreferrer">
-                  {item.title}
-                </a>
+                <DocsLink path={item.target} title={item.title} />
               </li>
             ))}
           </ul>
@@ -111,7 +110,6 @@ export const DeviceConnectionDialog = ({ onCancel }) => {
   const { pending: pendingCount } = useSelector(getDeviceCountsByStatus);
   const [pendingDevicesCount] = useState(pendingCount);
   const [hasMoreDevices, setHasMoreDevices] = useState(false);
-  const docsVersion = useSelector(getDocsVersion);
   const { hasMonitor } = useSelector(getTenantCapabilities);
   const { complete: onboardingComplete, deviceType: onboardingDeviceType } = useSelector(getOnboardingState);
   const dispatch = useDispatch();
@@ -144,7 +142,7 @@ export const DeviceConnectionDialog = ({ onCancel }) => {
     setProgress(progress + 1);
   };
 
-  let content = <DeviceConnectionExplainer docsVersion={docsVersion} hasMonitor={hasMonitor} setOnDevice={setOnDevice} setVirtualDevice={setVirtualDevice} />;
+  let content = <DeviceConnectionExplainer hasMonitor={hasMonitor} setOnDevice={setOnDevice} setVirtualDevice={setVirtualDevice} />;
   if (onDevice) {
     content = <PhysicalDeviceOnboarding progress={progress} />;
   } else if (virtualDevice) {

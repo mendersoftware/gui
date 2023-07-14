@@ -12,24 +12,19 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, mockDate, undefineds } from '../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
 import GeneralApi from '../../api/general-api';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { getConfiguredStore } from './../../reducers';
 import Deployments from './deployments';
 
-const mockStore = configureStore([thunk]);
 const defaultLocationProps = { location: { search: 'startDate=2019-01-01' }, match: {} };
 
 const specialKeys = {
@@ -38,7 +33,7 @@ const specialKeys = {
 };
 
 describe('Deployments Component', () => {
-  let mockState = {
+  const mockState = {
     ...defaultState,
     app: {
       ...defaultState.app,
@@ -73,14 +68,9 @@ describe('Deployments Component', () => {
   };
 
   it('renders correctly', async () => {
-    const store = mockStore(mockState);
     const get = jest.spyOn(GeneralApi, 'get');
-    const ui = (
-      <Provider store={store}>
-        <Deployments {...defaultLocationProps} />
-      </Provider>
-    );
-    const { baseElement, rerender } = render(ui);
+    const ui = <Deployments {...defaultLocationProps} />;
+    const { baseElement, rerender } = render(ui, { state: mockState });
     await waitFor(() => rerender(ui));
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
@@ -124,15 +114,12 @@ describe('Deployments Component', () => {
         }
       }
     };
-    const store = getConfiguredStore({ preloadedState });
     const ui = (
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <Provider store={store}>
-          <Deployments {...defaultLocationProps} />
-        </Provider>
+        <Deployments {...defaultLocationProps} />
       </LocalizationProvider>
     );
-    const { rerender } = render(ui);
+    const { rerender } = render(ui, { preloadedState });
     await user.click(screen.getByRole('tab', { name: /Finished/i }));
     await user.click(screen.getByRole('tab', { name: /Scheduled/i }));
     await user.click(screen.getByRole('tab', { name: /Active/i }));
@@ -170,15 +157,12 @@ describe('Deployments Component', () => {
         }
       }
     };
-    const store = getConfiguredStore({ preloadedState });
     const ui = (
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <Provider store={store}>
-          <Deployments {...defaultLocationProps} />
-        </Provider>
+        <Deployments {...defaultLocationProps} />
       </LocalizationProvider>
     );
-    const { rerender } = render(ui);
+    const { rerender } = render(ui, { preloadedState });
     await user.click(screen.getByRole('tab', { name: /Finished/i }));
     await user.click(screen.getByRole('button', { name: /Create a deployment/i }));
     const releaseId = 'release-998';
@@ -259,15 +243,12 @@ describe('Deployments Component', () => {
         }
       }
     };
-    const store = getConfiguredStore({ preloadedState });
     const ui = (
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <Provider store={store}>
-          <Deployments {...defaultLocationProps} />
-        </Provider>
+        <Deployments {...defaultLocationProps} />
       </LocalizationProvider>
     );
-    const { rerender } = render(ui);
+    const { rerender } = render(ui, { preloadedState });
     await user.click(screen.getByRole('button', { name: /Create a deployment/i }));
     const releaseId = 'release-998';
     act(() => {

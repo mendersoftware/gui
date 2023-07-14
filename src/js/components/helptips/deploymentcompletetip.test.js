@@ -12,30 +12,16 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act, waitFor } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import { defaultState, undefineds } from '../../../../tests/mockData';
+import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import DeploymentCompleteTip from './deploymentcompletetip';
 
-const mockStore = configureStore([thunk]);
-
 describe('DeploymentCompleteTip Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
-    const ui = (
-      <Provider store={store}>
-        <DeploymentCompleteTip targetUrl="https://test.com" />
-      </Provider>
-    );
+    const ui = <DeploymentCompleteTip targetUrl="https://test.com" />;
     const { baseElement, rerender } = render(ui);
     await act(async () => {});
     await waitFor(() => rerender(ui));

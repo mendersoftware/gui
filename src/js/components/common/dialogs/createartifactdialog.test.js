@@ -12,35 +12,21 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
-
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import CreateArtifactDialog from './createartifactdialog';
 
-const mockStore = configureStore([thunk]);
-
 describe('CreateArtifactDialog Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({
+  it('renders correctly', async () => {
+    const preloadedState = {
       ...defaultState,
       onboarding: {
         ...defaultState.onboarding,
         showCreateArtifactDialog: true
       }
-    });
-  });
-
-  it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <CreateArtifactDialog />
-      </Provider>
-    );
+    };
+    const { baseElement } = render(<CreateArtifactDialog />, { preloadedState });
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

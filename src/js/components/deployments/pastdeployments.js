@@ -25,8 +25,16 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { BEGINNING_OF_TIME, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getISOStringBoundaries, tryMapDeployments } from '../../helpers';
-import { getGroupNames, getIdAttribute, getOnboardingState, getUserCapabilities } from '../../selectors';
+import { getISOStringBoundaries } from '../../helpers';
+import {
+  getDeploymentsSelectionState,
+  getDevicesById,
+  getGroupNames,
+  getIdAttribute,
+  getMappedDeploymentSelection,
+  getOnboardingState,
+  getUserCapabilities
+} from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -66,12 +74,12 @@ export const Past = props => {
   const dispatch = useDispatch();
   const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
 
-  const past = useSelector(state => state.deployments.selectionState.finished.selection.reduce(tryMapDeployments, { state, deployments: [] }).deployments);
+  const { finished: pastSelectionState } = useSelector(getDeploymentsSelectionState);
+  const past = useSelector(state => getMappedDeploymentSelection(state, type));
   const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const onboardingState = useSelector(getOnboardingState);
-  const pastSelectionState = useSelector(state => state.deployments.selectionState.finished);
-  const devices = useSelector(state => state.devices.byId);
+  const devices = useSelector(getDevicesById);
   const groupNames = useSelector(getGroupNames);
 
   const debouncedSearch = useDebounce(searchValue, TIMEOUTS.debounceDefault);

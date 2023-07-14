@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
 import { getDeviceById } from '../../../actions/deviceActions';
-import { getIdAttribute, getUserCapabilities } from '../../../selectors';
+import { getDeviceById as getDeviceByIdSelector, getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 
@@ -28,7 +28,7 @@ export const FileTransfer = ({ item, onClose }) => {
     meta: { path = [] },
     object = {}
   } = item;
-  const device = useSelector(state => state.devices.byId[object.id]);
+  const device = useSelector(state => getDeviceByIdSelector(state, object.id));
   const { canReadDevices } = useSelector(getUserCapabilities);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const theme = useTheme();

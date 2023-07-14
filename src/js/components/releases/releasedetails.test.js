@@ -12,37 +12,24 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { act } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import ReleaseDetails from './releasedetails';
 
-const mockStore = configureStore([thunk]);
+const preloadedState = {
+  ...defaultState,
+  releases: {
+    ...defaultState.releases,
+    byId: {}
+  }
+};
 
 describe('ReleaseDetails Component', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({
-      ...defaultState,
-      releases: {
-        ...defaultState.releases,
-        byId: {}
-      }
-    });
-  });
-
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <Provider store={store}>
-        <ReleaseDetails artifacts={[]} />
-      </Provider>
-    );
+    const { baseElement } = render(<ReleaseDetails artifacts={[]} />, { preloadedState });
     await act(async () => jest.advanceTimersByTime(1000));
     const view = baseElement.lastChild.firstChild;
     expect(view).toMatchSnapshot();

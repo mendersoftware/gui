@@ -25,6 +25,8 @@ export const userHandlers = [
       return res(ctx.status(401));
     } else if (user.includes('limited')) {
       return res(ctx.status(200), ctx.json('limitedToken'));
+    } else if (user.includes('2fa')) {
+      return res(ctx.status(401), ctx.json({ error: '2fa needed' }));
     }
     return res(ctx.status(200), ctx.json(token));
   }),

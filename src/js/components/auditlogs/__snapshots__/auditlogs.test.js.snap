@@ -282,12 +282,6 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="link margin-bottom-small"
-        style="align-self: flex-end;"
-      >
-        clear filter
-      </span>
     </div>
     <div
       class="flexbox center-aligned"
@@ -491,8 +485,12 @@ exports[`Auditlogs Component renders correctly 1`] = `
           >
             device
           </div>
-          <div>
-            a1
+          <div
+            class="flexbox space-between"
+          >
+            <div>
+              a1
+            </div>
           </div>
           <a>
             View session log
@@ -622,7 +620,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="loaderContainer shrunk"
+          class="loaderContainer"
         >
           <div
             class="small  loader"

@@ -12,38 +12,28 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { prettyDOM } from '@testing-library/dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { adminUserCapabilities, defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import AuditLogsList from './auditlogslist';
 
-const mockStore = configureStore([thunk]);
-
 describe('Auditlogs Component', () => {
-  let store;
-  beforeEach(() => {
-    store = mockStore({ ...defaultState });
-  });
-
   it('renders correctly', async () => {
+    const state = { ...defaultState };
     const { baseElement } = render(
-      <Provider store={store}>
-        <AuditLogsList
-          items={defaultState.organization.auditlog.events}
-          loading={false}
-          onChangeRowsPerPage={jest.fn}
-          onChangePage={jest.fn}
-          onChangeSorting={jest.fn}
-          selectionState={defaultState.organization.auditlog.selectionState}
-          setAuditlogsState={jest.fn}
-          userCapabilities={adminUserCapabilities}
-        />
-      </Provider>
+      <AuditLogsList
+        items={defaultState.organization.auditlog.events}
+        loading={false}
+        onChangeRowsPerPage={jest.fn}
+        onChangePage={jest.fn}
+        onChangeSorting={jest.fn}
+        selectionState={defaultState.organization.auditlog.selectionState}
+        setAuditlogsState={jest.fn}
+        userCapabilities={adminUserCapabilities}
+      />,
+      { state }
     );
 
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })

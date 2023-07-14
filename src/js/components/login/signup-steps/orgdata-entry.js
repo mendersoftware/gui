@@ -17,6 +17,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { MenuItem, Select } from '@mui/material';
 
 import { locations } from '../../../constants/appConstants';
+import DocsLink from '../../common/docslink';
 import FormCheckbox from '../../common/forms/formcheckbox';
 import TextInput from '../../common/forms/textinput';
 
@@ -29,9 +30,9 @@ export const OrgDataEntry = ({ classes, emailVerified, recaptchaSiteKey = '', se
   };
 
   return (
-    <div>
-      <h1 className="flexbox centered">Setting up your Account</h1>
-      <h2 className="flexbox centered margin-bottom-large">
+    <div className={`flexbox column centered ${classes.orgData}`}>
+      <h1>Setting up your Account</h1>
+      <h2 className="margin-bottom-large">
         To finish creating your account,
         <br />
         please fill in a few details
@@ -43,9 +44,7 @@ export const OrgDataEntry = ({ classes, emailVerified, recaptchaSiteKey = '', se
           <p className="margin-bottom-none margin-top-none muted" style={{ marginRight: 4 }}>
             Choose a hosting region for your account.
           </p>
-          <a href="https://docs.mender.io/general/hosted-mender-regions" target="_blank" rel="noopener noreferrer">
-            Learn more
-          </a>
+          <DocsLink path="general/hosted-mender-regions" title="Learn more" />
         </div>
         <Select
           value={location}

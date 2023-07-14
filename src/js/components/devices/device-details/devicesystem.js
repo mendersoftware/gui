@@ -23,8 +23,9 @@ import { getSystemDevices } from '../../../actions/deviceActions';
 import { SORTING_OPTIONS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { getDemoDeviceAddress, toggle } from '../../../helpers';
-import { getDevicesById, getDocsVersion, getIdAttribute, getIsPreview, getOrganization, getTenantCapabilities } from '../../../selectors';
+import { getDevicesById, getIdAttribute, getIsPreview, getOrganization, getTenantCapabilities } from '../../../selectors';
 import { TwoColumnData } from '../../common/configurationobject';
+import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { getHeaders } from '../authorized-devices';
 import { routes } from '../base-devices';
@@ -34,7 +35,7 @@ import DeviceDataCollapse from './devicedatacollapse';
 
 const useStyles = makeStyles()(theme => ({ container: { maxWidth: 600, marginTop: theme.spacing(), marginBottom: theme.spacing() } }));
 
-export const DeviceSystem = ({ columnSelection, device, docsVersion, onConnectToGatewayClick, openSettingsDialog }) => {
+export const DeviceSystem = ({ columnSelection, device, onConnectToGatewayClick, openSettingsDialog }) => {
   const [columnHeaders, setColumnHeaders] = useState([]);
   const [headerKeys, setHeaderKeys] = useState([]);
   const [page, setPage] = useState(DEVICE_LIST_DEFAULTS.page);
@@ -101,11 +102,8 @@ export const DeviceSystem = ({ columnSelection, device, docsVersion, onConnectTo
           <div className="dashboard-placeholder">
             <p>No devices have been connected to this gateway device yet.</p>
             <div>
-              Visit the{' '}
-              <a href={`https://docs.mender.io/${docsVersion}get-started/mender-gateway`} target="_blank" rel="noopener noreferrer">
-                full Mender Gateway documentation
-              </a>{' '}
-              to learn how to make the most of the gateway functionality.
+              Visit the <DocsLink path="get-started/mender-gateway" title="full Mender Gateway documentation" /> to learn how to make the most of the gateway
+              functionality.
             </div>
           </div>
         )}
@@ -122,7 +120,6 @@ export const DeviceSystem = ({ columnSelection, device, docsVersion, onConnectTo
 
 const DeviceSystemTab = ({ device, ...remainder }) => {
   const [open, setOpen] = useState(false);
-  const docsVersion = useSelector(getDocsVersion);
   const isPreRelease = useSelector(getIsPreview);
   const { tenant_token: tenantToken } = useSelector(getOrganization);
 
@@ -130,10 +127,8 @@ const DeviceSystemTab = ({ device, ...remainder }) => {
   const toggleDialog = () => setOpen(toggle);
   return (
     <>
-      <DeviceSystem onConnectToGatewayClick={toggleDialog} {...{ device, docsVersion, ...remainder }} />
-      {open && (
-        <ConnectToGatewayDialog docsVersion={docsVersion} gatewayIp={gatewayIp} isPreRelease={isPreRelease} onCancel={toggleDialog} tenantToken={tenantToken} />
-      )}
+      <DeviceSystem onConnectToGatewayClick={toggleDialog} {...{ device, ...remainder }} />
+      {open && <ConnectToGatewayDialog gatewayIp={gatewayIp} isPreRelease={isPreRelease} onCancel={toggleDialog} tenantToken={tenantToken} />}
     </>
   );
 };
