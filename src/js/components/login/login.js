@@ -229,7 +229,7 @@ export const Login = () => {
               )}
               <FormControlLabel control={<Checkbox color="primary" checked={noExpiry} onChange={onNoExpiryClick} />} label="Stay logged in" />
             </Form>
-            {isHosted && twoFARef.current && (
+            {has2FA && twoFARef.current && (
               <MenderTooltipClickable
                 disableHoverListener={false}
                 placement="right"
