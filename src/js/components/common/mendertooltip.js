@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ClickAwayListener, Tooltip } from '@mui/material';
 import { withStyles } from 'tss-react/mui';
@@ -36,8 +36,16 @@ export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
   }
 }));
 
-export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
+export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, visibility = startOpen, onOpenChange, ...remainingProps }) => {
   const [open, setOpen] = useState(startOpen || false);
+
+  useEffect(() => {
+    setOpen(visibility);
+  }, [visibility]);
+
+  useEffect(() => {
+    onOpenChange(open);
+  }, [open]);
 
   const toggleVisibility = () => setOpen(toggle);
 

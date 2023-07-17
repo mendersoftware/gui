@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { Autocomplete, TextField } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 
@@ -24,6 +24,7 @@ import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
 import { getFeatures, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization, getVersionInformation } from '../../../selectors';
+import { HELPTOOLTIPS, HelpTooltip } from '../../helptips/helptooltips';
 import CopyCode from '../copy-code';
 import DocsLink from '../docslink';
 import { MenderTooltipClickable } from '../mendertooltip';
@@ -70,28 +71,6 @@ export const ExternalProviderTip = ({ hasExternalIntegration, integrationProvide
     }
   >
     <InfoIcon />
-  </MenderTooltipClickable>
-);
-
-export const DeviceTypeTip = () => (
-  <MenderTooltipClickable
-    className="flexbox"
-    placement="bottom"
-    style={{ alignItems: 'end' }}
-    title={
-      <>
-        <p>
-          If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
-        </p>
-        <p>
-          (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
-        </p>
-      </>
-    }
-  >
-    <div className="tooltip help" style={{ marginLeft: 0, position: 'initial' }}>
-      <HelpIcon />
-    </div>
   </MenderTooltipClickable>
 );
 
@@ -149,7 +128,7 @@ export const DeviceTypeSelectionStep = ({
           style={{ maxWidth: 300 }}
           value={selection}
         />
-        {shouldShowOnboardingTip ? <DeviceTypeTip /> : <div />}
+        {shouldShowOnboardingTip ? <HelpTooltip id={HELPTOOLTIPS.DeviceTypeTip.id} placement="bottom" /> : <div />}
         {hasExternalIntegrationSupport && <ExternalProviderTip hasExternalIntegration={hasExternalIntegration} integrationProvider={integrationProvider} />}
       </div>
       {hasConvertedImage && <ConvertedImageNote />}

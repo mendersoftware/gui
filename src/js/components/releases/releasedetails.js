@@ -36,12 +36,12 @@ import { removeArtifact, removeRelease, selectArtifact, selectRelease } from '..
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getFeatures, getOnboardingState, getShowHelptips, getUserCapabilities } from '../../selectors';
+import { getFeatures, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
 import { RelativeTime } from '../common/time';
-import { ExpandArtifact } from '../helptips/helptooltips';
+import { HELPTOOLTIPS, HelpTooltip } from '../helptips/helptooltips';
 import Artifact from './artifact';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 
@@ -215,7 +215,7 @@ const ReleaseTags = ({ existingTags = [] }) => {
   );
 };
 
-const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog, showHelptips }) => {
+const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
 
@@ -273,11 +273,9 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
           );
         })}
       </div>
-      {showHelptips && (
-        <span className="relative">
-          <ExpandArtifact />
-        </span>
-      )}
+      <span className="relative">
+        <HelpTooltip id={HELPTOOLTIPS.ExpandArtifact.id} />
+      </span>
     </>
   );
 };
@@ -296,7 +294,6 @@ export const ReleaseDetails = () => {
   const pastDeploymentsCount = useSelector(state => state.deployments.byStatus.finished.total);
   const release = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
   const selectedArtifact = useSelector(state => state.releases.selectedArtifact);
-  const showHelptips = useSelector(getShowHelptips);
   const userCapabilities = useSelector(getUserCapabilities);
 
   const onRemoveArtifact = artifact => dispatch(removeArtifact(artifact.id)).finally(() => setShowRemoveArtifactDialog(false));
@@ -352,7 +349,6 @@ export const ReleaseDetails = () => {
         selectArtifact={artifact => dispatch(selectArtifact(artifact))}
         selectedArtifact={selectedArtifact}
         setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
-        showHelptips={showHelptips}
       />
       <OnboardingComponent creationRef={creationRef} drawerRef={drawerRef} onboardingState={onboardingState} />
       <RemoveArtifactDialog

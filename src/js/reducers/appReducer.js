@@ -59,6 +59,12 @@ export const initialState = {
   },
   stripeAPIKey: '',
   trackerCode: '',
+  tooltips: {
+    byId: {
+      // <id>: { readState: <read|unread> } // this object is getting enhanced by the tooltip texts in the app constants
+    },
+    show: true
+  },
   uploadsById: {
     // id: { uploading: false, uploadProgress: 0, cancelSource: undefined }
   },
@@ -135,6 +141,26 @@ const appReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.value
+      };
+    case AppConstants.SET_TOOLTIP_STATE:
+      return {
+        ...state,
+        tooltips: {
+          ...state.tooltips,
+          byId: {
+            ...state.tooltips.byId,
+            [action.id]: action.value
+          }
+        }
+      };
+    case AppConstants.SET_TOOLTIPS_STATE:
+      return {
+        ...state,
+        tooltips: {
+          ...state.tooltips,
+          byId: action.value,
+          show: action.state === AppConstants.READ_STATES.read
+        }
       };
     default:
       return state;

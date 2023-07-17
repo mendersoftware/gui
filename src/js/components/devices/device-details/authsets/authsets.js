@@ -40,7 +40,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Authsets = ({ decommission, device, showHelptips }) => {
+export const Authsets = ({ decommission, device }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -72,7 +72,6 @@ export const Authsets = ({ decommission, device, showHelptips }) => {
         confirm={updateDeviceAuthStatus}
         loading={loading}
         device={device}
-        showHelptips={showHelptips}
         userCapabilities={userCapabilities}
       />
       {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedDevices} deviceLimit={deviceLimit} hasContactInfo />}

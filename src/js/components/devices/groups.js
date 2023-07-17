@@ -19,7 +19,7 @@ import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/
 import { makeStyles } from 'tss-react/mui';
 
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { AddGroup } from '../helptips/helptooltips';
+import { HELPTOOLTIPS, HelpTooltip } from '../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
   header: {
@@ -50,7 +50,7 @@ export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
   </ListItem>
 );
 
-export const Groups = ({ acceptedCount, changeGroup, className, groups, openGroupDialog, selectedGroup, showHelptips }) => {
+export const Groups = ({ acceptedCount, changeGroup, className, groups, openGroupDialog, selectedGroup }) => {
   const { dynamic: dynamicGroups, static: staticGroups, ungrouped } = groups;
   return (
     <div className={className}>
@@ -79,7 +79,7 @@ export const Groups = ({ acceptedCount, changeGroup, className, groups, openGrou
         </ListItem>
       </List>
 
-      {showHelptips && acceptedCount && groups.length <= 1 ? <AddGroup /> : null}
+      {acceptedCount && groups.length <= 1 && <HelpTooltip id={HELPTOOLTIPS.AddGroup.id} />}
     </div>
   );
 };

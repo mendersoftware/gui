@@ -23,7 +23,7 @@ import * as AppConstants from '../constants/appConstants';
 import * as OnboardingConstants from '../constants/onboardingConstants';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
-import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getCurrentUser, getOnboardingState, getTooltipsState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 import { commonErrorFallback, commonErrorHandler, initializeAppData, setOfflineThreshold, setSnackbar } from './appActions';
 
@@ -642,13 +642,16 @@ export const saveUserSettings =
     }
     return Promise.resolve(dispatch(getUserSettings())).then(result => {
       const userSettings = getUserSettingsSelector(getState());
+      const onboardingState = getOnboardingState(getState());
+      const tooltipState = getTooltipsState(getState());
       const updatedSettings = {
         ...userSettings,
         ...settings,
         onboarding: {
-          ...userSettings.onboarding,
+          ...onboardingState.onboarding,
           ...settings.onboarding
-        }
+        },
+        tooltips: tooltipState
       };
       const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};
       return Promise.all([

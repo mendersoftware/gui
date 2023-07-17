@@ -21,14 +21,13 @@ import { toggle } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
-import { NameTagTip } from '../../helptips/helptooltips';
+import { HELPTOOLTIPS, HelpTooltip } from '../../helptips/helptooltips';
 import DeviceDataCollapse from './devicedatacollapse';
 
+const NameTipComponent = props => <HelpTooltip id={HELPTOOLTIPS.NameTagTip.id} {...props} />;
+
 const configHelpTipsMap = {
-  name: {
-    position: 'right',
-    component: NameTagTip
-  }
+  name: { component: NameTipComponent, position: 'right' }
 };
 
 export const DeviceTags = ({ device, setDeviceTags, setSnackbar, showHelptips, userCapabilities }) => {

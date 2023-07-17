@@ -18,13 +18,7 @@ import { waitFor } from '@testing-library/react';
 import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
-import PhysicalDeviceOnboarding, {
-  ConvertedImageNote,
-  DeviceTypeSelectionStep,
-  DeviceTypeTip,
-  ExternalProviderTip,
-  InstallationStep
-} from './physicaldeviceonboarding';
+import PhysicalDeviceOnboarding, { ConvertedImageNote, DeviceTypeSelectionStep, ExternalProviderTip, InstallationStep } from './physicaldeviceonboarding';
 
 const oldHostname = window.location.hostname;
 
@@ -43,33 +37,31 @@ describe('PhysicalDeviceOnboarding Component', () => {
   });
 
   describe('tiny onboarding tips', () => {
-    [DeviceTypeSelectionStep, InstallationStep, ConvertedImageNote, DeviceTypeTip, ExternalProviderTip, ExternalProviderTip].forEach(
-      async (Component, index) => {
-        it(`renders ${Component.displayName || Component.name} correctly`, () => {
-          const { baseElement } = render(
-            <Component
-              advanceOnboarding={jest.fn}
-              connectionString="test"
-              docsVersion={''}
-              hasConvertedImage={true}
-              integrationProvider={EXTERNAL_PROVIDER['iot-hub'].provider}
-              hasExternalIntegration={index % 2}
-              ipAddress="test.address"
-              isEnterprise={false}
-              isHosted={true}
-              isDemoMode={false}
-              onboardingState={{ complete: false, showTips: true, showHelptips: true }}
-              onSelect={jest.fn}
-              selection="raspberrypi7"
-              tenantToken="testtoken"
-            />
-          );
-          const view = baseElement.firstChild;
-          expect(view).toMatchSnapshot();
-          expect(view).toEqual(expect.not.stringMatching(undefineds));
-        });
-      }
-    );
+    [DeviceTypeSelectionStep, InstallationStep, ConvertedImageNote, ExternalProviderTip].forEach(async (Component, index) => {
+      it(`renders ${Component.displayName || Component.name} correctly`, () => {
+        const { baseElement } = render(
+          <Component
+            advanceOnboarding={jest.fn}
+            connectionString="test"
+            docsVersion={''}
+            hasConvertedImage={true}
+            integrationProvider={EXTERNAL_PROVIDER['iot-hub'].provider}
+            hasExternalIntegration={index % 2}
+            ipAddress="test.address"
+            isEnterprise={false}
+            isHosted={true}
+            isDemoMode={false}
+            onboardingState={{ complete: false, showTips: true, showHelptips: true }}
+            onSelect={jest.fn}
+            selection="raspberrypi7"
+            tenantToken="testtoken"
+          />
+        );
+        const view = baseElement.firstChild;
+        expect(view).toMatchSnapshot();
+        expect(view).toEqual(expect.not.stringMatching(undefineds));
+      });
+    });
   });
 
   it('renders correctly', async () => {

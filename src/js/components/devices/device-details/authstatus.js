@@ -18,7 +18,7 @@ import { Chip, Icon } from '@mui/material';
 
 import pendingIcon from '../../../../assets/img/pending_status.png';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { AuthButton } from '../../helptips/helptooltips';
+import { HELPTOOLTIPS, HelpTooltip } from '../../helptips/helptooltips';
 import Authsets from './authsets/authsets';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -32,7 +32,7 @@ const states = {
   preauthorized: <CheckIcon style={iconStyle} />
 };
 
-export const AuthStatus = ({ decommission, device, showHelptips }) => {
+export const AuthStatus = ({ decommission, device }) => {
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
   let hasPending = '';
@@ -54,14 +54,15 @@ export const AuthStatus = ({ decommission, device, showHelptips }) => {
             <div className="capitalized">{status}</div>
             {statusIcon}
           </div>
-          {requestNotification}
-          {showHelptips && (
-            <div style={{ position: 'relative', width: 50, height: 30 }}>{status === DEVICE_STATES.pending && <AuthButton highlightHelp={true} />}</div>
-          )}
+          {requestNotification}(
+          <div className="relative" style={{ width: 50, height: 30 }}>
+            {status === DEVICE_STATES.pending && <HelpTooltip id={HELPTOOLTIPS.AuthButton.id} />}
+          </div>
+          )
         </div>
       }
     >
-      <Authsets decommission={decommission} device={device} showHelptips={showHelptips} />
+      <Authsets decommission={decommission} device={device} />
     </DeviceDataCollapse>
   );
 };

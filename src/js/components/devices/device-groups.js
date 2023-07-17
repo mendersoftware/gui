@@ -48,7 +48,6 @@ import {
   getIsPreview,
   getLimitMaxed,
   getSelectedGroupInfo,
-  getShowHelptips,
   getSortedFilteringAttributes,
   getTenantCapabilities,
   getUserCapabilities
@@ -94,7 +93,6 @@ export const DeviceGroups = () => {
   const limitMaxed = useSelector(getLimitMaxed);
   const { pending: pendingCount } = useSelector(getDeviceCountsByStatus);
   const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
-  const showHelptips = useSelector(getShowHelptips);
   const isEnterprise = useSelector(getIsEnterprise);
   const dispatch = useDispatch();
 
@@ -270,7 +268,6 @@ export const DeviceGroups = () => {
           groups={groupsByType}
           openGroupDialog={setCreateGroupExplanation}
           selectedGroup={selectedGroup}
-          showHelptips={showHelptips}
         />
         <div className="rightFluid relative" style={{ paddingTop: 0 }}>
           {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedCount} deviceLimit={deviceLimit} />}

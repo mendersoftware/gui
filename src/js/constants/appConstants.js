@@ -36,6 +36,8 @@ export const SET_FEATURES = 'SET_FEATURES';
 export const SET_FIRST_LOGIN_AFTER_SIGNUP = 'SET_FIRST_LOGIN_AFTER_SIGNUP';
 export const SET_SEARCH_STATE = 'SET_SEARCH_STATE';
 export const SET_SNACKBAR = 'SET_SNACKBAR';
+export const SET_TOOLTIP_STATE = 'SET_TOOLTIP_STATE';
+export const SET_TOOLTIPS_STATE = 'SET_TOOLTIPS_STATE';
 export const SET_VERSION_INFORMATION = 'SET_VERSION_INFORMATION';
 export const SET_OFFLINE_THRESHOLD = 'SET_OFFLINE_THRESHOLD';
 export const UPLOAD_PROGRESS = 'UPLOAD_PROGRESS';
@@ -139,3 +141,9 @@ export const canAccess = yes;
 
 export const DARK_MODE = 'dark';
 export const LIGHT_MODE = 'light';
+
+export const READ_STATES = {
+  read: 'read',
+  seen: 'seen',
+  unread: 'unread'
+};

@@ -15,13 +15,17 @@ import Cookies from 'universal-cookie';
 
 import GeneralApi from '../api/general-api';
 import { getToken } from '../auth';
+import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
 import {
+  READ_STATES,
   SET_ENVIRONMENT_DATA,
   SET_FEATURES,
   SET_FIRST_LOGIN_AFTER_SIGNUP,
   SET_OFFLINE_THRESHOLD,
   SET_SEARCH_STATE,
   SET_SNACKBAR,
+  SET_TOOLTIPS_STATE,
+  SET_TOOLTIP_STATE,
   SET_VERSION_INFORMATION,
   TIMEOUTS
 } from '../constants/appConstants';
@@ -176,18 +180,20 @@ const processUserCookie = (user, showHelptips) => {
 const interpretAppData = () => (dispatch, getState) => {
   const state = getState();
   const user = getCurrentUser(state);
-  let tasks = [];
-  let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettingsSelector(state);
-  tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
+  let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled, tooltips } = getUserSettingsSelector(state);
   // checks if user id is set and if cookie for helptips exists for that user
   showHelptips = processUserCookie(user, showHelptips);
-  tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
-  tasks.push(Promise.resolve(dispatch({ type: SET_SHOW_HELP, show: showHelptips })));
   let settings = { showHelptips };
   if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
     settings.trackingConsentGiven = true;
   }
-  tasks.push(dispatch(saveUserSettings(settings)));
+  let tasks = [
+    dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })),
+    dispatch({ type: SET_SHOW_HELP, show: showHelptips }),
+    dispatch({ type: SET_TOOLTIPS_STATE, value: tooltips }), // tooltips read state is primarily trusted from the redux store, except on app init - here user settings are the reference
+    dispatch(saveUserSettings(settings))
+  ];
+  tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
   // the following is used as a migration and initialization of the stored identity attribute
   // changing the default device attribute to the first non-deviceId attribute, unless a stored
   // id attribute setting exists
@@ -381,3 +387,15 @@ export const setSearchState = searchState => (dispatch, getState) => {
   tasks.push(dispatch({ type: SET_SEARCH_STATE, state: nextState }));
   return Promise.all(tasks);
 };
+
+export const setTooltipReadState =
+  (id, readState = READ_STATES.read) =>
+  dispatch =>
+    Promise.resolve(dispatch({ type: SET_TOOLTIP_STATE, id, value: readState }));
+
+export const setAllTooltipsReadState =
+  (readState = READ_STATES.read) =>
+  dispatch => {
+    const updatedTips = Object.keys(HELPTOOLTIPS).reduce((accu, id) => ({ ...accu, [id]: { readState } }), {});
+    return Promise.resolve(dispatch({ type: SET_TOOLTIPS_STATE, value: updatedTips })).then(() => dispatch(saveUserSettings()));
+  };

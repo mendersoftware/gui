@@ -13,13 +13,13 @@
 //    limitations under the License.
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
 // material ui
+import { HighlightOff as HighlightOffIcon } from '@mui/icons-material';
 import { FormHelperText, IconButton, MenuItem, Select, TextField } from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
-import MenderTooltip from '../../common/mendertooltip';
+import { HELPTOOLTIPS, HelpTooltip } from '../../helptips/helptooltips';
 import AttributeAutoComplete from './attribute-autocomplete';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
@@ -34,13 +34,7 @@ const filterOptionsByPlan = {
 const defaultScope = 'inventory';
 
 const filterNotifications = {
-  name: (
-    <MenderTooltip arrow placement="bottom" title="Filtering by name is limited to devices with a previously defined name.">
-      <div className="tooltip help" style={{ top: 20, left: -12 }}>
-        <HelpIcon />
-      </div>
-    </MenderTooltip>
-  )
+  name: <HelpTooltip id={HELPTOOLTIPS.NameFilterTip.id} anchor={{ top: 20, left: -12 }} />
 };
 
 export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => {
