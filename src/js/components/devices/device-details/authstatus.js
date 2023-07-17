@@ -11,7 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React from 'react';
+import React, { useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Block as BlockIcon, CheckCircle as CheckCircleIcon, Check as CheckIcon } from '@mui/icons-material';
 import { Chip, Icon } from '@mui/material';
@@ -19,6 +20,9 @@ import { Chip, Icon } from '@mui/material';
 import pendingIcon from '../../../../assets/img/pending_status.png';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
+import { getOnboardingState } from '../../../selectors';
+import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import Authsets from './authsets/authsets';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -33,6 +37,9 @@ const states = {
 };
 
 export const AuthStatus = ({ decommission, device }) => {
+  const listRef = useRef();
+  const statusRef = useRef();
+  const onboardingState = useSelector(getOnboardingState);
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
 
   let hasPending = '';
@@ -44,13 +51,37 @@ export const AuthStatus = ({ decommission, device }) => {
 
   const statusIcon = states[status] ? states[status] : states.default;
   const requestNotification = !!hasPending && <Chip size="small" label="new request" color="primary" />;
-
+  let onboardingComponent;
+  if (listRef.current?.querySelector('.action-buttons')) {
+    const anchor = {
+      top: listRef.current.offsetTop + listRef.current.offsetHeight,
+      left: listRef.current.offsetLeft + listRef.current.querySelector('.action-buttons').offsetLeft + 15
+    };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING,
+      onboardingState,
+      { anchor, place: 'top' },
+      onboardingComponent
+    );
+  }
+  if (statusRef.current) {
+    const anchor = {
+      top: statusRef.current.offsetTop + statusRef.current.offsetHeight,
+      left: statusRef.current.offsetLeft + statusRef.current.offsetWidth / 2
+    };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEVICES_ACCEPTED_ONBOARDING,
+      onboardingState,
+      { anchor, place: 'top' },
+      onboardingComponent
+    );
+  }
   return (
     <DeviceDataCollapse
       title={
         <div className="flexbox center-aligned">
           <h4>Authentication status</h4>
-          <div className="flexbox center-aligned margin-left margin-right">
+          <div className="flexbox center-aligned margin-left margin-right" ref={statusRef}>
             <div className="capitalized">{status}</div>
             {statusIcon}
           </div>
@@ -59,7 +90,8 @@ export const AuthStatus = ({ decommission, device }) => {
         </div>
       }
     >
-      <Authsets decommission={decommission} device={device} />
+      <Authsets decommission={decommission} device={device} listRef={listRef} />
+      {onboardingComponent}
     </DeviceDataCollapse>
   );
 };

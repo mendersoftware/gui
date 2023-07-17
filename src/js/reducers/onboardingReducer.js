@@ -25,6 +25,11 @@ export const initialState = {
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case OnboardingConstants.SET_ONBOARDING_STATE:
+      return {
+        ...state,
+        ...action.value
+      };
     case OnboardingConstants.SET_DEMO_ARTIFACT_PORT:
       return {
         ...state,
@@ -60,12 +65,6 @@ const userReducer = (state = initialState, action) => {
         ...state,
         approach: action.value
       };
-    case OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED:
-      return {
-        ...state,
-        artifactIncluded: action.value
-      };
-
     default:
       return state;
   }

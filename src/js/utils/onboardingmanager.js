@@ -23,7 +23,9 @@ import {
   DeploymentsPastCompletedFailure,
   DevicePendingTip,
   DevicesAcceptedOnboarding,
+  DevicesDeployReleaseOnboarding,
   DevicesPendingAcceptingOnboarding,
+  DevicesPendingDelayed,
   GetStartedTip,
   SchedulingAllDevicesSelection,
   SchedulingArtifactSelection,
@@ -38,12 +40,23 @@ import { onboardingSteps as stepNames } from '../constants/onboardingConstants';
 export const onboardingSteps = {
   [stepNames.DASHBOARD_ONBOARDING_START]: {
     condition: { min: stepNames.ONBOARDING_START },
-    component: GetStartedTip
+    specialComponent: <GetStartedTip />
   },
   [stepNames.DEVICES_PENDING_ONBOARDING_START]: {
     condition: { min: stepNames.DASHBOARD_ONBOARDING_START, max: stepNames.DEVICES_PENDING_ONBOARDING },
     fallbackStep: stepNames.DASHBOARD_ONBOARDING_START,
     specialComponent: <DevicePendingTip />
+  },
+  [stepNames.DEVICES_DELAYED_ONBOARDING]: {
+    condition: { min: stepNames.DASHBOARD_ONBOARDING_START },
+    component: DevicesPendingDelayed,
+    fallbackStep: stepNames.DASHBOARD_ONBOARDING_START,
+    extra: ({ deviceConnection }) => {
+      const now = new Date();
+      const then = new Date(deviceConnection);
+      then.setMinutes(then.getMinutes() + 5);
+      return !!deviceConnection && then < now;
+    }
   },
   [stepNames.DEVICES_PENDING_ONBOARDING]: {
     condition: { min: stepNames.DASHBOARD_ONBOARDING_START },
@@ -59,12 +72,16 @@ export const onboardingSteps = {
     component: DashboardOnboardingPendings
   },
   [stepNames.DEVICES_ACCEPTED_ONBOARDING]: {
-    condition: { max: stepNames.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION },
-    component: DevicesAcceptedOnboarding
+    condition: { min: stepNames.DASHBOARD_ONBOARDING_PENDINGS, max: stepNames.DEVICES_ACCEPTED_ONBOARDING },
+    specialComponent: <DevicesAcceptedOnboarding />
   },
   [stepNames.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION]: {
-    condition: { min: stepNames.DASHBOARD_ONBOARDING_PENDINGS, max: stepNames.APPLICATION_UPDATE_REMINDER_TIP },
+    condition: { min: stepNames.DASHBOARD_ONBOARDING_PENDINGS, max: stepNames.SCHEDULING_ALL_DEVICES_SELECTION },
     specialComponent: <WelcomeSnackTip progress={2} />
+  },
+  [stepNames.DEVICES_DEPLOY_RELEASE_ONBOARDING]: {
+    condition: {},
+    component: DevicesDeployReleaseOnboarding
   },
   [stepNames.SCHEDULING_ALL_DEVICES_SELECTION]: {
     condition: { min: stepNames.DEVICES_ACCEPTED_ONBOARDING, max: stepNames.DEPLOYMENTS_INPROGRESS },
@@ -103,41 +120,44 @@ export const onboardingSteps = {
     component: DeploymentsPastCompletedFailure
   },
   [stepNames.ONBOARDING_CANCELED]: {
-    condition: { extra: yes },
+    condition: {},
     specialComponent: <div />
   }
 };
 
-const getOnboardingStepCompleted = (id, progress, complete, showHelptips, showTips) => {
+const getOnboardingStepCompleted = (id, onboardingState) => {
+  const { progress, complete, showHelptips, showTips } = onboardingState;
   const keys = Object.keys(onboardingSteps);
   const {
-    min = id,
-    max = id,
-    extra
-  } = Object.entries(onboardingSteps).reduce((accu, [key, value]) => {
-    if (key === id) {
-      return value.condition;
-    }
-    return accu;
-  }, {});
-  const progressIndex = keys.findIndex(step => step === progress);
+    condition: { min = id, max = id },
+    extra,
+    progressIndex
+  } = Object.entries(onboardingSteps).reduce(
+    (accu, [key, value], index) => {
+      accu = key === id ? { ...accu, ...value } : accu;
+      accu.progressIndex = key === progress ? index : accu.progressIndex;
+      return accu;
+    },
+    { progressIndex: 0, extra: yes, condition: { min: id, max: id } }
+  );
   return (
     !complete &&
     showHelptips &&
     showTips &&
     progressIndex >= keys.findIndex(step => step === min) &&
     progressIndex <= keys.findIndex(step => step === max) &&
-    (extra ? extra() : true)
+    extra(onboardingState)
   );
 };
 
 export const getOnboardingComponentFor = (id, componentProps, params = {}, previousComponent = null) => {
   const step = onboardingSteps[id];
-  const isValid = getOnboardingStepCompleted(id, componentProps.progress, componentProps.complete, componentProps.showHelptips, componentProps.showTips);
+  const isValid = getOnboardingStepCompleted(id, componentProps);
   if (!isValid) {
     return previousComponent;
   }
   if (step.specialComponent) {
+    // const Component = step.specialComponent
     return React.cloneElement(step.specialComponent, params);
   }
   const component = step.component(componentProps);

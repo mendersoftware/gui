@@ -60,7 +60,7 @@ export const defaultColumns = [
   { title: 'Actions', canAccess: ({ userCapabilities: { canManageDevices } }) => canManageDevices }
 ];
 
-export const AuthsetList = ({ device, userCapabilities, ...remainingProps }) => {
+export const AuthsetList = ({ device, listRef, userCapabilities, ...remainingProps }) => {
   const [expandRow, setExpandRow] = useState();
   const { classes } = useStyles();
   const { auth_sets: authsets = [], status = DEVICE_STATES.accepted } = device;
@@ -97,7 +97,7 @@ export const AuthsetList = ({ device, userCapabilities, ...remainingProps }) => 
           </div>
         ))}
       </div>
-      <div className="body relative">
+      <div className="body relative" ref={listRef}>
         {orderedAuthsets.map(authset => (
           <AuthsetListItem
             authset={authset}

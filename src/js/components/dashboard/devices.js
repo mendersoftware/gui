@@ -56,6 +56,10 @@ export const Devices = ({ clickHandle }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(availableIssueOptions), dispatch]);
 
+  const showDismissHelptipsDialog = useSelector(state => !state.onboarding.complete && state.onboarding.showTipsDialog);
+  const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
+  const showsDialog = showDismissHelptipsDialog || showDeviceConnectionDialog;
+
   useEffect(() => {
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
@@ -73,7 +77,7 @@ export const Devices = ({ clickHandle }) => {
   };
 
   let onboardingComponent = null;
-  if (anchor.current) {
+  if (anchor.current && !showsDialog) {
     const element = anchor.current.children[anchor.current.children.length - 1];
     const deviceConnectionAnchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_START, onboardingState, { anchor: deviceConnectionAnchor });

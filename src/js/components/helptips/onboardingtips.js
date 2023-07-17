@@ -12,18 +12,15 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 
-import { bindActionCreators } from 'redux';
-
-import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
+import { advanceOnboarding, setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { MenderTooltipClickable } from '../common/mendertooltip';
+import BaseOnboardingTip, { BaseOnboardingTooltip } from './baseonboardingtip';
 
 export const WelcomeSnackTip = React.forwardRef(({ progress, setSnackbar }, ref) => {
   const onClose = () => setSnackbar('');
@@ -70,57 +67,73 @@ export const WelcomeSnackTip = React.forwardRef(({ progress, setSnackbar }, ref)
 });
 WelcomeSnackTip.displayName = 'WelcomeSnackTip';
 
-const DevicePendingTipComponent = ({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }) => (
-  <div style={{ display: 'grid', placeItems: 'center' }}>
-    <MenderTooltipClickable
-      onboarding
-      title={
-        <>
-          <p>It may take a few moments before your device appears.</p>
-          <b className="clickable" onClick={() => setShowConnectingDialog(true)}>
-            Open the tutorial
-          </b>{' '}
-          again or <Link to="/help/get-started">go to the help pages</Link> if you have problems.
-          <div className="flexbox">
-            <div style={{ flexGrow: 1 }} />
-            <b className="clickable" onClick={() => setShowDismissOnboardingTipsDialog(true)}>
-              Dismiss
-            </b>
-          </div>
-        </>
-      }
-    >
-      <div className="onboard-icon">
-        <HelpIcon />
-      </div>
-    </MenderTooltipClickable>
-  </div>
+export const DevicePendingTip = props => (
+  <BaseOnboardingTip
+    icon={<HelpIcon />}
+    component={<div>If you followed the steps in &quot;Connecting a device&quot;, your device will show here shortly.</div>}
+    {...props}
+  />
 );
 
-const mappedActionCreators = dispatch => {
-  return bindActionCreators({ setShowConnectingDialog, setShowDismissOnboardingTipsDialog }, dispatch);
+export const GetStartedTip = props => {
+  const dispatch = useDispatch();
+  return (
+    <BaseOnboardingTooltip {...props}>
+      <div className="margin-top" style={{ marginBottom: -12 }}>
+        <p>
+          <b>Welcome to Mender!</b>
+        </p>
+        We can help you get started with connecting your first device and deploying an update to it.
+        <div className="flexbox center-aligned margin-top-small space-between">
+          <b className="clickable slightly-smaller" onClick={() => dispatch(setShowDismissOnboardingTipsDialog(true))}>
+            No thanks, I don&apos;t need help
+          </b>
+          <Button onClick={() => dispatch(setShowConnectingDialog(true))}>Get started</Button>
+        </div>
+      </div>
+    </BaseOnboardingTooltip>
+  );
 };
 
-export const DevicePendingTip = connect(null, mappedActionCreators)(DevicePendingTipComponent);
-
-export const GetStartedTip = () => <div>Click here to get started!</div>;
-
-export const DashboardOnboardingState = () => (
-  <div>This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!</div>
+export const DevicesPendingDelayed = () => (
+  <div>If your device still isn&apos;t showing, try following the connection steps again or see our documentation for more.</div>
 );
 
-export const DevicesPendingAcceptingOnboarding = () => <div>If you recognize this device as your own, you can accept it</div>;
+export const DashboardOnboardingState = () => <div>Your device has requested to join the server. Click the row to expand the device details.</div>;
+
+export const DevicesPendingAcceptingOnboarding = () => (
+  <div>
+    Your device has made a request to join the Mender server. You can inspect its identity details, such as mac address and public key, to verify it is
+    definitely your device.
+    <br />
+    When you are ready, Accept it!
+  </div>
+);
 
 export const DashboardOnboardingPendings = () => <div>Next accept your device</div>;
 
-export const DevicesAcceptedOnboarding = () => (
-  <div>
-    <b>Good job! Your first device is connected!</b>
-    <p>
-      Your device is now <b>accepted</b>! It&apos;s now going to share device details with the server.
-    </p>
-    Click to expand the device and see more
-  </div>
+export const DevicesAcceptedOnboarding = ({ id, ...props }) => {
+  const dispatch = useDispatch();
+  return (
+    <BaseOnboardingTooltip id={id} {...props}>
+      <div className="margin-top" style={{ marginBottom: -12 }}>
+        <div>
+          <p>Your device is now authenticated and has connected to the server! It&apos;s ready to receive updates, report its data and more.</p>
+          Would you like to learn how to deploy your first update?
+        </div>
+        <div className="flexbox center-aligned margin-top-small space-between">
+          <b className="clickable slightly-smaller" onClick={() => dispatch(setShowDismissOnboardingTipsDialog(true))}>
+            Dismiss the tutorial
+          </b>
+          <Button onClick={() => dispatch(advanceOnboarding(id))}>Yes, let&apos;s deploy!</Button>
+        </div>
+      </div>
+    </BaseOnboardingTooltip>
+  );
+};
+
+export const DevicesDeployReleaseOnboarding = () => (
+  <div>Click to create your first deployment. You&apos;ll deploy an update to your device using some demo software we have provided.</div>
 );
 
 export const SchedulingArtifactSelection = ({ selectedRelease }) => <div>{`Select the ${selectedRelease.Name} release we included.`}</div>;

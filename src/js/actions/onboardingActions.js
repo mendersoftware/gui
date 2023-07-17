@@ -17,15 +17,14 @@ import { DEVICE_STATES } from '../constants/deviceConstants';
 import {
   SET_DEMO_ARTIFACT_PORT,
   SET_ONBOARDING_APPROACH,
-  SET_ONBOARDING_ARTIFACT_INCLUDED,
   SET_ONBOARDING_COMPLETE,
   SET_ONBOARDING_DEVICE_TYPE,
   SET_ONBOARDING_PROGRESS,
+  SET_ONBOARDING_STATE,
   SET_SHOW_ONBOARDING_HELP,
   SET_SHOW_ONBOARDING_HELP_DIALOG,
   onboardingSteps as onboardingStepNames
 } from '../constants/onboardingConstants';
-import { SET_SHOW_HELP } from '../constants/userConstants';
 import { getDemoDeviceAddress } from '../helpers';
 import { getOnboardingState as getCurrentOnboardingState, getUserCapabilities } from '../selectors';
 import Tracking from '../tracking';
@@ -46,6 +45,7 @@ const deductOnboardingState = ({ devicesById, devicesByStatus, onboardingState, 
       : deviceType;
   const progress = applyOnboardingFallbacks(onboardingState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments));
   return {
+    ...onboardingState,
     complete: !!(
       Boolean(userCookie) ||
       onboardingState.complete ||
@@ -59,7 +59,6 @@ const deductOnboardingState = ({ devicesById, devicesByStatus, onboardingState, 
     showTips: onboardingState.showTips != null ? onboardingState.showTips : true,
     deviceType,
     approach: onboardingState.approach || (deviceType.some(type => type.startsWith('qemu')) ? 'virtual' : 'physical'),
-    artifactIncluded: onboardingState.artifactIncluded,
     progress
   };
 };
@@ -91,7 +90,6 @@ export const setShowOnboardingHelp =
     let tasks = [dispatch({ type: SET_SHOW_ONBOARDING_HELP, show })];
     if (update) {
       tasks.push(dispatch(saveUserSettings({ onboarding: { showTips: show }, showHelptips: show })));
-      tasks.push(dispatch({ type: SET_SHOW_HELP, show }));
     }
     return Promise.all(tasks);
   };
@@ -117,8 +115,6 @@ export const setOnboardingApproach =
     }
     return Promise.all(tasks);
   };
-
-const setOnboardingArtifactIncluded = value => dispatch => dispatch({ type: SET_ONBOARDING_ARTIFACT_INCLUDED, value });
 
 export const setShowDismissOnboardingTipsDialog = show => dispatch => dispatch({ type: SET_SHOW_ONBOARDING_HELP_DIALOG, show });
 
@@ -148,11 +144,7 @@ export const setOnboardingCanceled = () => dispatch =>
 const setOnboardingState = state => dispatch =>
   Promise.all([
     dispatch(setOnboardingComplete(state.complete)),
-    dispatch(setOnboardingDeviceType(state.deviceType, false)),
-    dispatch(setOnboardingApproach(state.approach, false)),
-    dispatch(setOnboardingArtifactIncluded(state.artifactIncluded)),
-    dispatch(setShowOnboardingHelp(state.showTips, false)),
-    dispatch(setOnboardingProgress(state.progress)),
+    dispatch({ type: SET_ONBOARDING_STATE, value: state }),
     dispatch(saveUserSettings({ onboarding: state }))
   ]);
 
@@ -177,9 +169,7 @@ const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeploy
   const steps = Object.keys(onboardingSteps);
   let progress = -1;
   progress = pendingDevices.length > 1 ? steps.findIndex(step => step === onboardingStepNames.DEVICES_PENDING_ACCEPTING_ONBOARDING) : progress;
-  progress = acceptedDevices.length >= 1 ? steps.findIndex(step => step === onboardingStepNames.APPLICATION_UPDATE_REMINDER_TIP) : progress;
-  progress =
-    acceptedDevices.length > 1 && releases.length > 1 ? steps.findIndex(step => step === onboardingStepNames.APPLICATION_UPDATE_REMINDER_TIP) : progress;
+  progress = acceptedDevices.length >= 1 ? steps.findIndex(step => step === onboardingStepNames.DEVICES_ACCEPTED_ONBOARDING) : progress;
   progress =
     acceptedDevices.length > 1 && releases.length > 1 && pastDeployments.length > 1
       ? steps.findIndex(step => step === onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED)

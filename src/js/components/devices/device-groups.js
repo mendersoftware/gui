@@ -35,6 +35,7 @@ import {
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle } from '../../helpers';
 import {
   getAcceptedDevices,
@@ -46,12 +47,14 @@ import {
   getIsEnterprise,
   getIsPreview,
   getLimitMaxed,
+  getOnboardingState,
   getSelectedGroupInfo,
   getSortedFilteringAttributes,
   getTenantCapabilities,
   getUserCapabilities
 } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
 import DeviceStatusNotification from './devicestatusnotification';
@@ -72,6 +75,7 @@ export const DeviceGroups = () => {
   const [showMakeGateway, setShowMakeGateway] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
+  const deviceConnectionRef = useRef();
   const { status: statusParam } = useParams();
 
   const { groupCount, selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
@@ -91,6 +95,7 @@ export const DeviceGroups = () => {
   const limitMaxed = useSelector(getLimitMaxed);
   const { pending: pendingCount } = useSelector(getDeviceCountsByStatus);
   const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
+  const onboardingState = useSelector(getOnboardingState);
   const isEnterprise = useSelector(getIsEnterprise);
   const dispatch = useDispatch();
   const isInitialized = useRef(false);
@@ -233,6 +238,16 @@ export const DeviceGroups = () => {
 
   const toggleMakeGatewayClick = () => setShowMakeGateway(toggle);
 
+  let onboardingComponent;
+  if (deviceConnectionRef.current && !(pendingCount || acceptedCount)) {
+    const anchor = { top: deviceConnectionRef.current.offsetTop + deviceConnectionRef.current.offsetHeight / 2, left: deviceConnectionRef.current.offsetLeft };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEVICES_DELAYED_ONBOARDING,
+      onboardingState,
+      { anchor, place: 'left' },
+      onboardingComponent
+    );
+  }
   return (
     <>
       <div className="tab-container with-sub-panels" style={{ paddingTop: 0, paddingBottom: 45, minHeight: 'max-content', alignContent: 'center' }}>
@@ -258,8 +273,10 @@ export const DeviceGroups = () => {
               onMakeGatewayClick={toggleMakeGatewayClick}
               onPreauthClick={setOpenPreauth}
               tenantCapabilities={tenantCapabilities}
+              innerRef={deviceConnectionRef}
             />
           )}
+          {onboardingComponent}
         </span>
       </div>
       <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>

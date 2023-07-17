@@ -1,7 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
-.emotion-0 {
+.emotion-0 .MuiButtonBase-root.MuiButton-text {
+  color: #fff;
+  padding-right: 0;
+}
+
+.emotion-1 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -18,35 +23,32 @@ exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-0 iconButton {
+.emotion-1 iconButton {
   margin-right: 8px;
 }
 
 <div
-  style="display: grid; place-items: center;"
+  class="emotion-0 onboard-tip"
+  data-mui-internal-clone-element="true"
+  style="left: -15px; top: 0px; overflow: initial;"
 >
   <div
-    class=""
-    data-mui-internal-clone-element="true"
+    class="tooltip onboard-icon bottom"
   >
-    <div
-      class="onboard-icon"
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+      data-testid="ScheduleIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
     >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
-        data-testid="ScheduleIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-        />
-        <path
-          d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
-        />
-      </svg>
-    </div>
+      <path
+        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+      />
+      <path
+        d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+      />
+    </svg>
   </div>
 </div>
 `;
@@ -227,7 +229,7 @@ exports[`OnboardingTips Components tiny onboarding tips renders DashboardOnboard
 
 exports[`OnboardingTips Components tiny onboarding tips renders DashboardOnboardingState correctly 1`] = `
 <div>
-  This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!
+  Your device has requested to join the server. Click the row to expand the device details.
 </div>
 `;
 
@@ -250,30 +252,114 @@ exports[`OnboardingTips Components tiny onboarding tips renders DeploymentsPastC
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders DevicesAcceptedOnboarding correctly 1`] = `
-<div>
-  <b>
-    Good job! Your first device is connected!
-  </b>
-  <p>
-    Your device is now 
-    <b>
-      accepted
-    </b>
-    ! It's now going to share device details with the server.
-  </p>
-  Click to expand the device and see more
+.emotion-0 .MuiButtonBase-root.MuiButton-text {
+  color: #fff;
+  padding-right: 0;
+}
+
+.emotion-1 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+}
+
+.emotion-1 iconButton {
+  margin-right: 8px;
+}
+
+<div
+  class="emotion-0 onboard-tip"
+  createdgroup="testgroup"
+  data-mui-internal-clone-element="true"
+  selectedrelease="test"
+  style="left: -15px; top: 0px; overflow: initial;"
+>
+  <div
+    class="tooltip onboard-icon bottom"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+      data-testid="ArrowUpwardIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+      />
+    </svg>
+  </div>
 </div>
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders DevicesPendingAcceptingOnboarding correctly 1`] = `
 <div>
-  If you recognize this device as your own, you can accept it
+  Your device has made a request to join the Mender server. You can inspect its identity details, such as mac address and public key, to verify it is definitely your device.
+  <br />
+  When you are ready, Accept it!
 </div>
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders GetStartedTip correctly 1`] = `
-<div>
-  Click here to get started!
+.emotion-0 .MuiButtonBase-root.MuiButton-text {
+  color: #fff;
+  padding-right: 0;
+}
+
+.emotion-1 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+}
+
+.emotion-1 iconButton {
+  margin-right: 8px;
+}
+
+<div
+  class="emotion-0 onboard-tip"
+  createdgroup="testgroup"
+  data-mui-internal-clone-element="true"
+  selectedrelease="test"
+  style="left: -15px; top: 0px; overflow: initial;"
+>
+  <div
+    class="tooltip onboard-icon bottom"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+      data-testid="ArrowUpwardIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+      />
+    </svg>
+  </div>
 </div>
 `;
 

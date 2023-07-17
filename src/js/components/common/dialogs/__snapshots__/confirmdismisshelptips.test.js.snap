@@ -381,22 +381,10 @@ exports[`ConfirmDismissHelptips Component renders correctly 1`] = `
       <div
         class="MuiDialogContent-root emotion-5"
       >
-        <p>
-          Hide the help tips? You haven't finished your first update yet.
-        </p>
-        <p>
-          You can always show the help again later by selecting the option from the top menu:
-        </p>
-        <div
-          class="flexbox centered"
-        >
-          <img
-            src="helptooltips.png"
-          />
-        </div>
+        Hide the help tips? You haven't finished your first update yet.
       </div>
       <div
-        class="MuiDialogActions-root MuiDialogActions-spacing emotion-6"
+        class="MuiDialogActions-root MuiDialogActions-spacing flexbox space-between emotion-6"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-7"
@@ -408,9 +396,6 @@ exports[`ConfirmDismissHelptips Component renders correctly 1`] = `
             class="MuiTouchRipple-root emotion-8"
           />
         </button>
-        <div
-          style="flex-grow: 1;"
-        />
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-9"
           tabindex="0"

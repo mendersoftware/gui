@@ -51,7 +51,7 @@ import {
   SET_REJECTED_DEVICES,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
-import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_ARTIFACT_INCLUDED, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
+import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
 import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
 import {
@@ -272,7 +272,6 @@ const appInitActions = [
     ]
   },
   { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
-  { type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
   {
     type: SET_RELEASES_LIST_STATE,
     value: {

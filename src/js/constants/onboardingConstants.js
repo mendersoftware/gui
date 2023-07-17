@@ -16,10 +16,12 @@ export const onboardingSteps = {
   DEVICES_PENDING_ONBOARDING_START: 'devices-pending-onboarding-start',
   DASHBOARD_ONBOARDING_START: 'dashboard-onboarding-start',
   DASHBOARD_ONBOARDING_PENDINGS: 'dashboard-onboarding-pendings',
+  DEVICES_DELAYED_ONBOARDING: 'devices-delayed-onboarding',
   DEVICES_PENDING_ONBOARDING: 'devices-pending-onboarding',
   DEVICES_ACCEPTED_ONBOARDING: 'devices-accepted-onboarding',
   DEVICES_PENDING_ACCEPTING_ONBOARDING: 'devices-pending-accepting-onboarding',
   DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION: 'devices-accepted-onboarding-notification',
+  DEVICES_DEPLOY_RELEASE_ONBOARDING: 'devices-deploy-release-onboarding',
   SCHEDULING_ARTIFACT_SELECTION: 'scheduling-artifact-selection',
   SCHEDULING_ALL_DEVICES_SELECTION: 'scheduling-all-devices-selection',
   SCHEDULING_GROUP_SELECTION: 'scheduling-group-selection',
@@ -36,7 +38,7 @@ export const SET_ONBOARDING_COMPLETE = 'SET_ONBOARDING_COMPLETE';
 export const SET_ONBOARDING_PROGRESS = 'SET_ONBOARDING_PROGRESS';
 export const SET_ONBOARDING_DEVICE_TYPE = 'SET_ONBOARDING_DEVICE_TYPE';
 export const SET_ONBOARDING_APPROACH = 'SET_ONBOARDING_APPROACH';
-export const SET_ONBOARDING_ARTIFACT_INCLUDED = 'SET_ONBOARDING_ARTIFACT_INCLUDED';
 export const SET_SHOW_CREATE_ARTIFACT = 'SET_SHOW_CREATE_ARTIFACT';
 export const SET_SHOW_ONBOARDING_HELP = 'SET_SHOW_ONBOARDING_HELP';
 export const SET_SHOW_ONBOARDING_HELP_DIALOG = 'SET_SHOW_ONBOARDING_HELP_DIALOG';
+export const SET_ONBOARDING_STATE = 'SET_ONBOARDING_STATE';

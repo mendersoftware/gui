@@ -42,8 +42,4 @@ describe('organization reducer', () => {
     expect(reducer(undefined, { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' }).approach).toEqual('physical');
     expect(reducer(initialState, { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'virtual' }).approach).toEqual('virtual');
   });
-  it('should handle SET_ONBOARDING_ARTIFACT_INCLUDED', async () => {
-    expect(reducer(undefined, { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true }).artifactIncluded).toEqual(true);
-    expect(reducer(initialState, { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: false }).artifactIncluded).toEqual(false);
-  });
 });

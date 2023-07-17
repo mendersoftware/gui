@@ -17,7 +17,6 @@ import thunk from 'redux-thunk';
 import { defaultState } from '../../../tests/mockData';
 import { mockAbortController } from '../../../tests/setupTests';
 import * as AppConstants from '../constants/appConstants';
-import * as OnboardingConstants from '../constants/onboardingConstants';
 import * as ReleaseConstants from '../constants/releaseConstants';
 import {
   createArtifact,
@@ -73,7 +72,6 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: { ...defaultState.releases.releasesList, releaseIds: ['release-1'], total: 5000 }
@@ -88,7 +86,6 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: {
@@ -107,7 +104,6 @@ describe('release actions', () => {
     const store = mockStore({ ...defaultState });
     const expectedActions = [
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: {
@@ -242,7 +238,6 @@ describe('release actions', () => {
       { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
       { type: ReleaseConstants.SELECTED_RELEASE, release: defaultState.releases.byId.r1.Name },
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, releaseIds: retrievedReleaseIds, total: 5000 } },
       { type: ReleaseConstants.RECEIVE_RELEASE, release: defaultState.releases.byId.r1 },
       { type: AppConstants.UPLOAD_PROGRESS, uploads: {} }
@@ -258,7 +253,6 @@ describe('release actions', () => {
       { type: ReleaseConstants.RELEASE_REMOVED, release: defaultState.releases.byId.r1.Name },
       { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, isLoading: true, releaseIds: [], total: 0 } },
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: { ...defaultState.releases.releasesList, releaseIds: retrievedReleaseIds, total: 5000 }
@@ -276,7 +270,6 @@ describe('release actions', () => {
       { type: ReleaseConstants.RELEASE_REMOVED, release: defaultState.releases.byId.r1.Name },
       { type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: { ...defaultState.releases.releasesList, isLoading: true, releaseIds: [], total: 0 } },
       { type: ReleaseConstants.RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: ReleaseConstants.SET_RELEASES_LIST_STATE,
         value: { ...defaultState.releases.releasesList, releaseIds: retrievedReleaseIds, total: 5000 }

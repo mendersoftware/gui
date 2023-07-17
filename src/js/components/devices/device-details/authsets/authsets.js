@@ -21,7 +21,9 @@ import { makeStyles } from 'tss-react/mui';
 import pluralize from 'pluralize';
 
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
+import { advanceOnboarding } from '../../../../actions/onboardingActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
+import { onboardingSteps } from '../../../../constants/onboardingConstants';
 import { getAcceptedDevices, getDeviceLimit, getLimitMaxed, getUserCapabilities } from '../../../../selectors';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../../helptips/helptooltips';
 import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
@@ -41,7 +43,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Authsets = ({ decommission, device }) => {
+export const Authsets = ({ decommission, device, listRef }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -49,19 +51,18 @@ export const Authsets = ({ decommission, device }) => {
   const deviceLimit = useSelector(getDeviceLimit);
   const limitMaxed = useSelector(getLimitMaxed);
   const userCapabilities = useSelector(getUserCapabilities);
-
+  const { classes } = useStyles();
   const { auth_sets = [], status = DEVICE_STATES.accepted } = device;
+  const { canManageDevices } = userCapabilities;
 
   const updateDeviceAuthStatus = (device_id, auth_id, status) => {
     setLoading(auth_id);
     // call API to update authset
     const request = status === DEVICE_DISMISSAL_STATE ? dispatch(deleteAuthset(device_id, auth_id)) : dispatch(updateDeviceAuth(device_id, auth_id, status));
     // on finish, change "loading" back to null
-    return request.finally(() => setLoading(null));
+    return request.then(() => dispatch(advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING))).finally(() => setLoading(null));
   };
 
-  const { canManageDevices } = userCapabilities;
-  const { classes } = useStyles();
   return (
     <div className={classes.wrapper}>
       <div className="margin-bottom-small flexbox space-between">
@@ -70,6 +71,7 @@ export const Authsets = ({ decommission, device }) => {
       </div>
       <Authsetlist
         limitMaxed={limitMaxed}
+        listRef={listRef}
         total={auth_sets.length}
         confirm={updateDeviceAuthStatus}
         loading={loading}

@@ -24,7 +24,7 @@ const useStyles = makeStyles()(() => ({
   buttonStyle: { textTransform: 'none' }
 }));
 
-export const DeviceAdditionWidget = ({ features, onConnectClick, onMakeGatewayClick, onPreauthClick, tenantCapabilities }) => {
+export const DeviceAdditionWidget = ({ features, innerRef, onConnectClick, onMakeGatewayClick, onPreauthClick, tenantCapabilities }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { classes } = useStyles();
@@ -60,7 +60,7 @@ export const DeviceAdditionWidget = ({ features, onConnectClick, onMakeGatewayCl
 
   return (
     <>
-      <ButtonGroup className="muted device-addition-widget" style={{ height: 'max-content' }}>
+      <ButtonGroup className="muted device-addition-widget" ref={innerRef} style={{ height: 'max-content' }}>
         <Button className={classes.buttonStyle} onClick={options[selectedIndex].action} variant="text">
           {options[selectedIndex].title}
         </Button>
