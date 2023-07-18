@@ -4,11 +4,11 @@
 /* eslint-disable */
 
 /**
- * Error descriptor
+ * Fields to be updated in the given Release.
  */
-export type ErrorDeviceauth = {
+export type ReleaseUpdate = {
   /**
-   * Description of the error
+   * Release notes, limited to maximum length.
    */
-  error?: string;
+  notes?: string;
 };

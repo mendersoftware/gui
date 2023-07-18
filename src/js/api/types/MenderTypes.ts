@@ -1,3 +1,4 @@
+/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -80,6 +81,7 @@ export type { ErrorDeployments } from "./ErrorDeployments";
 export type { ErrorDeviceauth } from "./ErrorDeviceauth";
 export type { ErrorDeviceconnect } from "./ErrorDeviceconnect";
 export type { ErrorDevicemonitor } from "./ErrorDevicemonitor";
+export type { ErrorExt } from "./ErrorExt";
 export type { ErrorInventory } from "./ErrorInventory";
 export type { ErrorIot_manager } from "./ErrorIot_manager";
 export type { ErrorNotFound } from "./ErrorNotFound";
@@ -130,6 +132,7 @@ export type { PlanChangeRequest } from "./PlanChangeRequest";
 export type { PreAuthSet } from "./PreAuthSet";
 export type { Release } from "./Release";
 export type { Releases } from "./Releases";
+export type { ReleaseUpdate } from "./ReleaseUpdate";
 export type { Role } from "./Role";
 export { RolePermission } from "./RolePermission";
 export type { RolePermissionObject } from "./RolePermissionObject";
@@ -147,6 +150,7 @@ export type { StorageLimit } from "./StorageLimit";
 export type { SubscriptionData } from "./SubscriptionData";
 export type { SupportRequest } from "./SupportRequest";
 export type { Tag } from "./Tag";
+export type { Tags } from "./Tags";
 export { Tenant } from "./Tenant";
 export type { TenantApiLimits } from "./TenantApiLimits";
 export type { TenantShortInfo } from "./TenantShortInfo";
