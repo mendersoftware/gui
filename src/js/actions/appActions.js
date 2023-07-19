@@ -108,7 +108,7 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
     };
     environmentFeatures = {
       ...featureFlags.reduce((accu, flag) => ({ ...accu, [flag]: stringToBoolean(features[flag]) }), {}),
-      isHosted: stringToBoolean(features.isHosted) || window.location.hostname.includes('hosted.mender.io'),
+      isHosted: window.location.hostname.includes('hosted.mender.io'),
       isDemoMode: stringToBoolean(isDemoMode || features.isDemoMode)
     };
     versionInfo = {
@@ -301,7 +301,7 @@ const repoKeyMap = {
 };
 
 const deductSaasState = (latestRelease, guiTags, saasReleases) => {
-  const latestGuiTag = guiTags[0].name;
+  const latestGuiTag = guiTags.length ? guiTags[0].name : '';
   const latestSaasRelease = latestGuiTag.startsWith('saas-v') ? { date: latestGuiTag.split('-v')[1].replaceAll('.', '-'), tag: latestGuiTag } : saasReleases[0];
   return latestSaasRelease.date > latestRelease.release_date ? latestSaasRelease.tag : latestRelease.release;
 };
