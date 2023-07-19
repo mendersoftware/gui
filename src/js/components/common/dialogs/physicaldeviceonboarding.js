@@ -104,7 +104,7 @@ export const DeviceTypeSelectionStep = ({
   selection = '',
   version
 }) => {
-  const shouldShowOnboardingTip = !onboardingState.complete && onboardingState.showTips && onboardingState.showHelptips;
+  const shouldShowOnboardingTip = !onboardingState.complete && onboardingState.showTips;
   const hasExternalIntegrationSupport = versionCompare(version, '3.2') > -1;
   return (
     <>

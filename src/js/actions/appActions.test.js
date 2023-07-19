@@ -64,7 +64,7 @@ import {
   setSnackbar,
   setVersionInfo
 } from './appActions';
-import { expectedOnboardingActions } from './onboardingActions.test';
+import { defaultOnboardingState, expectedOnboardingActions } from './onboardingActions.test';
 import { tenantDataDivergedMessage } from './organizationActions';
 
 export const attributeReducer = (accu, item) => {
@@ -351,7 +351,7 @@ describe('app actions', () => {
         total: defaultState.devices.byStatus.accepted.total
       },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, onboarding: defaultOnboardingState, showHelptips: true } },
       {
         type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
