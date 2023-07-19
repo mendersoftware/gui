@@ -1,3 +1,4 @@
+/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -20,4 +21,10 @@ export type Release = {
    * List of artifacts for this release.
    */
   artifacts?: Array<Artifact>;
+  /**
+   * Tags assigned to the release used for filtering releases. Each tag
+   * must be valid a ASCII string and contain only lowercase and uppercase
+   * letters, digits, underscores, periods and hyphens.
+   */
+  tags?: Array<string>;
 };
