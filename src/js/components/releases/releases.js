@@ -32,8 +32,8 @@ import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import ChipSelect from '../common/chipselect';
 import EnterpriseNotification from '../common/enterpriseNotification';
-import InfoHint from '../common/info-hint';
 import Search from '../common/search';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import AddArtifactDialog from './dialogs/addartifact';
 import ReleaseDetails from './releasedetails';
 import ReleasesList from './releaseslist';
@@ -57,7 +57,7 @@ const useStyles = makeStyles()(theme => ({
   filters: { maxWidth: 400, alignItems: 'end', columnGap: 50 },
   searchNote: { minHeight: '1.8rem' },
   tabContainer: { alignSelf: 'flex-start' },
-  uploadButton: { marginTop: theme.spacing(1.5), minWidth: 164 }
+  uploadButton: { minWidth: 164, marginRight: theme.spacing(2) }
 }));
 
 const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop, onUpload }) => (
@@ -93,29 +93,27 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
 
   return (
     <div>
-      <div className="flexbox space-between">
+      <div className="flexbox space-between center-aligned">
         <Tabs className={classes.tabContainer} value={tab} onChange={onTabChanged} textColor="primary">
           {tabs.map(({ key, title }) => (
             <Tab key={key} label={title} value={key} />
           ))}
         </Tabs>
-        <div>
-          {canUpload && (
-            <>
-              <Button
-                ref={uploadButtonRef}
-                color="secondary"
-                className={classes.uploadButton}
-                onClick={onUploadClick}
-                startIcon={<CloudUpload fontSize="small" />}
-                variant="contained"
-              >
-                Upload
-              </Button>
-              <InfoHint content="Upload an Artifact to an existing or new Release" />
-            </>
-          )}
-        </div>
+        {canUpload && (
+          <div className="flexbox center-aligned">
+            <Button
+              ref={uploadButtonRef}
+              color="secondary"
+              className={classes.uploadButton}
+              onClick={onUploadClick}
+              startIcon={<CloudUpload fontSize="small" />}
+              variant="contained"
+            >
+              Upload
+            </Button>
+            <MenderHelpTooltip id={HELPTOOLTIPS.artifactUpload.id} style={{ marginTop: 8 }} />
+          </div>
+        )}
       </div>
       {hasReleases && tab === tabs[0].key && (
         <div className={`two-columns ${classes.filters}`}>

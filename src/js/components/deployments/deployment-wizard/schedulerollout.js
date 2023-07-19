@@ -20,7 +20,7 @@ import { makeStyles } from 'tss-react/mui';
 import moment from 'moment';
 
 import EnterpriseNotification from '../../common/enterpriseNotification';
-import InfoHint from '../../common/info-hint';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 
 const useStyles = makeStyles()(() => ({
   textField: { minWidth: 400 },
@@ -68,7 +68,7 @@ export const ScheduleRollout = ({ canSchedule, commonClasses, setDeploymentSetti
             <MenuItem value="custom">Schedule the start date &amp; time</MenuItem>
           </Select>
         </FormControl>
-        <InfoHint content="This time is relative to the server only – each device’s time zone will not be taken into account. Devices across different time zones will receive the update at the same time." />
+        <MenderHelpTooltip id={HELPTOOLTIPS.scheduleDeployment.id} />
       </div>
       {Boolean(isPickerOpen || start_time) && (
         <FormControl className={`margin-top-none ${classes.pickerStyle}`} disabled={!canSchedule}>

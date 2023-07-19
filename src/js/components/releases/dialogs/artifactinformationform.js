@@ -12,10 +12,8 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 
-import { InfoOutlined as InfoIcon } from '@mui/icons-material';
-import { FormControl, Input, InputLabel, TextField, Tooltip } from '@mui/material';
+import { FormControl, Input, InputLabel, TextField } from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
@@ -23,19 +21,9 @@ import { useDebounce } from '../../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
 import ChipSelect from '../../common/chipselect';
+import { InfoHintContainer } from '../../common/info-hint';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import { FileInformation } from './addartifact';
-
-export const ReleaseTooltip = () => (
-  <div style={{ fontSize: 12 }}>
-    <p>
-      If a Release with this name already exists, this new Artifact may be grouped into a Release with other Artifacts of the same name - so long as they are
-      compatible with different device types
-    </p>
-    <Link to="/help/releases-artifacts" style={{ color: '#679ba5' }}>
-      Learn more about releases
-    </Link>
-  </div>
-);
 
 const defaultVersion = '1.0.0';
 
@@ -174,9 +162,9 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
       <FormControl>
         <InputLabel htmlFor="release-name" style={{ alignItems: 'center', display: 'flex' }}>
           Release name
-          <Tooltip key="release-name-tip" title={<ReleaseTooltip />} placement="bottom" arrow leaveDelay={300}>
-            <InfoIcon fontSize="small" classes={{ root: 'margin-left-small' }} />
-          </Tooltip>
+          <InfoHintContainer>
+            <MenderHelpTooltip id={HELPTOOLTIPS.releaseName.id} />
+          </InfoHintContainer>
         </InputLabel>
         <Input
           defaultValue={name}

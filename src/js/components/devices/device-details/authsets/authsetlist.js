@@ -19,7 +19,6 @@ import { makeStyles } from 'tss-react/mui';
 import { canAccess } from '../../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { customSort } from '../../../../helpers';
-import { AuthExplainButton } from '../../../helptips/helptooltips';
 import AuthsetListItem from './authsetlistitem';
 
 const fourColumns = '0.5fr 1fr 2fr 2fr';
@@ -61,7 +60,7 @@ export const defaultColumns = [
   { title: 'Actions', canAccess: ({ userCapabilities: { canManageDevices } }) => canManageDevices }
 ];
 
-export const AuthsetList = ({ device, showHelptips, userCapabilities, ...remainingProps }) => {
+export const AuthsetList = ({ device, userCapabilities, ...remainingProps }) => {
   const [expandRow, setExpandRow] = useState();
   const { classes } = useStyles();
   const { auth_sets: authsets = [], status = DEVICE_STATES.accepted } = device;
@@ -99,7 +98,6 @@ export const AuthsetList = ({ device, showHelptips, userCapabilities, ...remaini
         ))}
       </div>
       <div className="body relative">
-        {showHelptips && <AuthExplainButton />}
         {orderedAuthsets.map(authset => (
           <AuthsetListItem
             authset={authset}

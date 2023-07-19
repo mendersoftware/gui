@@ -41,7 +41,7 @@ import LogDialog from '../../common/dialogs/log';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
-import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -54,11 +54,11 @@ const defaultReportTimeStamp = '0001-01-01T00:00:00Z';
 const configHelpTipsMap = {
   'mender-demo-raspberrypi-led': {
     position: 'right',
-    component: ConfigureRaspberryLedTip
+    component: ({ anchor, ...props }) => <MenderHelpTooltip style={anchor} id={HELPTOOLTIPS.configureRaspberryLedTip.id} contentProps={props} />
   },
   timezone: {
     position: 'right',
-    component: ConfigureTimezoneTip
+    component: ({ anchor, ...props }) => <MenderHelpTooltip style={anchor} id={HELPTOOLTIPS.configureTimezoneTip.id} contentProps={props} />
   }
 };
 
@@ -137,7 +137,7 @@ export const ConfigUpdateFailureActions = ({ hasLog, onSubmit, onCancel, setShow
   </>
 );
 
-export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId }, showHelptips }) => {
+export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId } }) => {
   const { device, deviceConfigDeployment: deployment } = useSelector(state => getDeviceConfigDeployment(state, deviceId));
   const { config = {}, status } = device;
   const { configured = {}, deployment_id, reported = {}, reported_ts, updated_ts } = config;
@@ -359,11 +359,14 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
               </Button>
             )}
           </div>
-          {isEditingConfig ? (
-            <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left', alignSelf: 'center' }}>
-              Import configuration
-            </Button>
-          ) : null}
+          <div className="flexbox center-aligned">
+            {isEditingConfig ? (
+              <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+                Import configuration
+              </Button>
+            ) : null}
+            <MenderHelpTooltip id={HELPTOOLTIPS.configureAddOnTip.id} style={{ marginTop: 5 }} />
+          </div>
         </div>
       }
     >
@@ -375,12 +378,10 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
             initialInput={editableConfig}
             inputHelpTipsMap={helpTipsMap}
             onInputChange={setChangedConfig}
-            showHelptips={showHelptips}
           />
         ) : (
           hasDeviceConfig && <ConfigurationObject config={reported} setSnackbar={onSetSnackbar} />
         )}
-        {showHelptips && <ConfigureAddOnTip />}
         <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
         {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
         {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}

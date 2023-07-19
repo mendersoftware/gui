@@ -32,6 +32,7 @@ import { attributeDuplicateFilter, duplicateFilter, getDemoDeviceAddress as getD
 
 const getAppDocsVersion = state => state.app.docsVersion;
 export const getFeatures = state => state.app.features;
+export const getTooltipsById = state => state.users.tooltips.byId;
 export const getRolesById = state => state.users.rolesById;
 export const getOrganization = state => state.organization.organization;
 export const getAcceptedDevices = state => state.devices.byStatus.accepted;
@@ -235,6 +236,16 @@ export const getOnboardingState = createSelector([getOnboarding, getUserSettings
   progress,
   showTips
 }));
+
+export const getTooltipsState = createSelector([getTooltipsById, getUserSettings], (byId, { tooltips = {} }) =>
+  Object.entries(byId).reduce(
+    (accu, [id, value]) => {
+      accu[id] = { ...accu[id], ...value };
+      return accu;
+    },
+    { ...tooltips }
+  )
+);
 
 export const getDocsVersion = createSelector([getAppDocsVersion, getFeatures], (appDocsVersion, { isHosted }) => {
   // if hosted, use latest docs version

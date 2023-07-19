@@ -23,17 +23,16 @@ import { toggle } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
-import { NameTagTip } from '../../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import DeviceDataCollapse from './devicedatacollapse';
 
+const NameTipComponent = props => <MenderHelpTooltip id={HELPTOOLTIPS.nameTagTip.id} {...props} />;
+
 const configHelpTipsMap = {
-  name: {
-    position: 'right',
-    component: NameTagTip
-  }
+  name: { component: NameTipComponent, position: 'right' }
 };
 
-export const DeviceTags = ({ device, setSnackbar, showHelptips, userCapabilities }) => {
+export const DeviceTags = ({ device, setSnackbar, userCapabilities }) => {
   const { canWriteDevices } = userCapabilities;
   const theme = useTheme();
   const [changedTags, setChangedTags] = useState({});
@@ -108,7 +107,6 @@ export const DeviceTags = ({ device, setSnackbar, showHelptips, userCapabilities
               inputHelpTipsMap={helpTipsMap}
               onInputChange={setChangedTags}
               reset={shouldUpdateEditor}
-              showHelptips={showHelptips}
             />
             <div className="flexbox center-aligned margin-bottom-small" style={{ justifyContent: 'flex-end' }}>
               <Button color="primary" onClick={onSubmit} variant="contained" style={{ marginRight: theme.spacing(2) }}>

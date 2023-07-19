@@ -28,7 +28,7 @@ import {
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { SET_SHOW_HELP } from '../constants/userConstants';
+import { SET_SHOW_HELP, SET_TOOLTIPS_STATE } from '../constants/userConstants';
 import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
 import { getCurrentUser, getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
@@ -108,7 +108,8 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
     };
     environmentFeatures = {
       ...featureFlags.reduce((accu, flag) => ({ ...accu, [flag]: stringToBoolean(features[flag]) }), {}),
-      isHosted: window.location.hostname.includes('hosted.mender.io'),
+      // the check in features is purely kept as a local override, it shouldn't become relevant for production again
+      isHosted: features.isHosted || window.location.hostname.includes('hosted.mender.io'),
       isDemoMode: stringToBoolean(isDemoMode || features.isDemoMode)
     };
     versionInfo = {
@@ -176,18 +177,25 @@ const processUserCookie = (user, showHelptips) => {
 const interpretAppData = () => (dispatch, getState) => {
   const state = getState();
   const user = getCurrentUser(state);
-  let tasks = [];
-  let { columnSelection = [], showHelptips = state.users.showHelptips, trackingConsentGiven: hasTrackingEnabled } = getUserSettingsSelector(state);
-  tasks.push(dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })));
+  let {
+    columnSelection = [],
+    showHelptips = state.users.showHelptips,
+    trackingConsentGiven: hasTrackingEnabled,
+    tooltips = {}
+  } = getUserSettingsSelector(state);
   // checks if user id is set and if cookie for helptips exists for that user
   showHelptips = processUserCookie(user, showHelptips);
-  tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
-  tasks.push(Promise.resolve(dispatch({ type: SET_SHOW_HELP, show: showHelptips })));
   let settings = { showHelptips };
   if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
     settings.trackingConsentGiven = true;
   }
-  tasks.push(dispatch(saveUserSettings(settings)));
+  let tasks = [
+    dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })),
+    dispatch({ type: SET_SHOW_HELP, show: showHelptips }),
+    dispatch({ type: SET_TOOLTIPS_STATE, value: tooltips }), // tooltips read state is primarily trusted from the redux store, except on app init - here user settings are the reference
+    dispatch(saveUserSettings(settings))
+  ];
+  tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
   // the following is used as a migration and initialization of the stored identity attribute
   // changing the default device attribute to the first non-deviceId attribute, unless a stored
   // id attribute setting exists

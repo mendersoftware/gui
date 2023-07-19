@@ -28,7 +28,7 @@ import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDeviceCountsByStatus, getOnboardingState, getTenantCapabilities } from '../../../selectors';
 import InfoText from '../../common/infotext';
-import { DeviceSupportTip } from '../../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import DocsLink from '../docslink';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
@@ -98,7 +98,7 @@ const DeviceConnectionExplainer = ({ hasMonitor, setOnDevice, setVirtualDevice }
           and search integrations for your device and OS.
         </div>
       </div>
-      <DeviceSupportTip />
+      <MenderHelpTooltip id={HELPTOOLTIPS.deviceSupportTip.id} style={{ position: 'absolute', bottom: '2.5%', left: '88%' }} />
     </>
   );
 };

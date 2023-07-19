@@ -20,6 +20,7 @@ import { makeStyles } from 'tss-react/mui';
 import { chartTypes, emptyChartSelection } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
 import Confirm from '../../common/confirm';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import { Header } from './distribution';
 
 const fontSize = 'smaller';
@@ -171,7 +172,7 @@ export const WidgetAdditionWidget = ({ onAdditionClick, ...remainder }) => {
     <ChartEditWidget {...remainder} onSave={addCurrentSelection} onCancel={onCancelClick} />
   ) : (
     <div className="widget">
-      <div></div>
+      <MenderHelpTooltip id={HELPTOOLTIPS.dashboardWidget.id} />
       <div className={`flexbox centered muted ${classes.additionButton}`} onClick={() => setAdding(true)}>
         <AddIcon />
         <span className={classes.additionButton}>add a widget</span>

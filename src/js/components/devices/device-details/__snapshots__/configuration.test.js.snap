@@ -135,6 +135,46 @@ exports[`Configuration Component renders correctly 1`] = `
 }
 
 .emotion-4 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+  color: #337a87;
+}
+
+.emotion-4 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-4.read {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-5 {
+  position: absolute;
+  top: -5px;
+  bottom: 0;
+  left: -5px;
+  right: -5px;
+  border: 1px dashed #337a87;
+  border-radius: 50%;
+}
+
+.emotion-5.read {
+  border-color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-6 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -188,23 +228,23 @@ exports[`Configuration Component renders correctly 1`] = `
   font-size: smaller;
 }
 
-.emotion-4::-moz-focus-inner {
+.emotion-6::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-4.Mui-disabled {
+.emotion-6.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-4 {
+  .emotion-6 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-4:hover {
+.emotion-6:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -212,39 +252,39 @@ exports[`Configuration Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-4:hover {
+  .emotion-6:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-4:active {
+.emotion-6:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-4.Mui-focusVisible {
+.emotion-6.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-4.Mui-disabled {
+.emotion-6.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-4:hover {
+.emotion-6:hover {
   colors: #337a87;
 }
 
-.emotion-4.MuiButton-text {
+.emotion-6.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-5 .key>b {
+.emotion-7 .key>b {
   background-color: #f7f7f7;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-6 {
+.emotion-8 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -262,11 +302,11 @@ exports[`Configuration Component renders correctly 1`] = `
   color: #337a87;
 }
 
-.emotion-6 iconButton {
+.emotion-8 iconButton {
   margin-right: 8px;
 }
 
-.emotion-10 {
+.emotion-12 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 500;
@@ -274,7 +314,7 @@ exports[`Configuration Component renders correctly 1`] = `
   line-height: 1.57;
 }
 
-.emotion-11 {
+.emotion-13 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -326,12 +366,40 @@ exports[`Configuration Component renders correctly 1`] = `
           />
         </button>
       </div>
+      <div
+        class="flexbox center-aligned"
+      >
+        <div
+          class=""
+          data-mui-internal-clone-element="true"
+          style="margin-top: 5px;"
+        >
+          <div
+            class="relative"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeMedium  emotion-4"
+              data-testid="HelpIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+              />
+            </svg>
+            <div
+              class="emotion-5 "
+            />
+          </div>
+        </div>
+      </div>
     </div>
     <div
       class="flexbox centered"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-4"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-6"
         disabled=""
         tabindex="-1"
         type="button"
@@ -345,7 +413,7 @@ exports[`Configuration Component renders correctly 1`] = `
     class="relative"
   >
     <div
-      class="break-all two-columns emotion-5  column-data "
+      class="break-all two-columns emotion-7  column-data "
     >
       <div
         class="align-right key muted"
@@ -365,7 +433,7 @@ exports[`Configuration Component renders correctly 1`] = `
         <svg
           aria-hidden="true"
           aria-label="Copy to clipboard"
-          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-6"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-8"
           data-mui-internal-clone-element="true"
           data-testid="FileCopyOutlinedIcon"
           focusable="false"
@@ -394,7 +462,7 @@ exports[`Configuration Component renders correctly 1`] = `
         <svg
           aria-hidden="true"
           aria-label="Copy to clipboard"
-          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-6"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-8"
           data-mui-internal-clone-element="true"
           data-testid="FileCopyOutlinedIcon"
           focusable="false"
@@ -423,7 +491,7 @@ exports[`Configuration Component renders correctly 1`] = `
         <svg
           aria-hidden="true"
           aria-label="Copy to clipboard"
-          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-6"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-8"
           data-mui-internal-clone-element="true"
           data-testid="FileCopyOutlinedIcon"
           focusable="false"
@@ -455,13 +523,13 @@ exports[`Configuration Component renders correctly 1`] = `
         </svg>
         <div>
           <h6
-            class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
+            class="MuiTypography-root MuiTypography-subtitle2 emotion-12"
             style="text-transform: capitalize; text-align: left;"
           >
             Configuration up-to-date on the device
           </h6>
           <span
-            class="MuiTypography-root MuiTypography-caption muted emotion-11"
+            class="MuiTypography-root MuiTypography-caption muted emotion-13"
             style="text-transform: capitalize; text-align: left;"
           >
             Updated: 

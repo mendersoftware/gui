@@ -20,7 +20,7 @@ import { TIMEOUTS } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
 import { useDebounce } from '../../../utils/debouncehook';
 import EnterpriseNotification from '../../common/enterpriseNotification';
-import MenderTooltip from '../../common/mendertooltip';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import RolloutSteps from './rolloutsteps';
 
 const useStyles = makeStyles()(() => ({
@@ -40,24 +40,22 @@ export const ForceDeploy = ({ deploymentObject, setDeploymentSettings }) => {
 
   return (
     <div>
-      <MenderTooltip
-        title={
-          <div style={{ whiteSpace: 'normal' }}>
-            <h3>Force update</h3>
-            <p>This will make the Mender client install the update even if the selected release is already installed.</p>
+      <FormControlLabel
+        className={classes.heading}
+        control={<Checkbox color="primary" checked={forceDeploy} onChange={() => setForceDeploy(toggle)} size="small" />}
+        label={
+          <div className="flexbox center-aligned">
+            <b className="margin-right-small">Force update</b> (optional)
+            <MenderHelpTooltip
+              id={HELPTOOLTIPS.forceDeployment.id}
+              disableFocusListener={false}
+              disableHoverListener={false}
+              disableTouchListener={false}
+              style={{ marginLeft: 15 }}
+            />
           </div>
         }
-      >
-        <FormControlLabel
-          className={classes.heading}
-          control={<Checkbox color="primary" checked={forceDeploy} onChange={() => setForceDeploy(toggle)} size="small" />}
-          label={
-            <>
-              <b>Force update</b> (optional)
-            </>
-          }
-        />
-      </MenderTooltip>
+      />
     </div>
   );
 };

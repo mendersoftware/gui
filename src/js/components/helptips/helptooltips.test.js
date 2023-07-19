@@ -15,16 +15,7 @@ import React from 'react';
 
 import { defaultState } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
-import {
-  AddGroup,
-  AuthButton,
-  ConfigureAddOnTip,
-  ConfigureRaspberryLedTip,
-  ConfigureTimezoneTip,
-  DeviceSupportTip,
-  ExpandArtifact,
-  ExpandDevice
-} from './helptooltips';
+import { HELPTOOLTIPS } from './helptooltips';
 
 const preloadedState = {
   ...defaultState,
@@ -52,13 +43,11 @@ const preloadedState = {
 };
 
 describe('Helptooltips Components', () => {
-  [AddGroup, AuthButton, ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip, DeviceSupportTip, ExpandArtifact, ExpandDevice].forEach(
-    async Component => {
-      it(`renders ${Component.displayName || Component.name} correctly`, () => {
-        const { baseElement } = render(<Component deviceId={defaultState.devices.byId.a1.id} />, { preloadedState });
-        const view = baseElement.firstChild.childNodes.length > 1 ? baseElement.firstChild.childNodes : baseElement.firstChild.firstChild;
-        expect(view).toMatchSnapshot();
-      });
-    }
-  );
+  Object.values(HELPTOOLTIPS).forEach(async ({ SpecialComponent, Component = SpecialComponent }) => {
+    it(`renders ${Component.displayName || Component.name} correctly`, () => {
+      const { baseElement } = render(<Component deviceId={defaultState.devices.byId.a1.id} />, { preloadedState });
+      const view = baseElement.firstChild.childNodes.length > 1 ? baseElement.firstChild.childNodes : baseElement.firstChild.firstChild;
+      expect(view).toMatchSnapshot();
+    });
+  });
 });

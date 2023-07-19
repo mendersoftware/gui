@@ -503,35 +503,12 @@ ul.link-list {
 .tooltip {
   position: absolute;
   cursor: pointer;
-
-  .transition(opacity 0.4s ease-in);
-  .transition(transform 0.4s ease-in);
-
-  &.info {
-    top: 2px;
-    right: 0px;
+  .transition(all 0.4s ease-in);
+  svg {
+    .transition(all 0.4s ease-in);
   }
-
-  &.help {
-    left: 50%;
-    margin-left: -16px;
-    z-index: 10;
-    svg {
-      color: @alertpurple !important;
-    }
-
-    &.highlight svg {
-      width: 1.3em;
-      height: 1.3em;
-      border-radius: 50%;
-      border: @alertpurple 4px solid;
-      .animation(highlight 2.2s infinite);
-    }
-  }
-
   &:hover {
-    .opacity(1);
-    .animation(bounce 0.4s forwards);
+    opacity: 0.54;
   }
 }
 

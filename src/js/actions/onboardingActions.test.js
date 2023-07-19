@@ -203,6 +203,7 @@ describe('onboarding actions', () => {
       {
         type: UserConstants.SET_USER_SETTINGS,
         settings: {
+          ...defaultState.users.userSettings,
           columnSelection: [],
           onboarding: {
             ...defaultOnboardingState,

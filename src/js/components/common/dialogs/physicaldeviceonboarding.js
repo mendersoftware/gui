@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Help as HelpIcon, InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { Autocomplete, TextField } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 
@@ -24,6 +24,7 @@ import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
 import { getFeatures, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization, getVersionInformation } from '../../../selectors';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import CopyCode from '../copy-code';
 import DocsLink from '../docslink';
 import { MenderTooltipClickable } from '../mendertooltip';
@@ -73,28 +74,6 @@ export const ExternalProviderTip = ({ hasExternalIntegration, integrationProvide
   </MenderTooltipClickable>
 );
 
-export const DeviceTypeTip = () => (
-  <MenderTooltipClickable
-    className="flexbox"
-    placement="bottom"
-    style={{ alignItems: 'end' }}
-    title={
-      <>
-        <p>
-          If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
-        </p>
-        <p>
-          (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
-        </p>
-      </>
-    }
-  >
-    <div className="tooltip help" style={{ marginLeft: 0, position: 'initial' }}>
-      <HelpIcon />
-    </div>
-  </MenderTooltipClickable>
-);
-
 export const DeviceTypeSelectionStep = ({
   hasConvertedImage,
   hasExternalIntegration,
@@ -111,7 +90,7 @@ export const DeviceTypeSelectionStep = ({
       <h4>Enter your device type</h4>
       <p>Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.</p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'max-content 50px 150px', justifyItems: 'center' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'max-content 50px 150px', placeItems: 'end center' }}>
         <Autocomplete
           id="device-type-selection"
           autoSelect
@@ -149,8 +128,8 @@ export const DeviceTypeSelectionStep = ({
           style={{ maxWidth: 300 }}
           value={selection}
         />
-        {shouldShowOnboardingTip ? <DeviceTypeTip /> : <div />}
         {hasExternalIntegrationSupport && <ExternalProviderTip hasExternalIntegration={hasExternalIntegration} integrationProvider={integrationProvider} />}
+        {shouldShowOnboardingTip ? <MenderHelpTooltip id={HELPTOOLTIPS.deviceTypeTip.id} placement="bottom" /> : <div />}
       </div>
       {hasConvertedImage && <ConvertedImageNote />}
     </>

@@ -36,7 +36,6 @@ import {
   getDocsVersion,
   getGlobalSettings,
   getSelectedGroupInfo,
-  getShowHelptips,
   getTenantCapabilities,
   getUserCapabilities,
   getUserSettings
@@ -204,7 +203,6 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
   const devicesById = useSelector(getDevicesById);
   const docsVersion = useSelector(getDocsVersion);
   const integrations = useSelector(getDeviceTwinIntegrations);
-  const showHelptips = useSelector(getShowHelptips);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
@@ -302,7 +300,6 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
     setSnackbar: dispatchedSetSnackbar,
     setSocketClosed,
     setTroubleshootType,
-    showHelptips,
     socketClosed,
     tenantCapabilities: { hasAuditlogs },
     troubleshootType,
