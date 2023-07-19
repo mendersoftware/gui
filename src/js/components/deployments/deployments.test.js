@@ -154,7 +154,7 @@ describe('Deployments Component', () => {
     const preloadedState = {
       ...mockState,
       app: {
-        ...mockState,
+        ...mockState.app,
         features: {
           ...mockState.app.features,
           isEnterprise: false
@@ -215,7 +215,7 @@ describe('Deployments Component', () => {
     const preloadedState = {
       ...mockState,
       app: {
-        ...mockState,
+        ...mockState.app,
         features: {
           ...mockState.app.features,
           isHosted: false
