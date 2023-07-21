@@ -21,6 +21,7 @@ import { useDebounce } from '../../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
 import ChipSelect from '../../common/chipselect';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import { InfoHintContainer } from '../../common/info-hint';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import { FileInformation } from './addartifact';
@@ -164,6 +165,7 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
           Release name
           <InfoHintContainer>
             <MenderHelpTooltip id={HELPTOOLTIPS.releaseName.id} />
+            <DocsTooltip id={DOCSTIPS.releases.id} />
           </InfoHintContainer>
         </InputLabel>
         <Input

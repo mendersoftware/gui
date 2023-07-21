@@ -19,6 +19,7 @@ import { makeStyles } from 'tss-react/mui';
 import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
 import { useDebounce } from '../../../utils/debouncehook';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { InfoHintContainer } from '../../common/info-hint';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
@@ -85,6 +86,7 @@ export const RolloutOptions = ({ deploymentObject, isEnterprise, setDeploymentSe
             <b className="margin-right-small">Add pauses between update steps</b> (optional)
             <InfoHintContainer>
               <EnterpriseNotification id={BENEFITS.pausedDeployments.id} />
+              <DocsTooltip id={DOCSTIPS.pausedDeployments.id} />
             </InfoHintContainer>
           </div>
         }
@@ -137,6 +139,7 @@ export const Retries = ({
         <b className={canRetry ? '' : commonClasses.disabled}>Select the number of times each device will attempt to apply the update</b>
         <InfoHintContainer>
           <EnterpriseNotification id={BENEFITS.retryDeployments.id} />
+          <DocsTooltip id={DOCSTIPS.phasedDeployments.id} />
         </InfoHintContainer>
       </div>
       <FormControl className="margin-top-none" disabled={!canRetry}>

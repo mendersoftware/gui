@@ -38,6 +38,7 @@ import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
 import { InfoHintContainer } from '../../common/info-hint';
@@ -369,6 +370,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
             <InfoHintContainer>
               <EnterpriseNotification id={BENEFITS.deviceConfiguration.id} />
               <MenderHelpTooltip id={HELPTOOLTIPS.configureAddOnTip.id} style={{ marginTop: 5 }} />
+              <DocsTooltip id={DOCSTIPS.deviceConfig.id} />
             </InfoHintContainer>
           </div>
         </div>

@@ -19,6 +19,7 @@ import { makeStyles } from 'tss-react/mui';
 import dynamicImage from '../../../../assets/img/dynamic-group-creation.gif';
 import staticImage from '../../../../assets/img/static-group-creation.gif';
 import { BENEFITS } from '../../../constants/appConstants';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { InfoHintContainer } from '../../common/info-hint';
 
@@ -59,6 +60,7 @@ export const CreateGroupExplainerContent = ({ isEnterprise }) => {
             <div className="bold margin-left-small margin-right">Dynamic group</div>
             <InfoHintContainer>
               <EnterpriseNotification id={BENEFITS.dynamicGroups.id} />
+              <DocsTooltip id={DOCSTIPS.dynamicGroups.id} />
             </InfoHintContainer>
           </div>
           <p className="help-content">

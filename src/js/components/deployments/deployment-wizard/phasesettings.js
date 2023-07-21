@@ -38,6 +38,7 @@ import pluralize from 'pluralize';
 
 import { BENEFITS } from '../../../constants/appConstants';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { InfoHintContainer } from '../../common/info-hint';
 import Time from '../../common/time';
@@ -287,6 +288,7 @@ export const RolloutPatternSelection = props => {
             <b className="margin-right-small">Select a rollout pattern</b> (optional)
             <InfoHintContainer>
               <EnterpriseNotification id={BENEFITS.phasedDeployments.id} />
+              <DocsTooltip id={DOCSTIPS.phasedDeployments.id} />
             </InfoHintContainer>
           </div>
         }

@@ -24,6 +24,7 @@ import { BENEFITS } from '../../constants/appConstants';
 import { emptyRole, rolesById } from '../../constants/userConstants';
 import { getFeatures, getGroupsByIdWithoutUngrouped, getIsEnterprise, getReleaseTagsById, getRolesList } from '../../selectors';
 import DetailsTable from '../common/detailstable';
+import { DocsTooltip } from '../common/docslink';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import { InfoHintContainer } from '../common/info-hint';
 import RoleDefinition from './roledefinition';
@@ -107,6 +108,7 @@ export const RoleManagement = () => {
         <h2 style={{ marginLeft: 20 }}>Roles</h2>
         <InfoHintContainer>
           <EnterpriseNotification id={BENEFITS.rbac.id} />
+          <DocsTooltip />
         </InfoHintContainer>
       </div>
       <DetailsTable columns={columns} items={items} onItemClick={onEditRole} />
