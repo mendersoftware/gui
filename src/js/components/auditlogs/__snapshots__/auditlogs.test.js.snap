@@ -10,7 +10,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
       Audit log
     </h3>
     <div
-      class="auditlogs-filters margin-bottom margin-top-small css-1691o3y-filters"
+      class="margin-bottom margin-top-small css-q7wbiy-filters"
     >
       <div
         class="MuiAutocomplete-root css-1h51icj-MuiAutocomplete-root"
@@ -109,8 +109,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="MuiAutocomplete-root css-1h51icj-MuiAutocomplete-root"
-        style="margin-right: 15px; margin-top: 16px;"
+        class="MuiAutocomplete-root css-1at9rwh-MuiAutocomplete-root-typeDetails"
       >
         <div
           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
@@ -138,7 +137,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
       </div>
       <div />
       <div
-        class=""
+        class=" "
       >
         <span>
           Filter by date
@@ -177,7 +176,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </ul>
       </div>
       <div
-        style="grid-column-start: 2; grid-column-end: 4; margin-left: 7.5px;"
+        class="css-63yq0h-timeframe"
       >
         <div
           class="MuiFormControl-root MuiTextField-root css-1x6hzm-MuiFormControl-root-MuiTextField-root"
