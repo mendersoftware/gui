@@ -21,15 +21,21 @@ import { isEmpty } from '../../../helpers';
 import FileUpload from '../../common/forms/fileupload';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
 
+export const DeviceLimitContact = () => (
+  <p>
+    If you need a higher device limit, you can contact us through our{' '}
+    <a href="https://support.northern.tech" target="_blank" rel="noopener noreferrer">
+      support portal
+    </a>{' '}
+    to request a higher limit.
+  </p>
+);
+
 export const DeviceLimitWarning = ({ acceptedDevices, deviceLimit, hasContactInfo }) => (
   <div className="margin-bottom-small margin-top-small warning">
-    <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+    <InfoIcon style={{ marginRight: 2, height: 16, verticalAlign: 'bottom' }} />
     You have reached your limit of authorized devices: {acceptedDevices} of {deviceLimit}
-    {hasContactInfo && (
-      <p>
-        Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
-      </p>
-    )}
+    {hasContactInfo && <DeviceLimitContact />}
   </div>
 );
 
