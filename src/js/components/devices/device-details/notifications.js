@@ -13,7 +13,13 @@
 //    limitations under the License.
 import React from 'react';
 
-import { CheckCircle as CheckIcon, Error as ErrorIcon, Help as HelpIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@mui/icons-material';
+import {
+  CheckCircle as CheckIcon,
+  Error as ErrorIcon,
+  Help as HelpIcon,
+  ArrowDropDownCircleOutlined as ScrollDownIcon,
+  Warning as WarningIcon
+} from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
@@ -23,11 +29,13 @@ import Time from '../../common/time';
 const errorIcon = <ErrorIcon className="red" />;
 const successIcon = <CheckIcon className="green" />;
 const questionIcon = <HelpIcon />;
+const warningIcon = <WarningIcon />;
 
-const monitoringSeverities = {
+export const monitoringSeverities = {
   CRITICAL: 'CRITICAL',
   CRITICAL_FLAPPING: 'CRITICAL_FLAPPING',
   OK: 'OK',
+  WARNING: 'WARNING',
   UNKNOWN: 'UNKNOWN'
 };
 
@@ -35,7 +43,8 @@ export const severityMap = {
   [monitoringSeverities.CRITICAL]: { className: 'red', icon: errorIcon },
   [monitoringSeverities.CRITICAL_FLAPPING]: { className: '', icon: errorIcon },
   [monitoringSeverities.OK]: { className: '', icon: successIcon },
-  [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon }
+  [monitoringSeverities.UNKNOWN]: { className: '', icon: questionIcon },
+  [monitoringSeverities.WARNING]: { className: '', icon: warningIcon }
 };
 
 const useStyles = makeStyles()(theme => ({
