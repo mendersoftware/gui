@@ -24,7 +24,7 @@ import Time from '../../common/time';
 import MonitorDetailsDialog from '../dialogs/monitordetailsdialog';
 import { DeviceConnectionNote } from './connection';
 import DeviceDataCollapse from './devicedatacollapse';
-import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, severityMap } from './notifications';
+import { DeviceOfflineHeaderNotification, NoAlertsHeaderNotification, monitoringSeverities, severityMap } from './notifications';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -45,7 +45,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
   const lines = [...lines_before, line_matching, ...lines_after].filter(i => i);
   return (
     <div className="monitoring-alert column-data" style={style}>
-      {severityMap[alert.level].icon}
+      {(severityMap[alert.level] ?? severityMap[monitoringSeverities.UNKNOWN]).icon}
       <div className="key muted">
         <b>{alert.name}</b>
       </div>
