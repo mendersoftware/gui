@@ -1324,7 +1324,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       </svg>
     </div>
     <div
-      class="tooltip help "
+      class=""
       data-mui-internal-clone-element="true"
     >
       <div

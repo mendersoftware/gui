@@ -483,34 +483,74 @@ exports[`Main Component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="flexbox centered"
+            class="dashboard margin-bottom-large"
           >
-            <p
-              class="mui-10smx4s-default icon flexbox center-aligned mui-urjt41-default "
+            <div
+              class="widget"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall mui-1cwsc1r-MuiSvgIcon-root"
-                data-testid="InfoOutlinedIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <div
+                class="flexbox center-aligned  mui-1dc2w5e-container"
+                style="align-items: end;"
               >
-                <path
-                  d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                />
-              </svg>
-              <span>
-                With a more advanced commercial Mender plan you get access to actionable insights into the devices you are updating with Mender. Get an overview of the Mender plans on the 
-                <a
-                  href="https://mender.io/plans/features"
-                  rel="noopener noreferrer"
-                  target="_blank"
+                <div
+                  class=""
+                  data-mui-internal-clone-element="true"
                 >
-                  features page
-                </a>
-                .
-              </span>
-            </p>
+                  <div
+                    class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault mui-1xcecd3-MuiChip-root-root-root"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelMedium mui-6od3lo-MuiChip-label"
+                    >
+                      Enterprise
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <div
+                    class="relative"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeMedium  mui-1nin21u-MuiSvgIcon-root-icon"
+                      data-testid="HelpIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                      />
+                    </svg>
+                    <div
+                      class="mui-10ee8t0-iconAura "
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flexbox centered muted mui-1g2stal-additionButton"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-1lqc678-MuiSvgIcon-root"
+                  data-testid="AddIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                  />
+                </svg>
+                <span
+                  class="mui-1g2stal-additionButton"
+                >
+                  add a widget
+                </span>
+              </div>
+            </div>
           </div>
         </div>
         <div

@@ -543,9 +543,9 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="tooltip help "
+          class=""
           data-mui-internal-clone-element="true"
-          style="bottom: 2.5%; left: 88%;"
+          style="position: absolute; bottom: 2.5%; left: 88%;"
         >
           <div
             class="relative"

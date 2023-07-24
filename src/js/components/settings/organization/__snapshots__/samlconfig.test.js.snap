@@ -10,6 +10,7 @@ exports[`SamlConfig Component renders correctly 1`] = `
   column-gap: 16px;
   display: grid;
   grid-template-columns: minmax(max-content, 500px) max-content max-content;
+  position: relative;
 }
 
 .emotion-0.has-sso {

@@ -6,9 +6,33 @@ exports[`Auditlogs Component renders correctly 1`] = `
     class="fadeIn margin-left flexbox column"
     style="margin-right: 5%;"
   >
-    <h3>
-      Audit log
-    </h3>
+    <div
+      class="flexbox center-aligned"
+    >
+      <h3
+        class="margin-right-small"
+      >
+        Audit log
+      </h3>
+      <div
+        class="flexbox center-aligned margin-left-small css-1dc2w5e-container"
+      >
+        <div
+          class=""
+          data-mui-internal-clone-element="true"
+        >
+          <div
+            class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1xcecd3-MuiChip-root-root-root"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
+            >
+              Professional
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="margin-bottom margin-top-small css-q7wbiy-filters"
     >
@@ -184,8 +208,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="true"
-            for="mui-2"
-            id="mui-2-label"
+            for="mui-3"
+            id="mui-3-label"
           >
             From
           </label>
@@ -235,8 +259,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="true"
-            for="mui-4"
-            id="mui-4-label"
+            for="mui-5"
+            id="mui-5-label"
           >
             To
           </label>

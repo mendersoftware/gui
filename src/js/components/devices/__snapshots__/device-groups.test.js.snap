@@ -814,9 +814,9 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="tooltip help "
+          class=""
           data-mui-internal-clone-element="true"
-          style="right: 45px;"
+          style="position: absolute; right: 45px;"
         >
           <div
             class="relative"

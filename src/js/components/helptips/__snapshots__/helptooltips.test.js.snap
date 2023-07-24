@@ -23,6 +23,26 @@ NodeList [
 ]
 `;
 
+exports[`Helptooltips Components renders ArtifactUpload correctly 1`] = `Upload an Artifact to an existing or new Release`;
+
+exports[`Helptooltips Components renders AttributeLimit correctly 1`] = `
+NodeList [
+  Expand to see the list of attributes currently in use. Please,
+   ,
+  <a
+    href="mailto:contact@mender.io"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    contact our team
+  </a>,
+   ,
+  if your use case requires a different set of attributes.,
+]
+`;
+
+exports[`Helptooltips Components renders AuditlogExplanation correctly 1`] = `The audit log shows the history of changes made to your Devices, Artifacts, Deployments, and user management.`;
+
 exports[`Helptooltips Components renders AuthButton correctly 1`] = `
 NodeList [
   <h3>
@@ -81,17 +101,7 @@ exports[`Helptooltips Components renders ConfigureAddOnTip correctly 1`] = `
   <code>
     /usr/lib/mender-configure/apply-device-config.d/
   </code>
-   are executed to apply the configuration attributes. To add a new configuration attribute, you simply need to input it in the UI and add a script to that directory that applies it accordingly. Read more about how it works in the
-   
-  <a
-    class=""
-    href="https://docs.mender.io/add-ons/configure"
-    rel="noopener noreferrer"
-    target="_blank"
-  >
-    Configure documentation
-  </a>
-  .
+   are executed to apply the configuration attributes. To add a new configuration attribute, you simply need to input it in the UI and add a script to that directory that applies it accordingly.
 </p>
 `;
 
@@ -294,6 +304,8 @@ NodeList [
 ]
 `;
 
+exports[`Helptooltips Components renders DashboardWidget correctly 1`] = `Add dashboard widgets to visualize the software distribution or geographical location of all your devices, or a group of your devices.`;
+
 exports[`Helptooltips Components renders DeviceSupportTip correctly 1`] = `
 <p>
   The steps in the guide should work on most operating systems in the Debian family (e.g. Debian, Ubuntu, Raspberry Pi OS) and devices based on ARMv6 or newer (e.g. Raspberry Pi 2/3/4, Beaglebone). Visit 
@@ -383,6 +395,30 @@ NodeList [
 ]
 `;
 
+exports[`Helptooltips Components renders ForceDeployment correctly 1`] = `
+NodeList [
+  <h3>
+    Force update
+  </h3>,
+  <p>
+    This will make the Mender client install the update even if the selected release is already installed.
+  </p>,
+]
+`;
+
+exports[`Helptooltips Components renders GlobalSettings correctly 1`] = `These settings apply to all users, so changes made here may affect other users' experience.`;
+
+exports[`Helptooltips Components renders GroupDeployment correctly 1`] = `The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type.`;
+
+exports[`Helptooltips Components renders MenderArtifactUpload correctly 1`] = `
+NodeList [
+  If there is no Release matching this Artifact’s name, a new Release will be created for this Artifact.,
+  <br />,
+  <br />,
+  If there is already a Release matching this Artifact’s name, the Artifact will be grouped in that Release.,
+]
+`;
+
 exports[`Helptooltips Components renders NameFilterTip correctly 1`] = `Filtering by name is limited to devices with a previously defined name.`;
 
 exports[`Helptooltips Components renders NameTagTip correctly 1`] = `
@@ -394,3 +430,44 @@ NodeList [
    tag will be available as a device indentifier too.,
 ]
 `;
+
+exports[`Helptooltips Components renders PhasedPausedDeployments correctly 1`] = `
+NodeList [
+  This feature is not available on ,
+  <b>
+    phased deployments
+  </b>,
+  . If you'd like to set pause states between update steps, go back and adjust the rollout schedule to a ,
+  <b>
+    single phase
+  </b>,
+  .,
+]
+`;
+
+exports[`Helptooltips Components renders ReleaseName correctly 1`] = `If a Release with this name already exists, this new Artifact may be grouped into a Release with other Artifacts of the same name - so long as they are compatible with different device types`;
+
+exports[`Helptooltips Components renders ResetHistory correctly 1`] = `Greyed out items will not be considered during deployment roll out`;
+
+exports[`Helptooltips Components renders SamlMetadata correctly 1`] = `Submit the metadata document from your Identity Provider`;
+
+exports[`Helptooltips Components renders ScheduleDeployment correctly 1`] = `This time is relative to the server only – each device's time zone will not be taken into account. Devices across different time zones will receive the update at the same time.`;
+
+exports[`Helptooltips Components renders SingleFileUpload correctly 1`] = `This will generate a single file application update Artifact, which requires some additional metadata to be entered.`;
+
+exports[`Helptooltips Components renders TenantToken correctly 1`] = `
+NodeList [
+  <h3>
+    Organization token
+  </h3>,
+  This token is unique for your organization and ensures that only devices that you own are able to connect to your account.,
+]
+`;
+
+exports[`Helptooltips Components renders TwoFactorNote correctly 1`] = `
+<div>
+  Two Factor Authentication is enabled for your account. If you haven't set up a 3rd party authentication app with a verification code, please contact an administrator.
+</div>
+`;
+
+exports[`Helptooltips Components renders Webhooks correctly 1`] = `Webhooks are triggered when a device's status is updated, or a device is decommissioned or provisioned.`;
