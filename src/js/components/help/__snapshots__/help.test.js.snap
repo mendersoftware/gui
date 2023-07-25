@@ -4207,14 +4207,14 @@ exports[`Help Component static components renders Support correctly 1`] = `
     Do you have a paid plan and need to contact support?
   </p>
   <p>
-    Send an email to
+    Please reach out through our
      
     <a
-      href="mailto:support@mender.io"
+      href="https://support.northern.tech"
       rel="noopener noreferrer"
       target="_blank"
     >
-      support@mender.io
+      support portal
     </a>
     , including your organization name and how we can help you.
   </p>

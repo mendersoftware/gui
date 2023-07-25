@@ -71,9 +71,12 @@ export const CancelSubscriptionAlert = () => (
   <Alert className="margin-top-large" severity="error" style={{ maxWidth }}>
     <p>We&#39;ve started the process to cancel your plan and deactivate your account.</p>
     <p>
-      We&#39;ll send you an email confirming your deactivation. If you have any question at all, contact us at{' '}
+      We&#39;ll send you an email confirming your deactivation. If you have any question at all, contact us at our{' '}
       <strong>
-        <a href="mailto:support@mender.io">support@mender.io</a>
+        <a href="https://support.northern.tech" target="_blank" rel="noopener noreferrer">
+          support portal
+        </a>
+        .
       </strong>
     </p>
   </Alert>
