@@ -20,6 +20,7 @@ import { DeveloperBoard as DeveloperBoardIcon } from '@mui/icons-material';
 import pluralize from 'pluralize';
 
 import { MenderTooltipClickable } from '../common/mendertooltip';
+import { DeviceLimitContact } from '../devices/dialogs/preauth-dialog';
 
 const DeviceNotifications = ({ total, limit, pending }) => {
   const approaching = limit && total / limit > 0.8;
@@ -58,9 +59,7 @@ const DeviceNotifications = ({ total, limit, pending }) => {
               You can still connect another {(limit - total).toLocaleString()} {pluralize('devices', limit - total)}.
             </p>
           )}
-          <p>
-            If you need a higher device limit, you can contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to change your plan.
-          </p>
+          <DeviceLimitContact />
           <p>
             Learn about the different plans available by visiting{' '}
             <a href="https://mender.io/pricing" target="_blank" rel="noopener noreferrer">

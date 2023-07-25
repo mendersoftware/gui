@@ -22,9 +22,9 @@ const Support = () => (
     <h2>Contact support</h2>
     <p>Do you have a paid plan and need to contact support?</p>
     <p>
-      Send an email to{' '}
-      <a href="mailto:support@mender.io" target="_blank" rel="noopener noreferrer">
-        support@mender.io
+      Please reach out through our{' '}
+      <a href="https://support.northern.tech" target="_blank" rel="noopener noreferrer">
+        support portal
       </a>
       , including your organization name and how we can help you.
     </p>

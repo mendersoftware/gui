@@ -1150,14 +1150,17 @@ exports[`smaller components renders CancelSubscriptionAlert correctly 1`] = `
     We've started the process to cancel your plan and deactivate your account.
   </p>
   <p>
-    We'll send you an email confirming your deactivation. If you have any question at all, contact us at
+    We'll send you an email confirming your deactivation. If you have any question at all, contact us at our
      
     <strong>
       <a
-        href="mailto:support@mender.io"
+        href="https://support.northern.tech"
+        rel="noopener noreferrer"
+        target="_blank"
       >
-        support@mender.io
+        support portal
       </a>
+      .
     </strong>
   </p>
 </div>
