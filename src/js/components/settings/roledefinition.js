@@ -389,7 +389,12 @@ export const RoleDefinition = ({
         <h3>{adding ? 'Add a' : 'Edit'} role</h3>
         <div className="flexbox center-aligned">
           {editing && !rolesById[selectedRole.id] && (
-            <Button className={`flexbox center-aligned ${classes.roleDeletion}`} color="secondary" disabled={disableEdit} onClick={onRemoveRole}>
+            <Button
+              className={`flexbox center-aligned ${classes.roleDeletion}`}
+              color="secondary"
+              disabled={!!rolesById[selectedRole.id]}
+              onClick={onRemoveRole}
+            >
               delete role
             </Button>
           )}
