@@ -21,7 +21,7 @@ COPY ./entrypoint.sh /usr/src/entrypoint.sh
 COPY httpd.conf /etc/nginx/nginx.conf
 RUN sed -i 's|/var/run/nginx.pid|/tmp/nginx.pid|g' /etc/nginx/nginx.conf && sed -i 's|listen 80;|listen 8090;|g' /etc/nginx/nginx.conf
 ENTRYPOINT ["/usr/src/entrypoint.sh"]
-HEALTHCHECK --interval=8s --timeout=15s --start-period=120s --retries=128 CMD wget --quiet --tries=1 --spider --output-document=/dev/null 127.0.0.1
+HEALTHCHECK --interval=8s --timeout=15s --start-period=120s --retries=128 CMD wget --quiet --tries=1 --spider --output-document=/dev/null 127.0.0.1:8090/ui/
 CMD ["nginx"]
 
 
@@ -34,5 +34,5 @@ COPY ./entrypoint.sh /usr/src/entrypoint.sh
 COPY httpd.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist .
 ENTRYPOINT ["/usr/src/entrypoint.sh"]
-HEALTHCHECK --interval=8s --timeout=15s --start-period=120s --retries=128 CMD wget --quiet --tries=1 --spider --output-document=/dev/null 127.0.0.1
+HEALTHCHECK --interval=8s --timeout=15s --start-period=120s --retries=128 CMD wget --quiet --tries=1 --spider --output-document=/dev/null 127.0.0.1/ui/
 CMD ["nginx"]
