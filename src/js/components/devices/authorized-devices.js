@@ -34,7 +34,6 @@ import {
   getAvailableIssueOptionsByType,
   getDeviceCountsByStatus,
   getDeviceFilters,
-  getFeatures,
   getFilterAttributes,
   getIdAttribute,
   getLimitMaxed,
@@ -194,7 +193,6 @@ export const Authorized = ({
   const customColumnSizes = useSelector(state => state.users.customColumns);
   const deviceListState = useSelector(state => state.devices.deviceList);
   const { total: deviceCount } = deviceListState;
-  const features = useSelector(getFeatures);
   const filters = useSelector(getDeviceFilters);
   const idAttribute = useSelector(getIdAttribute);
   const onboardingState = useSelector(getOnboardingState);
@@ -523,16 +521,7 @@ export const Authorized = ({
         <OnboardingComponent authorizeRef={authorizeRef} deviceListRef={deviceListRef} onboardingState={onboardingState} selectedRows={selectedRows} />
       )}
       {canManageDevices && !!selectedRows.length && (
-        <DeviceQuickActions
-          actionCallbacks={actionCallbacks}
-          devices={devices}
-          features={features}
-          selectedGroup={selectedStaticGroup}
-          selectedRows={selectedRows}
-          ref={authorizeRef}
-          tenantCapabilities={tenantCapabilities}
-          userCapabilities={userCapabilities}
-        />
+        <DeviceQuickActions actionCallbacks={actionCallbacks} selectedGroup={selectedStaticGroup} ref={authorizeRef} />
       )}
       <ColumnCustomizationDialog
         attributes={attributes}
