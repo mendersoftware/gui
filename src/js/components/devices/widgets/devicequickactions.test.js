@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { adminUserCapabilities, defaultState, undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import DeviceQuickActions from './devicequickactions';
 
@@ -21,24 +21,33 @@ describe('DeviceQuickActions Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <DeviceQuickActions
-        devices={[
-          ...Object.values(defaultState.devices.byId),
-          {
-            id: 'd1',
-            auth_sets: [],
-            attributes: {
-              device_type: 'qemux86-128'
-            },
-            status: 'pending'
-          }
-        ]}
         actionCallbacks={{ onAddDevicesToGroup: jest.fn, onAuthorizationChange: jest.fn, onDeviceDismiss: jest.fn, onRemoveDevicesFromGroup: jest.fn }}
-        features={{ isHosted: true }}
         selectedGroup=""
-        selectedRows={[3]}
-        tenantCapabilities={{ isEnterprise: true }}
-        userCapabilities={adminUserCapabilities}
-      />
+      />,
+      {
+        preloadedState: {
+          ...defaultState,
+          devices: {
+            ...defaultState.devices,
+            byId: {
+              ...defaultState.devices.byId,
+              d1: {
+                id: 'd1',
+                auth_sets: [],
+                attributes: {
+                  device_type: 'qemux86-128'
+                },
+                status: 'pending'
+              }
+            },
+            deviceList: {
+              ...defaultState.devices.deviceList,
+              deviceIds: ['d1'],
+              selection: [0]
+            }
+          }
+        }
+      }
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
