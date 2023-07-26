@@ -165,7 +165,7 @@ export const Signup = () => {
         <div>
           <Form
             defaultValues={{ email, tos, marketing, name: organization }}
-            showButtons={!isStarting}
+            showButtons={!(isStarting || loading)}
             buttonColor="primary"
             onSubmit={handleSignup}
             submitLabel={isStarting ? 'Sign up' : 'Complete signup'}
@@ -173,7 +173,7 @@ export const Signup = () => {
           >
             {loading ? <Loader show style={{ marginTop: '40vh' }} /> : steps[step]}
           </Form>
-          <EntryLink target="login" />
+          {!loading && <EntryLink target="login" />}
         </div>
         {isStarting && (
           <div className={classes.promo}>
