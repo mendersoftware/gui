@@ -520,7 +520,7 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
     },
     { maybeUiPermissions: {}, remainderKeys: [] }
   );
-  const { permissionSetsWithScope, roleUiPermissions } = Object.keys(remainderKeys).reduce(
+  const { permissionSetsWithScope, roleUiPermissions } = remainderKeys.reduce(
     (accu, area) => {
       const areaPermissions = role.uiPermissions[area];
       if (!Array.isArray(areaPermissions)) {

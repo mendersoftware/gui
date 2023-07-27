@@ -120,78 +120,6 @@ export const uiPermissionsById = {
   }
 };
 
-export const defaultPermissionSets = {
-  [permissionSetIds.Basic]: { name: permissionSetIds.Basic },
-  [permissionSetIds.SuperUser]: { name: permissionSetIds.SuperUser },
-  [permissionSetIds.ManageUsers]: {
-    name: permissionSetIds.ManageUsers,
-    result: {
-      userManagement: [uiPermissionsById.manage.value]
-    }
-  },
-  [permissionSetIds.ReadAuditLogs]: {
-    name: permissionSetIds.ReadAuditLogs,
-    result: {
-      auditlog: [uiPermissionsById.read.value]
-    }
-  },
-  [permissionSetIds.ReadReleases]: {
-    name: permissionSetIds.ReadReleases,
-    result: {
-      releases: { [ALL_RELEASES]: [uiPermissionsById.read.value] }
-    }
-  },
-  [permissionSetIds.ReadUsers]: {
-    name: permissionSetIds.ReadUsers,
-    result: {
-      userManagement: [uiPermissionsById.read.value]
-    }
-  },
-  [permissionSetIds.UploadArtifacts]: {
-    name: permissionSetIds.UploadArtifacts,
-    result: {
-      releases: { [ALL_RELEASES]: [uiPermissionsById.upload.value] }
-    }
-  },
-  [permissionSetIds.ManageReleases]: {
-    name: permissionSetIds.ManageReleases,
-    result: {
-      releases: { [ALL_RELEASES]: [uiPermissionsById.manage.value] }
-    }
-  },
-  [permissionSetIds.ConfigureDevices]: {
-    name: permissionSetIds.ConfigureDevices,
-    result: {
-      deployments: [uiPermissionsById.read.value, uiPermissionsById.deploy.value],
-      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.configure.value] }
-    }
-  },
-  [permissionSetIds.ConnectToDevices]: {
-    name: permissionSetIds.ConnectToDevices,
-    result: {
-      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.connect.value] }
-    }
-  },
-  [permissionSetIds.DeployToDevices]: {
-    name: permissionSetIds.DeployToDevices,
-    result: {
-      deployments: [uiPermissionsById.deploy.value, uiPermissionsById.manage.value, uiPermissionsById.read.value],
-      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.deploy.value] }
-    }
-  },
-  [permissionSetIds.ManageDevices]: {
-    name: permissionSetIds.ManageDevices,
-    result: {
-      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.manage.value] }
-    }
-  },
-  [permissionSetIds.ReadDevices]: {
-    name: permissionSetIds.ReadDevices,
-    result: {
-      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value] }
-    }
-  }
-};
 /**
  * _uiPermissions_ represent the possible permissions/ rights that can be given for the area
  * _endpoints_ represent the possible endpoints this definition might be affecting in the UI and what
@@ -354,6 +282,90 @@ export const rolesById = Object.freeze({
     }
   }
 });
+
+export const defaultPermissionSets = {
+  [permissionSetIds.Basic]: {
+    name: permissionSetIds.Basic,
+    result: {
+      // this is needed to prevent the detailed permissions of the basic permission set from being interpreted as allowing read & management access to user endpoints
+      userManagement: [uiPermissionsById.read.value]
+    }
+  },
+  [permissionSetIds.SuperUser]: {
+    name: permissionSetIds.SuperUser,
+    result: {
+      ...rolesById[staticRolesByName.admin].uiPermissions
+    }
+  },
+  [permissionSetIds.ManageUsers]: {
+    name: permissionSetIds.ManageUsers,
+    result: {
+      userManagement: [uiPermissionsById.manage.value]
+    }
+  },
+  [permissionSetIds.ReadAuditLogs]: {
+    name: permissionSetIds.ReadAuditLogs,
+    result: {
+      auditlog: [uiPermissionsById.read.value]
+    }
+  },
+  [permissionSetIds.ReadReleases]: {
+    name: permissionSetIds.ReadReleases,
+    result: {
+      releases: { [ALL_RELEASES]: [uiPermissionsById.read.value] }
+    }
+  },
+  [permissionSetIds.ReadUsers]: {
+    name: permissionSetIds.ReadUsers,
+    result: {
+      userManagement: [uiPermissionsById.read.value]
+    }
+  },
+  [permissionSetIds.UploadArtifacts]: {
+    name: permissionSetIds.UploadArtifacts,
+    result: {
+      releases: { [ALL_RELEASES]: [uiPermissionsById.upload.value] }
+    }
+  },
+  [permissionSetIds.ManageReleases]: {
+    name: permissionSetIds.ManageReleases,
+    result: {
+      releases: { [ALL_RELEASES]: [uiPermissionsById.manage.value] }
+    }
+  },
+  [permissionSetIds.ConfigureDevices]: {
+    name: permissionSetIds.ConfigureDevices,
+    result: {
+      deployments: [uiPermissionsById.read.value, uiPermissionsById.deploy.value],
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.configure.value] }
+    }
+  },
+  [permissionSetIds.ConnectToDevices]: {
+    name: permissionSetIds.ConnectToDevices,
+    result: {
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.connect.value] }
+    }
+  },
+  [permissionSetIds.DeployToDevices]: {
+    name: permissionSetIds.DeployToDevices,
+    result: {
+      deployments: [uiPermissionsById.deploy.value, uiPermissionsById.manage.value, uiPermissionsById.read.value],
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.deploy.value] }
+    }
+  },
+  [permissionSetIds.ManageDevices]: {
+    name: permissionSetIds.ManageDevices,
+    result: {
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value, uiPermissionsById.manage.value] }
+    }
+  },
+  [permissionSetIds.ReadDevices]: {
+    name: permissionSetIds.ReadDevices,
+    result: {
+      groups: { [ALL_DEVICES]: [uiPermissionsById.read.value] }
+    }
+  }
+};
 
 export const RECEIVED_QR_CODE = 'RECEIVED_QR_CODE';
 

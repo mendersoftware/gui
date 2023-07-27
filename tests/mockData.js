@@ -659,7 +659,6 @@ export const permissionSets = [
     ]
   },
   {
-    ...defaultPermissionSets.Basic,
     name: 'almostAdmin',
     object: permissionSetObjectTypes.empty,
     description: 'Set containing all the permissions.',
@@ -814,8 +813,8 @@ const expectedParsedRoles = {
     }
   },
   almostAdminNew: {
-    editable: false,
-    isCustom: true,
+    editable: true,
+    isCustom: undefined,
     uiPermissions: {
       ...emptyUiPermissions,
       auditlog: [uiPermissionsById.read.value],
