@@ -129,7 +129,6 @@ export const CreateDeployment = props => {
   const dispatch = useDispatch();
 
   const isCreating = useRef(false);
-  const [releaseSelectionLocked, setReleaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -147,7 +146,6 @@ export const CreateDeployment = props => {
   useEffect(() => {
     const { devices = [], group, release } = deploymentObject;
     if (release) {
-      setReleaseSelectionLocked(Boolean(deploymentObject.release));
       dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION));
     }
     if (!group) {
@@ -277,7 +275,6 @@ export const CreateDeployment = props => {
     hasNewRetryDefault,
     onSaveRetriesSetting,
     open: false,
-    releaseSelectionLocked,
     setDeploymentSettings
   };
   const hasReleases = !!Object.keys(releasesById).length;
