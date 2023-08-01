@@ -9,7 +9,7 @@
     "@monaco-editor/react": "^4.5.1",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
-    "@mui/styles": "^5.13.2",
+    "@mui/styles": "^5.14.1",
     "@mui/x-date-pickers": "^6.9.1",
     "@redux-devtools/extension": "^3.2.5",
     "@reduxjs/toolkit": "^1.9.5",
