@@ -259,12 +259,15 @@ export const RolloutPatternSelection = props => {
     previousPhases.length > 0
       ? previousPhases.map((previousPhaseSetting, index) => (
           <MenuItem key={`previousPhaseSetting-${index}`} value={previousPhaseSetting}>
-            {previousPhaseSetting.reduce((accu, phase, _, source) => {
-              const phaseDescription = phase.delay
-                ? `${phase.batch_size}% > ${phase.delay} ${phase.delayUnit || 'hours'} >`
-                : `${phase.batch_size || 100 / source.length}%`;
-              return `${accu} ${phaseDescription}`;
-            }, `${previousPhaseSetting.length} ${pluralize('phase', previousPhaseSetting.length)}:`)}
+            {previousPhaseSetting.reduce(
+              (accu, phase, _, source) => {
+                const phaseDescription = phase.delay
+                  ? `${phase.batch_size}% > ${phase.delay} ${phase.delayUnit || 'hours'} >`
+                  : `${phase.batch_size || 100 / source.length}%`;
+                return `${accu} ${phaseDescription}`;
+              },
+              `${previousPhaseSetting.length} ${pluralize('phase', previousPhaseSetting.length)}:`
+            )}
           </MenuItem>
         ))
       : [
