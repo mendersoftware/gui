@@ -149,13 +149,15 @@ export const SoftwareDistribution = () => {
 
   return hasDevices ? (
     <div className="dashboard margin-bottom-large">
-      <MapWrapper
-        groups={groups}
-        groupNames={groupNames}
-        devicesById={devicesById}
-        getGroupDevices={onGetGroupDevices}
-        getDevicesInBounds={onGetDevicesInBounds}
-      />
+      {hasReporting && (
+        <MapWrapper
+          groups={groups}
+          groupNames={groupNames}
+          devicesById={devicesById}
+          getGroupDevices={onGetGroupDevices}
+          getDevicesInBounds={onGetDevicesInBounds}
+        />
+      )}
       {reports.map((report, index) => {
         const Component = reportTypes[report.type || defaultReportType];
         return (
