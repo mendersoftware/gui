@@ -12,6 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 export const selectors = {
+  deploymentCreation: 'text=/Create deployment/i',
+  deploymentListItem: '.deployment-item',
+  deploymentListItemContent: '.deployment-item:not(.deployment-header-item)',
   deviceGroupSelect: '#deployment-device-group-selection',
   deviceListCheckbox: '.deviceListItem input',
   email: '[name=email]',
