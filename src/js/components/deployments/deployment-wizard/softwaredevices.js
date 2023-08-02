@@ -192,19 +192,10 @@ export const Devices = ({
   );
 };
 
-export const Software = ({
-  commonClasses,
-  deploymentObject,
-  getReleases,
-  releaseRef,
-  releases,
-  releasesById,
-  releaseSelectionLocked,
-  setDeploymentSettings
-}) => {
+export const Software = ({ commonClasses, deploymentObject, getReleases, releaseRef, releases, releasesById, setDeploymentSettings }) => {
   const [isLoadingReleases, setIsLoadingReleases] = useState(!releases.length);
   const { classes } = useStyles();
-  const { devices = [], release: deploymentRelease = null } = deploymentObject;
+  const { devices = [], release: deploymentRelease = null, releaseSelectionLocked } = deploymentObject;
   const device = devices.length ? devices[0] : undefined;
 
   useEffect(() => {
