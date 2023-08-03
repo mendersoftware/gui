@@ -1734,8 +1734,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-4"
             data-shrink="true"
-            for="mui-3"
-            id="mui-3-label"
+            for="mui-2"
+            id="mui-2-label"
           >
             Timeout
           </label>
@@ -1743,11 +1743,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-35"
           >
             <input
-              aria-describedby="mui-3-helper-text"
+              aria-describedby="mui-2-helper-text"
               aria-invalid="false"
               autocomplete="off"
               class="MuiInputBase-input MuiInput-input emotion-36"
-              id="mui-3"
+              id="mui-2"
               pattern="[0-9]*"
               step="1"
               type="numeric"
@@ -1756,7 +1756,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           </div>
           <p
             class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-filled emotion-9"
-            id="mui-3-helper-text"
+            id="mui-2-helper-text"
           >
             Defaults to: 60
           </p>
@@ -1845,8 +1845,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-4"
             data-shrink="true"
-            for="mui-4"
-            id="mui-4-label"
+            for="mui-3"
+            id="mui-3-label"
           >
             Compression level
           </label>
@@ -1857,7 +1857,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
               aria-invalid="false"
               autocomplete="off"
               class="MuiInputBase-input MuiInput-input emotion-36"
-              id="mui-4"
+              id="mui-3"
               pattern="[0-9]*"
               step="1"
               type="numeric"
@@ -1871,10 +1871,43 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-4"
             data-shrink="true"
+            for="mui-4"
+            id="mui-4-label"
+          >
+            Source window size
+          </label>
+          <div
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-35"
+          >
+            <input
+              aria-describedby="mui-4-helper-text"
+              aria-invalid="false"
+              autocomplete="off"
+              class="MuiInputBase-input MuiInput-input emotion-36"
+              id="mui-4"
+              pattern="[0-9]*"
+              step="1"
+              type="numeric"
+              value="5"
+            />
+          </div>
+          <p
+            class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-filled emotion-9"
+            id="mui-4-helper-text"
+          >
+            Defaults to: 10
+          </p>
+        </div>
+        <div
+          class="MuiFormControl-root MuiTextField-root emotion-33"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-4"
+            data-shrink="true"
             for="mui-5"
             id="mui-5-label"
           >
-            Source window size
+            Input window size
           </label>
           <div
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-35"
@@ -1907,7 +1940,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
             for="mui-6"
             id="mui-6-label"
           >
-            Input window size
+            Compression duplicates window
           </label>
           <div
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-35"
@@ -1940,7 +1973,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
             for="mui-7"
             id="mui-7-label"
           >
-            Compression duplicates window
+            Instruction buffer size
           </label>
           <div
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-35"
@@ -1960,39 +1993,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           <p
             class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-filled emotion-9"
             id="mui-7-helper-text"
-          >
-            Defaults to: 10
-          </p>
-        </div>
-        <div
-          class="MuiFormControl-root MuiTextField-root emotion-33"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-4"
-            data-shrink="true"
-            for="mui-8"
-            id="mui-8-label"
-          >
-            Instruction buffer size
-          </label>
-          <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-35"
-          >
-            <input
-              aria-describedby="mui-8-helper-text"
-              aria-invalid="false"
-              autocomplete="off"
-              class="MuiInputBase-input MuiInput-input emotion-36"
-              id="mui-8"
-              pattern="[0-9]*"
-              step="1"
-              type="numeric"
-              value="5"
-            />
-          </div>
-          <p
-            class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-filled emotion-9"
-            id="mui-8-helper-text"
           >
             Defaults to: 10
           </p>
@@ -2054,7 +2054,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiInput-input emotion-36"
-          id="mui-2"
+          id="mui-8"
           max="1000"
           min="1"
           type="number"

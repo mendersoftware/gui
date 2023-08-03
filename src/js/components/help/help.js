@@ -82,7 +82,7 @@ const eachRecursive = (obj, path, level, accu, isHosted, spacing) =>
 
 const helpPath = 'help/';
 export const Help = () => {
-  const theme = useTheme();
+  const spacing = useTheme().spacing(2);
   const [links, setLinks] = useState([]);
   const { pathname } = useLocation();
   const { section } = useParams();
@@ -91,8 +91,8 @@ export const Help = () => {
 
   useEffect(() => {
     // generate sidebar links
-    setLinks(eachRecursive(components, '/help', 1, [], isHosted, theme.spacing(2)));
-  }, []);
+    setLinks(eachRecursive(components, '/help', 1, [], isHosted, spacing));
+  }, [isHosted, spacing]);
 
   if (!section) {
     return <Navigate replace to="/help/get-started" />;

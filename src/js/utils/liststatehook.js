@@ -59,7 +59,7 @@ const processors = {
 };
 
 export const useLocationParams = (key, extras) => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -71,7 +71,8 @@ export const useLocationParams = (key, extras) => {
       sort,
       ...processors[key].parse(params, extendedExtras)
     };
-  }, [key, searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(extras), key, location.search, location.pathname, searchParams.toString()]);
 
   let setValue = useCallback(
     (newValue, options = {}) => {
@@ -79,7 +80,8 @@ export const useLocationParams = (key, extras) => {
       const searchQuery = [processors.common.format(newValue.pageState, extras), processors[key].format(newValue, extras)].filter(i => i).join('&');
       navigate({ pathname, replace: true, search: `?${searchQuery}`, ...options });
     },
-    [key, navigate, searchParams, setSearchParams]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(extras), key, location.search, location.pathname, navigate]
   );
 
   return [value, setValue];

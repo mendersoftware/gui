@@ -13,21 +13,17 @@
 //    limitations under the License.
 import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
+import { useDispatch } from 'react-redux';
 
 // material ui
 import { Clear as ClearIcon, CloudUpload as FileIcon } from '@mui/icons-material';
 import { IconButton, TextField } from '@mui/material';
 
-export const FileUpload = ({
-  enableContentReading = true,
-  fileNameSelection,
-  onFileChange,
-  onFileSelect = () => undefined,
-  placeholder,
-  setSnackbar,
-  style = {}
-}) => {
+import { setSnackbar } from '../../../actions/appActions';
+
+export const FileUpload = ({ enableContentReading = true, fileNameSelection, onFileChange, onFileSelect = () => undefined, placeholder, style = {} }) => {
   const [filename, setFilename] = useState(fileNameSelection);
+  const dispatch = useDispatch();
 
   const onDrop = (acceptedFiles, rejectedFiles) => {
     if (acceptedFiles.length) {
@@ -48,7 +44,7 @@ export const FileUpload = ({
       onFileSelect(acceptedFiles[0]);
     }
     if (rejectedFiles.length) {
-      setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`);
+      dispatch(setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`));
     }
   };
 

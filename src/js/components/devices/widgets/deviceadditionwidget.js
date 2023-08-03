@@ -60,7 +60,7 @@ export const DeviceAdditionWidget = ({ features, onConnectClick, onMakeGatewayCl
 
   return (
     <>
-      <ButtonGroup className="muted device-addition-widget">
+      <ButtonGroup className="muted device-addition-widget" style={{ height: 'max-content' }}>
         <Button className={classes.buttonStyle} onClick={options[selectedIndex].action} variant="text">
           {options[selectedIndex].title}
         </Button>

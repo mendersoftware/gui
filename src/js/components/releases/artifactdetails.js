@@ -145,6 +145,7 @@ export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) =>
       accu.push({ key: infoItems[0], name: infoItems.slice(1, infoItems.length - 1).join('.'), version: item[1], nestingLevel: infoItems.length });
       return accu;
     }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(artifact.artifact_provides)]);
 
   useEffect(() => {
@@ -152,7 +153,7 @@ export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) =>
       return;
     }
     dispatch(getArtifactUrl(artifact.id));
-  }, [artifact.id, artifact.url, open]);
+  }, [artifact.id, artifact.url, dispatch, open]);
 
   useEffect(() => {
     if (artifact.installCount || !open || softwareVersions.length > 1) {
@@ -162,7 +163,8 @@ export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) =>
     if (version) {
       dispatch(getArtifactInstallCount(artifact.id));
     }
-  }, [artifact.id, artifact.installCount, open, softwareVersions.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [artifact.id, artifact.installCount, dispatch, open, softwareVersions.length]);
 
   const onToggleEditing = useCallback(
     event => {
@@ -175,7 +177,7 @@ export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) =>
         setDescEdit(!descEdit);
       }
     },
-    [descEdit, description, setDescEdit]
+    [artifact.id, descEdit, description, dispatch]
   );
 
   const softwareItem = extractSoftwareItem(artifact.artifact_provides);

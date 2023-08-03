@@ -24,17 +24,7 @@ import copy from 'copy-to-clipboard';
 import GatewayConnectionIcon from '../../../assets/img/gateway-connection.svg';
 import GatewayIcon from '../../../assets/img/gateway.svg';
 import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, getDeviceDeployments, getDeviceLog, getSingleDeployment, resetDeviceDeployments } from '../../actions/deploymentActions';
-import {
-  applyDeviceConfig,
-  decommissionDevice,
-  getDeviceInfo,
-  getDeviceTwin,
-  getGatewayDevices,
-  setDeviceConfig,
-  setDeviceTags,
-  setDeviceTwin
-} from '../../actions/deviceActions';
+import { decommissionDevice, getDeviceInfo, getGatewayDevices } from '../../actions/deviceActions';
 import { saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS, yes } from '../../constants/appConstants';
 import { DEVICE_STATES, EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
@@ -199,11 +189,12 @@ const tabs = [
 ];
 
 export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsTab, tabSelection }) => {
-  const [socketClosed, setSocketClosed] = useState(true);
+  const [socketClosed, setSocketClosed] = useState();
   const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
+  const closeTimer = useRef();
 
   const { latest: latestAlerts = [] } = useSelector(state => state.monitor.alerts.byDeviceId[deviceId]) || {};
   const { selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
@@ -234,14 +225,22 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
     return () => {
       clearInterval(timer.current);
     };
-  }, [deviceId, device.status]);
+  }, [deviceId, device.status, dispatch]);
 
   useEffect(() => {
     if (!(device.id && mender_gateway_system_id)) {
       return;
     }
     dispatch(getGatewayDevices(device.id));
-  }, [device.id, mender_gateway_system_id]);
+  }, [device.id, dispatch, mender_gateway_system_id]);
+
+  useEffect(() => {
+    if (!socketClosed) {
+      return;
+    }
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setSocketClosed(false), TIMEOUTS.fiveSeconds);
+  }, [socketClosed]);
 
   // close expanded device
   const onDecommissionDevice = device_id => dispatch(decommissionDevice(device_id)).finally(onClose);
@@ -284,30 +283,23 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
 
   const { component: SelectedTab, value: selectedTab } = availableTabs.find(tab => tab.value === tabSelection) ?? tabs[0];
 
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
+  const dispatchedSaveGlobalSettings = useCallback(settings => dispatch(saveGlobalSettings(settings)), [dispatch]);
+
   const commonProps = {
-    abortDeployment: id => dispatch(abortDeployment(id)),
-    applyDeviceConfig: (...args) => dispatch(applyDeviceConfig(...args)),
     classes,
     columnSelection,
     defaultConfig,
     device,
     deviceConfigDeployment,
     docsVersion,
-    getDeviceDeployments: (...args) => dispatch(getDeviceDeployments(...args)),
-    getDeviceLog: (...args) => dispatch(getDeviceLog(...args)),
-    getDeviceTwin: (...args) => dispatch(getDeviceTwin(...args)),
-    getSingleDeployment: id => dispatch(getSingleDeployment(id)),
     integrations,
     latestAlerts,
     launchTroubleshoot,
     onDecommissionDevice,
-    resetDeviceDeployments: id => dispatch(resetDeviceDeployments(id)),
-    saveGlobalSettings: settings => dispatch(saveGlobalSettings(settings)),
+    saveGlobalSettings: dispatchedSaveGlobalSettings,
     setDetailsTab,
-    setDeviceConfig: (...args) => dispatch(setDeviceConfig(...args)),
-    setDeviceTags: (...args) => dispatch(setDeviceTags(...args)),
-    setDeviceTwin: (...args) => dispatch(setDeviceTwin(...args)),
-    setSnackbar: (...args) => dispatch(setSnackbar(...args)),
+    setSnackbar: dispatchedSetSnackbar,
     setSocketClosed,
     setTroubleshootType,
     showHelptips,

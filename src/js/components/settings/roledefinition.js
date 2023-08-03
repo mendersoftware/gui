@@ -324,7 +324,8 @@ export const RoleDefinition = ({
         return accu;
       }, [])
     );
-  }, [adding, editing, selectedRole, stateGroups, stateReleaseTags]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adding, editing, JSON.stringify(selectedRole), JSON.stringify(stateGroups), JSON.stringify(stateReleaseTags)]);
 
   const validateNameChange = ({ target: { value } }) => {
     setNameError(!(value && validator.isWhitelisted(value, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')));
@@ -381,7 +382,19 @@ export const RoleDefinition = ({
         (Object.entries({ description, name }).every(([key, value]) => selectedRole[key] === value) &&
           uiPermissionCompare(selectedRole.uiPermissions, changedPermissions))
     );
-  }, [auditlogPermissions, description, disableEdit, groupSelections, name, nameError, releasesPermissions, releaseTagSelections, userManagementPermissions]);
+  }, [
+    auditlogPermissions,
+    userManagementPermissions,
+    groupSelections,
+    hasReleaseTags,
+    releaseTagSelections,
+    releasesPermissions,
+    disableEdit,
+    name,
+    nameError,
+    description,
+    selectedRole
+  ]);
 
   return (
     <Drawer anchor="right" open={adding || editing} PaperProps={{ style: { minWidth: 600, width: '50vw' } }}>

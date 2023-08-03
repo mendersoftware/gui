@@ -56,7 +56,7 @@ export const RoleManagement = () => {
     dispatch(getDynamicGroups());
     dispatch(getGroups());
     dispatch(getRoles());
-  }, []);
+  }, [dispatch, groups]);
 
   const addRole = () => {
     setAdding(true);
@@ -93,6 +93,7 @@ export const RoleManagement = () => {
           accu = [accu[index], ...accu.filter((item, itemIndex) => index !== itemIndex)];
           return accu;
         }, roles),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(roles)]
   );
 

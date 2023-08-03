@@ -12,12 +12,13 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Button, Table, TableBody, TableCell, TableHead, TableRow, buttonClasses, tableCellClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { deploymentsApiUrl } from '../../../actions/deploymentActions';
+import { deploymentsApiUrl, getDeviceDeployments, resetDeviceDeployments } from '../../../actions/deploymentActions';
 import { deploymentDisplayStates, deploymentStatesToSubstates } from '../../../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import Confirm from '../../common/confirm';
@@ -132,26 +133,27 @@ const deploymentStates = {
   successes: { key: 'successes', title: () => 'successes', values: deploymentStatesToSubstates.successes }
 };
 
-export const Deployments = ({ device, getDeviceDeployments, resetDeviceDeployments }) => {
+export const Deployments = ({ device }) => {
   const [filters, setFilters] = useState([deploymentStates.any.key]);
   const [page, setPage] = useState(DEVICE_LIST_DEFAULTS.page);
   const [perPage, setPerPage] = useState(10);
   const [isChecking, setIsChecking] = useState(false);
   const { classes } = useStyles();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!device?.id) {
       return;
     }
     const filterSelection = deploymentStates[filters[0]].values;
-    getDeviceDeployments(device.id, { filterSelection, page, perPage });
-  }, [device.id, filters, page, perPage]);
+    dispatch(getDeviceDeployments(device.id, { filterSelection, page, perPage }));
+  }, [device.id, dispatch, filters, page, perPage]);
 
   const onSelectStatus = status => setFilters([status]);
 
   const onResetStart = () => setIsChecking(true);
 
-  const onResetConfirm = () => resetDeviceDeployments(device.id).then(() => setIsChecking(false));
+  const onResetConfirm = () => dispatch(resetDeviceDeployments(device.id)).then(() => setIsChecking(false));
 
   const { deviceDeployments = [], deploymentsCount } = device;
 

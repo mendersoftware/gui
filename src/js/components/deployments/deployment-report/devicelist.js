@@ -133,7 +133,7 @@ const deviceListColumns = [
   {
     key: 'attempts',
     title: 'Attempts',
-    render: ({ device: { attempts, retries } }) => (attempts || 1) / (retries + 1),
+    render: ({ device: { attempts, retries } }) => `${attempts || 1} / ${retries + 1}`,
     canShow: ({ deployment: { retries } }) => !!retries
   },
   {
@@ -187,12 +187,13 @@ export const DeploymentDeviceList = ({ deployment, getDeploymentDevices, idAttri
   }, [perPage]);
 
   useEffect(() => {
-    if (!deployment.id || isLoading) {
+    if (!deployment.id) {
       return;
     }
     setIsLoading(true);
     getDeploymentDevices(deployment.id, { page: currentPage, perPage }).then(() => setIsLoading(false));
-  }, [currentPage, deployment.status, JSON.stringify(statistics.status)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, deployment.id, deployment.status, getDeploymentDevices, JSON.stringify(statistics.status), perPage]);
 
   const columns = deviceListColumns.reduce((accu, column) => (column.canShow({ deployment }) ? [...accu, { ...column, extras: { idAttribute } }] : accu), []);
   const items = selectedDevices.map(device => ({ device, id: device.id, idAttribute, userCapabilities, viewLog }));

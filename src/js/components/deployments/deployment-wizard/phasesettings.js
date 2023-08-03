@@ -250,6 +250,7 @@ export const RolloutPatternSelection = props => {
       setDeploymentSettings({ phases: phases.slice(0, 1) });
     }
     setUsesPattern(!usesPattern);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usesPattern, JSON.stringify(phases), setDeploymentSettings, setUsesPattern]);
 
   const numberDevices = deploymentDeviceCount ? deploymentDeviceCount : deploymentDeviceIds ? deploymentDeviceIds.length : 0;

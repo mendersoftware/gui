@@ -199,7 +199,7 @@ export const PhysicalDeviceOnboarding = ({ progress }) => {
 
   useEffect(() => {
     dispatch(setOnboardingApproach('physical'));
-  }, []);
+  }, [dispatch]);
 
   const onSelect = (e, deviceType, reason) => {
     if (reason === 'selectOption') {

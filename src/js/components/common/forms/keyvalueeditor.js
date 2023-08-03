@@ -19,7 +19,7 @@ import { useTheme } from '@mui/material/styles';
 
 const emptyInput = { helptip: null, key: '', value: '' };
 
-export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsMap = {}, onInputChange, reset, showHelptips }) => {
+export const KeyValueEditor = ({ disabled, errortext, initialInput = {}, inputHelpTipsMap = {}, onInputChange, reset, showHelptips }) => {
   const theme = useTheme();
   const [inputs, setInputs] = useState([{ ...emptyInput }]);
   const [error, setError] = useState('');
@@ -27,12 +27,13 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
   let inputRefs = useRef([]);
 
   useEffect(() => {
-    const newInputs = Object.keys(input).length
-      ? Object.entries(input).map(([key, value]) => ({ helptip: inputHelpTipsMap[key.toLowerCase()], key, ref: createRef(), value }))
+    const newInputs = Object.keys(initialInput).length
+      ? Object.entries(initialInput).map(([key, value]) => ({ helptip: inputHelpTipsMap[key.toLowerCase()], key, ref: createRef(), value }))
       : [{ ...emptyInput, ref: createRef() }];
     inputRefs.current = newInputs.map((_, i) => inputRefs.current[i] ?? createRef());
     setInputs(newInputs);
-  }, [reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialInput), JSON.stringify(inputHelpTipsMap), reset]);
 
   const onClearClick = () => {
     const changedInputs = [{ ...emptyInput }];
@@ -98,14 +99,14 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
         return (
           <div className="key-value-container relative" key={index}>
             <FormControl>
-              <Input value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
+              <Input disabled={disabled} value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
               {hasError && <FormHelperText>{errortext || error}</FormHelperText>}
             </FormControl>
             <FormControl>
-              <Input value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
+              <Input disabled={disabled} value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
             </FormControl>
             {inputs.length > 1 && !hasRemovalDisabled ? (
-              <IconButton disabled={disabled || hasRemovalDisabled} onClick={() => removeInput(index)} size="large">
+              <IconButton disabled={disabled} onClick={() => removeInput(index)} size="large">
                 <ClearIcon fontSize="small" />
               </IconButton>
             ) : (

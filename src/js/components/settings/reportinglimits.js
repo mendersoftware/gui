@@ -72,7 +72,7 @@ export const ReportingLimits = () => {
 
   useEffect(() => {
     dispatch(getReportingLimits());
-  }, []);
+  }, [dispatch]);
 
   const toggleOpen = () => setOpen(toggle);
 

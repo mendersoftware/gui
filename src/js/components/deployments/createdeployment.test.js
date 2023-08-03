@@ -38,7 +38,7 @@ const preloadedState = {
 
 describe('CreateDeployment Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<CreateDeployment deploymentObject={{}} setDeploymentObject={jest.fn} />, { preloadedState });
+    const { baseElement } = render(<CreateDeployment deploymentObject={{}} setDeploymentSettings={jest.fn} />, { preloadedState });
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

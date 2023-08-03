@@ -32,7 +32,7 @@ export const VirtualDeviceOnboarding = () => {
 
   useEffect(() => {
     dispatch(setOnboardingApproach('virtual'));
-  }, []);
+  }, [dispatch]);
 
   const codeToCopy = getDemoDeviceCreationCommand(tenantToken);
 

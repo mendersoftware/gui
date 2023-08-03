@@ -13,13 +13,18 @@
 //    limitations under the License.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { CloudUpload, Delete as DeleteIcon, InsertDriveFile as InsertDriveFileIcon } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { setSnackbar } from '../../../actions/appActions';
+import { advanceOnboarding } from '../../../actions/onboardingActions';
+import { createArtifact, uploadArtifact } from '../../../actions/releaseActions';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { FileSize, unionizeStrings } from '../../../helpers';
+import { getDeviceTypes, getOnboardingState } from '../../../selectors';
 import Tracking from '../../../tracking';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
@@ -75,10 +80,10 @@ const fileInformationContent = {
 };
 
 export const FileInformation = ({ file, type, onRemove }) => {
+  const { classes } = useStyles();
   if (!file) {
     return <div />;
   }
-  const { classes } = useStyles();
   const { icon: Icon, info, title } = fileInformationContent[type];
   return (
     <>
@@ -171,19 +176,7 @@ export const ArtifactUpload = ({ advanceOnboarding, onboardingState, releases, s
   );
 };
 
-export const AddArtifactDialog = ({
-  advanceOnboarding,
-  createArtifact,
-  deviceTypes = [],
-  onboardingState,
-  onCancel,
-  onUploadStarted,
-  pastCount,
-  releases,
-  selectedFile,
-  setSnackbar,
-  uploadArtifact
-}) => {
+export const AddArtifactDialog = ({ onCancel, onUploadStarted, releases, selectedFile }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [creation, setCreation] = useState({
     customDeviceTypes: '',
@@ -200,9 +193,37 @@ export const AddArtifactDialog = ({
     type: uploadTypes.mender.key
   });
 
+  const onboardingState = useSelector(getOnboardingState);
+  const pastCount = useSelector(state => state.deployments.byStatus.finished.total);
+  const deviceTypes = useSelector(getDeviceTypes);
+  const dispatch = useDispatch();
+
+  const onAdvanceOnboarding = useCallback(step => dispatch(advanceOnboarding(step)), [dispatch]);
+  const onCreateArtifact = useCallback((meta, file) => dispatch(createArtifact(meta, file)), [dispatch]);
+  const onSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
+  const onUploadArtifact = useCallback((meta, file) => dispatch(uploadArtifact(meta, file)), [dispatch]);
+
   useEffect(() => {
     setCreation(current => ({ ...current, file: selectedFile }));
   }, [selectedFile]);
+
+  const addArtifact = useCallback(
+    (meta, file, type = 'upload') => {
+      const upload = type === 'create' ? onCreateArtifact(meta, file) : onUploadArtifact(meta, file);
+      onUploadStarted();
+      return upload.then(() => {
+        if (!onboardingState.complete && deviceTypes.length && pastCount) {
+          onAdvanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
+          if (type === 'create') {
+            onAdvanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_CLICK);
+          }
+        }
+        // track in GA
+        Tracking.event({ category: 'artifacts', action: 'create' });
+      });
+    },
+    [onAdvanceOnboarding, onCreateArtifact, deviceTypes.length, onUploadStarted, onboardingState.complete, pastCount, onUploadArtifact]
+  );
 
   const onUpload = useCallback(() => {
     const { customDeviceTypes, destination, file, fileSystem, name, selectedDeviceTypes, softwareName, softwareVersion } = creation;
@@ -220,39 +241,25 @@ export const AddArtifactDialog = ({
       name
     };
     return addArtifact(meta, file, 'create');
-  }, [JSON.stringify(creation)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addArtifact, JSON.stringify(creation)]);
 
-  const addArtifact = (meta, file, type = 'upload') => {
-    const upload = type === 'create' ? createArtifact(meta, file) : uploadArtifact(meta, file);
-    onUploadStarted();
-    return upload.then(() => {
-      if (!onboardingState.complete && deviceTypes.length && pastCount) {
-        advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
-        if (type === 'create') {
-          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_CLICK);
-        }
-      }
-      // track in GA
-      Tracking.event({ category: 'artifacts', action: 'create' });
-    });
-  };
-
-  const onUpdateCreation = update => setCreation(current => ({ ...current, ...update }));
+  const onUpdateCreation = useCallback(update => setCreation(current => ({ ...current, ...update })), []);
 
   const onNextClick = useCallback(() => {
     if (!onboardingState.complete && creation.destination) {
-      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
+      onAdvanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
     }
     onUpdateCreation({ isValid: false });
     setActiveStep(activeStep + 1);
-  }, [activeStep, creation.destination, onboardingState.complete]);
+  }, [activeStep, onAdvanceOnboarding, creation.destination, onboardingState.complete, onUpdateCreation]);
 
   const onRemove = () => onUpdateCreation({ file: undefined, isValid: false });
   const buttonRef = useRef();
 
   const { file, finalStep, isValid, type } = creation;
   const { component: ComponentToShow } = uploadTypes[type];
-  const commonProps = { advanceOnboarding, onboardingState, releases, setSnackbar, updateCreation: onUpdateCreation };
+  const commonProps = { advanceOnboarding: onAdvanceOnboarding, onboardingState, releases, setSnackbar: onSetSnackbar, updateCreation: onUpdateCreation };
 
   let onboardingComponent = null;
   if (!onboardingState.complete && buttonRef.current && finalStep && isValid) {

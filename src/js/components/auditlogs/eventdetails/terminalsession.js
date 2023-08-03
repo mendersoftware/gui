@@ -45,7 +45,7 @@ export const TerminalSession = ({ item, onClose }) => {
     dispatch(
       getSessionDetails(meta.session_id[0], object.id, actor.id, action.startsWith('open') ? time : undefined, action.startsWith('close') ? time : undefined)
     ).then(setSessionDetails);
-  }, []);
+  }, [canReadDevices, device, dispatch, item]);
 
   if (!sessionDetails || (canReadDevices && !device)) {
     return <Loader show={true} />;

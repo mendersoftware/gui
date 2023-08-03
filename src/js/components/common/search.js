@@ -49,7 +49,7 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
       return;
     }
     onSearch(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, onSearch]);
 
   useEffect(() => {
     if (!searchTerm) {
@@ -60,7 +60,7 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
   const onSearchUpdated = ({ target: { value } }) => setSearchValue(value);
 
   const onTriggerSearch = ({ key }) => {
-    if (key === 'Enter' && searchValue >= MINIMUM_SEARCH_LENGTH) {
+    if (key === 'Enter' && (!searchValue || searchValue >= MINIMUM_SEARCH_LENGTH)) {
       onSearch(searchValue);
     }
   };

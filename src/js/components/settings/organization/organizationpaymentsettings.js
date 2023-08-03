@@ -30,7 +30,7 @@ export const OrganizationPaymentSettings = () => {
 
   useEffect(() => {
     dispatch(getCurrentCard());
-  }, []);
+  }, [dispatch]);
 
   const onCardConfirm = async () => {
     await dispatch(confirmCardUpdate());
@@ -38,58 +38,47 @@ export const OrganizationPaymentSettings = () => {
     setIsUpdatingPaymentDetails(false);
   };
 
-  // const invoiceDate = moment();
   const { last4, expiration, brand } = card;
   return (
-    <>
-      {/* <OrganizationSettingsItem
-                  title="Next payment date"
-                  content={{
-                    action: { title: 'View invoices', internal: true, action: setShowInvoices },
-                    description: invoiceDate.format('MMMM DD, YYYY')
-                  }}
-                  notification={<div className="text-muted">Your subscription will be charged automatically</div>}
-                /> */}
-      <OrganizationSettingsItem
-        title="Payment card"
-        content={{
-          action: { title: `${last4 ? 'Update' : 'Enter'} payment card`, internal: true, action: () => setIsUpdatingPaymentDetails(true) },
-          description: last4 ? (
+    <OrganizationSettingsItem
+      title="Payment card"
+      content={{
+        action: { title: `${last4 ? 'Update' : 'Enter'} payment card`, internal: true, action: () => setIsUpdatingPaymentDetails(true) },
+        description: last4 ? (
+          <div>
             <div>
-              <div>
-                {brand} ending in {last4}
-              </div>
-              <div>
-                Expires {`0${expiration.month}`.slice(-2)}/{`${expiration.year}`.slice(-2)}
-              </div>
+              {brand} ending in {last4}
             </div>
-          ) : (
             <div>
-              The introduction of the PSD2 regulation in Europe requires re-entering your card details before we can allow the modification of payment details
-              or access to the payment history.
+              Expires {`0${expiration.month}`.slice(-2)}/{`${expiration.year}`.slice(-2)}
             </div>
-          )
-        }}
-        secondary={
-          isUpdatingPaymentDetails && (
-            <CardSection
-              onCancel={() => setIsUpdatingPaymentDetails(false)}
-              onComplete={onCardConfirm}
-              onSubmit={() => dispatch(startCardUpdate())}
-              setSnackbar={text => dispatch(setSnackbar(text))}
-            />
-          )
-        }
-        notification={
-          hasUnpaid && (
-            <div className="red flexbox centered">
-              <ErrorIcon fontSize="small" />
-              <span className="margin-left-small">You have an unpaid invoice. Please check your payment card details</span>
-            </div>
-          )
-        }
-      />
-    </>
+          </div>
+        ) : (
+          <div>
+            The introduction of the PSD2 regulation in Europe requires re-entering your card details before we can allow the modification of payment details or
+            access to the payment history.
+          </div>
+        )
+      }}
+      secondary={
+        isUpdatingPaymentDetails && (
+          <CardSection
+            onCancel={() => setIsUpdatingPaymentDetails(false)}
+            onComplete={onCardConfirm}
+            onSubmit={() => dispatch(startCardUpdate())}
+            setSnackbar={text => dispatch(setSnackbar(text))}
+          />
+        )
+      }
+      notification={
+        hasUnpaid && (
+          <div className="red flexbox centered">
+            <ErrorIcon fontSize="small" />
+            <span className="margin-left-small">You have an unpaid invoice. Please check your payment card details</span>
+          </div>
+        )
+      }
+    />
   );
 };
 

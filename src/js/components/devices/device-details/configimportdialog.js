@@ -18,7 +18,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlL
 
 import FileUpload from '../../common/forms/fileupload';
 
-export const ConfigImportDialog = ({ onCancel, onSubmit, setSnackbar }) => {
+export const ConfigImportDialog = ({ onCancel, onSubmit }) => {
   const [config, setConfig] = useState(null);
   const [errortext, setErrortext] = useState();
   const [importType, setImportType] = useState('default');
@@ -72,7 +72,6 @@ export const ConfigImportDialog = ({ onCancel, onSubmit, setSnackbar }) => {
                   </>
                 }
                 onFileChange={onFileChange}
-                setSnackbar={setSnackbar}
               />
             }
             style={{ marginTop: 0 }}

@@ -36,7 +36,7 @@ export const ForceDeploy = ({ deploymentObject, setDeploymentSettings }) => {
 
   useEffect(() => {
     setDeploymentSettings({ forceDeploy });
-  }, [forceDeploy]);
+  }, [forceDeploy, setDeploymentSettings]);
 
   return (
     <div>
@@ -112,7 +112,7 @@ export const Retries = ({
 
   useEffect(() => {
     setDeploymentSettings({ retries: Number(debouncedAttempts) - 1 });
-  }, [debouncedAttempts]);
+  }, [debouncedAttempts, setDeploymentSettings]);
 
   const formatValue = value => {
     const newValue = Math.max(0, Math.min(value, 100));

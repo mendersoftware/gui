@@ -88,7 +88,7 @@ const BaseOnboardingTipComponent = ({
   useEffect(() => {
     Tracking.event({ category: 'onboarding', action: id });
     setOpen(true);
-  }, []);
+  }, [id]);
 
   const toggleVisibility = () => setOpen(toggle);
 

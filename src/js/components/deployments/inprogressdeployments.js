@@ -57,8 +57,6 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 export const Progress = ({ abort, createClick, ...remainder }) => {
-  const dispatch = useDispatch();
-  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
   const { canConfigure, canDeploy } = useSelector(getUserCapabilities);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const onboardingState = useSelector(getOnboardingState);
@@ -72,57 +70,21 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
   const pending = useSelector(state => getMappedDeploymentSelection(state, DEPLOYMENT_STATES.pending));
   const selectionState = useSelector(getDeploymentsSelectionState);
   const devices = useSelector(getDevicesById);
+  const dispatch = useDispatch();
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
   const { page: progressPage, perPage: progressPerPage } = selectionState.inprogress;
   const { page: pendingPage, perPage: pendingPerPage } = selectionState.pending;
 
-  const [currentRefreshDeploymentLength, setCurrentRefreshDeploymentLength] = useState(refreshDeploymentsLength);
   const [doneLoading, setDoneLoading] = useState(!!(progressCount || pendingCount));
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
 
+  const currentRefreshDeploymentLength = useRef(refreshDeploymentsLength);
   const inprogressRef = useRef();
   const dynamicTimer = useRef();
 
   const { classes } = useStyles();
-
-  useEffect(() => {
-    return () => {
-      clearAllRetryTimers(dispatchedSetSnackbar);
-    };
-  }, []);
-
-  useEffect(() => {
-    clearTimeout(dynamicTimer.current);
-    setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
-    return () => {
-      clearTimeout(dynamicTimer.current);
-    };
-  }, [pendingCount]);
-
-  useEffect(() => {
-    clearTimeout(dynamicTimer.current);
-    setupDeploymentsRefresh();
-    return () => {
-      clearInterval(dynamicTimer.current);
-    };
-  }, [progressPage, progressPerPage, pendingPage, pendingPerPage]);
-
-  const setupDeploymentsRefresh = (refreshLength = currentRefreshDeploymentLength) => {
-    let tasks = [refreshDeployments(DEPLOYMENT_STATES.inprogress), refreshDeployments(DEPLOYMENT_STATES.pending)];
-    if (!onboardingState.complete && !pastDeploymentsCount) {
-      // retrieve past deployments outside of the regular refresh cycle to not change the selection state for past deployments
-      dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false));
-    }
-    return Promise.all(tasks)
-      .then(() => {
-        const currentRefreshDeploymentLength = Math.min(refreshDeploymentsLength, refreshLength * 2);
-        setCurrentRefreshDeploymentLength(currentRefreshDeploymentLength);
-        clearTimeout(dynamicTimer.current);
-        dynamicTimer.current = setTimeout(setupDeploymentsRefresh, currentRefreshDeploymentLength);
-      })
-      .finally(() => setDoneLoading(true));
-  };
 
   // deploymentStatus = <inprogress|pending>
   const refreshDeployments = useCallback(
@@ -139,11 +101,55 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
         .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar))
         .finally(() => setDoneLoading(true));
     },
-    [pendingPage, pendingPerPage, progressPage, progressPerPage]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dispatch, dispatchedSetSnackbar, pendingPage, pendingPerPage, progressPage, progressPerPage]
   );
+
+  const setupDeploymentsRefresh = useCallback(
+    (refreshLength = currentRefreshDeploymentLength.current) => {
+      let tasks = [refreshDeployments(DEPLOYMENT_STATES.inprogress), refreshDeployments(DEPLOYMENT_STATES.pending)];
+      if (!onboardingState.complete && !pastDeploymentsCount) {
+        // retrieve past deployments outside of the regular refresh cycle to not change the selection state for past deployments
+        dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false));
+      }
+      return Promise.all(tasks)
+        .then(() => {
+          currentRefreshDeploymentLength.current = Math.min(refreshDeploymentsLength, refreshLength * 2);
+          clearTimeout(dynamicTimer.current);
+          dynamicTimer.current = setTimeout(setupDeploymentsRefresh, currentRefreshDeploymentLength.current);
+        })
+        .finally(() => setDoneLoading(true));
+    },
+    [dispatch, onboardingState.complete, pastDeploymentsCount, refreshDeployments]
+  );
+
+  useEffect(() => {
+    return () => {
+      clearAllRetryTimers(dispatchedSetSnackbar);
+    };
+  }, [dispatchedSetSnackbar]);
+
+  useEffect(() => {
+    clearTimeout(dynamicTimer.current);
+    setupDeploymentsRefresh(minimalRefreshDeploymentsLength);
+    return () => {
+      clearTimeout(dynamicTimer.current);
+    };
+  }, [pendingCount, setupDeploymentsRefresh]);
+
+  useEffect(() => {
+    clearTimeout(dynamicTimer.current);
+    setupDeploymentsRefresh();
+    return () => {
+      clearInterval(dynamicTimer.current);
+    };
+  }, [progressPage, progressPerPage, pendingPage, pendingPerPage, setupDeploymentsRefresh]);
 
   const abortDeployment = id =>
     abort(id).then(() => Promise.all([refreshDeployments(DEPLOYMENT_STATES.inprogress), refreshDeployments(DEPLOYMENT_STATES.pending)]));
+
+  const onChangePage = state => page => dispatch(setDeploymentsState({ [state]: { page } }));
+  const onChangeRowsPerPage = state => perPage => dispatch(setDeploymentsState({ [state]: { page: 1, perPage } }));
 
   let onboardingComponent = null;
   if (!onboardingState.complete && inprogressRef.current) {
@@ -168,8 +174,8 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
             page={progressPage}
             pageSize={progressPerPage}
             rootRef={inprogressRef}
-            onChangeRowsPerPage={perPage => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page: 1, perPage } }))}
-            onChangePage={page => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.inprogress]: { page } }))}
+            onChangeRowsPerPage={onChangeRowsPerPage(DEPLOYMENT_STATES.inprogress)}
+            onChangePage={onChangePage(DEPLOYMENT_STATES.inprogress)}
             type={DEPLOYMENT_STATES.inprogress}
           />
         </div>
@@ -186,8 +192,8 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
             items={pending}
             page={pendingPage}
             pageSize={pendingPerPage}
-            onChangeRowsPerPage={perPage => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.pending]: { page: 1, perPage } }))}
-            onChangePage={page => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.pending]: { page } }))}
+            onChangeRowsPerPage={onChangeRowsPerPage(DEPLOYMENT_STATES)}
+            onChangePage={onChangePage(DEPLOYMENT_STATES.pending)}
             type={DEPLOYMENT_STATES.pending}
           />
         </div>

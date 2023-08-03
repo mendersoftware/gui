@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useIdleTimer, workerTimers } from 'react-idle-timer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -101,6 +101,24 @@ export const AppRoot = () => {
   const trackingCode = useSelector(state => state.app.trackerCode);
   const { mode } = useSelector(getUserSettings);
 
+  const trackLocationChange = useCallback(
+    pathname => {
+      let page = pathname;
+      // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
+      if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
+        const splitter = page.lastIndexOf('/');
+        const filters = page.slice(splitter + 1);
+        const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
+        page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
+      } else if (page.startsWith(activationPath)) {
+        dispatch(setAccountActivationCode(page.substring(activationPath.length + 1)));
+        navigate('/settings/my-profile', { replace: true });
+      }
+      Tracking.pageview(page);
+    },
+    [dispatch, navigate]
+  );
+
   useEffect(() => {
     dispatch(parseEnvironmentInfo());
     if (!trackingCode) {
@@ -117,7 +135,7 @@ export const AppRoot = () => {
       Tracking.initialize(trackingCode);
     }
     trackLocationChange(pathname);
-  }, [trackingCode]);
+  }, [dispatch, pathname, trackLocationChange, trackingCode]);
 
   useEffect(() => {
     trackLocationChange(pathname);
@@ -125,22 +143,7 @@ export const AppRoot = () => {
     if (hash) {
       navigate(hash.substring(1));
     }
-  }, [hash, pathname]);
-
-  const trackLocationChange = pathname => {
-    let page = pathname;
-    // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
-    if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
-      const splitter = page.lastIndexOf('/');
-      const filters = page.slice(splitter + 1);
-      const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
-      page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
-    } else if (page.startsWith(activationPath)) {
-      dispatch(setAccountActivationCode(page.substring(activationPath.length + 1)));
-      navigate('/settings/my-profile', { replace: true });
-    }
-    Tracking.pageview(page);
-  };
+  }, [hash, navigate, pathname, trackLocationChange]);
 
   const onIdle = () => {
     if (expirySet() && currentUser) {

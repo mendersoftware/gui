@@ -109,13 +109,13 @@ export const Organization = () => {
 
   useEffect(() => {
     dispatch(getUserOrganization());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (isEnterprise) {
       dispatch(getSamlConfigs());
     }
-  }, [isEnterprise]);
+  }, [dispatch, isEnterprise]);
 
   useEffect(() => {
     setHasSingleSignOn(!!samlConfigs.length);
@@ -145,7 +145,7 @@ export const Organization = () => {
       }
       return dispatch(storeSamlConfig(fileContent));
     },
-    [isResettingSSO, changeSamlConfig, deleteSamlConfig, storeSamlConfig]
+    [isResettingSSO, dispatch, samlConfigs]
   );
 
   const onDownloadReportClick = () =>

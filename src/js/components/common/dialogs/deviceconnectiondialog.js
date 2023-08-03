@@ -125,7 +125,7 @@ export const DeviceConnectionDialog = ({ onCancel }) => {
       dispatch(setDeviceListState({ state: DEVICE_STATES.pending }));
       navigate('/devices/pending');
     }
-  }, [advanceOnboarding, hasMoreDevices, progress, virtualDevice]);
+  }, [dispatch, hasMoreDevices, navigate, progress, virtualDevice]);
 
   const onBackClick = () => {
     let updatedProgress = progress - 1;

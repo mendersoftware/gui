@@ -26,6 +26,10 @@ export const TimerangePicker = ({ classNames = '', endDate, onChange, startDate 
   const [active, setActive] = useState();
 
   useEffect(() => {
+    if (!(endDate && startDate)) {
+      setActive(Object.keys(timeranges)[0]);
+      return;
+    }
     if (!(endDate || startDate)) {
       setActive();
       return;
@@ -44,12 +48,6 @@ export const TimerangePicker = ({ classNames = '', endDate, onChange, startDate 
     }, undefined);
     setActive(currentRange);
   }, [endDate, startDate]);
-
-  useEffect(() => {
-    if (!(endDate && startDate)) {
-      setActive(Object.keys(timeranges)[0]);
-    }
-  }, []);
 
   const setRange = (after, before) => {
     let newStartDate = new Date();
