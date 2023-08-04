@@ -71,7 +71,7 @@ describe('Deployments Component', () => {
     const get = jest.spyOn(GeneralApi, 'get');
     const ui = <Deployments {...defaultLocationProps} />;
     const { asFragment, rerender } = render(ui, { state: mockState });
-    act(() => {
+    await act(async () => {
       jest.runAllTicks();
       jest.advanceTimersByTime(2000);
     });
