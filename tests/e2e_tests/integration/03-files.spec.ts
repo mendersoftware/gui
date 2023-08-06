@@ -31,7 +31,7 @@ test.describe('Files', () => {
     await page.click(`.leftNav :text('Releases')`);
     // create an artifact to download first
     await page.click(`button:has-text('Upload')`);
-    await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
+    await page.locator('.MuiDialog-paper .dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(`.MuiDialog-paper button:has-text('Upload')`);
     // give some extra time for the upload
     await page.waitForTimeout(timeouts.fiveSeconds);
@@ -77,7 +77,7 @@ test.describe('Files', () => {
     await page.waitForSelector('text=/file transfer/i', { timeout: timeouts.tenSeconds });
     await page.click(`css=.expandedDevice >> text=file transfer`);
     await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
-    await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
+    await page.locator('.dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(selectors.placeholderExample, { clickCount: 3 });
     await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
     await page.click(`button:text("Upload"):below(:text("Destination directory"))`);

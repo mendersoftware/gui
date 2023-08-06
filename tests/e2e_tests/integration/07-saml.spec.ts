@@ -123,17 +123,11 @@ test.describe('SAML Login via sso/id/login', () => {
     fs.writeFileSync('fixtures/service_provider_metadata.xml', serviceProviderMetadata);
 
     await page.goto('https://samltest.id/upload.php');
-    await page.waitForSelector('input[id=uploader]');
-    const handle = await page.$('input[id="uploader"]');
-    await handle.setInputFiles('fixtures/service_provider_metadata.xml');
-    // Click input:has-text("Upload")
-    await page.locator('input:has-text("Upload")').click();
+    await page.waitForSelector('text=Metadata Upload Form');
+    await page.locator('input[type="file"]').setInputFiles('fixtures/service_provider_metadata.xml');
+    await page.getByRole('button', { name: /upload/i }).click();
     await expect(page).toHaveURL('https://samltest.id/upload.php');
-
-    console.log('uploaded file, making screen shot, after waiting 5s');
-    await page.waitForTimeout(timeouts.fiveSeconds);
-    // Let's save the image after the upload
-    await page.screenshot({ path: './test-results/saml-uploaded.png' });
+    await page.waitForSelector('text=We now trust you');
   });
 
   // Creates a user with login that matches Identity privder (samltest.id) user email
