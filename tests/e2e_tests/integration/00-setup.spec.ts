@@ -65,8 +65,8 @@ test.describe('Test setup', () => {
 
       await page.click(`button:has-text('Sign up')`);
       await page.waitForSelector(`button:has-text('Complete')`);
-      await page.fill('[id=name]', 'CI test corp');
-      await page.check('[id=tos]');
+      await page.getByLabel(/organization name/i).fill('CI test corp');
+      await page.getByLabel(/terms of service/i).check();
       const frameHandle = await page.waitForSelector('iframe[title="reCAPTCHA"]');
       await page.waitForTimeout(300);
       const recaptchaFrame = await frameHandle.contentFrame();
