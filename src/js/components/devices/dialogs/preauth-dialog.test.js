@@ -14,7 +14,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -77,6 +77,10 @@ describe('PreauthDialog Component', () => {
     await waitFor(() => expect(screen.queryByText(errorText)).not.toBeInTheDocument());
     submitMock.mockRejectedValueOnce(errorText);
     await user.click(screen.getByRole('button', { name: 'Save' }));
+    act(() => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(errorText)).toBeTruthy());
     await user.type(screen.getByDisplayValue('testValue'), 'testValues');
