@@ -241,7 +241,7 @@ export const DeviceGroups = () => {
         <h3 className="flexbox center-aligned" style={{ marginBottom: 0, marginTop: 0, flexWrap: 'wrap' }}>
           Devices
         </h3>
-        <span className="flexbox space-between margin-left-large margin-right center-aligned">
+        <span className="flexbox space-between margin-left-large margin-right center-aligned padding-top-small">
           {hasReporting && !!authRequestCount && (
             <a className="flexbox center-aligned margin-right-large" onClick={onShowAuthRequestDevicesClick}>
               <AddIcon fontSize="small" style={{ marginRight: 6 }} />
