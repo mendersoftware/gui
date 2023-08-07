@@ -122,6 +122,11 @@ export const preformatWithRequestID = (res, failMsg) => {
   return failMsg;
 };
 
+export const yes = () => true;
+export const canAccess = yes;
+
+export const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && version !== 'next' ? 'master' : version);
+
 export const versionCompare = (v1, v2) => {
   const partsV1 = `${v1}`.split('.');
   const partsV2 = `${v2}`.split('.');

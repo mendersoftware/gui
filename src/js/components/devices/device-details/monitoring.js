@@ -63,7 +63,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
 
   useEffect(() => {
-    dispatch(getDeviceAlerts(device.id, alertListState));
+    dispatch(getDeviceAlerts({ id: device.id, config: alertListState }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [device.id, dispatch, pageNo, pageLength]);
 

@@ -165,7 +165,7 @@ export const GlobalSettingsDialog = ({
 
   const onNotificationSettingsClick = ({ target: { checked } }, channel) => {
     setChannelSettings({ ...channelSettings, channel: { enabled: !checked } });
-    onChangeNotificationSetting(!checked, channel);
+    onChangeNotificationSetting({ enabled: !checked, channel });
   };
 
   const onChangeOfflineIntervalUnit = ({ target: { value } }) => setCurrentIntervalUnit(value);

@@ -21,7 +21,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
 
-import { setSnackbar, setVersionInfo } from '../actions/appActions';
+import { setSnackbar, setVersionInformation } from '../actions/appActions';
 import { TIMEOUTS, canAccess } from '../constants/appConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities, getVersionInformation } from '../selectors';
@@ -111,7 +111,7 @@ const VersionInfo = () => {
       setClicks(0);
     }, TIMEOUTS.threeSeconds);
     if (clicks > 5) {
-      dispatch(setVersionInfo({ Integration: 'next' }));
+      dispatch(setVersionInformation({ Integration: 'next' }));
     }
     onVersionClick();
   };

@@ -312,7 +312,7 @@ export const Authorized = ({
   useEffect(() => {
     Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState })));
     availableIssueOptions[DEVICE_ISSUE_OPTIONS.authRequests.key]
-      ? dispatch(getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] }))
+      ? dispatch(getIssueCountsByType({ type: DEVICE_ISSUE_OPTIONS.authRequests.key, options: { filters: [] } }))
       : undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIssues.join(''), JSON.stringify(availableIssueOptions), selectedState, selectedGroup, dispatch, JSON.stringify(filters)]);
