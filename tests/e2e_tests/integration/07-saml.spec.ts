@@ -70,8 +70,6 @@ test.describe('SAML Login via sso/id/login', () => {
     const { data: metadata, status } = await axios({ url: samlSettings.idp_url, method: 'GET' });
     expect(status).toBeGreaterThanOrEqual(200);
     expect(status).toBeLessThan(300);
-
-    console.log(`IdP metadata len=${metadata.length} loaded and uploading`);
     await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
 
     const isInitialized = await page.isVisible('text=Entity ID');
@@ -84,7 +82,6 @@ test.describe('SAML Login via sso/id/login', () => {
       // Click .view-lines
       await page.locator('.view-lines').click();
 
-      console.log('typing metadata');
       await page
         .locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]')
         .type(metadata.replace(/(?:\r\n|\r|\n)/g, ''), { delay: 0 });
@@ -93,7 +90,6 @@ test.describe('SAML Login via sso/id/login', () => {
       await page.screenshot({ 'path': 'saml-edit-saving.png' });
       // Click text=Save >> nth=1
       await page.locator('text=Save').nth(1).click();
-      console.log('typing metadata done. waiting for Entity ID to be present on page.');
       await page.waitForSelector('text=Entity ID');
     }
 

@@ -83,7 +83,6 @@ test.describe('Deployments', () => {
   });
 
   test('allows group deployments', async ({ loggedInPage: page }) => {
-    console.log(`allows group deployments`);
     await page.click(`a:has-text('Deployments')`);
     await page.click(`button:has-text('Create a deployment')`);
 
