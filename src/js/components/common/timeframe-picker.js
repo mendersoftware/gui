@@ -25,7 +25,7 @@ export const TimeframePicker = ({ onChange, ...props }) => {
   useEffect(() => {
     setEndDate(moment(props.endDate) > tonight ? tonight : moment(props.endDate));
     setStartDate(moment(props.startDate));
-  }, [props.tonight, props.endDate, props.startDate]);
+  }, [props.tonight, props.endDate, props.startDate, tonight]);
 
   const handleChangeStartDate = date => {
     let currentEndDate = endDate.clone();

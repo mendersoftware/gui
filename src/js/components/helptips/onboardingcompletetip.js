@@ -44,7 +44,7 @@ export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
       dispatch(setOnboardingComplete(true));
       clearTimeout(timer.current);
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <MenderTooltipClickable

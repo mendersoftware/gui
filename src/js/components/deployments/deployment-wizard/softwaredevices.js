@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
@@ -21,9 +22,12 @@ import { makeStyles } from 'tss-react/mui';
 import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
+import { getSystemDevices } from '../../../actions/deviceActions';
+import { getReleases } from '../../../actions/releaseActions';
 import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
 import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { stringToBoolean } from '../../../helpers';
+import { formatDeviceSearch } from '../../../utils/locationutils';
 import useWindowSize from '../../../utils/resizehook';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
 import InfoHint from '../../common/info-hint';
@@ -44,7 +48,7 @@ const hardCodedStyle = {
   }
 };
 
-export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
+export const getDevicesLink = ({ devices, filter, group, hasFullFiltering, name }) => {
   let devicesLink = '/devices';
   if (devices.length && (!name || isUUID(name))) {
     devicesLink = `${devicesLink}?id=${devices[0].id}`;
@@ -55,8 +59,8 @@ export const getDevicesLink = ({ devices, group, hasFullFiltering, name }) => {
       const { systemDeviceIds = [] } = devices[0];
       devicesLink = `${devicesLink}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
     }
-  } else if (group && group !== ALL_DEVICES) {
-    devicesLink = `${devicesLink}?inventory=group:eq:${group}`;
+  } else if (group || filter) {
+    devicesLink = `${devicesLink}?${formatDeviceSearch({ pageState: {}, filters: filter ? [filter] : [], selectedGroup: group })}`;
   }
   return devicesLink;
 };
@@ -85,7 +89,6 @@ export const ReleasesWarning = ({ lacksReleases }) => (
 
 export const Devices = ({
   deploymentObject,
-  getSystemDevices,
   groupRef,
   groupNames,
   hasDevices,
@@ -98,9 +101,11 @@ export const Devices = ({
   const { classes } = useStyles();
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
+  const dispatch = useDispatch();
 
-  const { deploymentDeviceCount = 0, devices = [], group = null } = deploymentObject;
-  const device = devices.length === 1 ? devices[0] : {};
+  const { deploymentDeviceCount = 0, devices = [], filter, group = null } = deploymentObject;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const device = useMemo(() => (devices.length === 1 ? devices[0] : {}), [devices.length]);
 
   useEffect(() => {
     const { attributes = {} } = device;
@@ -108,8 +113,9 @@ export const Devices = ({
     if (!device.id || !stringToBoolean(mender_is_gateway)) {
       return;
     }
-    getSystemDevices(device.id, { perPage: 500 });
-  }, [device.id, device.attributes?.mender_is_gateway]);
+    dispatch(getSystemDevices(device.id, { perPage: 500 }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [device.id, device.attributes?.mender_is_gateway, dispatch]);
 
   const deploymentSettingsUpdate = (e, value, reason) => {
     let update = { group: value };
@@ -120,7 +126,7 @@ export const Devices = ({
   };
 
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
-    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering });
+    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering, filter });
     let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
     let targetDeviceCount = deploymentDeviceCount;
     let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;
@@ -140,7 +146,7 @@ export const Devices = ({
       }
     }
     return { deviceText, devicesLink, targetDeviceCount, targetDevicesText };
-  }, [devices, group, idAttribute, deploymentDeviceCount]);
+  }, [devices, filter, group, hasFullFiltering, deploymentObject, idAttribute, deploymentDeviceCount, device]);
 
   return (
     <>
@@ -191,19 +197,11 @@ export const Devices = ({
   );
 };
 
-export const Software = ({
-  commonClasses,
-  deploymentObject,
-  getReleases,
-  releaseRef,
-  releases,
-  releasesById,
-  releaseSelectionLocked,
-  setDeploymentSettings
-}) => {
+export const Software = ({ commonClasses, deploymentObject, releaseRef, releases, releasesById, setDeploymentSettings }) => {
   const [isLoadingReleases, setIsLoadingReleases] = useState(!releases.length);
+  const dispatch = useDispatch();
   const { classes } = useStyles();
-  const { devices = [], release: deploymentRelease = null } = deploymentObject;
+  const { devices = [], release: deploymentRelease = null, releaseSelectionLocked } = deploymentObject;
   const device = devices.length ? devices[0] : undefined;
 
   useEffect(() => {
@@ -217,7 +215,8 @@ export const Software = ({
       releaseItems = releaseItems.filter(rel => rel.device_types_compatible.some(type => device.attributes.device_type.includes(type)));
     }
     return releaseItems;
-  }, [releases, device]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [device, releases]);
 
   const onReleaseSelectionChange = release => {
     if (release !== deploymentObject.release) {
@@ -227,7 +226,7 @@ export const Software = ({
 
   const onReleaseInputChange = inputValue => {
     setIsLoadingReleases(!releases.length);
-    return getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true }).finally(() => setIsLoadingReleases(false));
+    return dispatch(getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true })).finally(() => setIsLoadingReleases(false));
   };
 
   const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];

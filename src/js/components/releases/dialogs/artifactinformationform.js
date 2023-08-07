@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
@@ -47,11 +47,11 @@ export const VersionInformation = ({ creation = {}, onRemove, updateCreation }) 
 
   useEffect(() => {
     updateCreation({ finalStep: true });
-  }, []);
+  }, [updateCreation]);
 
   useEffect(() => {
     updateCreation({ fileSystem, softwareName, softwareVersion, isValid: fileSystem && softwareName && softwareVersion });
-  }, [fileSystem, softwareName, softwareVersion]);
+  }, [fileSystem, softwareName, softwareVersion, updateCreation]);
 
   return (
     <>
@@ -89,24 +89,27 @@ export const ArtifactInformation = ({ advanceOnboarding, creation = {}, deviceTy
       isValid: checkDestinationValidity(nextDestination) && selectedDeviceTypes.length && name,
       finalStep: false
     });
-  }, []);
+  }, [destination, name, onboardingState.complete, selectedDeviceTypes.length, updateCreation]);
 
   useEffect(() => {
     if (debouncedName.length) {
       advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_RELEASE_NAME);
     }
-  }, [debouncedName]);
+  }, [advanceOnboarding, debouncedName]);
 
-  const onSelectionChanged = ({ currentValue = '', selection = [] }) => {
-    if (currentValue.length > 3) {
-      advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
-    }
-    updateCreation({
-      customDeviceTypes: currentValue,
-      isValid: (currentValue.length || selection.length) && name && destination,
-      selectedDeviceTypes: selection
-    });
-  };
+  const onSelectionChanged = useCallback(
+    ({ currentValue = '', selection = [] }) => {
+      if (currentValue.length > 3) {
+        advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
+      }
+      updateCreation({
+        customDeviceTypes: currentValue,
+        isValid: (currentValue.length || selection.length) && name && destination,
+        selectedDeviceTypes: selection
+      });
+    },
+    [advanceOnboarding, destination, name, updateCreation]
+  );
 
   const onDestinationChange = ({ target: { value } }) =>
     updateCreation({ destination: value, isValid: checkDestinationValidity(value) && selectedDeviceTypes.length && name });

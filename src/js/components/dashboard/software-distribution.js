@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { BarChart as BarChartIcon } from '@mui/icons-material';
@@ -109,7 +109,7 @@ export const SoftwareDistribution = () => {
     if (hasReporting) {
       dispatch(getReportingLimits());
     }
-  }, []);
+  }, [dispatch, hasReporting]);
 
   useEffect(() => {
     if (hasReporting) {
@@ -117,7 +117,8 @@ export const SoftwareDistribution = () => {
       return;
     }
     dispatch(deriveReportsData());
-  }, [JSON.stringify(reports)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, hasReporting, JSON.stringify(reports)]);
 
   const addCurrentSelection = selection => {
     const newReports = [...reports, { ...defaultReports[0], ...selection }];
@@ -132,6 +133,10 @@ export const SoftwareDistribution = () => {
 
   const removeReport = removedReport => dispatch(saveUserSettings({ reports: reports.filter(report => report !== removedReport) }));
 
+  const onGetGroupDevices = useCallback((...args) => dispatch(getGroupDevices(...args)), [dispatch]);
+  const onGetDevicesInBounds = useCallback((...args) => dispatch(getDevicesInBounds(...args)), [dispatch]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const software = useMemo(() => listSoftware(hasReporting ? attributes : [rootfsImageVersion]), [JSON.stringify(attributes), hasReporting]);
 
   if (!isEnterprise) {
@@ -141,23 +146,25 @@ export const SoftwareDistribution = () => {
       </div>
     );
   }
-  const dispatchedGetGroupDevices = (...args) => dispatch(getGroupDevices(...args));
+
   return hasDevices ? (
     <div className="dashboard margin-bottom-large">
-      <MapWrapper
-        groups={groups}
-        groupNames={groupNames}
-        devicesById={devicesById}
-        getGroupDevices={dispatchedGetGroupDevices}
-        getDevicesInBounds={(...args) => dispatch(getDevicesInBounds(...args))}
-      />
+      {hasReporting && (
+        <MapWrapper
+          groups={groups}
+          groupNames={groupNames}
+          devicesById={devicesById}
+          getGroupDevices={onGetGroupDevices}
+          getDevicesInBounds={onGetDevicesInBounds}
+        />
+      )}
       {reports.map((report, index) => {
         const Component = reportTypes[report.type || defaultReportType];
         return (
           <Component
             key={`report-${report.group}-${index}`}
             data={reportsData[index]}
-            getGroupDevices={dispatchedGetGroupDevices}
+            getGroupDevices={onGetGroupDevices}
             groups={groups}
             onClick={() => removeReport(report)}
             onSave={change => onSaveChangedReport(change, index)}

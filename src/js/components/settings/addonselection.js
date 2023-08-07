@@ -43,6 +43,7 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
         accu.push({ ...addOn, name: addOnName, isEnabled });
         return accu;
       }, []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(addons), JSON.stringify(features)]
   );
 

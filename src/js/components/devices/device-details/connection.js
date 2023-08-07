@@ -124,7 +124,8 @@ export const DeviceConnection = ({ className = '', device, hasAuditlogs, socketC
       return accu;
     }, []);
     setAvailableTabs(allowedTabs);
-  }, [hasWriteAccess, canTroubleshoot]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasWriteAccess, canTroubleshoot, JSON.stringify(groupsPermissions), device.group]);
 
   const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
   return (
@@ -139,7 +140,7 @@ export const DeviceConnection = ({ className = '', device, hasAuditlogs, socketC
               if (item.component) {
                 Component = item.component;
               }
-              return <Component key={item.key} onClick={startTroubleshoot} disabled={!socketClosed} item={item} />;
+              return <Component key={item.key} onClick={startTroubleshoot} disabled={socketClosed} item={item} />;
             })}
           {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
             <Link

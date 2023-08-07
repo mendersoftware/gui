@@ -49,7 +49,7 @@ export const TablePaginationActions = ({ count, page = 0, onPageChange, rowsPerP
     if (newPage !== page + paginationIndex) {
       onPageChange(newPage);
     }
-  }, [debouncedPage]);
+  }, [count, debouncedPage, onPageChange, page, rowsPerPage]);
 
   const pages = Math.ceil(count / rowsPerPage);
 

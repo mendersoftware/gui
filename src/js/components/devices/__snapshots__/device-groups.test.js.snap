@@ -3,16 +3,17 @@
 exports[`DeviceGroups Component renders correctly 1`] = `
 "<div>
   <div
-    class="tab-container with-sub-panels margin-bottom-small"
-    style="padding: 0px; min-height: initial;"
+    class="tab-container with-sub-panels"
+    style="padding-top: 0px; padding-bottom: 45px; min-height: max-content; align-content: center;"
   >
     <h3
-      style="margin-bottom: 0px;"
+      class="flexbox center-aligned"
+      style="margin-bottom: 0px; margin-top: 0px; flex-wrap: wrap;"
     >
       Devices
     </h3>
-    <div
-      class="flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small"
+    <span
+      class="flexbox space-between margin-left-large margin-right center-aligned"
     >
       <div />
       <div
@@ -50,7 +51,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </button>
       </div>
-    </div>
+    </span>
   </div>
   <div
     class="tab-container with-sub-panels"

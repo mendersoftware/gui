@@ -20,7 +20,7 @@ export const ArtifactUploadConfirmation = ({ creation = {}, onRemove, updateCrea
 
   useEffect(() => {
     updateCreation({ finalStep: true, isValid: true });
-  }, []);
+  }, [updateCreation]);
 
   return <FileInformation file={file} type={type} onRemove={onRemove} />;
 };

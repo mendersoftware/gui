@@ -183,7 +183,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     socket.onopen = () => {
       setSocketInitialized(true);
     };
-  }, [sessionInitialized]);
+  }, [item.meta.session_id, sessionInitialized]);
 
   useEffect(() => {
     if (!socketInitialized) {
@@ -215,10 +215,10 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   useEffect(() => {
     if (isPlaying && bufferIndex < buffer.length) {
       if (bufferIndex === 0) {
-        xtermRef.current.terminal.reset();
+        xtermRef.current.terminal.current.reset();
       }
       if (buffer[bufferIndex].content) {
-        xtermRef.current.terminal.write(byteArrayToString(buffer[bufferIndex].content));
+        xtermRef.current.terminal.current.write(byteArrayToString(buffer[bufferIndex].content));
         setTimeout(() => setBufferIndex(bufferIndex + 1), 20);
       }
       if (buffer[bufferIndex].delay) {

@@ -244,7 +244,29 @@ exports[`Configuration Component renders correctly 1`] = `
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-7 {
+.emotion-6 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.1607rem;
+  color: #337a87;
+}
+
+.emotion-6 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-10 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 500;
@@ -252,7 +274,7 @@ exports[`Configuration Component renders correctly 1`] = `
   line-height: 1.57;
 }
 
-.emotion-8 {
+.emotion-11 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -333,13 +355,26 @@ exports[`Configuration Component renders correctly 1`] = `
         </b>
       </div>
       <div
-        class="flexbox "
+        class="flexbox clickable"
       >
         <div
           title="true"
         >
           true
         </div>
+        <svg
+          aria-hidden="true"
+          aria-label="Copy to clipboard"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-6"
+          data-mui-internal-clone-element="true"
+          data-testid="FileCopyOutlinedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
       <div
         class="align-right key muted"
@@ -349,13 +384,26 @@ exports[`Configuration Component renders correctly 1`] = `
         </b>
       </div>
       <div
-        class="flexbox "
+        class="flexbox clickable"
       >
         <div
           title="bar"
         >
           bar
         </div>
+        <svg
+          aria-hidden="true"
+          aria-label="Copy to clipboard"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-6"
+          data-mui-internal-clone-element="true"
+          data-testid="FileCopyOutlinedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
       <div
         class="align-right key muted"
@@ -365,13 +413,26 @@ exports[`Configuration Component renders correctly 1`] = `
         </b>
       </div>
       <div
-        class="flexbox "
+        class="flexbox clickable"
       >
         <div
           title="GMT+2"
         >
           GMT+2
         </div>
+        <svg
+          aria-hidden="true"
+          aria-label="Copy to clipboard"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-6"
+          data-mui-internal-clone-element="true"
+          data-testid="FileCopyOutlinedIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4H8c-1.1 0-1.99.9-1.99 2L6 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V11l-6-6zM8 21V7h6v5h5v9H8z"
+          />
+        </svg>
       </div>
     </div>
     <div
@@ -394,13 +455,13 @@ exports[`Configuration Component renders correctly 1`] = `
         </svg>
         <div>
           <h6
-            class="MuiTypography-root MuiTypography-subtitle2 emotion-7"
+            class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             style="text-transform: capitalize; text-align: left;"
           >
             Configuration up-to-date on the device
           </h6>
           <span
-            class="MuiTypography-root MuiTypography-caption muted emotion-8"
+            class="MuiTypography-root MuiTypography-caption muted emotion-11"
             style="text-transform: capitalize; text-align: left;"
           >
             Updated: 

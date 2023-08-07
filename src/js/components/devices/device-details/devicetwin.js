@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { CheckCircleOutlined, CloudUploadOutlined as CloudUpload, Refresh as RefreshIcon } from '@mui/icons-material';
@@ -21,6 +22,7 @@ import { makeStyles } from 'tss-react/mui';
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
 import pluralize from 'pluralize';
 
+import { getDeviceTwin, setDeviceTwin } from '../../../actions/deviceActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
@@ -137,7 +139,7 @@ const indentation = 4; // number of spaces, tab based indentation won't show in 
 
 const stringifyTwin = twin => JSON.stringify(twin, undefined, indentation) ?? '';
 
-export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }) => {
+export const DeviceTwin = ({ device, integration }) => {
   const [configured, setConfigured] = useState('');
   const [diffCount, setDiffCount] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -149,6 +151,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
   const [isSync, setIsSync] = useState(true);
   const editorRef = useRef(null);
   const { classes } = useStyles();
+  const dispatch = useDispatch();
 
   const externalProvider = EXTERNAL_PROVIDER[integration.provider];
   const { [integration.id]: deviceTwin = {} } = device.twinsByIntegration ?? {};
@@ -159,7 +162,8 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
     setConfigured(textContent);
     setUpdated(textContent);
     setReported(stringifyTwin(reportedTwin));
-  }, [open]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setReported(stringifyTwin(reportedTwin));
@@ -203,7 +207,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
     editorRef.current.modifiedEditor.getAction('editor.action.formatDocument').run();
     setUpdated(stringifyTwin(update));
     setErrorMessage('');
-    setDeviceTwin(device.id, integration, update).then(() => setIsEditing(false));
+    dispatch(setDeviceTwin(device.id, integration, update)).then(() => setIsEditing(false));
   };
 
   const onCancelClick = () => {
@@ -215,7 +219,7 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
 
   const onRefreshClick = () => {
     setIsRefreshing(true);
-    getDeviceTwin(device.id, integration).finally(() => setTimeout(() => setIsRefreshing(false), TIMEOUTS.halfASecond));
+    dispatch(getDeviceTwin(device.id, integration)).finally(() => setTimeout(() => setIsRefreshing(false), TIMEOUTS.halfASecond));
   };
 
   const onEditClick = () => setIsEditing(true);
@@ -303,10 +307,10 @@ export const DeviceTwin = ({ device, getDeviceTwin, integration, setDeviceTwin }
 
 export default DeviceTwin;
 
-export const IntegrationTab = ({ device, integrations, getDeviceTwin, setDeviceTwin }) => (
+export const IntegrationTab = ({ device, integrations }) => (
   <div>
     {integrations.map(integration => (
-      <DeviceTwin key={integration.id} device={device} integration={integration} getDeviceTwin={getDeviceTwin} setDeviceTwin={setDeviceTwin} />
+      <DeviceTwin key={integration.id} device={device} integration={integration} />
     ))}
   </div>
 );

@@ -84,19 +84,19 @@ export const SearchResult = ({ onToggleSearchResult, open = true }) => {
   useEffect(() => {
     const columnHeaders = getHeaders(columnSelection, routes.devices.defaultHeaders, idAttribute);
     setColumnHeaders(columnHeaders);
-  }, [columnSelection, idAttribute.attribute]);
+  }, [columnSelection, idAttribute, idAttribute.attribute]);
 
   useEffect(() => {
     if (!open && isSearching) {
       onToggleSearchResult();
     }
-  }, [open, isSearching]);
+  }, [open, isSearching, onToggleSearchResult]);
 
   useEffect(() => {
     if (open && !searchTerm) {
       onToggleSearchResult();
     }
-  }, [open, searchTerm]);
+  }, [onToggleSearchResult, open, searchTerm]);
 
   const onDeviceSelect = device => {
     dispatch(setDeviceListState({ selectedId: device.id }));

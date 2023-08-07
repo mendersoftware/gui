@@ -1,16 +1,18 @@
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Link } from 'react-router-dom';
 
+import { waitFor } from '@testing-library/dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState } from '../../../tests/mockData';
 import { mockAbortController } from '../../../tests/setupTests';
-import { SET_SNACKBAR, UPLOAD_PROGRESS } from '../constants/appConstants';
-import * as DeploymentConstants from '../constants/deploymentConstants';
+import { SET_SNACKBAR, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
+import * as DeploymentActions from './deploymentActions';
 import {
   addDevicesToGroup,
   addDynamicGroup,
@@ -56,6 +58,8 @@ import {
   updateDevicesAuth,
   updateDynamicGroup
 } from './deviceActions';
+
+const deploymentsSpy = jest.spyOn(DeploymentActions, 'getSingleDeployment');
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -835,8 +839,8 @@ describe('device retrieval ', () => {
 });
 
 const deviceConfig = {
-  configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-  reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
+  configured: { aNumber: 42, something: 'else', test: true },
+  reported: { aNumber: 42, something: 'else', test: true },
   updated_ts: defaultState.devices.byId.a1.updated_ts,
   reported_ts: '2019-01-01T09:25:01.000Z'
 };
@@ -869,11 +873,16 @@ describe('device config ', () => {
   });
   it('should allow single device config deployment', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: { ...defaultState.deployments.byId.d1, name: 'undefined' } }];
-    await store.dispatch(applyDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: { ...defaultState.devices.byId.a1, config: { deployment_id: '' } } }];
+    const result = store.dispatch(applyDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
+    await act(async () => jest.runAllTicks());
+    result.then(() => {
+      const storeActions = store.getActions();
+      expect(storeActions.length).toEqual(expectedActions.length);
+      expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    });
+    await waitFor(async () => expect(deploymentsSpy).toHaveBeenCalled(), { timeout: TIMEOUTS.threeSeconds });
+    deploymentsSpy.mockClear();
   });
 
   it('should allow setting device tags', async () => {
@@ -912,10 +921,7 @@ describe('troubleshooting related actions', () => {
         uploads: { 'mock-uuid': { cancelSource: mockAbortController, uploadProgress: 0 } }
       },
       { type: SET_SNACKBAR, snackbar: { message: 'Upload successful' } },
-      {
-        type: UPLOAD_PROGRESS,
-        uploads: {}
-      }
+      { type: UPLOAD_PROGRESS, uploads: {} }
     ];
     await store.dispatch(deviceFileUpload(defaultState.devices.byId.a1.id, '/tmp/file', 'file'));
     const storeActions = store.getActions();

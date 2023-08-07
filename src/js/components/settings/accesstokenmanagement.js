@@ -115,7 +115,7 @@ export const AccessTokenCreationDialog = ({ onCancel, generateToken, isEnterpris
     setHint(hint);
   }, [expirationTime]);
 
-  const onGenerateClick = useCallback(() => generateToken({ name, expiresIn: expirationTime }), [name, expirationTime]);
+  const onGenerateClick = useCallback(() => generateToken({ name, expiresIn: expirationTime }), [generateToken, name, expirationTime]);
 
   const onChangeExpirationTime = ({ target: { value } }) => setExpirationTime(value);
 
@@ -202,7 +202,7 @@ export const AccessTokenManagement = () => {
 
   useEffect(() => {
     dispatch(getTokens());
-  }, []);
+  }, [dispatch]);
 
   const toggleGenerateClick = () => {
     setCurrentToken(null);

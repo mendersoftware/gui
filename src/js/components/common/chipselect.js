@@ -37,7 +37,8 @@ export const ChipSelect = ({
 
   useEffect(() => {
     onChange({ currentValue: debouncedValue, selection: currentSelection });
-  }, [debouncedValue, JSON.stringify(currentSelection)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedValue, JSON.stringify(currentSelection), onChange]);
 
   // to allow device types to automatically be selected on entered ',' we have to filter the input and transform any completed device types (followed by a ',')
   // while also checking for duplicates and allowing complete resets of the input

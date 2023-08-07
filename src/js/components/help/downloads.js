@@ -245,7 +245,6 @@ const DocsLink = ({ title, ...remainder }) => (
 
 const DownloadableComponents = ({ locations, onMenuClick }) => {
   const onLocationClick = (location, title) => {
-    console.log(location);
     Tracking.event({ category: 'download', action: title });
     cookies.set('JWT', getToken(), { path: '/', maxAge: 60, domain: '.mender.io', sameSite: false });
     const link = document.createElement('a');
@@ -330,7 +329,6 @@ export const Downloads = () => {
   const handleToggle = event => {
     setAnchorEl(current => (current ? null : event?.currentTarget.parentElement));
     const location = event?.target.getAttribute('value') || '';
-    console.log(location);
     setCurrentLocation(location);
   };
 
@@ -341,7 +339,7 @@ export const Downloads = () => {
       copy(option.format({ location: currentLocation, tokens }));
       dispatch(setSnackbar('Copied to clipboard'));
     },
-    [currentLocation, tokens]
+    [currentLocation, dispatch, tokens]
   );
 
   return (

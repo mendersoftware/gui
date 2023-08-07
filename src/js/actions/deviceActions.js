@@ -294,7 +294,7 @@ export const selectGroup =
     const { cleanedFilters, groupName, selectedGroup, groupFilterLength } = getGroupFilters(group, getState().devices.groups, filters);
     const state = getState();
     if (state.devices.groups.selectedGroup === groupName && filters.length === 0 && !groupFilterLength) {
-      return;
+      return Promise.resolve();
     }
     let tasks = [];
     if (groupFilterLength) {
@@ -1070,9 +1070,13 @@ export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDef
   GeneralApi.post(`${deviceConfig}/${deviceId}/deploy`, configDeploymentConfiguration)
     .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, commonErrorFallback))
     .then(({ data }) => {
-      let tasks = [dispatch(getSingleDeployment(data.deployment_id))];
+      const device = getDeviceByIdSelector(getState(), deviceId);
+      let tasks = [
+        dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, config: { ...device.config, deployment_id: '' } } }),
+        new Promise(resolve => setTimeout(() => resolve(dispatch(getSingleDeployment(data.deployment_id))), TIMEOUTS.oneSecond))
+      ];
       if (isDefault) {
-        const { previous } = getState().users.globalSettings.defaultDeviceConfig;
+        const { previous } = getState().users.globalSettings.defaultDeviceConfig ?? {};
         tasks.push(dispatch(saveGlobalSettings({ defaultDeviceConfig: { current: config, previous } })));
       }
       return Promise.all(tasks);

@@ -12,17 +12,31 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import ConfigImportDialog from './configimportdialog';
 
+const mockStore = configureStore([thunk]);
+
+let store;
+
 describe('ConfigImportDialog Component', () => {
+  beforeEach(() => {
+    store = mockStore({ ...defaultState });
+  });
   it('renders correctly', async () => {
-    const { baseElement } = render(<ConfigImportDialog onSubmit={jest.fn} onCancel={jest.fn} setSnackbar={jest.fn} />);
+    const { baseElement } = render(
+      <Provider store={store}>
+        <ConfigImportDialog onSubmit={jest.fn} onCancel={jest.fn} setSnackbar={jest.fn} />
+      </Provider>
+    );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -33,7 +47,11 @@ describe('ConfigImportDialog Component', () => {
     const submitMock = jest.fn();
     const menderFile = new File(['testContent plain'], 'test.pem');
 
-    const ui = <ConfigImportDialog onSubmit={submitMock} onCancel={jest.fn} setSnackbar={jest.fn} />;
+    const ui = (
+      <Provider store={store}>
+        <ConfigImportDialog onSubmit={submitMock} onCancel={jest.fn} setSnackbar={jest.fn} />
+      </Provider>
+    );
     const { rerender } = render(ui);
     expect(screen.getByText(/the current default/i)).toBeInTheDocument();
     await user.click(screen.getByText(/the current default/i));

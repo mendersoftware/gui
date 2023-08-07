@@ -11,7 +11,9 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -83,6 +85,7 @@ export const Deployments = () => {
     }
     setLocationParams({ deploymentObject, pageState: selectionState });
   }, [
+    JSON.stringify(deploymentObject),
     selectionState.selectedId,
     selectionState.general.state,
     selectionState.general.showCreationDialog,
@@ -97,7 +100,8 @@ export const Deployments = () => {
     selectionState[DEPLOYMENT_STATES.inprogress].page,
     selectionState[DEPLOYMENT_STATES.inprogress].perPage,
     selectionState[DEPLOYMENT_STATES.pending].page,
-    selectionState[DEPLOYMENT_STATES.pending].perPage
+    selectionState[DEPLOYMENT_STATES.pending].perPage,
+    setLocationParams
   ]);
 
   useEffect(() => {
@@ -109,10 +113,10 @@ export const Deployments = () => {
     const { devices: selectedDevices = [], release: releaseName } = deploymentObject;
     const release = releaseName ? { ...(releases[releaseName] ?? { Name: releaseName }) } : undefined;
     const devices = selectedDevices.length ? selectedDevices.map(device => ({ ...device, ...devicesById[device.id] })) : [];
-    setDeploymentObject({ devices, release });
+    setDeploymentObject({ devices, release, releaseSelectionLocked: !!release });
     dispatch(setDeploymentsState({ selectedId: selectedId[0], ...remainder }));
     isInitialized.current = true;
-  }, []);
+  }, [dispatch, isEnterprise]);
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
     const { artifact_name, name, update_control_map = {} } = deployment;
@@ -175,6 +179,8 @@ export const Deployments = () => {
 
   const onCreationShow = () => dispatch(setDeploymentsState({ general: { showCreationDialog: true } }));
 
+  const setDeploymentSettings = useCallback(change => setDeploymentObject(current => ({ ...current, ...change })), []);
+
   let onboardingComponent = null;
   // the pastCount prop is needed to trigger the rerender as the change in past deployments would otherwise not be noticed on this view
   if (pastCount && tabsRef.current && !reportDialog) {
@@ -212,7 +218,7 @@ export const Deployments = () => {
         onDismiss={onCreationDismiss}
         deploymentObject={deploymentObject}
         onScheduleSubmit={onScheduleSubmit}
-        setDeploymentObject={setDeploymentObject}
+        setDeploymentSettings={setDeploymentSettings}
       />
       {!reportDialog && onboardingComponent}
     </>

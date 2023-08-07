@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -23,10 +23,10 @@ import pluralize from 'pluralize';
 
 import { setSnackbar } from '../../actions/appActions';
 import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
-import { createArtifact, getReleases, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
+import { getReleases, selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getDeviceTypes, getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -85,7 +85,7 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
   const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
   const { classes } = useStyles();
 
-  const searchUpdated = searchTerm => setReleasesListState({ searchTerm });
+  const searchUpdated = useCallback(searchTerm => setReleasesListState({ searchTerm }), [setReleasesListState]);
 
   const onTabChanged = (e, tab) => setReleasesListState({ tab });
 
@@ -139,14 +139,12 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
 
 export const Releases = () => {
   const demoArtifactLink = useSelector(state => state.app.demoArtifactLink);
-  const deviceTypes = useSelector(getDeviceTypes);
   const features = useSelector(getFeatures);
   const hasReleases = useSelector(
     state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
   );
   const onboardingState = useSelector(getOnboardingState);
   const { artifactIncluded } = onboardingState;
-  const pastCount = useSelector(state => state.deployments.byStatus.finished.total);
   const releases = useSelector(getReleasesList);
   const releasesListState = useSelector(state => state.releases.releasesList);
   const releaseTags = useSelector(state => state.releases.releaseTags);
@@ -172,14 +170,8 @@ export const Releases = () => {
       return;
     }
     setLocationParams({ pageState: { ...releasesListState, selectedRelease: selectedRelease.Name } });
-  }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, tab, JSON.stringify(selectedTags)]);
-
-  useEffect(() => {
-    dispatch(setReleasesListState({ selectedTags: locationParams.tags }));
-    if (locationParams.selectedRelease) {
-      dispatch(selectRelease(locationParams.selectedRelease));
-    }
-  }, [JSON.stringify(locationParams.tags), locationParams.selectedRelease]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, setLocationParams, tab, JSON.stringify(selectedTags)]);
 
   useEffect(() => {
     if (!onboardingState.progress || onboardingState.complete) {
@@ -191,7 +183,7 @@ export const Releases = () => {
     if (selectedRelease.Name) {
       dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING));
     }
-  }, [onboardingState.complete, onboardingState.progress, releases.length, selectedRelease.Name]);
+  }, [dispatch, onboardingState.complete, onboardingState.progress, releases.length, selectedRelease.Name]);
 
   useEffect(() => {
     const { selectedRelease, tags, ...remainder } = locationParams;
@@ -204,7 +196,8 @@ export const Releases = () => {
     return () => {
       clearInterval(artifactTimer.current);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(locationParams)]);
 
   const onUploadClick = () => {
     if (releases.length) {
@@ -226,6 +219,11 @@ export const Releases = () => {
     setSelectedFile(selectedFile);
     setShowAddArtifactDialog(true);
   };
+
+  const onHideAddArtifactDialog = () => setShowAddArtifactDialog(false);
+
+  const onSetReleasesListState = useCallback(state => dispatch(setReleasesListState(state)), [dispatch]);
+  const onReleaseSelect = useCallback(id => dispatch(selectRelease(id)), [dispatch]);
 
   let uploadArtifactOnboardingComponent = null;
   if (!onboardingState.complete && uploadButtonRef.current) {
@@ -260,17 +258,18 @@ export const Releases = () => {
           hasReleases={hasReleases}
           onUploadClick={onUploadClick}
           releasesListState={releasesListState}
-          setReleasesListState={state => dispatch(setReleasesListState(state))}
+          setReleasesListState={onSetReleasesListState}
+          uploadButtonRef={uploadButtonRef}
         />
         {hasReleases ? (
           <ContentComponent
             artifactIncluded={artifactIncluded}
             features={features}
             onboardingState={onboardingState}
-            onSelect={id => dispatch(selectRelease(id))}
+            onSelect={onReleaseSelect}
             releases={releases}
             releasesListState={releasesListState}
-            setReleasesListState={state => dispatch(setReleasesListState(state))}
+            setReleasesListState={onSetReleasesListState}
             tenantCapabilities={tenantCapabilities}
           />
         ) : (
@@ -287,19 +286,7 @@ export const Releases = () => {
       <ReleaseDetails />
       {!showAddArtifactDialog && uploadArtifactOnboardingComponent}
       {showAddArtifactDialog && (
-        <AddArtifactDialog
-          advanceOnboarding={step => dispatch(advanceOnboarding(step))}
-          createArtifact={(meta, file) => dispatch(createArtifact(meta, file))}
-          deviceTypes={deviceTypes}
-          onboardingState={onboardingState}
-          pastCount={pastCount}
-          releases={releases}
-          setSnackbar={(...args) => dispatch(setSnackbar(...args))}
-          uploadArtifact={(meta, file) => dispatch(uploadArtifact(meta, file))}
-          onCancel={() => setShowAddArtifactDialog(false)}
-          onUploadStarted={() => setShowAddArtifactDialog(false)}
-          selectedFile={selectedFile}
-        />
+        <AddArtifactDialog releases={releases} onCancel={onHideAddArtifactDialog} onUploadStarted={onHideAddArtifactDialog} selectedFile={selectedFile} />
       )}
     </div>
   );

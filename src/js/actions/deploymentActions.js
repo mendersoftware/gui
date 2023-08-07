@@ -7,6 +7,7 @@ import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS, RECEIVE_DEVICE } from '../constants/deviceConstants';
 import { deepCompare, isEmpty, standardizePhases, startTimeSort } from '../helpers';
+import { getDevicesById } from '../selectors';
 import Tracking from '../tracking';
 import { getDeviceAuth, getDeviceById } from './deviceActions';
 import { saveGlobalSettings } from './userActions';
@@ -183,7 +184,7 @@ export const getDeploymentDevices =
           totalDeviceCount: Number(response.headers[headerNames.total])
         })
       ];
-      const devicesById = getState().devices.byId;
+      const devicesById = getDevicesById(getState());
       // only update those that have changed & lack data
       const lackingData = selectedDeviceIds.reduce((accu, deviceId) => {
         const device = devicesById[deviceId];
@@ -265,8 +266,7 @@ export const getSingleDeployment = id => (dispatch, getState) =>
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${deploymentId}/devices/${deviceId}/log`)
     .catch(e => {
-      console.log('no log here');
-      console.log(e);
+      console.log('no log here', e);
       return Promise.reject();
     })
     .then(({ data: log }) => {

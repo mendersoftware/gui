@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -127,6 +127,16 @@ export const Header = ({ mode }) => {
   const dispatch = useDispatch();
   const deviceTimer = useRef();
 
+  const updateUsername = useCallback(() => {
+    const userId = decodeSessionToken(getToken());
+    if (gettingUser || !userId) {
+      return;
+    }
+    setGettingUser(true);
+    // get current user
+    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
+  }, [dispatch, gettingUser]);
+
   useEffect(() => {
     if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
       updateUsername();
@@ -140,7 +150,7 @@ export const Header = ({ mode }) => {
         dispatch(setFirstLoginAfterSignup(false));
       }
     }
-  }, [sessionId, user.id, user.email, gettingUser, loggingOut]);
+  }, [sessionId, user.id, user.email, gettingUser, loggingOut, user, hasTrackingEnabled, organization, updateUsername, firstLoginAfterSignup, dispatch]);
 
   useEffect(() => {
     const showOfferCookie = cookies.get('offer') === currentOffer.name;
@@ -150,17 +160,7 @@ export const Header = ({ mode }) => {
     return () => {
       clearInterval(deviceTimer.current);
     };
-  }, []);
-
-  const updateUsername = () => {
-    const userId = decodeSessionToken(getToken());
-    if (gettingUser || !userId) {
-      return;
-    }
-    setGettingUser(true);
-    // get current user
-    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
-  };
+  }, [dispatch]);
 
   const onLogoutClick = () => {
     setGettingUser(false);

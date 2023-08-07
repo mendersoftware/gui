@@ -603,7 +603,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
           aria-hidden="true"
           class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-5"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
       </div>
@@ -699,7 +699,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             aria-hidden="true"
             class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-5"
             readonly=""
-            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
             tabindex="-1"
           />
         </div>
@@ -729,7 +729,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             aria-hidden="true"
             class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-5"
             readonly=""
-            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
             tabindex="-1"
           />
         </div>
@@ -759,7 +759,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             aria-hidden="true"
             class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-5"
             readonly=""
-            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
             tabindex="-1"
           />
         </div>
@@ -789,7 +789,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             aria-hidden="true"
             class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputMultiline emotion-5"
             readonly=""
-            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+            style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
             tabindex="-1"
           />
         </div>

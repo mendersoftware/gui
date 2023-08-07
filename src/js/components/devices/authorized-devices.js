@@ -201,7 +201,7 @@ export const Authorized = ({
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
-  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
   const {
     refreshTrigger,
@@ -241,18 +241,25 @@ export const Authorized = ({
       clearInterval(timer.current);
       clearAllRetryTimers(dispatchedSetSnackbar);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, dispatchedSetSnackbar]);
 
   useEffect(() => {
     const columnHeaders = getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
     setColumnHeaders(columnHeaders);
-  }, [columnSelection, selectedState, idAttribute.attribute]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columnSelection, idAttribute.attribute, currentSelectedState.defaultHeaders, openSettingsDialog]);
 
   useEffect(() => {
     // only set state after all devices id data retrieved
     setIsInitialized(isInitialized => isInitialized || (settingsInitialized && devicesInitialized && pageLoading === false));
     setDevicesInitialized(devicesInitialized => devicesInitialized || pageLoading === false);
   }, [settingsInitialized, devicesInitialized, pageLoading]);
+
+  const onDeviceStateSelectionChange = useCallback(
+    newState => dispatch(setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger })),
+    [dispatch, refreshTrigger]
+  );
 
   useEffect(() => {
     if (onboardingState.complete) {
@@ -279,7 +286,8 @@ export const Authorized = ({
         !!notification && dispatchedSetSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
       }, TIMEOUTS.debounceDefault);
     }
-  }, [acceptedCount, allCount, pendingCount, onboardingState.complete]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [acceptedCount, allCount, pendingCount, onboardingState.complete, dispatch, onDeviceStateSelectionChange, dispatchedSetSnackbar]);
 
   useEffect(() => {
     setShowFilters(false);
@@ -290,7 +298,7 @@ export const Authorized = ({
     return dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger })).catch(err =>
       setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshLength, dispatchedSetSnackbar)
     );
-  }, [refreshTrigger, selectedState]);
+  }, [dispatch, dispatchedSetSnackbar, refreshTrigger, selectedState]);
 
   useEffect(() => {
     if (!devicesInitialized) {
@@ -299,14 +307,15 @@ export const Authorized = ({
     const refreshLength = deviceRefreshTimes[selectedState] ?? deviceRefreshTimes.default;
     clearInterval(timer.current);
     timer.current = setInterval(() => refreshDevices(), refreshLength);
-  }, [devicesInitialized, selectedState]);
+  }, [devicesInitialized, refreshDevices, selectedState]);
 
   useEffect(() => {
     Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState })));
     availableIssueOptions[DEVICE_ISSUE_OPTIONS.authRequests.key]
       ? dispatch(getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] }))
       : undefined;
-  }, [selectedIssues, availableIssueOptions, selectedState, selectedGroup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedIssues.join(''), JSON.stringify(availableIssueOptions), selectedState, selectedGroup, dispatch, JSON.stringify(filters)]);
 
   /*
    * Devices
@@ -363,8 +372,6 @@ export const Authorized = ({
 
   const onFilterChange = () => handlePageChange(1);
 
-  const onDeviceStateSelectionChange = newState => dispatch(setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger }));
-
   const setDetailsTab = detailsTab => dispatch(setDeviceListState({ detailsTab, setOnly: true }));
 
   const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) =>
@@ -379,19 +386,22 @@ export const Authorized = ({
 
   const onToggleCustomizationClick = () => setShowCustomization(toggle);
 
-  const onChangeColumns = (changedColumns, customColumnSizes) => {
-    const { columnSizes, selectedAttributes } = calculateColumnSelectionSize(changedColumns, customColumnSizes);
-    dispatch(updateUserColumnSettings(columnSizes));
-    dispatch(saveUserSettings({ columnSelection: changedColumns }));
-    // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
-    dispatch(setDeviceListState({ selectedAttributes }));
-    setShowCustomization(false);
-  };
+  const onChangeColumns = useCallback(
+    (changedColumns, customColumnSizes) => {
+      const { columnSizes, selectedAttributes } = calculateColumnSelectionSize(changedColumns, customColumnSizes);
+      dispatch(updateUserColumnSettings(columnSizes));
+      dispatch(saveUserSettings({ columnSelection: changedColumns }));
+      // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
+      dispatch(setDeviceListState({ selectedAttributes }));
+      setShowCustomization(false);
+    },
+    [dispatch]
+  );
 
   const onExpandClick = (device = {}) => {
     dispatchedSetSnackbar('');
     const { attributes = {}, id, status } = device;
-    dispatch(setDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id }));
+    dispatch(setDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id, detailsTab: deviceListState.detailsTab || 'identity' }));
     if (!onboardingState.complete) {
       dispatch(advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING));
       if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
@@ -401,6 +411,8 @@ export const Authorized = ({
   };
 
   const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
+
+  const onCloseExpandedDevice = useCallback(() => dispatch(setDeviceListState({ selectedId: undefined, detailsTab: '' })), [dispatch]);
 
   const actionCallbacks = {
     onAddDevicesToGroup: addDevicesToGroup,
@@ -513,7 +525,7 @@ export const Authorized = ({
       <ExpandedDevice
         actionCallbacks={actionCallbacks}
         deviceId={openedDevice}
-        onClose={() => dispatch(setDeviceListState({ selectedId: undefined }))}
+        onClose={onCloseExpandedDevice}
         setDetailsTab={setDetailsTab}
         tabSelection={tabSelection}
       />

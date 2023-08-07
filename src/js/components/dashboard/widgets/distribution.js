@@ -110,6 +110,7 @@ const BarChart = ({ data, events }) => {
     return () => {
       clearTimeout(timer.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(data)]);
 
   const { eventHandlers = {} } = events[0];
@@ -235,13 +236,14 @@ export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onS
     setChartType(chartTypeSelection);
     setRemoving(false);
     getGroupDevices(groupSelection, { page: 1, perPage: 1 });
-  }, [attributeSelection, groupSelection, chartTypeSelection, softwareSelection]);
+  }, [attributeSelection, groupSelection, chartTypeSelection, softwareSelection, getGroupDevices]);
 
   const { distribution, totals } = useMemo(() => {
     if (isEmpty(data)) {
       return { distribution: [], totals: [] };
     }
     return initDistribution({ data, theme });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(data), JSON.stringify(selection)]);
 
   const onSliceClick = useCallback(
@@ -251,7 +253,7 @@ export const DistributionReport = ({ data, getGroupDevices, groups, onClick, onS
       }
       navigate(`/devices/accepted?inventory=${group ? `group:eq:${group}&` : ''}${ensureVersionString(software, attributeSelection)}:eq:${target}`);
     },
-    [attributeSelection, group, software]
+    [attributeSelection, group, navigate, software]
   );
 
   const toggleRemoving = () => setRemoving(toggle);

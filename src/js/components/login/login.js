@@ -154,13 +154,13 @@ export const Login = () => {
     return () => {
       dispatch(setSnackbar(''));
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (currentUser.id) {
       dispatch(setSnackbar(''));
     }
-  }, [currentUser]);
+  }, [currentUser, dispatch]);
 
   const onLoginClick = useCallback(
     loginData => {
@@ -172,7 +172,7 @@ export const Login = () => {
         }
       });
     },
-    [noExpiry]
+    [dispatch, noExpiry]
   );
 
   const onOAuthClick = ({ target: { textContent } }) => {

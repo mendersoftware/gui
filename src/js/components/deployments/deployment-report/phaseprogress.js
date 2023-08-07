@@ -188,7 +188,7 @@ export const PhaseProgress = ({ className = '', deployment = {}, onAbort, onUpda
       return;
     }
     setIsLoading(false);
-  }, [status]);
+  }, [isLoading, status]);
 
   const onAbortClick = () => {
     setShouldAbort(false);

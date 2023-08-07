@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
@@ -31,12 +31,13 @@ export const options = {
 // only matching absolute paths, so: /here/there - but not ../here or ./here or here/there
 const unixPathRegex = new RegExp('(\\/([^\\0\\s!$`&*()\\[\\]+\'":;\\\\])+)');
 
-export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar, socketInitialized, textInput, xtermRef, ...xtermProps }) => {
+export const Terminal = ({ onDownloadClick, sendMessage, setSnackbar, socketInitialized, textInput, xtermRef, ...xtermProps }) => {
   const [dimensions, setDimensions] = useState({});
   const [isVisible, setIsVisible] = useState(false);
   const size = useWindowSize();
 
-  const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting));
+  const observer = useMemo(() => new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting)), []);
+  const addons = useMemo(() => [fitAddon], []);
 
   const tryFit = useCallback(() => {
     try {
@@ -44,33 +45,33 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
     } catch {
       setSnackbar('Fit not possible, terminal not yet visible', TIMEOUTS.fiveSeconds);
     }
-  }, [fitAddon, setSnackbar]);
+  }, [setSnackbar]);
 
   useEffect(() => {
     if (!socketInitialized) {
       return;
     }
     observer.observe(xtermRef.current.terminalRef.current);
-    tryFit();
     // Remove the observer as soon as the component is unmounted
     return () => {
       observer.disconnect();
     };
-  }, [socketInitialized, tryFit]);
+  }, [observer, sendMessage, socketInitialized, xtermRef]);
 
   useEffect(() => {
-    if (!socketInitialized || !xtermRef.current?.terminal || sessionId) {
+    if (!socketInitialized || !xtermRef.current?.terminal?.current) {
       return;
     }
-    xtermRef.current.terminal.reset();
+    xtermRef.current.terminal.current.reset();
     const webLinksAddon = new WebLinksAddon((e, link) => onDownloadClick(link), { urlRegex: unixPathRegex }, true);
-    xtermRef.current.terminal.loadAddon(webLinksAddon);
+    xtermRef.current.terminal.current.loadAddon(webLinksAddon);
     tryFit();
     const { rows = 40, cols = 80 } = fitAddon.proposeDimensions() || {};
-    sendMessage({ typ: MessageTypes.New, props: { terminal_height: rows, terminal_width: cols } });
+    sendMessage({ typ: MessageTypes.Resize, props: { terminal_height: rows, terminal_width: cols } });
     setDimensions({ rows, cols });
-    xtermRef.current.terminal.focus();
-  }, [sessionId, socketInitialized, tryFit, xtermRef.current]);
+    xtermRef.current.terminal.current.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onDownloadClick, socketInitialized, tryFit, sendMessage]);
 
   useEffect(() => {
     if (!socketInitialized || !xtermRef.current.terminal || !isVisible) {
@@ -86,18 +87,18 @@ export const Terminal = ({ onDownloadClick, sendMessage, sessionId, setSnackbar,
       });
       setDimensions(newDimensions);
     }
-  }, [size, isVisible]);
+  }, [size, isVisible, socketInitialized, xtermRef, dimensions.rows, dimensions.cols, sendMessage]);
 
   useEffect(() => {
     if (!socketInitialized || !xtermRef.current.terminal || !textInput) {
       return;
     }
-    xtermRef.current.terminal.paste(textInput);
-  }, [socketInitialized, xtermRef.current, textInput]);
+    xtermRef.current.terminal.current.paste(textInput);
+  }, [socketInitialized, textInput, xtermRef]);
 
-  const onData = data => sendMessage({ typ: MessageTypes.Shell, body: data });
+  const onData = useCallback(data => sendMessage({ typ: MessageTypes.Shell, body: data }), [sendMessage]);
 
-  return <XTerm xtermRef={xtermRef} addons={[fitAddon]} options={options} onData={onData} {...xtermProps} />;
+  return <XTerm xtermRef={xtermRef} addons={addons} options={options} onData={onData} {...xtermProps} />;
 };
 
 export default Terminal;

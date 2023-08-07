@@ -57,7 +57,7 @@ const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = {
       webhookConfig = { ...remainder, credentials: { ...credentials, [EXTERNAL_PROVIDER.webhook.credentialsType]: { url } } };
     }
     onSubmit(webhookConfig);
-  }, [description, editing, id, secret, url]);
+  }, [description, editing, id, onSubmit, secret, url]);
 
   const secretInputTip = editing ? 'Cannot edit webhook secrets after they have been saved' : 'The secret has to be entered as a hexadecimal string';
   const descriptionInput = (

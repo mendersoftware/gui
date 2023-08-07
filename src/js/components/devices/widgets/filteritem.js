@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Help as HelpIcon, HighlightOff as HighlightOffIcon } from '@mui/icons-material';
 // material ui
@@ -24,7 +24,6 @@ import AttributeAutoComplete from './attribute-autocomplete';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
 
-let timer;
 const filterOptionsByPlan = {
   os: { $eq: { title: 'equals' } },
   professional: DEVICE_FILTERING_OPTIONS,
@@ -49,10 +48,11 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
   const [operator, setOperator] = useState(filter.operator || '$eq');
   const [scope, setScope] = useState(filter.scope || defaultScope);
   const [reset, setReset] = useState(true);
+  const timer = useRef();
 
   useEffect(() => {
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timer.current);
     };
   }, []);
 
@@ -68,11 +68,11 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
     setValue(filter.value);
     setOperator(filter.operator);
     setScope(filter.scope);
-  }, [filter.key]);
+  }, [filter.key, filter.operator, filter.scope, filter.value]);
 
   useEffect(() => {
-    clearTimeout(timer);
-    timer = setTimeout(
+    clearTimeout(timer.current);
+    timer.current = setTimeout(
       () =>
         key && (value || operator.includes('exists'))
           ? onSelect({
@@ -84,7 +84,7 @@ export const FilterItem = ({ attributes, filter, onRemove, onSelect, plan }) => 
           : null,
       TIMEOUTS.debounceDefault
     );
-  }, [key, operator, scope, value]);
+  }, [key, onSelect, operator, scope, value]);
 
   const updateFilterKey = ({ key, scope }) => {
     setKey(key);

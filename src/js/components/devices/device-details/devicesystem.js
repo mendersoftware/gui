@@ -64,13 +64,15 @@ export const DeviceSystem = ({ columnSelection, device, onConnectToGatewayClick,
     const columnHeaders = getHeaders(columnSelection, routes.allDevices.defaultHeaders, idAttribute, openSettingsDialog);
     setColumnHeaders(columnHeaders);
     setHeaderKeys(columnHeaders.map(({ attribute: { name, scope } }) => `${name}-${scope}`).join('-'));
-  }, [columnSelection, idAttribute.attribute]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columnSelection, idAttribute.attribute, openSettingsDialog]);
 
   useEffect(() => {
     if (device.attributes) {
       dispatch(getSystemDevices(device.id, { page, perPage, sortOptions }));
     }
-  }, [device.id, device.attributes?.mender_is_gateway, page, perPage, sortOptions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, device.id, device.attributes?.mender_is_gateway, page, perPage, sortOptions]);
 
   const onDeviceClick = (device = {}) => navigate(`/devices/${device.status}?id=${device.id}&open=true&tab=identity`);
 

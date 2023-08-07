@@ -35,19 +35,7 @@ const useStyles = makeStyles()(theme => ({
   fileDestination: { marginTop: theme.spacing(2) }
 }));
 
-export const FileTransfer = ({
-  deviceId,
-  downloadPath,
-  file,
-  onDownload,
-  onUpload,
-  setFile,
-  setDownloadPath,
-  setSnackbar,
-  setUploadPath,
-  uploadPath,
-  userCapabilities
-}) => {
+export const FileTransfer = ({ deviceId, downloadPath, file, onDownload, onUpload, setFile, setDownloadPath, setUploadPath, uploadPath, userCapabilities }) => {
   const { classes } = useStyles();
   const [currentTab, setCurrentTab] = useState(tabs[0].key);
   const [isValidDestination, setIsValidDestination] = useState(true);
@@ -68,6 +56,7 @@ export const FileTransfer = ({
     }, []);
     setAvailableTabs(availableTabs);
     setCurrentTab(availableTabs[0].key);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(userCapabilities)]);
 
   const onPasteDownloadClick = async () => {
@@ -112,7 +101,6 @@ export const FileTransfer = ({
                   Drag here or <a>browse</a> to upload a file
                 </>
               }
-              setSnackbar={setSnackbar}
               style={{ maxWidth }}
             />
             <div className={classes.inputWrapper}>

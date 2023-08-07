@@ -46,7 +46,7 @@ export const DeploymentCompleteTip = ({ anchor, targetUrl }) => {
   useEffect(() => {
     dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
     Tracking.event({ category: 'onboarding', action: onboardingSteps.DEPLOYMENTS_PAST_COMPLETED });
-  }, []);
+  }, [dispatch]);
 
   const onClick = () => {
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;

@@ -75,7 +75,7 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
       return setIsEditing(false);
     }
     onCancel();
-  }, [config, isEditing, onCancel]);
+  }, [config, hasSSOConfig, isEditing, onCancel, setFileContent]);
 
   const onSubmitClick = () => {
     onSave();

@@ -72,6 +72,7 @@ const DeliveryStatus = ({ entry, webhook = {} }) => {
       return { code: status.status_code, signal: status.success ? 'green' : 'red' };
     }
     return { code: 418, signal: 'disabled' };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(delivery_statuses), webhook.id]);
 
   return (
@@ -118,7 +119,7 @@ const WebhookActivity = ({ events = [], getWebhookEvents, eventTotal, webhook })
 
   useEffect(() => {
     getWebhookEvents({ page, perPage: defaultPerPage });
-  }, [page]);
+  }, [getWebhookEvents, page]);
 
   return (
     <div className={classes.activityList}>
