@@ -26,13 +26,13 @@ test.describe('Login', () => {
     test('Logs in using UI', async ({ context, page, password, username }) => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       // enter valid username and password
-      await page.waitForSelector(selectors.email);
-      await page.click(selectors.email);
-      await page.fill(selectors.email, username);
-      await page.waitForSelector(selectors.password);
-      await page.focus(selectors.password);
-      await page.fill(selectors.password, password);
-      await page.click(`:is(button:has-text('Log in'))`);
+      const emailInput = await page.getByPlaceholder(/email/i);
+      await emailInput.click();
+      await emailInput.fill(username);
+      const passwordInput = await page.getByLabel(/password/i);
+      await passwordInput.click();
+      await passwordInput.fill(password);
+      await page.getByRole('button', { name: /log in/i }).click();
       // confirm we have logged in successfully
       await page.waitForSelector(selectors.loggedInText);
       await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
@@ -49,20 +49,13 @@ test.describe('Login', () => {
       await page.waitForSelector(selectors.loggedInText);
       // now we can log out
       await page.click('.header-dropdown', { force: true });
-      await page.click(`text=/Log out/i`, { force: true });
+      await page.getByRole('menuitem', { name: /log out/i }).click();
       await page.waitForSelector('text=/log in/i', { timeout: timeouts.tenSeconds });
     });
 
     test('fails to access unknown resource', async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
-      const request = await axios({
-        url: `${baseUrl}/users`,
-        method: 'GET',
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        })
-      });
-
+      const request = await axios.get(`${baseUrl}/users`, { httpsAgent: new https.Agent({ rejectUnauthorized: false }) });
       expect(request.status).toEqual(200);
       const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
       expect(loginVisible).toBeTruthy();
@@ -72,13 +65,13 @@ test.describe('Login', () => {
       console.log(`logging in user with username: ${username} and password: lewrongpassword`);
       await page.goto(`${baseUrl}ui/`);
       // enter valid username and invalid password
-      await page.waitForSelector(selectors.email);
-      await page.click(selectors.email);
-      await page.fill(selectors.email, username);
-      await page.waitForSelector(selectors.password);
-      await page.click(selectors.password);
-      await page.fill(selectors.password, 'lewrongpassword');
-      await page.click(`:is(button:has-text('Log in'))`);
+      const emailInput = await page.getByPlaceholder(/email/i);
+      await emailInput.click();
+      await emailInput.fill(username);
+      const passwordInput = await page.getByLabel(/password/i);
+      await passwordInput.click();
+      await passwordInput.fill('lewrongpassword');
+      await page.getByRole('button', { name: /log in/i }).click();
 
       // still on /login page plus an error is displayed
       const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
@@ -97,39 +90,35 @@ test.describe('Login', () => {
     });
   });
 
-  test.describe('stays logged in across sessions, after browser restart if selected', () => {
-    test.beforeEach(async ({ baseUrl, page }) => {
-      await page.goto(`${baseUrl}ui/`);
-    });
+  test('stays logged in across sessions, after browser restart if selected', async ({ baseUrl, browser, context, password, page, username }) => {
+    console.log(`logging in user with username: ${username} and password: ${password}`);
+    await page.goto(`${baseUrl}ui/`);
+    // enter valid username and password
+    const emailInput = await page.getByPlaceholder(/email/i);
+    await emailInput.click();
+    await emailInput.fill(username);
+    const passwordInput = await page.getByLabel(/password/i);
+    await passwordInput.click();
+    await passwordInput.fill(password);
+    const checkbox = await page.getByLabel(/stay logged in/i);
+    await checkbox.check();
+    await page.getByRole('button', { name: /log in/i }).click();
 
-    test('pt1', async ({ context, password, page, username }) => {
-      console.log(`logging in user with username: ${username} and password: ${password}`);
-      // enter valid username and password
-      await page.waitForSelector(selectors.email);
-      await page.click(selectors.email);
-      await page.fill(selectors.email, username);
-      await page.waitForSelector(selectors.password);
-      await page.click(selectors.password);
-      await page.fill(selectors.password, password);
-      await page.check('[type=checkbox]', { force: true });
-      await page.click(`:is(button:has-text('Log in'))`);
+    // confirm we have logged in successfully
+    await page.waitForSelector(selectors.loggedInText);
+    let loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
+    expect(loginVisible).toBeFalsy();
+    await page.getByText('Help & support').click();
+    const cookies = await context.cookies();
+    await context.storageState({ path: 'storage.json' });
 
-      // confirm we have logged in successfully
-      await page.waitForSelector(selectors.loggedInText);
-      const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
-      expect(loginVisible).toBeFalsy();
-      const cookies = await context.cookies();
-      process.env.LOGIN_STORAGE = JSON.stringify(cookies);
-    });
-
-    test('pt2', async ({ baseUrl, context }) => {
-      const cookies = JSON.parse(process.env.LOGIN_STORAGE);
-      await context.addCookies(cookies);
-      const page = await context.newPage();
-      await page.goto(`${baseUrl}ui/`);
-      const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
-      await context.storageState({ path: 'storage.json' });
-      expect(loginVisible).toBeFalsy();
-    });
+    const differentContext = await browser.newContext();
+    await differentContext.addCookies(cookies);
+    const differentPage = await differentContext.newPage();
+    await differentPage.goto(`${baseUrl}ui/`);
+    // page.reload();
+    loginVisible = await differentPage.getByRole('button', { name: /log in/i }).isVisible();
+    expect(loginVisible).toBeFalsy();
+    expect(await differentPage.getByText('Getting started').isVisible()).toBeFalsy();
   });
 });
