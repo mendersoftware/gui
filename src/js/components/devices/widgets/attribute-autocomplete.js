@@ -18,12 +18,18 @@ import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { getFilterLabelByKey } from './filters';
+import { defaultHeaders } from '../base-devices';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
 
 const defaultScope = 'inventory';
 
-const getOptionLabel = option => option.value || option.key || option;
+export const getOptionLabel = option => {
+  const header = Object.values(defaultHeaders).find(
+    ({ attribute }) => attribute.scope === option.scope && (attribute.name === option.key || attribute.alternative === option.key)
+  );
+  return header?.title || option.title || option.value || option.key || option;
+};
 
 const FilterOption = (props, option) => {
   let content = getOptionLabel(option);
