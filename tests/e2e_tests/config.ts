@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { PlaywrightTestConfig } from '@playwright/test';
+import { LaunchOptions, PlaywrightTestConfig } from '@playwright/test';
 import * as path from 'path';
 
 const contextArgs = {
@@ -20,20 +20,22 @@ const contextArgs = {
   viewport: { width: 1600, height: 900 }
 };
 
+const launchOptions: LaunchOptions = {
+  ...contextArgs,
+  args: process.env.TEST_ENVIRONMENT === 'staging' ? [] : ['--disable-dev-shm-usage', '--disable-web-security'],
+  slowMo: process.env.TEST_ENVIRONMENT === 'staging' ? undefined : 50
+  // to ease running the test locally and "headful" uncomment and modify the below option to match your preferred browser installation
+  // this might also require adjusting the `runWith` call at the bottom of the file
+  // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+};
+
 export const contextOptions = {
   ...contextArgs,
   contextOptions: contextArgs,
-  // slowMo: 50,
   screenshot: 'only-on-failure',
   video: 'retry-with-video',
   // headless: false,
-  launchOptions: {
-    ...contextArgs,
-    args: process.env.TEST_ENVIRONMENT === 'staging' ? [] : ['--disable-dev-shm-usage', '--disable-web-security']
-    // to ease running the test locally and "headful" uncomment and modify the below option to match your preferred browser installation
-    // this might also require adjusting the `runWith` call at the bottom of the file
-    // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-  }
+  launchOptions
 };
 
 const options: PlaywrightTestConfig = {

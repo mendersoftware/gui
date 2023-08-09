@@ -59,10 +59,7 @@ test.describe('SAML Login via sso/id/login', () => {
   });
 
   // Setups the SAML/SSO login with samltest.id Identity Provider
-  test('Set up SAML', async ({ browserName, context, environment, baseUrl, page }) => {
-    // QA-579
-    test.skip(browserName === 'webkit');
-
+  test('Set up SAML', async ({ context, environment, baseUrl, page }) => {
     test.skip(environment !== 'staging');
     // allow a lot of time to enter metadata + then some to handle uploading the config to the external service
     test.setTimeout(5 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
@@ -71,7 +68,6 @@ test.describe('SAML Login via sso/id/login', () => {
     expect(status).toBeGreaterThanOrEqual(200);
     expect(status).toBeLessThan(300);
     await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
-
     const isInitialized = await page.isVisible('text=Entity ID');
     if (!isInitialized) {
       // Check input[type="checkbox"]
@@ -79,12 +75,8 @@ test.describe('SAML Login via sso/id/login', () => {
       // Click text=input with the text editor
       await page.locator('text=input with the text editor').click();
 
-      // Click .view-lines
-      await page.locator('.view-lines').click();
-
-      await page
-        .locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]')
-        .type(metadata.replace(/(?:\r\n|\r|\n)/g, ''), { delay: 0 });
+      const textfield = await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]');
+      await textfield.type(metadata.replace(/(?:\r\n|\r|\n)/g, ''));
       console.log('typing metadata done.');
       // The screenshot saves the view of the typed metadata
       await page.screenshot({ 'path': 'saml-edit-saving.png' });
@@ -95,14 +87,13 @@ test.describe('SAML Login via sso/id/login', () => {
 
     await page.locator('text=View metadata in the text editor').click();
     // Click text=Download file
-    const [download] = await Promise.all([page.waitForEvent('download'), page.locator('text=Download file').click()]);
+    const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: /download file/i }).click()]);
     const downloadTargetPath = await download.path();
     expect(downloadTargetPath).toBeTruthy();
     const dialog = await page.locator('text=SAML metadata >> .. >> ..');
     await dialog.locator('data-testid=CloseIcon').click();
-
     const storage = await context.storageState();
-    const jwt = storage['cookies'].find(cookie => cookie.name === 'JWT').value;
+    const jwt = storage.cookies.find(cookie => cookie.name === 'JWT').value;
     const requestInfo = { method: 'GET', headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` }, httpsAgent };
     const { data } = await axios({ ...requestInfo, url: `${baseUrl}api/management/v1/useradm/sso/idp/metadata` });
     const metadataId = data[0].id;
@@ -132,9 +123,6 @@ test.describe('SAML Login via sso/id/login', () => {
 
   // Creates a user with login that matches Identity privder (samltest.id) user email
   test('Creates a user without a password', async ({ environment, browserName, baseUrl, page }) => {
-    // QA-579
-    test.skip(browserName === 'webkit');
-
     test.skip(environment !== 'staging');
     await page.goto(`${baseUrl}ui/settings/user-management`);
     const userExists = await page.isVisible(`text=${samlSettings.credentials[browserName].email}`);
@@ -158,10 +146,6 @@ test.describe('SAML Login via sso/id/login', () => {
   // This test calls auth/sso/${id}/login, where id is the id of the identity provider
   // and verifies that login is successful.
   test('User can login via sso/login endpoint', async ({ environment, browserName, baseUrl, browser, loggedInPage }) => {
-    // QA-579
-    test.skip(browserName === 'firefox');
-    test.skip(browserName === 'webkit');
-
     test.skip(environment !== 'staging');
     test.setTimeout(2 * timeouts.fifteenSeconds);
 
@@ -178,7 +162,6 @@ test.describe('SAML Login via sso/id/login', () => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto(loginUrl);
-    await page.waitForSelector(selectors.loggedInText);
     // This screenshot saves the view right after the first redirection
     await page.screenshot({ path: './test-results/saml-redirected.png' });
 
