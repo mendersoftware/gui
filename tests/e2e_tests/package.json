@@ -7,9 +7,10 @@
     "url": "git+https://github.com/mendersoftware/integration.git"
   },
   "scripts": {
-    "test": "npx playwright test --workers 1 --config=config.ts",
-    "test-ci": "mv mender-demo-artifact.mender fixtures/ && npx playwright test --workers 1 --config=config.ts",
-    "test-visual": "npx playwright test --ui --workers 1 --config=config.ts"
+    "test": "npx playwright test --workers 1",
+    "test-ci": "mv mender-demo-artifact.mender fixtures/ && npx playwright test --workers 1",
+    "test-visual": "PWDEBUG=1 npx playwright test --workers 1",
+    "test-visual-new": "npx playwright test --ui --workers 1"
   },
   "author": "Northern.tech AS",
   "license": "Apache-2.0",
