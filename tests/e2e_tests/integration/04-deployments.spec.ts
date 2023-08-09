@@ -62,8 +62,7 @@ test.describe('Deployments', () => {
     await releaseSelect.focus();
     await releaseSelect.type('mender-demo');
     await page.click(`#deployment-release-selection-listbox li`);
-    const clearButton = await page.getByRole('button', { name: 'Clear' });
-    await clearButton.click();
+    await page.getByRole('button', { name: 'Clear' }).click();
     const textContent = await releaseSelect.textContent();
     expect(textContent).toBeFalsy();
     await releaseSelect.focus();
