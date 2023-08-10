@@ -68,8 +68,6 @@ export const TwoFactorAuthSetup = () => {
       let request;
       if (state === twoFAStates.disabled) {
         request = dispatch(disableUser2fa());
-      } else if (state === twoFAStates.enabled && has2FA) {
-        request = Promise.resolve(setQrExpanded(false));
       } else {
         request = dispatch(enableUser2fa());
       }
@@ -81,7 +79,7 @@ export const TwoFactorAuthSetup = () => {
         }
       });
     },
-    [dispatch, has2FA]
+    [dispatch]
   );
 
   const onToggle2FAClick = useCallback(() => {
@@ -116,7 +114,14 @@ export const TwoFactorAuthSetup = () => {
         />
       )}
       <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
-        <AuthSetup currentUser={currentUser} handle2FAState={handle2FAState} has2FA={has2FA} qrImage={qrImage} verify2FA={data => dispatch(verify2FA(data))} />
+        <AuthSetup
+          currentUser={currentUser}
+          handle2FAState={handle2FAState}
+          has2FA={has2FA}
+          qrImage={qrImage}
+          verify2FA={data => dispatch(verify2FA(data))}
+          onClose={() => setQrExpanded(false)}
+        />
       </Collapse>
     </div>
   );
