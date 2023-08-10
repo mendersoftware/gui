@@ -19,14 +19,10 @@ import { Clear as ClearIcon, DragHandle as DragHandleIcon } from '@mui/icons-mat
 import { DialogContent, FormControl, FormHelperText, IconButton, ListItem } from '@mui/material';
 
 import { ATTRIBUTE_SCOPES } from '../../../constants/deviceConstants';
-import { defaultHeaders } from '../base-devices';
-import AttributeAutoComplete from '../widgets/attribute-autocomplete';
+import AttributeAutoComplete, { getOptionLabel } from '../widgets/attribute-autocomplete';
 
 const DraggableListItem = ({ item, index, onRemove }) => {
-  const title = useMemo(() => {
-    const header = Object.values(defaultHeaders).find(thing => thing.attribute === item.key);
-    return item.title || header?.title || item.key;
-  }, [item]);
+  const title = useMemo(() => getOptionLabel(item), [item.key, item.scope, item.title]);
 
   const onClick = () => onRemove(item, index);
 
