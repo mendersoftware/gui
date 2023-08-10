@@ -13,7 +13,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
       Devices
     </h3>
     <span
-      class="flexbox space-between margin-left-large margin-right center-aligned"
+      class="flexbox space-between margin-left-large margin-right center-aligned padding-top-small"
     >
       <div />
       <div
