@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -218,16 +218,22 @@ export const Software = ({ commonClasses, deploymentObject, releaseRef, releases
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [device, releases]);
 
-  const onReleaseSelectionChange = release => {
-    if (release !== deploymentObject.release) {
-      setDeploymentSettings({ release });
-    }
-  };
+  const onReleaseSelectionChange = useCallback(
+    release => {
+      if (release !== deploymentObject.release) {
+        setDeploymentSettings({ release });
+      }
+    },
+    [deploymentObject.release, setDeploymentSettings]
+  );
 
-  const onReleaseInputChange = inputValue => {
-    setIsLoadingReleases(!releases.length);
-    return dispatch(getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true })).finally(() => setIsLoadingReleases(false));
-  };
+  const onReleaseInputChange = useCallback(
+    inputValue => {
+      setIsLoadingReleases(!releases.length);
+      return dispatch(getReleases({ page: 1, perPage: 100, searchTerm: inputValue, searchOnly: true })).finally(() => setIsLoadingReleases(false));
+    },
+    [dispatch, releases.length]
+  );
 
   const releaseDeviceTypes = (deploymentRelease && deploymentRelease.device_types_compatible) ?? [];
   const devicetypesInfo = (
