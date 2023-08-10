@@ -14,58 +14,14 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@mui/icons-material';
-import { Button, IconButton } from '@mui/material';
+import { Schedule as HelpIcon } from '@mui/icons-material';
+import { Button } from '@mui/material';
 
 import { advanceOnboarding, setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
 import BaseOnboardingTip, { BaseOnboardingTooltip } from './baseonboardingtip';
-
-export const WelcomeSnackTip = React.forwardRef(({ progress, setSnackbar }, ref) => {
-  const onClose = () => setSnackbar('');
-  const messages = {
-    1: (
-      <div>
-        Welcome to Mender! Follow the{' '}
-        <div className="onboard-icon">
-          <ArrowUpwardIcon />
-        </div>{' '}
-        tutorial tips on screen to:
-      </div>
-    ),
-    2: <div>Next up</div>,
-    3: <div>Next up</div>,
-    4: <div>Success!</div>
-  };
-  return (
-    <div className="onboard-snack" ref={ref}>
-      <IconButton onClick={onClose} size="large">
-        <CloseIcon fontSize="small" />
-      </IconButton>
-      <div className="flexbox">
-        {messages[progress]}
-        <ol>
-          {['Connect a device', 'Deploy an Application Update', 'Create your own Release and deploy it'].map((item, index) => {
-            let classNames = '';
-            if (index < progress) {
-              classNames = 'bold';
-              if (index < progress - 1) {
-                classNames = 'completed';
-              }
-            }
-            return (
-              <li className={classNames} key={`onboarding-step-${index}`}>
-                {index + 1}. {item}
-              </li>
-            );
-          })}
-        </ol>
-      </div>
-    </div>
-  );
-});
-WelcomeSnackTip.displayName = 'WelcomeSnackTip';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 
 export const DevicePendingTip = props => (
   <BaseOnboardingTip
@@ -112,10 +68,10 @@ export const DevicesPendingAcceptingOnboarding = () => (
 
 export const DashboardOnboardingPendings = () => <div>Next accept your device</div>;
 
-export const DevicesAcceptedOnboarding = ({ id, ...props }) => {
+export const DevicesAcceptedOnboarding = props => {
   const dispatch = useDispatch();
   return (
-    <BaseOnboardingTooltip id={id} {...props}>
+    <BaseOnboardingTooltip {...props}>
       <div className="margin-top" style={{ marginBottom: -12 }}>
         <div>
           <p>Your device is now authenticated and has connected to the server! It&apos;s ready to receive updates, report its data and more.</p>
@@ -125,7 +81,7 @@ export const DevicesAcceptedOnboarding = ({ id, ...props }) => {
           <b className="clickable slightly-smaller" onClick={() => dispatch(setShowDismissOnboardingTipsDialog(true))}>
             Dismiss the tutorial
           </b>
-          <Button onClick={() => dispatch(advanceOnboarding(id))}>Yes, let&apos;s deploy!</Button>
+          <Button onClick={() => dispatch(advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING))}>Yes, let&apos;s deploy!</Button>
         </div>
       </div>
     </BaseOnboardingTooltip>
@@ -133,7 +89,10 @@ export const DevicesAcceptedOnboarding = ({ id, ...props }) => {
 };
 
 export const DevicesDeployReleaseOnboarding = () => (
-  <div>Click to create your first deployment. You&apos;ll deploy an update to your device using some demo software we have provided.</div>
+  <div>
+    From the Device actions, choose &apos;Create a deployment for this device&apos;. You&apos;ll deploy an update to the device, using some demo software we
+    have provided.
+  </div>
 );
 
 export const SchedulingArtifactSelection = ({ selectedRelease }) => <div>{`Select the ${selectedRelease.Name} release we included.`}</div>;

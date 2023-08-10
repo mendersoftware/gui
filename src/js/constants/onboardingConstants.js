@@ -20,7 +20,6 @@ export const onboardingSteps = {
   DEVICES_PENDING_ONBOARDING: 'devices-pending-onboarding',
   DEVICES_ACCEPTED_ONBOARDING: 'devices-accepted-onboarding',
   DEVICES_PENDING_ACCEPTING_ONBOARDING: 'devices-pending-accepting-onboarding',
-  DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION: 'devices-accepted-onboarding-notification',
   DEVICES_DEPLOY_RELEASE_ONBOARDING: 'devices-deploy-release-onboarding',
   SCHEDULING_ARTIFACT_SELECTION: 'scheduling-artifact-selection',
   SCHEDULING_ALL_DEVICES_SELECTION: 'scheduling-all-devices-selection',
@@ -29,7 +28,6 @@ export const onboardingSteps = {
   DEPLOYMENTS_INPROGRESS: 'deployments-inprogress',
   DEPLOYMENTS_PAST: 'deployments-past',
   DEPLOYMENTS_PAST_COMPLETED: 'deployments-past-completed',
-  DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION: 'deployments-past-completed-notification',
   DEPLOYMENTS_PAST_COMPLETED_FAILURE: 'deployments-past-completed-failure',
   ONBOARDING_CANCELED: 'onboarding-canceled'
 };

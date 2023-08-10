@@ -320,66 +320,34 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
       <div
         class="content"
       >
-        <p>
-          Fantastic! You completed your first deployment!
-        </p>
-        <p>
-          Your deployment is finished and your device is now running the updated software!
-        </p>
+        <b>
+          <p>
+            Fantastic! You completed your first deployment!
+          </p>
+          <p>
+            Your deployment is finished and your device is now running the updated software.
+          </p>
+        </b>
         <div
           class="margin-bottom-small margin-top-small"
         >
-          Your device is now running the updated version of the software. At
-          <div
-            class="flexbox centered"
-            style="margin: 5px 0px;"
+          <a
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium button emotion-3"
+            href="http://192.168.10.141:85/index.html?source=http%3A%2F%2Ftest.com"
+            tabindex="0"
+            target="_blank"
           >
-            <a
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium button emotion-3"
-              href="http://192.168.10.141:85/index.html?source=http%3A%2F%2Ftest.com"
-              tabindex="0"
-              target="_blank"
-            >
-              Go to http://192.168.10.141:85
-              <span
-                class="MuiTouchRipple-root emotion-4"
-              />
-            </a>
-          </div>
-          you should see the demo web application actually being run on the device.
+            Go to http://192.168.10.141:85
+            <span
+              class="MuiTouchRipple-root emotion-4"
+            />
+          </a>
+          <br />
+          and you should see the demo web application actually being run on the device.
         </div>
         <p>
           NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.
         </p>
-        <p>
-          You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
-        </p>
-        What next?
-        <div>
-          Proceed to one of the following tutorials (listed in recommended order):
-          <ol>
-            <li>
-              <a
-                class=""
-                href="https://docs.mender.io/get-started/deploy-an-operating-system-update"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Deploy an operating system update
-              </a>
-            </li>
-            <li>
-              <a
-                class=""
-                href="https://docs.mender.io/get-started/deploy-a-container-update"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Deploy a container update
-              </a>
-            </li>
-          </ol>
-        </div>
         <div
           class="flexbox"
         >

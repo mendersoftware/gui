@@ -263,17 +263,9 @@ export const Authorized = ({
     }
     dispatch(advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING));
 
-    if (acceptedCount < 2) {
-      if (!window.sessionStorage.getItem('pendings-redirect')) {
-        window.sessionStorage.setItem('pendings-redirect', true);
-        onDeviceStateSelectionChange(DEVICE_STATES.accepted);
-      }
-      setTimeout(() => {
-        const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState, {
-          setSnackbar: dispatchedSetSnackbar
-        });
-        !!notification && dispatchedSetSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
-      }, TIMEOUTS.debounceDefault);
+    if (acceptedCount < 2 && !window.sessionStorage.getItem('pendings-redirect')) {
+      window.sessionStorage.setItem('pendings-redirect', true);
+      onDeviceStateSelectionChange(DEVICE_STATES.accepted);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acceptedCount, allCount, pendingCount, onboardingState.complete, dispatch, onDeviceStateSelectionChange, dispatchedSetSnackbar]);

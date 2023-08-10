@@ -27,22 +27,13 @@ import {
   SchedulingAllDevicesSelection,
   SchedulingArtifactSelection,
   SchedulingGroupSelection,
-  SchedulingReleaseToDevices,
-  WelcomeSnackTip
+  SchedulingReleaseToDevices
 } from './onboardingtips';
 
 describe('OnboardingTips Components', () => {
   describe('DevicePendingTip', () => {
     it('renders correctly', async () => {
       const { baseElement } = render(<DevicePendingTip />);
-      const view = baseElement.firstChild.firstChild;
-      expect(view).toMatchSnapshot();
-    });
-  });
-
-  describe('WelcomeSnackTip', () => {
-    it('renders correctly', async () => {
-      const { baseElement } = render(<WelcomeSnackTip />);
       const view = baseElement.firstChild.firstChild;
       expect(view).toMatchSnapshot();
     });

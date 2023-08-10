@@ -30,8 +30,7 @@ import {
   SchedulingAllDevicesSelection,
   SchedulingArtifactSelection,
   SchedulingGroupSelection,
-  SchedulingReleaseToDevices,
-  WelcomeSnackTip
+  SchedulingReleaseToDevices
 } from '../components/helptips/onboardingtips';
 import { yes } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
@@ -72,12 +71,8 @@ export const onboardingSteps = {
     component: DashboardOnboardingPendings
   },
   [stepNames.DEVICES_ACCEPTED_ONBOARDING]: {
-    condition: { min: stepNames.DASHBOARD_ONBOARDING_PENDINGS, max: stepNames.DEVICES_ACCEPTED_ONBOARDING },
+    condition: { min: stepNames.DASHBOARD_ONBOARDING_PENDINGS },
     specialComponent: <DevicesAcceptedOnboarding />
-  },
-  [stepNames.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION]: {
-    condition: { min: stepNames.DASHBOARD_ONBOARDING_PENDINGS, max: stepNames.SCHEDULING_ALL_DEVICES_SELECTION },
-    specialComponent: <WelcomeSnackTip progress={2} />
   },
   [stepNames.DEVICES_DEPLOY_RELEASE_ONBOARDING]: {
     condition: {},
@@ -107,16 +102,12 @@ export const onboardingSteps = {
     condition: { min: stepNames.DEPLOYMENTS_INPROGRESS, extra: () => !window.location.pathname.includes(DEPLOYMENT_STATES.finished) },
     component: DeploymentsPast
   },
-  [stepNames.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION]: {
-    condition: { min: stepNames.DEPLOYMENTS_PAST },
-    specialComponent: <WelcomeSnackTip progress={3} />
-  },
   [stepNames.DEPLOYMENTS_PAST_COMPLETED]: {
-    condition: { min: stepNames.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, max: stepNames.DEPLOYMENTS_PAST_COMPLETED_FAILURE },
+    condition: { max: stepNames.DEPLOYMENTS_PAST_COMPLETED_FAILURE },
     specialComponent: <OnboardingCompleteTip targetUrl="destination-unreachable" />
   },
   [stepNames.DEPLOYMENTS_PAST_COMPLETED_FAILURE]: {
-    condition: {},
+    condition: { max: stepNames.ONBOARDING_CANCELED },
     component: DeploymentsPastCompletedFailure
   },
   [stepNames.ONBOARDING_CANCELED]: {
