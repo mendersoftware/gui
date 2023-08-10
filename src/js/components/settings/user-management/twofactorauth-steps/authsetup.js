@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
@@ -21,23 +21,24 @@ import Form from '../../../common/forms/form';
 import TextInput from '../../../common/forms/textinput';
 import Loader from '../../../common/loader';
 
-export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify2FA }) => {
+export const AuthSetup = ({ currentUser, handle2FAState, has2FA, onClose, qrImage, verify2FA }) => {
   const current2FA = useRef(has2FA);
   const [validated2fa, setValidated2fa] = useState(false);
   const [validating2fa, setValidating2fa] = useState(false);
 
-  const onUnload = useCallback(
-    e => {
-      if (!e || (validated2fa && has2FA) || !qrImage) {
+  useEffect(() => {
+    current2FA.current = has2FA;
+  }, [has2FA]);
+
+  useEffect(() => {
+    const onUnload = e => {
+      if (!e || (validated2fa && current2FA.current) || !qrImage) {
         return;
       }
       e.returnValue = '2fa setup incomplete';
       return e.returnValue;
-    },
-    [has2FA, qrImage, validated2fa]
-  );
+    };
 
-  useEffect(() => {
     window.addEventListener('beforeunload', onUnload);
     return () => {
       if (!current2FA.current && qrImage) {
@@ -45,11 +46,7 @@ export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify
       }
       window.removeEventListener('beforeunload', onUnload);
     };
-  }, [handle2FAState, onUnload, qrImage]);
-
-  useEffect(() => {
-    current2FA.current = has2FA;
-  }, [has2FA]);
+  }, [handle2FAState, qrImage, validated2fa]);
 
   const validate2faSetup = formData => {
     setValidating2fa(true);
@@ -112,7 +109,7 @@ export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify
         <Button onClick={() => handle2FAState(twoFAStates.disabled)} style={{ marginRight: 10 }}>
           Cancel
         </Button>
-        <Button variant="contained" color="secondary" disabled={!validated2fa} onClick={() => handle2FAState(twoFAStates.enabled)}>
+        <Button variant="contained" color="secondary" disabled={!validated2fa} onClick={onClose}>
           Save
         </Button>
       </div>
