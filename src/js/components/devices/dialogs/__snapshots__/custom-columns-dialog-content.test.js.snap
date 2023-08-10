@@ -752,7 +752,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       data-rbd-draggable-id="name"
     >
       <div>
-        name
+        Name
       </div>
       <div
         class="flexbox space-between"
@@ -807,7 +807,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       data-rbd-draggable-id="id"
     >
       <div>
-        id
+        Device ID
       </div>
       <div
         class="flexbox space-between"
