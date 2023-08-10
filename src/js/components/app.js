@@ -134,8 +134,14 @@ export const AppRoot = () => {
     } else {
       Tracking.initialize(trackingCode);
     }
+  }, [dispatch, trackingCode]);
+
+  useEffect(() => {
+    if (!(trackingCode && cookies.get('_ga'))) {
+      return;
+    }
     trackLocationChange(pathname);
-  }, [dispatch, pathname, trackLocationChange, trackingCode]);
+  }, [pathname, trackLocationChange, trackingCode]);
 
   useEffect(() => {
     trackLocationChange(pathname);
