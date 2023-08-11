@@ -50,7 +50,7 @@ import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import { ExpandDevice } from '../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import { defaultHeaders, defaultTextRender, getDeviceIdentityText, routes as states } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
 import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
@@ -144,28 +144,18 @@ const calculateColumnSelectionSize = (changedColumns, customColumnSizes) =>
     { columnSizes: [], selectedAttributes: [] }
   );
 
-const OnboardingComponent = ({ authorizeRef, deviceListRef, onboardingState, selectedRows }) => {
+const OnboardingComponent = ({ deviceListRef, onboardingState }) => {
   let onboardingComponent = null;
-  if (deviceListRef.current) {
-    const element = deviceListRef.current.querySelector('body .deviceListItem > div');
+  const element = deviceListRef.current?.querySelector('body .deviceListItem > div');
+  if (element) {
     const anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
-  }
-  if (selectedRows && authorizeRef.current) {
-    const anchor = {
-      left: authorizeRef.current.offsetLeft - authorizeRef.current.offsetWidth,
-      top:
-        authorizeRef.current.offsetTop +
-        authorizeRef.current.offsetHeight -
-        authorizeRef.current.lastElementChild.offsetHeight +
-        authorizeRef.current.lastElementChild.firstElementChild.offsetHeight * 1.5
-    };
+  } else if (deviceListRef.current) {
+    const anchor = { top: deviceListRef.current.offsetTop + deviceListRef.current.offsetHeight / 3, left: deviceListRef.current.offsetWidth / 2 + 30 };
     onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING,
+      onboardingSteps.DEVICES_PENDING_ONBOARDING_START,
       onboardingState,
-      { place: 'left', anchor },
+      { anchor, place: 'top' },
       onboardingComponent
     );
   }
@@ -223,7 +213,6 @@ export const Authorized = ({
   const [showFilters, setShowFilters] = useState(false);
   const [showCustomization, setShowCustomization] = useState(false);
   const deviceListRef = useRef();
-  const authorizeRef = useRef();
   const timer = useRef();
   const navigate = useNavigate();
 
@@ -274,17 +263,9 @@ export const Authorized = ({
     }
     dispatch(advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING));
 
-    if (acceptedCount < 2) {
-      if (!window.sessionStorage.getItem('pendings-redirect')) {
-        window.sessionStorage.setItem('pendings-redirect', true);
-        onDeviceStateSelectionChange(DEVICE_STATES.accepted);
-      }
-      setTimeout(() => {
-        const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState, {
-          setSnackbar: dispatchedSetSnackbar
-        });
-        !!notification && dispatchedSetSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
-      }, TIMEOUTS.debounceDefault);
+    if (acceptedCount < 2 && !window.sessionStorage.getItem('pendings-redirect')) {
+      window.sessionStorage.setItem('pendings-redirect', true);
+      onDeviceStateSelectionChange(DEVICE_STATES.accepted);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acceptedCount, allCount, pendingCount, onboardingState.complete, dispatch, onDeviceStateSelectionChange, dispatchedSetSnackbar]);
@@ -400,17 +381,17 @@ export const Authorized = ({
 
   const onExpandClick = (device = {}) => {
     dispatchedSetSnackbar('');
-    const { attributes = {}, id, status } = device;
+    const { id } = device;
     dispatch(setDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id, detailsTab: deviceListState.detailsTab || 'identity' }));
     if (!onboardingState.complete) {
       dispatch(advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING));
-      if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
-        dispatch(advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION));
-      }
     }
   };
 
-  const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
+  const onCreateDeploymentClick = devices => {
+    const devicesLink = !onboardingState.complete ? '' : `&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`;
+    return navigate(`/deployments?open=true${devicesLink}`);
+  };
 
   const onCloseExpandedDevice = useCallback(() => dispatch(setDeviceListState({ selectedId: undefined, detailsTab: '' })), [dispatch]);
 
@@ -424,8 +405,6 @@ export const Authorized = ({
   };
 
   const listOptionHandlers = [{ key: 'customize', title: 'Customize', onClick: onToggleCustomizationClick }];
-  const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
-
   const EmptyState = currentSelectedState.emptyState;
 
   const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : ALL_DEVICES;
@@ -483,9 +462,9 @@ export const Authorized = ({
         />
       </div>
       <Loader show={!isInitialized} />
-      {isInitialized ? (
-        devices.length > 0 ? (
-          <div className="padding-bottom" ref={deviceListRef}>
+      <div className="padding-bottom" ref={deviceListRef}>
+        {devices.length > 0 ? (
+          <>
             <DeviceList
               columnHeaders={columnHeaders}
               customColumnSizes={customColumnSizes}
@@ -501,27 +480,19 @@ export const Authorized = ({
               pageLoading={pageLoading}
               pageTotal={deviceCount}
             />
-            {showHelptips && <ExpandDevice />}
-          </div>
-        ) : (
-          <>
-            {devicePendingTip && !showsDialog ? (
-              devicePendingTip
-            ) : (
-              <EmptyState
-                allCount={allCount}
-                canManageDevices={canManageDevices}
-                filters={filters}
-                highlightHelp={showHelptips}
-                limitMaxed={limitMaxed}
-                onClick={onPreauthClick}
-              />
-            )}
+            <MenderHelpTooltip id={HELPTOOLTIPS.expandDevice.id} style={{ position: 'absolute', right: 45 }} />
           </>
-        )
-      ) : (
-        <div />
-      )}
+        ) : (
+          <EmptyState
+            allCount={allCount}
+            canManageDevices={canManageDevices}
+            filters={filters}
+            highlightHelp={showHelptips}
+            limitMaxed={limitMaxed}
+            onClick={onPreauthClick}
+          />
+        )}
+      </div>
       <ExpandedDevice
         actionCallbacks={actionCallbacks}
         deviceId={openedDevice}
@@ -529,11 +500,9 @@ export const Authorized = ({
         setDetailsTab={setDetailsTab}
         tabSelection={tabSelection}
       />
-      {!selectedId && (
-        <OnboardingComponent authorizeRef={authorizeRef} deviceListRef={deviceListRef} onboardingState={onboardingState} selectedRows={selectedRows} />
-      )}
+      {!selectedId && !showsDialog && <OnboardingComponent deviceListRef={deviceListRef} onboardingState={onboardingState} />}
       {canManageDevices && !!selectedRows.length && (
-        <DeviceQuickActions actionCallbacks={actionCallbacks} selectedGroup={selectedStaticGroup} ref={authorizeRef} />
+        <DeviceQuickActions actionCallbacks={actionCallbacks} deviceId={openedDevice} selectedGroup={selectedStaticGroup} />
       )}
       <ColumnCustomizationDialog
         attributes={attributes}

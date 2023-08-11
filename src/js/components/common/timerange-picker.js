@@ -14,6 +14,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { getISOStringBoundaries } from '../../helpers';
+import ClickFilter from './forms/clickfilter';
 
 const timeranges = {
   today: { start: 0, end: 0, title: 'Today' },
@@ -22,7 +23,7 @@ const timeranges = {
   month: { start: 29, end: 0, title: 'Last 30 days' }
 };
 
-export const TimerangePicker = ({ classNames = '', endDate, onChange, startDate }) => {
+export const TimerangePicker = ({ classNames = '', disabled = false, endDate, onChange, startDate }) => {
   const [active, setActive] = useState();
 
   useEffect(() => {
@@ -60,18 +61,20 @@ export const TimerangePicker = ({ classNames = '', endDate, onChange, startDate 
   };
 
   return (
-    <div className={classNames}>
-      <span>Filter by date</span>
-      <ul className="unstyled link-list horizontal">
-        {Object.entries(timeranges).map(([key, range]) => (
-          <li key={`filter-by-${key}`}>
-            <a className={active === key ? 'active' : ''} onClick={() => setRange(range.start, range.end)}>
-              {range.title}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ClickFilter disabled={disabled}>
+      <div className={`${classNames} ${disabled ? 'muted' : ''}`}>
+        <span>Filter by date</span>
+        <ul className="unstyled link-list horizontal">
+          {Object.entries(timeranges).map(([key, range]) => (
+            <li key={`filter-by-${key}`}>
+              <a className={active === key ? 'active' : ''} onClick={() => setRange(range.start, range.end)}>
+                {range.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </ClickFilter>
   );
 };
 

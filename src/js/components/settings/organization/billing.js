@@ -98,7 +98,7 @@ export const Billing = () => {
   const deviceLimit = useSelector(getDeviceLimit);
   const isEnterprise = useSelector(getIsEnterprise);
   const organization = useSelector(getOrganization);
-  const { plan: currentPlan = 'os' } = organization;
+  const { plan: currentPlan = PLANS.os.id } = organization;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { classes } = useStyles();

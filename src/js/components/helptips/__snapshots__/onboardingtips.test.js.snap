@@ -1,136 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OnboardingTips Components DevicePendingTip renders correctly 1`] = `
-.emotion-0 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  fill: currentColor;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.3929rem;
-}
-
-.emotion-0 iconButton {
-  margin-right: 8px;
-}
-
-<div
-  style="display: grid; place-items: center;"
->
-  <div
-    class=""
-    data-mui-internal-clone-element="true"
-  >
-    <div
-      class="onboard-icon"
-    >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-0"
-        data-testid="ScheduleIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-        />
-        <path
-          d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
-        />
-      </svg>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
-.emotion-0 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  position: relative;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  margin: 0;
-  border-radius: 0;
-  padding: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  text-align: center;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
-  overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
-  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.625rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
-}
-
-.emotion-0::-moz-focus-inner {
-  border-style: none;
-}
-
-.emotion-0.Mui-disabled {
-  pointer-events: none;
-  cursor: default;
-}
-
-@media print {
-  .emotion-0 {
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
-}
-
-.emotion-0:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-@media (hover: none) {
-  .emotion-0:hover {
-    background-color: transparent;
-  }
-}
-
-.emotion-0.Mui-disabled {
-  background-color: transparent;
-  color: rgba(0, 0, 0, 0.26);
+.emotion-0 .MuiButtonBase-root.MuiButton-text {
+  color: #fff;
+  padding-right: 0;
 }
 
 .emotion-1 {
@@ -147,117 +20,36 @@ exports[`OnboardingTips Components WelcomeSnackTip renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.1607rem;
+  font-size: 1.3929rem;
 }
 
 .emotion-1 iconButton {
   margin-right: 8px;
 }
 
-.emotion-2 {
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-}
-
 <div
-  class="onboard-snack"
+  class="emotion-0 onboard-tip"
+  data-mui-internal-clone-element="true"
+  style="left: -15px; top: 0px; overflow: initial;"
 >
-  <button
-    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-0"
-    tabindex="0"
-    type="button"
+  <div
+    class="tooltip onboard-icon bottom"
   >
     <svg
       aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-1"
-      data-testid="CloseIcon"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+      data-testid="ScheduleIcon"
       focusable="false"
       viewBox="0 0 24 24"
     >
       <path
-        d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+      />
+      <path
+        d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
       />
     </svg>
-    <span
-      class="MuiTouchRipple-root emotion-2"
-    />
-  </button>
-  <div
-    class="flexbox"
-  >
-    <ol>
-      <li
-        class=""
-      >
-        1
-        . 
-        Connect a device
-      </li>
-      <li
-        class=""
-      >
-        2
-        . 
-        Deploy an Application Update
-      </li>
-      <li
-        class=""
-      >
-        3
-        . 
-        Create your own Release and deploy it
-      </li>
-    </ol>
   </div>
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders ApplicationUpdateReminderTip correctly 1`] = `
-<div>
-  <b>
-    Deploy your first Application update
-  </b>
-  <p>
-    To continue to make a demo deployment to this device click the 
-    <a
-      href="/releases"
-    >
-      Releases
-    </a>
-     tab
-  </p>
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders ArtifactIncludedDeployOnboarding correctly 1`] = `
-<div>
-  Let's deploy this Release to your device now
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders ArtifactIncludedOnboarding correctly 1`] = `
-<div>
-  Now you have
-   a Mender artifact with a simple Application update for you to test with.
-  <p>
-    Click on it for more details.
-  </p>
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders ArtifactModifiedOnboarding correctly 1`] = `
-<div>
-  Your uploaded Artifact is now part of a new 'Release'.
-  <p>
-    Now create a deployment with this Release!
-  </p>
 </div>
 `;
 
@@ -269,7 +61,7 @@ exports[`OnboardingTips Components tiny onboarding tips renders DashboardOnboard
 
 exports[`OnboardingTips Components tiny onboarding tips renders DashboardOnboardingState correctly 1`] = `
 <div>
-  This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!
+  Your device has requested to join the server. Click the row to expand the device details.
 </div>
 `;
 
@@ -292,30 +84,114 @@ exports[`OnboardingTips Components tiny onboarding tips renders DeploymentsPastC
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders DevicesAcceptedOnboarding correctly 1`] = `
-<div>
-  <b>
-    Good job! Your first device is connected!
-  </b>
-  <p>
-    Your device is now 
-    <b>
-      accepted
-    </b>
-    ! It's now going to share device details with the server.
-  </p>
-  Click to expand the device and see more
+.emotion-0 .MuiButtonBase-root.MuiButton-text {
+  color: #fff;
+  padding-right: 0;
+}
+
+.emotion-1 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+}
+
+.emotion-1 iconButton {
+  margin-right: 8px;
+}
+
+<div
+  class="emotion-0 onboard-tip"
+  createdgroup="testgroup"
+  data-mui-internal-clone-element="true"
+  selectedrelease="test"
+  style="left: -15px; top: 0px; overflow: initial;"
+>
+  <div
+    class="tooltip onboard-icon bottom"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+      data-testid="ArrowUpwardIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+      />
+    </svg>
+  </div>
 </div>
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders DevicesPendingAcceptingOnboarding correctly 1`] = `
 <div>
-  If you recognize this device as your own, you can accept it
+  Your device has made a request to join the Mender server. You can inspect its identity details, such as mac address and public key, to verify it is definitely your device.
+  <br />
+  When you are ready, Accept it!
 </div>
 `;
 
 exports[`OnboardingTips Components tiny onboarding tips renders GetStartedTip correctly 1`] = `
-<div>
-  Click here to get started!
+.emotion-0 .MuiButtonBase-root.MuiButton-text {
+  color: #fff;
+  padding-right: 0;
+}
+
+.emotion-1 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+}
+
+.emotion-1 iconButton {
+  margin-right: 8px;
+}
+
+<div
+  class="emotion-0 onboard-tip"
+  createdgroup="testgroup"
+  data-mui-internal-clone-element="true"
+  selectedrelease="test"
+  style="left: -15px; top: 0px; overflow: initial;"
+>
+  <div
+    class="tooltip onboard-icon bottom"
+  >
+    <svg
+      aria-hidden="true"
+      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-1"
+      data-testid="ArrowUpwardIcon"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="m4 12 1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+      />
+    </svg>
+  </div>
 </div>
 `;
 
@@ -343,74 +219,5 @@ exports[`OnboardingTips Components tiny onboarding tips renders SchedulingGroupS
 exports[`OnboardingTips Components tiny onboarding tips renders SchedulingReleaseToDevices correctly 1`] = `
 <div>
   Create the deployment! This will deploy the test Artifact to All devices
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogClick correctly 1`] = `
-<div>
-  Now click 'Upload Artifact' to finish this step!
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogDestination correctly 1`] = `
-<div>
-  We have prefilled this for you, for the demo - it is the destination on your device where the new 
-  <i>
-    index.html
-  </i>
-   file will be installed.
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogDeviceType correctly 1`] = `
-<div>
-  Enter the device types this will be compatible with. For the demo, you just need to select the device type of your demo device.
-  <br />
-  Then click 'Next' below.
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogReleaseName correctly 1`] = `
-<div>
-  Now name your Release: for the demo you could call it something like "hello-world".
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactDialogUpload correctly 1`] = `
-<div>
-  Drag or select your new 
-  <i>
-    index.html
-  </i>
-   file here to upload it.
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadNewArtifactTip correctly 1`] = `
-<div>
-  Click 'Upload' to upload the file and create your new Release.
-  <p>
-    You can 
-    <a>
-      view the instructions again
-    </a>
-     if you need help creating the 
-    <i>
-      index.html
-    </i>
-     file.
-  </p>
-</div>
-`;
-
-exports[`OnboardingTips Components tiny onboarding tips renders UploadPreparedArtifactTip correctly 1`] = `
-<div>
-  Download our prepared demo Artifact from 
-  <a
-    href="http://somewhere.com"
-  >
-    here
-  </a>
-   to upload it to your profile.
 </div>
 `;

@@ -584,23 +584,27 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
     </div>
   </div>
   <div
-    class="dashboard-placeholder"
+    class="padding-bottom"
   >
-    <p>
-      No devices found
-    </p>
-    <p>
-      No devices have been authorized to connect to the Mender server yet.
-    </p>
-    <p>
-      Visit the 
-      <a
-        href="/help/get-started"
-      >
-        Help section
-      </a>
-       to learn how to connect devices to the Mender server.
-    </p>
+    <div
+      class="dashboard-placeholder"
+    >
+      <p>
+        No devices found
+      </p>
+      <p>
+        No devices have been authorized to connect to the Mender server yet.
+      </p>
+      <p>
+        Visit the 
+        <a
+          href="/help/get-started"
+        >
+          Help section
+        </a>
+         to learn how to connect devices to the Mender server.
+      </p>
+    </div>
   </div>
 </div>
 `;

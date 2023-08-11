@@ -47,7 +47,7 @@ describe('Main Component', () => {
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
     let settingsCall;
-    const keys = ['approach', 'artifactIncluded', 'complete', 'deviceType', 'progress'];
+    const keys = ['approach', 'complete', 'deviceType', 'progress'];
     await waitFor(
       () => {
         settingsCall = post.mock.calls.filter(

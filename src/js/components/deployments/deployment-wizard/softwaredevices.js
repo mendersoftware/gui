@@ -30,9 +30,9 @@ import { stringToBoolean } from '../../../helpers';
 import { formatDeviceSearch } from '../../../utils/locationutils';
 import useWindowSize from '../../../utils/resizehook';
 import AsyncAutocomplete from '../../common/asyncautocomplete';
-import InfoHint from '../../common/info-hint';
 import InfoText from '../../common/infotext';
 import { getDeviceIdentityText } from '../../devices/base-devices';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
   infoStyle: {
@@ -271,7 +271,7 @@ export const Software = ({ commonClasses, deploymentObject, releaseRef, releases
             !!releaseDeviceTypes.length && <InfoText style={{ marginBottom: 0 }}>This Release is compatible with {devicetypesInfo}.</InfoText>
           )}
         </div>
-        <InfoHint content="The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type." />
+        <MenderHelpTooltip id={HELPTOOLTIPS.groupDeployment.id} />
       </div>
     </>
   );

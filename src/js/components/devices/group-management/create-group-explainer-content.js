@@ -18,7 +18,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import dynamicImage from '../../../../assets/img/dynamic-group-creation.gif';
 import staticImage from '../../../../assets/img/static-group-creation.gif';
-import InfoText from '../../common/infotext';
+import { BENEFITS } from '../../../constants/appConstants';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
+import EnterpriseNotification from '../../common/enterpriseNotification';
+import { InfoHintContainer } from '../../common/info-hint';
 
 const useStyles = makeStyles()(theme => ({
   groupType: {
@@ -55,21 +58,15 @@ export const CreateGroupExplainerContent = ({ isEnterprise }) => {
           <div className="flexbox center-aligned margin-bottom">
             <Autorenew className={classes.icon} fontSize="small" />
             <div className="bold margin-left-small margin-right">Dynamic group</div>
-            {!isEnterprise && (
-              <InfoText className="uppercased" style={{ margin: 0 }} variant="dense">
-                Enterprise
-              </InfoText>
-            )}
+            <InfoHintContainer>
+              <EnterpriseNotification id={BENEFITS.dynamicGroups.id} />
+              <DocsTooltip id={DOCSTIPS.dynamicGroups.id} />
+            </InfoHintContainer>
           </div>
           <p className="help-content">
             You can set filters based on device attributes, and save them as a group. At any point in time, all devices that match the filters will be part of
             this group. This means that new devices will automatically join the group if they match the filters.
           </p>
-          {!isEnterprise && (
-            <InfoText>
-              Dynamic grouping is only available to Enterprise users. <a href="mailto:contact@mender.io">Contact us</a> to ask about upgrading.
-            </InfoText>
-          )}
         </div>
         <img className={classes.image} src={dynamicImage} />
       </div>

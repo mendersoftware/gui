@@ -58,7 +58,9 @@ const palette = {
     dark: '#dc6a5e'
   },
   tooltip: {
-    text: grey[600]
+    ...commonPalette.tooltip,
+    text: grey[600],
+    tierTipBackground: grey[50]
   }
 };
 

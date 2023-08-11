@@ -40,7 +40,6 @@ import {
   getGroupsByIdWithoutUngrouped,
   getIsEnterprise
 } from '../../selectors';
-import EnterpriseNotification from '../common/enterpriseNotification';
 import { extractSoftwareInformation } from '../devices/device-details/installedsoftware';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
@@ -141,8 +140,8 @@ export const SoftwareDistribution = () => {
 
   if (!isEnterprise) {
     return (
-      <div className="flexbox centered">
-        <EnterpriseNotification isEnterprise={isEnterprise} benefit="actionable insights into the devices you are updating with Mender" />
+      <div className="dashboard margin-bottom-large">
+        <ChartAdditionWidget groups={groups} onAdditionClick={addCurrentSelection} software={software} />
       </div>
     );
   }

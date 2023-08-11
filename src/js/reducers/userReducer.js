@@ -32,6 +32,11 @@ export const initialState = {
   rolesById: {
     ...UserConstants.rolesById
   },
+  tooltips: {
+    byId: {
+      // <id>: { readState: <read|unread> } // this object is getting enhanced by the tooltip texts in the app constants
+    }
+  },
   userSettings: {
     columnSelection: [],
     onboarding: {}
@@ -155,6 +160,25 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         showConnectDeviceDialog: action.show
+      };
+    case UserConstants.SET_TOOLTIP_STATE:
+      return {
+        ...state,
+        tooltips: {
+          ...state.tooltips,
+          byId: {
+            ...state.tooltips.byId,
+            [action.id]: action.value
+          }
+        }
+      };
+    case UserConstants.SET_TOOLTIPS_STATE:
+      return {
+        ...state,
+        tooltips: {
+          ...state.tooltips,
+          byId: action.value
+        }
       };
     default:
       return state;

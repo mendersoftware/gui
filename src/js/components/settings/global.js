@@ -35,7 +35,7 @@ import {
 } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import DocsLink from '../common/docslink';
-import InfoHint from '../common/info-hint';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import ArtifactGenerationSettings from './artifactgeneration';
 import ReportingLimits from './reportinglimits';
 
@@ -53,7 +53,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const IdAttributeSelection = ({ attributes, dialog, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
+export const IdAttributeSelection = ({ attributes, dialog = false, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
   const [attributeSelection, setAttributeSelection] = useState('name');
 
   useEffect(() => {
@@ -183,8 +183,10 @@ export const GlobalSettingsDialog = ({
 
   return (
     <div style={{ maxWidth }} className="margin-top-small">
-      <h2 className="margin-top-small">Global settings</h2>
-      <InfoHint content="These settings apply to all users, so changes made here may affect other users' experience." style={{ marginBottom: 30 }} />
+      <div className="flexbox center-aligned">
+        <h2 className="margin-top-small margin-right-small">Global settings</h2>
+        <MenderHelpTooltip id={HELPTOOLTIPS.globalSettings.id} placement="top" />
+      </div>
       <IdAttributeSelection attributes={attributes} onCloseClick={onCloseClick} onSaveClick={onSaveClick} selectedAttribute={selectedAttribute} />
       {hasReporting && <ReportingLimits />}
       <InputLabel className="margin-top" shrink>

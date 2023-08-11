@@ -553,8 +553,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   class="margin-bottom "
 >
   <div
-    class="flexbox space-between"
-    style="align-items: flex-start;"
+    class="flexbox space-between center-aligned"
   >
     <div
       class="two-columns"

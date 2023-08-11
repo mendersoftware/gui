@@ -58,7 +58,7 @@ class Tracker {
   }
   exception(error) {
     if (this.initialized && this.trackingEnabled) {
-      ReactGA.exception(error);
+      ReactGA.event('error', error);
     }
   }
   event(data) {

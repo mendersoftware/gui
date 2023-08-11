@@ -35,7 +35,7 @@ import {
   getUserCapabilities
 } from '../../selectors';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
-import EnterpriseNotification from '../common/enterpriseNotification';
+import { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -215,7 +215,7 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
             </>
           ) : (
             <div className="flexbox centered">
-              <EnterpriseNotification isEnterprise={isEnterprise} benefit="scheduled deployments to steer the distribution of your updates." />
+              <DefaultUpgradeNotification />
             </div>
           )}
           <RefreshIcon className={`flip-horizontal ${classes.refreshIcon}`} />

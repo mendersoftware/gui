@@ -20,10 +20,12 @@ import { Button, Chip, Collapse } from '@mui/material';
 
 import { getDeviceAttributes, setDeviceFilters, setDeviceListState } from '../../../actions/deviceActions';
 import { saveGlobalSettings } from '../../../actions/userActions';
+import { BENEFITS } from '../../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
 import { deepCompare } from '../../../helpers';
-import { getDeviceFilters, getFilterAttributes, getIsEnterprise, getOrganization, getSelectedGroupInfo, getTenantCapabilities } from '../../../selectors';
+import { getDeviceFilters, getFilterAttributes, getIsEnterprise, getSelectedGroupInfo, getTenantCapabilities } from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import { InfoHintContainer } from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
 import FilterItem from './filteritem';
 
@@ -40,10 +42,9 @@ export const Filters = ({ className = '', filters: propsFilters, isModification 
   const [currentFilters, setCurrentFilters] = useState([]);
   const [editedIndex, setEditedIndex] = useState(0);
   const dispatch = useDispatch();
-  const { plan = 'os' } = useSelector(getOrganization);
+  const { plan } = useSelector(getTenantCapabilities);
   const { groupFilters, selectedGroup } = useSelector(getSelectedGroupInfo);
   const attributes = useSelector(getFilterAttributes);
-  const { hasFullFiltering: canFilterMultiple } = useSelector(getTenantCapabilities);
   const stateFilters = useSelector(getDeviceFilters);
   const filters = propsFilters || stateFilters;
   const isEnterprise = useSelector(getIsEnterprise);
@@ -153,39 +154,39 @@ export const Filters = ({ className = '', filters: propsFilters, isModification 
             ) : null}
             {adding && <FilterItem attributes={attributes} filter={filter} onRemove={removeFilter} onSelect={updateFilter} plan={plan} />}
             {isFilterDefined && addButton}
+            <EnterpriseNotification id={BENEFITS.fullFiltering.id} />
           </div>
         </div>
-        <div className="flexbox column margin-top-small margin-bottom-small" style={{ alignItems: 'flex-end' }}>
-          {!!filters.length && !groupFilters.length && (
+        {!!filters.length && !groupFilters.length && (
+          <div className="flexbox column margin-top-small margin-bottom-small" style={{ alignItems: 'flex-end' }}>
             <span className="link margin-small margin-top-none" onClick={clearFilters}>
               Clear filter
             </span>
-          )}
-          <EnterpriseNotification
-            isEnterprise={isEnterprise}
-            benefit="filtering by multiple attributes to improve the device overview and the creation of dynamic groups to ease device management"
-          />
-          {canFilterMultiple && isEnterprise && filters.length >= 1 && (
-            <>
-              {selectedGroup ? (
-                !!groupFilters.length && (
-                  <MenderTooltip
-                    title="Saved changes will not change the target devices of any ongoing deployments to this group, but will take effect for new deployments"
-                    arrow
-                  >
-                    <Button variant="contained" color="secondary" onClick={onGroupClick}>
-                      Save group
-                    </Button>
-                  </MenderTooltip>
-                )
-              ) : (
-                <Button variant="contained" color="secondary" onClick={onGroupClick}>
-                  Create group with this filter
-                </Button>
-              )}
-            </>
-          )}
-        </div>
+          </div>
+        )}
+        {isEnterprise && filters.length >= 1 && (
+          <div>
+            {selectedGroup ? (
+              !!groupFilters.length && (
+                <MenderTooltip
+                  title="Saved changes will not change the target devices of any ongoing deployments to this group, but will take effect for new deployments"
+                  arrow
+                >
+                  <Button variant="contained" color="secondary" onClick={onGroupClick}>
+                    Save group
+                  </Button>
+                </MenderTooltip>
+              )
+            ) : (
+              <Button variant="contained" color="secondary" onClick={onGroupClick}>
+                Create group with this filter
+              </Button>
+            )}
+            <InfoHintContainer>
+              <EnterpriseNotification id={BENEFITS.dynamicGroups.id} />
+            </InfoHintContainer>
+          </div>
+        )}
       </>
     </Collapse>
   );

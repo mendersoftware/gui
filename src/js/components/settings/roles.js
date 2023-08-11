@@ -20,9 +20,13 @@ import { Chip } from '@mui/material';
 
 import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
+import { BENEFITS } from '../../constants/appConstants';
 import { emptyRole, rolesById } from '../../constants/userConstants';
-import { getFeatures, getGroupsByIdWithoutUngrouped, getReleaseTagsById, getRolesList } from '../../selectors';
+import { getFeatures, getGroupsByIdWithoutUngrouped, getIsEnterprise, getReleaseTagsById, getRolesList } from '../../selectors';
 import DetailsTable from '../common/detailstable';
+import { DocsTooltip } from '../common/docslink';
+import EnterpriseNotification from '../common/enterpriseNotification';
+import { InfoHintContainer } from '../common/info-hint';
 import RoleDefinition from './roledefinition';
 
 const columns = [
@@ -48,6 +52,7 @@ export const RoleManagement = () => {
   const groups = useSelector(getGroupsByIdWithoutUngrouped);
   const releaseTags = useSelector(getReleaseTagsById);
   const roles = useSelector(getRolesList);
+  const isEnterprise = useSelector(getIsEnterprise);
 
   useEffect(() => {
     if (Object.keys(groups).length) {
@@ -99,9 +104,15 @@ export const RoleManagement = () => {
 
   return (
     <div>
-      <h2 style={{ marginLeft: 20 }}>Roles</h2>
+      <div className="flexbox center-aligned">
+        <h2 style={{ marginLeft: 20 }}>Roles</h2>
+        <InfoHintContainer>
+          <EnterpriseNotification id={BENEFITS.rbac.id} />
+          <DocsTooltip />
+        </InfoHintContainer>
+      </div>
       <DetailsTable columns={columns} items={items} onItemClick={onEditRole} />
-      <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} />
+      <Chip color="primary" icon={<AddIcon />} label="Add a role" onClick={addRole} disabled={!isEnterprise} />
       <RoleDefinition
         adding={adding}
         editing={editing}

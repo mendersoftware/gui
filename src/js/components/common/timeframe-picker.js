@@ -17,15 +17,15 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import moment from 'moment';
 
-export const TimeframePicker = ({ onChange, ...props }) => {
+export const TimeframePicker = ({ onChange, disabled = false, endDate: propsEndDate, startDate: propsStartDate, tonight: propsTonight }) => {
   const [tonight] = useState(moment().endOf('day'));
-  const [endDate, setEndDate] = useState(moment(props.endDate) > tonight ? tonight : moment(props.endDate));
-  const [startDate, setStartDate] = useState(moment(props.startDate));
+  const [endDate, setEndDate] = useState(moment(propsEndDate) > tonight ? tonight : moment(propsEndDate));
+  const [startDate, setStartDate] = useState(moment(propsStartDate));
 
   useEffect(() => {
-    setEndDate(moment(props.endDate) > tonight ? tonight : moment(props.endDate));
-    setStartDate(moment(props.startDate));
-  }, [props.tonight, props.endDate, props.startDate, tonight]);
+    setEndDate(moment(propsEndDate) > tonight ? tonight : moment(propsEndDate));
+    setStartDate(moment(propsStartDate));
+  }, [propsTonight, propsEndDate, propsStartDate, tonight]);
 
   const handleChangeStartDate = date => {
     let currentEndDate = endDate.clone();
@@ -49,8 +49,23 @@ export const TimeframePicker = ({ onChange, ...props }) => {
 
   return (
     <>
-      <DatePicker onChange={handleChangeStartDate} label="From" format="MMMM Do" value={startDate} maxDate={props.endDate ? endDate : tonight} />
-      <DatePicker className="margin-left-small" onChange={handleChangeEndDate} label="To" format="MMMM Do" value={endDate} maxDate={tonight} />
+      <DatePicker
+        disabled={disabled}
+        format="MMMM Do"
+        label="From"
+        maxDate={propsEndDate ? endDate : tonight}
+        onChange={handleChangeStartDate}
+        value={startDate}
+      />
+      <DatePicker
+        className="margin-left-small"
+        disabled={disabled}
+        format="MMMM Do"
+        label="To"
+        maxDate={tonight}
+        onChange={handleChangeEndDate}
+        value={endDate}
+      />
     </>
   );
 };

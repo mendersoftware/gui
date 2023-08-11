@@ -31,8 +31,8 @@ const useStyles = makeStyles()(theme => ({
   actionButtons: { justifyContent: 'flex-end' },
   divider: { marginTop: theme.spacing(4) },
   leftButton: { marginRight: theme.spacing(2) },
-  oauthIcon: { fontSize: '36px', marginRight: 10 },
-  widthLimit: { maxWidth: 500 }
+  oauthIcon: { fontSize: 36, marginRight: 10 },
+  widthLimit: { maxWidth: 400 }
 }));
 
 export const getUserSSOState = user => {
@@ -112,6 +112,7 @@ export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, 
   const isSubmitDisabled = !selectedRoles.length;
 
   const { isOAuth2, provider } = getUserSSOState(selectedUser);
+  const rolesClasses = isEnterprise ? '' : 'muted';
   return (
     <Drawer anchor="right" open={!!id} PaperProps={{ style: { minWidth: 600, width: '50vw' } }}>
       <div className="flexbox margin-bottom-small space-between">
@@ -147,21 +148,19 @@ export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, 
           label="Send an email to the user containing a link to reset the password"
         />
       )}
-      {isEnterprise && (
+      <UserRolesSelect disabled={!isEnterprise} currentUser={currentUser} onSelect={onRolesSelect} roles={roles} user={selectedUser} />
+      {!!(Object.keys(groups).length || Object.keys(areas).length) && (
+        <InputLabel className="margin-top" shrink>
+          Role permissions
+        </InputLabel>
+      )}
+      <TwoColumnData className={rolesClasses} config={areas} />
+      {!!Object.keys(groups).length && (
         <>
-          <UserRolesSelect currentUser={currentUser} onSelect={onRolesSelect} roles={roles} user={selectedUser} />
-          {!!(Object.keys(groups).length || Object.keys(areas).length) && (
-            <InputLabel className="margin-top" shrink>
-              Role permissions
-            </InputLabel>
-          )}
-          <TwoColumnData config={areas} />
-          {!!Object.keys(groups).length && (
-            <>
-              <div className="slightly-smaller text-muted">Device groups</div>
-              <TwoColumnData config={groups} />
-            </>
-          )}
+          <InputLabel className="margin-top-small" shrink>
+            Device groups
+          </InputLabel>
+          <TwoColumnData className={rolesClasses} config={groups} />
         </>
       )}
       <Divider className={classes.divider} light />
