@@ -16,11 +16,13 @@ import React, { useEffect, useState } from 'react';
 import { Autocomplete, Checkbox, Collapse, FormControl, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { TIMEOUTS } from '../../../constants/appConstants';
+import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
 import { useDebounce } from '../../../utils/debouncehook';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
-import MenderTooltip from '../../common/mendertooltip';
+import { InfoHintContainer } from '../../common/info-hint';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import RolloutSteps from './rolloutsteps';
 
 const useStyles = makeStyles()(() => ({
@@ -40,24 +42,22 @@ export const ForceDeploy = ({ deploymentObject, setDeploymentSettings }) => {
 
   return (
     <div>
-      <MenderTooltip
-        title={
-          <div style={{ whiteSpace: 'normal' }}>
-            <h3>Force update</h3>
-            <p>This will make the Mender client install the update even if the selected release is already installed.</p>
+      <FormControlLabel
+        className={classes.heading}
+        control={<Checkbox color="primary" checked={forceDeploy} onChange={() => setForceDeploy(toggle)} size="small" />}
+        label={
+          <div className="flexbox center-aligned">
+            <b className="margin-right-small">Force update</b> (optional)
+            <MenderHelpTooltip
+              id={HELPTOOLTIPS.forceDeployment.id}
+              disableFocusListener={false}
+              disableHoverListener={false}
+              disableTouchListener={false}
+              style={{ marginLeft: 15 }}
+            />
           </div>
         }
-      >
-        <FormControlLabel
-          className={classes.heading}
-          control={<Checkbox color="primary" checked={forceDeploy} onChange={() => setForceDeploy(toggle)} size="small" />}
-          label={
-            <>
-              <b>Force update</b> (optional)
-            </>
-          }
-        />
-      </MenderTooltip>
+      />
     </div>
   );
 };
@@ -82,15 +82,18 @@ export const RolloutOptions = ({ deploymentObject, isEnterprise, setDeploymentSe
         className={classes.heading}
         control={<Checkbox color="primary" checked={isPaused} disabled={!isEnterprise} onChange={onIsPausedClick} size="small" />}
         label={
-          <>
-            <b>Add pauses between update steps</b> (optional)
-          </>
+          <div className="flexbox center-aligned">
+            <b className="margin-right-small">Add pauses between update steps</b> (optional)
+            <InfoHintContainer>
+              <EnterpriseNotification id={BENEFITS.pausedDeployments.id} />
+              <DocsTooltip id={DOCSTIPS.pausedDeployments.id} />
+            </InfoHintContainer>
+          </div>
         }
       />
       <Collapse in={isPaused} className={classes.wrapper}>
         <RolloutSteps disabled={phases.length > 1 || !isEnterprise} onStepChange={onStepChangeClick} release={release} steps={states} />
       </Collapse>
-      <EnterpriseNotification isEnterprise={isEnterprise} benefit="granular control about update rollout to allow synchronization across your fleet" />
     </>
   );
 };
@@ -132,9 +135,13 @@ export const Retries = ({
 
   return (
     <>
-      <h4 className={`${classes.heading} ${canRetry ? '' : commonClasses.disabled}`}>
-        Select the number of times each device will attempt to apply the update
-      </h4>
+      <div className="flexbox center-aligned margin-top-small">
+        <b className={canRetry ? '' : commonClasses.disabled}>Select the number of times each device will attempt to apply the update</b>
+        <InfoHintContainer>
+          <EnterpriseNotification id={BENEFITS.retryDeployments.id} />
+          <DocsTooltip id={DOCSTIPS.phasedDeployments.id} />
+        </InfoHintContainer>
+      </div>
       <FormControl className="margin-top-none" disabled={!canRetry}>
         <FormGroup row>
           <Autocomplete
@@ -166,7 +173,6 @@ export const Retries = ({
           />
         </FormGroup>
       </FormControl>
-      <EnterpriseNotification isEnterprise={canRetry} benefit="optional retries for failed rollout attempts" />
     </>
   );
 };

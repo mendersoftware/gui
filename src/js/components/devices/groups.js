@@ -19,7 +19,7 @@ import { List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/
 import { makeStyles } from 'tss-react/mui';
 
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { AddGroup } from '../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
   header: {
@@ -50,11 +50,14 @@ export const GroupItem = ({ changeGroup, groupname, selectedGroup, name }) => (
   </ListItem>
 );
 
-export const Groups = ({ acceptedCount, changeGroup, className, groups, openGroupDialog, selectedGroup, showHelptips }) => {
+export const Groups = ({ acceptedCount, changeGroup, className, groups, openGroupDialog, selectedGroup }) => {
   const { dynamic: dynamicGroups, static: staticGroups, ungrouped } = groups;
   return (
     <div className={className}>
-      <div className="muted margin-bottom-small">Groups</div>
+      <div className="flexbox margin-bottom-small margin-top-small">
+        <div className="muted">Groups</div>
+        {!!(acceptedCount && staticGroups.length + dynamicGroups.length <= 1) && <MenderHelpTooltip id={HELPTOOLTIPS.addGroup.id} className="margin-left" />}
+      </div>
       <List>
         <ListItem classes={{ root: 'grouplist' }} button key="All" selected={!selectedGroup} onClick={() => changeGroup()}>
           <ListItemText primary={ALL_DEVICES} />
@@ -78,8 +81,6 @@ export const Groups = ({ acceptedCount, changeGroup, className, groups, openGrou
           <ListItemText primary="Create a group" />
         </ListItem>
       </List>
-
-      {showHelptips && acceptedCount && groups.length <= 1 ? <AddGroup /> : null}
     </div>
   );
 };

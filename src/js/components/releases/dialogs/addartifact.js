@@ -28,7 +28,7 @@ import { getDeviceTypes, getOnboardingState } from '../../../selectors';
 import Tracking from '../../../tracking';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
-import InfoHint from '../../common/info-hint';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import ArtifactInformationForm from './artifactinformationform';
 import ArtifactUploadConfirmation from './artifactupload';
 
@@ -40,12 +40,11 @@ const useStyles = makeStyles()(theme => ({
     alignItems: 'center',
     columnGap: theme.spacing(4),
     display: 'grid',
-    gridTemplateColumns: 'max-content 1fr max-content',
+    gridTemplateColumns: 'max-content 1fr max-content max-content',
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(4)
   },
-  fileSizeWrapper: { marginTop: 5 },
-  infoIcon: { '> svg': { alignSelf: 'flex-start', marginTop: theme.spacing(0.5) } }
+  fileSizeWrapper: { marginTop: 5 }
 }));
 
 const uploadTypes = {
@@ -63,19 +62,12 @@ const fileInformationContent = {
   mender: {
     title: 'Mender Artifact',
     icon: InsertDriveFileIcon,
-    info: (
-      <>
-        If there is no Release matching this Artifact’s name, a new Release will be created for this Artifact.
-        <br />
-        <br />
-        If there is already a Release matching this Artifact’s name, the Artifact will be grouped in that Release.
-      </>
-    )
+    infoId: 'menderArtifactUpload'
   },
   singleFile: {
     title: 'Single File',
     icon: InsertDriveFileIcon,
-    info: `This will generate a single file application update Artifact, which requires some additional metadata to be entered.`
+    infoId: 'singleFileUpload'
   }
 };
 
@@ -84,7 +76,7 @@ export const FileInformation = ({ file, type, onRemove }) => {
   if (!file) {
     return <div />;
   }
-  const { icon: Icon, info, title } = fileInformationContent[type];
+  const { icon: Icon, infoId, title } = fileInformationContent[type];
   return (
     <>
       <h4>Selected {title}</h4>
@@ -99,9 +91,9 @@ export const FileInformation = ({ file, type, onRemove }) => {
         <IconButton size="large" onClick={onRemove}>
           <DeleteIcon />
         </IconButton>
+        <MenderHelpTooltip id={HELPTOOLTIPS[infoId].id} />
       </div>
       <Divider className="margin-right-large" />
-      <InfoHint className={classes.infoIcon} content={info} />
     </>
   );
 };

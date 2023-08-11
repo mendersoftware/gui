@@ -19,11 +19,11 @@ import Cookies from 'universal-cookie';
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
 import { cleanUp, logout } from '../auth';
+import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
 import * as AppConstants from '../constants/appConstants';
-import * as OnboardingConstants from '../constants/onboardingConstants';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
-import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getCurrentUser, getOnboardingState, getTooltipsState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 import { commonErrorFallback, commonErrorHandler, initializeAppData, setOfflineThreshold, setSnackbar } from './appActions';
 
@@ -642,13 +642,16 @@ export const saveUserSettings =
     }
     return Promise.resolve(dispatch(getUserSettings())).then(result => {
       const userSettings = getUserSettingsSelector(getState());
+      const onboardingState = getOnboardingState(getState());
+      const tooltipState = getTooltipsState(getState());
       const updatedSettings = {
         ...userSettings,
         ...settings,
         onboarding: {
-          ...userSettings.onboarding,
+          ...onboardingState,
           ...settings.onboarding
-        }
+        },
+        tooltips: tooltipState
       };
       const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};
       return Promise.all([
@@ -664,19 +667,6 @@ export const get2FAQRCode = () => dispatch =>
 /*
   Onboarding
 */
-export const setShowHelptips = show => (dispatch, getState) => {
-  let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch(saveUserSettings({ showHelptips: show }))];
-  if (!getOnboardingState(getState()).complete) {
-    tasks.push(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }));
-  }
-  return Promise.all(tasks);
-};
-
-export const toggleHelptips = () => (dispatch, getState) => {
-  const showHelptips = getUserSettingsSelector(getState()).showHelptips;
-  return Promise.resolve(dispatch(setShowHelptips(!showHelptips)));
-};
-
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: Boolean(show) });
 
 export const setHideAnnouncement = (shouldHide, userId) => (dispatch, getState) => {
@@ -711,3 +701,20 @@ export const generateToken =
 
 export const revokeToken = token => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/settings/tokens/${token.id}`).then(() => Promise.resolve(dispatch(getTokens())));
+
+export const setTooltipReadState =
+  (id, readState = UserConstants.READ_STATES.read, persist) =>
+  dispatch =>
+    Promise.resolve(dispatch({ type: UserConstants.SET_TOOLTIP_STATE, id, value: { readState } })).then(() => {
+      if (persist) {
+        return Promise.resolve(dispatch(saveUserSettings()));
+      }
+      return Promise.resolve();
+    });
+
+export const setAllTooltipsReadState =
+  (readState = UserConstants.READ_STATES.read) =>
+  dispatch => {
+    const updatedTips = Object.keys(HELPTOOLTIPS).reduce((accu, id) => ({ ...accu, [id]: { readState } }), {});
+    return Promise.resolve(dispatch({ type: UserConstants.SET_TOOLTIPS_STATE, value: updatedTips })).then(() => dispatch(saveUserSettings()));
+  };

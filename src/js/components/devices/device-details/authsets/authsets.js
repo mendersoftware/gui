@@ -23,6 +23,7 @@ import pluralize from 'pluralize';
 import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
 import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
 import { getAcceptedDevices, getDeviceLimit, getLimitMaxed, getUserCapabilities } from '../../../../selectors';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../../helptips/helptooltips';
 import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
 import Confirm from './../../../common/confirm';
 import Authsetlist from './authsetlist';
@@ -40,7 +41,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const Authsets = ({ decommission, device, showHelptips }) => {
+export const Authsets = ({ decommission, device }) => {
   const [confirmDecommission, setConfirmDecomission] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -63,8 +64,9 @@ export const Authsets = ({ decommission, device, showHelptips }) => {
   const { classes } = useStyles();
   return (
     <div className={classes.wrapper}>
-      <div className="margin-bottom-small">
+      <div className="margin-bottom-small flexbox space-between">
         {status === DEVICE_STATES.pending ? `Authorization ${pluralize('request', auth_sets.length)}` : 'Authorization sets'}
+        <MenderHelpTooltip id={HELPTOOLTIPS.authExplainButton.id} />
       </div>
       <Authsetlist
         limitMaxed={limitMaxed}
@@ -72,7 +74,6 @@ export const Authsets = ({ decommission, device, showHelptips }) => {
         confirm={updateDeviceAuthStatus}
         loading={loading}
         device={device}
-        showHelptips={showHelptips}
         userCapabilities={userCapabilities}
       />
       {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedDevices} deviceLimit={deviceLimit} hasContactInfo />}

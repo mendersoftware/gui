@@ -17,6 +17,7 @@ import Cookies from 'universal-cookie';
 
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { accessTokens, defaultPassword, defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
+import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
 import {
   SET_ANNOUNCEMENT,
   SET_ENVIRONMENT_DATA,
@@ -50,7 +51,7 @@ import {
   SET_REJECTED_DEVICES,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
-import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_ARTIFACT_INCLUDED, SET_ONBOARDING_COMPLETE, SET_SHOW_ONBOARDING_HELP } from '../constants/onboardingConstants';
+import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_ARTIFACT_INCLUDED, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
 import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
 import {
@@ -68,6 +69,8 @@ import {
   SET_GLOBAL_SETTINGS,
   SET_SHOW_CONNECT_DEVICE,
   SET_SHOW_HELP,
+  SET_TOOLTIPS_STATE,
+  SET_TOOLTIP_STATE,
   SET_USER_SETTINGS,
   SUCCESSFULLY_LOGGED_IN,
   UPDATED_ROLE,
@@ -101,9 +104,10 @@ import {
   saveGlobalSettings,
   saveUserSettings,
   setAccountActivationCode,
+  setAllTooltipsReadState,
   setHideAnnouncement,
   setShowConnectingDialog,
-  toggleHelptips,
+  setTooltipReadState,
   updateUserColumnSettings,
   verify2FA,
   verifyEmailComplete,
@@ -336,6 +340,7 @@ const appInitActions = [
     }
   },
   { type: SET_SHOW_HELP, show: true },
+  { type: SET_TOOLTIPS_STATE, value: {} },
   { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
   {
     type: SET_ACCEPTED_DEVICES,
@@ -380,36 +385,6 @@ describe('user actions', () => {
       }
     ];
     await store.dispatch(setShowConnectingDialog(true));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should toggle helptips visibility based on cookie value', async () => {
-    jest.clearAllMocks();
-    const expectedActions = [
-      { type: SET_SHOW_HELP, show: true },
-      { type: SET_SHOW_ONBOARDING_HELP, show: true }
-    ];
-    const store = mockStore({ ...defaultState });
-    store.dispatch(toggleHelptips());
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
-  it('should toggle helptips visibility based on cookie value - pt 2', async () => {
-    jest.clearAllMocks();
-    const expectedActions = [
-      { type: SET_SHOW_HELP, show: false },
-      { type: SET_SHOW_ONBOARDING_HELP, show: false }
-    ];
-    const store = mockStore({
-      ...defaultState,
-      users: {
-        ...defaultState.users,
-        userSettings: { ...defaultState.users.userSettings, showHelptips: true }
-      }
-    });
-    store.dispatch(toggleHelptips());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -788,6 +763,32 @@ describe('user actions', () => {
     const expectedActions = [{ type: UPDATED_USER, userId: 'a1', user: { tokens: accessTokens } }];
     const store = mockStore({ ...defaultState });
     await store.dispatch(revokeToken({ id: 'some-id-1' }));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
+  it('should handle setting single tooltip read state', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      { type: SET_TOOLTIP_STATE, id: 'foo', value: { readState: 'testRead' } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } }
+    ];
+    await store.dispatch(setTooltipReadState('foo', 'testRead', true));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should handle setting tooltip read state for all tips', async () => {
+    const store = mockStore({ ...defaultState });
+
+    const expectedActions = [
+      { type: SET_TOOLTIPS_STATE, value: { ...Object.values(HELPTOOLTIPS).reduce((accu, { id }) => ({ ...accu, [id]: { readState: 'testRead' } }), {}) } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } }
+    ];
+    await store.dispatch(setAllTooltipsReadState('testRead'));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));

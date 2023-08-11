@@ -33,9 +33,10 @@ import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
 import { getAllDeviceCounts } from '../../actions/deviceActions';
-import { initializeSelf, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
+import { initializeSelf, logoutUser, setAllTooltipsReadState, setHideAnnouncement } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
+import { READ_STATES } from '../../constants/userConstants';
 import { decodeSessionToken, isDarkMode } from '../../helpers';
 import {
   getAcceptedDevices,
@@ -45,7 +46,7 @@ import {
   getFeatures,
   getIsEnterprise,
   getOrganization,
-  getShowHelptips,
+  getTooltipsById,
   getUserCapabilities,
   getUserSettings
 } from '../../selectors';
@@ -121,11 +122,12 @@ export const Header = ({ mode }) => {
   const { isDemoMode: demo, hasMultitenancy, isHosted } = useSelector(getFeatures);
   const { isSearching, searchTerm, refreshTrigger } = useSelector(state => state.app.searchState);
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
-  const showHelptips = useSelector(getShowHelptips);
+  const tooltips = useSelector(getTooltipsById);
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
   const dispatch = useDispatch();
   const deviceTimer = useRef();
+  const showHelptips = Object.values(tooltips).reduce((accu, { readState }) => accu || readState === READ_STATES.unread, false);
 
   const updateUsername = useCallback(() => {
     const userId = decodeSessionToken(getToken());
@@ -170,6 +172,8 @@ export const Header = ({ mode }) => {
   };
 
   const onSearch = searchTerm => dispatch(setSearchState({ refreshTrigger: !refreshTrigger, searchTerm, page: 1 }));
+
+  const onToggleTooltips = () => dispatch(setAllTooltipsReadState(showHelptips ? READ_STATES.read : READ_STATES.unread));
 
   const setHideOffer = () => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
@@ -248,7 +252,7 @@ export const Header = ({ mode }) => {
                 User management
               </MenuItem>
             )}
-            <MenuItem onClick={() => dispatch(toggleHelptips())}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+            <MenuItem onClick={onToggleTooltips}>{`Mark help tips as ${showHelptips ? '' : 'un'}read`}</MenuItem>
             <MenuItem component={Link} to="/help/get-started">
               Help & support
             </MenuItem>

@@ -61,10 +61,10 @@ export const DeviceIdentity = ({ device, setSnackbar }) => {
 
 export default DeviceIdentity;
 
-export const IdentityTab = ({ device, setSnackbar, showHelptips, userCapabilities, onDecommissionDevice }) => (
+export const IdentityTab = ({ device, setSnackbar, userCapabilities, onDecommissionDevice }) => (
   <>
     <DeviceIdentity device={device} setSnackbar={setSnackbar} />
-    <AuthStatus device={device} decommission={onDecommissionDevice} showHelptips={showHelptips} />
-    <DeviceTags device={device} setSnackbar={setSnackbar} showHelptips={showHelptips} userCapabilities={userCapabilities} />
+    <AuthStatus device={device} decommission={onDecommissionDevice} />
+    <DeviceTags device={device} setSnackbar={setSnackbar} userCapabilities={userCapabilities} />
   </>
 );

@@ -50,7 +50,7 @@ import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import { ExpandDevice } from '../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import { defaultHeaders, defaultTextRender, getDeviceIdentityText, routes as states } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
 import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
@@ -501,7 +501,7 @@ export const Authorized = ({
               pageLoading={pageLoading}
               pageTotal={deviceCount}
             />
-            {showHelptips && <ExpandDevice />}
+            <MenderHelpTooltip id={HELPTOOLTIPS.expandDevice.id} style={{ position: 'absolute', right: 45 }} />
           </div>
         ) : (
           <>

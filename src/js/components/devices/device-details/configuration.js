@@ -29,7 +29,7 @@ import { setSnackbar } from '../../../actions/appActions';
 import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../../actions/deploymentActions';
 import { applyDeviceConfig, setDeviceConfig } from '../../../actions/deviceActions';
 import { saveGlobalSettings } from '../../../actions/userActions';
-import { TIMEOUTS } from '../../../constants/appConstants';
+import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
@@ -38,10 +38,13 @@ import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
+import { InfoHintContainer } from '../../common/info-hint';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
-import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -54,11 +57,11 @@ const defaultReportTimeStamp = '0001-01-01T00:00:00Z';
 const configHelpTipsMap = {
   'mender-demo-raspberrypi-led': {
     position: 'right',
-    component: ConfigureRaspberryLedTip
+    component: ({ anchor, ...props }) => <MenderHelpTooltip style={anchor} id={HELPTOOLTIPS.configureRaspberryLedTip.id} contentProps={props} />
   },
   timezone: {
     position: 'right',
-    component: ConfigureTimezoneTip
+    component: ({ anchor, ...props }) => <MenderHelpTooltip style={anchor} id={HELPTOOLTIPS.configureTimezoneTip.id} contentProps={props} />
   }
 };
 
@@ -137,12 +140,11 @@ export const ConfigUpdateFailureActions = ({ hasLog, onSubmit, onCancel, setShow
   </>
 );
 
-export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId }, showHelptips }) => {
+export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId } }) => {
   const { device, deviceConfigDeployment: deployment } = useSelector(state => getDeviceConfigDeployment(state, deviceId));
   const { config = {}, status } = device;
   const { configured = {}, deployment_id, reported = {}, reported_ts, updated_ts } = config;
   const isRelevantDeployment = deployment.created > updated_ts && (!reported_ts || deployment.finished > reported_ts);
-
   const [changedConfig, setChangedConfig] = useState();
   const [editableConfig, setEditableConfig] = useState();
   const [isAborting, setIsAborting] = useState(false);
@@ -294,7 +296,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
   const onAbortClick = () => setIsAborting(toggle);
 
   const hasDeviceConfig = !isEmpty(reported);
-  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
+  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={updated_ts} />;
   if (isEditingConfig) {
     footer = (
       <ConfigEditingActions
@@ -359,11 +361,18 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
               </Button>
             )}
           </div>
-          {isEditingConfig ? (
-            <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left', alignSelf: 'center' }}>
-              Import configuration
-            </Button>
-          ) : null}
+          <div className="flexbox center-aligned">
+            {isEditingConfig ? (
+              <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+                Import configuration
+              </Button>
+            ) : null}
+            <InfoHintContainer>
+              <EnterpriseNotification id={BENEFITS.deviceConfiguration.id} />
+              <MenderHelpTooltip id={HELPTOOLTIPS.configureAddOnTip.id} style={{ marginTop: 5 }} />
+              <DocsTooltip id={DOCSTIPS.deviceConfig.id} />
+            </InfoHintContainer>
+          </div>
         </div>
       }
     >
@@ -375,12 +384,10 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
             initialInput={editableConfig}
             inputHelpTipsMap={helpTipsMap}
             onInputChange={setChangedConfig}
-            showHelptips={showHelptips}
           />
         ) : (
           hasDeviceConfig && <ConfigurationObject config={reported} setSnackbar={onSetSnackbar} />
         )}
-        {showHelptips && <ConfigureAddOnTip />}
         <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
         {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
         {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}

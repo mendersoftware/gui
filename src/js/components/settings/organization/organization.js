@@ -16,7 +16,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
-import { FileCopy as CopyPasteIcon, Info as InfoIcon } from '@mui/icons-material';
+import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
 import { Button, Checkbox, Collapse, FormControlLabel, List } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
@@ -36,7 +36,7 @@ import { TIMEOUTS } from '../../../constants/appConstants';
 import { createFileDownload, toggle } from '../../../helpers';
 import { getFeatures, getIsEnterprise, getIsPreview, getOrganization, getUserRoles } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
-import { MenderTooltipClickable } from '../../common/mendertooltip';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import Billing from './billing';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import { SAMLConfig } from './samlconfig';
@@ -56,20 +56,7 @@ export const OrgHeader = () => {
   return (
     <div className="flexbox center-aligned">
       <div className={classes.tokenTitle}>Organization token</div>
-      <MenderTooltipClickable
-        disableHoverListener={false}
-        placement="top"
-        title={
-          <>
-            <h3>Organization token</h3>
-            <p className={classes.tokenExplanation}>
-              This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
-            </p>
-          </>
-        }
-      >
-        <InfoIcon />
-      </MenderTooltipClickable>
+      <MenderHelpTooltip id={HELPTOOLTIPS.tenantToken.id} disableHoverListener={false} placement="top" />
     </div>
   );
 };

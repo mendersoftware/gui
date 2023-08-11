@@ -47,7 +47,7 @@ export const useStyles = makeStyles()(theme => ({
   price: { fontSize: '1rem' }
 }));
 
-export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTag, setUpdatedPlan, updatedPlan }) => {
+export const PlanSelection = ({ currentPlan = PLANS.os.id, isTrial, offerValid, offerTag, setUpdatedPlan, updatedPlan }) => {
   const { classes } = useStyles();
   const canUpgrade = plan => Object.keys(PLANS).indexOf(plan) >= Object.keys(PLANS).indexOf(currentPlan);
   const onPlanSelect = plan => (isTrial || canUpgrade(plan) ? setUpdatedPlan(plan) : undefined);
@@ -57,12 +57,12 @@ export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTa
       <div className="flexbox space-between" style={{ paddingBottom: 15 }}>
         {Object.values(PLANS).map(item => (
           <div
-            key={item.value}
-            className={`planPanel ${classes.planPanel} ${updatedPlan === item.value ? 'active' : ''} ${isTrial || canUpgrade(item.value) ? '' : 'muted'}`}
-            onClick={() => onPlanSelect(item.value)}
+            key={item.id}
+            className={`planPanel ${classes.planPanel} ${updatedPlan === item.id ? 'active' : ''} ${isTrial || canUpgrade(item.id) ? '' : 'muted'}`}
+            onClick={() => onPlanSelect(item.id)}
           >
-            {!isTrial && canUpgrade(item.value) && (
-              <div className={`uppercased align-center muted ${classes.planNote}`}>{item.value === currentPlan ? 'current plan' : 'upgrade'}</div>
+            {!isTrial && canUpgrade(item.id) && (
+              <div className={`uppercased align-center muted ${classes.planNote}`}>{item.id === currentPlan ? 'current plan' : 'upgrade'}</div>
             )}
             <h4>
               {item.name} {item.offer && isTrial && offerValid ? offerTag : null}
@@ -82,7 +82,7 @@ export const PlanSelection = ({ currentPlan = 'os', isTrial, offerValid, offerTa
             </div>
             <ul className="unstyled">
               {item.features.map((feature, index) => (
-                <li key={`${item.value}-feature-${index}`}>
+                <li key={`${item.id}-feature-${index}`}>
                   <InfoText variant="dense">{feature}</InfoText>
                 </li>
               ))}

@@ -77,10 +77,9 @@ const useStyles = makeStyles()(theme => ({
     }
   },
   columns: {
-    alignItems: 'start',
     columnGap: 30,
     display: 'grid',
-    gridTemplateColumns: 'max-content 1fr',
+    gridTemplateColumns: 'max-content max-content',
     '&>p': {
       marginTop: theme.spacing(3)
     }

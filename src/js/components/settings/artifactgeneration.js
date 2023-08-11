@@ -21,8 +21,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { getDeploymentsConfig, saveDeltaDeploymentsConfig } from '../../actions/deploymentActions';
-import { TIMEOUTS } from '../../constants/appConstants';
-import { getIsEnterprise } from '../../selectors';
+import { BENEFITS, TIMEOUTS } from '../../constants/appConstants';
 import { useDebounce } from '../../utils/debouncehook';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import InfoText from '../common/infotext';
@@ -81,7 +80,6 @@ const NumberInputLimited = ({ limit, onChange, value: propsValue, ...remainder }
 
 export const ArtifactGenerationSettings = () => {
   const { binaryDelta: deltaConfig = {}, binaryDeltaLimits: deltaLimits = {}, hasDelta: deltaEnabled } = useSelector(state => state.deployments.config) ?? {};
-  const isEnterprise = useSelector(getIsEnterprise);
   const dispatch = useDispatch();
   const [timeoutValue, setTimeoutValue] = useState(deltaConfig.timeout);
   const [disableChecksum, setDisableChecksum] = useState(deltaConfig.disableChecksum);
@@ -172,6 +170,7 @@ export const ArtifactGenerationSettings = () => {
       <div className="flexbox center-aligned">
         <DeltaIcon />
         <h5 className="margin-left-small">Delta artifacts generation configuration</h5>
+        <EnterpriseNotification className="margin-left-small" id={BENEFITS.deltaGeneration.id} />
       </div>
       {deltaEnabled && isInitialized ? (
         <div className="margin-small margin-top-none">
@@ -208,7 +207,7 @@ export const ArtifactGenerationSettings = () => {
             ))}
           </div>
         </div>
-      ) : isEnterprise ? (
+      ) : (
         <InfoText>
           <InfoOutlinedIcon style={{ fontSize: '14px', margin: '0 4px 4px 0', verticalAlign: 'middle' }} />
           Automatic delta artifacts generation is not enabled in your account. If you want to start using this feature,{' '}
@@ -217,11 +216,6 @@ export const ArtifactGenerationSettings = () => {
           </a>
           .
         </InfoText>
-      ) : (
-        <EnterpriseNotification
-          isEnterprise={isEnterprise}
-          benefit="automatic delta artifacts generation to minimize data transfer and improve the update delivery"
-        />
       )}
     </div>
   );

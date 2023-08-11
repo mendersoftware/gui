@@ -22,9 +22,9 @@ import { deploymentsApiUrl, getDeviceDeployments, resetDeviceDeployments } from 
 import { deploymentDisplayStates, deploymentStatesToSubstates } from '../../../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import Confirm from '../../common/confirm';
-import InfoHint from '../../common/info-hint';
 import Pagination from '../../common/pagination';
 import { MaybeTime } from '../../common/time';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import { DeviceStateSelection } from '../authorized-devices';
 
 const useStyles = makeStyles()(theme => ({
@@ -118,7 +118,7 @@ const History = ({ className, items, page, perPage, setPage, setPerPage, total }
           rowsPerPage={perPage}
           rowsPerPageOptions={[10, 20]}
         />
-        {wasReset && <InfoHint content="Greyed out items will not be considered during deployment roll out" style={{ alignSelf: 'flex-end' }} />}
+        {wasReset && <MenderHelpTooltip id={HELPTOOLTIPS.resetHistory.id} />}
       </div>
     </div>
   );

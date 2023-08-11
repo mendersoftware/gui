@@ -36,12 +36,12 @@ import { removeArtifact, removeRelease, selectArtifact, selectRelease } from '..
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getFeatures, getOnboardingState, getShowHelptips, getUserCapabilities } from '../../selectors';
+import { getFeatures, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
 import { RelativeTime } from '../common/time';
-import { ExpandArtifact } from '../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import Artifact from './artifact';
 import RemoveArtifactDialog from './dialogs/removeartifact';
 
@@ -59,7 +59,8 @@ export const columns = [
     title: 'Device type compatibility',
     name: 'device_types',
     sortable: false,
-    render: DeviceTypeCompatibility
+    render: DeviceTypeCompatibility,
+    tooltip: <MenderHelpTooltip id={HELPTOOLTIPS.expandArtifact.id} className="margin-left-small" />
   },
   {
     title: 'Type',
@@ -216,7 +217,7 @@ const ReleaseTags = ({ existingTags = [] }) => {
   );
 };
 
-const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog, showHelptips }) => {
+const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
 
@@ -248,12 +249,13 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
       <div>
         <div className="release-repo-item repo-item repo-header">
           {columns.map(item => (
-            <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" onClick={() => sortColumn(item)}>
-              <div>
+            <div className="columnHeader" key={item.name} onClick={() => sortColumn(item)}>
+              <Tooltip title={item.title} placement="top-start">
                 {item.title}
-                {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
-              </div>
-            </Tooltip>
+              </Tooltip>
+              {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
+              {item.tooltip}
+            </div>
           ))}
           <div style={{ width: 48 }} />
         </div>
@@ -274,11 +276,6 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
           );
         })}
       </div>
-      {showHelptips && (
-        <span className="relative">
-          <ExpandArtifact />
-        </span>
-      )}
     </>
   );
 };
@@ -297,7 +294,6 @@ export const ReleaseDetails = () => {
   const pastDeploymentsCount = useSelector(state => state.deployments.byStatus.finished.total);
   const release = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
   const selectedArtifact = useSelector(state => state.releases.selectedArtifact);
-  const showHelptips = useSelector(getShowHelptips);
   const userCapabilities = useSelector(getUserCapabilities);
 
   const onRemoveArtifact = artifact => dispatch(removeArtifact(artifact.id)).finally(() => setShowRemoveArtifactDialog(false));
@@ -353,7 +349,6 @@ export const ReleaseDetails = () => {
         selectArtifact={artifact => dispatch(selectArtifact(artifact))}
         selectedArtifact={selectedArtifact}
         setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
-        showHelptips={showHelptips}
       />
       <OnboardingComponent creationRef={creationRef} drawerRef={drawerRef} onboardingState={onboardingState} />
       <RemoveArtifactDialog

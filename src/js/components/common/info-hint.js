@@ -19,6 +19,7 @@ import { makeStyles } from 'tss-react/mui';
 import InfoText from './infotext';
 
 const useStyles = makeStyles()(theme => ({
+  container: { gap: theme.spacing(2) },
   default: { gap: theme.spacing() }
 }));
 
@@ -29,6 +30,15 @@ export const InfoHint = ({ className = '', content, ...props }) => {
       <InfoOutlinedIcon fontSize="small" />
       {content}
     </InfoText>
+  );
+};
+
+export const InfoHintContainer = ({ children, className = 'margin-left-small', ...props }) => {
+  const { classes } = useStyles();
+  return (
+    <div className={`flexbox center-aligned ${className} ${classes.container}`} {...props}>
+      {children}
+    </div>
   );
 };
 

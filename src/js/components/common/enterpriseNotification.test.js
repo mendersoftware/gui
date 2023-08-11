@@ -13,14 +13,25 @@
 //    limitations under the License.
 import React from 'react';
 
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import { undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import EnterpriseNotification from './enterpriseNotification';
 
 describe('EnterpriseNotification Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<EnterpriseNotification benefit="a test benefit" />);
-    const view = baseElement.firstChild.firstChild;
+    const { baseElement } = render(<EnterpriseNotification />);
+    const view = baseElement.firstChild;
+    expect(view).toMatchSnapshot();
+    expect(view).toEqual(expect.not.stringMatching(undefineds));
+  });
+  it('works as expected', async () => {
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    render(<EnterpriseNotification />);
+    await user.click(screen.getByText(/enterprise/i));
+    const view = screen.getByRole('tooltip').firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

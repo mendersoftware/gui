@@ -2,7 +2,7 @@
 
 exports[`TimerangePicker Component renders correctly 1`] = `
 <div
-  class=""
+  class=" "
 >
   <span>
     Filter by date

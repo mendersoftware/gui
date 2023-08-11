@@ -33,13 +33,17 @@ import {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const defaultOnboardingState = {
+export const defaultOnboardingState = {
   approach: null,
   artifactIncluded: null,
+  complete: false,
   demoArtifactPort: 85,
   deviceType: null,
+  progress: undefined,
   showConnectDeviceDialog: false,
+  showCreateArtifactDialog: false,
   showTips: null,
+  showTipsDialog: false,
   something: 'here'
 };
 
@@ -57,15 +61,12 @@ export const expectedOnboardingActions = [
     settings: {
       ...defaultState.users.userSettings,
       onboarding: {
+        ...defaultOnboardingState,
         address: 'http://192.168.10.141:85',
         approach: 'physical',
-        artifactIncluded: null,
-        complete: false,
         deviceType: ['raspberrypi4'],
         progress: 'application-update-reminder-tip',
-        showArtifactCreation: false,
-        showTips: true,
-        something: 'here'
+        showTips: true
       }
     }
   }
@@ -104,7 +105,13 @@ describe('onboarding actions', () => {
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
         type: UserConstants.SET_USER_SETTINGS,
-        settings: { ...defaultState.users.userSettings, onboarding: { approach: 'test', something: 'here' } }
+        settings: {
+          ...defaultState.users.userSettings,
+          onboarding: {
+            ...defaultOnboardingState,
+            approach: 'test'
+          }
+        }
       }
     ];
     const storeActions = store.getActions();
@@ -125,7 +132,10 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.userSettings,
           columnSelection: [],
-          onboarding: { deviceType: 'testtype', something: 'here' }
+          onboarding: {
+            ...defaultOnboardingState,
+            deviceType: 'testtype'
+          }
         }
       }
     ];
@@ -171,7 +181,10 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.userSettings,
           columnSelection: [],
-          onboarding: { something: 'here', showTips: true },
+          onboarding: {
+            ...defaultOnboardingState,
+            showTips: true
+          },
           showHelptips: true
         }
       }
@@ -190,12 +203,11 @@ describe('onboarding actions', () => {
       {
         type: UserConstants.SET_USER_SETTINGS,
         settings: {
+          ...defaultState.users.userSettings,
           columnSelection: [],
           onboarding: {
             ...defaultOnboardingState,
-            complete: false,
-            progress: stepNames[1],
-            something: 'here'
+            progress: stepNames[1]
           }
         }
       }
@@ -209,19 +221,8 @@ describe('onboarding actions', () => {
     await store.dispatch(setOnboardingCanceled());
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
-      { type: UserConstants.SET_SHOW_HELP, show: false },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show: false },
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
-      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      {
-        type: UserConstants.SET_USER_SETTINGS,
-        settings: {
-          ...defaultState.users.userSettings,
-          columnSelection: [],
-          onboarding: { showTips: false, something: 'here' },
-          showHelptips: false
-        }
-      },
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-canceled' },
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {

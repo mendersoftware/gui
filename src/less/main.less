@@ -503,35 +503,12 @@ ul.link-list {
 .tooltip {
   position: absolute;
   cursor: pointer;
-
-  .transition(opacity 0.4s ease-in);
-  .transition(transform 0.4s ease-in);
-
-  &.info {
-    top: 2px;
-    right: 0px;
+  .transition(all 0.4s ease-in);
+  svg {
+    .transition(all 0.4s ease-in);
   }
-
-  &.help {
-    left: 50%;
-    margin-left: -16px;
-    z-index: 10;
-    svg {
-      color: @alertpurple !important;
-    }
-
-    &.highlight svg {
-      width: 1.3em;
-      height: 1.3em;
-      border-radius: 50%;
-      border: @alertpurple 4px solid;
-      .animation(highlight 2.2s infinite);
-    }
-  }
-
   &:hover {
-    .opacity(1);
-    .animation(bounce 0.4s forwards);
+    opacity: 0.54;
   }
 }
 
@@ -1531,14 +1508,6 @@ div.waiting-inventory {
     padding: 10px @defaultGutterWidth;
     position: relative;
   }
-}
-
-.auditlogs-filters {
-  padding: 0px 25px 5px;
-  display: grid;
-  grid-template-columns: 400px 250px 250px 1fr;
-  grid-column-gap: @defaultGutterWidth;
-  grid-row-gap: @defaultGutterWidth;
 }
 
 // Releases & Artifacts

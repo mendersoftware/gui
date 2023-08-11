@@ -36,8 +36,11 @@ import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
+import { BENEFITS } from '../../../constants/appConstants';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import { InfoHintContainer } from '../../common/info-hint';
 import Time from '../../common/time';
 import { getPhaseStartTime } from '../createdeployment';
 
@@ -281,9 +284,13 @@ export const RolloutPatternSelection = props => {
       <FormControlLabel
         control={<Checkbox color="primary" checked={usesPattern} disabled={!isEnterprise} onChange={onUsesPatternClick} size="small" />}
         label={
-          <>
-            <b>Select a rollout pattern</b> (optional)
-          </>
+          <div className="flexbox center-aligned">
+            <b className="margin-right-small">Select a rollout pattern</b> (optional)
+            <InfoHintContainer>
+              <EnterpriseNotification id={BENEFITS.phasedDeployments.id} />
+              <DocsTooltip id={DOCSTIPS.phasedDeployments.id} />
+            </InfoHintContainer>
+          </div>
         }
       />
       <Collapse in={usesPattern}>
@@ -300,7 +307,6 @@ export const RolloutPatternSelection = props => {
           </Select>
         </FormControl>
       </Collapse>
-      <EnterpriseNotification isEnterprise={isEnterprise} benefit="choose to roll out deployments in multiple phases" />
       {customPattern ? <PhaseSettings classNames="margin-bottom-small" disabled={disableSchedule} numberDevices={numberDevices} {...props} /> : null}
     </>
   );

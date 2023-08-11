@@ -11,21 +11,46 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { Help as HelpIcon } from '@mui/icons-material';
 import { ClickAwayListener, Tooltip } from '@mui/material';
-import { withStyles } from 'tss-react/mui';
+import { makeStyles, withStyles } from 'tss-react/mui';
 
+import { TIMEOUTS } from '../../constants/appConstants';
+import { READ_STATES } from '../../constants/userConstants';
 import { toggle } from '../../helpers';
+import { useDebounce } from '../../utils/debouncehook';
 
-export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
+const useStyles = makeStyles()(theme => ({
+  icon: {
+    '&.read': {
+      color: theme.palette.text.disabled
+    }
+  },
+  iconAura: {
+    position: 'absolute',
+    top: -5,
+    bottom: 0,
+    left: -5,
+    right: -5,
+    border: `1px dashed ${theme.palette.primary.main}`,
+    borderRadius: '50%',
+    '&.read': {
+      borderColor: theme.palette.text.disabled
+    }
+  }
+}));
+
+export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows, spacing }) => ({
   arrow: {
-    color: palette.secondary.main
+    color: palette.background.paper
   },
   tooltip: {
-    backgroundColor: palette.secondary.main,
+    backgroundColor: palette.background.paper,
     boxShadow: shadows[1],
-    color: palette.tooltip.text,
+    color: palette.text.primary,
+    padding: spacing(2),
     fontSize: 'small',
     maxWidth: 600,
     info: {
@@ -36,14 +61,33 @@ export const MenderTooltip = withStyles(Tooltip, ({ palette, shadows }) => ({
   }
 }));
 
-export const MenderTooltipClickable = ({ children, onboarding, startOpen = false, ...remainingProps }) => {
+export const MenderTooltipClickable = ({
+  children,
+  onboarding,
+  startOpen = false,
+  visibility = startOpen,
+  onOpenChange,
+  tooltipComponent = MenderTooltip,
+  ...remainingProps
+}) => {
   const [open, setOpen] = useState(startOpen || false);
+
+  useEffect(() => {
+    setOpen(visibility);
+  }, [visibility]);
+
+  useEffect(() => {
+    if (!onOpenChange) {
+      return;
+    }
+    onOpenChange(open);
+  }, [open, onOpenChange]);
 
   const toggleVisibility = () => setOpen(toggle);
 
   const hide = () => setOpen(false);
 
-  const Component = onboarding ? OnboardingTooltip : MenderTooltip;
+  const Component = onboarding ? OnboardingTooltip : tooltipComponent;
   const extraProps = onboarding
     ? {
         PopperProps: {
@@ -103,3 +147,68 @@ export const OnboardingTooltip = withStyles(Tooltip, theme => ({
   }
 }));
 export default MenderTooltip;
+
+const tooltipStateStyleMap = {
+  [READ_STATES.read]: 'read muted',
+  default: ''
+};
+
+const TooltipWrapper = ({ content, onClose, onReadAll }) => (
+  <div>
+    {content}
+    <div className="flexbox space-between margin-top-small">
+      <span className="link" onClick={onReadAll}>
+        Mark all help tips as read
+      </span>
+      <span className="link" onClick={onClose}>
+        Close
+      </span>
+    </div>
+  </div>
+);
+
+export const HelpTooltip = ({
+  icon = undefined,
+  id,
+  contentProps = {},
+  tooltip,
+  showHelptips,
+  device,
+  setAllTooltipsReadState,
+  setTooltipReadState,
+  ...props
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const debouncedIsOpen = useDebounce(isOpen, TIMEOUTS.threeSeconds);
+  const { classes } = useStyles();
+  const { Component, SpecialComponent, isRelevant, readState } = tooltip;
+
+  useEffect(() => {
+    if (!debouncedIsOpen) {
+      return;
+    }
+    setTooltipReadState(id, READ_STATES.read, true);
+  }, [debouncedIsOpen, id, setTooltipReadState]);
+
+  const onReadAllClick = () => setAllTooltipsReadState(READ_STATES.read);
+
+  const title = SpecialComponent ? (
+    <SpecialComponent device={device} {...contentProps} />
+  ) : (
+    <TooltipWrapper content={<Component device={device} {...contentProps} />} onClose={() => setIsOpen(false)} onReadAll={onReadAllClick} />
+  );
+
+  if (!showHelptips || !isRelevant({ device, ...contentProps })) {
+    return null;
+  }
+
+  const className = tooltipStateStyleMap[readState] ?? tooltipStateStyleMap.default;
+  return (
+    <MenderTooltipClickable className={isOpen ? 'muted' : ''} title={title} visibility={isOpen} onOpenChange={setIsOpen} {...props}>
+      <div className="relative">
+        {icon || <HelpIcon className={`${classes.icon} ${className}`} color="primary" />}
+        <div className={`${classes.iconAura} ${className}`} />
+      </div>
+    </MenderTooltipClickable>
+  );
+};
