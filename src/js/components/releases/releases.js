@@ -20,14 +20,11 @@ import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
 import { getReleases, selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getFeatures, getIsEnterprise, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
+import { getFeatures, getIsEnterprise, getReleasesList, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import ChipSelect from '../common/chipselect';
 import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import Search from '../common/search';
@@ -66,7 +63,7 @@ const useStyles = makeStyles()(theme => ({
   uploadButton: { minWidth: 164, marginRight: theme.spacing(2) }
 }));
 
-const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesListState, setReleasesListState, onUploadClick, uploadButtonRef }) => {
+const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesListState, setReleasesListState, onUploadClick }) => {
   const { hasReleaseTags } = features;
   const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
   const { classes } = useStyles();
@@ -87,14 +84,7 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
         </Tabs>
         {canUpload && (
           <div className="flexbox center-aligned">
-            <Button
-              ref={uploadButtonRef}
-              color="secondary"
-              className={classes.uploadButton}
-              onClick={onUploadClick}
-              startIcon={<CloudUpload fontSize="small" />}
-              variant="contained"
-            >
+            <Button color="secondary" className={classes.uploadButton} onClick={onUploadClick} startIcon={<CloudUpload fontSize="small" />} variant="contained">
               Upload
             </Button>
             <MenderHelpTooltip id={HELPTOOLTIPS.artifactUpload.id} style={{ marginTop: 8 }} />
@@ -122,12 +112,10 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
 };
 
 export const Releases = () => {
-  const demoArtifactLink = useSelector(state => state.app.demoArtifactLink);
   const features = useSelector(getFeatures);
   const hasReleases = useSelector(
     state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
   );
-  const onboardingState = useSelector(getOnboardingState);
   const releases = useSelector(getReleasesList);
   const releasesListState = useSelector(state => state.releases.releasesList);
   const releaseTags = useSelector(state => state.releases.releaseTags);
@@ -138,7 +126,6 @@ export const Releases = () => {
 
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
-  const uploadButtonRef = useRef();
   const artifactTimer = useRef();
   const [locationParams, setLocationParams] = useLocationParams('releases', { defaults: { direction: SORTING_OPTIONS.desc, key: 'modified' } });
   const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags } = releasesListState;
@@ -151,18 +138,6 @@ export const Releases = () => {
     setLocationParams({ pageState: { ...releasesListState, selectedRelease: selectedRelease.Name } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, setLocationParams, tab, JSON.stringify(selectedTags)]);
-
-  useEffect(() => {
-    if (!onboardingState.progress || onboardingState.complete) {
-      return;
-    }
-    if (releases.length === 1) {
-      dispatch(advanceOnboarding(onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP));
-    }
-    if (selectedRelease.Name) {
-      dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING));
-    }
-  }, [dispatch, onboardingState.complete, onboardingState.progress, releases.length, selectedRelease.Name]);
 
   useEffect(() => {
     const { selectedRelease, tags, ...remainder } = locationParams;
@@ -178,12 +153,7 @@ export const Releases = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, JSON.stringify(locationParams)]);
 
-  const onUploadClick = () => {
-    if (releases.length) {
-      dispatch(advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP));
-    }
-    setShowAddArtifactDialog(true);
-  };
+  const onUploadClick = () => setShowAddArtifactDialog(true);
 
   const onFileUploadClick = selectedFile => {
     setSelectedFile(selectedFile);
@@ -193,28 +163,6 @@ export const Releases = () => {
   const onHideAddArtifactDialog = () => setShowAddArtifactDialog(false);
 
   const onSetReleasesListState = useCallback(state => dispatch(setReleasesListState(state)), [dispatch]);
-
-  let uploadArtifactOnboardingComponent = null;
-  if (!onboardingState.complete && uploadButtonRef.current) {
-    const anchor = {
-      anchor: {
-        left: uploadButtonRef.current.offsetLeft - 15,
-        top: uploadButtonRef.current.offsetTop + uploadButtonRef.current.offsetHeight / 2
-      },
-      place: 'left'
-    };
-    uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
-      { ...onboardingState, demoArtifactLink },
-      anchor
-    );
-    uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP,
-      { ...onboardingState, setShowCreateArtifactDialog: state => dispatch(setShowCreateArtifactDialog(state)) },
-      anchor,
-      uploadArtifactOnboardingComponent
-    );
-  }
 
   const ContentComponent = useMemo(() => tabs.find(({ key }) => key === tab).component, [tab]);
   return (
@@ -228,12 +176,10 @@ export const Releases = () => {
           onUploadClick={onUploadClick}
           releasesListState={releasesListState}
           setReleasesListState={onSetReleasesListState}
-          uploadButtonRef={uploadButtonRef}
         />
         <ContentComponent onFileUploadClick={onFileUploadClick} />
       </div>
       <ReleaseDetails />
-      {!showAddArtifactDialog && uploadArtifactOnboardingComponent}
       {showAddArtifactDialog && (
         <AddArtifactDialog releases={releases} onCancel={onHideAddArtifactDialog} onUploadStarted={onHideAddArtifactDialog} selectedFile={selectedFile} />
       )}

@@ -1641,23 +1641,11 @@ label+.emotion-63 {
 }
 
 .emotion-74 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   position: fixed;
   bottom: 52px;
   right: 52px;
   z-index: 10;
   min-width: 400px;
-  -webkit-align-items: flex-end;
-  -webkit-box-align: flex-end;
-  -ms-flex-align: flex-end;
-  align-items: flex-end;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
   pointer-events: none;
 }
 
@@ -1668,11 +1656,26 @@ label+.emotion-63 {
 }
 
 .emotion-75 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-76 {
   margin-right: 16px;
   margin-bottom: 32px;
 }
 
-.emotion-76 {
+.emotion-77 {
   z-index: 1050;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1689,7 +1692,7 @@ label+.emotion-63 {
   margin: 16px;
 }
 
-.emotion-76 .MuiSpeedDial-actions {
+.emotion-77 .MuiSpeedDial-actions {
   -webkit-flex-direction: column-reverse;
   -ms-flex-direction: column-reverse;
   flex-direction: column-reverse;
@@ -1697,7 +1700,7 @@ label+.emotion-63 {
   padding-bottom: 48px;
 }
 
-.emotion-77 {
+.emotion-78 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1752,68 +1755,68 @@ label+.emotion-63 {
   pointer-events: auto;
 }
 
-.emotion-77::-moz-focus-inner {
+.emotion-78::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-77.Mui-disabled {
+.emotion-78.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-77 {
+  .emotion-78 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-77:active {
+.emotion-78:active {
   box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
 }
 
-.emotion-77:hover {
+.emotion-78:hover {
   background-color: #f5f5f5;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media (hover: none) {
-  .emotion-77:hover {
+  .emotion-78:hover {
     background-color: #e6f2f1;
   }
 }
 
-.emotion-77.Mui-focusVisible {
+.emotion-78.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-77:hover {
+.emotion-78:hover {
   background-color: rgb(35, 85, 94);
 }
 
 @media (hover: none) {
-  .emotion-77:hover {
+  .emotion-78:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-77.Mui-disabled {
+.emotion-78.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-78 {
+.emotion-79 {
   height: 24px;
 }
 
-.emotion-78 .MuiSpeedDialIcon-icon {
+.emotion-79 .MuiSpeedDialIcon-icon {
   -webkit-transition: -webkit-transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-78 .MuiSpeedDialIcon-openIcon {
+.emotion-79 .MuiSpeedDialIcon-openIcon {
   position: absolute;
   -webkit-transition: -webkit-transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -1824,7 +1827,7 @@ label+.emotion-63 {
   transform: rotate(-45deg);
 }
 
-.emotion-81 {
+.emotion-82 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1834,7 +1837,7 @@ label+.emotion-63 {
   transition: top 0s linear 0.2s;
 }
 
-.emotion-82 {
+.emotion-83 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1846,7 +1849,7 @@ label+.emotion-63 {
   align-items: center;
 }
 
-.emotion-82 .MuiSpeedDialAction-staticTooltipLabel {
+.emotion-83 .MuiSpeedDialAction-staticTooltipLabel {
   -webkit-transition: -webkit-transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   opacity: 0;
@@ -1859,7 +1862,7 @@ label+.emotion-63 {
   margin-right: 8px;
 }
 
-.emotion-83 {
+.emotion-84 {
   position: absolute;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -1873,7 +1876,7 @@ label+.emotion-63 {
   word-break: keep-all;
 }
 
-.emotion-84 {
+.emotion-85 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1935,53 +1938,53 @@ label+.emotion-63 {
   transform: scale(0);
 }
 
-.emotion-84::-moz-focus-inner {
+.emotion-85::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-84.Mui-disabled {
+.emotion-85.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-84 {
+  .emotion-85 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-84:active {
+.emotion-85:active {
   box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
 }
 
-.emotion-84:hover {
+.emotion-85:hover {
   background-color: #f5f5f5;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media (hover: none) {
-  .emotion-84:hover {
+  .emotion-85:hover {
     background-color: #e6f2f1;
   }
 }
 
-.emotion-84.Mui-focusVisible {
+.emotion-85.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-84.Mui-disabled {
+.emotion-85.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-84:hover {
+.emotion-85:hover {
   background-color: rgb(216, 216, 216);
 }
 
-.emotion-100 {
+.emotion-101 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1998,7 +2001,7 @@ label+.emotion-63 {
   font-size: inherit;
 }
 
-.emotion-100 iconButton {
+.emotion-101 iconButton {
   margin-right: 8px;
 }
 
@@ -2751,228 +2754,236 @@ label+.emotion-63 {
         class="emotion-74"
       >
         <div
-          class="emotion-75"
+          class="relative"
         >
-          Device actions
-        </div>
-        <div
-          class="MuiSpeedDial-root MuiSpeedDial-directionUp emotion-76"
-          role="presentation"
-        >
-          <button
-            aria-controls="device-actions-actions"
-            aria-expanded="false"
-            aria-haspopup="true"
-            aria-label="device-actions"
-            class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiSpeedDial-fab emotion-77"
-            style="transform: none; webkit-transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiSpeedDialIcon-root emotion-78"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSpeedDialIcon-icon emotion-4"
-                data-testid="AddIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                />
-              </svg>
-            </span>
-            <span
-              class="MuiTouchRipple-root emotion-5"
-            />
-          </button>
           <div
-            aria-orientation="vertical"
-            class="MuiSpeedDial-actions MuiSpeedDial-actionsClosed emotion-81"
-            id="device-actions-actions"
-            role="menu"
+            class="emotion-75"
           >
-            <span
-              aria-label="dismiss"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-82"
-              id="device-actions-action-0"
+            <div
+              class="emotion-76"
             >
-              <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-83"
-                id="device-actions-action-0-label"
-                style="transition-delay: 150ms;"
-              >
-                Dismiss device
-              </span>
+              Device actions
+            </div>
+            <div
+              class="MuiSpeedDial-root MuiSpeedDial-directionUp emotion-77"
+              role="presentation"
+            >
               <button
-                aria-labelledby="device-actions-action-0-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-84"
-                role="menuitem"
-                style="transition-delay: 150ms;"
-                tabindex="-1"
+                aria-controls="device-actions-actions"
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-label="device-actions"
+                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiSpeedDial-fab emotion-78"
+                style="transform: none; webkit-transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+                tabindex="0"
                 type="button"
               >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-4"
-                  data-testid="RemoveCircleOutlineIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <span
+                  class="MuiSpeedDialIcon-root emotion-79"
                 >
-                  <path
-                    d="M7 11v2h10v-2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                  />
-                </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSpeedDialIcon-icon emotion-4"
+                    data-testid="AddIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                    />
+                  </svg>
+                </span>
                 <span
                   class="MuiTouchRipple-root emotion-5"
                 />
               </button>
-            </span>
-            <span
-              aria-label="reject"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-82"
-              id="device-actions-action-1"
-            >
-              <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-83"
-                id="device-actions-action-1-label"
-                style="transition-delay: 120ms;"
+              <div
+                aria-orientation="vertical"
+                class="MuiSpeedDial-actions MuiSpeedDial-actionsClosed emotion-82"
+                id="device-actions-actions"
+                role="menu"
               >
-                Reject device
-              </span>
-              <button
-                aria-labelledby="device-actions-action-1-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-84"
-                role="menuitem"
-                style="transition-delay: 120ms;"
-                tabindex="-1"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-4"
-                  data-testid="HighlightOffOutlinedIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M14.59 8 12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                  />
-                </svg>
                 <span
-                  class="MuiTouchRipple-root emotion-5"
-                />
-              </button>
-            </span>
-            <span
-              aria-label="group-change"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-82"
-              id="device-actions-action-2"
-            >
-              <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-83"
-                id="device-actions-action-2-label"
-                style="transition-delay: 90ms;"
-              >
-                Move selected device to another group
-              </span>
-              <button
-                aria-labelledby="device-actions-action-2-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-84"
-                role="menuitem"
-                style="transition-delay: 90ms;"
-                tabindex="-1"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium rotated ninety emotion-4"
-                  data-testid="HeightOutlinedIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                  aria-label="dismiss"
+                  class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-83"
+                  id="device-actions-action-0"
                 >
-                  <path
-                    d="M13 6.99h3L12 3 8 6.99h3v10.02H8L12 21l4-3.99h-3z"
-                  />
-                </svg>
+                  <span
+                    class="MuiSpeedDialAction-staticTooltipLabel emotion-84"
+                    id="device-actions-action-0-label"
+                    style="transition-delay: 150ms;"
+                  >
+                    Dismiss device
+                  </span>
+                  <button
+                    aria-labelledby="device-actions-action-0-label"
+                    class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-85"
+                    role="menuitem"
+                    style="transition-delay: 150ms;"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-4"
+                      data-testid="RemoveCircleOutlineIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M7 11v2h10v-2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                      />
+                    </svg>
+                    <span
+                      class="MuiTouchRipple-root emotion-5"
+                    />
+                  </button>
+                </span>
                 <span
-                  class="MuiTouchRipple-root emotion-5"
-                />
-              </button>
-            </span>
-            <span
-              aria-label="group-remove"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-82"
-              id="device-actions-action-3"
-            >
-              <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-83"
-                id="device-actions-action-3-label"
-                style="transition-delay: 60ms;"
-              >
-                Remove selected device from this group
-              </span>
-              <button
-                aria-labelledby="device-actions-action-3-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-84"
-                role="menuitem"
-                style="transition-delay: 60ms;"
-                tabindex="-1"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-100"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                  aria-label="reject"
+                  class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-83"
+                  id="device-actions-action-1"
                 >
-                  <path
-                    d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
-                  />
-                </svg>
+                  <span
+                    class="MuiSpeedDialAction-staticTooltipLabel emotion-84"
+                    id="device-actions-action-1-label"
+                    style="transition-delay: 120ms;"
+                  >
+                    Reject device
+                  </span>
+                  <button
+                    aria-labelledby="device-actions-action-1-label"
+                    class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-85"
+                    role="menuitem"
+                    style="transition-delay: 120ms;"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium red emotion-4"
+                      data-testid="HighlightOffOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M14.59 8 12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                      />
+                    </svg>
+                    <span
+                      class="MuiTouchRipple-root emotion-5"
+                    />
+                  </button>
+                </span>
                 <span
-                  class="MuiTouchRipple-root emotion-5"
-                />
-              </button>
-            </span>
-            <span
-              aria-label="create-deployment"
-              class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-82"
-              id="device-actions-action-4"
-            >
-              <span
-                class="MuiSpeedDialAction-staticTooltipLabel emotion-83"
-                id="device-actions-action-4-label"
-                style="transition-delay: 30ms;"
-              >
-                Create deployment for this device
-              </span>
-              <button
-                aria-labelledby="device-actions-action-4-label"
-                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-84"
-                role="menuitem"
-                style="transition-delay: 30ms;"
-                tabindex="-1"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
-                  data-testid="ReplayIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                  aria-label="group-change"
+                  class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-83"
+                  id="device-actions-action-2"
                 >
-                  <path
-                    d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
-                  />
-                </svg>
+                  <span
+                    class="MuiSpeedDialAction-staticTooltipLabel emotion-84"
+                    id="device-actions-action-2-label"
+                    style="transition-delay: 90ms;"
+                  >
+                    Move selected device to another group
+                  </span>
+                  <button
+                    aria-labelledby="device-actions-action-2-label"
+                    class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-85"
+                    role="menuitem"
+                    style="transition-delay: 90ms;"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium rotated ninety emotion-4"
+                      data-testid="HeightOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M13 6.99h3L12 3 8 6.99h3v10.02H8L12 21l4-3.99h-3z"
+                      />
+                    </svg>
+                    <span
+                      class="MuiTouchRipple-root emotion-5"
+                    />
+                  </button>
+                </span>
                 <span
-                  class="MuiTouchRipple-root emotion-5"
-                />
-              </button>
-            </span>
+                  aria-label="group-remove"
+                  class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-83"
+                  id="device-actions-action-3"
+                >
+                  <span
+                    class="MuiSpeedDialAction-staticTooltipLabel emotion-84"
+                    id="device-actions-action-3-label"
+                    style="transition-delay: 60ms;"
+                  >
+                    Remove selected device from this group
+                  </span>
+                  <button
+                    aria-labelledby="device-actions-action-3-label"
+                    class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-85"
+                    role="menuitem"
+                    style="transition-delay: 60ms;"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-101"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
+                      />
+                    </svg>
+                    <span
+                      class="MuiTouchRipple-root emotion-5"
+                    />
+                  </button>
+                </span>
+                <span
+                  aria-label="create-deployment"
+                  class="MuiSpeedDialAction-staticTooltip MuiSpeedDialAction-tooltipPlacementLeft MuiSpeedDialAction-staticTooltipClosed emotion-83"
+                  id="device-actions-action-4"
+                >
+                  <span
+                    class="MuiSpeedDialAction-staticTooltipLabel emotion-84"
+                    id="device-actions-action-4-label"
+                    style="transition-delay: 30ms;"
+                  >
+                    Create deployment for this device
+                  </span>
+                  <button
+                    aria-labelledby="device-actions-action-4-label"
+                    class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiFab-root MuiFab-circular MuiFab-sizeSmall MuiFab-default MuiSpeedDialAction-fab MuiSpeedDialAction-fabClosed emotion-85"
+                    role="menuitem"
+                    style="transition-delay: 30ms;"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-4"
+                      data-testid="ReplayIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
+                      />
+                    </svg>
+                    <span
+                      class="MuiTouchRipple-root emotion-5"
+                    />
+                  </button>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

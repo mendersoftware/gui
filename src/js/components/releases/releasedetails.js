@@ -31,13 +31,10 @@ import { makeStyles } from 'tss-react/mui';
 import copy from 'copy-to-clipboard';
 
 import { setSnackbar } from '../../actions/appActions';
-import { advanceOnboarding } from '../../actions/onboardingActions';
 import { removeArtifact, removeRelease, selectArtifact, selectRelease } from '../../actions/releaseActions';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getFeatures, getOnboardingState, getUserCapabilities } from '../../selectors';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { getFeatures, getUserCapabilities } from '../../selectors';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
 import { RelativeTime } from '../common/time';
@@ -150,21 +147,6 @@ export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease
       </SpeedDial>
     </div>
   );
-};
-
-const OnboardingComponent = ({ creationRef, drawerRef, onboardingState }) => {
-  if (!(creationRef.current && drawerRef.current)) {
-    return null;
-  }
-  const anchor = {
-    anchor: {
-      left: creationRef.current.offsetLeft - drawerRef.current.offsetLeft - 48,
-      top: creationRef.current.offsetTop + creationRef.current.offsetHeight - 48
-    },
-    place: 'left'
-  };
-  let onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING, onboardingState, anchor);
-  return getOnboardingComponentFor(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING, onboardingState, anchor, onboardingComponent);
 };
 
 const ReleaseTags = ({ existingTags = [] }) => {
@@ -290,8 +272,6 @@ export const ReleaseDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { hasReleaseTags } = useSelector(getFeatures);
-  const onboardingState = useSelector(getOnboardingState);
-  const pastDeploymentsCount = useSelector(state => state.deployments.byStatus.finished.total);
   const release = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
   const selectedArtifact = useSelector(state => state.releases.selectedArtifact);
   const userCapabilities = useSelector(getUserCapabilities);
@@ -306,15 +286,7 @@ export const ReleaseDetails = () => {
 
   const onCloseClick = () => dispatch(selectRelease());
 
-  const onCreateDeployment = () => {
-    if (!onboardingState.complete) {
-      dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_DEPLOY_ONBOARDING));
-      if (pastDeploymentsCount === 1) {
-        dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_MODIFIED_ONBOARDING));
-      }
-    }
-    navigate(`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(release.Name)}`);
-  };
+  const onCreateDeployment = () => navigate(`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(release.Name)}`);
 
   const onToggleReleaseDeletion = () => setConfirmReleaseDeletion(toggle);
 
@@ -350,7 +322,6 @@ export const ReleaseDetails = () => {
         selectedArtifact={selectedArtifact}
         setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
       />
-      <OnboardingComponent creationRef={creationRef} drawerRef={drawerRef} onboardingState={onboardingState} />
       <RemoveArtifactDialog
         artifact={selectedArtifact}
         open={!!showRemoveDialog}

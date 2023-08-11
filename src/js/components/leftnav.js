@@ -23,9 +23,7 @@ import copy from 'copy-to-clipboard';
 
 import { setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS, canAccess } from '../constants/appConstants';
-import { onboardingSteps } from '../constants/onboardingConstants';
-import { getFeatures, getOnboardingState, getUserCapabilities, getVersionInformation } from '../selectors';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import { getFeatures, getUserCapabilities, getVersionInformation } from '../selectors';
 import DocsLink from './common/docslink';
 
 const listItems = [
@@ -129,19 +127,7 @@ export const LeftNav = () => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
-  const onboardingState = useSelector(getOnboardingState);
   const userCapabilities = useSelector(getUserCapabilities);
-
-  let onboardingComponent;
-  if (releasesRef.current) {
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
-      anchor: {
-        left: releasesRef.current.offsetWidth - 48,
-        top: releasesRef.current.offsetTop + releasesRef.current.offsetHeight / 2
-      },
-      place: 'right'
-    });
-  }
   return (
     <div className={`leftFixed leftNav ${classes.list}`}>
       <List style={{ padding: 0 }}>
@@ -164,7 +150,6 @@ export const LeftNav = () => {
           return accu;
         }, [])}
       </List>
-      {onboardingComponent ? onboardingComponent : null}
       <List className={classes.infoList}>
         <ListItem className={`navLink leftNav ${classes.listItem}`} component={Link} to="/help">
           <ListItemText primary="Help & support" />

@@ -20,13 +20,10 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Ico
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
-import { advanceOnboarding } from '../../../actions/onboardingActions';
 import { createArtifact, uploadArtifact } from '../../../actions/releaseActions';
-import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { FileSize, unionizeStrings } from '../../../helpers';
-import { getDeviceTypes, getOnboardingState } from '../../../selectors';
+import { getDeviceTypes } from '../../../selectors';
 import Tracking from '../../../tracking';
-import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import useWindowSize from '../../../utils/resizehook';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import ArtifactInformationForm from './artifactinformationform';
@@ -108,7 +105,7 @@ const shortenFileName = name => {
   return name;
 };
 
-export const ArtifactUpload = ({ advanceOnboarding, onboardingState, releases, setSnackbar, updateCreation }) => {
+export const ArtifactUpload = ({ setSnackbar, updateCreation }) => {
   const onboardingAnchor = useRef();
   const { classes } = useStyles();
   // eslint-disable-next-line no-unused-vars
@@ -121,13 +118,10 @@ export const ArtifactUpload = ({ advanceOnboarding, onboardingState, releases, s
         updateCreation(emptyFileInfo);
         setSnackbar('Only letters, digits and characters in the set ".,_-" are allowed in the filename.', null);
       } else {
-        if (releases.length && !onboardingState.complete) {
-          advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD);
-        }
         const { name } = acceptedFiles[0];
         updateCreation({
           file: acceptedFiles[0],
-          name: onboardingState.complete ? shortenFileName(name) : '',
+          name: shortenFileName(name),
           type: name.endsWith('.mender') ? uploadTypes.mender.key : uploadTypes.singleFile.key
         });
       }
@@ -137,14 +131,6 @@ export const ArtifactUpload = ({ advanceOnboarding, onboardingState, releases, s
     }
   };
 
-  let onboardingComponent = null;
-  if (!onboardingState.complete && onboardingAnchor.current) {
-    const anchor = {
-      left: onboardingAnchor.current.offsetLeft + onboardingAnchor.current.clientWidth,
-      top: onboardingAnchor.current.offsetTop + onboardingAnchor.current.clientHeight / 2
-    };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_UPLOAD, onboardingState, { anchor, place: 'right' });
-  }
   return (
     <>
       <div className="flexbox column centered margin">
@@ -163,7 +149,6 @@ export const ArtifactUpload = ({ advanceOnboarding, onboardingState, releases, s
           </div>
         )}
       </Dropzone>
-      {!!onboardingComponent && onboardingComponent}
     </>
   );
 };
@@ -185,12 +170,9 @@ export const AddArtifactDialog = ({ onCancel, onUploadStarted, releases, selecte
     type: uploadTypes.mender.key
   });
 
-  const onboardingState = useSelector(getOnboardingState);
-  const pastCount = useSelector(state => state.deployments.byStatus.finished.total);
   const deviceTypes = useSelector(getDeviceTypes);
   const dispatch = useDispatch();
 
-  const onAdvanceOnboarding = useCallback(step => dispatch(advanceOnboarding(step)), [dispatch]);
   const onCreateArtifact = useCallback((meta, file) => dispatch(createArtifact(meta, file)), [dispatch]);
   const onSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
   const onUploadArtifact = useCallback((meta, file) => dispatch(uploadArtifact(meta, file)), [dispatch]);
@@ -203,18 +185,10 @@ export const AddArtifactDialog = ({ onCancel, onUploadStarted, releases, selecte
     (meta, file, type = 'upload') => {
       const upload = type === 'create' ? onCreateArtifact(meta, file) : onUploadArtifact(meta, file);
       onUploadStarted();
-      return upload.then(() => {
-        if (!onboardingState.complete && deviceTypes.length && pastCount) {
-          onAdvanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP);
-          if (type === 'create') {
-            onAdvanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_CLICK);
-          }
-        }
-        // track in GA
-        Tracking.event({ category: 'artifacts', action: 'create' });
-      });
+      // track in GA
+      return upload.then(() => Tracking.event({ category: 'artifacts', action: 'create' }));
     },
-    [onAdvanceOnboarding, onCreateArtifact, deviceTypes.length, onUploadStarted, onboardingState.complete, pastCount, onUploadArtifact]
+    [onCreateArtifact, onUploadStarted, onUploadArtifact]
   );
 
   const onUpload = useCallback(() => {
@@ -239,33 +213,16 @@ export const AddArtifactDialog = ({ onCancel, onUploadStarted, releases, selecte
   const onUpdateCreation = useCallback(update => setCreation(current => ({ ...current, ...update })), []);
 
   const onNextClick = useCallback(() => {
-    if (!onboardingState.complete && creation.destination) {
-      onAdvanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_DEVICE_TYPE);
-    }
     onUpdateCreation({ isValid: false });
     setActiveStep(activeStep + 1);
-  }, [activeStep, onAdvanceOnboarding, creation.destination, onboardingState.complete, onUpdateCreation]);
+  }, [activeStep, onUpdateCreation]);
 
   const onRemove = () => onUpdateCreation({ file: undefined, isValid: false });
-  const buttonRef = useRef();
 
   const { file, finalStep, isValid, type } = creation;
   const { component: ComponentToShow } = uploadTypes[type];
-  const commonProps = { advanceOnboarding: onAdvanceOnboarding, onboardingState, releases, setSnackbar: onSetSnackbar, updateCreation: onUpdateCreation };
+  const commonProps = { releases, setSnackbar: onSetSnackbar, updateCreation: onUpdateCreation };
 
-  let onboardingComponent = null;
-  if (!onboardingState.complete && buttonRef.current && finalStep && isValid) {
-    const releaseNameAnchor = {
-      left: buttonRef.current.offsetLeft - 15,
-      top: buttonRef.current.offsetTop + buttonRef.current.clientHeight / 2
-    };
-    onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.UPLOAD_NEW_ARTIFACT_DIALOG_CLICK,
-      onboardingState,
-      { anchor: releaseNameAnchor, place: 'left' },
-      onboardingComponent
-    );
-  }
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">
       <DialogTitle>Upload an Artifact</DialogTitle>
@@ -281,11 +238,10 @@ export const AddArtifactDialog = ({ onCancel, onUploadStarted, releases, selecte
         {!!activeStep && <Button onClick={() => setActiveStep(activeStep - 1)}>Back</Button>}
         <div style={{ flexGrow: 1 }} />
         {file && (
-          <Button variant="contained" color="primary" disabled={!isValid} onClick={() => (finalStep ? onUpload() : onNextClick())} ref={buttonRef}>
+          <Button variant="contained" color="primary" disabled={!isValid} onClick={() => (finalStep ? onUpload() : onNextClick())}>
             {finalStep ? 'Upload artifact' : 'Next'}
           </Button>
         )}
-        {onboardingComponent}
       </DialogActions>
     </Dialog>
   );

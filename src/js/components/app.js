@@ -28,13 +28,11 @@ import { logoutUser, setAccountActivationCode, setShowConnectingDialog } from '.
 import { expirySet, getToken, updateMaxAge } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
-import { onboardingSteps } from '../constants/onboardingConstants';
 import ErrorBoundary from '../errorboundary';
 import { isDarkMode, toggle } from '../helpers';
-import { getOnboardingState, getUserSettings } from '../selectors';
+import { getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import Footer from './footer';
@@ -94,7 +92,6 @@ export const AppRoot = () => {
 
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.users.currentUser);
-  const onboardingState = useSelector(getOnboardingState);
   const showDismissHelptipsDialog = useSelector(state => !state.onboarding.complete && state.onboarding.showTipsDialog);
   const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
   const snackbar = useSelector(state => state.app.snackbar);
@@ -162,7 +159,6 @@ export const AppRoot = () => {
 
   const onToggleSearchResult = () => setShowSearchResult(toggle);
 
-  const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
   const theme = createTheme(isDarkMode(mode) ? darkTheme : lightTheme);
 
   const { classes } = useStyles();
@@ -181,7 +177,6 @@ export const AppRoot = () => {
                 <PrivateRoutes />
               </ErrorBoundary>
             </div>
-            {onboardingComponent ? onboardingComponent : null}
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
             {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => dispatch(setShowConnectingDialog(false))} />}
           </div>

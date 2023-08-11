@@ -158,24 +158,12 @@ export const Past = props => {
         accu,
       false
     );
-    let onboardingStep = onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION;
+    let onboardingStep = onboardingSteps.DEPLOYMENTS_PAST;
     if (pastDeploymentsFailed) {
       onboardingStep = onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE;
     }
     dispatch(advanceOnboarding(onboardingStep));
-    setTimeout(() => {
-      let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState, {
-        setSnackbar: dispatchedSetSnackbar
-      });
-      // the following extra check is needed since this component will still be mounted if a user returns to the initial tab after the first
-      // onboarding deployment & thus the effects will still run, so only ever consider the notification for the second deployment
-      notification =
-        past.length > 1
-          ? getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar: dispatchedSetSnackbar }, notification)
-          : notification;
-      !!notification && dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true));
-    }, TIMEOUTS.debounceDefault);
-  }, [past.length, onboardingState.complete, past, onboardingState, dispatch, dispatchedSetSnackbar]);
+  }, [dispatch, onboardingState.complete, past]);
 
   useEffect(() => {
     dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, search: debouncedSearch, type: debouncedType } }));
@@ -198,7 +186,6 @@ export const Past = props => {
       { anchor: { left, top: detailsButtons[0].parentElement.offsetTop + detailsButtons[0].parentElement.offsetHeight } },
       onboardingComponent
     );
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
   }
 
   const onGroupFilterChange = (e, value) => {

@@ -21,9 +21,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { SORTING_OPTIONS, canAccess as canShow } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getFeatures, getOnboardingState, getReleasesList, getUserCapabilities } from '../../selectors';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { getFeatures, getReleasesList, getUserCapabilities } from '../../selectors';
 import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -95,8 +93,6 @@ export const ReleasesList = ({ onFileUploadClick }) => {
     state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
   );
   const features = useSelector(getFeatures);
-  const onboardingState = useSelector(getOnboardingState);
-  const { artifactIncluded } = onboardingState;
   const releases = useSelector(getReleasesList);
   const releasesListState = useSelector(state => state.releases.releasesList);
   const userCapabilities = useSelector(getUserCapabilities);
@@ -140,14 +136,6 @@ export const ReleasesList = ({ onFileUploadClick }) => {
     [JSON.stringify(features)]
   );
 
-  let onboardingComponent = null;
-  if (repoRef.current?.lastChild?.lastChild) {
-    const element = repoRef.current.lastChild.lastChild;
-    const anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetParent?.offsetTop + element.offsetHeight };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING, { ...onboardingState, artifactIncluded }, { anchor });
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
-  }
-
   const potentialTotal = searchTerm ? searchTotal : total;
   if (!hasReleases) {
     return (
@@ -182,7 +170,6 @@ export const ReleasesList = ({ onFileUploadClick }) => {
             />
             <Loader show={isLoading} small />
           </div>
-          {onboardingComponent}
         </>
       )}
     </div>

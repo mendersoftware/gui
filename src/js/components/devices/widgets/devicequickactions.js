@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { forwardRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -30,9 +30,12 @@ import { mdiTrashCanOutline as TrashCan } from '@mdi/js';
 import pluralize from 'pluralize';
 
 import GatewayIcon from '../../../../assets/img/gateway.svg';
+import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_STATES, UNGROUPED_GROUP } from '../../../constants/deviceConstants';
-import { stringToBoolean } from '../../../helpers';
-import { getDeviceById, getFeatures, getMappedDevicesList, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
+import { getDeviceById, getFeatures, getMappedDevicesList, getOnboardingState, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
+import { stringToBoolean, toggle } from '../../../helpers';
+import { onboardingSteps } from '../../../constants/onboardingConstants';
+import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 
 const defaultActions = {
@@ -101,27 +104,29 @@ const defaultActions = {
 
 const useStyles = makeStyles()(theme => ({
   container: {
-    display: 'flex',
     position: 'fixed',
     bottom: theme.spacing(6.5),
     right: theme.spacing(6.5),
     zIndex: 10,
     minWidth: 400,
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
     pointerEvents: 'none',
     [`.${speedDialActionClasses.staticTooltipLabel}`]: {
       minWidth: 'max-content'
     }
   },
   fab: { margin: theme.spacing(2) },
+  innerContainer: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
+  },
   label: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(4)
   }
 }));
 
-export const DeviceQuickActions = ({ actionCallbacks, deviceId, selectedGroup }, ref) => {
+export const DeviceQuickActions = ({ actionCallbacks, deviceId, selectedGroup }) => {
   const [showActions, setShowActions] = useState(false);
   const features = useSelector(getFeatures);
   const tenantCapabilities = useSelector(getTenantCapabilities);
@@ -130,6 +135,18 @@ export const DeviceQuickActions = ({ actionCallbacks, deviceId, selectedGroup },
   const singleDevice = useSelector(state => getDeviceById(state, deviceId));
   const devices = useSelector(state => getMappedDevicesList(state, 'deviceList'));
   const { classes } = useStyles();
+  const deployActionRef = useRef();
+  const onboardingState = useSelector(getOnboardingState);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const timer = useRef();
+
+  useEffect(() => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setIsInitialized(toggle), TIMEOUTS.debounceDefault);
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
 
   const selectedDevices = deviceId ? [singleDevice] : selectedRows.map(row => devices[row]);
   const actions = Object.values(defaultActions).reduce((accu, action) => {
@@ -140,30 +157,49 @@ export const DeviceQuickActions = ({ actionCallbacks, deviceId, selectedGroup },
   }, []);
 
   const pluralized = pluralize('devices', selectedDevices.length);
+
+  let onboardingComponent;
+  if (deployActionRef.current && isInitialized) {
+    const anchor = {
+      left: deployActionRef.current.firstElementChild.offsetLeft - 15,
+      top: deployActionRef.current.offsetTop + deployActionRef.current.firstElementChild.offsetTop + deployActionRef.current.firstElementChild.offsetHeight / 2
+    };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEVICES_DEPLOY_RELEASE_ONBOARDING,
+      onboardingState,
+      { anchor, place: 'left' },
+      onboardingComponent
+    );
+  }
   return (
-    <div className={classes.container} ref={ref}>
-      <div className={classes.label}>{deviceId ? 'Device actions' : `${selectedDevices.length} ${pluralized} selected`}</div>
-      <SpeedDial
-        className={classes.fab}
-        ariaLabel="device-actions"
-        icon={<SpeedDialIcon />}
-        onClose={() => setShowActions(false)}
-        onOpen={setShowActions}
-        open={Boolean(showActions)}
-      >
-        {actions.map(action => (
-          <SpeedDialAction
-            key={action.key}
-            aria-label={action.key}
-            icon={action.icon}
-            tooltipTitle={action.title(pluralized, selectedDevices.length)}
-            tooltipOpen
-            onClick={() => action.action({ ...actionCallbacks, selection: selectedDevices })}
-          />
-        ))}
-      </SpeedDial>
+    <div className={classes.container}>
+      <div className="relative">
+        <div className={classes.innerContainer} ref={deployActionRef}>
+          <div className={classes.label}>{deviceId ? 'Device actions' : `${selectedDevices.length} ${pluralized} selected`}</div>
+          <SpeedDial
+            className={classes.fab}
+            ariaLabel="device-actions"
+            icon={<SpeedDialIcon />}
+            onClose={() => setShowActions(false)}
+            onOpen={setShowActions}
+            open={Boolean(showActions)}
+          >
+            {actions.map(action => (
+              <SpeedDialAction
+                key={action.key}
+                aria-label={action.key}
+                icon={action.icon}
+                tooltipTitle={action.title(pluralized, selectedDevices.length)}
+                tooltipOpen
+                onClick={() => action.action({ ...actionCallbacks, selection: selectedDevices })}
+              />
+            ))}
+          </SpeedDial>
+        </div>
+        {onboardingComponent}
+      </div>
     </div>
   );
 };
 
-export default forwardRef(DeviceQuickActions);
+export default DeviceQuickActions;

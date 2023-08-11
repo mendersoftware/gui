@@ -23,6 +23,7 @@ import raspberryPi4 from '../../../../assets/img/raspberrypi4.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';
 import { setDeviceListState } from '../../../actions/deviceActions';
 import { advanceOnboarding } from '../../../actions/onboardingActions';
+import { saveUserSettings } from '../../../actions/userActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
@@ -124,6 +125,9 @@ export const DeviceConnectionDialog = ({ onCancel }) => {
       dispatch(advanceOnboarding(onboardingSteps.DASHBOARD_ONBOARDING_START));
       dispatch(setDeviceListState({ state: DEVICE_STATES.pending }));
       navigate('/devices/pending');
+    }
+    if (virtualDevice || progress >= 2) {
+      dispatch(saveUserSettings({ onboarding: { deviceConnection: new Date().toISOString() } }));
     }
   }, [dispatch, hasMoreDevices, navigate, progress, virtualDevice]);
 
