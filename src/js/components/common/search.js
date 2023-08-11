@@ -38,7 +38,7 @@ const endAdornment = (
 // due to search not working reliably for single letter searches, only start at 2
 const MINIMUM_SEARCH_LENGTH = 2;
 
-const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchTerm, style = {} }) => {
+const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchTerm, style = {}, trigger }) => {
   const [searchValue, setSearchValue] = useState('');
   const { classes } = useStyles();
 
@@ -60,8 +60,8 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
   const onSearchUpdated = ({ target: { value } }) => setSearchValue(value);
 
   const onTriggerSearch = ({ key }) => {
-    if (key === 'Enter' && (!searchValue || searchValue >= MINIMUM_SEARCH_LENGTH)) {
-      onSearch(searchValue);
+    if (key === 'Enter' && (!searchValue || searchValue.length >= MINIMUM_SEARCH_LENGTH)) {
+      onSearch(searchValue, !trigger);
     }
   };
 

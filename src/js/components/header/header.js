@@ -171,7 +171,7 @@ export const Header = ({ mode }) => {
     dispatch(logoutUser());
   };
 
-  const onSearch = searchTerm => dispatch(setSearchState({ refreshTrigger: !refreshTrigger, searchTerm, page: 1 }));
+  const onSearch = useCallback((searchTerm, refreshTrigger) => dispatch(setSearchState({ refreshTrigger, searchTerm, page: 1 })), [dispatch]);
 
   const onToggleTooltips = () => dispatch(setAllTooltipsReadState(showHelptips ? READ_STATES.read : READ_STATES.unread));
 
@@ -211,7 +211,7 @@ export const Header = ({ mode }) => {
             />
           )}
         </div>
-        <Search isSearching={isSearching} searchTerm={searchTerm} onSearch={onSearch} />
+        <Search isSearching={isSearching} searchTerm={searchTerm} onSearch={onSearch} trigger={refreshTrigger} />
         <div className="flexbox center-aligned">
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
