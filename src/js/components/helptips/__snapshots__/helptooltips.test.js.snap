@@ -8,18 +8,6 @@ NodeList [
   <p>
     It is possible to create groups of devices. Once you have created a group and added one or more devices to it, you can deploy an update to that specific group only.
   </p>,
-  <p>
-    To avoid accidents, Mender only allows a device to be in one group at the time.
-  </p>,
-  <p>
-    You can find out additional information about device groups in 
-    <a
-      href="/help/devices"
-    >
-      the help section
-    </a>
-    .
-  </p>,
 ]
 `;
 
@@ -365,30 +353,6 @@ NodeList [
       target="_blank"
     >
       see the documentation
-    </a>
-    .
-  </p>,
-]
-`;
-
-exports[`Helptooltips Components renders ExpandDevice correctly 1`] = `
-NodeList [
-  <h3>
-    Device inventory
-  </h3>,
-  <p>
-    Mender automatically collects identity and inventory information from connected devices. You can view this information by clicking on a device to expand the row.
-  </p>,
-  <p>
-    Which information is collected about devices is fully configurable;
-     
-    <a
-      class=""
-      href="https://docs.mender.io/client-installation/identity"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      see the documentation for how to configure this
     </a>
     .
   </p>,
