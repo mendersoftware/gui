@@ -384,7 +384,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
           <div
             class="muted"
           >
-            1% (1 device)
+            100% (1 device)
           </div>
         </div>
       </div>
