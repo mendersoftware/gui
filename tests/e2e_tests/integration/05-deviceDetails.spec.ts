@@ -34,6 +34,23 @@ test.describe('Device details', () => {
     expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
   });
 
+  test('can be found', async ({ demoDeviceName, loggedInPage: page }) => {
+    const searchField = await page.getByPlaceholder(/search devices/i);
+    await searchField.fill(demoDeviceName);
+    await page.waitForSelector('.deviceListItem');
+    expect(await page.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
+    expect(await page.getByText('1-1 of 1').isVisible()).toBeTruthy();
+    await page.click(`.deviceListItem`);
+    await page.waitForSelector('text=/device information/i');
+    expect(await page.getByText(/Authorization sets/i).isVisible()).toBeTruthy();
+    await page.click('[aria-label="close"]');
+    expect(await page.getByText(/table options/i).isVisible()).toBeTruthy();
+    await page.getByText(/releases/i).click();
+    await searchField.focus();
+    await searchField.press('Enter');
+    expect(await page.getByText(/device found/i).isVisible()).toBeTruthy();
+  });
+
   test('can open a terminal', async ({ browserName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`.deviceListItem div:last-child`);
