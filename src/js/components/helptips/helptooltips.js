@@ -13,7 +13,6 @@
 //    limitations under the License.
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { setSnackbar } from '../../actions/appActions';
 import { setAllTooltipsReadState, setTooltipReadState } from '../../actions/userActions';
@@ -57,24 +56,6 @@ const AddGroup = () => (
     <p>
       It is possible to create groups of devices. Once you have created a group and added one or more devices to it, you can deploy an update to that specific
       group only.
-    </p>
-    <p>To avoid accidents, Mender only allows a device to be in one group at the time.</p>
-    <p>
-      You can find out additional information about device groups in <Link to="/help/devices">the help section</Link>.
-    </p>
-  </>
-);
-
-const ExpandDevice = () => (
-  <>
-    <h3>Device inventory</h3>
-    <p>
-      Mender automatically collects identity and inventory information from connected devices. You can view this information by clicking on a device to expand
-      the row.
-    </p>
-    <p>
-      Which information is collected about devices is fully configurable;{' '}
-      <DocsLink path="client-installation/identity" title="see the documentation for how to configure this" />.
     </p>
   </>
 );
@@ -289,7 +270,6 @@ export const HELPTOOLTIPS = {
   deviceSupportTip: { id: 'deviceSupportTip', Component: DeviceSupportTip },
   deviceTypeTip: { id: 'deviceTypeTip', Component: DeviceTypeTip },
   expandArtifact: { id: 'expandArtifact', Component: ExpandArtifact },
-  expandDevice: { id: 'expandDevice', Component: ExpandDevice },
   forceDeployment: { id: 'forceDeployment', Component: ForceDeployment },
   globalSettings: { id: 'globalSettings', Component: GlobalSettings },
   groupDeployment: { id: 'groupDeployment', Component: GroupDeployment },

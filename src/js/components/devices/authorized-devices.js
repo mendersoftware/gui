@@ -50,7 +50,6 @@ import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import { defaultHeaders, defaultTextRender, getDeviceIdentityText, routes as states } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
 import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
@@ -464,24 +463,21 @@ export const Authorized = ({
       <Loader show={!isInitialized} />
       <div className="padding-bottom" ref={deviceListRef}>
         {devices.length > 0 ? (
-          <>
-            <DeviceList
-              columnHeaders={columnHeaders}
-              customColumnSizes={customColumnSizes}
-              devices={devices}
-              deviceListState={deviceListState}
-              idAttribute={idAttribute}
-              onChangeRowsPerPage={onPageLengthChange}
-              onExpandClick={onExpandClick}
-              onPageChange={handlePageChange}
-              onResizeColumns={columns => dispatch(updateUserColumnSettings(columns))}
-              onSelect={onSelectionChange}
-              onSort={onSortChange}
-              pageLoading={pageLoading}
-              pageTotal={deviceCount}
-            />
-            <MenderHelpTooltip id={HELPTOOLTIPS.expandDevice.id} style={{ position: 'absolute', right: 45 }} />
-          </>
+          <DeviceList
+            columnHeaders={columnHeaders}
+            customColumnSizes={customColumnSizes}
+            devices={devices}
+            deviceListState={deviceListState}
+            idAttribute={idAttribute}
+            onChangeRowsPerPage={onPageLengthChange}
+            onExpandClick={onExpandClick}
+            onPageChange={handlePageChange}
+            onResizeColumns={columns => dispatch(updateUserColumnSettings(columns))}
+            onSelect={onSelectionChange}
+            onSort={onSortChange}
+            pageLoading={pageLoading}
+            pageTotal={deviceCount}
+          />
         ) : (
           <EmptyState
             allCount={allCount}
