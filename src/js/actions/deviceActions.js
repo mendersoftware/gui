@@ -29,6 +29,7 @@ import {
 } from '../selectors';
 import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
+import { filtersFilter } from '../components/devices/widgets/filters';
 
 const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP, emptyFilter } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -282,9 +283,7 @@ const getGroupFilters = (group, groupsState, filters = []) => {
   const groupName = group === UNGROUPED_GROUP.id || group === UNGROUPED_GROUP.name ? UNGROUPED_GROUP.id : group;
   const selectedGroup = groupsState.byId[groupName];
   const groupFilterLength = selectedGroup?.filters?.length || 0;
-  const cleanedFilters = groupFilterLength
-    ? (filters.length ? filters : selectedGroup.filters).filter((item, index, array) => array.findIndex(filter => deepCompare(filter, item)) == index)
-    : filters;
+  const cleanedFilters = groupFilterLength ? [...filters, ...selectedGroup.filters].filter(filtersFilter) : filters;
   return { cleanedFilters, groupName, selectedGroup, groupFilterLength };
 };
 
@@ -293,7 +292,7 @@ export const selectGroup =
   (dispatch, getState) => {
     const { cleanedFilters, groupName, selectedGroup, groupFilterLength } = getGroupFilters(group, getState().devices.groups, filters);
     const state = getState();
-    if (state.devices.groups.selectedGroup === groupName && filters.length === 0 && !groupFilterLength) {
+    if (state.devices.groups.selectedGroup === groupName && ((filters.length === 0 && !groupFilterLength) || filters.length === cleanedFilters.length)) {
       return Promise.resolve();
     }
     let tasks = [];
@@ -569,12 +568,14 @@ export const getDeviceLimit = () => dispatch =>
   );
 
 export const setDeviceListState =
-  (selectionState, shouldSelectDevices = true) =>
+  (selectionState, shouldSelectDevices = true, forceRefresh) =>
   (dispatch, getState) => {
     const currentState = getState().devices.deviceList;
+    const refreshTrigger = forceRefresh ? !currentState.refreshTrigger : selectionState.refreshTrigger;
     let nextState = {
       ...currentState,
       setOnly: false,
+      refreshTrigger,
       ...selectionState,
       sort: { ...currentState.sort, ...selectionState.sort }
     };

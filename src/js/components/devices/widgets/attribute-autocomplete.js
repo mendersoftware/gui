@@ -19,10 +19,9 @@ import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { getFilterLabelByKey } from './filters';
 import { defaultHeaders } from '../base-devices';
+import { emptyFilter } from '../../../constants/deviceConstants';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
-
-const defaultScope = 'inventory';
 
 export const getOptionLabel = option => {
   const header = Object.values(defaultHeaders).find(
@@ -60,9 +59,7 @@ const filterOptions = (options, params) => {
   return filtered;
 };
 
-const defaultFilter = { key: '', scope: defaultScope };
-
-export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFilter, label = 'Attribute', onRemove, onSelect }) => {
+export const AttributeAutoComplete = ({ attributes, disabled, filter = emptyFilter, label = 'Attribute', onRemove, onSelect, ...remainder }) => {
   const [key, setKey] = useState(filter.key); // this refers to the selected filter with key as the id
   const [options, setOptions] = useState([]);
   const [reset, setReset] = useState(true);
@@ -76,8 +73,8 @@ export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFi
   }, []);
 
   useEffect(() => {
-    setKey('');
-    setScope(defaultScope);
+    setKey(emptyFilter.key);
+    setScope(emptyFilter.scope);
     setOptions(attributes.sort((a, b) => a.priority - b.priority));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attributes.length, reset]);
@@ -112,6 +109,7 @@ export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFi
 
   return (
     <Autocomplete
+      {...remainder}
       autoComplete
       autoHighlight
       autoSelect
@@ -129,7 +127,7 @@ export const AttributeAutoComplete = ({ attributes, disabled, filter = defaultFi
         if (inputValue) {
           // only circumvent updateFilterKey if we deal with a custom attribute - those will be treated as inventory attributes
           setKey(inputValue);
-          return setScope(defaultScope);
+          return setScope(emptyFilter.scope);
         }
         updateFilterKey(key, scope);
       }}

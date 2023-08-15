@@ -1055,6 +1055,9 @@ label+.emotion-18 {
         </div>
         <div>
           <div
+            class="filter-list"
+          />
+          <div
             class="flexbox center-aligned relative"
           >
             <div

@@ -20,13 +20,7 @@ import FilterItem from './filteritem';
 describe('FilterItem Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
-      <FilterItem
-        filterAttributes={['test']}
-        filter={{ key: 'testkey', value: 'testvalue' }}
-        filters={[{ key: 'testkey', value: 'testvalue' }]}
-        attributes={[{ key: 'testkey', value: 'testvalue' }]}
-        index={0}
-      />
+      <FilterItem attributes={[{ key: 'testkey', value: 'testvalue' }]} filter={{ key: 'testkey', value: 'testvalue' }} onChange={jest.fn} onSelect={jest.fn} />
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
