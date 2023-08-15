@@ -36,7 +36,14 @@ export const getFilterLabelByKey = (key, attributes) => {
 
 const MAX_PREVIOUS_FILTERS_COUNT = 3;
 
-export const Filters = ({ className = '', filters: propsFilters, isModification = true, onFilterChange, onGroupClick, open }) => {
+const filterCompare = (filter, item) => Object.keys(emptyFilter).every(key => item[key].toString() === filter[key].toString());
+
+const filtersFilter = (item, index, array) => {
+  const firstIndex = array.findIndex(filter => filterCompare(filter, item));
+  return firstIndex === index;
+};
+
+export const Filters = ({ className = '', isModification = true, onFilterChange, onGroupClick, open }) => {
   const [adding, setAdding] = useState(isModification);
   const [newFilter, setNewFilter] = useState(emptyFilter);
   const [currentFilters, setCurrentFilters] = useState([]);
@@ -45,16 +52,18 @@ export const Filters = ({ className = '', filters: propsFilters, isModification 
   const { plan } = useSelector(getTenantCapabilities);
   const { groupFilters, selectedGroup } = useSelector(getSelectedGroupInfo);
   const attributes = useSelector(getFilterAttributes);
-  const stateFilters = useSelector(getDeviceFilters);
-  const filters = propsFilters || stateFilters;
+  const filters = useSelector(getDeviceFilters);
   const isEnterprise = useSelector(getIsEnterprise);
   const previousFilters = useSelector(state => state.users.globalSettings.previousFilters);
 
   useEffect(() => {
-    setCurrentFilters(filters);
-    setEditedIndex(filters.length);
-    dispatch(getDeviceAttributes());
-  }, [dispatch, filters, open]);
+    const uniqueFilters = [...currentFilters, ...filters].filter(filtersFilter);
+    if (uniqueFilters.some(filter => !currentFilters.find(current => filterCompare(filter, current)))) {
+      setCurrentFilters(uniqueFilters);
+      setEditedIndex(uniqueFilters.length);
+      dispatch(getDeviceAttributes());
+    }
+  }, [dispatch, currentFilters, filters, open]);
 
   useEffect(() => {
     setAdding(adding && groupFilters.length ? isModification : true);
