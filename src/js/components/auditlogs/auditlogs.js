@@ -135,6 +135,7 @@ export const AuditLogs = props => {
     if (!hasAuditlogs) {
       return;
     }
+    isInitialized.current = false;
     let state = { ...locationParams };
     if (locationParams.id && Boolean(locationParams.open)) {
       state.selectedId = locationParams.id[0];
