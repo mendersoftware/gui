@@ -316,7 +316,7 @@ export const AuditLogs = props => {
       {!hasAuditlogs && (
         <div className={`dashboard-placeholder flexbox ${classes.upgradeNote}`}>
           <DefaultUpgradeNotification className="margin-right-small" />
-          <MenderHelpTooltip id={HELPTOOLTIPS.AuditlogExplanation.id} />
+          <MenderHelpTooltip id={HELPTOOLTIPS.auditlogExplanation.id} />
         </div>
       )}
     </div>
