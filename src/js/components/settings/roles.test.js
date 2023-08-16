@@ -42,9 +42,10 @@ describe('Roles Component', () => {
     await user.click(within(role).getByText(/view details/i));
     let collapse = screen.getByText(/edit role/i).parentElement.parentElement;
     await user.click(screen.getByRole('button', { name: /delete/i }));
+    expect(screen.queryByText(/delete the role/i)).toBeInTheDocument();
+    const dialog = screen.getByText(/delete role\?/i).parentElement.parentElement;
+    await user.click(within(dialog).getByRole('button', { name: /delete/i }));
     expect(removeRoleSpy).toHaveBeenCalled();
-    // expect(screen.getByLabelText(/Role name/i)).toBeDisabled();
-    // userEvent.type(within(collapse).getByLabelText(/Name/i), 'test');
     await user.click(within(role).getByText(/view details/i));
     collapse = screen.getByText(/edit role/i).parentElement.parentElement;
     await user.type(within(collapse).getByLabelText(/Description/i), 'something');
