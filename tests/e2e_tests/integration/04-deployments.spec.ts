@@ -62,8 +62,7 @@ test.describe('Deployments', () => {
     await releaseSelect.focus();
     await releaseSelect.type('mender-demo');
     await page.click(`#deployment-release-selection-listbox li`);
-    const clearButton = await page.getByRole('button', { name: 'Clear' });
-    await clearButton.click();
+    await page.getByRole('button', { name: 'Clear' }).click();
     const textContent = await releaseSelect.textContent();
     expect(textContent).toBeFalsy();
     await releaseSelect.focus();
@@ -83,7 +82,6 @@ test.describe('Deployments', () => {
   });
 
   test('allows group deployments', async ({ loggedInPage: page }) => {
-    console.log(`allows group deployments`);
     await page.click(`a:has-text('Deployments')`);
     await page.click(`button:has-text('Create a deployment')`);
 

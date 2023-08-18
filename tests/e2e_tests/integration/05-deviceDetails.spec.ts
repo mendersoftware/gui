@@ -22,6 +22,8 @@ const terminalReferenceFileMap = {
   webkit: 'terminalContent-webkit.png'
 };
 
+const rootfs = 'rootfs-image.version';
+
 test.describe('Device details', () => {
   test.use({ storageState: 'storage.json' });
 
@@ -38,8 +40,9 @@ test.describe('Device details', () => {
     const searchField = await page.getByPlaceholder(/search devices/i);
     await searchField.fill(demoDeviceName);
     await page.waitForSelector('.deviceListItem');
-    expect(await page.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
-    expect(await page.getByText('1-1 of 1').isVisible()).toBeTruthy();
+    const slideOut = await page.locator('.MuiPaper-root');
+    expect(await slideOut.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
+    expect(await slideOut.getByText('1-1 of 1').isVisible()).toBeTruthy();
     await page.click(`.deviceListItem`);
     await page.waitForSelector('text=/device information/i');
     expect(await page.getByText(/Authorization sets/i).isVisible()).toBeTruthy();
@@ -49,6 +52,26 @@ test.describe('Device details', () => {
     await searchField.focus();
     await searchField.press('Enter');
     expect(await page.getByText(/device found/i).isVisible()).toBeTruthy();
+  });
+
+  test('can be filtered', async ({ demoDeviceName, environment, loggedInPage: page }) => {
+    await page.click(`.leftNav :text('Devices')`);
+    await page.getByRole('button', { name: /filters/i }).click();
+    await page.getByLabel(/attribute/i).fill(rootfs);
+    await page.getByLabel(/value/i).fill(demoDeviceName);
+    await page.waitForSelector('.deviceListItem');
+    expect(await page.getByText('1-1 of 1').isVisible()).toBeTruthy();
+    await page.waitForTimeout(timeouts.default);
+    expect(await page.getByText(`${rootfs} = ${demoDeviceName}`).isVisible()).toBeTruthy();
+    await page.getByText(/clear filter/i).click();
+    if (['enterprise', 'staging'].includes(environment)) {
+      await page.getByLabel(/attribute/i).fill(rootfs);
+      await page.getByText(/equals/i).click();
+      await page.getByText(`doesn't exist`).click();
+      await page.waitForTimeout(timeouts.default);
+      expect(await await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
+      expect(await page.getByText('No devices found').isVisible()).toBeTruthy();
+    }
   });
 
   test('can open a terminal', async ({ browserName, loggedInPage: page }) => {
