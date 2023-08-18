@@ -40,8 +40,9 @@ test.describe('Device details', () => {
     const searchField = await page.getByPlaceholder(/search devices/i);
     await searchField.fill(demoDeviceName);
     await page.waitForSelector('.deviceListItem');
-    expect(await page.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
-    expect(await page.getByText('1-1 of 1').isVisible()).toBeTruthy();
+    const slideOut = await page.locator('.MuiPaper-root');
+    expect(await slideOut.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
+    expect(await slideOut.getByText('1-1 of 1').isVisible()).toBeTruthy();
     await page.click(`.deviceListItem`);
     await page.waitForSelector('text=/device information/i');
     expect(await page.getByText(/Authorization sets/i).isVisible()).toBeTruthy();

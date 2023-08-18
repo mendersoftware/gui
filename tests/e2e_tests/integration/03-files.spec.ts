@@ -11,15 +11,15 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import axios from 'axios';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import * as fs from 'fs';
-import https from 'https';
 import md5 from 'md5';
+import https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
 import { selectors, timeouts } from '../utils/constants';
+import axios from 'axios';
 
 dayjs.extend(isBetween);
 
@@ -31,7 +31,7 @@ test.describe('Files', () => {
     await page.click(`.leftNav :text('Releases')`);
     // create an artifact to download first
     await page.click(`button:has-text('Upload')`);
-    await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
+    await page.locator('.MuiDialog-paper .dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(`.MuiDialog-paper button:has-text('Upload')`);
     // give some extra time for the upload
     await page.waitForTimeout(timeouts.fiveSeconds);
@@ -55,14 +55,19 @@ test.describe('Files', () => {
     await page.click(`.leftNav :text('Releases')`);
     await page.click(`text=/mender-demo-artifact/i`);
     await page.click('.expandButton');
-    await page.waitForSelector(`text=Download Artifact`, { timeout: timeouts.default });
-    expect(await page.isVisible(`text=Download Artifact`)).toBeTruthy();
-    // unfortunately the firefox integration gets flaky with the download attribute set + the chrome + webkit integrations time out
-    // waiting for the download event almost every time => work around by getting the file
-    const locator = await page.locator('text=Download Artifact');
-    const downloadUrl = await locator.getAttribute('href');
-    const download = await axios.get(downloadUrl, { httpsAgent: new https.Agent({ rejectUnauthorized: false }), responseType: 'arraybuffer' });
-    const newFile = download.data;
+    const downloadButton = await page.getByText(/download artifact/i);
+    expect(await downloadButton.isVisible()).toBeTruthy();
+    const [download] = await Promise.all([page.waitForEvent('download'), downloadButton.click()]);
+    let downloadTargetPath = await download.path();
+    const downloadError = await download.failure();
+    if (downloadError) {
+      const downloadUrl = download.url();
+      const response = await axios.get(downloadUrl, { httpsAgent: new https.Agent({ rejectUnauthorized: false }), responseType: 'arraybuffer' });
+      const fileData = Buffer.from(response.data, 'binary');
+      downloadTargetPath = `./${download.suggestedFilename()}`;
+      fs.writeFileSync(downloadTargetPath, fileData);
+    }
+    const newFile = await fs.readFileSync(downloadTargetPath);
     const testFile = await fs.readFileSync(`fixtures/${fileName}`);
     expect(md5(newFile)).toEqual(md5(testFile));
   });
@@ -77,7 +82,7 @@ test.describe('Files', () => {
     await page.waitForSelector('text=/file transfer/i', { timeout: timeouts.tenSeconds });
     await page.click(`css=.expandedDevice >> text=file transfer`);
     await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
-    await page.setInputFiles('.MuiDialog-paper .dropzone input', `fixtures/${fileName}`);
+    await page.locator('.dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(selectors.placeholderExample, { clickCount: 3 });
     await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
     await page.click(`button:text("Upload"):below(:text("Destination directory"))`);

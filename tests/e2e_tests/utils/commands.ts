@@ -128,7 +128,7 @@ export const startDockerClient = async (baseUrl, token) => {
     `${projectRoot}/dockerClient/mender-connect-test.json:/etc/mender/mender-connect.conf`,
     'mendersoftware/mender-client-docker-addons:master'
   ];
-  console.log(`starting with: ${token}`);
+  console.log(`starting with token: ${token}`);
   console.log(`starting using: docker ${args.join(' ')}`);
   const child = spawn('docker', args);
   child.on('error', err => console.error(`${err}`));
@@ -184,9 +184,7 @@ export const login = async (username: string, password: string, baseUrl: string)
 export const tenantTokenRetrieval = async (baseUrl: string, page: Page) => {
   await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
   await page.waitForSelector('.tenant-token-text');
-  const token = await page.$eval('.tenant-token-text', el => el.textContent);
-  console.log(token);
-  return token;
+  return page.$eval('.tenant-token-text', el => el.textContent);
 };
 
 let previousSecret;
