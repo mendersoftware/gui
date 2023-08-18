@@ -47,12 +47,23 @@ export const cancelRequest = (tenantId, reason) => dispatch =>
     Promise.resolve(dispatch(setSnackbar('Deactivation request was sent successfully', TIMEOUTS.fiveSeconds, '')))
   );
 
+export const getTargetLocation = key => {
+  if (devLocations.includes(window.location.hostname)) {
+    return '';
+  }
+  let subdomainSections = window.location.hostname.substring(0, window.location.hostname.indexOf(locations.us.location)).split('.');
+  subdomainSections = subdomainSections.splice(0, subdomainSections.length - 1);
+  if (!subdomainSections.find(section => section === key)) {
+    subdomainSections = key === locations.us.key ? subdomainSections.filter(section => !locations[section]) : [...subdomainSections, key];
+    return `https://${[...subdomainSections, ...locations.us.location.split('.')].join('.')}`;
+  }
+  return `https://${window.location.hostname}`;
+};
+
 const devLocations = ['localhost', 'docker.mender.io'];
 export const createOrganizationTrial = data => dispatch => {
-  const { location } = locations[data.location];
-  const targetLocation = devLocations.includes(window.location.hostname)
-    ? ''
-    : `https://${window.location.hostname.startsWith('staging') ? 'staging.' : ''}${location}`;
+  const { key } = locations[data.location];
+  const targetLocation = getTargetLocation(key);
   const target = `${targetLocation}${tenantadmApiUrlv2}/tenants/trial`;
   return Api.postUnauthorized(target, data)
     .catch(err => {
