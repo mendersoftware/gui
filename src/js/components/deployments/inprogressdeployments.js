@@ -125,6 +125,12 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
 
   useEffect(() => {
     return () => {
+      clearTimeout(dynamicTimer.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
       clearAllRetryTimers(dispatchedSetSnackbar);
     };
   }, [dispatchedSetSnackbar]);
@@ -141,7 +147,7 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
     clearTimeout(dynamicTimer.current);
     setupDeploymentsRefresh();
     return () => {
-      clearInterval(dynamicTimer.current);
+      clearTimeout(dynamicTimer.current);
     };
   }, [progressPage, progressPerPage, pendingPage, pendingPerPage, setupDeploymentsRefresh]);
 
