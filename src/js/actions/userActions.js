@@ -556,6 +556,23 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
   };
 };
 
+const roleActions = {
+  create: {
+    successMessage: 'The role was created successfully.',
+    errorMessage: 'creating'
+  },
+  edit: {
+    successMessage: 'The role has been updated.',
+    errorMessage: 'editing'
+  },
+  remove: {
+    successMessage: 'The role was deleted successfully.',
+    errorMessage: 'removing'
+  }
+};
+
+const roleActionErrorHandler = (err, type, dispatch) => commonErrorHandler(err, `There was an error ${roleActions[type].errorMessage} the role.`, dispatch);
+
 export const createRole = roleData => dispatch => {
   const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData);
   return GeneralApi.post(`${useradmApiUrlv2}/roles`, {
@@ -563,8 +580,14 @@ export const createRole = roleData => dispatch => {
     description: role.description,
     permission_sets_with_scope: permissionSetsWithScope
   })
-    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
-    .catch(err => commonErrorHandler(err, `There was an error creating the role:`, dispatch));
+    .then(() =>
+      Promise.all([
+        dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: role.name }),
+        dispatch(getRoles()),
+        dispatch(setSnackbar(roleActions.create.successMessage))
+      ])
+    )
+    .catch(err => roleActionErrorHandler(err, 'create', dispatch));
 };
 
 export const editRole = roleData => (dispatch, getState) => {
@@ -574,8 +597,14 @@ export const editRole = roleData => (dispatch, getState) => {
     name: role.name,
     permission_sets_with_scope: permissionSetsWithScope
   })
-    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
-    .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
+    .then(() =>
+      Promise.all([
+        dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }),
+        dispatch(getRoles()),
+        dispatch(setSnackbar(roleActions.edit.successMessage))
+      ])
+    )
+    .catch(err => roleActionErrorHandler(err, 'edit', dispatch));
 };
 
 export const removeRole = roleId => (dispatch, getState) =>
@@ -583,9 +612,13 @@ export const removeRole = roleId => (dispatch, getState) =>
     .then(() => {
       // eslint-disable-next-line no-unused-vars
       const { [roleId]: toBeRemoved, ...rolesById } = getState().users.rolesById;
-      return Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, value: rolesById }), dispatch(getRoles())]);
+      return Promise.all([
+        dispatch({ type: UserConstants.REMOVED_ROLE, value: rolesById }),
+        dispatch(getRoles()),
+        dispatch(setSnackbar(roleActions.remove.successMessage))
+      ]);
     })
-    .catch(err => commonErrorHandler(err, `There was an error removing the role:`, dispatch));
+    .catch(err => roleActionErrorHandler(err, 'remove', dispatch));
 
 /*
   Global settings
