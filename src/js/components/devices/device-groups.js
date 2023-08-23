@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -108,8 +108,6 @@ export const DeviceGroups = () => {
 
   const { refreshTrigger, selectedId, state: selectedState } = deviceListState;
 
-  const refreshListState = useCallback(() => dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger })), [dispatch, refreshTrigger]);
-
   useEffect(() => {
     if (!isInitialized.current) {
       return;
@@ -153,7 +151,7 @@ export const DeviceGroups = () => {
         return;
       }
       isInitialized.current = true;
-      refreshListState();
+      dispatch(setDeviceListState({}, true, true));
       dispatch(setOfflineThreshold());
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

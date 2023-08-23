@@ -31,12 +31,12 @@ export const DeviceConfiguration = ({ item, onClose }) => {
   const theme = useTheme();
   useEffect(() => {
     const { object } = item;
-    if (!device && canReadDevices) {
+    if (!device.id && canReadDevices) {
       dispatch(getDeviceById(object.id));
     }
-  }, [canReadDevices, device, dispatch, item]);
+  }, [canReadDevices, device.id, dispatch, item]);
 
-  if (canReadDevices && !device) {
+  if (canReadDevices && !device.id) {
     return <Loader show={true} />;
   }
 

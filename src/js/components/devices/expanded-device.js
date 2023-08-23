@@ -211,10 +211,10 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
   const isGateway = stringToBoolean(mender_is_gateway);
 
   useEffect(() => {
+    clearInterval(timer.current);
     if (!deviceId) {
       return;
     }
-    clearInterval(timer.current);
     timer.current = setInterval(() => dispatch(getDeviceInfo(deviceId)), refreshDeviceLength);
     dispatch(getDeviceInfo(deviceId));
     return () => {
