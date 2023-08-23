@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import msgpack5 from 'msgpack5';
 
@@ -32,14 +32,10 @@ export const blobToString = blob =>
     fr.readAsArrayBuffer(blob);
   });
 
-export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, onNotify, onOpen, onReady }) => {
+export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, onNotify, onOpen }) => {
   const [sessionId, setSessionId] = useState();
   const healthcheckTimeout = useRef();
   const socketRef = useRef();
-
-  useEffect(() => {
-    onReady(!!(socketRef.current?.readyState === WebSocket.OPEN && sessionId));
-  }, [sessionId, onReady]);
 
   const sendMessage = useCallback(({ typ, body, props }) => {
     if (!socketRef.current) {
@@ -51,11 +47,12 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
   }, []);
 
   const close = useCallback(() => {
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      sendMessage({ typ: MessageTypes.Stop, body: {}, props: {} });
-      socketRef.current.close();
-      setSessionId();
+    if (socketRef.current?.readyState !== WebSocket.OPEN) {
+      return;
     }
+    sendMessage({ typ: MessageTypes.Stop, body: {}, props: {} });
+    socketRef.current.close();
+    setSessionId();
   }, [sendMessage]);
 
   const healthcheckFailed = useCallback(() => {
@@ -64,7 +61,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
   }, [close, onHealthCheckFailed]);
 
   const onSocketMessage = useCallback(
-    event => {
+    event =>
       blobToString(event.data).then(data => {
         const {
           hdr: { props = {}, proto, sid, typ },
@@ -105,8 +102,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
           default:
             break;
         }
-      });
-    },
+      }),
     [close, healthcheckFailed, onMessageReceived, onNotify, sendMessage]
   );
 
@@ -119,36 +115,42 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
     [close, onNotify]
   );
 
-  const isOpen = socketRef.current?.readyState === WebSocket.OPEN;
+  const onSocketOpen = useCallback(() => {
+    sendMessage({ typ: MessageTypes.New, props: {} });
+    onOpen(true);
+  }, [onOpen, sendMessage]);
 
-  useEffect(() => {
-    if (!socketRef.current || !isOpen || sessionId) {
-      return;
-    }
-    socketRef.current.addEventListener('close', onClose);
-    socketRef.current.addEventListener('error', onSocketError);
-    socketRef.current.addEventListener('message', onSocketMessage);
-    socketRef.current.addEventListener('open', onOpen);
-    return () => {
-      if (!sessionId) {
-        return;
+  const onSocketClose = useCallback(
+    e => {
+      console.log('closing');
+      close();
+      onClose(e);
+    },
+    [close, onClose]
+  );
+
+  const connect = useCallback(
+    deviceId => {
+      const uri = `wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`;
+      setSessionId();
+      try {
+        socketRef.current = new WebSocket(uri);
+        socketRef.current.addEventListener('close', onSocketClose);
+        socketRef.current.addEventListener('error', onSocketError);
+        socketRef.current.addEventListener('message', onSocketMessage);
+        socketRef.current.addEventListener('open', onSocketOpen);
+      } catch (error) {
+        console.log(error);
       }
-      socketRef.current.removeEventListener('close', onClose);
-      socketRef.current.removeEventListener('error', onSocketError);
-      socketRef.current.removeEventListener('message', onSocketMessage);
-      socketRef.current.removeEventListener('open', onOpen);
-    };
-  }, [isOpen, sessionId, onClose, onSocketError, onSocketMessage, onOpen]);
+      return () => {
+        socketRef.current.removeEventListener('close', onSocketClose);
+        socketRef.current.removeEventListener('error', onSocketError);
+        socketRef.current.removeEventListener('message', onSocketMessage);
+        socketRef.current.removeEventListener('open', onSocketOpen);
+      };
+    },
+    [onSocketClose, onSocketOpen, onSocketError, onSocketMessage]
+  );
 
-  const connect = useCallback(deviceId => {
-    const uri = `wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`;
-    setSessionId();
-    try {
-      socketRef.current = new WebSocket(uri);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  return [connect, sendMessage, close, socketRef.current?.readyState, sessionId];
+  return [connect, sendMessage, close, socketRef.current?.readyState ?? WebSocket.CLOSED, sessionId];
 };

@@ -49,7 +49,6 @@ test.describe('Device details', () => {
     await page.click('[aria-label="close"]');
     expect(await page.getByText(/table options/i).isVisible()).toBeTruthy();
     await page.getByText(/releases/i).click();
-    await searchField.focus();
     await searchField.press('Enter');
     expect(await page.getByText(/device found/i).isVisible()).toBeTruthy();
   });
@@ -58,18 +57,20 @@ test.describe('Device details', () => {
     await page.click(`.leftNav :text('Devices')`);
     await page.getByRole('button', { name: /filters/i }).click();
     await page.getByLabel(/attribute/i).fill(rootfs);
-    await page.getByLabel(/value/i).fill(demoDeviceName);
+    const nameInput = await page.getByLabel(/value/i);
+    await nameInput.fill(demoDeviceName);
+    await page.waitForTimeout(timeouts.oneSecond);
+    await nameInput.press('Enter');
+    expect(await page.getByRole('button', { name: `${rootfs} = ${demoDeviceName}` }).isVisible()).toBeTruthy();
     await page.waitForSelector('.deviceListItem');
     expect(await page.getByText('1-1 of 1').isVisible()).toBeTruthy();
-    await page.waitForTimeout(timeouts.default);
-    expect(await page.getByText(`${rootfs} = ${demoDeviceName}`).isVisible()).toBeTruthy();
     await page.getByText(/clear filter/i).click();
     if (['enterprise', 'staging'].includes(environment)) {
       await page.getByLabel(/attribute/i).fill(rootfs);
       await page.getByText(/equals/i).click();
       await page.getByText(`doesn't exist`).click();
       await page.waitForTimeout(timeouts.default);
-      expect(await await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
+      expect(await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
       expect(await page.getByText('No devices found').isVisible()).toBeTruthy();
     }
   });

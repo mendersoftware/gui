@@ -603,6 +603,7 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: CREATED_ROLE, role: defaultRole, roleId: defaultRole.name },
+      { type: SET_SNACKBAR, snackbar: { message: 'The role was created successfully.' } },
       { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
       { type: RECEIVED_ROLES, value: receivedRoles }
     ];
@@ -626,6 +627,7 @@ describe('user actions', () => {
           }
         }
       },
+      { type: SET_SNACKBAR, snackbar: { message: 'The role has been updated.' } },
       { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
       { type: RECEIVED_ROLES, value: receivedRoles }
     ];
@@ -643,6 +645,7 @@ describe('user actions', () => {
     const { test, ...remainder } = defaultState.users.rolesById;
     const expectedActions = [
       { type: REMOVED_ROLE, value: remainder },
+      { type: SET_SNACKBAR, snackbar: { message: 'The role was deleted successfully.' } },
       { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
       { type: RECEIVED_ROLES, value: receivedRoles }
     ];

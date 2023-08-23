@@ -30,6 +30,7 @@ export const selectors = {
 
 const oneSecond = 1000;
 export const timeouts = {
+  oneSecond,
   default: 3 * oneSecond,
   fiveSeconds: 5 * oneSecond,
   tenSeconds: 10 * oneSecond,

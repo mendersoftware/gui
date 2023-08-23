@@ -681,9 +681,9 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
               class="flexbox "
             >
               <div
-                title="00:00:00"
+                title="-"
               >
-                00:00:00
+                -
               </div>
             </div>
           </div>

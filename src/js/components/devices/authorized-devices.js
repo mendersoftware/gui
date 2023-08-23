@@ -275,10 +275,10 @@ export const Authorized = ({
 
   const refreshDevices = useCallback(() => {
     const refreshLength = deviceRefreshTimes[selectedState] ?? deviceRefreshTimes.default;
-    return dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger })).catch(err =>
+    return dispatch(setDeviceListState({}, true, true)).catch(err =>
       setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshLength, dispatchedSetSnackbar)
     );
-  }, [dispatch, dispatchedSetSnackbar, refreshTrigger, selectedState]);
+  }, [dispatch, dispatchedSetSnackbar, selectedState]);
 
   useEffect(() => {
     if (!devicesInitialized) {
@@ -332,7 +332,7 @@ export const Authorized = ({
       })
       .then(() => onSelectionChange([]));
 
-  const handlePageChange = page => dispatch(setDeviceListState({ selectedId: undefined, page, refreshTrigger: !refreshTrigger }));
+  const handlePageChange = useCallback(page => dispatch(setDeviceListState({ selectedId: undefined, page })), [dispatch]);
 
   const onPageLengthChange = perPage => dispatch(setDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger }));
 
@@ -349,8 +349,6 @@ export const Authorized = ({
       })
     );
   };
-
-  const onFilterChange = () => handlePageChange(1);
 
   const setDetailsTab = detailsTab => dispatch(setDeviceListState({ detailsTab, setOnly: true }));
 
@@ -452,13 +450,7 @@ export const Authorized = ({
           )}
           <ListOptions options={listOptionHandlers} title="Table options" />
         </div>
-        <Filters
-          className={classes.filterCommon}
-          onFilterChange={onFilterChange}
-          onGroupClick={onGroupClick}
-          isModification={!!groupFilters.length}
-          open={showFilters}
-        />
+        <Filters className={classes.filterCommon} onGroupClick={onGroupClick} open={showFilters} />
       </div>
       <Loader show={!isInitialized} />
       <div className="padding-bottom" ref={deviceListRef}>
