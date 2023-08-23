@@ -156,6 +156,7 @@ export type { TenantApiLimits } from "./TenantApiLimits";
 export type { TenantShortInfo } from "./TenantShortInfo";
 export type { Update } from "./Update";
 export type { UpdateFile } from "./UpdateFile";
+export type { UpdateTypes } from "./UpdateTypes";
 export { UpgradeCompleteRequest } from "./UpgradeCompleteRequest";
 export type { User } from "./User";
 export type { UserNew } from "./UserNew";
