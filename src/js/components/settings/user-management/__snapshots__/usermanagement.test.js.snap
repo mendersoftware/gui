@@ -535,7 +535,9 @@ exports[`UserManagement Component renders correctly 1`] = `
         </td>
         <td
           class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
-        />
+        >
+          Admin
+        </td>
         <td
           class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-12"
         >

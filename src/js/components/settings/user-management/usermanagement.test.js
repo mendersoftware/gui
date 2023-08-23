@@ -22,9 +22,6 @@ import * as UserActions from '../../../actions/userActions';
 import { yes } from '../../../constants/appConstants';
 import UserManagement from './usermanagement';
 
-// eslint-disable-next-line no-unused-vars
-const { roles, ...user } = defaultState.users.byId[userId];
-
 const preloadedState = {
   ...defaultState,
   app: {
@@ -32,13 +29,6 @@ const preloadedState = {
     features: {
       ...defaultState.app.features,
       isEnterprise: true
-    }
-  },
-  users: {
-    ...defaultState.users,
-    byId: {
-      ...defaultState.users.byId,
-      [userId]: user
     }
   }
 };
@@ -74,10 +64,15 @@ describe('UserManagement Component', () => {
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
     await user.click(screen.getByRole('checkbox', { name: /reset the password/i }));
     await user.click(screen.getByRole('checkbox', { name: /reset the password/i }));
-    expect(screen.getByRole('button', { name: /Save/i })).toBeDisabled();
     const selectButton = screen.getByText(/roles/i).parentNode.querySelector('[role=button]');
     await user.click(selectButton);
-    const listbox = document.body.querySelector(dropDownSelector);
+    let listbox = document.body.querySelector(dropDownSelector);
+    const adminItem = within(listbox).getByText(/admin/i);
+    await user.click(adminItem);
+    await user.type(listbox, '{Escape}');
+    expect(screen.getByRole('button', { name: /Save/i })).toBeDisabled();
+    await user.click(selectButton);
+    listbox = document.body.querySelector(dropDownSelector);
     const listItem = within(listbox).getByText(/read access/i);
     await user.click(listItem);
     await user.type(listbox, '{Escape}');
