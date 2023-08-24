@@ -15,7 +15,7 @@ import React from 'react';
 
 import { Error as ErrorIcon, ReportProblemOutlined } from '@mui/icons-material';
 import { Box, Chip, Tooltip } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
@@ -49,23 +49,20 @@ const NumberIcon = props => (
   </Box>
 );
 
+const useStyles = makeStyles()(theme => ({
+  warningIcon: {
+    width: 14,
+    height: 14,
+    color: theme.palette.grey[600]
+  }
+}));
+
 const DeviceStatus = ({ device: { auth_sets = [], isOffline, monitor = {}, status: deviceStatus } }) => {
   let notification = statusTypes.default.notification[deviceStatus] ?? '';
-  const theme = useTheme();
+  const { classes } = useStyles();
   let label;
   let icon = <ErrorIcon />;
-  const WarningIcon = (
-    <ReportProblemOutlined
-      style={{ marginLeft: 5 }}
-      classes={{
-        root: {
-          width: 14,
-          height: 14,
-          color: theme.palette.grey[600]
-        }
-      }}
-    />
-  );
+  const WarningIcon = <ReportProblemOutlined style={{ marginLeft: 5 }} classes={{ root: classes.warningIcon }} />;
 
   const pendingAuthSetsCount = auth_sets.filter(item => item.status === DEVICE_STATES.pending).length;
   if (pendingAuthSetsCount) {
