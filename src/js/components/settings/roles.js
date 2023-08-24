@@ -61,7 +61,8 @@ export const RoleManagement = () => {
     dispatch(getDynamicGroups());
     dispatch(getGroups());
     dispatch(getRoles());
-  }, [dispatch, groups]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(groups)]);
 
   const addRole = () => {
     setAdding(true);
