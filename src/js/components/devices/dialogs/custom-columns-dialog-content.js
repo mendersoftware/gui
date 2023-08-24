@@ -16,7 +16,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 // material ui
 import { Clear as ClearIcon, DragHandle as DragHandleIcon } from '@mui/icons-material';
-import { DialogContent, FormControl, FormHelperText, IconButton, ListItem } from '@mui/material';
+import { DialogContent, FormControl, IconButton, ListItem } from '@mui/material';
 
 import { ATTRIBUTE_SCOPES } from '../../../constants/deviceConstants';
 import AttributeAutoComplete, { getOptionLabel } from '../widgets/attribute-autocomplete';
@@ -46,13 +46,10 @@ const DraggableListItem = ({ item, index, onRemove }) => {
   );
 };
 
-const columnLimit = 5;
-
 const filterAttributes = (list, attribute) => list.filter(item => !(item.key === attribute.key && item.scope === attribute.scope));
 
-const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAttributes, setSelectedAttributes, ...props }) => {
+const Content = ({ attributes, columnHeaders, idAttribute, selectedAttributes, setSelectedAttributes, ...props }) => {
   const [attributeOptions, setAttributeOptions] = useState([]);
-  const [isAtColumnLimit, setIsAtColumnLimit] = useState(selectedAttributes.length >= columnLimit);
 
   useEffect(() => {
     const { attributeOptions, selectedAttributes } = columnHeaders.reduce(
@@ -74,14 +71,6 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
     setAttributeOptions(attributeOptions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(attributes), JSON.stringify(columnHeaders), idAttribute.attribute, setSelectedAttributes]);
-
-  useEffect(() => {
-    const isAtColumnLimit = selectedAttributes.length >= columnLimit;
-    if (isAtColumnLimit && buttonRef.current) {
-      buttonRef.current.focus();
-    }
-    setIsAtColumnLimit(isAtColumnLimit);
-  }, [buttonRef, selectedAttributes.length]);
 
   const onDragEnd = ({ destination, source }) => {
     if (!destination) {
@@ -124,7 +113,7 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
 
   return (
     <DialogContent>
-      <p>You can select up to 5 columns of inventory data to display in the device list table. Drag to change the order.</p>
+      <p>You can select columns of inventory data to display in the device list table. Drag to change the order.</p>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-list" direction="vertical">
           {provided => {
@@ -140,8 +129,7 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
         </Droppable>
       </DragDropContext>
       <FormControl>
-        <AttributeAutoComplete attributes={attributeOptions} disabled={isAtColumnLimit} label="Add a column" onRemove={onRemove} onSelect={onSelect} />
-        {isAtColumnLimit && <FormHelperText>Maximum of {columnLimit} reached</FormHelperText>}
+        <AttributeAutoComplete attributes={attributeOptions} label="Add a column" onRemove={onRemove} onSelect={onSelect} />
       </FormControl>
     </DialogContent>
   );

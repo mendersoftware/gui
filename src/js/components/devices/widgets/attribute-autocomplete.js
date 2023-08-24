@@ -59,7 +59,7 @@ const filterOptions = (options, params) => {
   return filtered;
 };
 
-export const AttributeAutoComplete = ({ attributes, disabled, filter = emptyFilter, label = 'Attribute', onRemove, onSelect, ...remainder }) => {
+export const AttributeAutoComplete = ({ attributes, disabled = false, filter = emptyFilter, label = 'Attribute', onRemove, onSelect, ...remainder }) => {
   const [key, setKey] = useState(filter.key); // this refers to the selected filter with key as the id
   const [options, setOptions] = useState([]);
   const [reset, setReset] = useState(true);
