@@ -69,7 +69,7 @@ test.describe('Device details', () => {
       await page.getByLabel(/attribute/i).fill(rootfs);
       await page.getByText(/equals/i).click();
       await page.getByText(`doesn't exist`).click();
-      await page.waitForTimeout(timeouts.default);
+      await page.waitForTimeout(timeouts.fiveSeconds);
       expect(await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
       expect(await page.getByText('No devices found').isVisible()).toBeTruthy();
     }
