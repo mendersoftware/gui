@@ -136,13 +136,12 @@ export const Filters = ({ className = '', onGroupClick, open }) => {
                 />
               ))}
             </div>
-            {hasFullFiltering ||
-              (!currentFilters.length && (
-                <>
-                  <FilterItem attributes={attributes} onChange={setNewFilter} onSelect={updateFilter} plan={plan} reset={reset} />
-                  {isFilterDefined && <Chip className="margin-bottom-small" icon={<AddIcon />} label="Add a rule" color="primary" onClick={onAddClick} />}
-                </>
-              ))}
+            {(hasFullFiltering || !currentFilters.length) && (
+              <>
+                <FilterItem attributes={attributes} onChange={setNewFilter} onSelect={updateFilter} plan={plan} reset={reset} />
+                {isFilterDefined && <Chip className="margin-bottom-small" icon={<AddIcon />} label="Add a rule" color="primary" onClick={onAddClick} />}
+              </>
+            )}
             <EnterpriseNotification id={BENEFITS.fullFiltering.id} />
           </div>
         </div>
