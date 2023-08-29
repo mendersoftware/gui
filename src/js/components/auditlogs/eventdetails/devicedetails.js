@@ -44,7 +44,7 @@ const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device'
 export const DeviceDetails = ({ device, idAttribute, onClose }) => {
   const { classes } = useStyles();
   const { attributes, id: deviceId } = device;
-  const { name, device_type: deviceTypes, artifact_name } = attributes;
+  const { name, device_type: deviceTypes, artifact_name } = attributes || {};
   const usesId = !idAttribute || idAttribute === 'id' || idAttribute === 'Device ID';
   const nameContainer = name ? { Name: name } : {};
   const deviceDetails = {
