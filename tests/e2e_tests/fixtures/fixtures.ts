@@ -14,8 +14,7 @@
 import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
 
-import { baseUrlToDomain, getPeristentLoginInfo, login, prepareCookies } from '../utils/commands';
-import { selectors } from '../utils/constants';
+import { baseUrlToDomain, getPeristentLoginInfo, isLoggedIn, login, prepareCookies } from '../utils/commands';
 
 type TestFixtures = {
   baseUrl: string;
@@ -53,7 +52,7 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     const page = await context.newPage();
     await page.goto(`${baseUrl}ui/`);
     await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
-    await page.waitForSelector(selectors.loggedInText);
+    await isLoggedIn(page);
     await use(page);
     await context.storageState({ path: 'storage.json' });
   },

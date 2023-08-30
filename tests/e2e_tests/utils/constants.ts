@@ -18,7 +18,7 @@ export const selectors = {
   deviceGroupSelect: '#deployment-device-group-selection',
   deviceListCheckbox: '.deviceListItem input',
   email: '[name=email]',
-  loggedInText: 'text=/License information/i',
+  loggedInText: /License information/i,
   password: '[name=password]',
   passwordConfirmation: '[name=password_confirmation]',
   passwordCurrent: '[name=current_password]',
