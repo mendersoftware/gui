@@ -16,6 +16,7 @@ import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
 import { selectors, timeouts } from '../utils/constants';
+import { isLoggedIn } from '../utils/commands';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {
@@ -34,7 +35,7 @@ test.describe('Login', () => {
       await passwordInput.fill(password);
       await page.getByRole('button', { name: /log in/i }).click();
       // confirm we have logged in successfully
-      await page.waitForSelector(selectors.loggedInText);
+      await isLoggedIn(page);
       await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
       await context.storageState({ path: 'storage.json' });
     });
@@ -46,7 +47,7 @@ test.describe('Login', () => {
     });
 
     test('Logs out using UI', async ({ loggedInPage: page }) => {
-      await page.waitForSelector(selectors.loggedInText);
+      await isLoggedIn(page);
       // now we can log out
       await page.click('.header-dropdown', { force: true });
       await page.getByRole('menuitem', { name: /log out/i }).click();
@@ -105,7 +106,7 @@ test.describe('Login', () => {
     await page.getByRole('button', { name: /log in/i }).click();
 
     // confirm we have logged in successfully
-    await page.waitForSelector(selectors.loggedInText);
+    await isLoggedIn(page);
     let loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
     expect(loginVisible).toBeFalsy();
     await page.getByText('Help & support').click();

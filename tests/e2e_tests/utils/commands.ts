@@ -22,6 +22,7 @@ import * as path from 'path';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { v4 as uuid } from 'uuid';
+import { selectors } from './constants';
 
 export const getPeristentLoginInfo = () => {
   let loginInfo;
@@ -179,6 +180,14 @@ export const login = async (username: string, password: string, baseUrl: string)
   const token = request.data;
   const userId = jwtDecode(token).sub;
   return { token, userId };
+};
+
+export const isLoggedIn = async (page: Page, timeout: number = 0) => {
+  const cookieConsentButton = await page.locator('text=/decline/i');
+  if (await cookieConsentButton?.isVisible()) {
+    await cookieConsentButton.click();
+  }
+  return page.getByText(selectors.loggedInText).waitFor({ timeout });
 };
 
 export const tenantTokenRetrieval = async (baseUrl: string, page: Page) => {

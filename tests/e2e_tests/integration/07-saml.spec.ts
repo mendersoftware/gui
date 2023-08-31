@@ -16,8 +16,8 @@ import * as fs from 'fs';
 import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
-import { getStorageState } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { getStorageState, isLoggedIn } from '../utils/commands';
+import { timeouts } from '../utils/constants';
 
 const samlSettings = {
   credentials: {
@@ -179,6 +179,6 @@ test.describe('SAML Login via sso/id/login', () => {
     await page.locator('text=Accept').click();
     // confirm we have logged in successfully
     await page.screenshot({ path: './test-results/saml-logging-in-accept.png' });
-    await page.waitForSelector(selectors.loggedInText);
+    await isLoggedIn(page);
   });
 });

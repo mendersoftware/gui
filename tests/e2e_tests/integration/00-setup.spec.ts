@@ -15,7 +15,7 @@ import { expect } from '@playwright/test';
 import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
-import { baseUrlToDomain, login, prepareCookies, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
+import { baseUrlToDomain, isLoggedIn, login, prepareCookies, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Test setup', () => {
@@ -75,7 +75,7 @@ test.describe('Test setup', () => {
       await recaptcha.click();
       await page.waitForTimeout(timeouts.default);
       await page.click(`button:has-text('Complete')`);
-      await page.waitForSelector(selectors.loggedInText, { timeout: timeouts.fifteenSeconds });
+      await isLoggedIn(page, timeouts.fifteenSeconds);
 
       // the following sets the UI up for easier navigation by disabling onboarding
       const domain = baseUrlToDomain(baseUrl);
@@ -83,8 +83,8 @@ test.describe('Test setup', () => {
       context = await prepareCookies(context, domain, userId, token);
       const newPage = await context.newPage();
       await newPage.goto(baseUrl);
-      await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
-      await newPage.waitForSelector(selectors.loggedInText);
+      await newPage.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
+      await isLoggedIn(newPage);
       await context.storageState({ path: 'storage.json' });
     });
   });
