@@ -104,7 +104,7 @@
     "lint-staged": "13.2.3",
     "mini-css-extract-plugin": "2.7.6",
     "msw": "0.36.8",
-    "postcss": "8.4.27",
+    "postcss": "8.4.29",
     "postcss-loader": "7.3.3",
     "prettier": "3.0.0",
     "redux-mock-store": "1.5.4",
