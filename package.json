@@ -44,7 +44,7 @@
     "react-redux": "8.1.2",
     "react-router-dom": "6.14.2",
     "stream-browserify": "3.0.0",
-    "tss-react": "4.8.8",
+    "tss-react": "4.9.0",
     "universal-cookie": "4.0.4",
     "uuid": "9.0.0",
     "validator": "13.9.0",
