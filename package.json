@@ -42,7 +42,7 @@
     "react-leaflet": "3.2.5",
     "react-linkify": "1.0.0-alpha",
     "react-redux": "8.1.2",
-    "react-router-dom": "6.14.2",
+    "react-router-dom": "6.15.0",
     "stream-browserify": "3.0.0",
     "tss-react": "4.8.8",
     "universal-cookie": "4.0.4",
