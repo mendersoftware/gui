@@ -99,7 +99,7 @@
     "jest-resolve": "~29.6.2",
     "jest-watch-typeahead": "2.2.2",
     "jsdom-worker": "0.3.0",
-    "less": "4.1.3",
+    "less": "4.2.0",
     "less-loader": "11.1.3",
     "lint-staged": "13.2.3",
     "mini-css-extract-plugin": "2.7.6",
