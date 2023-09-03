@@ -70,9 +70,13 @@ describe('Deployments Component', () => {
   it('renders correctly', async () => {
     const get = jest.spyOn(GeneralApi, 'get');
     const ui = <Deployments {...defaultLocationProps} />;
-    const { baseElement, rerender } = render(ui, { state: mockState });
+    const { asFragment, rerender } = render(ui, { state: mockState });
+    await act(async () => {
+      jest.runAllTicks();
+      jest.advanceTimersByTime(2000);
+    });
     await waitFor(() => rerender(ui));
-    const view = baseElement.firstChild.firstChild;
+    const view = asFragment();
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
     await act(async () => {});
@@ -150,7 +154,7 @@ describe('Deployments Component', () => {
     const preloadedState = {
       ...mockState,
       app: {
-        ...mockState,
+        ...mockState.app,
         features: {
           ...mockState.app.features,
           isEnterprise: false
@@ -211,7 +215,7 @@ describe('Deployments Component', () => {
     const preloadedState = {
       ...mockState,
       app: {
-        ...mockState,
+        ...mockState.app,
         features: {
           ...mockState.app.features,
           isHosted: false

@@ -2,6 +2,110 @@
 
 exports[`DeviceConnection Component renders correctly 1`] = `
 .emotion-0 {
+  max-width: 100%;
+  font-family: Lato,sans-serif;
+  font-size: 0.7545rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: rgba(10, 10, 11, 0.78);
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+}
+
+.emotion-0.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-0 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #bcbcbc;
+  font-size: 0.6964rem;
+}
+
+.emotion-0 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(35, 85, 94);
+}
+
+.emotion-0 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(65, 10, 46);
+}
+
+.emotion-0 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.5804rem;
+}
+
+.emotion-0 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: #bcbcbc;
+}
+
+.emotion-0 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(10, 10, 11, 0.26);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-0 .MuiChip-deleteIcon:hover {
+  color: rgba(10, 10, 11, 0.4);
+}
+
+.emotion-0:hover {
+  font-weight: bold;
+}
+
+.emotion-0:hover {
+  font-weight: bold;
+}
+
+.emotion-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -55,23 +159,23 @@ exports[`DeviceConnection Component renders correctly 1`] = `
   font-size: smaller;
 }
 
-.emotion-0::-moz-focus-inner {
+.emotion-2::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-0.Mui-disabled {
+.emotion-2.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-0 {
+  .emotion-2 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-0:hover {
+.emotion-2:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -79,34 +183,34 @@ exports[`DeviceConnection Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-0:hover {
+  .emotion-2:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-0:active {
+.emotion-2:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-focusVisible {
+.emotion-2.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-disabled {
+.emotion-2.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-0:hover {
+.emotion-2:hover {
   colors: #337a87;
 }
 
-.emotion-0.MuiButton-text {
+.emotion-2.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-1 {
+.emotion-3 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -123,11 +227,11 @@ exports[`DeviceConnection Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-1 iconButton {
+.emotion-3 iconButton {
   margin-right: 8px;
 }
 
-.emotion-2 {
+.emotion-4 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -140,19 +244,34 @@ exports[`DeviceConnection Component renders correctly 1`] = `
     class="margin-bottom "
   >
     <div
-      class="flexbox space-between"
-      style="align-items: flex-start;"
+      class="flexbox space-between center-aligned"
     >
-      <h4
-        class="margin-bottom-small"
+      <div
+        class="flexbox center-aligned"
       >
-        Troubleshoot
-      </h4>
+        <h4>
+          Troubleshoot
+        </h4>
+        <div
+          class=""
+          data-mui-internal-clone-element="true"
+        >
+          <div
+            class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault margin-left-small emotion-0"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
+            >
+              Basic
+            </span>
+          </div>
+        </div>
+      </div>
       <div
         class="flexbox centered"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-2"
           disabled=""
           tabindex="-1"
           type="button"
@@ -170,7 +289,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-1"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-3"
             data-testid="InfoOutlinedIcon"
             focusable="false"
             style="margin-right: 8px;"
@@ -181,7 +300,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
             />
           </svg>
           <p
-            class="MuiTypography-root MuiTypography-body1 emotion-2"
+            class="MuiTypography-root MuiTypography-body1 emotion-4"
             style="text-transform: none; text-align: left;"
           >
             The troubleshoot add-on does not seem to be enabled on this device.
@@ -206,6 +325,110 @@ exports[`DeviceConnection Component renders correctly 1`] = `
 
 exports[`DeviceConnection Component renders correctly when connected 1`] = `
 .emotion-0 {
+  max-width: 100%;
+  font-family: Lato,sans-serif;
+  font-size: 0.7545rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: rgba(10, 10, 11, 0.78);
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+}
+
+.emotion-0.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-0 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #bcbcbc;
+  font-size: 0.6964rem;
+}
+
+.emotion-0 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(35, 85, 94);
+}
+
+.emotion-0 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(65, 10, 46);
+}
+
+.emotion-0 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.5804rem;
+}
+
+.emotion-0 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: #bcbcbc;
+}
+
+.emotion-0 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(10, 10, 11, 0.26);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-0 .MuiChip-deleteIcon:hover {
+  color: rgba(10, 10, 11, 0.4);
+}
+
+.emotion-0:hover {
+  font-weight: bold;
+}
+
+.emotion-0:hover {
+  font-weight: bold;
+}
+
+.emotion-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -259,23 +482,23 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   font-size: smaller;
 }
 
-.emotion-0::-moz-focus-inner {
+.emotion-2::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-0.Mui-disabled {
+.emotion-2.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-0 {
+  .emotion-2 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-0:hover {
+.emotion-2:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -283,34 +506,34 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-0:hover {
+  .emotion-2:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-0:active {
+.emotion-2:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-focusVisible {
+.emotion-2.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-disabled {
+.emotion-2.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-0:hover {
+.emotion-2:hover {
   colors: #337a87;
 }
 
-.emotion-0.MuiButton-text {
+.emotion-2.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-1 {
+.emotion-3 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -360,57 +583,57 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-1::-moz-focus-inner {
+.emotion-3::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-1.Mui-disabled {
+.emotion-3.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-1 {
+  .emotion-3 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-1:hover {
+.emotion-3:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-1:hover {
+  .emotion-3:hover {
     background-color: transparent;
   }
 }
 
-.emotion-1.Mui-disabled {
+.emotion-3.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-1:hover {
+.emotion-3:hover {
   colors: #337a87;
 }
 
-.emotion-1.MuiButton-text {
+.emotion-3.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-2 {
+.emotion-4 {
   display: inherit;
   margin-right: 8px;
   margin-left: -4px;
 }
 
-.emotion-2>*:nth-of-type(1) {
+.emotion-4>*:nth-of-type(1) {
   font-size: 20px;
 }
 
-.emotion-3 {
+.emotion-5 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -427,11 +650,11 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   font-size: inherit;
 }
 
-.emotion-3 iconButton {
+.emotion-5 iconButton {
   margin-right: 8px;
 }
 
-.emotion-4 {
+.emotion-6 {
   margin: 0;
   font-family: Lato,sans-serif;
   font-weight: 500;
@@ -440,6 +663,18 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
 }
 
 .emotion-7 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-10 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -456,11 +691,11 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-7 iconButton {
+.emotion-10 iconButton {
   margin-right: 8px;
 }
 
-.emotion-9 {
+.emotion-13 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -477,7 +712,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-9 iconButton {
+.emotion-13 iconButton {
   margin-right: 8px;
 }
 
@@ -486,19 +721,34 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
     class="margin-bottom "
   >
     <div
-      class="flexbox space-between"
-      style="align-items: flex-start;"
+      class="flexbox space-between center-aligned"
     >
-      <h4
-        class="margin-bottom-small"
+      <div
+        class="flexbox center-aligned"
       >
-        Troubleshoot
-      </h4>
+        <h4>
+          Troubleshoot
+        </h4>
+        <div
+          class=""
+          data-mui-internal-clone-element="true"
+        >
+          <div
+            class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault margin-left-small emotion-0"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
+            >
+              Basic
+            </span>
+          </div>
+        </div>
+      </div>
       <div
         class="flexbox centered"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-2"
           disabled=""
           tabindex="-1"
           type="button"
@@ -512,18 +762,17 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
         class="flexbox "
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
-          disabled=""
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-3"
           style="margin-right: 16px;"
-          tabindex="-1"
+          tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-3"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-5"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -533,25 +782,27 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
             </svg>
           </span>
           <h6
-            class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
+            class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             style="text-transform: none; text-align: left;"
           >
             Launch a new Remote Terminal session
           </h6>
+          <span
+            class="MuiTouchRipple-root emotion-7"
+          />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
-          disabled=""
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-3"
           style="margin-right: 16px;"
-          tabindex="-1"
+          tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
+            class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-4"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
               data-testid="ImportExportIcon"
               focusable="false"
               viewBox="0 0 24 24"
@@ -562,14 +813,18 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
             </svg>
           </span>
           <h6
-            class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
+            class="MuiTypography-root MuiTypography-subtitle2 emotion-6"
             style="text-transform: none; text-align: left;"
           >
             Launch File Transfer
           </h6>
+          <span
+            class="MuiTouchRipple-root emotion-7"
+          />
         </button>
         <a
           class="flexbox centered margin-left"
+          data-mui-internal-clone-element="true"
           href="https://docs.mender.io/development/add-ons/port-forward"
           rel=""
           target="_blank"
@@ -577,7 +832,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
           Enable port forwarding
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-9"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small emotion-13"
             data-testid="LaunchIcon"
             focusable="false"
             viewBox="0 0 24 24"
@@ -601,6 +856,110 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
 
 exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
 .emotion-0 {
+  max-width: 100%;
+  font-family: Lato,sans-serif;
+  font-size: 0.7545rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: rgba(10, 10, 11, 0.78);
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+}
+
+.emotion-0.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-0 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #bcbcbc;
+  font-size: 0.6964rem;
+}
+
+.emotion-0 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(35, 85, 94);
+}
+
+.emotion-0 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(65, 10, 46);
+}
+
+.emotion-0 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.5804rem;
+}
+
+.emotion-0 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: #bcbcbc;
+}
+
+.emotion-0 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(10, 10, 11, 0.26);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-0 .MuiChip-deleteIcon:hover {
+  color: rgba(10, 10, 11, 0.4);
+}
+
+.emotion-0:hover {
+  font-weight: bold;
+}
+
+.emotion-0:hover {
+  font-weight: bold;
+}
+
+.emotion-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.emotion-2 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -654,23 +1013,23 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
   font-size: smaller;
 }
 
-.emotion-0::-moz-focus-inner {
+.emotion-2::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-0.Mui-disabled {
+.emotion-2.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-0 {
+  .emotion-2 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-0:hover {
+.emotion-2:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(35, 85, 94);
@@ -678,34 +1037,34 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-0:hover {
+  .emotion-2:hover {
     background-color: #337a87;
   }
 }
 
-.emotion-0:active {
+.emotion-2:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-focusVisible {
+.emotion-2.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-0.Mui-disabled {
+.emotion-2.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-0:hover {
+.emotion-2:hover {
   colors: #337a87;
 }
 
-.emotion-0.MuiButton-text {
+.emotion-2.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-1 {
+.emotion-3 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -722,11 +1081,11 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-1 iconButton {
+.emotion-3 iconButton {
   margin-right: 8px;
 }
 
-.emotion-2 {
+.emotion-4 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -739,19 +1098,34 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
     class="margin-bottom "
   >
     <div
-      class="flexbox space-between"
-      style="align-items: flex-start;"
+      class="flexbox space-between center-aligned"
     >
-      <h4
-        class="margin-bottom-small"
+      <div
+        class="flexbox center-aligned"
       >
-        Troubleshoot
-      </h4>
+        <h4>
+          Troubleshoot
+        </h4>
+        <div
+          class=""
+          data-mui-internal-clone-element="true"
+        >
+          <div
+            class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault margin-left-small emotion-0"
+          >
+            <span
+              class="MuiChip-label MuiChip-labelMedium emotion-1"
+            >
+              Basic
+            </span>
+          </div>
+        </div>
+      </div>
       <div
         class="flexbox centered"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-0"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-2"
           disabled=""
           tabindex="-1"
           type="button"
@@ -769,7 +1143,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
         >
           <svg
             aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-1"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-3"
             data-testid="InfoOutlinedIcon"
             focusable="false"
             style="margin-right: 8px;"
@@ -780,7 +1154,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
             />
           </svg>
           <p
-            class="MuiTypography-root MuiTypography-body1 emotion-2"
+            class="MuiTypography-root MuiTypography-body1 emotion-4"
             style="text-transform: none; text-align: left;"
           >
             The troubleshoot add-on is not currently connected on this device, it was last connected on 
@@ -974,6 +1348,7 @@ exports[`tiny DeviceConnection components renders PortForwardLink correctly 1`] 
 <div>
   <a
     class="flexbox centered margin-left"
+    data-mui-internal-clone-element="true"
     href="https://docs.mender.io/development/add-ons/port-forward"
     rel=""
     target="_blank"

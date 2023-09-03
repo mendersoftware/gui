@@ -11,15 +11,12 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 
 import { makeStyles } from 'tss-react/mui';
 
-import isUUID from 'validator/lib/isUUID';
-
-import { getDeviceById } from '../../../actions/deviceActions';
 import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
+import { useDeploymentDevice } from '../../../utils/deploymentdevicehook';
 import Time from '../../common/time';
 import { DeploymentDeviceGroup, DeploymentProgress } from '../../deployments/deploymentitem';
 import DeploymentStats from '../../deployments/deploymentstatus';
@@ -64,13 +61,7 @@ const deploymentStateComponentMap = {
 
 const BaseDeploymentWidget = ({ deployment, devicesById, idAttribute, onClick, state }) => {
   const { classes } = useStyles();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isUUID(deployment.name) && !devicesById[deployment.name]) {
-      dispatch(getDeviceById(deployment.name));
-    }
-  }, [deployment.name]);
+  useDeploymentDevice(deployment.name);
 
   const Component = deploymentStateComponentMap[state];
   const onWidgetClick = () => onClick({ route: 'deployments', id: deployment.id, tab: state === DEPLOYMENT_STATES.finished ? state : undefined, open: true });

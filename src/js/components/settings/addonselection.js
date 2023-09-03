@@ -19,7 +19,7 @@ import { ADDONS, PLANS } from '../../constants/appConstants';
 import InfoText from '../common/infotext';
 import { useStyles } from './planselection';
 
-export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 'os' }) => {
+export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = PLANS.os.id }) => {
   const { classes } = useStyles();
   const onAddOnClick = (e, name, enabled) => {
     if (e.target.tagName === 'A') {
@@ -43,6 +43,7 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
         accu.push({ ...addOn, name: addOnName, isEnabled });
         return accu;
       }, []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(addons), JSON.stringify(features)]
   );
 

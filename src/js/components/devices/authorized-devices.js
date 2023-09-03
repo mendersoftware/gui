@@ -50,7 +50,6 @@ import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
-import { ExpandDevice } from '../helptips/helptooltips';
 import { defaultHeaders, defaultTextRender, getDeviceIdentityText, routes as states } from './base-devices';
 import DeviceList, { minCellWidth } from './devicelist';
 import ColumnCustomizationDialog from './dialogs/custom-columns-dialog';
@@ -144,28 +143,18 @@ const calculateColumnSelectionSize = (changedColumns, customColumnSizes) =>
     { columnSizes: [], selectedAttributes: [] }
   );
 
-const OnboardingComponent = ({ authorizeRef, deviceListRef, onboardingState, selectedRows }) => {
+const OnboardingComponent = ({ deviceListRef, onboardingState }) => {
   let onboardingComponent = null;
-  if (deviceListRef.current) {
-    const element = deviceListRef.current.querySelector('body .deviceListItem > div');
+  const element = deviceListRef.current?.querySelector('body .deviceListItem > div');
+  if (element) {
     const anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
-  }
-  if (selectedRows && authorizeRef.current) {
-    const anchor = {
-      left: authorizeRef.current.offsetLeft - authorizeRef.current.offsetWidth,
-      top:
-        authorizeRef.current.offsetTop +
-        authorizeRef.current.offsetHeight -
-        authorizeRef.current.lastElementChild.offsetHeight +
-        authorizeRef.current.lastElementChild.firstElementChild.offsetHeight * 1.5
-    };
+  } else if (deviceListRef.current) {
+    const anchor = { top: deviceListRef.current.offsetTop + deviceListRef.current.offsetHeight / 3, left: deviceListRef.current.offsetWidth / 2 + 30 };
     onboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING,
+      onboardingSteps.DEVICES_PENDING_ONBOARDING_START,
       onboardingState,
-      { place: 'left', anchor },
+      { anchor, place: 'top' },
       onboardingComponent
     );
   }
@@ -201,7 +190,7 @@ export const Authorized = ({
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
-  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
   const {
     refreshTrigger,
@@ -223,7 +212,6 @@ export const Authorized = ({
   const [showFilters, setShowFilters] = useState(false);
   const [showCustomization, setShowCustomization] = useState(false);
   const deviceListRef = useRef();
-  const authorizeRef = useRef();
   const timer = useRef();
   const navigate = useNavigate();
 
@@ -241,18 +229,25 @@ export const Authorized = ({
       clearInterval(timer.current);
       clearAllRetryTimers(dispatchedSetSnackbar);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, dispatchedSetSnackbar]);
 
   useEffect(() => {
     const columnHeaders = getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
     setColumnHeaders(columnHeaders);
-  }, [columnSelection, selectedState, idAttribute.attribute]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columnSelection, idAttribute.attribute, currentSelectedState.defaultHeaders, openSettingsDialog]);
 
   useEffect(() => {
     // only set state after all devices id data retrieved
     setIsInitialized(isInitialized => isInitialized || (settingsInitialized && devicesInitialized && pageLoading === false));
     setDevicesInitialized(devicesInitialized => devicesInitialized || pageLoading === false);
   }, [settingsInitialized, devicesInitialized, pageLoading]);
+
+  const onDeviceStateSelectionChange = useCallback(
+    newState => dispatch(setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger })),
+    [dispatch, refreshTrigger]
+  );
 
   useEffect(() => {
     if (onboardingState.complete) {
@@ -267,19 +262,12 @@ export const Authorized = ({
     }
     dispatch(advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING));
 
-    if (acceptedCount < 2) {
-      if (!window.sessionStorage.getItem('pendings-redirect')) {
-        window.sessionStorage.setItem('pendings-redirect', true);
-        onDeviceStateSelectionChange(DEVICE_STATES.accepted);
-      }
-      setTimeout(() => {
-        const notification = getOnboardingComponentFor(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION, onboardingState, {
-          setSnackbar: dispatchedSetSnackbar
-        });
-        !!notification && dispatchedSetSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true);
-      }, TIMEOUTS.debounceDefault);
+    if (acceptedCount < 2 && !window.sessionStorage.getItem('pendings-redirect')) {
+      window.sessionStorage.setItem('pendings-redirect', true);
+      onDeviceStateSelectionChange(DEVICE_STATES.accepted);
     }
-  }, [acceptedCount, allCount, pendingCount, onboardingState.complete]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [acceptedCount, allCount, pendingCount, onboardingState.complete, dispatch, onDeviceStateSelectionChange, dispatchedSetSnackbar]);
 
   useEffect(() => {
     setShowFilters(false);
@@ -287,10 +275,10 @@ export const Authorized = ({
 
   const refreshDevices = useCallback(() => {
     const refreshLength = deviceRefreshTimes[selectedState] ?? deviceRefreshTimes.default;
-    return dispatch(setDeviceListState({ refreshTrigger: !refreshTrigger })).catch(err =>
+    return dispatch(setDeviceListState({}, true, true)).catch(err =>
       setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshLength, dispatchedSetSnackbar)
     );
-  }, [refreshTrigger, selectedState]);
+  }, [dispatch, dispatchedSetSnackbar, selectedState]);
 
   useEffect(() => {
     if (!devicesInitialized) {
@@ -299,14 +287,15 @@ export const Authorized = ({
     const refreshLength = deviceRefreshTimes[selectedState] ?? deviceRefreshTimes.default;
     clearInterval(timer.current);
     timer.current = setInterval(() => refreshDevices(), refreshLength);
-  }, [devicesInitialized, selectedState]);
+  }, [devicesInitialized, refreshDevices, selectedState]);
 
   useEffect(() => {
     Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState })));
     availableIssueOptions[DEVICE_ISSUE_OPTIONS.authRequests.key]
       ? dispatch(getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] }))
       : undefined;
-  }, [selectedIssues, availableIssueOptions, selectedState, selectedGroup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedIssues.join(''), JSON.stringify(availableIssueOptions), selectedState, selectedGroup, dispatch, JSON.stringify(filters)]);
 
   /*
    * Devices
@@ -343,7 +332,7 @@ export const Authorized = ({
       })
       .then(() => onSelectionChange([]));
 
-  const handlePageChange = page => dispatch(setDeviceListState({ selectedId: undefined, page, refreshTrigger: !refreshTrigger }));
+  const handlePageChange = useCallback(page => dispatch(setDeviceListState({ selectedId: undefined, page })), [dispatch]);
 
   const onPageLengthChange = perPage => dispatch(setDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger }));
 
@@ -361,10 +350,6 @@ export const Authorized = ({
     );
   };
 
-  const onFilterChange = () => handlePageChange(1);
-
-  const onDeviceStateSelectionChange = newState => dispatch(setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger }));
-
   const setDetailsTab = detailsTab => dispatch(setDeviceListState({ detailsTab, setOnly: true }));
 
   const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) =>
@@ -379,28 +364,33 @@ export const Authorized = ({
 
   const onToggleCustomizationClick = () => setShowCustomization(toggle);
 
-  const onChangeColumns = (changedColumns, customColumnSizes) => {
-    const { columnSizes, selectedAttributes } = calculateColumnSelectionSize(changedColumns, customColumnSizes);
-    dispatch(updateUserColumnSettings(columnSizes));
-    dispatch(saveUserSettings({ columnSelection: changedColumns }));
-    // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
-    dispatch(setDeviceListState({ selectedAttributes }));
-    setShowCustomization(false);
-  };
+  const onChangeColumns = useCallback(
+    (changedColumns, customColumnSizes) => {
+      const { columnSizes, selectedAttributes } = calculateColumnSelectionSize(changedColumns, customColumnSizes);
+      dispatch(updateUserColumnSettings(columnSizes));
+      dispatch(saveUserSettings({ columnSelection: changedColumns }));
+      // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
+      dispatch(setDeviceListState({ selectedAttributes }));
+      setShowCustomization(false);
+    },
+    [dispatch]
+  );
 
   const onExpandClick = (device = {}) => {
     dispatchedSetSnackbar('');
-    const { attributes = {}, id, status } = device;
-    dispatch(setDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id }));
+    const { id } = device;
+    dispatch(setDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id, detailsTab: deviceListState.detailsTab || 'identity' }));
     if (!onboardingState.complete) {
       dispatch(advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING));
-      if (status === DEVICE_STATES.accepted && Object.values(attributes).some(value => value)) {
-        dispatch(advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING_NOTIFICATION));
-      }
     }
   };
 
-  const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
+  const onCreateDeploymentClick = devices => {
+    const devicesLink = !onboardingState.complete ? '' : `&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`;
+    return navigate(`/deployments?open=true${devicesLink}`);
+  };
+
+  const onCloseExpandedDevice = useCallback(() => dispatch(setDeviceListState({ selectedId: undefined, detailsTab: '' })), [dispatch]);
 
   const actionCallbacks = {
     onAddDevicesToGroup: addDevicesToGroup,
@@ -412,8 +402,6 @@ export const Authorized = ({
   };
 
   const listOptionHandlers = [{ key: 'customize', title: 'Customize', onClick: onToggleCustomizationClick }];
-  const devicePendingTip = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING_START, onboardingState);
-
   const EmptyState = currentSelectedState.emptyState;
 
   const groupLabel = selectedGroup ? decodeURIComponent(selectedGroup) : ALL_DEVICES;
@@ -462,66 +450,47 @@ export const Authorized = ({
           )}
           <ListOptions options={listOptionHandlers} title="Table options" />
         </div>
-        <Filters
-          className={classes.filterCommon}
-          onFilterChange={onFilterChange}
-          onGroupClick={onGroupClick}
-          isModification={!!groupFilters.length}
-          open={showFilters}
-        />
+        <Filters className={classes.filterCommon} onGroupClick={onGroupClick} open={showFilters} />
       </div>
       <Loader show={!isInitialized} />
-      {isInitialized ? (
-        devices.length > 0 ? (
-          <div className="padding-bottom" ref={deviceListRef}>
-            <DeviceList
-              columnHeaders={columnHeaders}
-              customColumnSizes={customColumnSizes}
-              devices={devices}
-              deviceListState={deviceListState}
-              idAttribute={idAttribute}
-              onChangeRowsPerPage={onPageLengthChange}
-              onExpandClick={onExpandClick}
-              onPageChange={handlePageChange}
-              onResizeColumns={columns => dispatch(updateUserColumnSettings(columns))}
-              onSelect={onSelectionChange}
-              onSort={onSortChange}
-              pageLoading={pageLoading}
-              pageTotal={deviceCount}
-            />
-            {showHelptips && <ExpandDevice />}
-          </div>
+      <div className="padding-bottom" ref={deviceListRef}>
+        {devices.length > 0 ? (
+          <DeviceList
+            columnHeaders={columnHeaders}
+            customColumnSizes={customColumnSizes}
+            devices={devices}
+            deviceListState={deviceListState}
+            idAttribute={idAttribute}
+            onChangeRowsPerPage={onPageLengthChange}
+            onExpandClick={onExpandClick}
+            onPageChange={handlePageChange}
+            onResizeColumns={columns => dispatch(updateUserColumnSettings(columns))}
+            onSelect={onSelectionChange}
+            onSort={onSortChange}
+            pageLoading={pageLoading}
+            pageTotal={deviceCount}
+          />
         ) : (
-          <>
-            {devicePendingTip && !showsDialog ? (
-              devicePendingTip
-            ) : (
-              <EmptyState
-                allCount={allCount}
-                canManageDevices={canManageDevices}
-                filters={filters}
-                highlightHelp={showHelptips}
-                limitMaxed={limitMaxed}
-                onClick={onPreauthClick}
-              />
-            )}
-          </>
-        )
-      ) : (
-        <div />
-      )}
+          <EmptyState
+            allCount={allCount}
+            canManageDevices={canManageDevices}
+            filters={filters}
+            highlightHelp={showHelptips}
+            limitMaxed={limitMaxed}
+            onClick={onPreauthClick}
+          />
+        )}
+      </div>
       <ExpandedDevice
         actionCallbacks={actionCallbacks}
         deviceId={openedDevice}
-        onClose={() => dispatch(setDeviceListState({ selectedId: undefined }))}
+        onClose={onCloseExpandedDevice}
         setDetailsTab={setDetailsTab}
         tabSelection={tabSelection}
       />
-      {!selectedId && (
-        <OnboardingComponent authorizeRef={authorizeRef} deviceListRef={deviceListRef} onboardingState={onboardingState} selectedRows={selectedRows} />
-      )}
+      {!selectedId && !showsDialog && <OnboardingComponent deviceListRef={deviceListRef} onboardingState={onboardingState} />}
       {canManageDevices && !!selectedRows.length && (
-        <DeviceQuickActions actionCallbacks={actionCallbacks} selectedGroup={selectedStaticGroup} ref={authorizeRef} />
+        <DeviceQuickActions actionCallbacks={actionCallbacks} deviceId={openedDevice} selectedGroup={selectedStaticGroup} />
       )}
       <ColumnCustomizationDialog
         attributes={attributes}

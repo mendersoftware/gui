@@ -14,7 +14,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon, Info as InfoIcon } from '@mui/icons-material';
+import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@mui/icons-material';
 // material ui
 import {
   Accordion,
@@ -34,8 +34,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { getReportingLimits } from '../../actions/deviceActions';
 import { toggle } from '../../helpers';
-import { getFeatures } from '../../selectors';
-import { MenderTooltipClickable } from '../common/mendertooltip';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
   accordion: {
@@ -67,36 +66,18 @@ export const ReportingLimits = () => {
   const [open, setOpen] = useState(false);
   const { classes } = useStyles();
   const dispatch = useDispatch();
-  const { isHosted = false } = useSelector(getFeatures);
   const { attributes = {}, count = 0, limit = 100 } = useSelector(state => state.devices.filteringAttributesConfig);
 
   useEffect(() => {
     dispatch(getReportingLimits());
-  }, []);
+  }, [dispatch]);
 
   const toggleOpen = () => setOpen(toggle);
-
-  const tooltipContent = () => {
-    return isHosted ? (
-      <div style={{ maxWidth: 350 }}>
-        Expand to see the list of attributes currently in use. Please{' '}
-        <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
-          contact our team
-        </a>{' '}
-        if your use case requires a different set of attributes.
-      </div>
-    ) : (
-      <div style={{ maxWidth: 350 }}>Expand to see the list of attributes currently in use.</div>
-    );
-  };
 
   return (
     <>
       <InputLabel className="margin-top" shrink id="filterable-attributes-usage-and-limit">
-        Filterable attributes usage & limit ({count}/{limit}){' '}
-        <MenderTooltipClickable className="inline-block" style={{ verticalAlign: -5 }} disableHoverListener={false} placement="top" title={tooltipContent()}>
-          <InfoIcon />
-        </MenderTooltipClickable>
+        Filterable attributes usage & limit ({count}/{limit}) <MenderHelpTooltip id={HELPTOOLTIPS.attributeLimit.id} placement="top" />
       </InputLabel>
       <Accordion className={classes.accordion} square expanded={open} onChange={toggleOpen} disabled={!count}>
         <AccordionSummary className={classes.summary}>

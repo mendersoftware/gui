@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Deployments Component renders correctly 1`] = `
-.emotion-0 {
+<DocumentFragment>
+  .emotion-0 {
   overflow: hidden;
   min-height: 48px;
   -webkit-overflow-scrolling: touch;
@@ -543,21 +544,6 @@ exports[`Deployments Component renders correctly 1`] = `
   margin-right: 8px;
 }
 
-.emotion-22 {
-  border-color: rgba(0, 0, 0, 0.06);
-  background-color: #fdfdfd;
-  color: rgba(10, 10, 11, 0.78);
-}
-
-.emotion-22 .dashboard-header span {
-  background-color: #fdfdfd;
-  color: rgba(10, 10, 11, 0.78);
-}
-
-.emotion-22 .MuiButtonBase-root {
-  color: rgba(10, 10, 11, 0.78);
-}
-
 .emotion-24 {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -579,549 +565,878 @@ exports[`Deployments Component renders correctly 1`] = `
   margin-right: 8px;
 }
 
+.emotion-30 {
+  border-color: rgba(0, 0, 0, 0.06);
+  background-color: #fdfdfd;
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-30 .dashboard-header span {
+  background-color: #fdfdfd;
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-30 .MuiButtonBase-root {
+  color: rgba(10, 10, 11, 0.78);
+}
+
 <div
-  class="margin-left-small margin-top"
-  style="max-width: 80vw;"
->
-  <div
-    class="flexbox space-between"
+    class="margin-left-small margin-top"
+    style="max-width: 80vw;"
   >
     <div
-      class="MuiTabs-root emotion-0"
+      class="flexbox space-between"
     >
       <div
-        class="MuiTabs-scroller MuiTabs-fixed emotion-1"
-        style="overflow: hidden; margin-bottom: 0px;"
+        class="MuiTabs-root emotion-0"
       >
         <div
-          class="MuiTabs-flexContainer emotion-2"
-          role="tablist"
+          class="MuiTabs-scroller MuiTabs-fixed emotion-1"
+          style="overflow: hidden; margin-bottom: 0px;"
         >
-          <a
-            aria-selected="true"
-            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected emotion-3"
-            href="/deployments/active"
-            role="tab"
-            tabindex="0"
+          <div
+            class="MuiTabs-flexContainer emotion-2"
+            role="tablist"
           >
-            Active
-            <span
-              class="MuiTouchRipple-root emotion-4"
-            />
-          </a>
-          <a
-            aria-selected="false"
-            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-3"
-            href="/deployments/scheduled"
-            role="tab"
-            tabindex="-1"
-          >
-            Scheduled
-            <span
-              class="MuiTouchRipple-root emotion-4"
-            />
-          </a>
-          <a
-            aria-selected="false"
-            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-3"
-            href="/deployments/finished"
-            role="tab"
-            tabindex="-1"
-          >
-            Finished
-            <span
-              class="MuiTouchRipple-root emotion-4"
-            />
-          </a>
+            <a
+              aria-selected="true"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected emotion-3"
+              href="/deployments/active"
+              role="tab"
+              tabindex="0"
+            >
+              Active
+              <span
+                class="MuiTouchRipple-root emotion-4"
+              />
+            </a>
+            <a
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-3"
+              href="/deployments/scheduled"
+              role="tab"
+              tabindex="-1"
+            >
+              Scheduled
+              <span
+                class="MuiTouchRipple-root emotion-4"
+              />
+            </a>
+            <a
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-3"
+              href="/deployments/finished"
+              role="tab"
+              tabindex="-1"
+            >
+              Finished
+              <span
+                class="MuiTouchRipple-root emotion-4"
+              />
+            </a>
+          </div>
+          <span
+            class="MuiTabs-indicator emotion-9"
+            style="left: 0px; width: 0px;"
+          />
         </div>
-        <span
-          class="MuiTabs-indicator emotion-9"
-          style="left: 0px; width: 0px;"
-        />
       </div>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-10"
+        style="height: 100%;"
+        tabindex="0"
+        type="button"
+      >
+        Create a deployment
+        <span
+          class="MuiTouchRipple-root emotion-4"
+        />
+      </button>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-10"
-      style="height: 100%;"
-      tabindex="0"
-      type="button"
-    >
-      Create a deployment
-      <span
-        class="MuiTouchRipple-root emotion-4"
-      />
-    </button>
-  </div>
-  <div
-    class="fadeIn"
-  >
     <div
-      class="margin-left"
+      class="fadeIn"
     >
-      <h4
-        class="dashboard-header emotion-12 margin-top-large  margin-right"
-      >
-        <span>
-          In progress now
-        </span>
-      </h4>
       <div
-        class="fadeIn deploy-table-contain "
+        class="margin-left"
       >
+        <h4
+          class="dashboard-header emotion-12 margin-top-large  margin-right"
+        >
+          <span>
+            In progress now
+          </span>
+        </h4>
         <div
-          class="deployment-item deployment-header-item muted progress-item"
+          class="fadeIn deploy-table-contain "
         >
           <div
-            class=""
+            class="deployment-item deployment-header-item muted progress-item"
           >
-            Release
-          </div>
-          <div
-            class=""
-          >
-            Target device(s)
-          </div>
-          <div
-            class=""
-          >
-            Start time
-          </div>
-          <div
-            class=""
-          >
-            End time
-          </div>
-          <div
-            class="align-right column-defined"
-          >
-            # devices
-          </div>
-          <div
-            class=""
-          >
-            Status
-          </div>
-        </div>
-        <div
-          class="margin-right-small"
-        >
-          <div
-            class="deployment-item progress-item"
-          >
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Release
-              </span>
-              <div
-                class="text-overflow emotion-13"
-                title="r1"
-              >
-                r1
-              </div>
+            <div
+              class=""
+            >
+              Release
             </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Target device(s)
-              </span>
-              <div
-                class="text-overflow emotion-13"
-                title="test deployment"
-              >
-                test deployment
-              </div>
+            <div
+              class=""
+            >
+              Target device(s)
             </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Start time
-              </span>
-              <span
-                aria-label="Tue Jan 01 2019 12:30:00 GMT+0000"
-                class=""
-                data-mui-internal-clone-element="true"
-              >
-                <time
-                  datetime="2019-01-01T12:30:00+00:00"
-                >
-                  2019-01-01 12:30
-                </time>
-              </span>
+            <div
+              class=""
+            >
+              Start time
             </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                End time
-              </span>
-              <span
-                aria-label=""
-                class=""
-                data-mui-internal-clone-element="true"
-              >
-                <div
-                  class=""
-                >
-                  -
-                </div>
-              </span>
+            <div
+              class=""
+            >
+              End time
             </div>
             <div
               class="align-right column-defined"
             >
-              <span
-                class="deployment-item-title muted"
-              >
-                # devices
-              </span>
+              # devices
+            </div>
+            <div
+              class=""
+            >
+              Status
+            </div>
+          </div>
+          <div
+            class="margin-right-small"
+          >
+            <div
+              class="deployment-item progress-item"
+            >
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Release
+                </span>
+                <div
+                  class="text-overflow emotion-13"
+                  title="r1"
+                >
+                  r1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Target device(s)
+                </span>
+                <div
+                  class="text-overflow emotion-13"
+                  title="test deployment"
+                >
+                  test deployment
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Start time
+                </span>
+                <span
+                  aria-label="Tue Jan 01 2019 12:30:00 GMT+0000"
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <time
+                    datetime="2019-01-01T12:30:00+00:00"
+                  >
+                    2019-01-01 12:30
+                  </time>
+                </span>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  End time
+                </span>
+                <span
+                  aria-label=""
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <div
+                    class=""
+                  >
+                    -
+                  </div>
+                </span>
+              </div>
               <div
                 class="align-right column-defined"
               >
-                1
-              </div>
-            </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Status
-              </span>
-              <div
-                class="relative emotion-15  "
-              >
+                <span
+                  class="deployment-item-title muted"
+                >
+                  # devices
+                </span>
                 <div
-                  class="emotion-16"
+                  class="align-right column-defined"
+                >
+                  1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Status
+                </span>
+                <div
+                  class="relative emotion-15  "
                 >
                   <div
-                    class="progress-chart relative detailed"
+                    class="emotion-16"
                   >
                     <div
-                      class="progress-step"
-                      style="left: 0%; width: 100%;"
+                      class="progress-chart relative detailed"
                     >
                       <div
-                        class="progress-bar"
-                        style="width: 100%; background-color: rgb(170, 170, 170);"
-                      />
-                      <div
-                        style="display: contents;"
+                        class="progress-step"
+                        style="left: 0%; width: 100%;"
                       >
                         <div
-                          class="progress-bar green"
-                          style="width: 0%;"
+                          class="progress-bar"
+                          style="width: 100%; background-color: rgb(170, 170, 170);"
                         />
                         <div
-                          class="progress-bar warning"
-                          style="left: 0%; width: 0%;"
+                          style="display: contents;"
+                        >
+                          <div
+                            class="progress-bar green"
+                            style="width: 0%;"
+                          />
+                          <div
+                            class="progress-bar warning"
+                            style="left: 0%; width: 0%;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="progress-step relative flexbox progress-step-total"
+                      >
+                        <div
+                          class="progress-bar"
                         />
                       </div>
                     </div>
                     <div
-                      class="progress-step relative flexbox progress-step-total"
+                      class="flexbox center-aligned muted"
+                      style="justify-content: flex-end;"
                     >
-                      <div
-                        class="progress-bar"
-                      />
+                      0 failures
                     </div>
                   </div>
                   <div
-                    class="flexbox center-aligned muted"
-                    style="justify-content: flex-end;"
+                    class="flexbox space-between muted"
                   >
-                    0 failures
-                  </div>
-                </div>
-                <div
-                  class="flexbox space-between muted"
-                >
-                  <div>
-                    Devices in progress
-                  </div>
-                  <div>
-                    Current phase: 1 of 1
+                    <div>
+                      Devices in progress
+                    </div>
+                    <div>
+                      Current phase: 1 of 1
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-17"
-              tabindex="0"
-              type="button"
-            >
-              View details
-              <span
-                class="MuiTouchRipple-root emotion-4"
-              />
-            </button>
-            <button
-              aria-label="Abort"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-19"
-              data-mui-internal-clone-element="true"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-20"
-                data-testid="CancelOutlinedIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-17"
+                tabindex="0"
+                type="button"
               >
-                <path
-                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
+                View details
+                <span
+                  class="MuiTouchRipple-root emotion-4"
                 />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-4"
-              />
-            </button>
-          </div>
-        </div>
-        <div
-          class="flexbox"
-        >
-          <div
-            class="loaderContainer shrunk"
-          >
-            <div
-              class="small  loader"
-            >
-              <span
-                class="dot dot_1"
-              />
-              <span
-                class="dot dot_2"
-              />
-              <span
-                class="dot dot_3"
-              />
-              <span
-                class="dot dot_4"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="deployments-pending margin-top margin-bottom-large emotion-22"
-    >
-      <h4
-        class="dashboard-header emotion-12 margin-small margin-top"
-      >
-        <span>
-          Pending
-        </span>
-      </h4>
-      <div
-        class="fadeIn deploy-table-contain margin-left-small"
-      >
-        <div
-          class="deployment-item deployment-header-item muted pending-item"
-        >
-          <div
-            class=""
-          >
-            Release
-          </div>
-          <div
-            class=""
-          >
-            Target device(s)
-          </div>
-          <div
-            class=""
-          >
-            Start time
-          </div>
-          <div
-            class=""
-          >
-            End time
-          </div>
-          <div
-            class="align-right column-defined"
-          >
-            # devices
-          </div>
-          <div
-            class=""
-          >
-            Status
-          </div>
-        </div>
-        <div
-          class=""
-        >
-          <div
-            class="deployment-item pending-item"
-          >
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Release
-              </span>
-              <div
-                class="text-overflow "
-                title="r1"
-              >
-                r1
-              </div>
-            </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Target device(s)
-              </span>
-              <div
-                class="text-overflow "
-                title="test deployment 2"
-              >
-                test deployment 2
-              </div>
-            </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Start time
-              </span>
-              <span
-                aria-label="Tue Jan 01 2019 12:25:00 GMT+0000"
-                class=""
+              </button>
+              <button
+                aria-label="Abort"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-19"
                 data-mui-internal-clone-element="true"
-              >
-                <time
-                  datetime="2019-01-01T12:25:00+00:00"
-                >
-                  2019-01-01 12:25
-                </time>
-              </span>
-            </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                End time
-              </span>
-              <span
-                aria-label=""
-                class=""
-                data-mui-internal-clone-element="true"
-              >
-                <div
-                  class=""
-                >
-                  -
-                </div>
-              </span>
-            </div>
-            <div
-              class="align-right column-defined"
-            >
-              <span
-                class="deployment-item-title muted"
-              >
-                # devices
-              </span>
-              <div
-                class="align-right column-defined"
-              >
-                1
-              </div>
-            </div>
-            <div>
-              <span
-                class="deployment-item-title muted"
-              >
-                Status
-              </span>
-              <div
-                class="flexbox center-aligned"
+                tabindex="0"
+                type="button"
               >
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-24"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-20"
+                  data-testid="CancelOutlinedIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
                   />
                 </svg>
                 <span
-                  class="margin-left-small"
+                  class="MuiTouchRipple-root emotion-4"
+                />
+              </button>
+            </div>
+            <div
+              class="deployment-item progress-item"
+            >
+              <div>
+                <span
+                  class="deployment-item-title muted"
                 >
-                  Queued to start
+                  Release
+                </span>
+                <div
+                  class="text-overflow emotion-13"
+                  title="r1"
+                >
+                  r1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Target device(s)
+                </span>
+                <div
+                  class="text-overflow emotion-13"
+                  title="test deployment 2"
+                >
+                  test deployment 2
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Start time
+                </span>
+                <span
+                  aria-label="Tue Jan 01 2019 12:25:00 GMT+0000"
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <time
+                    datetime="2019-01-01T12:25:00+00:00"
+                  >
+                    2019-01-01 12:25
+                  </time>
                 </span>
               </div>
-            </div>
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-17"
-              tabindex="0"
-              type="button"
-            >
-              View details
-              <span
-                class="MuiTouchRipple-root emotion-4"
-              />
-            </button>
-            <button
-              aria-label="Abort"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-19"
-              data-mui-internal-clone-element="true"
-              tabindex="0"
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-20"
-                data-testid="CancelOutlinedIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  End time
+                </span>
+                <span
+                  aria-label=""
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <div
+                    class=""
+                  >
+                    -
+                  </div>
+                </span>
+              </div>
+              <div
+                class="align-right column-defined"
               >
-                <path
-                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
+                <span
+                  class="deployment-item-title muted"
+                >
+                  # devices
+                </span>
+                <div
+                  class="align-right column-defined"
+                >
+                  1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Status
+                </span>
+                <div
+                  class="flexbox center-aligned"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-24"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"
+                    />
+                  </svg>
+                  <span
+                    class="margin-left-small"
+                  >
+                    Queued to start
+                  </span>
+                </div>
+              </div>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-17"
+                tabindex="0"
+                type="button"
+              >
+                View details
+                <span
+                  class="MuiTouchRipple-root emotion-4"
                 />
-              </svg>
-              <span
-                class="MuiTouchRipple-root emotion-4"
-              />
-            </button>
+              </button>
+              <button
+                aria-label="Abort"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-19"
+                data-mui-internal-clone-element="true"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-20"
+                  data-testid="CancelOutlinedIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-4"
+                />
+              </button>
+            </div>
           </div>
-        </div>
-        <div
-          class="flexbox"
-        >
           <div
-            class="loaderContainer shrunk"
+            class="flexbox"
           >
             <div
-              class="small  loader"
+              class="loaderContainer shrunk"
             >
-              <span
-                class="dot dot_1"
-              />
-              <span
-                class="dot dot_2"
-              />
-              <span
-                class="dot dot_3"
-              />
-              <span
-                class="dot dot_4"
-              />
+              <div
+                class="small  loader"
+              >
+                <span
+                  class="dot dot_1"
+                />
+                <span
+                  class="dot dot_2"
+                />
+                <span
+                  class="dot dot_3"
+                />
+                <span
+                  class="dot dot_4"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="deployments-pending margin-top margin-bottom-large emotion-30"
+      >
+        <h4
+          class="dashboard-header emotion-12 margin-small margin-top"
+        >
+          <span>
+            Pending
+          </span>
+        </h4>
+        <div
+          class="fadeIn deploy-table-contain margin-left-small"
+        >
+          <div
+            class="deployment-item deployment-header-item muted pending-item"
+          >
+            <div
+              class=""
+            >
+              Release
+            </div>
+            <div
+              class=""
+            >
+              Target device(s)
+            </div>
+            <div
+              class=""
+            >
+              Start time
+            </div>
+            <div
+              class=""
+            >
+              End time
+            </div>
+            <div
+              class="align-right column-defined"
+            >
+              # devices
+            </div>
+            <div
+              class=""
+            >
+              Status
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <div
+              class="deployment-item pending-item"
+            >
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Release
+                </span>
+                <div
+                  class="text-overflow "
+                  title="r1"
+                >
+                  r1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Target device(s)
+                </span>
+                <div
+                  class="text-overflow "
+                  title="test deployment"
+                >
+                  test deployment
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Start time
+                </span>
+                <span
+                  aria-label="Tue Jan 01 2019 12:30:00 GMT+0000"
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <time
+                    datetime="2019-01-01T12:30:00+00:00"
+                  >
+                    2019-01-01 12:30
+                  </time>
+                </span>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  End time
+                </span>
+                <span
+                  aria-label=""
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <div
+                    class=""
+                  >
+                    -
+                  </div>
+                </span>
+              </div>
+              <div
+                class="align-right column-defined"
+              >
+                <span
+                  class="deployment-item-title muted"
+                >
+                  # devices
+                </span>
+                <div
+                  class="align-right column-defined"
+                >
+                  1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Status
+                </span>
+                <div
+                  class="relative emotion-15  "
+                >
+                  <div
+                    class="emotion-16"
+                  >
+                    <div
+                      class="progress-chart relative detailed"
+                    >
+                      <div
+                        class="progress-step"
+                        style="left: 0%; width: 100%;"
+                      >
+                        <div
+                          class="progress-bar"
+                          style="width: 100%; background-color: rgb(170, 170, 170);"
+                        />
+                        <div
+                          style="display: contents;"
+                        >
+                          <div
+                            class="progress-bar green"
+                            style="width: 0%;"
+                          />
+                          <div
+                            class="progress-bar warning"
+                            style="left: 0%; width: 0%;"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="progress-step relative flexbox progress-step-total"
+                      >
+                        <div
+                          class="progress-bar"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="flexbox center-aligned muted"
+                      style="justify-content: flex-end;"
+                    >
+                      0 failures
+                    </div>
+                  </div>
+                  <div
+                    class="flexbox space-between muted"
+                  >
+                    <div>
+                      Devices in progress
+                    </div>
+                    <div>
+                      Current phase: 1 of 1
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-17"
+                tabindex="0"
+                type="button"
+              >
+                View details
+                <span
+                  class="MuiTouchRipple-root emotion-4"
+                />
+              </button>
+              <button
+                aria-label="Abort"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-19"
+                data-mui-internal-clone-element="true"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-20"
+                  data-testid="CancelOutlinedIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-4"
+                />
+              </button>
+            </div>
+            <div
+              class="deployment-item pending-item"
+            >
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Release
+                </span>
+                <div
+                  class="text-overflow "
+                  title="r1"
+                >
+                  r1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Target device(s)
+                </span>
+                <div
+                  class="text-overflow "
+                  title="test deployment 2"
+                >
+                  test deployment 2
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Start time
+                </span>
+                <span
+                  aria-label="Tue Jan 01 2019 12:25:00 GMT+0000"
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <time
+                    datetime="2019-01-01T12:25:00+00:00"
+                  >
+                    2019-01-01 12:25
+                  </time>
+                </span>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  End time
+                </span>
+                <span
+                  aria-label=""
+                  class=""
+                  data-mui-internal-clone-element="true"
+                >
+                  <div
+                    class=""
+                  >
+                    -
+                  </div>
+                </span>
+              </div>
+              <div
+                class="align-right column-defined"
+              >
+                <span
+                  class="deployment-item-title muted"
+                >
+                  # devices
+                </span>
+                <div
+                  class="align-right column-defined"
+                >
+                  1
+                </div>
+              </div>
+              <div>
+                <span
+                  class="deployment-item-title muted"
+                >
+                  Status
+                </span>
+                <div
+                  class="flexbox center-aligned"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-24"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z"
+                    />
+                  </svg>
+                  <span
+                    class="margin-left-small"
+                  >
+                    Queued to start
+                  </span>
+                </div>
+              </div>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-17"
+                tabindex="0"
+                type="button"
+              >
+                View details
+                <span
+                  class="MuiTouchRipple-root emotion-4"
+                />
+              </button>
+              <button
+                aria-label="Abort"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge columnHeader emotion-19"
+                data-mui-internal-clone-element="true"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium cancelButton muted emotion-20"
+                  data-testid="CancelOutlinedIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-4"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="flexbox"
+          >
+            <div
+              class="loaderContainer shrunk"
+            >
+              <div
+                class="small  loader"
+              >
+                <span
+                  class="dot dot_1"
+                />
+                <span
+                  class="dot dot_2"
+                />
+                <span
+                  class="dot dot_3"
+                />
+                <span
+                  class="dot dot_4"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

@@ -12,17 +12,30 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
-import { undefineds } from '../../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import FileUpload from './fileupload';
 
+const mockStore = configureStore([thunk]);
+let store;
+
 describe('FileUpload Component', () => {
+  beforeEach(() => {
+    store = mockStore({ ...defaultState });
+  });
   it('renders correctly', async () => {
-    const { baseElement } = render(<FileUpload placeholder="test" />);
+    const { baseElement } = render(
+      <Provider store={store}>
+        <FileUpload placeholder="test" />
+      </Provider>
+    );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -35,7 +48,11 @@ describe('FileUpload Component', () => {
 
     const menderFile = new File(['testContent plain'], 'test.file');
 
-    const ui = <FileUpload onFileChange={submitMock} onFileSelect={selectMock} placeholder="test placeholder" setSnackbar={jest.fn} />;
+    const ui = (
+      <Provider store={store}>
+        <FileUpload onFileChange={submitMock} onFileSelect={selectMock} placeholder="test placeholder" />
+      </Provider>
+    );
     const { rerender } = render(ui);
     expect(screen.getByText(/test placeholder/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work

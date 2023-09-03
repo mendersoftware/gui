@@ -11,22 +11,19 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 // material ui
 import { Clear as ClearIcon, DragHandle as DragHandleIcon } from '@mui/icons-material';
-import { DialogContent, FormControl, FormHelperText, IconButton, ListItem } from '@mui/material';
+import { DialogContent, FormControl, IconButton, ListItem } from '@mui/material';
 
 import { ATTRIBUTE_SCOPES } from '../../../constants/deviceConstants';
-import { defaultHeaders } from '../base-devices';
-import AttributeAutoComplete from '../widgets/attribute-autocomplete';
+import AttributeAutoComplete, { getOptionLabel } from '../widgets/attribute-autocomplete';
 
 const DraggableListItem = ({ item, index, onRemove }) => {
-  const title = useMemo(() => {
-    const header = Object.values(defaultHeaders).find(thing => thing.attribute === item.key);
-    return item.title || header?.title || item.key;
-  }, [item]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const title = useMemo(() => getOptionLabel(item), [item.key, item.scope, item.title]);
 
   const onClick = () => onRemove(item, index);
 
@@ -49,13 +46,10 @@ const DraggableListItem = ({ item, index, onRemove }) => {
   );
 };
 
-const columnLimit = 5;
-
 const filterAttributes = (list, attribute) => list.filter(item => !(item.key === attribute.key && item.scope === attribute.scope));
 
-const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAttributes, setSelectedAttributes, ...props }) => {
+const Content = ({ attributes, columnHeaders, idAttribute, selectedAttributes, setSelectedAttributes, ...props }) => {
   const [attributeOptions, setAttributeOptions] = useState([]);
-  const [isAtColumnLimit, setIsAtColumnLimit] = useState(selectedAttributes.length >= columnLimit);
 
   useEffect(() => {
     const { attributeOptions, selectedAttributes } = columnHeaders.reduce(
@@ -69,21 +63,14 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
         return accu;
       },
       {
-        attributeOptions: [...attributes.filter(item => !([idAttribute, 'status'].includes(item.key) && item.scope === ATTRIBUTE_SCOPES.identity))],
+        attributeOptions: [...attributes.filter(item => !([idAttribute.attribute, 'status'].includes(item.key) && item.scope === ATTRIBUTE_SCOPES.identity))],
         selectedAttributes: []
       }
     );
     setSelectedAttributes(selectedAttributes);
     setAttributeOptions(attributeOptions);
-  }, [attributes, columnHeaders]);
-
-  useEffect(() => {
-    const isAtColumnLimit = selectedAttributes.length >= columnLimit;
-    if (isAtColumnLimit && buttonRef.current) {
-      buttonRef.current.focus();
-    }
-    setIsAtColumnLimit(isAtColumnLimit);
-  }, [selectedAttributes.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(attributes), JSON.stringify(columnHeaders), idAttribute.attribute, setSelectedAttributes]);
 
   const onDragEnd = ({ destination, source }) => {
     if (!destination) {
@@ -109,20 +96,24 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
     setAttributeOptions([...attributeOptions, removed]);
   };
 
-  const onSelect = attribute => {
-    if (attribute.key) {
-      const existingAttribute = attributeOptions.find(item => item.key === attribute.key && item.scope === attribute.scope) || attribute;
-      setSelectedAttributes([
-        ...selectedAttributes,
-        { ...existingAttribute, title: existingAttribute.value ?? existingAttribute.key, id: `${attribute.scope}-${attribute.key}` }
-      ]);
-      setAttributeOptions(filterAttributes(attributeOptions, attribute));
-    }
-  };
+  const onSelect = useCallback(
+    attribute => {
+      if (attribute.key) {
+        const existingAttribute = attributeOptions.find(item => item.key === attribute.key && item.scope === attribute.scope) || attribute;
+        setSelectedAttributes(current => [
+          ...current,
+          { ...existingAttribute, title: existingAttribute.value ?? existingAttribute.key, id: `${attribute.scope}-${attribute.key}` }
+        ]);
+        setAttributeOptions(filterAttributes(attributeOptions, attribute));
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(attributeOptions), setSelectedAttributes]
+  );
 
   return (
     <DialogContent>
-      <p>You can select up to 5 columns of inventory data to display in the device list table. Drag to change the order.</p>
+      <p>You can select columns of inventory data to display in the device list table. Drag to change the order.</p>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-list" direction="vertical">
           {provided => {
@@ -138,8 +129,7 @@ const Content = ({ attributes, buttonRef, columnHeaders, idAttribute, selectedAt
         </Droppable>
       </DragDropContext>
       <FormControl>
-        <AttributeAutoComplete attributes={attributeOptions} disabled={isAtColumnLimit} label="Add a column" onRemove={onRemove} onSelect={onSelect} />
-        {isAtColumnLimit && <FormHelperText>Maximum of {columnLimit} reached</FormHelperText>}
+        <AttributeAutoComplete attributes={attributeOptions} label="Add a column" onRemove={onRemove} onSelect={onSelect} />
       </FormControl>
     </DialogContent>
   );

@@ -86,12 +86,11 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
   const [downloadPath, setDownloadPath] = useState('');
   const [elapsed, setElapsed] = useState(moment());
   const [file, setFile] = useState();
-  const [socketInitialized, setSocketInitialized] = useState(false);
+  const [socketInitialized, setSocketInitialized] = useState(undefined);
   const [startTime, setStartTime] = useState();
   const [uploadPath, setUploadPath] = useState('');
   const [terminalInput, setTerminalInput] = useState('');
   const [snackbarAlreadySet, setSnackbarAlreadySet] = useState(false);
-  const closeTimer = useRef();
   const snackTimer = useRef();
   const timer = useRef();
   const termRef = useRef({ terminal: React.createRef(), terminalRef: React.createRef() });
@@ -103,21 +102,77 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
   const { canAuditlog, canTroubleshoot, canWriteDevices } = userCapabilities;
   const { hasAuditlogs } = useSelector(getTenantCapabilities);
   const dispatch = useDispatch();
-  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
-  useEffect(() => {
-    if (open) {
-      setCurrentTab(type);
+  const onNotify = useCallback(
+    content => {
+      if (snackbarAlreadySet) {
+        return;
+      }
+      setSnackbarAlreadySet(true);
+      dispatchedSetSnackbar(content, TIMEOUTS.threeSeconds);
+      snackTimer.current = setTimeout(() => setSnackbarAlreadySet(false), TIMEOUTS.threeSeconds + TIMEOUTS.debounceShort);
+    },
+    [dispatchedSetSnackbar, snackbarAlreadySet]
+  );
+
+  const onHealthCheckFailed = useCallback(() => {
+    if (!socketInitialized) {
       return;
     }
+    onNotify('Health check failed: connection with the device lost.');
+  }, [onNotify, socketInitialized]);
+
+  const onSocketClose = useCallback(
+    event => {
+      if (!socketInitialized) {
+        return;
+      }
+      if (event.wasClean) {
+        onNotify(`Connection with the device closed.`);
+      } else if (event.code == 1006) {
+        // 1006: abnormal closure
+        onNotify('Connection to the remote terminal is forbidden.');
+      } else {
+        onNotify('Connection with the device died.');
+      }
+      setSocketClosed(true);
+    },
+    [onNotify, setSocketClosed, socketInitialized]
+  );
+
+  const onMessageReceived = useCallback(message => {
+    if (!termRef.current.terminal.current) {
+      return;
+    }
+    termRef.current.terminal.current.write(new Uint8Array(message));
+  }, []);
+
+  const [connect, sendMessage, close, sessionState, sessionId] = useSession({
+    onClose: onSocketClose,
+    onHealthCheckFailed,
+    onMessageReceived,
+    onNotify,
+    onOpen: setSocketInitialized
+  });
+
+  useEffect(() => {
     setDownloadPath('');
     setUploadPath('');
     setFile();
+    if (open) {
+      setCurrentTab(type);
+      setSocketInitialized(undefined);
+      setStartTime();
+      return;
+    }
     return () => {
-      clearTimeout(closeTimer.current);
       clearTimeout(snackTimer.current);
+      if (!open) {
+        close();
+      }
     };
-  }, [open]);
+  }, [open, type, close]);
 
   useEffect(() => {
     const allowedTabs = Object.values(tabs).reduce((accu, tab) => {
@@ -127,7 +182,7 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
       return accu;
     }, []);
     setAvailableTabs(allowedTabs);
-  }, [canTroubleshoot, canWriteDevices]);
+  }, [canTroubleshoot, canWriteDevices, userCapabilities]);
 
   useEffect(() => {
     if (socketInitialized === undefined) {
@@ -136,6 +191,7 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
     clearInterval(timer.current);
     if (socketInitialized) {
       setStartTime(new Date());
+      dispatchedSetSnackbar('Connection with the device established.', TIMEOUTS.fiveSeconds);
       timer.current = setInterval(() => setElapsed(moment()), TIMEOUTS.halfASecond);
     } else {
       close();
@@ -143,25 +199,28 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
     return () => {
       clearInterval(timer.current);
     };
-  }, [socketInitialized]);
+  }, [close, dispatchedSetSnackbar, socketInitialized]);
 
   useEffect(() => {
-    if (!(open || socketInitialized) || socketInitialized) {
+    if (!open || sessionState !== WebSocket.OPEN) {
       return;
     }
-    canTroubleshoot ? connect(device.id) : undefined;
-    return () => {
-      close();
-      setTimeout(() => setSocketClosed(true), TIMEOUTS.fiveSeconds);
-    };
-  }, [device.id, open]);
+    return close;
+  }, [close, open, sessionState]);
+
+  useEffect(() => {
+    if (!canTroubleshoot || !open || sessionId || sessionState !== WebSocket.CLOSED) {
+      return;
+    }
+    connect(device.id);
+  }, [canTroubleshoot, connect, device.id, open, sessionId, sessionState]);
 
   const onConnectionToggle = () => {
-    if (socketInitialized) {
-      close();
-    } else {
-      setSocketInitialized(false);
+    if (sessionState === WebSocket.CLOSED) {
+      setSocketInitialized(undefined);
       connect(device.id);
+    } else {
+      close();
     }
   };
 
@@ -173,68 +232,16 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
     }
   };
 
-  const onDownloadClick = path => {
-    setDownloadPath(path);
-    dispatch(getDeviceFileDownloadLink(device.id, path)).then(address => {
-      const filename = path.substring(path.lastIndexOf('/') + 1) || 'file';
-      createDownload(address, filename);
-    });
-  };
-
-  const onSocketOpen = () => {
-    setSocketInitialized(true);
-    dispatch(setSnackbar('Connection with the device established.', TIMEOUTS.fiveSeconds));
-  };
-
-  const onNotify = content => {
-    setSnackbarAlreadySet(true);
-    dispatch(setSnackbar(content, TIMEOUTS.fiveSeconds));
-    snackTimer.current = setTimeout(() => setSnackbarAlreadySet(false), TIMEOUTS.fiveSeconds + TIMEOUTS.debounceShort);
-  };
-
-  const onHealthCheckFailed = () => {
-    if (snackbarAlreadySet) {
-      return;
-    }
-    onNotify('Health check failed: connection with the device lost.');
-  };
-
-  const onSocketClose = event => {
-    if (snackbarAlreadySet) {
-      return;
-    }
-    if (event.wasClean) {
-      onNotify(`Connection with the device closed.`);
-    } else if (event.code == 1006) {
-      // 1006: abnormal closure
-      onNotify('Connection to the remote terminal is forbidden.');
-    } else {
-      onNotify('Connection with the device died.');
-    }
-    closeTimer.current = setTimeout(() => setSocketClosed(true), TIMEOUTS.fiveSeconds);
-  };
-
-  const onMessageReceived = useCallback(
-    message => {
-      if (!termRef.current.terminal) {
-        return;
-      }
-      termRef.current.terminal.write(new Uint8Array(message));
+  const onDownloadClick = useCallback(
+    path => {
+      setDownloadPath(path);
+      dispatch(getDeviceFileDownloadLink(device.id, path)).then(address => {
+        const filename = path.substring(path.lastIndexOf('/') + 1) || 'file';
+        createDownload(address, filename);
+      });
     },
-    [termRef.current]
+    [dispatch, device.id]
   );
-
-  const [connect, sendMessage, close, sessionState, sessionId] = useSession({
-    onClose: onSocketClose,
-    onHealthCheckFailed,
-    onMessageReceived,
-    onNotify,
-    onOpen: onSocketOpen
-  });
-
-  useEffect(() => {
-    setSocketInitialized(sessionState === WebSocket.OPEN && sessionId);
-  }, [sessionId, sessionState]);
 
   const onMakeGatewayClick = () => {
     const code = getCode(canPreview);
@@ -243,7 +250,6 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
 
   const commandHandlers = isHosted && isEnterprise ? [{ key: 'thing', onClick: onMakeGatewayClick, title: 'Promote to Mender gateway' }] : [];
 
-  const duration = moment.duration(elapsed.diff(moment(startTime)));
   const visibilityToggle = !socketInitialized ? { maxHeight: 0, overflow: 'hidden' } : {};
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg">
@@ -266,7 +272,6 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
             onUpload={(...args) => dispatch(deviceFileUpload(...args))}
             setDownloadPath={setDownloadPath}
             setFile={setFile}
-            setSnackbar={dispatchedSetSnackbar}
             setUploadPath={setUploadPath}
             uploadPath={uploadPath}
             userCapabilities={userCapabilities}
@@ -278,7 +283,7 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
             items={{
               'Session status': socketInitialized ? 'connected' : 'disconnected',
               'Connection start': <MaybeTime value={startTime} />,
-              'Duration': `${duration.format('hh:mm:ss', { trim: false })}`
+              'Duration': startTime ? `${moment.duration(elapsed.diff(moment(startTime))).format('hh:mm:ss', { trim: false })}` : '-'
             }}
           />
           <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={onDrop} noClick>
@@ -287,7 +292,6 @@ export const TroubleshootDialog = ({ device, onCancel, open, setSocketClosed, ty
                 <Terminal
                   onDownloadClick={onDownloadClick}
                   sendMessage={sendMessage}
-                  sessionId={sessionId}
                   setSnackbar={dispatchedSetSnackbar}
                   socketInitialized={socketInitialized}
                   style={{ position: 'absolute', width: '100%', height: '100%', ...visibilityToggle }}

@@ -19,11 +19,11 @@ import Cookies from 'universal-cookie';
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
 import { cleanUp, logout } from '../auth';
+import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
 import * as AppConstants from '../constants/appConstants';
-import * as OnboardingConstants from '../constants/onboardingConstants';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
-import { getCurrentUser, getOnboardingState, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getCurrentUser, getOnboardingState, getTooltipsState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 import { commonErrorFallback, commonErrorHandler, initializeAppData, setOfflineThreshold, setSnackbar } from './appActions';
 
@@ -556,6 +556,23 @@ const transformRoleDataToRole = (roleData, roleState = {}) => {
   };
 };
 
+const roleActions = {
+  create: {
+    successMessage: 'The role was created successfully.',
+    errorMessage: 'creating'
+  },
+  edit: {
+    successMessage: 'The role has been updated.',
+    errorMessage: 'editing'
+  },
+  remove: {
+    successMessage: 'The role was deleted successfully.',
+    errorMessage: 'removing'
+  }
+};
+
+const roleActionErrorHandler = (err, type, dispatch) => commonErrorHandler(err, `There was an error ${roleActions[type].errorMessage} the role.`, dispatch);
+
 export const createRole = roleData => dispatch => {
   const { permissionSetsWithScope, role } = transformRoleDataToRole(roleData);
   return GeneralApi.post(`${useradmApiUrlv2}/roles`, {
@@ -563,8 +580,14 @@ export const createRole = roleData => dispatch => {
     description: role.description,
     permission_sets_with_scope: permissionSetsWithScope
   })
-    .then(() => Promise.all([dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
-    .catch(err => commonErrorHandler(err, `There was an error creating the role:`, dispatch));
+    .then(() =>
+      Promise.all([
+        dispatch({ type: UserConstants.CREATED_ROLE, role, roleId: role.name }),
+        dispatch(getRoles()),
+        dispatch(setSnackbar(roleActions.create.successMessage))
+      ])
+    )
+    .catch(err => roleActionErrorHandler(err, 'create', dispatch));
 };
 
 export const editRole = roleData => (dispatch, getState) => {
@@ -574,8 +597,14 @@ export const editRole = roleData => (dispatch, getState) => {
     name: role.name,
     permission_sets_with_scope: permissionSetsWithScope
   })
-    .then(() => Promise.all([dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }), dispatch(getRoles())]))
-    .catch(err => commonErrorHandler(err, `There was an error editing the role:`, dispatch));
+    .then(() =>
+      Promise.all([
+        dispatch({ type: UserConstants.UPDATED_ROLE, role, roleId: role.name }),
+        dispatch(getRoles()),
+        dispatch(setSnackbar(roleActions.edit.successMessage))
+      ])
+    )
+    .catch(err => roleActionErrorHandler(err, 'edit', dispatch));
 };
 
 export const removeRole = roleId => (dispatch, getState) =>
@@ -583,9 +612,13 @@ export const removeRole = roleId => (dispatch, getState) =>
     .then(() => {
       // eslint-disable-next-line no-unused-vars
       const { [roleId]: toBeRemoved, ...rolesById } = getState().users.rolesById;
-      return Promise.all([dispatch({ type: UserConstants.REMOVED_ROLE, value: rolesById }), dispatch(getRoles())]);
+      return Promise.all([
+        dispatch({ type: UserConstants.REMOVED_ROLE, value: rolesById }),
+        dispatch(getRoles()),
+        dispatch(setSnackbar(roleActions.remove.successMessage))
+      ]);
     })
-    .catch(err => commonErrorHandler(err, `There was an error removing the role:`, dispatch));
+    .catch(err => roleActionErrorHandler(err, 'remove', dispatch));
 
 /*
   Global settings
@@ -642,13 +675,16 @@ export const saveUserSettings =
     }
     return Promise.resolve(dispatch(getUserSettings())).then(result => {
       const userSettings = getUserSettingsSelector(getState());
+      const onboardingState = getOnboardingState(getState());
+      const tooltipState = getTooltipsState(getState());
       const updatedSettings = {
         ...userSettings,
         ...settings,
         onboarding: {
-          ...userSettings.onboarding,
+          ...onboardingState,
           ...settings.onboarding
-        }
+        },
+        tooltips: tooltipState
       };
       const headers = result[result.length - 1] ? { 'If-Match': result[result.length - 1] } : {};
       return Promise.all([
@@ -664,19 +700,6 @@ export const get2FAQRCode = () => dispatch =>
 /*
   Onboarding
 */
-export const setShowHelptips = show => (dispatch, getState) => {
-  let tasks = [dispatch({ type: UserConstants.SET_SHOW_HELP, show }), dispatch(saveUserSettings({ showHelptips: show }))];
-  if (!getOnboardingState(getState()).complete) {
-    tasks.push(dispatch({ type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show }));
-  }
-  return Promise.all(tasks);
-};
-
-export const toggleHelptips = () => (dispatch, getState) => {
-  const showHelptips = getUserSettingsSelector(getState()).showHelptips;
-  return Promise.resolve(dispatch(setShowHelptips(!showHelptips)));
-};
-
 export const setShowConnectingDialog = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: Boolean(show) });
 
 export const setHideAnnouncement = (shouldHide, userId) => (dispatch, getState) => {
@@ -711,3 +734,20 @@ export const generateToken =
 
 export const revokeToken = token => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/settings/tokens/${token.id}`).then(() => Promise.resolve(dispatch(getTokens())));
+
+export const setTooltipReadState =
+  (id, readState = UserConstants.READ_STATES.read, persist) =>
+  dispatch =>
+    Promise.resolve(dispatch({ type: UserConstants.SET_TOOLTIP_STATE, id, value: { readState } })).then(() => {
+      if (persist) {
+        return Promise.resolve(dispatch(saveUserSettings()));
+      }
+      return Promise.resolve();
+    });
+
+export const setAllTooltipsReadState =
+  (readState = UserConstants.READ_STATES.read) =>
+  dispatch => {
+    const updatedTips = Object.keys(HELPTOOLTIPS).reduce((accu, id) => ({ ...accu, [id]: { readState } }), {});
+    return Promise.resolve(dispatch({ type: UserConstants.SET_TOOLTIPS_STATE, value: updatedTips })).then(() => dispatch(saveUserSettings()));
+  };

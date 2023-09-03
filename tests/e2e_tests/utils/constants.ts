@@ -12,10 +12,13 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 export const selectors = {
+  deploymentCreation: 'text=/Create deployment/i',
+  deploymentListItem: '.deployment-item',
+  deploymentListItemContent: '.deployment-item:not(.deployment-header-item)',
   deviceGroupSelect: '#deployment-device-group-selection',
   deviceListCheckbox: '.deviceListItem input',
   email: '[name=email]',
-  loggedInText: 'text=/License information/i',
+  loggedInText: /License information/i,
   password: '[name=password]',
   passwordConfirmation: '[name=password_confirmation]',
   passwordCurrent: '[name=current_password]',
@@ -27,6 +30,7 @@ export const selectors = {
 
 const oneSecond = 1000;
 export const timeouts = {
+  oneSecond,
   default: 3 * oneSecond,
   fiveSeconds: 5 * oneSecond,
   tenSeconds: 10 * oneSecond,

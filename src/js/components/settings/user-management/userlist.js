@@ -74,6 +74,7 @@ const UserList = ({ editUser, isEnterprise, roles, users }) => {
         accu.push({ ...remainder, extras: { roles } });
         return accu;
       }, []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isEnterprise, JSON.stringify(roles)]
   );
   return <DetailsTable columns={columns} items={users} onItemClick={editUser} />;

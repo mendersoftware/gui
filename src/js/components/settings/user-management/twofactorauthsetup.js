@@ -53,7 +53,7 @@ export const TwoFactorAuthSetup = () => {
         .then(() => dispatch(enableUser2fa()))
         .then(() => dispatch(get2FAQRCode()));
     }
-  }, [activationCode]);
+  }, [activationCode, dispatch]);
 
   useEffect(() => {
     if (has2FA) {
@@ -61,25 +61,26 @@ export const TwoFactorAuthSetup = () => {
     }
   }, [has2FA]);
 
-  const handle2FAState = state => {
-    setIs2FAEnabled(state !== twoFAStates.disabled);
-    setQrExpanded(state === twoFAStates.unverified);
-    let request;
-    if (state === twoFAStates.disabled) {
-      request = dispatch(disableUser2fa());
-    } else if (state === twoFAStates.enabled && has2FA) {
-      request = Promise.resolve(setQrExpanded(false));
-    } else {
-      request = dispatch(enableUser2fa());
-    }
-    request.then(() => {
-      if (state === twoFAStates.unverified) {
-        dispatch(get2FAQRCode());
-      } else if (state === twoFAStates.enabled) {
-        setSnackbar('Two Factor authentication set up successfully.');
+  const handle2FAState = useCallback(
+    state => {
+      setIs2FAEnabled(state !== twoFAStates.disabled);
+      setQrExpanded(state === twoFAStates.unverified);
+      let request;
+      if (state === twoFAStates.disabled) {
+        request = dispatch(disableUser2fa());
+      } else {
+        request = dispatch(enableUser2fa());
       }
-    });
-  };
+      request.then(() => {
+        if (state === twoFAStates.unverified) {
+          dispatch(get2FAQRCode());
+        } else if (state === twoFAStates.enabled) {
+          setSnackbar('Two Factor authentication set up successfully.');
+        }
+      });
+    },
+    [dispatch]
+  );
 
   const onToggle2FAClick = useCallback(() => {
     if (!(currentUser.verified || currentUser.email?.endsWith('@example.com'))) {
@@ -94,7 +95,7 @@ export const TwoFactorAuthSetup = () => {
       setQrExpanded(!is2FAEnabled);
       setIs2FAEnabled(!is2FAEnabled);
     }
-  }, [currentUser.email, currentUser.verified, has2FA, is2FAEnabled, showEmailVerification]);
+  }, [currentUser.email, currentUser.verified, dispatch, handle2FAState, has2FA, is2FAEnabled, showEmailVerification]);
 
   return (
     <div className="margin-top">
@@ -113,7 +114,14 @@ export const TwoFactorAuthSetup = () => {
         />
       )}
       <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
-        <AuthSetup currentUser={currentUser} handle2FAState={handle2FAState} has2FA={has2FA} qrImage={qrImage} verify2FA={data => dispatch(verify2FA(data))} />
+        <AuthSetup
+          currentUser={currentUser}
+          handle2FAState={handle2FAState}
+          has2FA={has2FA}
+          qrImage={qrImage}
+          verify2FA={data => dispatch(verify2FA(data))}
+          onClose={() => setQrExpanded(false)}
+        />
       </Collapse>
     </div>
   );

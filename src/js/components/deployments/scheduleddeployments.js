@@ -35,7 +35,7 @@ import {
   getUserCapabilities
 } from '../../selectors';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
-import EnterpriseNotification from '../common/enterpriseNotification';
+import { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -86,10 +86,22 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
   const { scheduled: scheduledState } = useSelector(getDeploymentsSelectionState);
   const items = useSelector(state => getMappedDeploymentSelection(state, type));
   const dispatch = useDispatch();
-  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
   const { classes } = useStyles();
 
   const { page, perPage } = scheduledState;
+
+  const refreshDeployments = useCallback(() => {
+    return dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, page, perPage))
+      .then(deploymentsAction => {
+        clearRetryTimer(type, dispatchedSetSnackbar);
+        const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
+        if (total && !deploymentIds.length) {
+          return refreshDeployments();
+        }
+      })
+      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar));
+  }, [dispatch, dispatchedSetSnackbar, page, perPage]);
 
   useEffect(() => {
     if (!isEnterprise) {
@@ -99,7 +111,7 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
     return () => {
       clearAllRetryTimers(dispatchedSetSnackbar);
     };
-  }, [isEnterprise]);
+  }, [dispatchedSetSnackbar, isEnterprise, refreshDeployments]);
 
   useEffect(() => {
     if (!isEnterprise) {
@@ -110,7 +122,7 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
     return () => {
       clearInterval(timer.current);
     };
-  }, [isEnterprise, page, perPage]);
+  }, [isEnterprise, page, perPage, refreshDeployments]);
 
   useEffect(() => {
     if (tabIndex !== tabs.calendar.index) {
@@ -134,19 +146,8 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
       };
     });
     setCalendarEvents(calendarEvents);
-  }, [tabIndex]);
-
-  const refreshDeployments = useCallback(() => {
-    return dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, page, perPage))
-      .then(deploymentsAction => {
-        clearRetryTimer(type, dispatchedSetSnackbar);
-        const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
-        if (total && !deploymentIds.length) {
-          return refreshDeployments();
-        }
-      })
-      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar));
-  }, [page, perPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(items), tabIndex]);
 
   const abortDeployment = id => abort(id).then(refreshDeployments);
 
@@ -214,7 +215,7 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
             </>
           ) : (
             <div className="flexbox centered">
-              <EnterpriseNotification isEnterprise={isEnterprise} benefit="scheduled deployments to steer the distribution of your updates." />
+              <DefaultUpgradeNotification />
             </div>
           )}
           <RefreshIcon className={`flip-horizontal ${classes.refreshIcon}`} />

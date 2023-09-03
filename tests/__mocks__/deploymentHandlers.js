@@ -74,6 +74,10 @@ export const deploymentHandlers = [
   rest.get(`${deploymentsApiUrl}/deployments/:deploymentId`, ({ params: { deploymentId } }, res, ctx) => {
     if (deploymentId === createdDeployment.id) {
       return res(ctx.json(createdDeployment));
+    } else if (deploymentId === 'config1') {
+      return res(
+        ctx.json({ ...createdDeployment, id: 'config1', created: '2019-01-01T09:25:01.000Z', finished: '2019-01-01T09:25:03.000Z', status: 'finished' })
+      );
     }
     return res(ctx.json(deploymentId));
   }),

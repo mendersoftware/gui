@@ -1,4 +1,4 @@
-// Copyright 2020 Northern.tech AS
+// Copyright 2023 Northern.tech AS
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -11,18 +11,10 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { FileInformation } from './addartifact';
-
-export const ArtifactUploadConfirmation = ({ creation = {}, onRemove, updateCreation }) => {
-  const { file, type } = creation;
-
-  useEffect(() => {
-    updateCreation({ finalStep: true, isValid: true });
-  }, [updateCreation]);
-
-  return <FileInformation file={file} type={type} onRemove={onRemove} />;
+export const ClickFilter = ({ disabled = false, children }) => {
+  return disabled ? <div style={{ pointerEvents: 'none' }}>{children}</div> : <>{children}</>;
 };
 
-export default ArtifactUploadConfirmation;
+export default ClickFilter;

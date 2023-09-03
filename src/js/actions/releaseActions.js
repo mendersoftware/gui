@@ -18,7 +18,6 @@ import { commonErrorFallback, commonErrorHandler, setSnackbar } from '../actions
 import GeneralApi, { headerNames } from '../api/general-api';
 import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS, emptyFilter } from '../constants/deviceConstants';
-import { SET_ONBOARDING_ARTIFACT_INCLUDED } from '../constants/onboardingConstants';
 import * as ReleaseConstants from '../constants/releaseConstants';
 import { customSort, deepCompare, duplicateFilter, extractSoftwareItem } from '../helpers';
 import { deploymentsApiUrl } from './deploymentActions';
@@ -338,13 +337,11 @@ export const getReleases =
         const state = getState().releases;
         const flatReleases = reduceReceivedReleases(receivedReleases, state.byId);
         const combinedReleases = { ...state.byId, ...flatReleases };
-        let tasks = [dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases })];
-        if (!getState().onboarding.complete) {
-          tasks.push(dispatch({ type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!Object.keys(receivedReleases).length }));
-        }
         const releaseListState = deductSearchState(receivedReleases, config, total, state);
-        tasks.push(dispatch({ type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: releaseListState }));
-        return Promise.all(tasks);
+        return Promise.all([
+          dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: combinedReleases }),
+          dispatch({ type: ReleaseConstants.SET_RELEASES_LIST_STATE, value: releaseListState })
+        ]);
       })
       .catch(err => commonErrorHandler(err, `Please check your connection`, dispatch));
   };

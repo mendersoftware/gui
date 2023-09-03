@@ -75,29 +75,30 @@ const upgradeNotes = {
 export const Upgrade = () => {
   const offerValid = moment().isBefore('2021-01-01');
   const [addOns, setAddOns] = useState([]);
-  const [updatedPlan, setUpdatedPlan] = useState('os');
+  const [updatedPlan, setUpdatedPlan] = useState(PLANS.os.id);
   const [upgraded, setUpgraded] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const features = useSelector(getFeatures);
   const org = useSelector(getOrganization);
+  const { addons: orgAddOns = [], plan: currentPlan = PLANS.os.id, trial: isTrial = true } = org;
 
   useEffect(() => {
     dispatch(getUserOrganization());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    const { addons: orgAddOns = [], plan: orgPlan = 'os', trial = false } = org;
     const currentAddOns = orgAddOns.reduce((accu, addon) => {
       if (addon.enabled) {
         accu.push(addon);
       }
       return accu;
     }, []);
-    const plan = Object.values(PLANS).find(plan => plan.value === (trial ? 'os' : orgPlan));
+    const plan = Object.values(PLANS).find(plan => plan.id === (isTrial ? PLANS.os.id : currentPlan));
     setAddOns(currentAddOns);
-    setUpdatedPlan(plan.value);
-  }, [org]);
+    setUpdatedPlan(plan.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPlan, isTrial, JSON.stringify(orgAddOns)]);
 
   if (upgraded) {
     return <PostUpgradeNote newPlan={PLANS[updatedPlan].name} />;
@@ -125,7 +126,7 @@ export const Upgrade = () => {
   const onSendRequest = (message, addons = addOns) =>
     dispatch(
       requestPlanChange(org.id, {
-        current_plan: PLANS[org.plan || 'os'].name,
+        current_plan: PLANS[org.plan || PLANS.os.id].name,
         requested_plan: PLANS[updatedPlan].name,
         current_addons: addOnsToString(org.addons) || '-',
         requested_addons: addOnsToString(addons) || '-',
@@ -133,7 +134,6 @@ export const Upgrade = () => {
       })
     );
 
-  const { plan: currentPlan = 'os', trial: isTrial = true } = org;
   const { description, title } = isTrial ? upgradeNotes.trial : upgradeNotes.default;
   return (
     <div style={{ maxWidth: 750 }} className="margin-top-small">
@@ -165,7 +165,7 @@ export const Upgrade = () => {
         </p>
       )}
       {isTrial ? <PricingContactNote /> : <AddOnSelection addons={addOns} features={features} updatedPlan={updatedPlan} onChange={setAddOns} />}
-      {isTrial && updatedPlan !== PLANS.enterprise.value && (
+      {isTrial && updatedPlan !== PLANS.enterprise.id && (
         <>
           <h3 className="margin-top-large">2. Enter your payment details</h3>
           <p>
@@ -184,7 +184,7 @@ export const Upgrade = () => {
           />
         </>
       )}
-      {(!isTrial || updatedPlan === PLANS.enterprise.value) && (
+      {(!isTrial || updatedPlan === PLANS.enterprise.id) && (
         <QuoteRequestForm addOns={addOns} currentPlan={currentPlan} isTrial={isTrial} updatedPlan={updatedPlan} onSendMessage={onSendRequest} />
       )}
     </div>

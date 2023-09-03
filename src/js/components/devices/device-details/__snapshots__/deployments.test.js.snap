@@ -1021,7 +1021,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-31:focus::-ms-input-
             class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-17"
           >
             <a
-              href="/deployments/undefined?id=undefined&open=true"
+              href="/deployments/undefined?id=someId&open=true"
             >
               ALL THE DEVICES
             </a>
@@ -1059,7 +1059,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-31:focus::-ms-input-
           >
             <a
               class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
-              href="http://localhost/api/management/v1/deployments/deployments/undefined/devices/somne-id/log"
+              href="http://localhost/api/management/v1/deployments/deployments/someId/devices/somne-id/log"
               tabindex="0"
               target="_blank"
             >

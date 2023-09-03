@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -33,9 +33,10 @@ import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
 import { getAllDeviceCounts } from '../../actions/deviceActions';
-import { initializeSelf, logoutUser, setHideAnnouncement, toggleHelptips } from '../../actions/userActions';
+import { initializeSelf, logoutUser, setAllTooltipsReadState, setHideAnnouncement } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
+import { READ_STATES } from '../../constants/userConstants';
 import { decodeSessionToken, isDarkMode } from '../../helpers';
 import {
   getAcceptedDevices,
@@ -45,7 +46,7 @@ import {
   getFeatures,
   getIsEnterprise,
   getOrganization,
-  getShowHelptips,
+  getTooltipsById,
   getUserCapabilities,
   getUserSettings
 } from '../../selectors';
@@ -121,11 +122,22 @@ export const Header = ({ mode }) => {
   const { isDemoMode: demo, hasMultitenancy, isHosted } = useSelector(getFeatures);
   const { isSearching, searchTerm, refreshTrigger } = useSelector(state => state.app.searchState);
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
-  const showHelptips = useSelector(getShowHelptips);
+  const tooltips = useSelector(getTooltipsById);
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
   const dispatch = useDispatch();
   const deviceTimer = useRef();
+  const showHelptips = Object.values(tooltips).reduce((accu, { readState }) => accu || readState === READ_STATES.unread, false);
+
+  const updateUsername = useCallback(() => {
+    const userId = decodeSessionToken(getToken());
+    if (gettingUser || !userId) {
+      return;
+    }
+    setGettingUser(true);
+    // get current user
+    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
+  }, [dispatch, gettingUser]);
 
   useEffect(() => {
     if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
@@ -140,7 +152,7 @@ export const Header = ({ mode }) => {
         dispatch(setFirstLoginAfterSignup(false));
       }
     }
-  }, [sessionId, user.id, user.email, gettingUser, loggingOut]);
+  }, [sessionId, user.id, user.email, gettingUser, loggingOut, user, hasTrackingEnabled, organization, updateUsername, firstLoginAfterSignup, dispatch]);
 
   useEffect(() => {
     const showOfferCookie = cookies.get('offer') === currentOffer.name;
@@ -150,17 +162,7 @@ export const Header = ({ mode }) => {
     return () => {
       clearInterval(deviceTimer.current);
     };
-  }, []);
-
-  const updateUsername = () => {
-    const userId = decodeSessionToken(getToken());
-    if (gettingUser || !userId) {
-      return;
-    }
-    setGettingUser(true);
-    // get current user
-    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
-  };
+  }, [dispatch]);
 
   const onLogoutClick = () => {
     setGettingUser(false);
@@ -169,7 +171,9 @@ export const Header = ({ mode }) => {
     dispatch(logoutUser());
   };
 
-  const onSearch = searchTerm => dispatch(setSearchState({ refreshTrigger: !refreshTrigger, searchTerm, page: 1 }));
+  const onSearch = useCallback((searchTerm, refreshTrigger) => dispatch(setSearchState({ refreshTrigger, searchTerm, page: 1 })), [dispatch]);
+
+  const onToggleTooltips = () => dispatch(setAllTooltipsReadState(showHelptips ? READ_STATES.read : READ_STATES.unread));
 
   const setHideOffer = () => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
@@ -207,7 +211,7 @@ export const Header = ({ mode }) => {
             />
           )}
         </div>
-        <Search isSearching={isSearching} searchTerm={searchTerm} onSearch={onSearch} />
+        <Search isSearching={isSearching} searchTerm={searchTerm} onSearch={onSearch} trigger={refreshTrigger} />
         <div className="flexbox center-aligned">
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
@@ -248,7 +252,7 @@ export const Header = ({ mode }) => {
                 User management
               </MenuItem>
             )}
-            <MenuItem onClick={() => dispatch(toggleHelptips())}>{showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+            <MenuItem onClick={onToggleTooltips}>{`Mark help tips as ${showHelptips ? '' : 'un'}read`}</MenuItem>
             <MenuItem component={Link} to="/help/get-started">
               Help & support
             </MenuItem>

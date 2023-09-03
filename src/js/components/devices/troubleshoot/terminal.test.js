@@ -41,7 +41,7 @@ describe('Terminal Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(<Terminal xtermRef={{ current: { terminal: undefined, terminalRef: {} } }} />);
+    const { baseElement } = render(<Terminal xtermRef={{ current: { terminal: {}, terminalRef: {} } }} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

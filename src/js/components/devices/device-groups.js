@@ -20,11 +20,10 @@ import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 import pluralize from 'pluralize';
 
-import { setOfflineThreshold, setSnackbar } from '../../actions/appActions';
+import { setOfflineThreshold } from '../../actions/appActions';
 import {
   addDynamicGroup,
   addStaticGroup,
-  preauthDevice,
   removeDevicesFromGroup,
   removeDynamicGroup,
   removeStaticGroup,
@@ -36,6 +35,7 @@ import {
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
+import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle } from '../../helpers';
 import {
   getAcceptedDevices,
@@ -47,13 +47,14 @@ import {
   getIsEnterprise,
   getIsPreview,
   getLimitMaxed,
+  getOnboardingState,
   getSelectedGroupInfo,
-  getShowHelptips,
   getSortedFilteringAttributes,
   getTenantCapabilities,
   getUserCapabilities
 } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Global from '../settings/global';
 import AuthorizedDevices from './authorized-devices';
 import DeviceStatusNotification from './devicestatusnotification';
@@ -74,7 +75,7 @@ export const DeviceGroups = () => {
   const [showMakeGateway, setShowMakeGateway] = useState(false);
   const [removeGroup, setRemoveGroup] = useState(false);
   const [tmpDevices, setTmpDevices] = useState([]);
-  const deviceTimer = useRef();
+  const deviceConnectionRef = useRef();
   const { status: statusParam } = useParams();
 
   const { groupCount, selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
@@ -94,9 +95,10 @@ export const DeviceGroups = () => {
   const limitMaxed = useSelector(getLimitMaxed);
   const { pending: pendingCount } = useSelector(getDeviceCountsByStatus);
   const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
-  const showHelptips = useSelector(getShowHelptips);
+  const onboardingState = useSelector(getOnboardingState);
   const isEnterprise = useSelector(getIsEnterprise);
   const dispatch = useDispatch();
+  const isInitialized = useRef(false);
 
   const [locationParams, setLocationParams] = useLocationParams('devices', {
     filteringAttributes,
@@ -107,35 +109,25 @@ export const DeviceGroups = () => {
   const { refreshTrigger, selectedId, state: selectedState } = deviceListState;
 
   useEffect(() => {
-    if (!deviceTimer.current) {
+    if (!isInitialized.current) {
       return;
     }
     setLocationParams({ pageState: deviceListState, filters, selectedGroup });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     deviceListState.detailsTab,
     deviceListState.page,
     deviceListState.perPage,
     deviceListState.selectedIssues,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(deviceListState.sort),
+    refreshTrigger,
     selectedId,
     filters,
     selectedGroup,
-    selectedState
+    selectedState,
+    setLocationParams
   ]);
-
-  useEffect(() => {
-    if (locationParams.groupName) {
-      dispatch(selectGroup(locationParams.groupName));
-    }
-    let listState = { setOnly: true };
-    if (locationParams.open && locationParams.id.length) {
-      listState = { ...listState, selectedId: locationParams.id[0], detailsTab: locationParams.detailsTab };
-    }
-    if (!locationParams.id?.length && selectedId) {
-      listState = { ...listState, detailsTab: 'identity' };
-    }
-    dispatch(setDeviceListState(listState));
-  }, [locationParams.detailsTab, locationParams.groupName, JSON.stringify(locationParams.id), locationParams.open]);
 
   useEffect(() => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
@@ -145,16 +137,25 @@ export const DeviceGroups = () => {
     } else if (filters.length) {
       dispatch(setDeviceFilters(filters));
     }
-    const state = statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam) ? statusParam : selectedState;
-    let listState = { ...remainder, state, refreshTrigger: !refreshTrigger };
+    let listState = { ...remainder };
+    if (statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam)) {
+      listState.state = statusParam;
+    }
     if (id.length === 1 && Boolean(locationParams.open)) {
       listState.selectedId = id[0];
     } else if (id.length && hasFullFiltering) {
       dispatch(setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]));
     }
-    dispatch(setDeviceListState(listState));
-    dispatch(setOfflineThreshold());
-  }, []);
+    dispatch(setDeviceListState(listState)).then(() => {
+      if (isInitialized.current) {
+        return;
+      }
+      isInitialized.current = true;
+      dispatch(setDeviceListState({}, true, true));
+      dispatch(setOfflineThreshold());
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(tenantCapabilities), JSON.stringify(locationParams), statusParam]);
 
   /*
    * Groups
@@ -235,11 +236,23 @@ export const DeviceGroups = () => {
 
   const toggleMakeGatewayClick = () => setShowMakeGateway(toggle);
 
+  let onboardingComponent;
+  if (deviceConnectionRef.current && !(pendingCount || acceptedCount)) {
+    const anchor = { top: deviceConnectionRef.current.offsetTop + deviceConnectionRef.current.offsetHeight / 2, left: deviceConnectionRef.current.offsetLeft };
+    onboardingComponent = getOnboardingComponentFor(
+      onboardingSteps.DEVICES_DELAYED_ONBOARDING,
+      onboardingState,
+      { anchor, place: 'left' },
+      onboardingComponent
+    );
+  }
   return (
     <>
-      <div className="tab-container with-sub-panels margin-bottom-small" style={{ padding: 0, minHeight: 'initial' }}>
-        <h3 style={{ marginBottom: 0 }}>Devices</h3>
-        <div className="flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small">
+      <div className="tab-container with-sub-panels" style={{ paddingTop: 0, paddingBottom: 45, minHeight: 'max-content', alignContent: 'center' }}>
+        <h3 className="flexbox center-aligned" style={{ marginBottom: 0, marginTop: 0, flexWrap: 'wrap' }}>
+          Devices
+        </h3>
+        <span className="flexbox space-between margin-left-large margin-right center-aligned padding-top-small">
           {hasReporting && !!authRequestCount && (
             <a className="flexbox center-aligned margin-right-large" onClick={onShowAuthRequestDevicesClick}>
               <AddIcon fontSize="small" style={{ marginRight: 6 }} />
@@ -258,9 +271,11 @@ export const DeviceGroups = () => {
               onMakeGatewayClick={toggleMakeGatewayClick}
               onPreauthClick={setOpenPreauth}
               tenantCapabilities={tenantCapabilities}
+              innerRef={deviceConnectionRef}
             />
           )}
-        </div>
+          {onboardingComponent}
+        </span>
       </div>
       <div className="tab-container with-sub-panels" style={{ padding: 0, height: '100%' }}>
         <Groups
@@ -270,7 +285,6 @@ export const DeviceGroups = () => {
           groups={groupsByType}
           openGroupDialog={setCreateGroupExplanation}
           selectedGroup={selectedGroup}
-          showHelptips={showHelptips}
         />
         <div className="rightFluid relative" style={{ paddingTop: 0 }}>
           {limitMaxed && <DeviceLimitWarning acceptedDevices={acceptedCount} deviceLimit={deviceLimit} />}
@@ -309,10 +323,8 @@ export const DeviceGroups = () => {
             acceptedDevices={acceptedCount}
             deviceLimit={deviceLimit}
             limitMaxed={limitMaxed}
-            preauthDevice={authset => dispatch(preauthDevice(authset))}
             onSubmit={onPreauthSaved}
             onCancel={() => setOpenPreauth(false)}
-            setSnackbar={message => dispatch(setSnackbar(message))}
           />
         )}
         {showMakeGateway && <MakeGatewayDialog isPreRelease={canPreview} onCancel={toggleMakeGatewayClick} />}

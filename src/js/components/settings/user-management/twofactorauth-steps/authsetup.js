@@ -21,12 +21,24 @@ import Form from '../../../common/forms/form';
 import TextInput from '../../../common/forms/textinput';
 import Loader from '../../../common/loader';
 
-export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify2FA }) => {
+export const AuthSetup = ({ currentUser, handle2FAState, has2FA, onClose, qrImage, verify2FA }) => {
   const current2FA = useRef(has2FA);
   const [validated2fa, setValidated2fa] = useState(false);
   const [validating2fa, setValidating2fa] = useState(false);
 
   useEffect(() => {
+    current2FA.current = has2FA;
+  }, [has2FA]);
+
+  useEffect(() => {
+    const onUnload = e => {
+      if (!e || (validated2fa && current2FA.current) || !qrImage) {
+        return;
+      }
+      e.returnValue = '2fa setup incomplete';
+      return e.returnValue;
+    };
+
     window.addEventListener('beforeunload', onUnload);
     return () => {
       if (!current2FA.current && qrImage) {
@@ -34,19 +46,7 @@ export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify
       }
       window.removeEventListener('beforeunload', onUnload);
     };
-  }, []);
-
-  useEffect(() => {
-    current2FA.current = has2FA;
-  }, [has2FA]);
-
-  const onUnload = e => {
-    if (!e || (validated2fa && has2FA) || !qrImage) {
-      return;
-    }
-    e.returnValue = '2fa setup incomplete';
-    return e.returnValue;
-  };
+  }, [handle2FAState, qrImage, validated2fa]);
 
   const validate2faSetup = formData => {
     setValidating2fa(true);
@@ -109,7 +109,7 @@ export const AuthSetup = ({ currentUser, handle2FAState, has2FA, qrImage, verify
         <Button onClick={() => handle2FAState(twoFAStates.disabled)} style={{ marginRight: 10 }}>
           Cancel
         </Button>
-        <Button variant="contained" color="secondary" disabled={!validated2fa} onClick={() => handle2FAState(twoFAStates.enabled)}>
+        <Button variant="contained" color="secondary" disabled={!validated2fa} onClick={onClose}>
           Save
         </Button>
       </div>

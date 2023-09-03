@@ -323,7 +323,6 @@ export const defaultState = {
     progress: undefined,
     complete: false,
     demoArtifactPort: 85,
-    showCreateArtifactDialog: false,
     showConnectDeviceDialog: false,
     showTipsDialog: false
   },
@@ -518,7 +517,7 @@ export const defaultState = {
       }
     },
     settingsInitialized: true,
-    userSettings: { columnSelection: [], onboarding: { something: 'here' } }
+    userSettings: { columnSelection: [], onboarding: { something: 'here' }, tooltips: {} }
   }
 };
 

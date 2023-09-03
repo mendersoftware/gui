@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { createRef, useEffect, useRef, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 
 import { Clear as ClearIcon, Add as ContentAddIcon } from '@mui/icons-material';
 import { Fab, FormControl, FormHelperText, IconButton, Input } from '@mui/material';
@@ -19,20 +19,18 @@ import { useTheme } from '@mui/material/styles';
 
 const emptyInput = { helptip: null, key: '', value: '' };
 
-export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsMap = {}, onInputChange, reset, showHelptips }) => {
+export const KeyValueEditor = ({ disabled, errortext, initialInput = {}, inputHelpTipsMap = {}, onInputChange, reset }) => {
   const theme = useTheme();
   const [inputs, setInputs] = useState([{ ...emptyInput }]);
   const [error, setError] = useState('');
-  // need to useRef here to get positioning of
-  let inputRefs = useRef([]);
 
   useEffect(() => {
-    const newInputs = Object.keys(input).length
-      ? Object.entries(input).map(([key, value]) => ({ helptip: inputHelpTipsMap[key.toLowerCase()], key, ref: createRef(), value }))
+    const newInputs = Object.keys(initialInput).length
+      ? Object.entries(initialInput).map(([key, value]) => ({ helptip: inputHelpTipsMap[key.toLowerCase()], key, ref: createRef(), value }))
       : [{ ...emptyInput, ref: createRef() }];
-    inputRefs.current = newInputs.map((_, i) => inputRefs.current[i] ?? createRef());
     setInputs(newInputs);
-  }, [reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialInput), JSON.stringify(inputHelpTipsMap), reset]);
 
   const onClearClick = () => {
     const changedInputs = [{ ...emptyInput }];
@@ -66,7 +64,6 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
 
   const addKeyValue = () => {
     const changedInputs = [...inputs, { ...emptyInput, ref: createRef() }];
-    inputRefs.current = changedInputs.map((_, i) => inputRefs.current[i] ?? createRef());
     setInputs(changedInputs);
     setError('');
   };
@@ -74,18 +71,10 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
   const removeInput = index => {
     let changedInputs = [...inputs];
     changedInputs.splice(index, 1);
-    inputRefs.current = changedInputs.map((_, i) => inputRefs.current[i] ?? createRef());
     setInputs(changedInputs);
     const inputObject = reducePairs(changedInputs);
     onInputChange(inputObject);
     setError('');
-  };
-
-  const getHelptipPosition = ref => {
-    const { offsetHeight, offsetLeft, offsetTop } = ref.current.closest('.key-value-container');
-    const top = offsetTop + offsetHeight / 3;
-    const left = offsetLeft - 15;
-    return { left, top };
   };
 
   return (
@@ -94,24 +83,23 @@ export const KeyValueEditor = ({ disabled, errortext, input = {}, inputHelpTipsM
         const hasError = Boolean(index === inputs.length - 1 && (errortext || error));
         const hasRemovalDisabled = !(inputs[index].key && inputs[index].value);
         const Helptip = inputs[index].helptip?.component;
-        const ref = inputRefs.current[index];
         return (
           <div className="key-value-container relative" key={index}>
             <FormControl>
-              <Input value={input.key} placeholder="Key" inputRef={ref} onChange={e => updateInputs('key', index, e)} type="text" />
+              <Input disabled={disabled} value={input.key} placeholder="Key" onChange={e => updateInputs('key', index, e)} type="text" />
               {hasError && <FormHelperText>{errortext || error}</FormHelperText>}
             </FormControl>
             <FormControl>
-              <Input value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
+              <Input disabled={disabled} value={`${input.value}`} placeholder="Value" onChange={e => updateInputs('value', index, e)} type="text" />
             </FormControl>
             {inputs.length > 1 && !hasRemovalDisabled ? (
-              <IconButton disabled={disabled || hasRemovalDisabled} onClick={() => removeInput(index)} size="large">
+              <IconButton disabled={disabled} onClick={() => removeInput(index)} size="large">
                 <ClearIcon fontSize="small" />
               </IconButton>
             ) : (
               <span />
             )}
-            {showHelptips && Helptip && ref.current && <Helptip anchor={getHelptipPosition(ref)} {...inputs[index].helptip.props} />}
+            {Helptip && <Helptip anchor={{ left: -35, top: 5 }} {...inputs[index].helptip.props} />}
           </div>
         );
       })}

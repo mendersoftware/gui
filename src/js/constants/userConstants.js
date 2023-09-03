@@ -389,6 +389,8 @@ export const SET_GLOBAL_SETTINGS = 'SET_GLOBAL_SETTINGS';
 export const SET_USER_SETTINGS = 'SET_USER_SETTINGS';
 export const SET_SHOW_HELP = 'SET_SHOW_HELP';
 export const SET_SHOW_CONNECT_DEVICE = 'SET_SHOW_CONNECT_DEVICE';
+export const SET_TOOLTIP_STATE = 'SET_TOOLTIP_STATE';
+export const SET_TOOLTIPS_STATE = 'SET_TOOLTIPS_STATE';
 
 export const OWN_USER_ID = 'me';
 
@@ -404,3 +406,9 @@ export const twoFAStates = {
   unverified: 'unverified'
 };
 export const settingsKeys = { initialized: 'settings-initialized' };
+
+export const READ_STATES = {
+  read: 'read',
+  seen: 'seen',
+  unread: 'unread'
+};

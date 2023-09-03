@@ -60,10 +60,11 @@ export const Webhooks = ({ webhook = { ...emptyWebhook } }) => {
 
   useEffect(() => {
     dispatch(getIntegrations());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setSelectedWebhook(webhook);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(webhook)]);
 
   const onEdit = item => {
@@ -98,6 +99,7 @@ export const Webhooks = ({ webhook = { ...emptyWebhook } }) => {
       return accu;
     }, []);
     return { mappedWebhooks, relevantColumns };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(webhooks)]);
 
   return (

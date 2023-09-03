@@ -37,7 +37,7 @@ import pluralize from 'pluralize';
 
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { createDeployment, getDeploymentsConfig } from '../../actions/deploymentActions';
-import { getGroupDevices, getSystemDevices } from '../../actions/deviceActions';
+import { getGroupDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { getReleases } from '../../actions/releaseActions';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
@@ -77,10 +77,9 @@ const useStyles = makeStyles()(theme => ({
     }
   },
   columns: {
-    alignItems: 'start',
     columnGap: 30,
     display: 'grid',
-    gridTemplateColumns: 'max-content 1fr',
+    gridTemplateColumns: 'max-content max-content',
     '&>p': {
       marginTop: theme.spacing(3)
     }
@@ -105,7 +104,7 @@ export const getPhaseStartTime = (phases, index, startDate) => {
 };
 
 export const CreateDeployment = props => {
-  const { deploymentObject = {}, onDismiss, onScheduleSubmit, open = true, setDeploymentObject } = props;
+  const { deploymentObject = {}, onDismiss, onScheduleSubmit, open = true, setDeploymentSettings } = props;
 
   const { canRetry, canSchedule, hasFullFiltering } = useSelector(getTenantCapabilities);
   const { createdGroup, groups, hasDynamicGroups } = useSelector(state => {
@@ -131,7 +130,6 @@ export const CreateDeployment = props => {
   const dispatch = useDispatch();
 
   const isCreating = useRef(false);
-  const [releaseSelectionLocked, setReleaseSelectionLocked] = useState(Boolean(deploymentObject.release));
   const [hasNewRetryDefault, setHasNewRetryDefault] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -144,32 +142,27 @@ export const CreateDeployment = props => {
   useEffect(() => {
     dispatch(getReleases({ page: 1, perPage: 100, searchOnly: true }));
     dispatch(getDeploymentsConfig());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const { devices = [], group, release } = deploymentObject;
     if (release) {
-      setReleaseSelectionLocked(Boolean(deploymentObject.release));
       dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION));
     }
-    if (!group) {
-      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: devices.length ? devices.length : 0 });
-      return;
-    }
     dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION));
+    let nextDeploymentObject = { deploymentDeviceCount: devices.length ? devices.length : 0 };
     if (group === ALL_DEVICES) {
       dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_ALL_DEVICES_SELECTION));
-      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: acceptedDeviceCount });
-      return;
+      nextDeploymentObject.deploymentDeviceCount = acceptedDeviceCount;
     }
-    if (!groups[group]) {
-      setDeploymentObject({ ...deploymentObject, deploymentDeviceCount: devices.length ? devices.length : 0 });
-      return;
+    if (groups[group]) {
+      return dispatch(getGroupDevices(group, { perPage: 1 })).then(({ group: { total: deploymentDeviceCount } }) =>
+        setDeploymentSettings({ deploymentDeviceCount })
+      );
     }
-    dispatch(getGroupDevices(group, { perPage: 1 })).then(({ group: { total: deploymentDeviceCount } }) =>
-      setDeploymentObject(deploymentObject => ({ ...deploymentObject, deploymentDeviceCount }))
-    );
-  }, [deploymentObject.group, deploymentObject.release]);
+    setDeploymentSettings(nextDeploymentObject);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [acceptedDeviceCount, deploymentObject.group, deploymentObject.release?.Name, dispatch, JSON.stringify(groups), setDeploymentSettings]);
 
   useEffect(() => {
     let { deploymentDeviceCount: deviceCount, deploymentDeviceIds: deviceIds = [], devices = [] } = deploymentObject;
@@ -180,8 +173,9 @@ export const CreateDeployment = props => {
     } else if (deploymentObject.group === ALL_DEVICES) {
       deviceCount = acceptedDeviceCount;
     }
-    setDeploymentObject({ ...deploymentObject, deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount, devices });
-  }, [JSON.stringify(deploymentObject), devicesById]);
+    setDeploymentSettings({ deploymentDeviceIds: deviceIds, deploymentDeviceCount: deviceCount, devices });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [acceptedDeviceCount, JSON.stringify(deploymentObject), JSON.stringify(devicesById), setDeploymentSettings]);
 
   const cleanUpDeploymentsStatus = () => {
     if (!window.location.search) {
@@ -192,8 +186,6 @@ export const CreateDeployment = props => {
   };
 
   const onSaveRetriesSetting = hasNewRetryDefault => setHasNewRetryDefault(hasNewRetryDefault);
-
-  const setDeploymentSettings = change => setDeploymentObject(current => ({ ...current, ...change }));
 
   const closeWizard = () => {
     cleanUpDeploymentsStatus();
@@ -256,12 +248,10 @@ export const CreateDeployment = props => {
 
   const sharedProps = {
     ...props,
-    getSystemDevices: (...args) => dispatch(getSystemDevices(...args)),
     canRetry,
     canSchedule,
     docsVersion,
     groupNames,
-    getReleases: (...args) => dispatch(getReleases(...args)),
     groupRef,
     groups,
     hasDevices,
@@ -280,7 +270,6 @@ export const CreateDeployment = props => {
     hasNewRetryDefault,
     onSaveRetriesSetting,
     open: false,
-    releaseSelectionLocked,
     setDeploymentSettings
   };
   const hasReleases = !!Object.keys(releasesById).length;

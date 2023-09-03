@@ -25,7 +25,6 @@ import {
   setOnboardingCanceled,
   setOnboardingComplete,
   setOnboardingDeviceType,
-  setShowCreateArtifactDialog,
   setShowDismissOnboardingTipsDialog,
   setShowOnboardingHelp
 } from './onboardingActions';
@@ -33,39 +32,43 @@ import {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const defaultOnboardingState = {
+export const defaultOnboardingState = {
   approach: null,
-  artifactIncluded: null,
+  complete: false,
   demoArtifactPort: 85,
   deviceType: null,
+  progress: undefined,
   showConnectDeviceDialog: false,
   showTips: null,
+  showTipsDialog: false,
   something: 'here'
 };
 
 export const expectedOnboardingActions = [
   { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: false },
-  { type: OnboardingConstants.SET_ONBOARDING_DEVICE_TYPE, value: ['raspberrypi4'] },
-  { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' },
-  { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: null },
-  { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
-  { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'application-update-reminder-tip' },
-  { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false },
+  {
+    type: OnboardingConstants.SET_ONBOARDING_STATE,
+    value: {
+      ...defaultOnboardingState,
+      address: 'http://192.168.10.141:85',
+      approach: 'physical',
+      deviceType: ['raspberrypi4'],
+      progress: 'devices-accepted-onboarding',
+      showTips: true
+    }
+  },
   { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
   {
     type: UserConstants.SET_USER_SETTINGS,
     settings: {
       ...defaultState.users.userSettings,
       onboarding: {
+        ...defaultOnboardingState,
         address: 'http://192.168.10.141:85',
         approach: 'physical',
-        artifactIncluded: null,
-        complete: false,
         deviceType: ['raspberrypi4'],
-        progress: 'application-update-reminder-tip',
-        showArtifactCreation: false,
-        showTips: true,
-        something: 'here'
+        progress: 'devices-accepted-onboarding',
+        showTips: true
       }
     }
   }
@@ -78,7 +81,7 @@ describe('onboarding actions', () => {
     const expectedActions = [
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
-      { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-finished-notification' },
+      { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: OnboardingConstants.onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE },
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
         type: UserConstants.SET_USER_SETTINGS,
@@ -87,7 +90,7 @@ describe('onboarding actions', () => {
           onboarding: {
             ...defaultOnboardingState,
             complete: true,
-            progress: 'onboarding-finished-notification'
+            progress: OnboardingConstants.onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE
           }
         }
       }
@@ -104,7 +107,13 @@ describe('onboarding actions', () => {
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
         type: UserConstants.SET_USER_SETTINGS,
-        settings: { ...defaultState.users.userSettings, onboarding: { approach: 'test', something: 'here' } }
+        settings: {
+          ...defaultState.users.userSettings,
+          onboarding: {
+            ...defaultOnboardingState,
+            approach: 'test'
+          }
+        }
       }
     ];
     const storeActions = store.getActions();
@@ -125,21 +134,11 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.userSettings,
           columnSelection: [],
-          onboarding: { deviceType: 'testtype', something: 'here' }
+          onboarding: {
+            ...defaultOnboardingState,
+            deviceType: 'testtype'
+          }
         }
-      }
-    ];
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => Object.keys(action).map(key => expect(storeActions[index][key]).toEqual(action[key])));
-  });
-  it('should pass on onboarding artifact creation dialog', async () => {
-    const store = mockStore({ ...defaultState });
-    await store.dispatch(setShowCreateArtifactDialog(true));
-    const expectedActions = [
-      {
-        type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT,
-        show: true
       }
     ];
     const storeActions = store.getActions();
@@ -164,14 +163,13 @@ describe('onboarding actions', () => {
     await store.dispatch(setShowOnboardingHelp(true));
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true },
-      { type: UserConstants.SET_SHOW_HELP, show: true },
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
         type: UserConstants.SET_USER_SETTINGS,
         settings: {
           ...defaultState.users.userSettings,
           columnSelection: [],
-          onboarding: { something: 'here', showTips: true },
+          onboarding: { ...defaultOnboardingState, showTips: true },
           showHelptips: true
         }
       }
@@ -190,12 +188,11 @@ describe('onboarding actions', () => {
       {
         type: UserConstants.SET_USER_SETTINGS,
         settings: {
+          ...defaultState.users.userSettings,
           columnSelection: [],
           onboarding: {
             ...defaultOnboardingState,
-            complete: false,
-            progress: stepNames[1],
-            something: 'here'
+            progress: stepNames[1]
           }
         }
       }
@@ -209,19 +206,8 @@ describe('onboarding actions', () => {
     await store.dispatch(setOnboardingCanceled());
     const expectedActions = [
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false },
-      { type: UserConstants.SET_SHOW_HELP, show: false },
       { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP_DIALOG, show: false },
       { type: OnboardingConstants.SET_ONBOARDING_COMPLETE, complete: true },
-      { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      {
-        type: UserConstants.SET_USER_SETTINGS,
-        settings: {
-          ...defaultState.users.userSettings,
-          columnSelection: [],
-          onboarding: { showTips: false, something: 'here' },
-          showHelptips: false
-        }
-      },
       { type: OnboardingConstants.SET_ONBOARDING_PROGRESS, value: 'onboarding-canceled' },
       { type: UserConstants.SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       {
@@ -236,6 +222,7 @@ describe('onboarding actions', () => {
           }
         }
       }
+      // { type: UserConstants.SET_SHOW_HELP, show: false }
     ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

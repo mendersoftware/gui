@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
@@ -35,7 +35,7 @@ import {
 } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import DocsLink from '../common/docslink';
-import InfoHint from '../common/info-hint';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import ArtifactGenerationSettings from './artifactgeneration';
 import ReportingLimits from './reportinglimits';
 
@@ -53,7 +53,7 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const IdAttributeSelection = ({ attributes, dialog, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
+export const IdAttributeSelection = ({ attributes, dialog = false, onCloseClick, onSaveClick, selectedAttribute = '' }) => {
   const [attributeSelection, setAttributeSelection] = useState('name');
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export const GlobalSettingsDialog = ({
       return;
     }
     saveGlobalSettings({ offlineThreshold: { interval: debouncedInterval, intervalUnit: debouncedIntervalUnit } }, false, true);
-  }, [debouncedInterval, debouncedIntervalUnit]);
+  }, [debouncedInterval, debouncedIntervalUnit, saveGlobalSettings]);
 
   useEffect(() => {
     const initTimer = setTimeout(() => (timer.current = true), TIMEOUTS.threeSeconds);
@@ -183,8 +183,10 @@ export const GlobalSettingsDialog = ({
 
   return (
     <div style={{ maxWidth }} className="margin-top-small">
-      <h2 className="margin-top-small">Global settings</h2>
-      <InfoHint content="These settings apply to all users, so changes made here may affect other users' experience." style={{ marginBottom: 30 }} />
+      <div className="flexbox center-aligned">
+        <h2 className="margin-top-small margin-right-small">Global settings</h2>
+        <MenderHelpTooltip id={HELPTOOLTIPS.globalSettings.id} placement="top" />
+      </div>
       <IdAttributeSelection attributes={attributes} onCloseClick={onCloseClick} onSaveClick={onSaveClick} selectedAttribute={selectedAttribute} />
       {hasReporting && <ReportingLimits />}
       <InputLabel className="margin-top" shrink>
@@ -276,10 +278,12 @@ export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
       dispatch(getGlobalSettings());
     }
     dispatch(getDeviceAttributes());
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(settings)]);
 
   useEffect(() => {
-    setUpdatedSettings({ ...updatedSettings, ...settings });
+    setUpdatedSettings(current => ({ ...current, ...settings }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(settings)]);
 
   const onCloseClick = e => {
@@ -295,6 +299,9 @@ export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
       }
     });
   };
+
+  const onChangeNotificationSetting = useCallback((...args) => dispatch(changeNotificationSetting(...args)), [dispatch]);
+  const onSaveGlobalSettings = useCallback((...args) => dispatch(saveGlobalSettings(...args)), [dispatch]);
 
   if (dialog) {
     return (
@@ -314,10 +321,10 @@ export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
       isAdmin={isAdmin}
       notificationChannelSettings={notificationChannelSettings}
       offlineThresholdSettings={offlineThresholdSettings}
-      onChangeNotificationSetting={(...args) => dispatch(changeNotificationSetting(...args))}
+      onChangeNotificationSetting={onChangeNotificationSetting}
       onCloseClick={onCloseClick}
       onSaveClick={saveAttributeSetting}
-      saveGlobalSettings={(...args) => dispatch(saveGlobalSettings(...args))}
+      saveGlobalSettings={onSaveGlobalSettings}
       settings={settings}
       selectedAttribute={selectedAttribute}
       tenantCapabilities={tenantCapabilities}

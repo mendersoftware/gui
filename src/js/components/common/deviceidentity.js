@@ -58,6 +58,7 @@ export const DeviceIdentityDisplay = props => {
   const { attributes = {} } = device;
   const EndAdornment = useMemo(
     () => adornments.find(item => item.isApplicable(device))?.component,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [attributes.mender_is_gateway, attributes.mender_gateway_system_id]
   );
   return (

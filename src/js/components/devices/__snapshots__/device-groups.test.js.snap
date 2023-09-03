@@ -3,16 +3,17 @@
 exports[`DeviceGroups Component renders correctly 1`] = `
 "<div>
   <div
-    class="tab-container with-sub-panels margin-bottom-small"
-    style="padding: 0px; min-height: initial;"
+    class="tab-container with-sub-panels"
+    style="padding-top: 0px; padding-bottom: 45px; min-height: max-content; align-content: center;"
   >
     <h3
-      style="margin-bottom: 0px;"
+      class="flexbox center-aligned"
+      style="margin-bottom: 0px; margin-top: 0px; flex-wrap: wrap;"
     >
       Devices
     </h3>
-    <div
-      class="flexbox space-between margin-left-large margin-right center-aligned padding-bottom padding-top-small"
+    <span
+      class="flexbox space-between margin-left-large margin-right center-aligned padding-top-small"
     >
       <div />
       <div
@@ -50,7 +51,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
           />
         </button>
       </div>
-    </div>
+    </span>
   </div>
   <div
     class="tab-container with-sub-panels"
@@ -60,9 +61,13 @@ exports[`DeviceGroups Component renders correctly 1`] = `
       class="leftFixed"
     >
       <div
-        class="muted margin-bottom-small"
+        class="flexbox margin-bottom-small margin-top-small"
       >
-        Groups
+        <div
+          class="muted"
+        >
+          Groups
+        </div>
       </div>
       <ul
         class="MuiList-root MuiList-padding css-h4y409-MuiList-root"
@@ -807,23 +812,6 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="tooltip help"
-          data-mui-internal-clone-element="true"
-          style="right: 45px;"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
-            data-testid="HelpIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
-            />
-          </svg>
         </div>
       </div>
     </div>

@@ -154,15 +154,159 @@ exports[`Dashboard Component renders correctly 1`] = `
 }
 
 .emotion-14 {
-  color: rgba(0, 0, 0, 0.38);
-  margin: 15px 0;
+  gap: 16px;
 }
 
 .emotion-15 {
-  gap: 8px;
+  max-width: 100%;
+  font-family: Lato,sans-serif;
+  font-size: 0.7545rem;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 32px;
+  color: rgba(10, 10, 11, 0.78);
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  white-space: nowrap;
+  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  outline: 0;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border: 0;
+  padding: 0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+  background-color: #f7fafb;
+  color: rgba(0, 0, 0, 0.38);
+  text-transform: uppercase;
+}
+
+.emotion-15.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-15 .MuiChip-avatar {
+  margin-left: 5px;
+  margin-right: -6px;
+  width: 24px;
+  height: 24px;
+  color: #bcbcbc;
+  font-size: 0.6964rem;
+}
+
+.emotion-15 .MuiChip-avatarColorPrimary {
+  color: #fff;
+  background-color: rgb(35, 85, 94);
+}
+
+.emotion-15 .MuiChip-avatarColorSecondary {
+  color: #fff;
+  background-color: rgb(65, 10, 46);
+}
+
+.emotion-15 .MuiChip-avatarSmall {
+  margin-left: 4px;
+  margin-right: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 0.5804rem;
+}
+
+.emotion-15 .MuiChip-icon {
+  margin-left: 5px;
+  margin-right: -6px;
+  color: #bcbcbc;
+}
+
+.emotion-15 .MuiChip-deleteIcon {
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(10, 10, 11, 0.26);
+  font-size: 22px;
+  cursor: pointer;
+  margin: 0 5px 0 -6px;
+}
+
+.emotion-15 .MuiChip-deleteIcon:hover {
+  color: rgba(10, 10, 11, 0.4);
+}
+
+.emotion-15:hover {
+  font-weight: bold;
+}
+
+.emotion-15:hover {
+  font-weight: bold;
+}
+
+.emotion-16 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
 }
 
 .emotion-17 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.3929rem;
+  color: #337a87;
+}
+
+.emotion-17 iconButton {
+  margin-right: 8px;
+}
+
+.emotion-17.read {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-18 {
+  position: absolute;
+  top: -5px;
+  bottom: 0;
+  left: -5px;
+  right: -5px;
+  border: 1px dashed #337a87;
+  border-radius: 50%;
+}
+
+.emotion-18.read {
+  border-color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-19 {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.emotion-22 {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
   -ms-flex-positive: 1;
@@ -173,28 +317,28 @@ exports[`Dashboard Component renders correctly 1`] = `
   padding-top: 0;
 }
 
-.emotion-17 .deployments .dashboard>h4 {
+.emotion-22 .deployments .dashboard>h4 {
   margin-top: 48px;
 }
 
-.emotion-17 .deployments .dashboard>h4.margin-top-none {
+.emotion-22 .deployments .dashboard>h4.margin-top-none {
   margin-top: 0;
 }
 
 @media (min-width:1536px) {
-  .emotion-17 {
+  .emotion-22 {
     border-left: 1px solid #e9e9e9;
     margin-top: -16px;
     padding-left: 48px;
     padding-top: 16px;
   }
 
-  .emotion-17 .deployments .dashboard>h4 {
+  .emotion-22 .deployments .dashboard>h4 {
     margin-top: 0;
   }
 }
 
-.emotion-18 {
+.emotion-23 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -209,11 +353,11 @@ exports[`Dashboard Component renders correctly 1`] = `
   padding: 8px;
 }
 
-.emotion-18>div:last-child {
+.emotion-23>div:last-child {
   width: 100%;
 }
 
-.emotion-19 {
+.emotion-24 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -230,11 +374,11 @@ exports[`Dashboard Component renders correctly 1`] = `
   font-size: inherit;
 }
 
-.emotion-19 iconButton {
+.emotion-24 iconButton {
   margin-right: 8px;
 }
 
-.emotion-23 {
+.emotion-28 {
   background-color: #f7f7f7;
   padding: 10px 20px;
   border-radius: 4px;
@@ -245,61 +389,61 @@ exports[`Dashboard Component renders correctly 1`] = `
   min-height: 70px;
 }
 
-.emotion-23 .chart-container {
+.emotion-28 .chart-container {
   min-height: 70px;
 }
 
-.emotion-23 .progress-chart {
+.emotion-28 .progress-chart {
   min-height: 45px;
 }
 
-.emotion-23 .compact .progress-step,
-.emotion-23 .detailed .progress-step {
+.emotion-28 .compact .progress-step,
+.emotion-28 .detailed .progress-step {
   min-height: 45px;
 }
 
-.emotion-23 .progress-step,
-.emotion-23 .detailed .progress-step-total {
+.emotion-28 .progress-step,
+.emotion-28 .detailed .progress-step-total {
   position: absolute;
   border-right-style: none;
 }
 
-.emotion-23 .progress-step-total .progress-bar {
+.emotion-28 .progress-step-total .progress-bar {
   background-color: #d4e9e7;
 }
 
-.emotion-23 .progress-step-number {
+.emotion-28 .progress-step-number {
   -webkit-align-self: flex-start;
   -ms-flex-item-align: flex-start;
   align-self: flex-start;
   margin-top: -4px;
 }
 
-.emotion-23.minimal {
+.emotion-28.minimal {
   padding: initial;
 }
 
-.emotion-23.no-background {
+.emotion-28.no-background {
   background: none;
 }
 
-.emotion-23.stepped-progress .progress-step-total {
+.emotion-28.stepped-progress .progress-step-total {
   margin-left: -0.25%;
   width: 100.5%;
 }
 
-.emotion-23.stepped-progress .progress-step-total .progress-bar {
+.emotion-28.stepped-progress .progress-step-total .progress-bar {
   background-color: #fff;
   border: 1px solid #a9a9a9;
   border-radius: 2px;
   height: 12px;
 }
 
-.emotion-23.stepped-progress .detailed .progress-step {
+.emotion-28.stepped-progress .detailed .progress-step {
   min-height: 20px;
 }
 
-.emotion-26 {
+.emotion-31 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -310,32 +454,32 @@ exports[`Dashboard Component renders correctly 1`] = `
   max-width: 500px;
 }
 
-.emotion-26>time {
+.emotion-31>time {
   -webkit-align-self: flex-end;
   -ms-flex-item-align: flex-end;
   align-self: flex-end;
   margin-right: 6px;
 }
 
-.emotion-28 {
+.emotion-33 {
   background: #fff;
   border-radius: 4px;
   padding: 4px;
 }
 
-.emotion-29 {
+.emotion-34 {
   -webkit-column-gap: 8px;
   column-gap: 8px;
   display: grid;
   grid-template-columns: repeat(auto-fit, 32px);
 }
 
-.emotion-29>div {
+.emotion-34>div {
   -webkit-column-gap: 4px;
   column-gap: 4px;
 }
 
-.emotion-29 .disabled {
+.emotion-34 .disabled {
   opacity: 0.1;
 }
 
@@ -494,38 +638,78 @@ exports[`Dashboard Component renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="flexbox centered"
+        class="dashboard margin-bottom-large"
       >
-        <p
-          class="emotion-14 icon flexbox center-aligned emotion-15 "
+        <div
+          class="widget"
         >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-8"
-            data-testid="InfoOutlinedIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
+          <div
+            class="flexbox center-aligned  emotion-14"
+            style="align-items: end;"
           >
-            <path
-              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-            />
-          </svg>
-          <span>
-            With a more advanced commercial Mender plan you get access to actionable insights into the devices you are updating with Mender. Get an overview of the Mender plans on the 
-            <a
-              href="https://mender.io/plans/features"
-              rel="noopener noreferrer"
-              target="_blank"
+            <div
+              class=""
+              data-mui-internal-clone-element="true"
             >
-              features page
-            </a>
-            .
-          </span>
-        </p>
+              <div
+                class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault emotion-15"
+              >
+                <span
+                  class="MuiChip-label MuiChip-labelMedium emotion-16"
+                >
+                  Enterprise
+                </span>
+              </div>
+            </div>
+            <div
+              class=""
+              data-mui-internal-clone-element="true"
+            >
+              <div
+                class="relative"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeMedium  emotion-17"
+                  data-testid="HelpIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                  />
+                </svg>
+                <div
+                  class="emotion-18 "
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="flexbox centered muted emotion-19"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-2"
+              data-testid="AddIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+            </svg>
+            <span
+              class="emotion-19"
+            >
+              add a widget
+            </span>
+          </div>
+        </div>
       </div>
     </div>
     <div
-      class="emotion-17 deployments"
+      class="emotion-22 deployments"
     >
       <div
         class="dashboard flexbox column"
@@ -542,7 +726,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           Pending
         </h5>
         <div
-          class="clickable emotion-18"
+          class="clickable emotion-23"
         >
           <div>
             <div>
@@ -560,7 +744,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-19"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-24"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -576,7 +760,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="clickable emotion-18"
+          class="clickable emotion-23"
         >
           <div>
             <div>
@@ -594,7 +778,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-19"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-24"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -615,7 +799,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           In Progress
         </h5>
         <div
-          class="clickable emotion-18"
+          class="clickable emotion-23"
         >
           <div>
             <div>
@@ -629,7 +813,7 @@ exports[`Dashboard Component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="relative emotion-23 minimal "
+            class="relative emotion-28 minimal "
           >
             <div
               class="chart-container"
@@ -670,7 +854,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="clickable emotion-18"
+          class="clickable emotion-23"
         >
           <div>
             <div>
@@ -688,7 +872,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-19"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-24"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -709,7 +893,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           Finished
         </h5>
         <div
-          class="emotion-26"
+          class="emotion-31"
         >
           <time
             class="muted slightly-smaller"
@@ -718,7 +902,7 @@ exports[`Dashboard Component renders correctly 1`] = `
             2019-01-13 13:00
           </time>
           <div
-            class="clickable emotion-18"
+            class="clickable emotion-23"
           >
             <div>
               <div>
@@ -732,10 +916,10 @@ exports[`Dashboard Component renders correctly 1`] = `
               </div>
             </div>
             <div
-              class="emotion-28"
+              class="emotion-33"
             >
               <div
-                class="flexbox emotion-29 "
+                class="flexbox emotion-34 "
               >
                 <div
                   aria-label="Skipped"
@@ -812,7 +996,7 @@ exports[`Dashboard Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="emotion-26"
+          class="emotion-31"
         >
           <time
             class="muted slightly-smaller"
@@ -821,7 +1005,7 @@ exports[`Dashboard Component renders correctly 1`] = `
             2019-01-13 13:00
           </time>
           <div
-            class="clickable emotion-18"
+            class="clickable emotion-23"
           >
             <div>
               <div>
@@ -835,10 +1019,10 @@ exports[`Dashboard Component renders correctly 1`] = `
               </div>
             </div>
             <div
-              class="emotion-28"
+              class="emotion-33"
             >
               <div
-                class="flexbox emotion-29 "
+                class="flexbox emotion-34 "
               >
                 <div
                   aria-label="Skipped"

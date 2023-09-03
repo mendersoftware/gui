@@ -50,10 +50,17 @@ import {
   SET_REJECTED_DEVICES,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
-import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_ARTIFACT_INCLUDED, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
+import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, SET_ORGANIZATION } from '../constants/organizationConstants';
 import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
-import { RECEIVED_PERMISSION_SETS, RECEIVED_ROLES, SET_GLOBAL_SETTINGS, SET_SHOW_HELP, SET_USER_SETTINGS } from '../constants/userConstants';
+import {
+  RECEIVED_PERMISSION_SETS,
+  RECEIVED_ROLES,
+  SET_GLOBAL_SETTINGS,
+  SET_SHOW_HELP,
+  SET_TOOLTIPS_STATE,
+  SET_USER_SETTINGS
+} from '../constants/userConstants';
 import {
   commonErrorHandler,
   getLatestReleaseInfo,
@@ -64,7 +71,7 @@ import {
   setSnackbar,
   setVersionInfo
 } from './appActions';
-import { expectedOnboardingActions } from './onboardingActions.test';
+import { defaultOnboardingState, expectedOnboardingActions } from './onboardingActions.test';
 import { tenantDataDivergedMessage } from './organizationActions';
 
 export const attributeReducer = (accu, item) => {
@@ -299,7 +306,6 @@ describe('app actions', () => {
         ]
       },
       { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
-      { type: SET_ONBOARDING_ARTIFACT_INCLUDED, value: true },
       {
         type: SET_RELEASES_LIST_STATE,
         value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42 }
@@ -343,6 +349,7 @@ describe('app actions', () => {
         }
       },
       { type: SET_SHOW_HELP, show: true },
+      { type: SET_TOOLTIPS_STATE, value: {} },
       { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
       {
         type: SET_ACCEPTED_DEVICES,
@@ -351,7 +358,7 @@ describe('app actions', () => {
         total: defaultState.devices.byStatus.accepted.total
       },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, onboarding: defaultOnboardingState, showHelptips: true } },
       {
         type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }

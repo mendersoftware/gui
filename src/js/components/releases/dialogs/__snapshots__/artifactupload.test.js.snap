@@ -9,7 +9,7 @@ exports[`ArtifactUpload Component renders correctly 1`] = `
   -webkit-column-gap: 32px;
   column-gap: 32px;
   display: grid;
-  grid-template-columns: max-content 1fr max-content;
+  grid-template-columns: max-content 1fr max-content max-content;
   margin-bottom: 16px;
   margin-right: 32px;
 }
@@ -133,33 +133,6 @@ exports[`ArtifactUpload Component renders correctly 1`] = `
 }
 
 .emotion-6 {
-  margin: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  border-width: 0;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.12);
-  border-bottom-width: thin;
-}
-
-.emotion-7 {
-  color: rgba(0, 0, 0, 0.38);
-  margin: 15px 0;
-}
-
-.emotion-8 {
-  gap: 8px;
-}
-
-.emotion-9>svg {
-  -webkit-align-self: flex-start;
-  -ms-flex-item-align: flex-start;
-  align-self: flex-start;
-  margin-top: 4px;
-}
-
-.emotion-10 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -173,11 +146,41 @@ exports[`ArtifactUpload Component renders correctly 1`] = `
   flex-shrink: 0;
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.1607rem;
+  font-size: 1.3929rem;
+  color: #337a87;
 }
 
-.emotion-10 iconButton {
+.emotion-6 iconButton {
   margin-right: 8px;
+}
+
+.emotion-6.read {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-7 {
+  position: absolute;
+  top: -5px;
+  bottom: 0;
+  left: -5px;
+  right: -5px;
+  border: 1px dashed #337a87;
+  border-radius: 50%;
+}
+
+.emotion-7.read {
+  border-color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-8 {
+  margin: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-width: 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.12);
+  border-bottom-width: thin;
 }
 
 <div>
@@ -233,28 +236,32 @@ exports[`ArtifactUpload Component renders correctly 1`] = `
         class="MuiTouchRipple-root emotion-5"
       />
     </button>
+    <div
+      class=""
+      data-mui-internal-clone-element="true"
+    >
+      <div
+        class="relative"
+      >
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeMedium  emotion-6"
+          data-testid="HelpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+          />
+        </svg>
+        <div
+          class="emotion-7 "
+        />
+      </div>
+    </div>
   </div>
   <hr
-    class="MuiDivider-root MuiDivider-fullWidth margin-right-large emotion-6"
+    class="MuiDivider-root MuiDivider-fullWidth margin-right-large emotion-8"
   />
-  <p
-    class="emotion-7 icon flexbox center-aligned emotion-8 emotion-9"
-  >
-    <svg
-      aria-hidden="true"
-      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-10"
-      data-testid="InfoOutlinedIcon"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-      />
-    </svg>
-    If there is no Release matching this Artifact’s name, a new Release will be created for this Artifact.
-    <br />
-    <br />
-    If there is already a Release matching this Artifact’s name, the Artifact will be grouped in that Release.
-  </p>
 </div>
 `;

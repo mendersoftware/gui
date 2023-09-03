@@ -11,8 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Dropzone from 'react-dropzone';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CloudUpload } from '@mui/icons-material';
@@ -21,71 +20,55 @@ import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { setSnackbar } from '../../actions/appActions';
-import { advanceOnboarding, setShowCreateArtifactDialog } from '../../actions/onboardingActions';
-import { createArtifact, getReleases, selectRelease, setReleasesListState, uploadArtifact } from '../../actions/releaseActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getDeviceTypes, getFeatures, getOnboardingState, getReleasesList, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getReleases, selectRelease, setReleasesListState } from '../../actions/releaseActions';
+import { BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { getFeatures, getIsEnterprise, getReleasesList, getUserCapabilities } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import ChipSelect from '../common/chipselect';
-import EnterpriseNotification from '../common/enterpriseNotification';
-import InfoHint from '../common/info-hint';
+import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import Search from '../common/search';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import AddArtifactDialog from './dialogs/addartifact';
 import ReleaseDetails from './releasedetails';
 import ReleasesList from './releaseslist';
 
 const refreshArtifactsLength = 60000;
 
-const DeltaProgressPlaceholder = ({ tenantCapabilities: { canDelta } }) => (
-  <div className="dashboard-placeholder" style={{ display: 'grid', placeContent: 'center' }}>
-    There is no automatic delta artifacts generation running.
-    <EnterpriseNotification isEnterprise={canDelta} benefit="automatic artifact generation to reduce bandwidth consumption during deployments" />
+const DeltaProgress = () => {
+  const isEnterprise = useSelector(getIsEnterprise);
+  return (
+    <div className="dashboard-placeholder" style={{ display: 'grid', placeContent: 'center' }}>
+      {isEnterprise ? 'There is no automatic delta artifacts generation running.' : <DefaultUpgradeNotification />}
+    </div>
+  );
+};
+
+const DeltaTitle = () => (
+  <div className="flexbox center-aligned">
+    <div>Delta Artifacts generation</div>
+    <EnterpriseNotification className="margin-left-small" id={BENEFITS.deltaGeneration.id} />
   </div>
 );
 
 const tabs = [
-  { key: 'releases', title: 'Releases', component: ReleasesList },
-  { key: 'delta', title: 'Delta Artifacts generation', component: DeltaProgressPlaceholder }
+  { key: 'releases', Title: () => 'Releases', component: ReleasesList },
+  { key: 'delta', Title: DeltaTitle, component: DeltaProgress }
 ];
 
 const useStyles = makeStyles()(theme => ({
-  empty: { margin: '8vh auto' },
   filters: { maxWidth: 400, alignItems: 'end', columnGap: 50 },
   searchNote: { minHeight: '1.8rem' },
   tabContainer: { alignSelf: 'flex-start' },
-  uploadButton: { marginTop: theme.spacing(1.5), minWidth: 164 }
+  uploadButton: { minWidth: 164, marginRight: theme.spacing(2) }
 }));
 
-const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop, onUpload }) => (
-  <div className={`dashboard-placeholder fadeIn ${className}`} ref={dropzoneRef}>
-    <Dropzone activeClassName="active" disabled={uploading} multiple={false} noClick={true} onDrop={onDrop} rejectClassName="active">
-      {({ getRootProps, getInputProps }) => (
-        <div {...getRootProps({ className: uploading ? 'dropzone disabled muted' : 'dropzone' })} onClick={() => onUpload()}>
-          <input {...getInputProps()} disabled={uploading} />
-          <p>
-            There are no Releases yet.{' '}
-            {canUpload && (
-              <>
-                <a>Upload an Artifact</a> to create a new Release
-              </>
-            )}
-          </p>
-        </div>
-      )}
-    </Dropzone>
-  </div>
-);
-
-const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesListState, setReleasesListState, onUploadClick, uploadButtonRef }) => {
+const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesListState, setReleasesListState, onUploadClick }) => {
   const { hasReleaseTags } = features;
   const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
   const { classes } = useStyles();
 
-  const searchUpdated = searchTerm => setReleasesListState({ searchTerm });
+  const searchUpdated = useCallback(searchTerm => setReleasesListState({ searchTerm }), [setReleasesListState]);
 
   const onTabChanged = (e, tab) => setReleasesListState({ tab });
 
@@ -93,29 +76,20 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
 
   return (
     <div>
-      <div className="flexbox space-between">
+      <div className="flexbox space-between center-aligned">
         <Tabs className={classes.tabContainer} value={tab} onChange={onTabChanged} textColor="primary">
-          {tabs.map(({ key, title }) => (
-            <Tab key={key} label={title} value={key} />
+          {tabs.map(({ key, Title }) => (
+            <Tab key={key} label={<Title />} value={key} />
           ))}
         </Tabs>
-        <div>
-          {canUpload && (
-            <>
-              <Button
-                ref={uploadButtonRef}
-                color="secondary"
-                className={classes.uploadButton}
-                onClick={onUploadClick}
-                startIcon={<CloudUpload fontSize="small" />}
-                variant="contained"
-              >
-                Upload
-              </Button>
-              <InfoHint content="Upload an Artifact to an existing or new Release" />
-            </>
-          )}
-        </div>
+        {canUpload && (
+          <div className="flexbox center-aligned">
+            <Button color="secondary" className={classes.uploadButton} onClick={onUploadClick} startIcon={<CloudUpload fontSize="small" />} variant="contained">
+              Upload
+            </Button>
+            <MenderHelpTooltip id={HELPTOOLTIPS.artifactUpload.id} style={{ marginTop: 8 }} />
+          </div>
+        )}
       </div>
       {hasReleases && tab === tabs[0].key && (
         <div className={`two-columns ${classes.filters}`}>
@@ -138,60 +112,32 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
 };
 
 export const Releases = () => {
-  const demoArtifactLink = useSelector(state => state.app.demoArtifactLink);
-  const deviceTypes = useSelector(getDeviceTypes);
   const features = useSelector(getFeatures);
   const hasReleases = useSelector(
     state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
   );
-  const onboardingState = useSelector(getOnboardingState);
-  const { artifactIncluded } = onboardingState;
-  const pastCount = useSelector(state => state.deployments.byStatus.finished.total);
   const releases = useSelector(getReleasesList);
   const releasesListState = useSelector(state => state.releases.releasesList);
   const releaseTags = useSelector(state => state.releases.releaseTags);
   const selectedRelease = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
-  const tenantCapabilities = useSelector(getTenantCapabilities);
-  const uploading = useSelector(state => state.app.uploading);
   const userCapabilities = useSelector(getUserCapabilities);
   const { canUploadReleases } = userCapabilities;
   const dispatch = useDispatch();
 
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
-  const dropzoneRef = useRef();
-  const uploadButtonRef = useRef();
   const artifactTimer = useRef();
   const [locationParams, setLocationParams] = useLocationParams('releases', { defaults: { direction: SORTING_OPTIONS.desc, key: 'modified' } });
   const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
-  const { classes } = useStyles();
 
   useEffect(() => {
     if (!artifactTimer.current) {
       return;
     }
     setLocationParams({ pageState: { ...releasesListState, selectedRelease: selectedRelease.Name } });
-  }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, tab, JSON.stringify(selectedTags)]);
-
-  useEffect(() => {
-    dispatch(setReleasesListState({ selectedTags: locationParams.tags }));
-    if (locationParams.selectedRelease) {
-      dispatch(selectRelease(locationParams.selectedRelease));
-    }
-  }, [JSON.stringify(locationParams.tags), locationParams.selectedRelease]);
-
-  useEffect(() => {
-    if (!onboardingState.progress || onboardingState.complete) {
-      return;
-    }
-    if (releases.length === 1) {
-      dispatch(advanceOnboarding(onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP));
-    }
-    if (selectedRelease.Name) {
-      dispatch(advanceOnboarding(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING));
-    }
-  }, [onboardingState.complete, onboardingState.progress, releases.length, selectedRelease.Name]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, setLocationParams, tab, JSON.stringify(selectedTags)]);
 
   useEffect(() => {
     const { selectedRelease, tags, ...remainder } = locationParams;
@@ -204,50 +150,19 @@ export const Releases = () => {
     return () => {
       clearInterval(artifactTimer.current);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(locationParams)]);
 
-  const onUploadClick = () => {
-    if (releases.length) {
-      dispatch(advanceOnboarding(onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP));
-    }
-    setShowAddArtifactDialog(true);
-  };
-
-  const onDrop = (acceptedFiles, rejectedFiles) => {
-    if (acceptedFiles.length) {
-      onFileUploadClick(acceptedFiles[0]);
-    }
-    if (rejectedFiles.length) {
-      dispatch(setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null));
-    }
-  };
+  const onUploadClick = () => setShowAddArtifactDialog(true);
 
   const onFileUploadClick = selectedFile => {
     setSelectedFile(selectedFile);
     setShowAddArtifactDialog(true);
   };
 
-  let uploadArtifactOnboardingComponent = null;
-  if (!onboardingState.complete && uploadButtonRef.current) {
-    const anchor = {
-      anchor: {
-        left: uploadButtonRef.current.offsetLeft - 15,
-        top: uploadButtonRef.current.offsetTop + uploadButtonRef.current.offsetHeight / 2
-      },
-      place: 'left'
-    };
-    uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.UPLOAD_PREPARED_ARTIFACT_TIP,
-      { ...onboardingState, demoArtifactLink },
-      anchor
-    );
-    uploadArtifactOnboardingComponent = getOnboardingComponentFor(
-      onboardingSteps.UPLOAD_NEW_ARTIFACT_TIP,
-      { ...onboardingState, setShowCreateArtifactDialog: state => dispatch(setShowCreateArtifactDialog(state)) },
-      anchor,
-      uploadArtifactOnboardingComponent
-    );
-  }
+  const onHideAddArtifactDialog = () => setShowAddArtifactDialog(false);
+
+  const onSetReleasesListState = useCallback(state => dispatch(setReleasesListState(state)), [dispatch]);
 
   const ContentComponent = useMemo(() => tabs.find(({ key }) => key === tab).component, [tab]);
   return (
@@ -260,46 +175,13 @@ export const Releases = () => {
           hasReleases={hasReleases}
           onUploadClick={onUploadClick}
           releasesListState={releasesListState}
-          setReleasesListState={state => dispatch(setReleasesListState(state))}
+          setReleasesListState={onSetReleasesListState}
         />
-        {hasReleases ? (
-          <ContentComponent
-            artifactIncluded={artifactIncluded}
-            features={features}
-            onboardingState={onboardingState}
-            onSelect={id => dispatch(selectRelease(id))}
-            releases={releases}
-            releasesListState={releasesListState}
-            setReleasesListState={state => dispatch(setReleasesListState(state))}
-            tenantCapabilities={tenantCapabilities}
-          />
-        ) : (
-          <EmptyState
-            canUpload={canUploadReleases}
-            className={classes.empty}
-            dropzoneRef={dropzoneRef}
-            uploading={uploading}
-            onDrop={onDrop}
-            onUpload={onFileUploadClick}
-          />
-        )}
+        <ContentComponent onFileUploadClick={onFileUploadClick} />
       </div>
       <ReleaseDetails />
-      {!showAddArtifactDialog && uploadArtifactOnboardingComponent}
       {showAddArtifactDialog && (
-        <AddArtifactDialog
-          advanceOnboarding={step => dispatch(advanceOnboarding(step))}
-          createArtifact={(meta, file) => dispatch(createArtifact(meta, file))}
-          deviceTypes={deviceTypes}
-          onboardingState={onboardingState}
-          pastCount={pastCount}
-          releases={releases}
-          setSnackbar={(...args) => dispatch(setSnackbar(...args))}
-          uploadArtifact={(meta, file) => dispatch(uploadArtifact(meta, file))}
-          onCancel={() => setShowAddArtifactDialog(false)}
-          onUploadStarted={() => setShowAddArtifactDialog(false)}
-          selectedFile={selectedFile}
-        />
+        <AddArtifactDialog releases={releases} onCancel={onHideAddArtifactDialog} onUploadStarted={onHideAddArtifactDialog} selectedFile={selectedFile} />
       )}
     </div>
   );

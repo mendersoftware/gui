@@ -21,8 +21,8 @@ import validator from 'validator';
 
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { emptyWebhook } from '../../../constants/organizationConstants';
-import InfoHint from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 
 const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = { ...emptyWebhook } }) => {
   const [description, setDescription] = useState('');
@@ -57,7 +57,7 @@ const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = {
       webhookConfig = { ...remainder, credentials: { ...credentials, [EXTERNAL_PROVIDER.webhook.credentialsType]: { url } } };
     }
     onSubmit(webhookConfig);
-  }, [description, editing, id, secret, url]);
+  }, [description, editing, id, onSubmit, secret, url]);
 
   const secretInputTip = editing ? 'Cannot edit webhook secrets after they have been saved' : 'The secret has to be entered as a hexadecimal string';
   const descriptionInput = (
@@ -74,7 +74,6 @@ const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = {
   const isSubmitDisabled = !url || (editing && url === hookUrl);
   return (
     <>
-      <InfoHint content="Webhooks are triggered when a device's status is updated, or a device is decommissioned or provisioned." />
       <div className="flexbox column" style={{ width: 500 }}>
         {editing ? (
           <MenderTooltip arrow placement="bottom-start" title="Cannot edit webhook url after it has been saved">
@@ -119,7 +118,10 @@ const WebhookConfiguration = ({ adding, editing, onCancel, onSubmit, webhook = {
 export const WebhookCreation = ({ adding, onCancel, ...props }) => (
   <Drawer anchor="right" open={adding} PaperProps={{ style: { minWidth: 600, width: '50vw' } }}>
     <div className="flexbox center-aligned margin-bottom-small space-between">
-      <h3>Add a webhook</h3>
+      <div className="flexbox center-aligned">
+        <h3>Add a webhook</h3>
+        <MenderHelpTooltip id={HELPTOOLTIPS.webhooks.id} />
+      </div>
       <IconButton onClick={onCancel} aria-label="close">
         <CloseIcon />
       </IconButton>

@@ -21,8 +21,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { getDeploymentsConfig, saveDeltaDeploymentsConfig } from '../../actions/deploymentActions';
-import { TIMEOUTS } from '../../constants/appConstants';
-import { getIsEnterprise } from '../../selectors';
+import { BENEFITS, TIMEOUTS } from '../../constants/appConstants';
 import { useDebounce } from '../../utils/debouncehook';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import InfoText from '../common/infotext';
@@ -64,7 +63,7 @@ const NumberInputLimited = ({ limit, onChange, value: propsValue, ...remainder }
       return;
     }
     onChange(allowedValue);
-  }, [debouncedValue]);
+  }, [debouncedValue, max, min, onChange]);
 
   return (
     <TextField
@@ -81,7 +80,6 @@ const NumberInputLimited = ({ limit, onChange, value: propsValue, ...remainder }
 
 export const ArtifactGenerationSettings = () => {
   const { binaryDelta: deltaConfig = {}, binaryDeltaLimits: deltaLimits = {}, hasDelta: deltaEnabled } = useSelector(state => state.deployments.config) ?? {};
-  const isEnterprise = useSelector(getIsEnterprise);
   const dispatch = useDispatch();
   const [timeoutValue, setTimeoutValue] = useState(deltaConfig.timeout);
   const [disableChecksum, setDisableChecksum] = useState(deltaConfig.disableChecksum);
@@ -91,8 +89,8 @@ export const ArtifactGenerationSettings = () => {
   const [inputWindow, setInputWindow] = useState(deltaConfig.inputWindow);
   const [duplicatesWindow, setDuplicatesWindow] = useState(deltaConfig.duplicatesWindow);
   const [instructionBuffer, setInstructionBuffer] = useState(deltaConfig.instructionBuffer);
-  const [isInitialized, setIsInitialized] = useState(false);
   const timer = useRef(null);
+  const isInitialized = useRef(false);
 
   const { classes } = useStyles();
 
@@ -109,15 +107,16 @@ export const ArtifactGenerationSettings = () => {
     setInputWindow(inputWindow);
     setDuplicatesWindow(duplicatesWindow);
     setInstructionBuffer(instructionBuffer);
-    setTimeout(() => setIsInitialized(true), 0);
+    setTimeout(() => (isInitialized.current = true), TIMEOUTS.debounceShort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(deltaConfig), JSON.stringify(deltaLimits)]);
 
   useEffect(() => {
     dispatch(getDeploymentsConfig());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (!isInitialized) {
+    if (!isInitialized.current) {
       return;
     }
     clearTimeout(timer.current);
@@ -140,7 +139,7 @@ export const ArtifactGenerationSettings = () => {
     return () => {
       clearTimeout(timer.current);
     };
-  }, [compressionLevel, disableChecksum, disableDecompression, duplicatesWindow, inputWindow, instructionBuffer, sourceWindow, timeoutValue]);
+  }, [compressionLevel, disableChecksum, disableDecompression, dispatch, duplicatesWindow, inputWindow, instructionBuffer, sourceWindow, timeoutValue]);
 
   const numberInputs = useMemo(() => {
     return [
@@ -150,6 +149,7 @@ export const ArtifactGenerationSettings = () => {
       { ...numberFields.duplicatesWindow, setter: setDuplicatesWindow, value: duplicatesWindow, ...deltaLimits.duplicatesWindow },
       { ...numberFields.instructionBuffer, setter: setInstructionBuffer, value: instructionBuffer, ...deltaLimits.instructionBuffer }
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     compressionLevel,
     setCompressionLevel,
@@ -161,6 +161,7 @@ export const ArtifactGenerationSettings = () => {
     duplicatesWindow,
     setInstructionBuffer,
     instructionBuffer,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(deltaLimits)
   ]);
 
@@ -169,6 +170,7 @@ export const ArtifactGenerationSettings = () => {
       <div className="flexbox center-aligned">
         <DeltaIcon />
         <h5 className="margin-left-small">Delta artifacts generation configuration</h5>
+        <EnterpriseNotification className="margin-left-small" id={BENEFITS.deltaGeneration.id} />
       </div>
       {deltaEnabled && isInitialized ? (
         <div className="margin-small margin-top-none">
@@ -205,7 +207,7 @@ export const ArtifactGenerationSettings = () => {
             ))}
           </div>
         </div>
-      ) : isEnterprise ? (
+      ) : (
         <InfoText>
           <InfoOutlinedIcon style={{ fontSize: '14px', margin: '0 4px 4px 0', verticalAlign: 'middle' }} />
           Automatic delta artifacts generation is not enabled in your account. If you want to start using this feature,{' '}
@@ -214,11 +216,6 @@ export const ArtifactGenerationSettings = () => {
           </a>
           .
         </InfoText>
-      ) : (
-        <EnterpriseNotification
-          isEnterprise={isEnterprise}
-          benefit="automatic delta artifacts generation to minimize data transfer and improve the update delivery"
-        />
       )}
     </div>
   );

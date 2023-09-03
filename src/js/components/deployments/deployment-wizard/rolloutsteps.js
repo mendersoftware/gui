@@ -19,9 +19,9 @@ import { makeStyles } from 'tss-react/mui';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import DocsLink from '../../common/docslink';
-import InfoHint from '../../common/info-hint';
 import InfoText from '../../common/infotext';
 import MenderTooltip from '../../common/mendertooltip';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
   chip: { marginLeft: theme.spacing(-3), marginRight: theme.spacing(-3) },
@@ -154,16 +154,7 @@ export const RolloutStepsContainer = ({ className = '', disabled, onStepChange, 
         </InfoText>
       )}
     </div>
-    {disabled && (
-      <InfoHint
-        content={
-          <>
-            This feature is not available on <b>phased deployments</b>. If you&apos;d like to set pause states between update steps, go back and adjust the
-            rollout schedule to a <b>single phase</b>.
-          </>
-        }
-      />
-    )}
+    {disabled && <MenderHelpTooltip id={HELPTOOLTIPS.phasedPausedDeployments.id} />}
   </div>
 );
 

@@ -43,13 +43,14 @@ const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device'
 
 export const DeviceDetails = ({ device, idAttribute, onClose }) => {
   const { classes } = useStyles();
-  const { name, device_type: deviceTypes, artifact_name } = device.attributes;
+  const { attributes, id: deviceId } = device;
+  const { name, device_type: deviceTypes, artifact_name } = attributes || {};
   const usesId = !idAttribute || idAttribute === 'id' || idAttribute === 'Device ID';
   const nameContainer = name ? { Name: name } : {};
   const deviceDetails = {
     ...nameContainer,
     [usesId ? 'Device ID' : idAttribute]: (
-      <Link className={`flexbox center-aligned ${classes.deviceLink}`} to={`/devices?id=${device.id}`}>
+      <Link className={`flexbox center-aligned ${classes.deviceLink}`} to={`/devices?id=${deviceId}`}>
         <DeviceIdentityDisplay device={device} isEditable={false} />
         <LaunchIcon className="margin-left-small link-color" fontSize="small" />
       </Link>
@@ -58,7 +59,7 @@ export const DeviceDetails = ({ device, idAttribute, onClose }) => {
     'Operating system version': device[rootfsImageVersion] || artifact_name || '-',
     ' ': (
       <Link
-        to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
+        to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: deviceId, startDate: BEGINNING_OF_TIME } }, {})}`}
         onClick={onClose}
       >
         List all log entries for this device

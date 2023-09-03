@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { Suspense, lazy, useRef, useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 
 // material ui
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
@@ -22,7 +22,6 @@ const Content = lazy(() => import('./custom-columns-dialog-content'));
 
 export const ColumnCustomizationDialog = ({ customColumnSizes, open, onCancel, onSubmit, ...props }) => {
   const [selectedAttributes, setSelectedAttributes] = useState([]);
-  const buttonRef = useRef();
 
   const onHandleSubmit = () => {
     const attributes = selectedAttributes.map(attribute => ({
@@ -39,14 +38,13 @@ export const ColumnCustomizationDialog = ({ customColumnSizes, open, onCancel, o
     <Dialog open={open}>
       <DialogTitle>Customize Columns</DialogTitle>
       <Suspense fallback={<Loader show />}>
-        <Content buttonRef={buttonRef} selectedAttributes={selectedAttributes} setSelectedAttributes={setSelectedAttributes} {...props} />
+        <Content selectedAttributes={selectedAttributes} setSelectedAttributes={setSelectedAttributes} {...props} />
       </Suspense>
-
       <DialogActions className="space-between">
         <Button variant="text" onClick={onCancel}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={onHandleSubmit} color="secondary" ref={buttonRef}>
+        <Button variant="contained" onClick={onHandleSubmit} color="secondary">
           Save
         </Button>
       </DialogActions>

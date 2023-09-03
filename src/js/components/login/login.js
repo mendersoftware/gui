@@ -15,7 +15,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { ChevronRight, Help as HelpIcon } from '@mui/icons-material';
+import { ChevronRight } from '@mui/icons-material';
 import { Button, Checkbox, Collapse, FormControlLabel } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
@@ -34,7 +34,7 @@ import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 import TextInput from '../common/forms/textinput';
 import LinedHeader from '../common/lined-header';
-import { MenderTooltipClickable } from '../common/mendertooltip';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import { OAuth2Providers } from './oauth2providers';
 
 const cookies = new Cookies();
@@ -79,7 +79,8 @@ const useStyles = makeStyles()(theme => {
     },
     link: { marginLeft: theme.spacing(-0.5) },
     ntBranding: { bottom: `calc(${theme.mixins.toolbar.minHeight}px + 3vh)`, right: 0, zIndex: 0 },
-    tfaNote: { maxWidth: 300 }
+    tfaNote: { maxWidth: 300 },
+    tfaTip: { position: 'absolute', right: -120 }
   };
 });
 
@@ -154,13 +155,13 @@ export const Login = () => {
     return () => {
       dispatch(setSnackbar(''));
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (currentUser.id) {
       dispatch(setSnackbar(''));
     }
-  }, [currentUser]);
+  }, [currentUser, dispatch]);
 
   const onLoginClick = useCallback(
     loginData => {
@@ -172,7 +173,7 @@ export const Login = () => {
         }
       });
     },
-    [noExpiry]
+    [dispatch, noExpiry]
   );
 
   const onOAuthClick = ({ target: { textContent } }) => {
@@ -184,14 +185,6 @@ export const Login = () => {
   };
 
   const onNoExpiryClick = ({ target: { checked } }) => setNoExpiry(checked);
-
-  let twoFAAnchor = {};
-  if (twoFARef.current) {
-    twoFAAnchor = {
-      right: -120,
-      top: twoFARef.current.parentElement.parentElement.offsetTop + twoFARef.current.parentElement.parentElement.offsetHeight / 2
-    };
-  }
 
   const { classes } = useStyles();
   return (
@@ -228,20 +221,14 @@ export const Login = () => {
               <FormControlLabel control={<Checkbox color="primary" checked={noExpiry} onChange={onNoExpiryClick} />} label="Stay logged in" />
             </Form>
             {has2FA && twoFARef.current && (
-              <MenderTooltipClickable
+              <MenderHelpTooltip
+                id={HELPTOOLTIPS.twoFactorNote.id}
                 disableHoverListener={false}
                 placement="right"
-                className="absolute"
-                style={twoFAAnchor}
-                title={
-                  <div className={classes.tfaNote}>
-                    Two Factor Authentication is enabled for your account. If you haven&apos;t set up a 3rd party authentication app with a verification code,
-                    please contact an administrator.
-                  </div>
-                }
-              >
-                <HelpIcon />
-              </MenderTooltipClickable>
+                className={classes.tfaTip}
+                style={{ top: twoFARef.current.parentElement.parentElement.offsetTop + twoFARef.current.parentElement.parentElement.offsetHeight / 2 }}
+                contentProps={{ className: classes.tfaNote }}
+              />
             )}
           </div>
           {isHosted ? <EntryLink className={classes.entryLink} target="signup" /> : <div className="padding" />}

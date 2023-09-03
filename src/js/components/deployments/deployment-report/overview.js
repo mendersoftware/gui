@@ -85,7 +85,7 @@ export const DeploymentOverview = ({ creator, deployment, devicesById, onSchedul
     </Link>
   );
 
-  const devicesLink = getDevicesLink({ devices: Object.values(devices), group, hasFullFiltering, name });
+  const devicesLink = getDevicesLink({ devices: Object.values(devices), group, hasFullFiltering, name, filter });
   let targetDevices = (
     <Link {...defaultLinkProps} to={devicesLink}>
       {isDeviceDeployment && devicesById[name] ? (

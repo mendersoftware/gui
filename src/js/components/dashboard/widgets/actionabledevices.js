@@ -117,6 +117,7 @@ export const ActionableDevices = props => {
         }
         return accu;
       }, []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(issues)]
   );
 

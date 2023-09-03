@@ -22,6 +22,7 @@ import * as path from 'path';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { v4 as uuid } from 'uuid';
+import { selectors } from './constants';
 
 export const getPeristentLoginInfo = () => {
   let loginInfo;
@@ -128,7 +129,7 @@ export const startDockerClient = async (baseUrl, token) => {
     `${projectRoot}/dockerClient/mender-connect-test.json:/etc/mender/mender-connect.conf`,
     'mendersoftware/mender-client-docker-addons:master'
   ];
-  console.log(`starting with: ${token}`);
+  console.log(`starting with token: ${token}`);
   console.log(`starting using: docker ${args.join(' ')}`);
   const child = spawn('docker', args);
   child.on('error', err => console.error(`${err}`));
@@ -181,12 +182,18 @@ export const login = async (username: string, password: string, baseUrl: string)
   return { token, userId };
 };
 
+export const isLoggedIn = async (page: Page, timeout: number = 0) => {
+  const cookieConsentButton = await page.locator('text=/decline/i');
+  if (await cookieConsentButton?.isVisible()) {
+    await cookieConsentButton.click();
+  }
+  return page.getByText(selectors.loggedInText).waitFor({ timeout });
+};
+
 export const tenantTokenRetrieval = async (baseUrl: string, page: Page) => {
   await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
   await page.waitForSelector('.tenant-token-text');
-  const token = await page.$eval('.tenant-token-text', el => el.textContent);
-  console.log(token);
-  return token;
+  return page.$eval('.tenant-token-text', el => el.textContent);
 };
 
 let previousSecret;

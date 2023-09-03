@@ -15,7 +15,24 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 // material ui
 import { Close as CloseIcon, InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
-import { Button, Checkbox, Divider, Drawer, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Drawer,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip
+} from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import validator from 'validator';
@@ -23,7 +40,7 @@ import validator from 'validator';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
 import { ALL_RELEASES } from '../../constants/releaseConstants';
 import { emptyRole, emptyUiPermissions, itemUiPermissionsReducer, rolesById, uiPermissionsByArea, uiPermissionsById } from '../../constants/userConstants';
-import { deepCompare, isEmpty } from '../../helpers';
+import { deepCompare, isEmpty, toggle } from '../../helpers';
 
 const menuProps = {
   anchorOrigin: {
@@ -270,6 +287,27 @@ const deriveItemsAndPermissions = (stateItems, roleItems, options = {}) => {
 
 const permissionCompatibilityReducer = (accu, permission) => ({ [ALL_RELEASES]: [...accu[ALL_RELEASES], permission] });
 
+const DeleteRoleDialog = ({ dismiss, open, submit, name }) => (
+  <Dialog open={open}>
+    <DialogTitle>Delete role?</DialogTitle>
+    <DialogContent style={{ overflow: 'hidden' }}>
+      Are you sure you want to delete the role{' '}
+      <b>
+        <i>{name}</i>
+      </b>
+      ?
+    </DialogContent>
+    <DialogActions>
+      <Button style={{ marginRight: 10 }} onClick={dismiss}>
+        Cancel
+      </Button>
+      <Button variant="contained" color="primary" onClick={submit}>
+        Delete role
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
+
 export const RoleDefinition = ({
   adding,
   editing,
@@ -290,6 +328,7 @@ export const RoleDefinition = ({
   const [groupSelections, setGroupSelections] = useState([]);
   const [releasesPermissions, setReleasesPermissions] = useState([]);
   const [releaseTagSelections, setReleaseTagSelections] = useState([]);
+  const [removeDialog, setRemoveDialog] = useState(false);
   const [userManagementPermissions, setUserManagementPermissions] = useState([]);
   const { classes } = useStyles();
   const { hasReleaseTags } = features;
@@ -324,7 +363,8 @@ export const RoleDefinition = ({
         return accu;
       }, [])
     );
-  }, [adding, editing, selectedRole, stateGroups, stateReleaseTags]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adding, editing, JSON.stringify(selectedRole), JSON.stringify(stateGroups), JSON.stringify(stateReleaseTags)]);
 
   const validateNameChange = ({ target: { value } }) => {
     setNameError(!(value && validator.isWhitelisted(value, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')));
@@ -349,9 +389,12 @@ export const RoleDefinition = ({
   };
 
   const onRemoveRole = () => {
+    setRemoveDialog(false);
     removeRole(name);
     onCancel();
   };
+
+  const onToggleRemoveDialog = () => setRemoveDialog(toggle);
 
   const disableEdit = editing && Boolean(rolesById[selectedRole.id] || !selectedRole.editable);
   const isSubmitDisabled = useMemo(() => {
@@ -381,7 +424,19 @@ export const RoleDefinition = ({
         (Object.entries({ description, name }).every(([key, value]) => selectedRole[key] === value) &&
           uiPermissionCompare(selectedRole.uiPermissions, changedPermissions))
     );
-  }, [auditlogPermissions, description, disableEdit, groupSelections, name, nameError, releasesPermissions, releaseTagSelections, userManagementPermissions]);
+  }, [
+    auditlogPermissions,
+    userManagementPermissions,
+    groupSelections,
+    hasReleaseTags,
+    releaseTagSelections,
+    releasesPermissions,
+    disableEdit,
+    name,
+    nameError,
+    description,
+    selectedRole
+  ]);
 
   return (
     <Drawer anchor="right" open={adding || editing} PaperProps={{ style: { minWidth: 600, width: '50vw' } }}>
@@ -393,7 +448,7 @@ export const RoleDefinition = ({
               className={`flexbox center-aligned ${classes.roleDeletion}`}
               color="secondary"
               disabled={!!rolesById[selectedRole.id]}
-              onClick={onRemoveRole}
+              onClick={onToggleRemoveDialog}
             >
               delete role
             </Button>
@@ -466,6 +521,7 @@ export const RoleDefinition = ({
           Submit
         </Button>
       </div>
+      <DeleteRoleDialog dismiss={onToggleRemoveDialog} open={removeDialog} submit={onRemoveRole} name={name} />
     </Drawer>
   );
 };

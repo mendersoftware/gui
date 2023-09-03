@@ -18,11 +18,6 @@ describe('organization reducer', () => {
   it('should return the initial state', async () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
-
-  it('should handle SET_SHOW_CREATE_ARTIFACT', async () => {
-    expect(reducer(undefined, { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: true }).showCreateArtifactDialog).toEqual(true);
-    expect(reducer(initialState, { type: OnboardingConstants.SET_SHOW_CREATE_ARTIFACT, show: false }).showCreateArtifactDialog).toEqual(false);
-  });
   it('should handle SET_SHOW_ONBOARDING_HELP', async () => {
     expect(reducer(undefined, { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: true }).showTips).toEqual(true);
     expect(reducer(initialState, { type: OnboardingConstants.SET_SHOW_ONBOARDING_HELP, show: false }).showTips).toEqual(false);
@@ -46,9 +41,5 @@ describe('organization reducer', () => {
   it('should handle SET_ONBOARDING_APPROACH', async () => {
     expect(reducer(undefined, { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'physical' }).approach).toEqual('physical');
     expect(reducer(initialState, { type: OnboardingConstants.SET_ONBOARDING_APPROACH, value: 'virtual' }).approach).toEqual('virtual');
-  });
-  it('should handle SET_ONBOARDING_ARTIFACT_INCLUDED', async () => {
-    expect(reducer(undefined, { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: true }).artifactIncluded).toEqual(true);
-    expect(reducer(initialState, { type: OnboardingConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: false }).artifactIncluded).toEqual(false);
   });
 });

@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useIdleTimer, workerTimers } from 'react-idle-timer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -28,13 +28,11 @@ import { logoutUser, setAccountActivationCode, setShowConnectingDialog } from '.
 import { expirySet, getToken, updateMaxAge } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
-import { onboardingSteps } from '../constants/onboardingConstants';
 import ErrorBoundary from '../errorboundary';
 import { isDarkMode, toggle } from '../helpers';
-import { getOnboardingState, getUserSettings } from '../selectors';
+import { getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import Footer from './footer';
@@ -94,12 +92,29 @@ export const AppRoot = () => {
 
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.users.currentUser);
-  const onboardingState = useSelector(getOnboardingState);
   const showDismissHelptipsDialog = useSelector(state => !state.onboarding.complete && state.onboarding.showTipsDialog);
   const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
   const snackbar = useSelector(state => state.app.snackbar);
   const trackingCode = useSelector(state => state.app.trackerCode);
   const { mode } = useSelector(getUserSettings);
+
+  const trackLocationChange = useCallback(
+    pathname => {
+      let page = pathname;
+      // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
+      if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
+        const splitter = page.lastIndexOf('/');
+        const filters = page.slice(splitter + 1);
+        const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
+        page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
+      } else if (page.startsWith(activationPath)) {
+        dispatch(setAccountActivationCode(page.substring(activationPath.length + 1)));
+        navigate('/settings/my-profile', { replace: true });
+      }
+      Tracking.pageview(page);
+    },
+    [dispatch, navigate]
+  );
 
   useEffect(() => {
     dispatch(parseEnvironmentInfo());
@@ -116,8 +131,14 @@ export const AppRoot = () => {
     } else {
       Tracking.initialize(trackingCode);
     }
+  }, [dispatch, trackingCode]);
+
+  useEffect(() => {
+    if (!(trackingCode && cookies.get('_ga'))) {
+      return;
+    }
     trackLocationChange(pathname);
-  }, [trackingCode]);
+  }, [pathname, trackLocationChange, trackingCode]);
 
   useEffect(() => {
     trackLocationChange(pathname);
@@ -125,22 +146,7 @@ export const AppRoot = () => {
     if (hash) {
       navigate(hash.substring(1));
     }
-  }, [hash, pathname]);
-
-  const trackLocationChange = pathname => {
-    let page = pathname;
-    // if we're on page whose path might contain sensitive device/ group/ deployment names etc. we sanitize the sent information before submission
-    if (page.includes('=') && (page.startsWith('/devices') || page.startsWith('/deployments'))) {
-      const splitter = page.lastIndexOf('/');
-      const filters = page.slice(splitter + 1);
-      const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
-      page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
-    } else if (page.startsWith(activationPath)) {
-      dispatch(setAccountActivationCode(page.substring(activationPath.length + 1)));
-      navigate('/settings/my-profile', { replace: true });
-    }
-    Tracking.pageview(page);
-  };
+  }, [hash, navigate, pathname, trackLocationChange]);
 
   const onIdle = () => {
     if (expirySet() && currentUser) {
@@ -153,7 +159,6 @@ export const AppRoot = () => {
 
   const onToggleSearchResult = () => setShowSearchResult(toggle);
 
-  const onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_CREATION_DIALOG, onboardingState);
   const theme = createTheme(isDarkMode(mode) ? darkTheme : lightTheme);
 
   const { classes } = useStyles();
@@ -172,7 +177,6 @@ export const AppRoot = () => {
                 <PrivateRoutes />
               </ErrorBoundary>
             </div>
-            {onboardingComponent ? onboardingComponent : null}
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
             {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => dispatch(setShowConnectingDialog(false))} />}
           </div>

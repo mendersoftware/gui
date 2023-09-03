@@ -32,13 +32,15 @@ import {
 
 import pluralize from 'pluralize';
 
+import { BENEFITS } from '../../../constants/appConstants';
 import { rolesById, rolesByName, uiPermissionsById } from '../../../constants/userConstants';
 import { toggle } from '../../../helpers';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import Form from '../../common/forms/form';
 import PasswordInput from '../../common/forms/passwordinput';
 import TextInput from '../../common/forms/textinput';
 
-export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
+export const UserRolesSelect = ({ currentUser, disabled, onSelect, roles, user }) => {
   const [selectedRoleIds, setSelectedRoleIds] = useState(
     (user.roles || [rolesByName.admin]).reduce((accu, roleId) => {
       const foundRole = roles[roleId];
@@ -61,60 +63,59 @@ export const UserRolesSelect = ({ currentUser, onSelect, roles, user }) => {
     onSelect(newlySelectedRoles, hadRoleChanges);
   };
 
-  const editableRoles = useMemo(
-    () =>
-      Object.entries(roles).map(([id, role]) => {
-        const enabled = selectedRoleIds.some(roleId => id === roleId);
-        return { enabled, id, ...role };
-      }),
-    [roles, selectedRoleIds]
-  );
-
-  const showRoleUsageNotification = useMemo(
-    () =>
-      selectedRoleIds.reduce((accu, roleId) => {
-        const { permissions, uiPermissions } = roles[roleId];
-        const hasUiApiAccess = [rolesByName.ci].includes(roleId)
-          ? false
-          : roleId === rolesByName.admin ||
-            permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action)) ||
-            uiPermissions.userManagement.includes(uiPermissionsById.read.value);
-        if (hasUiApiAccess) {
-          return false;
-        }
-        return typeof accu !== 'undefined' ? accu : true;
-      }, undefined),
-    [selectedRoleIds]
-  );
+  const { editableRoles, showRoleUsageNotification } = useMemo(() => {
+    const editableRoles = Object.entries(roles).map(([id, role]) => {
+      const enabled = selectedRoleIds.some(roleId => id === roleId);
+      return { enabled, id, ...role };
+    });
+    const showRoleUsageNotification = selectedRoleIds.reduce((accu, roleId) => {
+      const { permissions, uiPermissions } = roles[roleId];
+      const hasUiApiAccess = [rolesByName.ci].includes(roleId)
+        ? false
+        : roleId === rolesByName.admin ||
+          permissions.some(permission => ![rolesByName.deploymentCreation.action].includes(permission.action)) ||
+          uiPermissions.userManagement.includes(uiPermissionsById.read.value);
+      if (hasUiApiAccess) {
+        return false;
+      }
+      return typeof accu !== 'undefined' ? accu : true;
+    }, undefined);
+    return { editableRoles, showRoleUsageNotification };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(roles), selectedRoleIds]);
 
   return (
-    <FormControl id="roles-form" style={{ maxWidth: 400 }}>
-      <InputLabel id="roles-selection-label">Roles</InputLabel>
-      <Select
-        labelId="roles-selection-label"
-        id={`roles-selector-${selectedRoleIds.length}`}
-        multiple
-        value={selectedRoleIds}
-        required
-        onChange={onInputChange}
-        renderValue={selected => selected.map(role => roles[role].name).join(', ')}
-      >
-        {editableRoles.map(role => (
-          <MenuItem id={role.id} key={role.id} value={role.id}>
-            <Checkbox id={`${role.id}-checkbox`} checked={role.enabled} />
-            <ListItemText id={`${role.id}-text`} primary={role.name} />
-          </MenuItem>
-        ))}
-      </Select>
-      {showRoleUsageNotification && (
-        <FormHelperText className="info">
-          The selected {pluralize('role', selectedRoleIds.length)} may prevent {currentUser.email === user.email ? 'you' : <i>{user.email}</i>} from using the
-          Mender UI.
-          <br />
-          Consider adding the <i>{rolesById[rolesByName.readOnly].name}</i> role as well.
-        </FormHelperText>
-      )}
-    </FormControl>
+    <div className="flexbox" style={{ alignItems: 'flex-end' }}>
+      <FormControl id="roles-form" style={{ maxWidth: 400 }}>
+        <InputLabel id="roles-selection-label">Roles</InputLabel>
+        <Select
+          labelId="roles-selection-label"
+          id={`roles-selector-${selectedRoleIds.length}`}
+          disabled={disabled}
+          multiple
+          value={selectedRoleIds}
+          required
+          onChange={onInputChange}
+          renderValue={selected => selected.map(role => roles[role].name).join(', ')}
+        >
+          {editableRoles.map(role => (
+            <MenuItem id={role.id} key={role.id} value={role.id}>
+              <Checkbox id={`${role.id}-checkbox`} checked={role.enabled} />
+              <ListItemText id={`${role.id}-text`} primary={role.name} />
+            </MenuItem>
+          ))}
+        </Select>
+        {showRoleUsageNotification && (
+          <FormHelperText className="info">
+            The selected {pluralize('role', selectedRoleIds.length)} may prevent {currentUser.email === user.email ? 'you' : <i>{user.email}</i>} from using the
+            Mender UI.
+            <br />
+            Consider adding the <i>{rolesById[rolesByName.readOnly].name}</i> role as well.
+          </FormHelperText>
+        )}
+      </FormControl>
+      <EnterpriseNotification className="margin-left-small" id={BENEFITS.rbac.id} />
+    </div>
   );
 };
 
@@ -174,7 +175,7 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
             control={<Checkbox checked={shouldResetPassword} onChange={togglePasswordReset} />}
             label="Send an email to the user containing a link to reset the password"
           />
-          {canManageUsers && isEnterprise && <UserRolesSelect currentUser={currentUser} onSelect={onSelect} roles={roles} user={{}} />}
+          <UserRolesSelect currentUser={currentUser} disabled={!(canManageUsers && isEnterprise)} onSelect={onSelect} roles={roles} user={{}} />
         </Form>
       </DialogContent>
       <DialogActions />

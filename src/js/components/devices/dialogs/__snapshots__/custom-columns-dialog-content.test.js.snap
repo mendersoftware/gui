@@ -740,7 +740,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   class="MuiDialogContent-root emotion-0"
 >
   <p>
-    You can select up to 5 columns of inventory data to display in the device list table. Drag to change the order.
+    You can select columns of inventory data to display in the device list table. Drag to change the order.
   </p>
   <div
     data-rbd-droppable-context-id="0"
@@ -752,7 +752,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       data-rbd-draggable-id="name"
     >
       <div>
-        name
+        Name
       </div>
       <div
         class="flexbox space-between"
@@ -807,7 +807,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       data-rbd-draggable-id="id"
     >
       <div>
-        id
+        Device ID
       </div>
       <div
         class="flexbox space-between"

@@ -38,13 +38,43 @@ test.describe('Deployments', () => {
     await page.focus(selectors.deviceGroupSelect);
     await page.type(selectors.deviceGroupSelect, 'All');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('All devices')`);
-    const creationButton = await page.waitForSelector('text=/Create deployment/i');
+    const creationButton = await page.waitForSelector(selectors.deploymentCreation);
     await creationButton.scrollIntoViewIfNeeded();
     await creationButton.click();
-    await page.waitForSelector('.deployment-item', { timeout: timeouts.tenSeconds });
+    await page.waitForSelector(selectors.deploymentListItem, { timeout: timeouts.tenSeconds });
     await page.click(`[role="tab"]:has-text('Finished')`);
-    await page.waitForSelector('.deployment-item:not(.deployment-header-item)', { timeout: timeouts.sixtySeconds });
-    const datetime = await page.getAttribute('.deployment-item:not(.deployment-header-item) time', 'datetime');
+    await page.waitForSelector(selectors.deploymentListItemContent, { timeout: timeouts.sixtySeconds });
+    const datetime = await page.getAttribute(`${selectors.deploymentListItemContent} time`, 'datetime');
+    const time = dayjs(datetime);
+    const earlier = dayjs().subtract(5, 'minutes');
+    const now = dayjs();
+    expect(time.isBetween(earlier, now));
+  });
+
+  test('allows shortcut device deployments', async ({ baseUrl, loggedInPage: page }) => {
+    await page.goto(`${baseUrl}ui/devices`);
+    // create an artifact to download first
+    await page.click(`text=/original/i`);
+    await page.hover('.MuiSpeedDial-fab');
+    await page.click('[aria-label="create-deployment"]');
+    await page.waitForSelector(selectors.releaseSelect, { timeout: timeouts.fiveSeconds });
+    const releaseSelect = page.locator(selectors.releaseSelect);
+    await releaseSelect.focus();
+    await releaseSelect.type('mender-demo');
+    await page.click(`#deployment-release-selection-listbox li`);
+    await page.getByRole('button', { name: 'Clear' }).click();
+    const textContent = await releaseSelect.textContent();
+    expect(textContent).toBeFalsy();
+    await releaseSelect.focus();
+    await releaseSelect.type('mender-demo');
+    await page.click(`#deployment-release-selection-listbox li`);
+    const creationButton = await page.waitForSelector(selectors.deploymentCreation);
+    await creationButton.scrollIntoViewIfNeeded();
+    await creationButton.click();
+    await page.waitForSelector(selectors.deploymentListItem, { timeout: timeouts.tenSeconds });
+    await page.click(`[role="tab"]:has-text('Finished')`);
+    await page.waitForSelector(selectors.deploymentListItemContent, { timeout: timeouts.sixtySeconds });
+    const datetime = await page.getAttribute(`${selectors.deploymentListItemContent} time`, 'datetime');
     const time = dayjs(datetime);
     const earlier = dayjs().subtract(5, 'minutes');
     const now = dayjs();
@@ -52,7 +82,6 @@ test.describe('Deployments', () => {
   });
 
   test('allows group deployments', async ({ loggedInPage: page }) => {
-    console.log(`allows group deployments`);
     await page.click(`a:has-text('Deployments')`);
     await page.click(`button:has-text('Create a deployment')`);
 
@@ -65,11 +94,11 @@ test.describe('Deployments', () => {
     await page.focus(selectors.deviceGroupSelect);
     await page.type(selectors.deviceGroupSelect, 'test');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('testgroup')`);
-    const creationButton = await page.waitForSelector('text=/Create deployment/i');
+    const creationButton = await page.waitForSelector(selectors.deploymentCreation);
     await creationButton.scrollIntoViewIfNeeded();
     await creationButton.click();
-    await page.waitForSelector('.deployment-item', { timeout: timeouts.tenSeconds });
+    await page.waitForSelector(selectors.deploymentListItem, { timeout: timeouts.tenSeconds });
     await page.click(`[role="tab"]:has-text('Finished')`);
-    await page.waitForSelector('.deployment-item:not(.deployment-header-item)', { timeout: timeouts.sixtySeconds });
+    await page.waitForSelector(selectors.deploymentListItemContent, { timeout: timeouts.sixtySeconds });
   });
 });

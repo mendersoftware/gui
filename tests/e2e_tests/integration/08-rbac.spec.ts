@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
+import { isLoggedIn } from '../utils/commands';
 import { selectors, timeouts } from '../utils/constants';
 
 test.describe('RBAC functionality', () => {
@@ -86,7 +87,7 @@ test.describe('RBAC functionality', () => {
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
     await page.click(`button:has-text('Log in')`);
-    await page.waitForSelector(selectors.loggedInText);
+    await isLoggedIn(page);
   });
 
   test('has working RBAC limitations', async ({ baseUrl, environment, page, password, username }) => {
@@ -100,7 +101,7 @@ test.describe('RBAC functionality', () => {
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
     await page.click(`button:has-text('Log in')`);
-    await page.waitForSelector(selectors.loggedInText);
+    await isLoggedIn(page);
     await page.reload();
     const releasesButton = page.getByText(/releases/i);
     await releasesButton.waitFor({ timeout: timeouts.tenSeconds });

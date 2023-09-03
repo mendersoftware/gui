@@ -38,7 +38,7 @@ export const FileTransfer = ({ item, onClose }) => {
     if (!device && canReadDevices) {
       dispatch(getDeviceById(object.id));
     }
-  }, []);
+  }, [canReadDevices, device, dispatch, item]);
 
   if (canReadDevices && !device) {
     return <Loader show={true} />;

@@ -44,6 +44,7 @@ const DeviceListItem = ({ columnHeaders, device, deviceListState, idAttribute, i
       }
       onClick(device);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [device.id, onClick, deviceListState.selectedId]
   );
 

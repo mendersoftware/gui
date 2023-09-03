@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
@@ -72,7 +72,7 @@ export const Past = props => {
   const { classes } = useStyles();
 
   const dispatch = useDispatch();
-  const dispatchedSetSnackbar = (...args) => dispatch(setSnackbar(...args));
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
   const { finished: pastSelectionState } = useSelector(getDeploymentsSelectionState);
   const past = useSelector(state => getMappedDeploymentSelection(state, type));
@@ -86,6 +86,36 @@ export const Past = props => {
   const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
 
   const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
+
+  /*
+  / refresh only finished deployments
+  /
+  */
+  const refreshPast = useCallback(
+    (
+      currentPage = page,
+      currentPerPage = perPage,
+      currentStartDate = startDate,
+      currentEndDate = endDate,
+      currentDeviceGroup = deviceGroup,
+      currentType = deploymentType
+    ) => {
+      const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
+      const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
+      setLoading(true);
+      return dispatch(getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType))
+        .then(deploymentsAction => {
+          setLoading(false);
+          clearRetryTimer(type, dispatchedSetSnackbar);
+          const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
+          if (total && !deploymentIds.length) {
+            return refreshPast(currentPage, currentPerPage, currentStartDate, currentEndDate, currentDeviceGroup);
+          }
+        })
+        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar));
+    },
+    [deploymentType, deviceGroup, dispatch, dispatchedSetSnackbar, endDate, page, perPage, startDate]
+  );
 
   useEffect(() => {
     const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
@@ -104,7 +134,7 @@ export const Past = props => {
     return () => {
       clearAllRetryTimers(dispatchedSetSnackbar);
     };
-  }, []);
+  }, [deploymentType, deviceGroup, dispatch, dispatchedSetSnackbar, endDate, page, perPage, startDate]);
 
   useEffect(() => {
     clearInterval(timer.current);
@@ -113,7 +143,7 @@ export const Past = props => {
     return () => {
       clearInterval(timer.current);
     };
-  }, [page, perPage, startDate, endDate, deviceGroup, deploymentType]);
+  }, [page, perPage, startDate, endDate, deviceGroup, deploymentType, refreshPast]);
 
   useEffect(() => {
     if (!past.length || onboardingState.complete) {
@@ -128,55 +158,16 @@ export const Past = props => {
         accu,
       false
     );
-    let onboardingStep = onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION;
+    let onboardingStep = onboardingSteps.DEPLOYMENTS_PAST;
     if (pastDeploymentsFailed) {
       onboardingStep = onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_FAILURE;
     }
     dispatch(advanceOnboarding(onboardingStep));
-    setTimeout(() => {
-      let notification = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED_NOTIFICATION, onboardingState, {
-        setSnackbar: dispatchedSetSnackbar
-      });
-      // the following extra check is needed since this component will still be mounted if a user returns to the initial tab after the first
-      // onboarding deployment & thus the effects will still run, so only ever consider the notification for the second deployment
-      notification =
-        past.length > 1
-          ? getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED_NOTIFICATION, onboardingState, { setSnackbar: dispatchedSetSnackbar }, notification)
-          : notification;
-      !!notification && dispatch(setSnackbar('open', TIMEOUTS.refreshDefault, '', notification, () => {}, true));
-    }, TIMEOUTS.debounceDefault);
-  }, [past.length, onboardingState.complete]);
+  }, [dispatch, onboardingState.complete, past]);
 
   useEffect(() => {
     dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, search: debouncedSearch, type: debouncedType } }));
-  }, [debouncedSearch, debouncedType]);
-
-  /*
-  / refresh only finished deployments
-  /
-  */
-  const refreshPast = (
-    currentPage = page,
-    currentPerPage = perPage,
-    currentStartDate = startDate,
-    currentEndDate = endDate,
-    currentDeviceGroup = deviceGroup,
-    currentType = deploymentType
-  ) => {
-    const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
-    const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
-    setLoading(true);
-    return dispatch(getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType))
-      .then(deploymentsAction => {
-        setLoading(false);
-        clearRetryTimer(type, dispatchedSetSnackbar);
-        const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
-        if (total && !deploymentIds.length) {
-          return refreshPast(currentPage, currentPerPage, currentStartDate, currentEndDate, currentDeviceGroup);
-        }
-      })
-      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, dispatchedSetSnackbar));
-  };
+  }, [debouncedSearch, debouncedType, dispatch]);
 
   let onboardingComponent = null;
   if (deploymentsRef.current) {
@@ -195,7 +186,6 @@ export const Past = props => {
       { anchor: { left, top: detailsButtons[0].parentElement.offsetTop + detailsButtons[0].parentElement.offsetHeight } },
       onboardingComponent
     );
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ONBOARDING_FINISHED, onboardingState, { anchor }, onboardingComponent);
   }
 
   const onGroupFilterChange = (e, value) => {

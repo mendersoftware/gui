@@ -16,7 +16,7 @@ import * as fs from 'fs';
 import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
-import { baseUrlToDomain, generateOtp, login, prepareCookies, startClient, tenantTokenRetrieval } from '../utils/commands';
+import { baseUrlToDomain, generateOtp, isLoggedIn, login, prepareCookies, startClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Settings', () => {
@@ -169,7 +169,7 @@ test.describe('Settings', () => {
       const newToken = await generateOtp();
       await page.fill('#token2fa', newToken);
       await page.click(`button:text('Log in')`);
-      await page.waitForSelector(selectors.loggedInText);
+      await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('text=/Enable Two Factor/');
       await page.waitForTimeout(timeouts.default);
@@ -180,7 +180,7 @@ test.describe('Settings', () => {
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
       await page.click(`:is(button:has-text('Log in'))`);
-      await page.waitForSelector(selectors.loggedInText);
+      await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings`);
     });
   });
@@ -244,7 +244,7 @@ test.describe('Settings', () => {
       context = await prepareCookies(context, domain, userId, token);
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui`);
-      await page.waitForSelector(selectors.loggedInText);
+      await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('#change_password');
 

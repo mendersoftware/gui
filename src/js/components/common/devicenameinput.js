@@ -45,7 +45,7 @@ export const DeviceNameInput = ({ device, isHovered }) => {
     if (!isEditing && name !== value) {
       setValue(name);
     }
-  }, [device, isEditing]);
+  }, [device, isEditing, name, value]);
 
   const onSubmit = () => dispatch(setDeviceTags(id, { ...tags, name: value })).then(() => setIsEditing(false));
 

@@ -23,9 +23,7 @@ import copy from 'copy-to-clipboard';
 
 import { setSnackbar, setVersionInfo } from '../actions/appActions';
 import { TIMEOUTS, canAccess } from '../constants/appConstants';
-import { onboardingSteps } from '../constants/onboardingConstants';
-import { getFeatures, getOnboardingState, getTenantCapabilities, getUserCapabilities, getVersionInformation } from '../selectors';
-import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import { getFeatures, getUserCapabilities, getVersionInformation } from '../selectors';
 import DocsLink from './common/docslink';
 
 const listItems = [
@@ -33,11 +31,7 @@ const listItems = [
   { route: '/devices', text: 'Devices', canAccess: ({ userCapabilities: { canReadDevices } }) => canReadDevices },
   { route: '/releases', text: 'Releases', canAccess: ({ userCapabilities: { canReadReleases, canUploadReleases } }) => canReadReleases || canUploadReleases },
   { route: '/deployments', text: 'Deployments', canAccess: ({ userCapabilities: { canDeploy, canReadDeployments } }) => canReadDeployments || canDeploy },
-  {
-    route: '/auditlog',
-    text: 'Audit log',
-    canAccess: ({ tenantCapabilities: { hasAuditlogs }, userCapabilities: { canAuditlog } }) => hasAuditlogs && canAuditlog
-  }
+  { route: '/auditlog', text: 'Audit log', canAccess: ({ userCapabilities: { canAuditlog } }) => canAuditlog }
 ];
 
 const useStyles = makeStyles()(theme => ({
@@ -133,25 +127,12 @@ export const LeftNav = () => {
   const releasesRef = useRef();
   const { classes } = useStyles();
 
-  const onboardingState = useSelector(getOnboardingState);
-  const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
-
-  let onboardingComponent;
-  if (releasesRef.current) {
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.APPLICATION_UPDATE_REMINDER_TIP, onboardingState, {
-      anchor: {
-        left: releasesRef.current.offsetWidth - 48,
-        top: releasesRef.current.offsetTop + releasesRef.current.offsetHeight / 2
-      },
-      place: 'right'
-    });
-  }
   return (
     <div className={`leftFixed leftNav ${classes.list}`}>
       <List style={{ padding: 0 }}>
         {listItems.reduce((accu, item, index) => {
-          if (!item.canAccess({ tenantCapabilities, userCapabilities })) {
+          if (!item.canAccess({ userCapabilities })) {
             return accu;
           }
           accu.push(
@@ -169,7 +150,6 @@ export const LeftNav = () => {
           return accu;
         }, [])}
       </List>
-      {onboardingComponent ? onboardingComponent : null}
       <List className={classes.infoList}>
         <ListItem className={`navLink leftNav ${classes.listItem}`} component={Link} to="/help">
           <ListItemText primary="Help & support" />

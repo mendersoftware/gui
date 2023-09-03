@@ -23,7 +23,7 @@ import { makeStyles } from 'tss-react/mui';
 import { useradmApiUrl } from '../../../constants/userConstants';
 import { toggle } from '../../../helpers';
 import ExpandableAttribute from '../../common/expandable-attribute';
-import InfoHint from '../../common/info-hint';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import { maxWidth } from './organizationsettingsitem';
 import SSOEditor from './ssoeditor';
 
@@ -48,6 +48,7 @@ const useStyles = makeStyles()(theme => ({
     columnGap: theme.spacing(2),
     display: 'grid',
     gridTemplateColumns: `minmax(max-content, ${maxWidth}px) max-content max-content`,
+    position: 'relative',
     ['&.has-sso']: {
       gridTemplateColumns: `${maxWidth - 45}px 1fr`
     }
@@ -112,6 +113,7 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar }) => {
           <a onClick={onOpenEditorClick}>View metadata in the text editor</a>
         ) : (
           <>
+            <MenderHelpTooltip id={HELPTOOLTIPS.samlMetadata.id} style={{ position: 'absolute', left: -35 }} placement="left" />
             <Dropzone multiple={false} onDrop={onDrop}>
               {({ getRootProps, getInputProps }) => (
                 <div {...getRootProps()} className="dropzone onboard dashboard-placeholder flexbox centered">
@@ -139,7 +141,7 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar }) => {
           )}
         </div>
       </div>
-      {hasSSOConfig ? (
+      {hasSSOConfig && (
         <div className="flexbox column margin-top">
           {configDetails.map(item => (
             <ExpandableAttribute
@@ -154,8 +156,6 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar }) => {
             />
           ))}
         </div>
-      ) : (
-        <InfoHint content="Submit the metadata document from your Identity Provider" />
       )}
       <SSOEditor
         open={isEditing}

@@ -11,7 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
@@ -24,17 +25,26 @@ import {
 } from '@mui/icons-material';
 import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 
-import { DEPLOYMENT_ROUTES } from '../../../constants/deploymentConstants';
+import { setSnackbar } from '../../../actions/appActions';
+import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../../actions/deploymentActions';
+import { applyDeviceConfig, setDeviceConfig } from '../../../actions/deviceActions';
+import { saveGlobalSettings } from '../../../actions/userActions';
+import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
+import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
+import { getDeviceConfigDeployment } from '../../../selectors';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
+import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
+import EnterpriseNotification from '../../common/enterpriseNotification';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
+import { InfoHintContainer } from '../../common/info-hint';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
-import { ConfigureAddOnTip, ConfigureRaspberryLedTip, ConfigureTimezoneTip } from '../../helptips/helptooltips';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
 
@@ -47,11 +57,11 @@ const defaultReportTimeStamp = '0001-01-01T00:00:00Z';
 const configHelpTipsMap = {
   'mender-demo-raspberrypi-led': {
     position: 'right',
-    component: ConfigureRaspberryLedTip
+    component: ({ anchor, ...props }) => <MenderHelpTooltip style={anchor} id={HELPTOOLTIPS.configureRaspberryLedTip.id} contentProps={props} />
   },
   timezone: {
     position: 'right',
-    component: ConfigureTimezoneTip
+    component: ({ anchor, ...props }) => <MenderHelpTooltip style={anchor} id={HELPTOOLTIPS.configureTimezoneTip.id} contentProps={props} />
   }
 };
 
@@ -130,115 +140,124 @@ export const ConfigUpdateFailureActions = ({ hasLog, onSubmit, onCancel, setShow
   </>
 );
 
-export const DeviceConfiguration = ({
-  abortDeployment,
-  applyDeviceConfig,
-  defaultConfig = {},
-  device,
-  deployment = {},
-  getDeviceLog,
-  getSingleDeployment,
-  saveGlobalSettings,
-  setDeviceConfig,
-  setSnackbar,
-  showHelptips
-}) => {
+export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId } }) => {
+  const { device, deviceConfigDeployment: deployment } = useSelector(state => getDeviceConfigDeployment(state, deviceId));
   const { config = {}, status } = device;
-  const { configured, deployment_id, reported = {}, reported_ts, updated_ts } = config;
-
+  const { configured = {}, deployment_id, reported = {}, reported_ts, updated_ts } = config;
+  const isRelevantDeployment = deployment.created > updated_ts && (!reported_ts || deployment.finished > reported_ts);
   const [changedConfig, setChangedConfig] = useState();
-  const [isEditDisabled, setIsEditDisabled] = useState(false);
+  const [editableConfig, setEditableConfig] = useState();
   const [isAborting, setIsAborting] = useState(false);
   const [isEditingConfig, setIsEditingConfig] = useState(false);
   const [isSetAsDefault, setIsSetAsDefault] = useState(false);
   const [isUpdatingConfig, setIsUpdatingConfig] = useState(false);
-  const [shouldUpdateEditor, setShouldUpdateEditor] = useState(false);
   const [showConfigImport, setShowConfigImport] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [updateFailed, setUpdateFailed] = useState();
   const [updateLog, setUpdateLog] = useState();
+  const dispatch = useDispatch();
+  const deploymentTimer = useRef();
 
   useEffect(() => {
-    setShouldUpdateEditor(toggle);
-  }, [isEditingConfig, isUpdatingConfig]);
-
-  useEffect(() => {
-    if (device.config || changedConfig) {
-      setIsEditDisabled(isUpdatingConfig);
+    if (!isEmpty(config) && !isEmpty(changedConfig) && !isEditingConfig) {
       setIsEditingConfig(isUpdatingConfig || updateFailed);
     }
-  }, [isUpdatingConfig, updateFailed]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(config), JSON.stringify(changedConfig), isEditingConfig, isUpdatingConfig, updateFailed]);
 
   useEffect(() => {
     if (deployment.devices && deployment.devices[device.id]?.log) {
       setUpdateLog(deployment.devices[device.id].log);
     }
-  }, [deployment.devices]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(deployment.devices), device.id]);
 
   useEffect(() => {
-    if (deployment.status === 'finished') {
+    clearInterval(deploymentTimer.current);
+    if (isRelevantDeployment && deployment.status !== DEPLOYMENT_STATES.finished) {
+      deploymentTimer.current = setInterval(() => dispatch(getSingleDeployment(deployment_id)), TIMEOUTS.refreshDefault);
+    } else if (deployment_id && !isRelevantDeployment) {
+      dispatch(getSingleDeployment(deployment_id));
+    }
+    return () => {
+      clearInterval(deploymentTimer.current);
+    };
+  }, [deployment.status, deployment_id, dispatch, isRelevantDeployment]);
+
+  useEffect(() => {
+    if (!isRelevantDeployment) {
+      return;
+    }
+    if (deployment.status === DEPLOYMENT_STATES.finished) {
       // we have to rely on the device stats here as the state change might not have propagated to the deployment status
       // leaving all stats at 0 and giving a false impression of deployment success
       const stats = groupDeploymentStats(deployment);
       const deviceStats = groupDeploymentDevicesStats(deployment);
-      setUpdateFailed(deployment.created > updated_ts && deployment.finished > reported_ts && (stats.failures || deviceStats.failures));
+      const updateFailed = !!((stats.failures || deviceStats.failures) && deployment.device_count);
+      setUpdateFailed(updateFailed);
+      setIsEditingConfig(updateFailed);
       setIsUpdatingConfig(false);
     } else if (deployment.status) {
       setChangedConfig(configured);
+      setEditableConfig(configured);
       // we can't rely on the deployment.status to be !== 'finished' since `deployment` is initialized as an empty object
       // and thus the undefined status would also point to an ongoing update
       setIsUpdatingConfig(true);
     }
-  }, [deployment.status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(configured), JSON.stringify(deployment.stats), deployment.created, deployment.status, deployment.finished, isRelevantDeployment]);
 
   useEffect(() => {
-    const { config = {} } = device;
-    if (!changedConfig && device.config && (!deployment_id || deployment.status)) {
-      const { configured = {}, reported = {}, reported_ts } = config;
-      let currentConfig = reported;
+    if (!isRelevantDeployment) {
+      return;
+    }
+    if (!changedConfig && !isEmpty(config) && (!deployment_id || deployment.status)) {
+      // let currentConfig = reported;
       const stats = groupDeploymentStats(deployment);
-      if (deployment.status !== 'finished' || (deployment.finished > reported_ts && stats.failures)) {
-        currentConfig = configured;
+      if (deployment.status !== DEPLOYMENT_STATES.finished || stats.failures) {
+        setEditableConfig(configured);
+        setChangedConfig(configured);
       }
-      setChangedConfig(currentConfig);
     }
-    if (deployment.status !== 'finished' && deployment_id) {
-      getSingleDeployment(deployment_id);
-    }
-  }, [device.config, deployment.status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(config), deployment.status, !changedConfig, JSON.stringify(deployment), isRelevantDeployment]);
 
   const onConfigImport = ({ config, importType }) => {
     let updatedConfig = config;
     if (importType === 'default') {
       updatedConfig = defaultConfig.current;
     }
-    setShouldUpdateEditor(toggle);
     setChangedConfig(updatedConfig);
+    setEditableConfig(updatedConfig);
     setShowConfigImport(false);
   };
 
+  const onSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
+
   const onSetAsDefaultChange = () => setIsSetAsDefault(toggle);
 
-  const onShowLog = () => {
-    getDeviceLog(deployment_id, device.id).then(result => {
+  const onShowLog = () =>
+    dispatch(getDeviceLog(deployment_id, device.id)).then(result => {
       setShowLog(true);
       setUpdateLog(result[1]);
     });
-  };
 
   const onCancel = () => {
-    setIsEditingConfig(isEmpty(reported));
-    setChangedConfig(reported);
+    if (!isEmpty(reported)) {
+      setEditableConfig(reported);
+      setChangedConfig(reported);
+    }
     let requests = [];
-    if (deployment_id && deployment.status !== 'finished') {
-      requests.push(abortDeployment(deployment_id));
+    if (deployment_id && deployment.status !== DEPLOYMENT_STATES.finished) {
+      requests.push(dispatch(abortDeployment(deployment_id)));
     }
     if (deepCompare(reported, changedConfig)) {
       requests.push(Promise.resolve());
     } else {
-      requests.push(setDeviceConfig(device.id, reported));
+      requests.push(dispatch(setDeviceConfig(device.id, reported)));
       if (isSetAsDefault) {
-        requests.push(saveGlobalSettings({ defaultDeviceConfig: { current: defaultConfig.previous } }));
+        requests.push(dispatch(saveGlobalSettings({ defaultDeviceConfig: { current: defaultConfig.previous } })));
       }
     }
     return Promise.all(requests).then(() => {
@@ -252,13 +271,9 @@ export const DeviceConfiguration = ({
     Tracking.event({ category: 'devices', action: 'apply_configuration' });
     setIsUpdatingConfig(true);
     setUpdateFailed(false);
-    return setDeviceConfig(device.id, changedConfig)
-      .then(() => applyDeviceConfig(device.id, { retries: 0 }, isSetAsDefault, changedConfig))
-      .then(() => {
-        setUpdateFailed(false);
-      })
+    return dispatch(setDeviceConfig(device.id, changedConfig))
+      .then(() => dispatch(applyDeviceConfig(device.id, { retries: 0 }, isSetAsDefault, changedConfig)))
       .catch(() => {
-        setIsEditDisabled(false);
         setIsEditingConfig(true);
         setUpdateFailed(true);
         setIsUpdatingConfig(false);
@@ -267,7 +282,9 @@ export const DeviceConfiguration = ({
 
   const onStartEdit = e => {
     e.stopPropagation();
-    setChangedConfig(configured || reported);
+    const nextEditableConfig = { ...configured, ...reported };
+    setChangedConfig(nextEditableConfig);
+    setEditableConfig(nextEditableConfig);
     setIsEditingConfig(true);
   };
 
@@ -279,7 +296,7 @@ export const DeviceConfiguration = ({
   const onAbortClick = () => setIsAborting(toggle);
 
   const hasDeviceConfig = !isEmpty(reported);
-  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={device.updated_ts} />;
+  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={updated_ts} />;
   if (isEditingConfig) {
     footer = (
       <ConfigEditingActions
@@ -344,32 +361,36 @@ export const DeviceConfiguration = ({
               </Button>
             )}
           </div>
-          {isEditingConfig ? (
-            <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
-              Import configuration
-            </Button>
-          ) : null}
+          <div className="flexbox center-aligned">
+            {isEditingConfig ? (
+              <Button onClick={onStartImportClick} disabled={isUpdatingConfig} startIcon={<SaveAltIcon />} style={{ justifySelf: 'left' }}>
+                Import configuration
+              </Button>
+            ) : null}
+            <InfoHintContainer>
+              <EnterpriseNotification id={BENEFITS.deviceConfiguration.id} />
+              <MenderHelpTooltip id={HELPTOOLTIPS.configureAddOnTip.id} style={{ marginTop: 5 }} />
+              <DocsTooltip id={DOCSTIPS.deviceConfig.id} />
+            </InfoHintContainer>
+          </div>
         </div>
       }
     >
       <div className="relative">
         {isEditingConfig ? (
           <KeyValueEditor
-            disabled={isEditDisabled}
+            disabled={isUpdatingConfig}
             errortext=""
-            input={changedConfig}
+            initialInput={editableConfig}
             inputHelpTipsMap={helpTipsMap}
             onInputChange={setChangedConfig}
-            reset={shouldUpdateEditor}
-            showHelptips={showHelptips}
           />
         ) : (
-          hasDeviceConfig && <ConfigurationObject config={reported} setSnackbar={setSnackbar} />
+          hasDeviceConfig && <ConfigurationObject config={reported} setSnackbar={onSetSnackbar} />
         )}
-        {showHelptips && <ConfigureAddOnTip />}
         <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
         {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
-        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} setSnackbar={setSnackbar} />}
+        {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
       </div>
     </DeviceDataCollapse>
   );

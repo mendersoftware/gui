@@ -24,7 +24,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getToken } from '../../auth';
 import { canAccess } from '../../constants/appConstants';
 import { detectOsIdentifier, toggle } from '../../helpers';
-import { getCurrentUser, getDocsVersion, getIsEnterprise, getTenantCapabilities, getVersionInformation } from '../../selectors';
+import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getVersionInformation } from '../../selectors';
 import Tracking from '../../tracking';
 import CommonDocsLink from '../common/docslink';
 import Time from '../common/time';
@@ -245,7 +245,6 @@ const DocsLink = ({ title, ...remainder }) => (
 
 const DownloadableComponents = ({ locations, onMenuClick }) => {
   const onLocationClick = (location, title) => {
-    console.log(location);
     Tracking.event({ category: 'download', action: title });
     cookies.set('JWT', getToken(), { path: '/', maxAge: 60, domain: '.mender.io', sameSite: false });
     const link = document.createElement('a');
@@ -273,7 +272,7 @@ const DownloadableComponents = ({ locations, onMenuClick }) => {
   ));
 };
 
-const DownloadSection = ({ docsVersion, item, isEnterprise, onMenuClick, os, versionInformation }) => {
+const DownloadSection = ({ item, isEnterprise, onMenuClick, os, versionInformation }) => {
   const [open, setOpen] = useState(false);
   const { id, getLocations, packageId, title } = item;
   const { locations, ...extraLocations } = getLocations({ isEnterprise, tool: item, versionInfo: versionInformation.repos, os });
@@ -298,7 +297,7 @@ const DownloadSection = ({ docsVersion, item, isEnterprise, onMenuClick, os, ver
             </React.Fragment>
           ))}
         </div>
-        <DocsLink docsVersion={docsVersion} path={`release-information/release-notes-changelog/${packageId || id}`} title="Changelog" />
+        <DocsLink path={`release-information/release-notes-changelog/${packageId || id}`} title="Changelog" />
       </AccordionDetails>
     </Accordion>
   );
@@ -310,7 +309,6 @@ export const Downloads = () => {
   const [os] = useState(detectOsIdentifier());
   const dispatch = useDispatch();
   const { tokens = [] } = useSelector(getCurrentUser);
-  const docsVersion = useSelector(getDocsVersion);
   const isEnterprise = useSelector(getIsEnterprise);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const { latestRelease: versions = { repos: {}, releaseDate: '' } } = useSelector(getVersionInformation);
@@ -330,7 +328,6 @@ export const Downloads = () => {
   const handleToggle = event => {
     setAnchorEl(current => (current ? null : event?.currentTarget.parentElement));
     const location = event?.target.getAttribute('value') || '';
-    console.log(location);
     setCurrentLocation(location);
   };
 
@@ -341,7 +338,7 @@ export const Downloads = () => {
       copy(option.format({ location: currentLocation, tokens }));
       dispatch(setSnackbar('Copied to clipboard'));
     },
-    [currentLocation, tokens]
+    [currentLocation, dispatch, tokens]
   );
 
   return (
@@ -349,15 +346,7 @@ export const Downloads = () => {
       <h2>Downloads</h2>
       <p>To get the most out of Mender, download the tools listed below.</p>
       {availableTools.map(tool => (
-        <DownloadSection
-          docsVersion={docsVersion}
-          key={tool.id}
-          item={tool}
-          isEnterprise={isEnterprise}
-          onMenuClick={handleToggle}
-          os={os}
-          versionInformation={versions}
-        />
+        <DownloadSection key={tool.id} item={tool} isEnterprise={isEnterprise} onMenuClick={handleToggle} os={os} versionInformation={versions} />
       ))}
       <Menu id="download-options-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleToggle} variant="menu">
         {copyOptions.map(option => (
@@ -367,8 +356,7 @@ export const Downloads = () => {
         ))}
       </Menu>
       <p>
-        To learn more about the tools availabe for Mender, read the{' '}
-        <DocsLink docsVersion={docsVersion} path="downloads" title="Downloads section in our documentation" />.
+        To learn more about the tools availabe for Mender, read the <DocsLink path="downloads" title="Downloads section in our documentation" />.
       </p>
     </div>
   );

@@ -257,16 +257,20 @@ export const deviceHandlers = [
     if (defaultState.devices.byId[deviceId]) {
       return res(
         ctx.json({
-          configured: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-          reported: { uiPasswordRequired: true, foo: 'bar', timezone: 'GMT+2' },
-          updated_ts: '2019-01-01T09:25:00.000Z',
+          configured: { test: true, something: 'else', aNumber: 42 },
+          deployment_id: 'config1',
+          reported: { test: true, something: 'else', aNumber: 42 },
+          updated_ts: defaultState.devices.byId.a1.updated_ts,
           reported_ts: '2019-01-01T09:25:01.000Z'
         })
       );
     }
     return res(ctx.status(512));
   }),
-  rest.put(`${deviceConfig}/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+  rest.put(`${deviceConfig}/:deviceId`, ({ params: { deviceId }, body }, res, ctx) => {
+    if (JSON.stringify(body).includes('evilValue')) {
+      return res(ctx.status(418));
+    }
     if (defaultState.devices.byId[deviceId]) {
       return res(ctx.status(201));
     }
@@ -274,7 +278,7 @@ export const deviceHandlers = [
   }),
   rest.post(`${deviceConfig}/:deviceId/deploy`, ({ params: { deviceId } }, res, ctx) => {
     if (defaultState.devices.byId[deviceId]) {
-      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+      return res(ctx.status(200), ctx.json({ deployment_id: 'config1' }));
     }
     return res(ctx.status(514));
   }),

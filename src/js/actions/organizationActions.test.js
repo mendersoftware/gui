@@ -15,7 +15,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, webhookEvents } from '../../../tests/mockData';
-import { SET_ANNOUNCEMENT, SET_FIRST_LOGIN_AFTER_SIGNUP, SET_SNACKBAR } from '../constants/appConstants';
+import { SET_ANNOUNCEMENT, SET_FIRST_LOGIN_AFTER_SIGNUP, SET_SNACKBAR, locations } from '../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import {
   RECEIVE_AUDIT_LOGS,
@@ -44,6 +44,7 @@ import {
   getCurrentCard,
   getIntegrations,
   getSamlConfigs,
+  getTargetLocation,
   getUserOrganization,
   getWebhookEvents,
   requestPlanChange,
@@ -68,6 +69,8 @@ const expectedSamlConfigs = [
   { id: '2', issuer: 'https://samltest2.id/saml/idp', valid_until: '2030-10-24T21:14:09Z' }
 ];
 
+const oldHostname = window.location.hostname;
+
 /* eslint-disable sonarjs/no-identical-functions */
 describe('organization actions', () => {
   it('should handle different error message formats', async () => {
@@ -78,6 +81,31 @@ describe('organization actions', () => {
       expect(storeActions).toHaveLength(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
+  });
+
+  it('should point to proper target locations from different circumstances', () => {
+    const expectations = [
+      { hostname: locations.us.location, location: locations.us.key, result: locations.us.location },
+      { hostname: locations.us.location, location: locations.eu.key, result: locations.eu.location },
+      { hostname: locations.eu.location, location: locations.us.key, result: locations.us.location },
+      { hostname: locations.eu.location, location: locations.eu.key, result: locations.eu.location },
+      { hostname: `staging.${locations.us.location}`, location: locations.us.key, result: `staging.${locations.us.location}` },
+      { hostname: `staging.${locations.us.location}`, location: locations.eu.key, result: `staging.${locations.eu.location}` },
+      { hostname: `testing.staging.${locations.us.location}`, location: locations.us.key, result: `testing.staging.${locations.us.location}` },
+      { hostname: `testing.staging.${locations.us.location}`, location: locations.eu.key, result: `testing.staging.${locations.eu.location}` },
+      { hostname: 'docker.mender.io', location: locations.us.key, result: '' },
+      { hostname: 'docker.mender.io', location: locations.eu.key, result: '' },
+      { hostname: 'localhost', location: locations.us.key, result: '' },
+      { hostname: 'localhost', location: locations.eu.key, result: '' }
+    ];
+
+    expectations.map(({ hostname, location, result }) => {
+      window.location = { ...window.location, hostname };
+      let targetLocation = getTargetLocation(location);
+      expect(targetLocation).toBe(result ? `https://${result}` : result);
+    });
+
+    window.location = { ...window.location, hostname: oldHostname };
   });
 
   it('should handle trial creation', async () => {

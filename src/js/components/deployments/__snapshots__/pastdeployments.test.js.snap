@@ -1309,7 +1309,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
     class="datepicker-container emotion-0"
   >
     <div
-      class=""
+      class=" "
     >
       <span>
         Filter by date

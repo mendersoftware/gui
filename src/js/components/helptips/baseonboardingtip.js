@@ -11,8 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   ArrowBack as ArrowBackIcon,
@@ -20,10 +20,11 @@ import {
   ArrowForward as ArrowForwardIcon,
   ArrowUpward as ArrowUpwardIcon
 } from '@mui/icons-material';
-
-import { bindActionCreators } from 'redux';
+import { buttonBaseClasses, buttonClasses } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { toggle } from '../../helpers';
 import Tracking from '../../tracking';
 import { OnboardingTooltip } from '../common/mendertooltip';
@@ -66,37 +67,39 @@ export const orientations = {
   }
 };
 
-export const OnboardingIndicator = React.forwardRef(({ className = '', orientation: { arrow, placement }, style = {}, toggle, ...props }, ref) => (
-  <div className={className} onClick={toggle} ref={ref} style={style} {...props}>
-    <div className={`tooltip onboard-icon ${placement}`}>{arrow}</div>
-  </div>
-));
-OnboardingIndicator.displayName = 'OnboardingIndicator';
+const useStyles = makeStyles()(theme => ({
+  root: {
+    [`.${buttonBaseClasses.root}.${buttonClasses.text}`]: { color: theme.palette.background.paper, paddingRight: 0 }
+  }
+}));
 
-const BaseOnboardingTipComponent = ({
-  anchor,
-  component,
-  place = 'top',
-  progress,
-  progressTotal = 3,
-  id = '1',
-  setShowDismissOnboardingTipsDialog,
-  ...others
-}) => {
-  const [open, setOpen] = useState(true);
+export const BaseOnboardingTooltip = ({ anchor = { left: 0, top: 0 }, icon, children, id = '1', place = 'top', ...props }) => {
+  const [open, setOpen] = useState(false);
+  const showDismissHelptipsDialog = useSelector(state => state.onboarding.showTipsDialog);
+  const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
+  const delayTimer = useRef();
+
+  const { classes } = useStyles();
 
   useEffect(() => {
     Tracking.event({ category: 'onboarding', action: id });
-    setOpen(true);
-  }, []);
+    clearTimeout(delayTimer.current);
+    delayTimer.current = setTimeout(() => setOpen(true), TIMEOUTS.debounceShort);
+    return () => {
+      clearTimeout(delayTimer.current);
+    };
+  }, [id]);
 
   const toggleVisibility = () => setOpen(toggle);
 
   const hide = () => setOpen(false);
 
+  if (showDismissHelptipsDialog || showDeviceConnectionDialog) {
+    return null;
+  }
+
   const orientation = orientations[place];
   const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top, overflow: 'initial' });
-
   return (
     <OnboardingTooltip
       disableFocusListener
@@ -107,6 +110,7 @@ const BaseOnboardingTipComponent = ({
       open={open}
       placement={orientation.placement}
       PopperProps={{
+        className: classes.root,
         disablePortal: true,
         popperOptions: {
           strategy: 'fixed',
@@ -116,25 +120,31 @@ const BaseOnboardingTipComponent = ({
           ]
         }
       }}
-      title={
-        <div className="content">
-          {React.cloneElement(component, others)}
-          <div className="flexbox">
-            {progress ? <div>{`Progress: step ${progress} of ${progressTotal}`}</div> : null}
-            <div style={{ flexGrow: 1 }} />
-            <a onClick={() => setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
-          </div>
-        </div>
-      }
+      title={children}
+      className={classes.root}
+      {...props}
     >
-      <OnboardingIndicator className="onboard-tip" orientation={orientation} style={style} toggle={toggleVisibility} />
+      <div className="onboard-tip" onClick={toggleVisibility} style={style}>
+        <div className={`tooltip onboard-icon ${orientation.placement}`}>{icon ?? orientation.arrow}</div>
+      </div>
     </OnboardingTooltip>
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ setShowDismissOnboardingTipsDialog }, dispatch);
+export const BaseOnboardingTip = ({ anchor, icon, component, place, id, ...others }) => {
+  const dispatch = useDispatch();
+  return (
+    <BaseOnboardingTooltip anchor={anchor} icon={icon} place={place} id={id}>
+      <div className="content">
+        {React.cloneElement(component, others)}
+        <div>
+          <b className="clickable" onClick={() => dispatch(setShowDismissOnboardingTipsDialog(true))}>
+            Dismiss the tutorial
+          </b>
+        </div>
+      </div>
+    </BaseOnboardingTooltip>
+  );
 };
 
-export const BaseOnboardingTip = connect(null, mapDispatchToProps)(BaseOnboardingTipComponent);
 export default BaseOnboardingTip;

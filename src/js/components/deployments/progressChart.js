@@ -236,7 +236,7 @@ export const getDeploymentPhasesInfo = deployment => {
   } = groupDeploymentStats(deployment, deploymentPhases.length < 2);
   const totalDeviceCount = Math.max(device_count, max_devices);
 
-  let phases = deploymentPhases.length ? deploymentPhases : [{ id, device_count: totalSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
+  let phases = deploymentPhases.length ? deploymentPhases : [{ id, device_count: totalSuccessCount, batch_size: 100, start_ts: created }];
   return {
     currentProgressCount,
     phases,

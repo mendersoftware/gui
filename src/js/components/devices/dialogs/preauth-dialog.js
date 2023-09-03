@@ -12,11 +12,13 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 // material ui
 import { InfoOutlined as InfoIcon } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
+import { preauthDevice } from '../../../actions/deviceActions';
 import { isEmpty } from '../../../helpers';
 import FileUpload from '../../common/forms/fileupload';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
@@ -39,10 +41,11 @@ export const DeviceLimitWarning = ({ acceptedDevices, deviceLimit, hasContactInf
   </div>
 );
 
-export const PreauthDialog = ({ acceptedDevices, deviceLimit, limitMaxed, onCancel, onSubmit, preauthDevice, setSnackbar }) => {
+export const PreauthDialog = ({ acceptedDevices, deviceLimit, limitMaxed, onCancel, onSubmit }) => {
   const [errortext, setErrortext] = useState(null);
   const [jsonIdentity, setJsonIdentity] = useState(null);
   const [publicKey, setPublicKey] = useState(null);
+  const dispatch = useDispatch();
 
   const convertIdentityToJSON = jsonIdentity => {
     setErrortext(null);
@@ -54,7 +57,7 @@ export const PreauthDialog = ({ acceptedDevices, deviceLimit, limitMaxed, onCanc
       pubkey: publicKey,
       identity_data: jsonIdentity
     };
-    return preauthDevice(authset)
+    return dispatch(preauthDevice(authset))
       .then(() => onSubmit(shouldClose))
       .catch(setErrortext);
   };
@@ -75,7 +78,6 @@ export const PreauthDialog = ({ acceptedDevices, deviceLimit, limitMaxed, onCanc
             </>
           }
           onFileChange={setPublicKey}
-          setSnackbar={setSnackbar}
         />
         <h4 className="margin-bottom-none margin-top">Identity data</h4>
         <KeyValueEditor errortext={errortext} onInputChange={convertIdentityToJSON} />

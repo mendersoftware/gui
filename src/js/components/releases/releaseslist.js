@@ -11,14 +11,17 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
+import Dropzone from 'react-dropzone';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles } from 'tss-react/mui';
 
+import { setSnackbar } from '../../actions/appActions';
+import { selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { SORTING_OPTIONS, canAccess as canShow } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { getFeatures, getReleasesList, getUserCapabilities } from '../../selectors';
 import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -56,26 +59,70 @@ const columns = [
 ];
 
 const useStyles = makeStyles()(() => ({
-  container: { maxWidth: 1600 }
+  container: { maxWidth: 1600 },
+  empty: { margin: '8vh auto' }
 }));
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
-export const ReleasesList = ({ artifactIncluded, features, onboardingState, onSelect, releasesListState, releases, setReleasesListState }) => {
+const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop, onUpload }) => (
+  <div className={`dashboard-placeholder fadeIn ${className}`} ref={dropzoneRef}>
+    <Dropzone activeClassName="active" disabled={uploading} multiple={false} noClick={true} onDrop={onDrop} rejectClassName="active">
+      {({ getRootProps, getInputProps }) => (
+        <div {...getRootProps({ className: uploading ? 'dropzone disabled muted' : 'dropzone' })} onClick={() => onUpload()}>
+          <input {...getInputProps()} disabled={uploading} />
+          <p>
+            There are no Releases yet.{' '}
+            {canUpload && (
+              <>
+                <a>Upload an Artifact</a> to create a new Release
+              </>
+            )}
+          </p>
+        </div>
+      )}
+    </Dropzone>
+  </div>
+);
+
+export const ReleasesList = ({ onFileUploadClick }) => {
+  const repoRef = useRef();
+  const dropzoneRef = useRef();
+  const uploading = useSelector(state => state.app.uploading);
+  const hasReleases = useSelector(
+    state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
+  );
+  const features = useSelector(getFeatures);
+  const releases = useSelector(getReleasesList);
+  const releasesListState = useSelector(state => state.releases.releasesList);
+  const userCapabilities = useSelector(getUserCapabilities);
+  const dispatch = useDispatch();
+  const { classes } = useStyles();
+
+  const { canUploadReleases } = userCapabilities;
   const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, total } = releasesListState;
   const { key: attribute, direction } = sort;
-  const repoRef = useRef();
-  const { classes } = useStyles();
+
+  const onSelect = useCallback(id => dispatch(selectRelease(id)), [dispatch]);
 
   const onChangeSorting = sortKey => {
     let sort = { key: sortKey, direction: direction === SORTING_OPTIONS.asc ? SORTING_OPTIONS.desc : SORTING_OPTIONS.asc };
     if (sortKey !== attribute) {
       sort = { ...sort, direction: columns.find(({ key }) => key === sortKey)?.defaultSortDirection ?? SORTING_OPTIONS.desc };
     }
-    setReleasesListState({ page: 1, sort });
+    dispatch(setReleasesListState({ page: 1, sort }));
   };
 
-  const onChangePagination = (page, currentPerPage = perPage) => setReleasesListState({ page, perPage: currentPerPage });
+  const onChangePagination = (page, currentPerPage = perPage) => dispatch(setReleasesListState({ page, perPage: currentPerPage }));
+
+  const onDrop = (acceptedFiles, rejectedFiles) => {
+    if (acceptedFiles.length) {
+      onFileUploadClick(acceptedFiles[0]);
+    }
+    if (rejectedFiles.length) {
+      dispatch(setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File should be of type .mender`, null));
+    }
+  };
 
   const applicableColumns = useMemo(
     () =>
@@ -85,18 +132,24 @@ export const ReleasesList = ({ artifactIncluded, features, onboardingState, onSe
         }
         return accu;
       }, []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(features)]
   );
 
-  let onboardingComponent = null;
-  if (repoRef.current?.lastChild?.lastChild) {
-    const element = repoRef.current.lastChild.lastChild;
-    const anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetParent?.offsetTop + element.offsetHeight };
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.ARTIFACT_INCLUDED_ONBOARDING, { ...onboardingState, artifactIncluded }, { anchor });
-    onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEPLOYMENTS_PAST_COMPLETED, onboardingState, { anchor }, onboardingComponent);
+  const potentialTotal = searchTerm ? searchTotal : total;
+  if (!hasReleases) {
+    return (
+      <EmptyState
+        canUpload={canUploadReleases}
+        className={classes.empty}
+        dropzoneRef={dropzoneRef}
+        uploading={uploading}
+        onDrop={onDrop}
+        onUpload={onFileUploadClick}
+      />
+    );
   }
 
-  const potentialTotal = searchTerm ? searchTotal : total;
   return (
     <div className={classes.container}>
       {isLoading === undefined ? (
@@ -117,7 +170,6 @@ export const ReleasesList = ({ artifactIncluded, features, onboardingState, onSe
             />
             <Loader show={isLoading} small />
           </div>
-          {onboardingComponent}
         </>
       )}
     </div>

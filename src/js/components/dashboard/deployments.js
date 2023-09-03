@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus } from '../../actions/deploymentActions';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, deploymentDisplayStates } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { DEPLOYMENT_CUTOFF, getIdAttribute, getOnboardingState, getRecentDeployments, getUserCapabilities } from '../../selectors';
+import { DEPLOYMENT_CUTOFF, getDevicesById, getIdAttribute, getOnboardingState, getRecentDeployments, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
@@ -38,17 +38,25 @@ const stateMap = {
 
 export const Deployments = ({ className = '', clickHandle }) => {
   const dispatch = useDispatch();
-  const setSnackbarDispatched = message => dispatch(setSnackbar(message));
+  const setSnackbarDispatched = useCallback(message => dispatch(setSnackbar(message)), [dispatch]);
   const { canDeploy } = useSelector(getUserCapabilities);
   const { total: deploymentsCount, ...deployments } = useSelector(getRecentDeployments);
   const onboardingState = useSelector(getOnboardingState);
-  const devicesById = useSelector(state => state.devices.byId);
+  const devicesById = useSelector(getDevicesById);
   const idAttribute = useSelector(getIdAttribute);
   const [loading, setLoading] = useState(!deploymentsCount);
   // eslint-disable-next-line no-unused-vars
   const size = useWindowSize();
   const deploymentsRef = useRef();
   const timer = useRef();
+
+  const getDeployments = useCallback(
+    () =>
+      Promise.all(Object.keys(stateMap).map(status => dispatch(getDeploymentsByStatus(status, 1, DEPLOYMENT_CUTOFF))))
+        .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbarDispatched))
+        .finally(() => setLoading(false)),
+    [dispatch, setSnackbarDispatched]
+  );
 
   useEffect(() => {
     clearAllRetryTimers(setSnackbarDispatched);
@@ -59,12 +67,7 @@ export const Deployments = ({ className = '', clickHandle }) => {
       clearInterval(timer.current);
       clearAllRetryTimers(setSnackbarDispatched);
     };
-  }, []);
-
-  const getDeployments = () =>
-    Promise.all(Object.keys(stateMap).map(status => dispatch(getDeploymentsByStatus(status, 1, DEPLOYMENT_CUTOFF))))
-      .catch(err => setRetryTimer(err, 'deployments', `Couldn't load deployments.`, refreshDeploymentsLength, setSnackbarDispatched))
-      .finally(() => setLoading(false));
+  }, [getDeployments, setSnackbarDispatched]);
 
   let onboardingComponent;
   if (deploymentsRef.current) {
