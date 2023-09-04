@@ -36,6 +36,8 @@ exports[`SearchResult Component renders correctly 1`] = `
   z-index: -1;
   top: 57px;
   left: 200px;
+  top: 57px;
+  left: 200px;
 }
 
 .emotion-2 {
