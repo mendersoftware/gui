@@ -888,7 +888,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd margin-bottom-small emotion-24"
     >
       <span
-        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-25"
+        class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-25"
       >
         <input
           class="PrivateSwitchBase-input emotion-26"

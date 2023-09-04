@@ -1825,7 +1825,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-39"
         >
           <span
-            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-40"
+            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeSmall PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeSmall MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeSmall emotion-40"
           >
             <input
               class="PrivateSwitchBase-input emotion-28"
@@ -1857,7 +1857,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-36:focus::-ms-input-
           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-39"
         >
           <span
-            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary emotion-40"
+            class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeSmall PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeSmall MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeSmall emotion-40"
           >
             <input
               class="PrivateSwitchBase-input emotion-28"

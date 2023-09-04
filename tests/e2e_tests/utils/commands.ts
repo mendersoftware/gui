@@ -186,6 +186,7 @@ export const isLoggedIn = async (page: Page, timeout: number = 0) => {
   const cookieConsentButton = await page.locator('text=/decline/i');
   if (await cookieConsentButton?.isVisible()) {
     await cookieConsentButton.click();
+    await page.keyboard.press('Escape');
   }
   return page.getByText(selectors.loggedInText).waitFor({ timeout });
 };
