@@ -45,7 +45,7 @@
     "react-router-dom": "6.15.0",
     "stream-browserify": "3.0.0",
     "tss-react": "4.9.0",
-    "universal-cookie": "4.0.4",
+    "universal-cookie": "6.1.0",
     "uuid": "9.0.0",
     "validator": "13.11.0",
     "victory": "36.6.11",
