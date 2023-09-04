@@ -18,7 +18,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import { act, cleanup, queryByRole, render, within } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { TextEncoder } from 'util';
