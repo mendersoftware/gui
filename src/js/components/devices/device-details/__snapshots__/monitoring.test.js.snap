@@ -126,7 +126,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
           Rows
         </p>
         <div
-          class="MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
+          class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
         >
           <div
             aria-expanded="false"

@@ -384,7 +384,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
                     class="PrivateSwitchBase-input css-1m9pwf3"
@@ -558,7 +558,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
                     class="PrivateSwitchBase-input css-1m9pwf3"
@@ -626,7 +626,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-root MuiCheckbox-colorPrimary css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
                     class="PrivateSwitchBase-input css-1m9pwf3"
@@ -709,7 +709,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   Rows
                 </p>
                 <div
-                  class="MuiInputBase-root MuiInputBase-colorPrimary css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
+                  class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
                 >
                   <div
                     aria-expanded="false"
