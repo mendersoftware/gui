@@ -46,7 +46,7 @@ import {
   getFeatures,
   getIsEnterprise,
   getOrganization,
-  getTooltipsById,
+  getShowHelptips,
   getUserCapabilities,
   getUserSettings
 } from '../../selectors';
@@ -122,12 +122,11 @@ export const Header = ({ mode }) => {
   const { isDemoMode: demo, hasMultitenancy, isHosted } = useSelector(getFeatures);
   const { isSearching, searchTerm, refreshTrigger } = useSelector(state => state.app.searchState);
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
-  const tooltips = useSelector(getTooltipsById);
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
   const dispatch = useDispatch();
   const deviceTimer = useRef();
-  const showHelptips = Object.values(tooltips).reduce((accu, { readState }) => accu || readState === READ_STATES.unread, false);
+  const showHelptips = useSelector(getShowHelptips);
 
   const updateUsername = useCallback(() => {
     const userId = decodeSessionToken(getToken());

@@ -118,18 +118,16 @@ export const PreauthorizedEmptyState = ({ canManageDevices, limitMaxed, onClick 
   </div>
 );
 
-export const PendingEmptyState = ({ filters, highlightHelp }) => (
+export const PendingEmptyState = ({ filters }) => (
   <div className="dashboard-placeholder">
     <p>
       {filters.length
         ? `There are no pending devices matching the selected ${pluralize('filters', filters.length)}`
         : 'There are no devices pending authorization'}
     </p>
-    {highlightHelp ? (
-      <p>
-        Visit the <Link to="/help/get-started">Help section</Link> to learn how to connect devices to the Mender server.
-      </p>
-    ) : null}
+    <p>
+      Visit the <Link to="/help/get-started">Help section</Link> to learn how to connect devices to the Mender server.
+    </p>
   </div>
 );
 

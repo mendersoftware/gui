@@ -167,17 +167,7 @@ const TooltipWrapper = ({ content, onClose, onReadAll }) => (
   </div>
 );
 
-export const HelpTooltip = ({
-  icon = undefined,
-  id,
-  contentProps = {},
-  tooltip,
-  showHelptips,
-  device,
-  setAllTooltipsReadState,
-  setTooltipReadState,
-  ...props
-}) => {
+export const HelpTooltip = ({ icon = undefined, id, contentProps = {}, tooltip, device, setAllTooltipsReadState, setTooltipReadState, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
   const debouncedIsOpen = useDebounce(isOpen, TIMEOUTS.threeSeconds);
   const { classes } = useStyles();
@@ -198,7 +188,7 @@ export const HelpTooltip = ({
     <TooltipWrapper content={<Component device={device} {...contentProps} />} onClose={() => setIsOpen(false)} onReadAll={onReadAllClick} />
   );
 
-  if (!showHelptips || !isRelevant({ device, ...contentProps })) {
+  if (!isRelevant({ device, ...contentProps })) {
     return null;
   }
 

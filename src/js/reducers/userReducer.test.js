@@ -143,10 +143,6 @@ describe('user reducer', () => {
       newSetting: 'test'
     });
   });
-  it('should handle SET_SHOW_HELP', async () => {
-    expect(reducer(undefined, { type: UserConstants.SET_SHOW_HELP, show: false }).showHelptips).toEqual(false);
-    expect(reducer({ ...initialState }, { type: UserConstants.SET_SHOW_HELP, show: true }).showHelptips).toEqual(true);
-  });
   it('should handle SET_SHOW_CONNECT_DEVICE', async () => {
     expect(reducer(undefined, { type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: false }).showConnectDeviceDialog).toEqual(false);
     expect(reducer({ ...initialState }, { type: UserConstants.SET_SHOW_CONNECT_DEVICE, show: true }).showConnectDeviceDialog).toEqual(true);

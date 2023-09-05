@@ -82,7 +82,7 @@ describe('KeyValueEditor Component', () => {
       }
     };
 
-    const ui = <KeyValueEditor inputHelpTipsMap={helptipsMap} onInputChange={jest.fn} showHelptips={true} />;
+    const ui = <KeyValueEditor inputHelpTipsMap={helptipsMap} onInputChange={jest.fn} />;
     render(ui);
     await user.type(screen.getByPlaceholderText(/key/i), 'timezon');
     expect(screen.queryByText(/testthing/i)).not.toBeInTheDocument();

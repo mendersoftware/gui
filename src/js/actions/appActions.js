@@ -28,9 +28,9 @@ import {
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { SET_SHOW_HELP, SET_TOOLTIPS_STATE } from '../constants/userConstants';
+import { SET_TOOLTIPS_STATE } from '../constants/userConstants';
 import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
-import { getCurrentUser, getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeploymentsByStatus } from './deploymentActions';
 import {
@@ -136,14 +136,13 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
   ]);
 };
 
-const maybeAddOnboardingTasks = ({ devicesByStatus, dispatch, showHelptips, onboardingState, tasks }) => {
-  if (!(showHelptips && onboardingState.showTips) || onboardingState.complete) {
+const maybeAddOnboardingTasks = ({ devicesByStatus, dispatch, onboardingState, tasks }) => {
+  if (!onboardingState.showTips || onboardingState.complete) {
     return tasks;
   }
   const welcomeTip = getOnboardingComponentFor(onboardingSteps.ONBOARDING_START, {
     progress: onboardingState.progress,
     complete: onboardingState.complete,
-    showHelptips,
     showTips: onboardingState.showTips
   });
   if (welcomeTip) {
@@ -158,44 +157,19 @@ const maybeAddOnboardingTasks = ({ devicesByStatus, dispatch, showHelptips, onbo
   }, tasks);
 };
 
-const processUserCookie = (user, showHelptips) => {
-  const userCookie = cookies.get(user.id);
-  if (userCookie && userCookie.help !== 'undefined') {
-    const { help, ...crumbles } = userCookie;
-    // got user cookie with pre-existing value
-    showHelptips = help;
-    // store only remaining cookie values, to allow relying on stored settings from now on
-    if (!Object.keys(crumbles).length) {
-      cookies.remove(user.id);
-    } else {
-      cookies.set(user.id, crumbles);
-    }
-  }
-  return showHelptips;
-};
-
 const interpretAppData = () => (dispatch, getState) => {
   const state = getState();
-  const user = getCurrentUser(state);
-  let {
-    columnSelection = [],
-    showHelptips = state.users.showHelptips,
-    trackingConsentGiven: hasTrackingEnabled,
-    tooltips = {}
-  } = getUserSettingsSelector(state);
-  // checks if user id is set and if cookie for helptips exists for that user
-  showHelptips = processUserCookie(user, showHelptips);
-  let settings = { showHelptips };
+  let { columnSelection = [], trackingConsentGiven: hasTrackingEnabled, tooltips = {} } = getUserSettingsSelector(state);
+  let settings = {};
   if (cookies.get('_ga') && typeof hasTrackingEnabled === 'undefined') {
     settings.trackingConsentGiven = true;
   }
   let tasks = [
     dispatch(setDeviceListState({ selectedAttributes: columnSelection.map(column => ({ attribute: column.key, scope: column.scope })) })),
-    dispatch({ type: SET_SHOW_HELP, show: showHelptips }),
     dispatch({ type: SET_TOOLTIPS_STATE, value: tooltips }), // tooltips read state is primarily trusted from the redux store, except on app init - here user settings are the reference
     dispatch(saveUserSettings(settings))
   ];
-  tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding, showHelptips });
+  tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding });
   // the following is used as a migration and initialization of the stored identity attribute
   // changing the default device attribute to the first non-deviceId attribute, unless a stored
   // id attribute setting exists
