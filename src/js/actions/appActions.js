@@ -302,36 +302,44 @@ export const getLatestReleaseInfo = () => (dispatch, getState) => {
   if (!getState().app.features.isHosted) {
     return Promise.resolve();
   }
-  return Promise.all([GeneralApi.get('/versions.json'), GeneralApi.get('/tags.json')]).then(([{ data }, { data: guiTags }]) => {
-    const { releases, saas } = data;
-    const latestRelease = getLatestRelease(getLatestRelease(releases));
-    const { latestRepos, latestVersions } = latestRelease.repos.reduce(
-      (accu, item) => {
-        if (repoKeyMap[item.name]) {
-          accu.latestVersions[repoKeyMap[item.name]] = getComparisonCompatibleVersion(item.version);
-        }
-        accu.latestRepos[item.name] = getComparisonCompatibleVersion(item.version);
-        return accu;
-      },
-      { latestVersions: { ...getState().app.versionInformation }, latestRepos: {} }
-    );
-    const info = deductSaasState(latestRelease, guiTags, saas);
-    return Promise.resolve(
-      dispatch({
-        type: SET_VERSION_INFORMATION,
-        docsVersion: getState().app.docsVersion,
-        value: {
-          ...latestVersions,
-          backend: info,
-          GUI: info,
-          latestRelease: {
-            releaseDate: latestRelease.release_date,
-            repos: latestRepos
+  return Promise.all([GeneralApi.get('/versions.json'), GeneralApi.get('/tags.json')])
+    .catch(err => {
+      console.log('init error:', extractErrorMessage(err));
+      return Promise.resolve([{ data: {} }, { data: [] }]);
+    })
+    .then(([{ data }, { data: guiTags }]) => {
+      if (!guiTags.length) {
+        return Promise.resolve();
+      }
+      const { releases, saas } = data;
+      const latestRelease = getLatestRelease(getLatestRelease(releases));
+      const { latestRepos, latestVersions } = latestRelease.repos.reduce(
+        (accu, item) => {
+          if (repoKeyMap[item.name]) {
+            accu.latestVersions[repoKeyMap[item.name]] = getComparisonCompatibleVersion(item.version);
           }
-        }
-      })
-    );
-  });
+          accu.latestRepos[item.name] = getComparisonCompatibleVersion(item.version);
+          return accu;
+        },
+        { latestVersions: { ...getState().app.versionInformation }, latestRepos: {} }
+      );
+      const info = deductSaasState(latestRelease, guiTags, saas);
+      return Promise.resolve(
+        dispatch({
+          type: SET_VERSION_INFORMATION,
+          docsVersion: getState().app.docsVersion,
+          value: {
+            ...latestVersions,
+            backend: info,
+            GUI: info,
+            latestRelease: {
+              releaseDate: latestRelease.release_date,
+              repos: latestRepos
+            }
+          }
+        })
+      );
+    });
 };
 
 export const setSearchState = searchState => (dispatch, getState) => {
