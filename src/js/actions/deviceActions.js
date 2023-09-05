@@ -13,6 +13,7 @@ import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
+import { filtersFilter } from '../components/devices/widgets/filters';
 import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
@@ -29,7 +30,6 @@ import {
 } from '../selectors';
 import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
-import { filtersFilter } from '../components/devices/widgets/filters';
 
 const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP, emptyFilter } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;

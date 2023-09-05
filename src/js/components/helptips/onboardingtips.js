@@ -20,8 +20,8 @@ import { Button } from '@mui/material';
 import { advanceOnboarding, setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import BaseOnboardingTip, { BaseOnboardingTooltip } from './baseonboardingtip';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import BaseOnboardingTip, { BaseOnboardingTooltip } from './baseonboardingtip';
 
 export const DevicePendingTip = props => (
   <BaseOnboardingTip

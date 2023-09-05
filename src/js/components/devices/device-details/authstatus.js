@@ -19,10 +19,10 @@ import { Chip, Icon } from '@mui/material';
 
 import pendingIcon from '../../../../assets/img/pending_status.png';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getOnboardingState } from '../../../selectors';
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
+import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import Authsets from './authsets/authsets';
 import DeviceDataCollapse from './devicedatacollapse';
 

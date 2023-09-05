@@ -11,15 +11,15 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+import axios from 'axios';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import * as fs from 'fs';
-import md5 from 'md5';
 import https from 'https';
+import md5 from 'md5';
 
 import test, { expect } from '../fixtures/fixtures';
 import { selectors, timeouts } from '../utils/constants';
-import axios from 'axios';
 
 dayjs.extend(isBetween);
 
