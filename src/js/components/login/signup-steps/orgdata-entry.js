@@ -70,7 +70,7 @@ export const OrgDataEntry = ({ classes, emailVerified, recaptchaSiteKey = '', se
         label={
           <label htmlFor="tos">
             By checking this you agree to our{' '}
-            <a href="https://northern.tech/legal/hosted-mender-agreement-10_10_2022-northern-tech-as.pdf" target="_blank" rel="noopener noreferrer">
+            <a href="https://northern.tech/legal/hosted-mender-agreement-northern-tech-as.pdf" target="_blank" rel="noopener noreferrer">
               Terms of service
             </a>{' '}
             and{' '}
