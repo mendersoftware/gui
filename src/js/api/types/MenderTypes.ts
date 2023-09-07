@@ -106,6 +106,8 @@ export type { IdentityData } from "./IdentityData";
 export { Integration } from "./Integration";
 export type { Limit } from "./Limit";
 export type { LimitDeviceauth } from "./LimitDeviceauth";
+export type { Limits } from "./Limits";
+export type { LimitUseradm } from "./LimitUseradm";
 export type { LineDescriptor } from "./LineDescriptor";
 export type { LoginOptions } from "./LoginOptions";
 export type { LogSubsystem } from "./LogSubsystem";
