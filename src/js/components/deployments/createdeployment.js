@@ -104,7 +104,7 @@ export const getPhaseStartTime = (phases, index, startDate) => {
 };
 
 export const CreateDeployment = props => {
-  const { deploymentObject = {}, onDismiss, onScheduleSubmit, open = true, setDeploymentSettings } = props;
+  const { deploymentObject = {}, onDismiss, onScheduleSubmit, open, setDeploymentSettings } = props;
 
   const { canRetry, canSchedule, hasFullFiltering } = useSelector(getTenantCapabilities);
   const { createdGroup, groups, hasDynamicGroups } = useSelector(state => {

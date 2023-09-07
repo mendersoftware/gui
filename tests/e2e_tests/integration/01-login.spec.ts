@@ -15,8 +15,8 @@ import axios from 'axios';
 import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
-import { selectors, timeouts } from '../utils/constants';
 import { isLoggedIn } from '../utils/commands';
+import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {

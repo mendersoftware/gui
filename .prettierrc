@@ -1,9 +1,5 @@
 {
-  "printWidth": 160,
-  "singleQuote": true,
-  "trailingComma": "none",
   "arrowParens": "avoid",
-  "quoteProps": "preserve",
   "importOrder": [
     "^react*",
     "@emotion/*|@mui/*|tss-react/*",
@@ -11,5 +7,12 @@
     "^[./]"
   ],
   "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "printWidth": 160,
+  "quoteProps": "preserve",
+  "singleQuote": true,
+  "trailingComma": "none"
 }

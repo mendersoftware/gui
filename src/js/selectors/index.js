@@ -27,7 +27,7 @@ import {
   EXTERNAL_PROVIDER,
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
-import { rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
+import { READ_STATES, rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
 import { attributeDuplicateFilter, duplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper, versionCompare } from '../helpers';
 
 const getAppDocsVersion = state => state.app.docsVersion;
@@ -53,7 +53,6 @@ export const getSortedFilteringAttributes = createSelector([getFilteringAttribut
 export const getDeviceLimit = state => state.devices.limit;
 const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
-export const getShowHelptips = state => state.users.showHelptips;
 export const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
 export const getReleasesById = state => state.releases.byId;
@@ -68,6 +67,10 @@ const getUsersById = state => state.users.byId;
 export const getCurrentUser = createSelector([getUsersById, getCurrentUserId], (usersById, userId) => usersById[userId] ?? {});
 export const getUserSettings = state => state.users.userSettings;
 export const getIsPreview = createSelector([getVersionInformation], ({ Integration }) => versionCompare(Integration, 'next') > -1);
+
+export const getShowHelptips = createSelector([getTooltipsById], tooltips =>
+  Object.values(tooltips).reduce((accu, { readState }) => accu || readState === READ_STATES.unread, false)
+);
 
 export const getDeploymentsSelectionState = state => state.deployments.selectionState;
 

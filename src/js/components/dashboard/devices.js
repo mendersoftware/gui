@@ -21,14 +21,7 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import {
-  getAcceptedDevices,
-  getAvailableIssueOptionsByType,
-  getDeviceCountsByStatus,
-  getOnboardingState,
-  getShowHelptips,
-  getUserCapabilities
-} from '../../selectors';
+import { getAcceptedDevices, getAvailableIssueOptionsByType, getDeviceCountsByStatus, getOnboardingState, getUserCapabilities } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -48,7 +41,6 @@ export const Devices = ({ clickHandle }) => {
   const { canManageDevices } = useSelector(getUserCapabilities);
   const onboardingState = useSelector(getOnboardingState);
   const { pending: pendingDevicesCount } = useSelector(getDeviceCountsByStatus);
-  const showHelptips = useSelector(getShowHelptips);
 
   const refreshDevices = useCallback(() => {
     const issueRequests = Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters: [], selectedIssues: [key] })));
@@ -103,7 +95,6 @@ export const Devices = ({ clickHandle }) => {
             onboardingState={onboardingState}
             onClick={clickHandle}
             pendingDevicesCount={pendingDevicesCount}
-            showHelptips={showHelptips}
           />
         )}
         {canManageDevices && (

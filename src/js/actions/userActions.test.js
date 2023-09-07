@@ -68,7 +68,6 @@ import {
   SET_CUSTOM_COLUMNS,
   SET_GLOBAL_SETTINGS,
   SET_SHOW_CONNECT_DEVICE,
-  SET_SHOW_HELP,
   SET_TOOLTIPS_STATE,
   SET_TOOLTIP_STATE,
   SET_USER_SETTINGS,
@@ -338,7 +337,6 @@ const appInitActions = [
       total: 0
     }
   },
-  { type: SET_SHOW_HELP, show: true },
   { type: SET_TOOLTIPS_STATE, value: {} },
   { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
   {
@@ -348,7 +346,7 @@ const appInitActions = [
     total: defaultState.devices.byStatus.accepted.total
   },
   { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, showHelptips: true } },
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
   { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
   offlineThreshold,
   { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },

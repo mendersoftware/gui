@@ -17,9 +17,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
-import { getFilterLabelByKey } from './filters';
-import { defaultHeaders } from '../base-devices';
 import { emptyFilter } from '../../../constants/deviceConstants';
+import { defaultHeaders } from '../base-devices';
+import { getFilterLabelByKey } from './filters';
 
 const textFieldStyle = { marginTop: 0, marginBottom: 15 };
 

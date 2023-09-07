@@ -18,7 +18,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { setAllTooltipsReadState, setTooltipReadState } from '../../actions/userActions';
 import { yes } from '../../constants/appConstants';
 import { READ_STATES } from '../../constants/userConstants';
-import { getDeviceById, getFeatures, getShowHelptips, getTooltipsState } from '../../selectors';
+import { getDeviceById, getFeatures, getTooltipsState } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import DocsLink from '../common/docslink';
 import { HelpTooltip } from '../common/mendertooltip';
@@ -289,7 +289,6 @@ export const HELPTOOLTIPS = {
 
 export const MenderHelpTooltip = props => {
   const { id, contentProps = {} } = props;
-  const showHelptips = useSelector(getShowHelptips);
   const tooltipsById = useSelector(getTooltipsState);
   const dispatch = useDispatch();
   const device = useSelector(state => getDeviceById(state, contentProps.deviceId));
@@ -303,7 +302,6 @@ export const MenderHelpTooltip = props => {
     <HelpTooltip
       setAllTooltipsReadState={onSetAllTooltipsReadState}
       setTooltipReadState={onSetTooltipReadState}
-      showHelptips={showHelptips}
       device={device}
       tooltip={{ Component, SpecialComponent, isRelevant, readState }}
       {...props}
