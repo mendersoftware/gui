@@ -169,8 +169,7 @@ describe('onboarding actions', () => {
         settings: {
           ...defaultState.users.userSettings,
           columnSelection: [],
-          onboarding: { ...defaultOnboardingState, showTips: true },
-          showHelptips: true
+          onboarding: { ...defaultOnboardingState, showTips: true }
         }
       }
     ];
@@ -222,7 +221,6 @@ describe('onboarding actions', () => {
           }
         }
       }
-      // { type: UserConstants.SET_SHOW_HELP, show: false }
     ];
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);

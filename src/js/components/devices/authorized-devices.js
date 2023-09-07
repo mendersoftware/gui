@@ -40,7 +40,6 @@ import {
   getMappedDevicesList,
   getOnboardingState,
   getSelectedGroupInfo,
-  getShowHelptips,
   getTenantCapabilities,
   getUserCapabilities,
   getUserSettings
@@ -186,7 +185,6 @@ export const Authorized = ({
   const idAttribute = useSelector(getIdAttribute);
   const onboardingState = useSelector(getOnboardingState);
   const settingsInitialized = useSelector(state => state.users.settingsInitialized);
-  const showHelptips = useSelector(getShowHelptips);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
@@ -471,14 +469,7 @@ export const Authorized = ({
             pageTotal={deviceCount}
           />
         ) : (
-          <EmptyState
-            allCount={allCount}
-            canManageDevices={canManageDevices}
-            filters={filters}
-            highlightHelp={showHelptips}
-            limitMaxed={limitMaxed}
-            onClick={onPreauthClick}
-          />
+          <EmptyState allCount={allCount} canManageDevices={canManageDevices} filters={filters} limitMaxed={limitMaxed} onClick={onPreauthClick} />
         )}
       </div>
       <ExpandedDevice

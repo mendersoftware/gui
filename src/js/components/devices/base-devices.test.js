@@ -49,7 +49,6 @@ describe('smaller components', () => {
           allCount={10}
           device={defaultState.devices.byId.a1}
           filters={[]}
-          highlightHelp={true}
           idAttribute={{ attribute: 'mac', scope: 'identity' }}
           column={{ title: 'mac', attribute: { name: 'mac', scope: 'identity' }, sortable: true, textRender: defaultTextRender }}
           limitMaxed={true}
