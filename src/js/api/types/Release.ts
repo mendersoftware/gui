@@ -27,4 +27,8 @@ export type Release = {
    * letters, digits, underscores, periods and hyphens.
    */
   tags?: Array<string>;
+  /**
+   * Additional information describing a Release limited to 1024 characters. Please use the v2 API to set this field.
+   */
+  notes?: string;
 };
