@@ -1016,40 +1016,45 @@ label+.emotion-16 {
         />
       </div>
     </div>
-    <div
-      class="MuiAutocomplete-root emotion-18"
+    <form
+      novalidate=""
     >
       <div
-        class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-0"
+        class="MuiAutocomplete-root emotion-18"
+        name="deviceTypes"
       >
-        <label
-          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-5"
-          data-shrink="false"
-          for="compatible-device-type-selection"
-          id="compatible-device-type-selection-label"
-        >
-          Device types compatible
-        </label>
         <div
-          class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-2"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-0"
         >
-          <input
-            aria-autocomplete="list"
-            aria-expanded="false"
-            aria-invalid="false"
-            autocapitalize="none"
-            autocomplete="off"
-            class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-3"
-            id="compatible-device-type-selection"
-            placeholder="Enter all device types this software is compatible with"
-            role="combobox"
-            spellcheck="false"
-            type="text"
-            value=""
-          />
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard emotion-5"
+            data-shrink="false"
+            for="deviceTypes-chip-select"
+            id="deviceTypes-chip-select-label"
+          >
+            Device types compatible
+          </label>
+          <div
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot emotion-2"
+          >
+            <input
+              aria-autocomplete="list"
+              aria-expanded="false"
+              aria-invalid="false"
+              autocapitalize="none"
+              autocomplete="off"
+              class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused emotion-3"
+              id="deviceTypes-chip-select"
+              placeholder="Enter all device types this software is compatible with"
+              role="combobox"
+              spellcheck="false"
+              type="text"
+              value=""
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 `;

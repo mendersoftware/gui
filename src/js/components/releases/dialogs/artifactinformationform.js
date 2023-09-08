@@ -11,7 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { FormControl, Input, InputLabel, TextField } from '@mui/material';
 
@@ -59,6 +60,14 @@ const checkDestinationValidity = destination => (destination.length ? /^(?:\/|[a
 export const ArtifactInformation = ({ creation = {}, deviceTypes = [], onRemove, updateCreation }) => {
   const { destination = '', file, name = '', selectedDeviceTypes = [], type } = creation;
 
+  const methods = useForm({ mode: 'onChange', defaultValues: { deviceTypes: selectedDeviceTypes } });
+  const { watch } = methods;
+  const formDeviceTypes = watch('deviceTypes');
+
+  useEffect(() => {
+    updateCreation({ selectedDeviceTypes: formDeviceTypes });
+  }, [formDeviceTypes, updateCreation]);
+
   useEffect(() => {
     updateCreation({
       destination,
@@ -66,17 +75,6 @@ export const ArtifactInformation = ({ creation = {}, deviceTypes = [], onRemove,
       finalStep: false
     });
   }, [destination, name, selectedDeviceTypes.length, updateCreation]);
-
-  const onSelectionChanged = useCallback(
-    ({ currentValue = '', selection = [] }) => {
-      updateCreation({
-        customDeviceTypes: currentValue,
-        isValid: (currentValue.length || selection.length) && name && destination,
-        selectedDeviceTypes: selection
-      });
-    },
-    [destination, name, updateCreation]
-  );
 
   const onDestinationChange = ({ target: { value } }) =>
     updateCreation({ destination: value, isValid: checkDestinationValidity(value) && selectedDeviceTypes.length && name });
@@ -114,14 +112,16 @@ export const ArtifactInformation = ({ creation = {}, deviceTypes = [], onRemove,
           onChange={e => updateCreation({ name: e.target.value })}
         />
       </FormControl>
-      <ChipSelect
-        id="compatible-device-type-selection"
-        label="Device types compatible"
-        onChange={onSelectionChanged}
-        placeholder="Enter all device types this software is compatible with"
-        selection={selectedDeviceTypes}
-        options={deviceTypes}
-      />
+      <FormProvider {...methods}>
+        <form noValidate>
+          <ChipSelect
+            name="deviceTypes"
+            label="Device types compatible"
+            placeholder="Enter all device types this software is compatible with"
+            options={deviceTypes}
+          />
+        </form>
+      </FormProvider>
     </div>
   );
 };
