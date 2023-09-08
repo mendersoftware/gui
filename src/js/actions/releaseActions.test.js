@@ -27,7 +27,6 @@ import {
   getReleases,
   removeArtifact,
   removeRelease,
-  selectArtifact,
   selectRelease,
   uploadArtifact
 } from './releaseActions';
@@ -166,17 +165,6 @@ describe('release actions', () => {
       expect(storeActions.length).toEqual(expectedActions.length);
       expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
     });
-  });
-  it('should select an artifact by name', async () => {
-    const store = mockStore({ ...defaultState });
-    const expectedActions = [
-      { type: ReleaseConstants.SELECTED_ARTIFACT, artifact: defaultState.releases.byId.r1.Artifacts[0] },
-      { type: ReleaseConstants.SELECTED_RELEASE, release: defaultState.releases.byId.r1.Name }
-    ];
-    await store.dispatch(selectArtifact('art1'));
-    const storeActions = store.getActions();
-    expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should select a release by name', async () => {
     const store = mockStore({ ...defaultState });

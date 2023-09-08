@@ -199,15 +199,15 @@ const ReleaseTags = ({ existingTags = [] }) => {
   );
 };
 
-const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog }) => {
+const ArtifactsList = ({ artifacts, selectedArtifact, setSelectedArtifact, setShowRemoveArtifactDialog }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
 
   const onRowSelection = artifact => {
-    if (!artifact || !selectedArtifact || selectedArtifact.id !== artifact.id) {
-      return selectArtifact(artifact);
+    if (artifact?.id === selectedArtifact?.id) {
+      return setSelectedArtifact();
     }
-    selectArtifact();
+    setSelectedArtifact(artifact);
   };
 
   const sortColumn = col => {
@@ -241,16 +241,16 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
           ))}
           <div style={{ width: 48 }} />
         </div>
-        {items.map((pkg, index) => {
-          const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
+        {items.map((artifact, index) => {
+          const expanded = !!(selectedArtifact?.id === artifact.id);
           return (
             <Artifact
               key={`repository-item-${index}`}
-              artifact={pkg}
+              artifact={artifact}
               columns={columns}
               expanded={expanded}
               index={index}
-              onRowSelection={() => onRowSelection(pkg)}
+              onRowSelection={() => onRowSelection(artifact)}
               // this will be run after expansion + collapse and both need some time to fully settle
               // otherwise the measurements are off
               showRemoveArtifactDialog={setShowRemoveArtifactDialog}
@@ -265,15 +265,15 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
 export const ReleaseDetails = () => {
   const [showRemoveDialog, setShowRemoveArtifactDialog] = useState(false);
   const [confirmReleaseDeletion, setConfirmReleaseDeletion] = useState(false);
+  const [selectedArtifact, setSelectedArtifact] = useState();
+
   // eslint-disable-next-line no-unused-vars
   const windowSize = useWindowSize();
   const creationRef = useRef();
   const drawerRef = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { hasReleaseTags } = useSelector(getFeatures);
   const release = useSelector(getSelectedRelease);
-  const selectedArtifact = useSelector(state => state.releases.selectedArtifact);
   const userCapabilities = useSelector(getUserCapabilities);
 
   const onRemoveArtifact = artifact => dispatch(removeArtifact(artifact.id)).finally(() => setShowRemoveArtifactDialog(false));
@@ -318,8 +318,8 @@ export const ReleaseDetails = () => {
       {hasReleaseTags && <ReleaseTags />}
       <ArtifactsList
         artifacts={artifacts}
-        selectArtifact={artifact => dispatch(selectArtifact(artifact))}
         selectedArtifact={selectedArtifact}
+        setSelectedArtifact={setSelectedArtifact}
         setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
       />
       <RemoveArtifactDialog

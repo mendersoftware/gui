@@ -100,10 +100,6 @@ describe('release reducer', () => {
       ).selectedRelease
     ).toEqual('test2');
   });
-  it('should handle SELECTED_ARTIFACT', async () => {
-    expect(reducer(undefined, { type: ReleaseConstants.SELECTED_ARTIFACT, artifact: testRelease.Artifacts[0] }).selectedArtifact.name).toEqual('test');
-    expect(reducer(initialState, { type: ReleaseConstants.SELECTED_ARTIFACT, artifact: testRelease.Artifacts[0] }).selectedArtifact.name).toEqual('test');
-  });
   it('should handle SELECTED_RELEASE', async () => {
     expect(reducer(undefined, { type: ReleaseConstants.SELECTED_RELEASE, release: 'test' }).selectedRelease).toEqual('test');
     expect(reducer(initialState, { type: ReleaseConstants.SELECTED_RELEASE, release: 'test' }).selectedRelease).toEqual('test');

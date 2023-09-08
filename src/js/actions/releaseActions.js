@@ -251,23 +251,6 @@ export const removeArtifact = id => (dispatch, getState) =>
 export const removeRelease = id => (dispatch, getState) =>
   Promise.all(getState().releases.byId[id].Artifacts.map(({ id }) => dispatch(removeArtifact(id)))).then(() => dispatch(selectRelease()));
 
-export const selectArtifact = artifact => (dispatch, getState) => {
-  if (!artifact) {
-    return dispatch({ type: ReleaseConstants.SELECTED_ARTIFACT, artifact });
-  }
-  const artifactName = artifact.hasOwnProperty('id') ? artifact.id : artifact;
-  const state = getState();
-  const release = Object.values(state.releases.byId).find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifactName));
-  if (release) {
-    const selectedArtifact = release.Artifacts.find(releaseArtifact => releaseArtifact.id === artifactName);
-    let tasks = [dispatch({ type: ReleaseConstants.SELECTED_ARTIFACT, artifact: selectedArtifact })];
-    if (release.Name !== state.releases.selectedRelease) {
-      tasks.push(dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: release.Name }));
-    }
-    return Promise.all(tasks);
-  }
-};
-
 export const selectRelease = release => dispatch => {
   const name = release ? release.Name || release : null;
   let tasks = [dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: name })];

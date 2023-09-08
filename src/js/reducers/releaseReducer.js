@@ -69,8 +69,7 @@ export const initialState = {
   /*
    * Return single release with corresponding Artifacts
    */
-  selectedRelease: null,
-  selectedArtifact: null
+  selectedRelease: null
 };
 
 const releaseReducer = (state = initialState, action) => {
@@ -101,11 +100,6 @@ const releaseReducer = (state = initialState, action) => {
         selectedRelease: action.release === state.selectedRelease ? Object.keys(byId)[0] : state.selectedRelease
       };
     }
-    case ReleaseConstants.SELECTED_ARTIFACT:
-      return {
-        ...state,
-        selectedArtifact: action.artifact
-      };
     case ReleaseConstants.SELECTED_RELEASE:
       return {
         ...state,

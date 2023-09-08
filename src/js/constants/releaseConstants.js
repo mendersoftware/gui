@@ -19,7 +19,6 @@ export const RECEIVE_ARTIFACTS = 'RECEIVE_ARTIFACTS';
 export const RECEIVE_RELEASE = 'RECEIVE_RELEASE';
 export const RECEIVE_RELEASES = 'RECEIVE_RELEASES';
 export const RELEASE_REMOVED = 'RELEASE_REMOVED';
-export const SELECTED_ARTIFACT = 'SELECTED_ARTIFACT';
 export const SELECTED_RELEASE = 'SELECTED_RELEASE';
 export const SET_RELEASES_LIST_STATE = 'SET_RELEASES_LIST_STATE';
 export const rootfsImageVersion = 'rootfs-image.version';
