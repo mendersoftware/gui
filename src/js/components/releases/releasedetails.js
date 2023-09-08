@@ -18,13 +18,12 @@ import { useNavigate } from 'react-router-dom';
 // material ui
 import {
   Close as CloseIcon,
-  Edit as EditIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
   Link as LinkIcon,
   Replay as ReplayIcon,
   Sort as SortIcon
 } from '@mui/icons-material';
-import { Button, Collapse, Divider, Drawer, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip } from '@mui/material';
+import { Button, Collapse, Divider, Drawer, TextField, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip } from '@mui/material';
 import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import { makeStyles } from 'tss-react/mui';
 
@@ -37,10 +36,14 @@ import { FileSize, customSort, formatTime, toggle } from '../../helpers';
 import { getFeatures, getSelectedRelease, getUserCapabilities } from '../../selectors';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
+import { ConfirmationButtons, EditButton } from '../common/confirm';
+import ExpandableAttribute from '../common/expandable-attribute';
 import { RelativeTime } from '../common/time';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import Artifact from './artifact';
 import RemoveArtifactDialog from './dialogs/removeartifact';
+import ExpandableAttribute from '../common/expandable-attribute';
+import { ConfirmationButtons, EditButton } from '../common/confirm';
 
 const DeviceTypeCompatibility = ({ artifact }) => {
   const compatible = artifact.artifact_depends ? artifact.artifact_depends.device_type.join(', ') : artifact.device_types_compatible.join(', ');
@@ -106,7 +109,9 @@ const useStyles = makeStyles()(theme => ({
   label: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(4)
-  }
+  },
+  notes: { display: 'block', whiteSpace: 'pre-wrap' },
+  notesWrapper: { minWidth: theme.components?.MuiFormControl?.styleOverrides?.root?.minWidth }
 }));
 
 export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease, userCapabilities }) => {
@@ -149,8 +154,73 @@ export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease
   );
 };
 
-const ReleaseTags = ({ existingTags = [] }) => {
-  const [selectedTags, setSelectedTags] = useState(existingTags);
+export const EditableLongText = ({ contentFallback = '', fullWidth, original, onChange, placeholder = '-' }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState(original);
+  const { classes } = useStyles();
+
+  useEffect(() => {
+    setValue(original);
+  }, [original]);
+
+  const onCancelClick = () => {
+    setValue(original);
+    setIsEditing(false);
+  };
+
+  const onEdit = ({ target: { value } }) => setValue(value);
+
+  const onEditClick = () => setIsEditing(true);
+
+  const onToggleEditing = useCallback(
+    event => {
+      event.stopPropagation();
+      if (event.key && (event.key !== 'Enter' || event.shiftKey)) {
+        return;
+      }
+      if (isEditing) {
+        // save change
+        onChange(value);
+      }
+      setIsEditing(toggle);
+    },
+    [isEditing, onChange, value]
+  );
+
+  const fullWidthClass = fullWidth ? 'full-width' : '';
+
+  return (
+    <div className="flexbox" style={{ alignItems: 'end' }}>
+      {isEditing ? (
+        <>
+          <TextField
+            className={`margin-right ${fullWidthClass}`}
+            multiline
+            onChange={onEdit}
+            onKeyDown={onToggleEditing}
+            placeholder={placeholder}
+            value={value}
+          />
+          <ConfirmationButtons onCancel={onCancelClick} onConfirm={onToggleEditing} />
+        </>
+      ) : (
+        <>
+          <ExpandableAttribute
+            className={`${fullWidthClass} margin-right ${classes.notesWrapper}`}
+            component="div"
+            dense
+            disableGutters
+            primary=""
+            secondary={original || value || contentFallback}
+            textClasses={{ secondary: classes.notes }}
+          />
+          <EditButton onClick={onEditClick} />
+        </>
+      )}
+    </div>
+  );
+};
+
   const [isEditing, setIsEditing] = useState(false);
 
   const onToggleEdit = () => {
