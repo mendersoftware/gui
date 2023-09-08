@@ -92,10 +92,10 @@ describe('release reducer', () => {
     expect(
       reducer({ ...initialState, byId: { test: testRelease }, selectedRelease: 'test' }, { type: ReleaseConstants.RELEASE_REMOVED, release: 'test' })
         .selectedRelease
-    ).toEqual(undefined);
+    ).toEqual(null);
     expect(
       reducer(
-        { ...initialState, byId: { test: testRelease, test2: testRelease }, selectedRelease: 'test' },
+        { ...initialState, byId: { test: testRelease, test2: testRelease }, selectedRelease: 'test2' },
         { type: ReleaseConstants.RELEASE_REMOVED, release: 'test' }
       ).selectedRelease
     ).toEqual('test2');

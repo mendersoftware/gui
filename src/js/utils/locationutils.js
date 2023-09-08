@@ -387,21 +387,24 @@ export const generateDeploymentsPath = ({ pageState }) => {
 };
 
 const releasesRoot = '/releases';
-export const formatReleases = ({ pageState: { selectedTags = [], tab } }) => {
-  const formattedFilters = selectedTags.map(tag => `tag=${tag}`);
-  if (tab) {
-    formattedFilters.push(`tab=${tab}`);
-  }
-  return formattedFilters.join('&');
-};
+export const formatReleases = ({ pageState: { searchTerm, selectedTags = [], tab, type } }) =>
+  Object.entries({ name: searchTerm, tab, type })
+    .reduce(
+      (accu, [key, value]) => (value ? [...accu, `${key}=${value}`] : accu),
+      selectedTags.map(tag => `tag=${tag}`)
+    )
+    .join('&');
+
 export const generateReleasesPath = ({ pageState: { selectedRelease } }) => `${releasesRoot}${selectedRelease ? `/${selectedRelease}` : ''}`;
 
 export const parseReleasesQuery = (queryParams, extraProps) => {
+  const name = queryParams.has('name') ? queryParams.get('name') : '';
   const tab = queryParams.has('tab') ? queryParams.get('tab') : undefined;
   const tags = queryParams.has('tag') ? queryParams.getAll('tag') : [];
+  const type = queryParams.has('type') ? queryParams.get('type') : '';
   let selectedRelease = extraProps.location.pathname.substring(releasesRoot.length + 1);
   if (!selectedRelease && extraProps.pageState.id?.length) {
     selectedRelease = extraProps.pageState.id[0];
   }
-  return { selectedRelease, tab, tags };
+  return { searchTerm: name, selectedRelease, tab, tags, type };
 };

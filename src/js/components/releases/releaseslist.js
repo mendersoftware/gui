@@ -46,7 +46,7 @@ const columns = [
     key: 'tags',
     title: 'Tags',
     render: ({ tags = [] }) => tags.join(', ') || '-',
-    canShow: ({ features: { hasReleaseTags } }) => hasReleaseTags
+    canShow
   },
   {
     key: 'modified',
@@ -59,7 +59,6 @@ const columns = [
 ];
 
 const useStyles = makeStyles()(() => ({
-  container: { maxWidth: 1600 },
   empty: { margin: '8vh auto' }
 }));
 
@@ -85,12 +84,12 @@ const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop,
   </div>
 );
 
-export const ReleasesList = ({ onFileUploadClick }) => {
+export const ReleasesList = ({ className = '', onFileUploadClick }) => {
   const repoRef = useRef();
   const dropzoneRef = useRef();
   const uploading = useSelector(state => state.app.uploading);
   const releasesListState = useSelector(getReleaseListState);
-  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, tags = [], total } = releasesListState;
+  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, tags = [], total, type } = releasesListState;
   const hasReleases = useSelector(getHasReleases);
   const features = useSelector(getFeatures);
   const releases = useSelector(getReleasesList);
@@ -134,7 +133,8 @@ export const ReleasesList = ({ onFileUploadClick }) => {
     [JSON.stringify(features)]
   );
 
-  const potentialTotal = searchTerm ? searchTotal : total;
+  const isFiltering = !!(tags.length || type || searchTerm);
+  const potentialTotal = isFiltering ? searchTotal : total;
   if (!hasReleases) {
     return (
       <EmptyState
@@ -149,11 +149,11 @@ export const ReleasesList = ({ onFileUploadClick }) => {
   }
 
   return (
-    <div className={classes.container}>
+    <div className={className}>
       {isLoading === undefined ? (
         <Loader show />
       ) : !potentialTotal ? (
-        <p className="margin-top muted align-center margin-right">There are no Releases {searchTerm ? `for ${searchTerm}` : 'yet'}</p>
+        <p className="margin-top muted align-center margin-right">There are no Releases {isFiltering ? 'for the filter selection' : 'yet'}</p>
       ) : (
         <>
           <DetailsTable columns={applicableColumns} items={releases} onItemClick={onSelect} sort={sort} onChangeSorting={onChangeSorting} tableRef={repoRef} />

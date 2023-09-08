@@ -299,9 +299,11 @@ describe('locationutils', () => {
       const endDate = new Date('2019-01-13');
       endDate.setHours(23, 59, 59, 999);
       expect(result).toEqual({
+        searchTerm: '',
         selectedRelease: 'terst',
         tab: 'flump',
-        tags: ['asd', '52534']
+        tags: ['asd', '52534'],
+        type: ''
       });
     });
     it('uses working utilities - generateReleasesPath', () => {

@@ -20,7 +20,8 @@ import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appCons
 import { DEVICE_LIST_DEFAULTS, emptyFilter } from '../constants/deviceConstants';
 import * as ReleaseConstants from '../constants/releaseConstants';
 import { customSort, deepCompare, duplicateFilter, extractSoftwareItem } from '../helpers';
-import { deploymentsApiUrl } from './deploymentActions';
+import { formatReleases } from '../utils/locationutils';
+import { deploymentsApiUrl, deploymentsApiUrlV2 } from './deploymentActions';
 import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -283,28 +284,30 @@ export const setReleasesListState = selectionState => (dispatch, getState) => {
 /* Releases */
 
 const releaseListRetrieval = config => {
-  const { searchTerm = '', page = defaultPage, perPage = defaultPerPage, sort = {}, selectedTags = [] } = config;
+  const { searchTerm = '', page = defaultPage, perPage = defaultPerPage, sort = {}, selectedTags = [], type = '' } = config;
   const { key: attribute, direction } = sort;
-
-  const sorting = attribute ? `&sort=${attribute}:${direction}`.toLowerCase() : '';
-  const searchQuery = searchTerm ? `&name=${searchTerm}` : '';
-  const tagQuery = selectedTags.map(tag => `&tag=${tag}`).join('');
-  return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}&per_page=${perPage}${searchQuery}${sorting}${tagQuery}`);
+  const filterQuery = formatReleases({ pageState: { searchTerm, selectedTags } });
+  const updateType = type ? `update_type=${type}` : '';
+  const sorting = attribute ? `sort=${attribute}:${direction}`.toLowerCase() : '';
+  return GeneralApi.get(
+    `${deploymentsApiUrlV2}/deployments/releases?${[`page=${page}`, `per_page=${perPage}`, filterQuery, updateType, sorting].filter(i => i).join('&')}`
+  );
 };
 
 const deductSearchState = (receivedReleases, config, total, state) => {
   let releaseListState = { ...state.releasesList };
-  const { searchTerm, searchOnly, sort = {} } = config;
+  const { searchTerm, searchOnly, sort = {}, tags = [], type } = config;
   const flattenedReleases = Object.values(receivedReleases).sort(customSort(sort.direction === SORTING_OPTIONS.desc, sort.key));
   const releaseIds = flattenedReleases.map(item => item.Name);
+  const isFiltering = !!(tags.length || type || searchTerm);
   if (searchOnly) {
     releaseListState = { ...releaseListState, searchedIds: releaseIds };
   } else {
     releaseListState = {
       ...releaseListState,
       releaseIds,
-      searchTotal: searchTerm ? total : state.releasesList.searchTotal,
-      total: !searchTerm ? total : state.releasesList.total
+      searchTotal: isFiltering ? total : state.releasesList.searchTotal,
+      total: !isFiltering ? total : state.releasesList.total
     };
   }
   return releaseListState;
@@ -337,3 +340,35 @@ export const getRelease = name => (dispatch, getState) =>
     }
     return Promise.resolve(null);
   });
+
+export const updateReleaseInfo = (name, info) => (dispatch, getState) =>
+  GeneralApi.patch(`${deploymentsApiUrlV2}/deployments/releases/${name}`, info)
+    .catch(err => commonErrorHandler(err, `Release details couldn't be updated.`, dispatch))
+    .then(() => {
+      return Promise.all([
+        dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: { ...getState().releases.byId[name], ...info } }),
+        dispatch(setSnackbar('Release details were updated successfully.', TIMEOUTS.fiveSeconds, ''))
+      ]);
+    });
+
+export const setReleaseTags =
+  (name, tags = []) =>
+  (dispatch, getState) =>
+    GeneralApi.put(`${deploymentsApiUrlV2}/deployments/releases/${name}/tags`, tags)
+      .catch(err => commonErrorHandler(err, `Release tags couldn't be set.`, dispatch))
+      .then(() => {
+        return Promise.all([
+          dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: { ...getState().releases.byId[name], tags } }),
+          dispatch(setSnackbar('Release tags were set successfully.', TIMEOUTS.fiveSeconds, ''))
+        ]);
+      });
+
+export const getExistingReleaseTags = () => dispatch =>
+  GeneralApi.get(`${deploymentsApiUrlV2}/releases/all/tags`)
+    .catch(err => commonErrorHandler(err, `Existing release tags couldn't be retrieved.`, dispatch))
+    .then(({ data: tags }) => Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE_TAGS, tags })));
+
+export const getUpdateTypes = () => dispatch =>
+  GeneralApi.get(`${deploymentsApiUrlV2}/releases/all/types`)
+    .catch(err => commonErrorHandler(err, `Existing update types couldn't be retrieved.`, dispatch))
+    .then(({ data: types }) => Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE_TYPES, types })));

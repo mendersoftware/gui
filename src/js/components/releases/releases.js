@@ -15,26 +15,30 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CloudUpload } from '@mui/icons-material';
-import { Button, Tab, Tabs } from '@mui/material';
+import { Button, Tab, Tabs, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
 
-import { getReleases, selectRelease, setReleasesListState } from '../../actions/releaseActions';
+import { getExistingReleaseTags, getReleases, getUpdateTypes, selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import {
   getHasReleases,
   getIsEnterprise,
   getReleaseListState,
+  getReleaseTags,
   getReleasesList,
   getSelectedRelease,
-  getUserCapabilities,
+  getUpdateTypes as getUpdateTypesSelector,
+  getUserCapabilities
 } from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import ChipSelect from '../common/chipselect';
 import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
-import Search from '../common/search';
+import { ControlledAutoComplete } from '../common/forms/autocomplete';
+import { Filters } from '../common/forms/filters';
+import { ControlledSearch } from '../common/search';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import AddArtifactDialog from './dialogs/addartifact';
 import ReleaseDetails from './releasedetails';
@@ -42,10 +46,10 @@ import ReleasesList from './releaseslist';
 
 const refreshArtifactsLength = 60000;
 
-const DeltaProgress = () => {
+const DeltaProgress = ({ className = '' }) => {
   const isEnterprise = useSelector(getIsEnterprise);
   return (
-    <div className="dashboard-placeholder" style={{ display: 'grid', placeContent: 'center' }}>
+    <div className={`dashboard-placeholder ${className}`} style={{ display: 'grid', placeContent: 'center' }}>
       {isEnterprise ? 'There is no automatic delta artifacts generation running.' : <DefaultUpgradeNotification />}
     </div>
   );
@@ -64,23 +68,24 @@ const tabs = [
 ];
 
 const useStyles = makeStyles()(theme => ({
-  filters: { maxWidth: 400, alignItems: 'end', columnGap: 50 },
+  container: { maxWidth: 1600 },
   searchNote: { minHeight: '1.8rem' },
   tabContainer: { alignSelf: 'flex-start' },
   uploadButton: { minWidth: 164, marginRight: theme.spacing(2) }
 }));
 
-const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesListState, setReleasesListState, onUploadClick }) => {
-  const { hasReleaseTags } = features;
-  const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
+const Header = ({ canUpload, releasesListState, setReleasesListState, onUploadClick }) => {
+  const { selectedTags = [], searchTerm = '', searchTotal, tab = tabs[0].key, total, type } = releasesListState;
   const { classes } = useStyles();
   const hasReleases = useSelector(getHasReleases);
+  const existingTags = useSelector(getReleaseTags);
+  const updateTypes = useSelector(getUpdateTypesSelector);
 
   const searchUpdated = useCallback(searchTerm => setReleasesListState({ searchTerm }), [setReleasesListState]);
 
   const onTabChanged = (e, tab) => setReleasesListState({ tab });
 
-  const onTagSelectionChanged = ({ selection }) => setReleasesListState({ selectedTags: selection });
+  const onFiltersChange = useCallback(({ name, tags, type }) => setReleasesListState({ selectedTags: tags, searchTerm: name, type }), [setReleasesListState]);
 
   return (
     <div>
@@ -100,19 +105,47 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
         )}
       </div>
       {hasReleases && tab === tabs[0].key && (
-        <div className={`two-columns ${classes.filters}`}>
-          <Search onSearch={searchUpdated} searchTerm={searchTerm} placeholder="Search releases by name" />
-          {hasReleaseTags && (
-            <ChipSelect
-              id="release-tag-selection"
-              label="Filter by tag"
-              onChange={onTagSelectionChanged}
-              placeholder="Filter by tag"
-              selection={selectedTags}
-              options={existingTags}
-            />
-          )}
-        </div>
+        <Filters
+          className={classes.container}
+          onChange={onFiltersChange}
+          initialValues={{ name: searchTerm, tags: selectedTags, type }}
+          defaultValues={{ name: '', tags: [], type: '' }}
+          filters={[
+            {
+              key: 'name',
+              title: 'Release name',
+              Component: ControlledSearch,
+              componentProps: {
+                onSearch: searchUpdated,
+                placeholder: 'Starts with'
+              }
+            },
+            {
+              key: 'tags',
+              title: 'Tags',
+              Component: ChipSelect,
+              componentProps: {
+                options: existingTags,
+                placeholder: 'Select tags',
+                selection: selectedTags
+              }
+            },
+            {
+              key: 'type',
+              title: 'Contains Artifact type',
+              Component: ControlledAutoComplete,
+              componentProps: {
+                autoHighlight: true,
+                autoSelect: true,
+                filterSelectedOptions: true,
+                freeSolo: true,
+                handleHomeEndKeys: true,
+                options: updateTypes,
+                renderInput: params => <TextField {...params} placeholder="Any" InputProps={{ ...params.InputProps }} />
+              }
+            }
+          ]}
+        />
       )}
       <p className={`muted ${classes.searchNote}`}>{searchTerm && searchTotal !== total ? `Filtered from ${total} ${pluralize('Release', total)}` : ''}</p>
     </div>
@@ -120,20 +153,20 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
 };
 
 export const Releases = () => {
-  const features = useSelector(getFeatures);
   const releasesListState = useSelector(getReleaseListState);
-  const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags } = releasesListState;
+  const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags, type } = releasesListState;
   const releases = useSelector(getReleasesList);
-  const releaseTags = useSelector(state => state.releases.releaseTags);
   const selectedRelease = useSelector(getSelectedRelease);
   const { canUploadReleases } = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
+  const { classes } = useStyles();
 
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
   const artifactTimer = useRef();
   const [locationParams, setLocationParams] = useLocationParams('releases', { defaults: { direction: SORTING_OPTIONS.desc, key: 'modified' } });
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
+  const debouncedTypeFilter = useDebounce(type, TIMEOUTS.debounceDefault);
 
   useEffect(() => {
     if (!artifactTimer.current) {
@@ -141,7 +174,19 @@ export const Releases = () => {
     }
     setLocationParams({ pageState: { ...releasesListState, selectedRelease: selectedRelease.Name } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchTerm, JSON.stringify(sort), page, perPage, selectedRelease.Name, setLocationParams, tab, JSON.stringify(selectedTags)]);
+  }, [
+    debouncedSearchTerm,
+    debouncedTypeFilter,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(sort),
+    page,
+    perPage,
+    selectedRelease.Name,
+    setLocationParams,
+    tab,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    JSON.stringify(selectedTags)
+  ]);
 
   useEffect(() => {
     const { selectedRelease, tags, ...remainder } = locationParams;
@@ -156,6 +201,12 @@ export const Releases = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, JSON.stringify(locationParams)]);
+
+  useEffect(() => {
+    dispatch(getReleases({ searchTerm: '', searchOnly: true, page: 1, perPage: 1, selectedTags: [], type: '' }));
+    dispatch(getExistingReleaseTags());
+    dispatch(getUpdateTypes());
+  }, [dispatch]);
 
   const onUploadClick = () => setShowAddArtifactDialog(true);
 
@@ -174,14 +225,11 @@ export const Releases = () => {
       <div>
         <Header
           canUpload={canUploadReleases}
-          existingTags={releaseTags}
-          features={features}
-          hasReleases={hasReleases}
           onUploadClick={onUploadClick}
           releasesListState={releasesListState}
           setReleasesListState={onSetReleasesListState}
         />
-        <ContentComponent onFileUploadClick={onFileUploadClick} />
+        <ContentComponent className={classes.container} onFileUploadClick={onFileUploadClick} />
       </div>
       <ReleaseDetails />
       {showAddArtifactDialog && (

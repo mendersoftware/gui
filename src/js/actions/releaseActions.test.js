@@ -23,11 +23,15 @@ import {
   editArtifact,
   getArtifactInstallCount,
   getArtifactUrl,
+  getExistingReleaseTags,
   getRelease,
   getReleases,
+  getUpdateTypes,
   removeArtifact,
   removeRelease,
   selectRelease,
+  setReleaseTags,
+  updateReleaseInfo,
   uploadArtifact
 } from './releaseActions';
 
@@ -266,6 +270,50 @@ describe('release actions', () => {
       { type: ReleaseConstants.SELECTED_RELEASE, release: null }
     ];
     await store.dispatch(removeRelease(defaultState.releases.byId.r1.Name));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should retrieve existing release tags', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: ReleaseConstants.RECEIVE_RELEASE_TAGS, tags: ['foo', 'bar'] }];
+    await store.dispatch(getExistingReleaseTags());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should retrieve existing release tags', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [{ type: ReleaseConstants.RECEIVE_RELEASE_TYPES, types: ['single-file', 'not-this'] }];
+    await store.dispatch(getUpdateTypes());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow setting new release tags', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      {
+        type: ReleaseConstants.RECEIVE_RELEASE,
+        release: { ...defaultState.releases.byId.r1, tags: ['foo', 'bar'] }
+      },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Release tags were set successfully.' } }
+    ];
+    await store.dispatch(setReleaseTags(defaultState.releases.byId.r1.Name, ['foo', 'bar']));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow extending the release info', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      {
+        type: ReleaseConstants.RECEIVE_RELEASE,
+        release: { ...defaultState.releases.byId.r1, notes: 'this & that' }
+      },
+      { type: AppConstants.SET_SNACKBAR, snackbar: { message: 'Release details were updated successfully.' } }
+    ];
+    await store.dispatch(updateReleaseInfo(defaultState.releases.byId.r1.Name, { notes: 'this & that' }));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
