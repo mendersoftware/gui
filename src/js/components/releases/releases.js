@@ -22,7 +22,14 @@ import pluralize from 'pluralize';
 
 import { getReleases, selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { getFeatures, getIsEnterprise, getReleasesList, getUserCapabilities } from '../../selectors';
+import {
+  getHasReleases,
+  getIsEnterprise,
+  getReleaseListState,
+  getReleasesList,
+  getSelectedRelease,
+  getUserCapabilities,
+} from '../../selectors';
 import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import ChipSelect from '../common/chipselect';
@@ -67,6 +74,7 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
   const { hasReleaseTags } = features;
   const { selectedTags = [], searchTerm, searchTotal, tab = tabs[0].key, total } = releasesListState;
   const { classes } = useStyles();
+  const hasReleases = useSelector(getHasReleases);
 
   const searchUpdated = useCallback(searchTerm => setReleasesListState({ searchTerm }), [setReleasesListState]);
 
@@ -113,22 +121,18 @@ const Header = ({ canUpload, existingTags = [], features, hasReleases, releasesL
 
 export const Releases = () => {
   const features = useSelector(getFeatures);
-  const hasReleases = useSelector(
-    state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
-  );
+  const releasesListState = useSelector(getReleaseListState);
+  const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags } = releasesListState;
   const releases = useSelector(getReleasesList);
-  const releasesListState = useSelector(state => state.releases.releasesList);
   const releaseTags = useSelector(state => state.releases.releaseTags);
-  const selectedRelease = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
-  const userCapabilities = useSelector(getUserCapabilities);
-  const { canUploadReleases } = userCapabilities;
+  const selectedRelease = useSelector(getSelectedRelease);
+  const { canUploadReleases } = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
 
   const [selectedFile, setSelectedFile] = useState();
   const [showAddArtifactDialog, setShowAddArtifactDialog] = useState(false);
   const artifactTimer = useRef();
   const [locationParams, setLocationParams] = useLocationParams('releases', { defaults: { direction: SORTING_OPTIONS.desc, key: 'modified' } });
-  const { searchTerm, sort = {}, page, perPage, tab = tabs[0].key, selectedTags } = releasesListState;
   const debouncedSearchTerm = useDebounce(searchTerm, TIMEOUTS.debounceDefault);
 
   useEffect(() => {

@@ -21,7 +21,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { SORTING_OPTIONS, canAccess as canShow } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { getFeatures, getReleasesList, getUserCapabilities } from '../../selectors';
+import { getFeatures, getHasReleases, getReleaseListState, getReleasesList, getUserCapabilities } from '../../selectors';
 import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -89,18 +89,16 @@ export const ReleasesList = ({ onFileUploadClick }) => {
   const repoRef = useRef();
   const dropzoneRef = useRef();
   const uploading = useSelector(state => state.app.uploading);
-  const hasReleases = useSelector(
-    state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
-  );
+  const releasesListState = useSelector(getReleaseListState);
+  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, tags = [], total } = releasesListState;
+  const hasReleases = useSelector(getHasReleases);
   const features = useSelector(getFeatures);
   const releases = useSelector(getReleasesList);
-  const releasesListState = useSelector(state => state.releases.releasesList);
   const userCapabilities = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
   const { classes } = useStyles();
 
   const { canUploadReleases } = userCapabilities;
-  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, total } = releasesListState;
   const { key: attribute, direction } = sort;
 
   const onSelect = useCallback(id => dispatch(selectRelease(id)), [dispatch]);

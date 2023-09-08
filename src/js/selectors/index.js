@@ -55,8 +55,10 @@ const getDevicesList = state => Object.values(state.devices.byId);
 const getOnboarding = state => state.onboarding;
 export const getGlobalSettings = state => state.users.globalSettings;
 const getIssueCountsByType = state => state.monitor.issueCounts.byType;
+const getSelectedReleaseId = state => state.releases.selectedRelease;
 export const getReleasesById = state => state.releases.byId;
 const getReleaseTags = state => state.releases.releaseTags;
+export const getReleaseListState = state => state.releases.releasesList;
 const getListedReleases = state => state.releases.releasesList.releaseIds;
 export const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
 const getDeploymentsById = state => state.deployments.byId;
@@ -406,6 +408,12 @@ const getReleaseMappingDefaults = () => ({});
 export const getReleasesList = createSelector([getReleasesById, getListedReleases, getReleaseMappingDefaults], listItemMapper);
 
 export const getReleaseTagsById = createSelector([getReleaseTags], releaseTags => releaseTags.reduce((accu, key) => ({ ...accu, [key]: key }), {}));
+export const getHasReleases = createSelector(
+  [getReleaseListState, getReleasesById],
+  ({ searchTotal, total }, byId) => !!(Object.keys(byId).length || total || searchTotal)
+);
+
+export const getSelectedRelease = createSelector([getReleasesById, getSelectedReleaseId], (byId, id) => byId[id] ?? {});
 
 const relevantDeploymentStates = [DEPLOYMENT_STATES.pending, DEPLOYMENT_STATES.inprogress, DEPLOYMENT_STATES.finished];
 export const DEPLOYMENT_CUTOFF = 3;

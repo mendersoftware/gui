@@ -54,6 +54,7 @@ import {
   getIdAttribute,
   getIsEnterprise,
   getOnboardingState,
+  getReleaseListState,
   getReleasesById,
   getTenantCapabilities
 } from '../../selectors';
@@ -124,7 +125,7 @@ export const CreateDeployment = props => {
   const { needsDeploymentConfirmation: needsCheck, previousPhases = [], retries: previousRetries = 0 } = useSelector(getGlobalSettings);
   const onboardingState = useSelector(getOnboardingState) || {};
   const { complete: isOnboardingComplete } = onboardingState;
-  const releases = useSelector(state => state.releases.releasesList.searchedIds);
+  const { searchedIds: releases } = useSelector(getReleaseListState);
   const releasesById = useSelector(getReleasesById);
   const groupNames = useSelector(getGroupNames);
   const dispatch = useDispatch();

@@ -34,7 +34,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { removeArtifact, removeRelease, selectArtifact, selectRelease } from '../../actions/releaseActions';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getFeatures, getUserCapabilities } from '../../selectors';
+import { getFeatures, getSelectedRelease, getUserCapabilities } from '../../selectors';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
 import { RelativeTime } from '../common/time';
@@ -272,7 +272,7 @@ export const ReleaseDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { hasReleaseTags } = useSelector(getFeatures);
-  const release = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
+  const release = useSelector(getSelectedRelease);
   const selectedArtifact = useSelector(state => state.releases.selectedArtifact);
   const userCapabilities = useSelector(getUserCapabilities);
 
