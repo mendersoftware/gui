@@ -19,7 +19,7 @@ if [ -n "$GATEWAY_PORT" ]; then
     HOSTNAME=$HOSTNAME':'$GATEWAY_PORT
 fi
 
-if [ -n "$MENDER_HOSTED" ]; then
+if [ -n "$STRIPE_API_KEY" ]; then
   wget -O /var/www/mender-gui/dist/tags.json https://api.github.com/repos/mendersoftware/gui/tags?per_page=10
 else
   echo "[]" >> /var/www/mender-gui/dist/tags.json
@@ -40,8 +40,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       hasMultitenancy: "$HAVE_MULTITENANT",
       hasReleaseTags: "$HAVE_RELEASE_TAGS",
       hasReporting: "$HAVE_REPORTING",
-      isEnterprise: "$HAVE_ENTERPRISE",
-      isHosted: "$MENDER_HOSTED"
+      isEnterprise: "$HAVE_ENTERPRISE"
     },
     trackerCode: "$TRACKER_CODE",
     recaptchaSiteKey: "$RECAPTCHA_SITE_KEY",
