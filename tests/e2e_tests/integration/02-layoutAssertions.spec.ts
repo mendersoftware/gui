@@ -65,9 +65,7 @@ test.describe('Layout assertions', () => {
 
   test('can group a device', async ({ loggedInPage: page }) => {
     const wasGrouped = await page.isVisible(`.grouplist:has-text('testgroup')`);
-    if (wasGrouped) {
-      test.skip('looks like the device was grouped already, continue with the remaining tests');
-    }
+    test.skip(wasGrouped, 'looks like the device was grouped already, continue with the remaining tests');
     await page.click(`.leftNav :text('Devices')`);
     await page.click(selectors.deviceListCheckbox);
     await page.hover('.MuiSpeedDial-fab');
