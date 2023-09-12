@@ -11,29 +11,45 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { ImportExport as ImportExportIcon, InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
+import { InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-material';
 import { Button, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { mdiConsole as ConsoleIcon } from '@mdi/js';
 
-import { BEGINNING_OF_TIME, BENEFITS } from '../../../constants/appConstants';
+import { setSnackbar } from '../../../actions/appActions';
+import { getDeviceFileDownloadLink } from '../../../actions/deviceActions';
+import { BEGINNING_OF_TIME, BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
 import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
 import { checkPermissionsObject, uiPermissionsById } from '../../../constants/userConstants';
+import { createDownload } from '../../../helpers';
+import { getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import { formatAuditlogs } from '../../../utils/locationutils';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
+import Loader from '../../common/loader';
 import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
-import Troubleshootdialog from '../dialogs/troubleshootdialog';
+import FileTransfer from '../troubleshoot/filetransfer';
+import TroubleshootContent from '../troubleshoot/terminal-wrapper';
 import DeviceDataCollapse from './devicedatacollapse';
 
-const buttonStyle = { textTransform: 'none', textAlign: 'left' };
+const useStyles = makeStyles()(theme => ({
+  buttonStyle: { textTransform: 'none', textAlign: 'left' },
+  connectionIcon: { marginRight: theme.spacing() },
+  content: { maxWidth: theme.spacing(80) },
+  connectedIcon: { color: theme.palette.success.main, marginLeft: theme.spacing() },
+  disconnectedIcon: { color: theme.palette.error.main, marginLeft: theme.spacing() },
+  title: { marginRight: theme.spacing(0.5) },
+  troubleshootButton: { marginRight: theme.spacing(2) }
+}));
+
 export const PortForwardLink = () => (
   <MenderTooltip
     arrow
@@ -55,12 +71,12 @@ export const PortForwardLink = () => (
   </MenderTooltip>
 );
 
-export const DeviceConnectionNote = ({ children, style = buttonStyle }) => {
-  const theme = useTheme();
+export const DeviceConnectionNote = ({ children }) => {
+  const { classes } = useStyles();
   return (
     <div className="flexbox muted">
-      <InfoIcon fontSize="small" style={{ marginRight: theme.spacing() }} />
-      <Typography variant="body1" style={style}>
+      <InfoIcon className={classes.connectionIcon} fontSize="small" />
+      <Typography className={classes.buttonStyle} variant="body1">
         {children}
       </Typography>
     </div>
@@ -84,114 +100,141 @@ export const DeviceDisconnectedNote = ({ lastConnectionTs }) => (
 );
 
 export const TroubleshootButton = ({ disabled, item, onClick }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   return (
-    <Button onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon} style={{ marginRight: theme.spacing(2) }}>
-      <Typography variant="subtitle2" style={buttonStyle}>
+    <Button className={classes.troubleshootButton} onClick={() => onClick(item.key)} disabled={disabled} startIcon={item.icon}>
+      <Typography className={classes.buttonStyle} variant="subtitle2">
         {item.title}
       </Typography>
     </Button>
   );
 };
 
-const troubleshootingTools = [
-  {
-    key: 'terminal',
-    title: 'Launch a new Remote Terminal session',
-    icon: <MaterialDesignIcon path={ConsoleIcon} />,
-    needsWriteAccess: true,
-    needsTroubleshoot: true
-  },
-  { key: 'transfer', title: 'Launch File Transfer', icon: <ImportExportIcon />, needsWriteAccess: false, needsTroubleshoot: false },
-  { key: 'portForward', component: PortForwardLink, needsWriteAccess: false, needsTroubleshoot: true }
-];
+const ConnectionIndicator = ({ isConnected }) => {
+  const { classes } = useStyles();
+  return (
+    <div className="flexbox center-aligned">
+      Remote terminal {<MaterialDesignIcon className={isConnected ? classes.connectedIcon : classes.disconnectedIcon} path={ConsoleIcon} />}
+    </div>
+  );
+};
 
 const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device');
 
-export const DeviceConnection = ({ className = '', device, hasAuditlogs, socketClosed, startTroubleshoot, userCapabilities }) => {
-  const [availableTabs, setAvailableTabs] = useState(troubleshootingTools);
+const tabs = {
+  terminal: {
+    title: ConnectionIndicator,
+    value: 'terminal',
+    canShow: ({ canTroubleshoot, canWriteDevices, groupsPermissions }, { group }) =>
+      (canTroubleshoot && canWriteDevices) || checkPermissionsObject(groupsPermissions, uiPermissionsById.connect.value, group, ALL_DEVICES),
+    Component: TroubleshootContent
+  },
+  transfer: { title: () => 'File transfer', value: 'transfer', canShow: ({ canTroubleshoot }) => canTroubleshoot, Component: FileTransfer }
+};
 
-  const { canAuditlog, canTroubleshoot, canWriteDevices: hasWriteAccess, groupsPermissions } = userCapabilities;
+export const DeviceConnection = ({ className = '', device }) => {
+  const [socketClosed, setSocketClosed] = useState();
+  const [availableTabs, setAvailableTabs] = useState(Object.values(tabs));
+  const [downloadPath, setDownloadPath] = useState('');
+  const [file, setFile] = useState();
+  const [socketInitialized, setSocketInitialized] = useState(undefined);
+  const [uploadPath, setUploadPath] = useState('');
+  const closeTimer = useRef();
+
+  const userCapabilities = useSelector(getUserCapabilities);
+  const { canAuditlog, canTroubleshoot } = userCapabilities;
+  const { hasAuditlogs } = useSelector(getTenantCapabilities);
+  const { classes } = useStyles();
+  const { connect_status, connect_updated_ts } = device;
+
+  const dispatch = useDispatch();
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
   useEffect(() => {
-    const allowedTabs = troubleshootingTools.reduce((accu, tab) => {
-      if (
-        (tab.needsWriteAccess && (!hasWriteAccess || !checkPermissionsObject(groupsPermissions, uiPermissionsById.connect.value, device.group, ALL_DEVICES))) ||
-        (tab.needsTroubleshoot && !canTroubleshoot)
-      ) {
-        return accu;
+    if (!socketClosed) {
+      return;
+    }
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setSocketClosed(false), TIMEOUTS.fiveSeconds);
+  }, [socketClosed]);
+
+  useEffect(() => {
+    const allowedTabs = Object.values(tabs).reduce((accu, tab) => {
+      if (tab.canShow(userCapabilities, device) && connect_status) {
+        accu.push(tab);
       }
-      accu.push(tab);
       return accu;
     }, []);
     setAvailableTabs(allowedTabs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasWriteAccess, canTroubleshoot, JSON.stringify(groupsPermissions), device.group]);
+  }, [connect_status, JSON.stringify(device), JSON.stringify(userCapabilities)]);
 
-  const { connect_status = DEVICE_CONNECT_STATES.unknown, connect_updated_ts } = device;
+  const onDownloadClick = useCallback(
+    path => {
+      setDownloadPath(path);
+      dispatch(setSnackbar('Downloading file'));
+      dispatch(getDeviceFileDownloadLink(device.id, path)).then(address => {
+        const filename = path.substring(path.lastIndexOf('/') + 1) || 'file';
+        createDownload(address, filename);
+      });
+    },
+    [dispatch, device.id]
+  );
+
   return (
     <DeviceDataCollapse
-      header={
-        <div className={`flexbox ${className}`}>
-          {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote />}
-          {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote lastConnectionTs={connect_updated_ts} />}
-          {connect_status === DEVICE_CONNECT_STATES.connected &&
-            availableTabs.map(item => {
-              let Component = TroubleshootButton;
-              if (item.component) {
-                Component = item.component;
-              }
-              return <Component key={item.key} onClick={startTroubleshoot} disabled={socketClosed} item={item} />;
-            })}
-          {canAuditlog && hasAuditlogs && connect_status !== DEVICE_CONNECT_STATES.unknown && (
-            <Link
-              className="flexbox center-aligned margin-left"
-              to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
-            >
-              List all log entries for this device
-            </Link>
-          )}
-        </div>
-      }
       isAddOn
       title={
         <div className="flexbox center-aligned">
-          <h4>Troubleshoot</h4>
+          <h4>Troubleshooting</h4>
+          <div className={`flexbox ${className}`}>
+            {connect_status !== DEVICE_CONNECT_STATES.unknown && canTroubleshoot && <PortForwardLink />}
+            {canAuditlog && hasAuditlogs && (
+              <Link
+                className="flexbox center-aligned margin-left"
+                to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
+              >
+                List all log entries for this device
+              </Link>
+            )}
+          </div>
           <EnterpriseNotification className="margin-left-small" id={BENEFITS.deviceTroubleshoot.id} />
         </div>
       }
-    ></DeviceDataCollapse>
+    >
+      <div className={`flexbox column ${classes.content}`}>
+        {!connect_status && (
+          <div className="flexbox centered">
+            <Loader show />
+          </div>
+        )}
+        {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote />}
+        {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote lastConnectionTs={connect_updated_ts} />}
+        {availableTabs.map(({ Component, title: Title, value }) => (
+          <div key={value}>
+            <h4 className={socketInitialized ? '' : 'margin-top-large'}>
+              <Title isConnected={socketInitialized} />
+            </h4>
+            <Component
+              device={device}
+              downloadPath={downloadPath}
+              file={file}
+              onDownload={onDownloadClick}
+              setDownloadPath={setDownloadPath}
+              setFile={setFile}
+              setSnackbar={dispatchedSetSnackbar}
+              setSocketClosed={setSocketClosed}
+              setSocketInitialized={setSocketInitialized}
+              setUploadPath={setUploadPath}
+              socketInitialized={socketInitialized}
+              uploadPath={uploadPath}
+              userCapabilities={userCapabilities}
+            />
+          </div>
+        ))}
+      </div>
+    </DeviceDataCollapse>
   );
 };
 
 export default DeviceConnection;
-
-export const TroubleshootTab = ({
-  classes,
-  device,
-  launchTroubleshoot,
-  setSocketClosed,
-  setTroubleshootType,
-  socketClosed,
-  tenantCapabilities,
-  troubleshootType,
-  userCapabilities
-}) => (
-  <>
-    <DeviceConnection
-      className={classes.deviceConnection}
-      device={device}
-      socketClosed={socketClosed}
-      startTroubleshoot={launchTroubleshoot}
-      userCapabilities={userCapabilities}
-      tenantCapabilities={tenantCapabilities}
-    />
-    <Troubleshootdialog
-      device={device}
-      open={Boolean(troubleshootType)}
-      onCancel={() => setTroubleshootType()}
-      setSocketClosed={setSocketClosed}
-      type={troubleshootType}
-    />
-  </>
-);

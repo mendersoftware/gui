@@ -15,7 +15,7 @@ import React from 'react';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import TroubleshootDialog from './troubleshootdialog';
+import TroubleshootDialog from './terminal-wrapper';
 
 describe('TroubleshootDialog Component', () => {
   let socketSpyFactory;
@@ -50,9 +50,17 @@ describe('TroubleshootDialog Component', () => {
   });
 
   it('renders correctly', async () => {
-    const userCapabilities = { canTroubleshoot: true, canWriteDevices: true };
     const { baseElement } = render(
-      <TroubleshootDialog device={defaultState.devices.byId.a1} onCancel={jest.fn} open={true} userCapabilities={userCapabilities} />
+      <TroubleshootDialog
+        device={defaultState.devices.byId.a1}
+        onDownload={jest.fn}
+        setSocketClosed={jest.fn}
+        setUploadPath={jest.fn}
+        setFile={jest.fn}
+        setSnackbar={jest.fn}
+        setSocketInitialized={jest.fn}
+        socketInitialized
+      />
     );
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
