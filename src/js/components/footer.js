@@ -38,7 +38,7 @@ const companySite = 'https://northern.tech';
 
 const targets = [
   { key: 'company', target: companySite, title: `© ${new Date().getFullYear()} Northern.tech` },
-  { key: 'tos', target: `${companySite}/legal/hosted-mender-agreement-10_10_2022-northern-tech-as.pdf`, title: 'Terms of service' },
+  { key: 'tos', target: `${companySite}/legal/hosted-mender-agreement-northern-tech-as.pdf`, title: 'Terms of service' },
   { key: 'privacyPolicy', target: `${companySite}/legal/privacy-policy`, title: 'Privacy policy' }
 ];
 
