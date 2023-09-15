@@ -47,7 +47,7 @@ exports[`DeviceInventory Component renders correctly 1`] = `
         class="muted slightly-smaller"
         style="margin-top: 2px;"
       >
-        Last synced: 
+        Last changed: 
         <time
           datetime="2019-01-13T13:00:00+00:00"
         >

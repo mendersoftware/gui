@@ -306,8 +306,8 @@ export const selectGroup =
     tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
     return Promise.all(tasks);
   };
+
 const getEarliestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA < dateB ? dateA : dateB);
-const getLatestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA >= dateB ? dateA : dateB);
 
 const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
@@ -330,7 +330,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.identity_data = { ...storedIdentity, ...identity, ...(device.identity_data ? device.identity_data : {}) };
       device.status = status ? status : device.status || identity.status;
       device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
-      device.updated_ts = getLatestTs(getLatestTs(getLatestTs(device.check_in_time, device.updated_ts), system.updated_ts), stateDevice.updated_ts);
+      device.updated_ts = device.attributes ? device.updated_ts : stateDevice.updated_ts;
       device.isNew = new Date(device.created_ts) > new Date(state.app.newThreshold);
       device.isOffline = new Date(device.updated_ts) < new Date(state.app.offlineThreshold);
       accu.devicesById[device.id] = { ...stateDevice, ...device };
