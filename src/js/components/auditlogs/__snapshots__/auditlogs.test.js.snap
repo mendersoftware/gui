@@ -33,279 +33,308 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="margin-bottom margin-top-small css-q7wbiy-filters"
+    <form
+      class="margin-bottom relative margin-top css-zqzy49-filters "
+      novalidate=""
     >
       <div
-        class="MuiAutocomplete-root css-1h51icj-MuiAutocomplete-root"
-        style="max-width: 250px;"
+        class="filter-item"
       >
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
+        <h5
+          class="margin-top-small margin-bottom-none muted"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for="audit-log-user-selection"
-            id="audit-log-user-selection-label"
-          >
-            Filter by user
-          </label>
-          <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
-          >
-            <input
-              aria-autocomplete="list"
-              aria-expanded="false"
-              aria-invalid="false"
-              autocapitalize="none"
-              autocomplete="off"
-              class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
-              id="audit-log-user-selection"
-              placeholder="Select a user"
-              role="combobox"
-              spellcheck="false"
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1h51icj-MuiAutocomplete-root"
-        style="margin-left: 7.5px;"
-      >
+          By user
+        </h5>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
+          class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon css-1h51icj-MuiAutocomplete-root"
+          name="user"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for="audit-log-type-selection"
-            id="audit-log-type-selection-label"
-          >
-            Filter by change
-          </label>
           <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
           >
-            <input
-              aria-autocomplete="list"
-              aria-expanded="false"
-              aria-invalid="false"
-              autocapitalize="none"
-              autocomplete="off"
-              class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
-              id="audit-log-type-selection"
-              placeholder="Type"
-              role="combobox"
-              spellcheck="false"
-              type="text"
-              value=""
-            />
             <div
-              class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
             >
-              <button
-                aria-label="Open"
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-1xk1zqq-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
-                tabindex="-1"
-                title="Open"
-                type="button"
+              <input
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-invalid="false"
+                autocapitalize="none"
+                autocomplete="off"
+                class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
+                
+                placeholder="Select a user"
+                role="combobox"
+                spellcheck="false"
+                type="text"
+                value=""
+              />
+              <div
+                class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
               >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
-                  data-testid="ArrowDropDownIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <button
+                  aria-label="Clear"
+                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1qk9ba-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
+                  tabindex="-1"
+                  title="Clear"
+                  type="button"
                 >
-                  <path
-                    d="M7 10l5 5 5-5z"
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root"
+                    data-testid="CloseIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
-                </svg>
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="MuiAutocomplete-root css-1at9rwh-MuiAutocomplete-root-typeDetails"
+        class="filter-item"
       >
+        <h5
+          class="margin-top-small margin-bottom-none muted"
+        >
+          Change type
+        </h5>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
+          class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon css-1h51icj-MuiAutocomplete-root"
+          name="type"
         >
           <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
           >
-            <input
-              aria-autocomplete="list"
-              aria-expanded="false"
-              aria-invalid="false"
-              autocapitalize="none"
-              autocomplete="off"
-              class="MuiInputBase-input MuiInput-input Mui-disabled MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
-              disabled=""
-              id="audit-log-type-details-selection"
-              placeholder="-"
-              role="combobox"
-              spellcheck="false"
-              type="text"
-              value=""
-            />
-          </div>
-        </div>
-      </div>
-      <div />
-      <div
-        class=" "
-      >
-        <span>
-          Filter by date
-        </span>
-        <ul
-          class="unstyled link-list horizontal"
-        >
-          <li>
-            <a
-              class="active"
-            >
-              Today
-            </a>
-          </li>
-          <li>
-            <a
-              class=""
-            >
-              Yesterday
-            </a>
-          </li>
-          <li>
-            <a
-              class=""
-            >
-              Last 7 days
-            </a>
-          </li>
-          <li>
-            <a
-              class=""
-            >
-              Last 30 days
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div
-        class="css-63yq0h-timeframe"
-      >
-        <div
-          class="MuiFormControl-root MuiTextField-root css-1qsph3y-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for="mui-3"
-            id="mui-3-label"
-          >
-            From
-          </label>
-          <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-s15sbk-MuiInputBase-root-MuiInput-root"
-          >
-            <input
-              aria-invalid="false"
-              autocomplete="off"
-              class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
-              
-              inputmode="text"
-              placeholder="MMMM DD"
-              type="text"
-              value="January 13th"
-            />
             <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
             >
-              <button
-                aria-label="Choose date, selected date is Jan 13, 2019"
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root"
-                tabindex="0"
-                type="button"
+              <input
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-invalid="false"
+                autocapitalize="none"
+                autocomplete="off"
+                class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
+                
+                placeholder="Type"
+                role="combobox"
+                spellcheck="false"
+                type="text"
+                value=""
+              />
+              <div
+                class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
               >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
-                  data-testid="CalendarIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <button
+                  aria-label="Clear"
+                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1qk9ba-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
+                  tabindex="-1"
+                  title="Clear"
+                  type="button"
                 >
-                  <path
-                    d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root"
+                    data-testid="CloseIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
-                </svg>
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="MuiFormControl-root MuiTextField-root margin-left-small css-1qsph3y-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for="mui-5"
-            id="mui-5-label"
-          >
-            To
-          </label>
-          <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-s15sbk-MuiInputBase-root-MuiInput-root"
-          >
-            <input
-              aria-invalid="false"
-              autocomplete="off"
-              class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
-              
-              inputmode="text"
-              placeholder="MMMM DD"
-              type="text"
-              value="January 13th"
-            />
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
-            >
-              <button
-                aria-label="Choose date, selected date is Jan 13, 2019"
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root"
-                tabindex="0"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
-                  data-testid="CalendarIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                </button>
+                <button
+                  aria-label="Open"
+                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-1xk1zqq-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
+                  tabindex="-1"
+                  title="Open"
+                  type="button"
                 >
-                  <path
-                    d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="ArrowDropDownIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7 10l5 5 5-5z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
-                </svg>
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <div
+        class="filter-item"
+      >
+        <h5
+          class="margin-top-small margin-bottom-none muted"
+        />
+        <div
+          class="MuiAutocomplete-root css-1h51icj-MuiAutocomplete-root"
+          name="detail"
+        >
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
+          >
+            <div
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
+            >
+              <input
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-invalid="false"
+                autocapitalize="none"
+                autocomplete="off"
+                class="MuiInputBase-input MuiInput-input Mui-disabled MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
+                disabled=""
+                
+                placeholder="-"
+                role="combobox"
+                spellcheck="false"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="filter-item"
+      >
+        <h5
+          class="margin-top-small margin-bottom-none muted"
+        >
+          Start time
+        </h5>
+        <div
+          class="flexbox"
+          style="flex-wrap: wrap; gap: 15px;"
+        >
+          <div
+            class="MuiFormControl-root MuiTextField-root css-1qsph3y-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="true"
+              for="mui-9"
+              id="mui-9-label"
+            >
+              From
+            </label>
+            <div
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-s15sbk-MuiInputBase-root-MuiInput-root"
+            >
+              <input
+                aria-invalid="false"
+                autocomplete="off"
+                class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
+                
+                inputmode="text"
+                placeholder="MMMM DD"
+                type="text"
+                value="January 13th"
+              />
+              <div
+                class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
+              >
+                <button
+                  aria-label="Choose date, selected date is Jan 13, 2019"
+                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root"
+                  tabindex="0"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="CalendarIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="MuiFormControl-root MuiTextField-root css-1qsph3y-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="true"
+              for="mui-11"
+              id="mui-11-label"
+            >
+              To
+            </label>
+            <div
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-s15sbk-MuiInputBase-root-MuiInput-root"
+            >
+              <input
+                aria-invalid="false"
+                autocomplete="off"
+                class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
+                
+                inputmode="text"
+                placeholder="MMMM DD"
+                type="text"
+                value="January 13th"
+              />
+              <div
+                class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
+              >
+                <button
+                  aria-label="Choose date, selected date is Jan 13, 2019"
+                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-188h89-MuiButtonBase-root-MuiIconButton-root"
+                  tabindex="0"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1lqc678-MuiSvgIcon-root"
+                    data-testid="CalendarIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
     <div
       class="flexbox center-aligned"
       style="justify-content: flex-end;"

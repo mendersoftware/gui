@@ -15,14 +15,13 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
-import { Autocomplete, TextField } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { TextField } from '@mui/material';
 
 import historyImage from '../../../assets/img/history.png';
 import { setSnackbar } from '../../actions/appActions';
 import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { BEGINNING_OF_TIME, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { BEGINNING_OF_TIME, SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getISOStringBoundaries } from '../../helpers';
@@ -35,12 +34,12 @@ import {
   getOnboardingState,
   getUserCapabilities
 } from '../../selectors';
-import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
-import TimeframePicker from '../common/timeframe-picker';
-import TimerangePicker from '../common/timerange-picker';
+import { ControlledAutoComplete } from '../common/forms/autocomplete';
+import Filters from '../common/forms/filters';
+import TimeframePicker from '../common/forms/timeframe-picker';
 import { DeploymentSize, DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
@@ -53,12 +52,6 @@ const headers = [
 
 const type = DEPLOYMENT_STATES.finished;
 
-const useStyles = makeStyles()(theme => ({
-  datepickerContainer: {
-    backgroundColor: theme.palette.background.lightgrey
-  }
-}));
-
 export const Past = props => {
   const { createClick, isShowingDetails } = props;
   // eslint-disable-next-line no-unused-vars
@@ -67,9 +60,6 @@ export const Past = props => {
   const [loading, setLoading] = useState(false);
   const deploymentsRef = useRef();
   const timer = useRef();
-  const [searchValue, setSearchValue] = useState('');
-  const [typeValue, setTypeValue] = useState('');
-  const { classes } = useStyles();
 
   const dispatch = useDispatch();
   const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
@@ -81,9 +71,6 @@ export const Past = props => {
   const onboardingState = useSelector(getOnboardingState);
   const devices = useSelector(getDevicesById);
   const groupNames = useSelector(getGroupNames);
-
-  const debouncedSearch = useDebounce(searchValue, TIMEOUTS.debounceDefault);
-  const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
 
   const { endDate, page, perPage, search: deviceGroup, startDate, total: count, type: deploymentType } = pastSelectionState;
 
@@ -118,6 +105,7 @@ export const Past = props => {
   );
 
   useEffect(() => {
+    console.log('getting list with', startDate);
     const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
     setLoading(true);
@@ -126,8 +114,8 @@ export const Past = props => {
         const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
         if (deploymentsList.length) {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
-          const { start: startDate } = getISOStringBoundaries(newStartDate);
-          dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate } }));
+          const { start } = getISOStringBoundaries(newStartDate);
+          dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { startDate: startDate || start } }));
         }
       })
       .finally(() => setLoading(false));
@@ -139,7 +127,7 @@ export const Past = props => {
   useEffect(() => {
     clearInterval(timer.current);
     timer.current = setInterval(refreshPast, refreshDeploymentsLength);
-    refreshPast();
+    // refreshPast();
     return () => {
       clearInterval(timer.current);
     };
@@ -165,10 +153,6 @@ export const Past = props => {
     dispatch(advanceOnboarding(onboardingStep));
   }, [dispatch, onboardingState.complete, past]);
 
-  useEffect(() => {
-    dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, search: debouncedSearch, type: debouncedType } }));
-  }, [debouncedSearch, debouncedType, dispatch]);
-
   let onboardingComponent = null;
   if (deploymentsRef.current) {
     const detailsButtons = deploymentsRef.current.getElementsByClassName('MuiButton-contained');
@@ -188,56 +172,50 @@ export const Past = props => {
     );
   }
 
-  const onGroupFilterChange = (e, value) => {
-    if (!e) {
-      return;
-    }
-    setSearchValue(value);
-  };
+  const onFiltersChange = useCallback(
+    ({ endDate, group, startDate, type }) =>
+      dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, search: group, type, startDate, endDate } })),
+    [dispatch]
+  );
 
-  const onTypeFilterChange = (e, value) => {
-    if (!e) {
-      return;
-    }
-    setTypeValue(value);
-  };
-
-  const onTimeFilterChange = (startDate, endDate) => dispatch(setDeploymentsState({ [DEPLOYMENT_STATES.finished]: { page: 1, startDate, endDate } }));
-
+  const autoCompleteProps = { autoHighlight: true, autoSelect: true, filterSelectedOptions: true, freeSolo: true, handleHomeEndKeys: true };
   return (
     <div className="fadeIn margin-left margin-top-large">
-      <div className={`datepicker-container ${classes.datepickerContainer}`}>
-        <TimerangePicker endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
-        <TimeframePicker onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
-        <Autocomplete
-          id="device-group-selection"
-          autoHighlight
-          autoSelect
-          filterSelectedOptions
-          freeSolo
-          handleHomeEndKeys
-          inputValue={deviceGroup}
-          options={groupNames}
-          onInputChange={onGroupFilterChange}
-          renderInput={params => (
-            <TextField {...params} label="Filter by device group" placeholder="Select a group" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
-          )}
-        />
-        <Autocomplete
-          id="deployment-type-selection"
-          autoHighlight
-          autoSelect
-          filterSelectedOptions
-          handleHomeEndKeys
-          classes={{ input: deploymentType ? 'capitalized' : '', option: 'capitalized' }}
-          inputValue={deploymentType}
-          onInputChange={onTypeFilterChange}
-          options={Object.keys(DEPLOYMENT_TYPES)}
-          renderInput={params => (
-            <TextField {...params} label="Filter by type" placeholder="Select a type" InputProps={{ ...params.InputProps }} style={{ marginTop: 0 }} />
-          )}
-        />
-      </div>
+      <Filters
+        initialValues={{ startDate, endDate, group: deviceGroup, type: deploymentType }}
+        defaultValues={{ startDate: '', endDate: tonight, group: '', type: '' }}
+        filters={[
+          {
+            key: 'group',
+            title: 'Device group',
+            Component: ControlledAutoComplete,
+            componentProps: {
+              ...autoCompleteProps,
+              options: groupNames,
+              renderInput: params => <TextField {...params} label="Target devices" placeholder="Select a group" InputProps={{ ...params.InputProps }} />
+            }
+          },
+          {
+            key: 'type',
+            title: 'Contains Artifact type',
+            Component: ControlledAutoComplete,
+            componentProps: {
+              ...autoCompleteProps,
+              options: Object.keys(DEPLOYMENT_TYPES),
+              renderInput: params => <TextField {...params} label="Deployment type" placeholder="Select a type" InputProps={{ ...params.InputProps }} />
+            }
+          },
+          {
+            key: 'timeframe',
+            title: 'Start time',
+            Component: TimeframePicker,
+            componentProps: {
+              tonight
+            }
+          }
+        ]}
+        onChange={onFiltersChange}
+      />
       <div className="deploy-table-contain">
         {/* TODO: fix status retrieval for past deployments to decide what to show here - */}
         {!loading && !!past.length && !!onboardingComponent && !isShowingDetails && onboardingComponent}

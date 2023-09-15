@@ -122,7 +122,7 @@ describe('locationutils', () => {
         expect(result).toEqual({
           deploymentObject: {},
           general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.finished.key },
-          [DEPLOYMENT_STATES.finished]: { startDate: today, endDate: tonight, search: 'someSearch', type: 'configuration' }
+          [DEPLOYMENT_STATES.finished]: { startDate: '', endDate: tonight, search: 'someSearch', type: 'configuration' }
         });
       });
       it('works as expected - pt3', () => {
