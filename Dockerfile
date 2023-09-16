@@ -1,4 +1,4 @@
-FROM node:20.5.1-alpine AS base
+FROM --platform=$BUILDPLATFORM node:20.5.1-alpine AS base
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
 RUN npm ci
@@ -6,7 +6,7 @@ RUN npm ci
 FROM mendersoftware/gui:base AS disclaim
 RUN npm run disclaim
 
-FROM base AS build
+FROM --platform=$BUILDPLATFORM base AS build
 COPY . ./
 RUN npm run build
 
