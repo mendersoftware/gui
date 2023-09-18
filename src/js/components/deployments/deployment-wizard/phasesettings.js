@@ -58,7 +58,7 @@ const tableHeaders = ['', 'Batch size', 'Phase begins', 'Delay before next phase
 export const PhaseSettings = ({ classNames, deploymentObject, disabled, numberDevices, setDeploymentSettings }) => {
   const { classes } = useStyles();
 
-  const { filterId, phases = [] } = deploymentObject;
+  const { filter, phases = [] } = deploymentObject;
   const updateDelay = (value, index) => {
     let newPhases = phases;
     // value must be at least 1
@@ -126,7 +126,7 @@ export const PhaseSettings = ({ classNames, deploymentObject, disabled, numberDe
   const remainder = getRemainderPercent(phases);
 
   // disable 'add phase' button if last phase/remainder has only 1 device left
-  const disableAdd = !filterId && (remainder / 100) * numberDevices <= 1;
+  const disableAdd = !filter && (remainder / 100) * numberDevices <= 1;
   const startTime = phases.length ? phases[0].start_ts || new Date() : new Date();
   const mappedPhases = phases.map((phase, index) => {
     let max = index > 0 ? 100 - phases[index - 1].batch_size : 100;
@@ -158,14 +158,14 @@ export const PhaseSettings = ({ classNames, deploymentObject, disabled, numberDe
             ) : (
               phase.batch_size || remainder
             )}
-            {!filterId && (
+            {!filter && (
               <span className={deviceCount < 1 ? 'warning info' : 'info'} style={{ marginLeft: '5px' }}>{`(${deviceCount} ${pluralize(
                 'device',
                 deviceCount
               )})`}</span>
             )}
           </div>
-          {!filterId && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
+          {!filter && deviceCount < 1 && <div className="warning">Phases must have at least 1 device</div>}
         </TableCell>
         <TableCell>
           <Time value={getPhaseStartTime(phases, index, startTime)} />
@@ -221,7 +221,7 @@ export const PhaseSettings = ({ classNames, deploymentObject, disabled, numberDe
 
 export const RolloutPatternSelection = props => {
   const { setDeploymentSettings, deploymentObject = {}, disableSchedule, isEnterprise, open = false, previousPhases = [] } = props;
-  const { deploymentDeviceCount = 0, deploymentDeviceIds = [], filterId, phases = [] } = deploymentObject;
+  const { deploymentDeviceCount = 0, deploymentDeviceIds = [], filter, phases = [] } = deploymentObject;
 
   const [usesPattern, setUsesPattern] = useState(open || phases.some(i => i));
   const { classes } = useStyles();
@@ -232,7 +232,7 @@ export const RolloutPatternSelection = props => {
     const phaseStart = phases.length ? { start_ts: phases[0].start_ts } : {};
     // if setting new custom pattern we use default 2 phases
     // for small groups get minimum batch size containing at least 1 device
-    const minBatch = deploymentDeviceCount < 10 && !filterId ? Math.ceil((1 / deploymentDeviceCount) * 100) : 10;
+    const minBatch = deploymentDeviceCount < 10 && !filter ? Math.ceil((1 / deploymentDeviceCount) * 100) : 10;
     switch (value) {
       case 0:
         updatedPhases = [{ batch_size: 100, ...phaseStart }];
@@ -297,7 +297,7 @@ export const RolloutPatternSelection = props => {
         <FormControl className={classes.patternSelection}>
           <Select className={classes.input} onChange={handlePatternChange} value={customPattern} disabled={!isEnterprise}>
             <MenuItem value={0}>Single phase: 100%</MenuItem>
-            {(numberDevices > 1 || filterId) && [
+            {(numberDevices > 1 || filter) && [
               <MenuItem key="customPhaseSetting" divider={true} value={1}>
                 Custom
               </MenuItem>,

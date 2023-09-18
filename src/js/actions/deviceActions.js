@@ -190,14 +190,14 @@ const filterProcessors = {
 const filterAliases = {
   $nexists: { alias: DEVICE_FILTERING_OPTIONS.$exists.key, value: false }
 };
-const mapFiltersToTerms = filters =>
+export const mapFiltersToTerms = (filters = []) =>
   filters.map(filter => ({
     scope: filter.scope,
     attribute: filter.key,
     type: filterAliases[filter.operator]?.alias || filter.operator,
     value: filterProcessors.hasOwnProperty(filter.operator) ? filterProcessors[filter.operator](filter.value) : filter.value
   }));
-const mapTermsToFilters = terms =>
+export const mapTermsToFilters = (terms = []) =>
   terms.map(term => {
     const aliasedFilter = Object.entries(filterAliases).find(
       aliasDefinition => aliasDefinition[1].alias === term.type && aliasDefinition[1].value === term.value

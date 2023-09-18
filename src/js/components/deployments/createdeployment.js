@@ -199,15 +199,15 @@ export const CreateDeployment = props => {
       return setIsChecking(true);
     }
     isCreating.current = true;
-    const { delta, deploymentDeviceIds, devices, filterId, forceDeploy = false, group, phases, release, retries, update_control_map } = settings;
+    const { delta, deploymentDeviceIds, devices, filter, forceDeploy = false, group, phases, release, retries, update_control_map } = settings;
     const startTime = phases?.length ? phases[0].start_ts : undefined;
     const retrySetting = canRetry && retries ? { retries } : {};
     const newDeployment = {
       artifact_name: release.Name,
       autogenerate_delta: delta,
-      devices: (filterId || group) && !devices.length ? undefined : deploymentDeviceIds,
-      filter_id: filterId,
-      all_devices: !filterId && group === ALL_DEVICES,
+      devices: (filter || group) && !devices.length ? undefined : deploymentDeviceIds,
+      filter_id: filter?.id,
+      all_devices: !filter && group === ALL_DEVICES,
       group: group === ALL_DEVICES || devices.length ? undefined : group,
       name: devices[0]?.id || (group ? decodeURIComponent(group) : ALL_DEVICES),
       phases: phases
@@ -239,12 +239,12 @@ export const CreateDeployment = props => {
 
   const deploymentSettings = {
     ...deploymentObject,
-    filterId: groups[group] ? groups[group].id : undefined
+    filter: groups[group]?.id ? groups[group] : undefined
   };
   const disabled =
     isCreating.current ||
-    !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || deploymentSettings.filterId || deploymentSettings.group)) ||
-    !validatePhases(phases, deploymentSettings.deploymentDeviceCount, deploymentSettings.filterId);
+    !(deploymentSettings.release && (deploymentSettings.deploymentDeviceCount || !!deploymentSettings.filter || deploymentSettings.group)) ||
+    !validatePhases(phases, deploymentSettings.deploymentDeviceCount, !!deploymentSettings.filter);
 
   const sharedProps = {
     ...props,
