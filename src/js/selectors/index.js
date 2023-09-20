@@ -394,7 +394,7 @@ export const getGroupNames = createSelector([getGroupsById, getUserRoles, (_, op
   }
   return Object.keys(
     Object.entries(groups).reduce((accu, [groupName, group]) => {
-      if (group.filterId || uiPermissions.groups[ALL_DEVICES]) {
+      if (group.filter || uiPermissions.groups[ALL_DEVICES]) {
         accu[groupName] = group;
       }
       return accu;
