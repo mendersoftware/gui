@@ -48,7 +48,7 @@ const hardCodedStyle = {
   }
 };
 
-export const getDevicesLink = ({ devices, filter, group, hasFullFiltering, name }) => {
+export const getDevicesLink = ({ devices, filters = [], group, hasFullFiltering, name }) => {
   let devicesLink = '/devices';
   if (devices.length && (!name || isUUID(name))) {
     devicesLink = `${devicesLink}?id=${devices[0].id}`;
@@ -59,8 +59,8 @@ export const getDevicesLink = ({ devices, filter, group, hasFullFiltering, name 
       const { systemDeviceIds = [] } = devices[0];
       devicesLink = `${devicesLink}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
     }
-  } else if (group || filter) {
-    devicesLink = `${devicesLink}?${formatDeviceSearch({ pageState: {}, filters: filter ? [filter] : [], selectedGroup: group })}`;
+  } else if (group || filters.length) {
+    devicesLink = `${devicesLink}?${formatDeviceSearch({ pageState: {}, filters, selectedGroup: group })}`;
   }
   return devicesLink;
 };
@@ -126,7 +126,7 @@ export const Devices = ({
   };
 
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
-    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering, filter });
+    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering, filters: filter?.filters });
     let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
     let targetDeviceCount = deploymentDeviceCount;
     let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;

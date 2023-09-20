@@ -10,6 +10,8 @@ stages:
 variables:
   DOCKER_REPOSITORY: mendersoftware/gui
   DOCS_VERSION: development
+  MULTIPLATFORM_BUILD: "true"
+  MULTIPLATFORM_PLATFORMS: "linux/amd64,linux/arm64"
 
 include:
   - project: 'Northern.tech/Mender/mendertesting'
@@ -29,9 +31,8 @@ include:
 
 test:lint:
   stage: test
-  except:
-    - master
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  rules:
+    - if: $CI_COMMIT_BRANCH !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []
   cache:
     key:
@@ -95,9 +96,8 @@ test:types:
 test:licenses:
   image: denoland/deno:alpine
   stage: test
-  except:
-    - master
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  rules:
+    - if: $CI_COMMIT_BRANCH !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []
   cache:
     key:
@@ -118,16 +118,15 @@ test:licenses:
   stage: e2e-test
   image: tiangolo/docker-with-compose
   needs:
-    - job: build:docker
+    - job: build:docker-multiplatform
       artifacts: true
   services:
     - docker:dind
   before_script:
-    - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
-    - export SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_TAG}
     - apk add --no-cache bash git jq wget
     - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
-    - docker load -i image.tar
+    - docker pull ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}
+    - docker tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID} ${DOCKER_REPOSITORY}:pr
   artifacts:
     expire_in: 2w
     paths:
@@ -142,56 +141,50 @@ test:licenses:
 
 test:acceptance:
   extends: .template:test:acceptance
-  except:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  rules:
+    - if: $CI_COMMIT_BRANCH !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
   script:
-    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
     - docker rmi $DOCKER_REPOSITORY:pr
 
 test:acceptance:enterprise:
   extends: .template:test:acceptance
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
   variables:
     TEST_ENVIRONMENT: enterprise
   script:
     - if [ -n "$REGISTRY_MENDER_IO_USERNAME" ]; then
     - docker login -u $REGISTRY_MENDER_IO_USERNAME -p $REGISTRY_MENDER_IO_PASSWORD registry.mender.io
     - fi
-    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise
     - docker rmi $DOCKER_REPOSITORY:pr
 
 test:acceptance:unprivileged:
   extends: .template:test:acceptance
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
   script:
-    - docker load -i unprivilegedImage.tar
-    - docker tag ${DOCKER_REPOSITORY}:unprivileged $DOCKER_REPOSITORY:pr
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --unprivileged
     - docker rmi $DOCKER_REPOSITORY:pr
 
 test:acceptance:enterprise-unprivileged:
   extends: .template:test:acceptance
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
   variables:
     TEST_ENVIRONMENT: enterprise
   script:
-    - docker load -i unprivilegedImage.tar
     - if [ -n "$REGISTRY_MENDER_IO_USERNAME" ]; then
     - docker login -u $REGISTRY_MENDER_IO_USERNAME -p $REGISTRY_MENDER_IO_PASSWORD registry.mender.io
     - fi
-    - docker tag ${DOCKER_REPOSITORY}:unprivileged $DOCKER_REPOSITORY:pr
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise --unprivileged
     - docker rmi $DOCKER_REPOSITORY:pr
 
 test:unit:
   stage: test
-  except:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  rules:
+    - if: $CI_COMMIT_BRANCH !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs: []
   cache:
     key:
@@ -251,8 +244,8 @@ test:docs-links:hosted:
 test:prep:
   stage: pre-test
   image: docker
-  only:
-    - staging
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
   services:
     - docker:dind
   script:
@@ -264,31 +257,51 @@ test:prep:
   tags:
     - mender-qa-worker-generic-light
 
+# excludes non multiplatform build job
 build:docker:
-  services:
-    - docker:dind
-  # unfortunately we can't just extend the after_script here as it would require rebuilding all layers of the image for the different build targets
+  rules:
+    - when: never
+
+build:docker-multiplatform:
+  # by default alvaldi-gui uses the unprivileged mode
   script:
     - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
-    - apk add --no-cache git
-    - docker context create the-context
-    - docker buildx create --driver=docker-container --name=buildx-builder --use the-context
-    - docker buildx build
-      --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
-      --tag $DOCKER_BUILD_SERVICE_IMAGE
-      --output=type=docker,dest=- . > image.tar
-    - docker buildx build --tag ${DOCKER_REPOSITORY}:base
+    - docker context create builder
+    - docker buildx create builder --use --driver-opt network=host --buildkitd-flags '--debug --allow-insecure-entitlement network.host'
+    # needed for the license generation step
+    - docker buildx build 
+      --tag ${DOCKER_REPOSITORY}:base
       --target base
-      --output=type=docker,dest=- . > baseImage.tar
-    - docker buildx build --tag ${DOCKER_REPOSITORY}:unprivileged
-      --target unprivileged
+      --output type=docker,dest=baseImage.tar 
+      ${DOCKER_DIR:-.}
+    # build production target
+    - docker buildx build
+      --cache-to type=registry,ref=${CI_REGISTRY_IMAGE}:ci_cache,mode=max
+      --cache-from type=registry,ref=${CI_REGISTRY_IMAGE}:ci_cache
+      --tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}
+      --file ${DOCKER_DIR:-.}/${DOCKERFILE:-Dockerfile}
       --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
-      --output=type=docker,dest=- . > unprivilegedImage.tar
+      --platform $MULTIPLATFORM_PLATFORMS
+      --provenance false
+      --target production
+      --push
+      ${DOCKER_DIR:-.}
+    # build unprivileged target
+    - docker buildx build
+      --cache-to type=registry,ref=${CI_REGISTRY_IMAGE}:ci_cache,mode=max
+      --cache-from type=registry,ref=${CI_REGISTRY_IMAGE}:ci_cache
+      --tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged
+      --file ${DOCKER_DIR:-.}/${DOCKERFILE:-Dockerfile}
+      --build-arg GIT_COMMIT_TAG="${DOCKER_PUBLISH_COMMIT_TAG}"
+      --platform $MULTIPLATFORM_PLATFORMS
+      --provenance false
+      --target unprivileged
+      --push
+      ${DOCKER_DIR:-.}
   artifacts:
     paths:
       - baseImage.tar
-      - image.tar
-      - unprivilegedImage.tar
+
 
 .template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
@@ -362,8 +375,8 @@ test:staging-deployment:webkit:
 
 publish:tests:
   extends: .template:publish:tests
-  except:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
+  rules:
+    - if: $CI_COMMIT_BRANCH !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
   needs:
     - test:unit
   script:
@@ -373,8 +386,8 @@ publish:tests:
 
 publish:e2e-tests:
   extends: .template:publish:tests
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
   needs:
     - test:acceptance:enterprise
   script:
@@ -387,7 +400,7 @@ publish:disclaimer:
   stage: publish
   image: docker:git
   needs:
-    - job: build:docker
+    - job: build:docker-multiplatform
       artifacts: true
   services:
     - docker:dind
@@ -402,27 +415,55 @@ publish:disclaimer:
     expire_in: 2w
     paths:
       - disclaimer.txt
-  only:
-    - /^(master|staging|[0-9]+\.[0-9]+\.x)$/
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^(master|staging|[0-9]+\.[0-9]+\.x)$/
   tags:
     - mender-qa-worker-generic-light
 
+# excludes non multiplatform build job
 publish:image:
-  after_script:
-    - *export_docker_vars
-    - docker load -i unprivilegedImage.tar
-    - docker tag $DOCKER_BUILD_SERVICE_IMAGE $DOCKER_REPOSITORY:${DOCKER_PUBLISH_TAG}-unprivileged
-    - docker push $DOCKER_REPOSITORY:${DOCKER_PUBLISH_TAG}-unprivileged
+  rules:
+    - when: never
+ 
+# excludes non multiplatform job
+publish:image:saas:
+  rules:
+    - when: never
 
+# excludes non multiplatform job
 publish:image:mender:
-  after_script:
-    - *export_docker_vars
-    - integration_versions=$(release_tool --integration-versions-including $CI_PROJECT_NAME --version $CI_COMMIT_REF_NAME | sed -e 's/origin\///')
-    - docker load -i unprivilegedImage.tar
+  rules:
+    - when: never
+
+publish:image-multiplatform:unprivileged:
+  extends: publish:image-multiplatform
+  variables:
+    GITLAB_REGISTRY_TAG: '${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged'
+  script:
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_TAG}-unprivileged
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_COMMIT_TAG}
+    - echo "PUBLISH_IMAGE_DIGEST=${DOCKER_REPOSITORY}@$(regctl image digest ${GITLAB_REGISTRY_TAG})" >> publish.env
+
+publish:image-multiplatform:mender-unprivileged:
+  extends: publish:image-multiplatform:mender
+  variables:
+    GITLAB_REGISTRY_TAG: '${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged'
+  script:
+    # Publish the image for all releases
     - for version in $integration_versions; do
-    - docker tag $DOCKER_BUILD_SERVICE_IMAGE $DOCKER_REPOSITORY:mender-${version}-unprivileged
-    - docker push $DOCKER_REPOSITORY:mender-${version}-unprivileged
+    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged
+    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged_${CI_COMMIT_SHA}
     - done
+    - echo "PUBLISH_IMAGE_DIGEST=${DOCKER_REPOSITORY}@$(regctl image digest ${DOCKER_REPOSITORY}:mender-${version}-unprivileged)" >> publish.env
+
+publish:image-multiplatform:saas-unprivileged:
+  extends: publish:image-multiplatform:saas
+  before_script:
+    - !reference [publish:image:saas, before_script]
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - *export_docker_vars
+    - DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}-unprivileged
+    - SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_TAG}
 
 coveralls:done:
   image: curlimages/curl

@@ -47,8 +47,7 @@ const PhaseLabel = ({ index }) => <div className="capitalized progress-step-numb
 export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, onUpdateControlChange }) => {
   const { classes } = useStyles();
   const now = moment();
-  const { created: creationTime = now.toISOString(), filter = {}, finished, status, update_control_map } = deployment;
-  const { id: filterId } = filter;
+  const { created: creationTime = now.toISOString(), filter, finished, status, update_control_map } = deployment;
 
   const { phases, reversedPhases, totalDeviceCount, ...remainder } = getDeploymentPhasesInfo(deployment);
 
@@ -60,7 +59,7 @@ export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, on
   if (now.isSameOrAfter(currentPhaseStartTime)) {
     currentPhaseTime = currentPhaseIndex + 1;
   }
-  const endTime = finished ? <Time value={formatTime(finished)} /> : filterId ? 'N/A' : '-';
+  const endTime = finished ? <Time value={formatTime(finished)} /> : filter ? 'N/A' : '-';
 
   const displayablePhases = getDisplayablePhases({ currentPhase, phases, totalDeviceCount, ...remainder });
   return (
@@ -88,7 +87,7 @@ export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, on
         {phases.map((phase, index) => {
           phase.batch_size = phase.batch_size || getRemainderPercent(phases);
           const deviceCount = getPhaseDeviceCount(totalDeviceCount, phase.batch_size, phase.batch_size, index === phases.length - 1);
-          const deviceCountText = !filterId ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
+          const deviceCountText = !filter ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
           const startTime = phase.start_ts ?? getPhaseStartTime(phases, index, start_time);
           const phaseObject = {
             'Start time': <Time value={startTime} />,
