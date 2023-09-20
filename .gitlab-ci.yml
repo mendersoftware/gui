@@ -439,6 +439,13 @@ publish:image-multiplatform:unprivileged:
   extends: publish:image-multiplatform
   variables:
     GITLAB_REGISTRY_TAG: '${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged'
+  before_script:
+    - !reference [publish:image:saas, before_script]
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - *export_docker_vars
+    - DOCKER_PUBLISH_COMMIT_TAG=${CI_COMMIT_REF_NAME}-unprivileged_${CI_COMMIT_SHA}
+    - DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}-unprivileged
+    - SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_TAG}
   script:
     - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_TAG}-unprivileged
     - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_COMMIT_TAG}
