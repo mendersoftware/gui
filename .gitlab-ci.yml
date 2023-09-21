@@ -456,10 +456,6 @@ publish:image-multiplatform:unprivileged:
     - DOCKER_PUBLISH_COMMIT_TAG=${CI_COMMIT_REF_NAME}-unprivileged_${CI_COMMIT_SHA}
     - DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}-unprivileged
     - SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_TAG}
-  script:
-    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_TAG}-unprivileged
-    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_COMMIT_TAG}
-    - echo "PUBLISH_IMAGE_DIGEST=${DOCKER_REPOSITORY}@$(regctl image digest ${GITLAB_REGISTRY_TAG})" >> publish.env
 
 publish:image-multiplatform:mender-unprivileged:
   extends: publish:image-multiplatform:mender
