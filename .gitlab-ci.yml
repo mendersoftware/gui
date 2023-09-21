@@ -164,6 +164,11 @@ test:acceptance:unprivileged:
   extends: .template:test:acceptance
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
+  before_script:
+    - apk add --no-cache bash git jq wget
+    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - docker pull ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged
+    - docker tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged ${DOCKER_REPOSITORY}:pr
   script:
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --unprivileged
     - docker rmi $DOCKER_REPOSITORY:pr
@@ -174,6 +179,11 @@ test:acceptance:enterprise-unprivileged:
     - if: $CI_COMMIT_BRANCH == "master"
   variables:
     TEST_ENVIRONMENT: enterprise
+  before_script:
+    - apk add --no-cache bash git jq wget
+    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - docker pull ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged
+    - docker tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged ${DOCKER_REPOSITORY}:pr
   script:
     - if [ -n "$REGISTRY_MENDER_IO_USERNAME" ]; then
     - docker login -u $REGISTRY_MENDER_IO_USERNAME -p $REGISTRY_MENDER_IO_PASSWORD registry.mender.io
