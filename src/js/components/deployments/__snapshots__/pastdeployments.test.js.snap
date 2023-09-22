@@ -1892,6 +1892,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-42:focus::-ms-input-
                 aria-hidden="true"
                 aria-invalid="false"
                 class="MuiSelect-nativeInput emotion-43"
+                name="pagination"
                 tabindex="-1"
                 value="20"
               />
