@@ -227,10 +227,10 @@ export const generateDevicePath = ({ pageState }) => {
 
 const formatDates = ({ endDate, params, startDate, today, tonight }) => {
   if (endDate && endDate !== tonight) {
-    params.set('endDate', new Date(endDate).toISOString().split('T')[0]);
+    params.set('endDate', endDate.split('T')[0]);
   }
   if (startDate && startDate !== today) {
-    params.set('startDate', new Date(startDate).toISOString().split('T')[0]);
+    params.set('startDate', startDate.split('T')[0]);
   }
   return params;
 };
