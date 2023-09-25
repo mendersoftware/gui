@@ -428,47 +428,53 @@ exports[`Main Component renders correctly 1`] = `
                     Offline
                   </p>
                 </a>
-                <a
-                  class="flexbox center-aligned column mui-1i32ysv-issueType green"
-                  href="/devices?issues=authRequests"
+              </div>
+            </div>
+            <div
+              class="relative"
+            >
+              <a
+                class="MuiButtonBase-root MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary MuiFab-root MuiFab-circular MuiFab-sizeLarge MuiFab-primary absolute mui-tu2glv-MuiButtonBase-root-MuiFab-root-fab"
+                href="/devices/pending"
+                tabindex="0"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-1lqc678-MuiSvgIcon-root"
+                  data-testid="AddIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
+                />
+              </a>
+              <div
+                class="widget "
+              >
+                <div
+                  class="flexbox widgetHeader"
+                >
+                  Pending devices
+                </div>
+                <div
+                  class="flexbox column widgetMainContent"
                 >
                   <div
-                    class="relative mui-1donq9n-issueContainer"
+                    class="counter"
                   >
-                    <div
-                      class="mui-1uwsjn9-issueCounter"
-                    >
-                      0
-                    </div>
-                    <div
-                      class="absolute mui-wx993p-issueWrapper"
-                    >
-                      <div
-                        class="relative"
-                      >
-                        <div
-                          class="absolute"
-                        />
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall absolute mui-1cwsc1r-MuiSvgIcon-root"
-                          data-testid="VpnKeyOutlinedIcon"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M22 19h-6v-4h-2.68c-1.14 2.42-3.6 4-6.32 4-3.86 0-7-3.14-7-7s3.14-7 7-7c2.72 0 5.17 1.58 6.32 4H24v6h-2v4zm-4-2h2v-4h2v-2H11.94l-.23-.67C11.01 8.34 9.11 7 7 7c-2.76 0-5 2.24-5 5s2.24 5 5 5c2.11 0 4.01-1.34 4.71-3.33l.23-.67H18v4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
-                          />
-                        </svg>
-                      </div>
-                    </div>
+                    1
                   </div>
-                  <p
-                    class="align-center slightly-smaller"
+                  <span
+                    class="link"
                   >
-                    Authentication requests
-                  </p>
-                </a>
+                    View details
+                  </span>
+                </div>
               </div>
             </div>
             <div
