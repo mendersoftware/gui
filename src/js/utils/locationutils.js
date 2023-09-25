@@ -22,10 +22,10 @@ const SEPARATOR = ':';
 const defaultSelector = result => result[0];
 
 const commonFields = {
-  ...Object.keys(DEVICE_LIST_DEFAULTS).reduce((accu, key) => ({ ...accu, [key]: { parse: Number, select: defaultSelector } }), {}),
-  id: { parse: String, select: i => i },
-  issues: { parse: undefined, select: defaultSelector },
-  open: { parse: Boolean, select: defaultSelector }
+  ...Object.keys(DEVICE_LIST_DEFAULTS).reduce((accu, key) => ({ ...accu, [key]: { parse: Number, select: defaultSelector, target: key } }), {}),
+  id: { parse: String, select: i => i, target: 'id' },
+  issues: { parse: undefined, select: defaultSelector, target: 'selectedIssues' },
+  open: { parse: Boolean, select: defaultSelector, target: 'open' }
 };
 
 const scopes = {
@@ -38,16 +38,16 @@ const scopes = {
 
 export const commonProcessor = searchParams => {
   let params = new URLSearchParams(searchParams);
-  const pageState = Object.entries(commonFields).reduce((accu, [key, { parse, select }]) => {
+  const pageState = Object.entries(commonFields).reduce((accu, [key, { parse, select, target }]) => {
     const values = params.getAll(key);
     if (!values.length) {
       return accu;
     }
     if (!parse) {
-      accu[key] = values;
+      accu[target] = values;
     } else {
       try {
-        accu[key] = select(values.map(parse));
+        accu[target] = select(values.map(parse));
       } catch (error) {
         console.log('encountered faulty url param, continue...', error);
       }
