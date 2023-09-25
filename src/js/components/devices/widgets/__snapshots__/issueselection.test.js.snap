@@ -395,7 +395,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
           tabindex="-1"
           value=""
         >
-          Offline devices} (8)
+          Offline devices (8)
           <span
             class="MuiTouchRipple-root emotion-3"
           />

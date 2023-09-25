@@ -48,7 +48,7 @@ const issueTypes = [
     title: 'Authentication requests',
     icon: KeyIcon,
     target: `/devices?issues=${DEVICE_ISSUE_OPTIONS.authRequests.key}`,
-    alwaysShown: true
+    alwaysShown: false
   }
 ];
 
