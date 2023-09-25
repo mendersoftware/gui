@@ -105,9 +105,7 @@ const useStyles = makeStyles()(theme => ({
 
 export const ActionableDevices = props => {
   const { classes } = useStyles();
-  const { issues, onClick } = props;
-
-  const onWidgetClick = () => onClick({ route: '/devices/accepted' });
+  const { issues } = props;
 
   const relevantIssues = useMemo(
     () =>
@@ -147,7 +145,7 @@ export const ActionableDevices = props => {
       })}
     </>
   );
-  return <BaseWidget {...props} className={classes.widget} header="Devices with issues" main={widgetMain} onClick={onWidgetClick} />;
+  return <BaseWidget {...props} className={classes.widget} header="Devices with issues" main={widgetMain} />;
 };
 
 export default ActionableDevices;
