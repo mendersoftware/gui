@@ -172,7 +172,7 @@ export const Releases = () => {
     if (!artifactTimer.current) {
       return;
     }
-    setLocationParams({ pageState: { ...releasesListState, selectedRelease: selectedRelease.Name } });
+    setLocationParams({ pageState: { ...releasesListState, selectedRelease: selectedRelease.name } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     debouncedSearchTerm,
@@ -181,7 +181,7 @@ export const Releases = () => {
     JSON.stringify(sort),
     page,
     perPage,
-    selectedRelease.Name,
+    selectedRelease.name,
     setLocationParams,
     tab,
     // eslint-disable-next-line react-hooks/exhaustive-deps

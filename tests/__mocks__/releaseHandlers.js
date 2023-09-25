@@ -22,13 +22,13 @@ import { defaultState, releasesList } from '../mockData';
 export const releaseHandlers = [
   rest.get(`${deploymentsApiUrl}/artifacts/:id/download`, (req, res, ctx) => res(ctx.json({ uri: 'https://testlocation.com/artifact.mender' }))),
   rest.delete(`${deploymentsApiUrl}/artifacts/:id`, ({ params: { id } }, res, ctx) => {
-    if (id === defaultState.releases.byId.r1.Artifacts[0].id) {
+    if (id === defaultState.releases.byId.r1.artifacts[0].id) {
       return res(ctx.status(200));
     }
     return res(ctx.status(591));
   }),
   rest.put(`${deploymentsApiUrl}/artifacts/:id`, ({ params: { id }, body: { description } }, res, ctx) => {
-    if (id === defaultState.releases.byId.r1.Artifacts[0].id && description) {
+    if (id === defaultState.releases.byId.r1.artifacts[0].id && description) {
       return res(ctx.status(200));
     }
     return res(ctx.status(592));
@@ -48,7 +48,7 @@ export const releaseHandlers = [
       return res(ctx.set(headerNames.total, 1), ctx.json([defaultState.releases.byId.r1]));
     }
     const sort = searchParams.get('sort');
-    const releaseListSection = releasesList.sort(customSort(sort.includes(SORTING_OPTIONS.desc), 'Name')).slice((page - 1) * perPage, page * perPage);
+    const releaseListSection = releasesList.sort(customSort(sort.includes(SORTING_OPTIONS.desc), 'name')).slice((page - 1) * perPage, page * perPage);
     if (searchParams.get('name')) {
       return res(ctx.set(headerNames.total, 1234), ctx.json(releaseListSection));
     }

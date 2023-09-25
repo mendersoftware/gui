@@ -28,16 +28,16 @@ describe('ArtifactDetails Component', () => {
 
 describe('transformArtifactCapabilities', () => {
   it('works as expected', async () => {
-    expect(transformArtifactCapabilities(defaultState.releases.byId.r1.Artifacts[0].artifact_provides)).toEqual([
+    expect(transformArtifactCapabilities(defaultState.releases.byId.r1.artifacts[0].artifact_provides)).toEqual([
       { key: 'artifact_name', primary: 'artifact_name', secondary: 'myapp' },
       { key: 'data-partition.myapp.version', primary: 'data-partition.myapp.version', secondary: 'v2020.10' },
       { key: 'list_of_fancy-1', primary: 'list_of_fancy-1', secondary: 'qemux86-64' },
       { key: 'list_of_fancy-2', primary: 'list_of_fancy-2', secondary: 'x172' }
     ]);
-    expect(transformArtifactCapabilities(defaultState.releases.byId.r1.Artifacts[0].clears_artifact_provides)).toEqual([
+    expect(transformArtifactCapabilities(defaultState.releases.byId.r1.artifacts[0].clears_artifact_provides)).toEqual([
       { key: '0', primary: '0', secondary: 'data-partition.myapp.*' }
     ]);
-    expect(transformArtifactCapabilities(defaultState.releases.byId.r1.Artifacts[0].artifact_depends)).toEqual([]);
+    expect(transformArtifactCapabilities(defaultState.releases.byId.r1.artifacts[0].artifact_depends)).toEqual([]);
   });
 });
 describe('transformArtifactMetadata', () => {

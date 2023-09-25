@@ -15,7 +15,7 @@ import * as ReleaseConstants from '../constants/releaseConstants';
 import reducer, { initialState } from './releaseReducer';
 
 const testRelease = {
-  Artifacts: [
+  artifacts: [
     {
       id: '123',
       name: 'test',
@@ -26,7 +26,7 @@ const testRelease = {
     }
   ],
   device_types_compatible: ['test'],
-  Name: 'test'
+  name: 'test'
 };
 describe('release reducer', () => {
   it('should return the initial state', async () => {
@@ -36,55 +36,55 @@ describe('release reducer', () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.UPDATED_ARTIFACT,
-        release: { ...testRelease, Artifacts: [{ ...testRelease.Artifacts[0], name: 'testUpdated' }] }
-      }).byId[testRelease.Name].Artifacts
-    ).toEqual([{ ...testRelease.Artifacts[0], name: 'testUpdated' }]);
+        release: { ...testRelease, artifacts: [{ ...testRelease.artifacts[0], name: 'testUpdated' }] }
+      }).byId[testRelease.name].artifacts
+    ).toEqual([{ ...testRelease.artifacts[0], name: 'testUpdated' }]);
     expect(
       reducer(initialState, {
         type: ReleaseConstants.UPDATED_ARTIFACT,
-        release: { ...testRelease, Artifacts: [{ ...testRelease.Artifacts[0], name: 'testUpdated' }] }
-      }).byId[testRelease.Name].Artifacts
-    ).toEqual([{ ...testRelease.Artifacts[0], name: 'testUpdated' }]);
+        release: { ...testRelease, artifacts: [{ ...testRelease.artifacts[0], name: 'testUpdated' }] }
+      }).byId[testRelease.name].artifacts
+    ).toEqual([{ ...testRelease.artifacts[0], name: 'testUpdated' }]);
   });
   it('should handle ARTIFACTS_SET_ARTIFACT_URL', async () => {
     expect(
       reducer(undefined, {
         type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL,
-        release: { ...testRelease, Artifacts: [{ ...testRelease.Artifacts[0], url: 'testUpdated' }] }
-      }).byId[testRelease.Name].Artifacts
-    ).toEqual([{ ...testRelease.Artifacts[0], url: 'testUpdated' }]);
+        release: { ...testRelease, artifacts: [{ ...testRelease.artifacts[0], url: 'testUpdated' }] }
+      }).byId[testRelease.name].artifacts
+    ).toEqual([{ ...testRelease.artifacts[0], url: 'testUpdated' }]);
     expect(
       reducer(initialState, {
         type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL,
-        release: { ...testRelease, Artifacts: [{ ...testRelease.Artifacts[0], url: 'testUpdated' }] }
-      }).byId[testRelease.Name].Artifacts
-    ).toEqual([{ ...testRelease.Artifacts[0], url: 'testUpdated' }]);
+        release: { ...testRelease, artifacts: [{ ...testRelease.artifacts[0], url: 'testUpdated' }] }
+      }).byId[testRelease.name].artifacts
+    ).toEqual([{ ...testRelease.artifacts[0], url: 'testUpdated' }]);
   });
   it('should handle ARTIFACTS_REMOVED_ARTIFACT', async () => {
     expect(
-      reducer(undefined, { type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release: { ...testRelease, Artifacts: [] } }).byId[testRelease.Name].Artifacts
+      reducer(undefined, { type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release: { ...testRelease, artifacts: [] } }).byId[testRelease.name].artifacts
     ).toEqual([]);
     expect(
-      reducer(initialState, { type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release: { ...testRelease, Artifacts: [] } }).byId[testRelease.Name].Artifacts
+      reducer(initialState, { type: ReleaseConstants.ARTIFACTS_REMOVED_ARTIFACT, release: { ...testRelease, artifacts: [] } }).byId[testRelease.name].artifacts
     ).toEqual([]);
   });
   it('should handle RECEIVE_RELEASE', async () => {
-    expect(reducer(undefined, { type: ReleaseConstants.RECEIVE_RELEASE, release: { ...testRelease, Name: 'test2' } }).byId.test2).toEqual({
+    expect(reducer(undefined, { type: ReleaseConstants.RECEIVE_RELEASE, release: { ...testRelease, name: 'test2' } }).byId.test2).toEqual({
       ...testRelease,
-      Name: 'test2'
+      name: 'test2'
     });
-    expect(reducer(initialState, { type: ReleaseConstants.RECEIVE_RELEASE, release: { ...testRelease, Name: 'test2' } }).byId.test2).toEqual({
+    expect(reducer(initialState, { type: ReleaseConstants.RECEIVE_RELEASE, release: { ...testRelease, name: 'test2' } }).byId.test2).toEqual({
       ...testRelease,
-      Name: 'test2'
+      name: 'test2'
     });
   });
   it('should handle RECEIVE_RELEASES', async () => {
     expect(
-      reducer(undefined, { type: ReleaseConstants.RECEIVE_RELEASES, releases: { test: testRelease, test2: { ...testRelease, Name: 'test2' } } }).byId
-    ).toEqual({ test: testRelease, test2: { ...testRelease, Name: 'test2' } });
+      reducer(undefined, { type: ReleaseConstants.RECEIVE_RELEASES, releases: { test: testRelease, test2: { ...testRelease, name: 'test2' } } }).byId
+    ).toEqual({ test: testRelease, test2: { ...testRelease, name: 'test2' } });
     expect(
-      reducer(initialState, { type: ReleaseConstants.RECEIVE_RELEASES, releases: { test: testRelease, test2: { ...testRelease, Name: 'test2' } } }).byId
-    ).toEqual({ test: testRelease, test2: { ...testRelease, Name: 'test2' } });
+      reducer(initialState, { type: ReleaseConstants.RECEIVE_RELEASES, releases: { test: testRelease, test2: { ...testRelease, name: 'test2' } } }).byId
+    ).toEqual({ test: testRelease, test2: { ...testRelease, name: 'test2' } });
   });
   it('should handle RELEASE_REMOVED', async () => {
     expect(reducer(undefined, { type: ReleaseConstants.RELEASE_REMOVED, release: 'test' }).byId).toEqual({});

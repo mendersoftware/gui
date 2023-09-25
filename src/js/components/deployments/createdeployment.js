@@ -163,7 +163,7 @@ export const CreateDeployment = props => {
     }
     setDeploymentSettings(nextDeploymentObject);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [acceptedDeviceCount, deploymentObject.group, deploymentObject.release?.Name, dispatch, JSON.stringify(groups), setDeploymentSettings]);
+  }, [acceptedDeviceCount, deploymentObject.group, deploymentObject.release?.name, dispatch, JSON.stringify(groups), setDeploymentSettings]);
 
   useEffect(() => {
     let { deploymentDeviceCount: deviceCount, deploymentDeviceIds: deviceIds = [], devices = [] } = deploymentObject;
@@ -204,7 +204,7 @@ export const CreateDeployment = props => {
     const startTime = phases?.length ? phases[0].start_ts : undefined;
     const retrySetting = canRetry && retries ? { retries } : {};
     const newDeployment = {
-      artifact_name: release.Name,
+      artifact_name: release.name,
       autogenerate_delta: delta,
       devices: (filterId || group) && !devices.length ? undefined : deploymentDeviceIds,
       filter_id: filterId,
@@ -323,7 +323,7 @@ export const CreateDeployment = props => {
             classes="confirmation-overlay"
             cancel={() => setIsChecking(false)}
             action={() => onScheduleSubmitClick(deploymentSettings)}
-            message={`This will deploy ${deploymentSettings.release?.Name} to ${deploymentDeviceCount} ${pluralize(
+            message={`This will deploy ${deploymentSettings.release?.name} to ${deploymentDeviceCount} ${pluralize(
               'device',
               deploymentDeviceCount
             )}. Are you sure?`}

@@ -30,7 +30,7 @@ export const initialState = {
   byId: {
     /*
     [releaseName]: {
-      Artifacts: [
+      artifacts: [
         {
           id: '',
           name: '',
@@ -48,7 +48,7 @@ export const initialState = {
       ],
       modified: ''
       device_types_compatible,
-      Name: '',
+      name: '',
       tags: ['something'],
       notes: ''
     }
@@ -87,7 +87,7 @@ const releaseReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.release.Name]: action.release
+          [action.release.name]: action.release
         }
       };
     case ReleaseConstants.RECEIVE_RELEASE_TAGS:

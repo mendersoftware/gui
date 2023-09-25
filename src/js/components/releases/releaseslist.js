@@ -31,7 +31,7 @@ const columns = [
   {
     key: 'name',
     title: 'Name',
-    render: ({ Name }) => Name,
+    render: ({ name }) => name,
     sortable: true,
     defaultSortDirection: SORTING_OPTIONS.asc,
     canShow
@@ -39,7 +39,7 @@ const columns = [
   {
     key: 'artifacts-count',
     title: 'Number of artifacts',
-    render: ({ Artifacts = [] }) => Artifacts.length,
+    render: ({ artifacts = [] }) => artifacts.length,
     canShow
   },
   {

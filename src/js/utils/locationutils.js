@@ -304,7 +304,7 @@ export const formatDeployments = ({ deploymentObject, pageState }, { defaults, t
   if (showCreationDialog) {
     params.set('open', true);
     if (deploymentObject.release) {
-      params.set('release', deploymentObject.release.Name);
+      params.set('release', deploymentObject.release.name);
     }
     if (deploymentObject.devices?.length) {
       deploymentObject.devices.map(({ id }) => params.append('deviceId', id));

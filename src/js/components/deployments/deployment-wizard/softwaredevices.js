@@ -250,14 +250,14 @@ export const Software = ({ commonClasses, deploymentObject, releaseRef, releases
       <div className={commonClasses.columns}>
         <div ref={releaseRef} className={classes.selection}>
           {releaseSelectionLocked ? (
-            <TextField value={deploymentRelease?.Name} label="Release" disabled={true} className={classes.infoStyle} />
+            <TextField value={deploymentRelease?.name} label="Release" disabled={true} className={classes.infoStyle} />
           ) : (
             <AsyncAutocomplete
               id="deployment-release-selection"
-              initialValue={deploymentRelease?.Name}
-              labelAttribute="Name"
+              initialValue={deploymentRelease?.name}
+              labelAttribute="name"
               placeholder="Select a Release"
-              selectionAttribute="Name"
+              selectionAttribute="name"
               options={releaseItems}
               onChange={onReleaseInputChange}
               onChangeSelection={onReleaseSelectionChange}

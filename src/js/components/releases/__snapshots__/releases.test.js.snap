@@ -1965,7 +1965,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-57:focus::-ms-input-
                 Name
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true emotion-41"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected true emotion-41"
                   data-testid="SortIcon"
                   focusable="false"
                   viewBox="0 0 24 24"

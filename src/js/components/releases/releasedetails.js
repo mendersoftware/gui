@@ -354,7 +354,7 @@ export const ReleaseDetails = () => {
   const existingTags = useSelector(getReleaseTags);
   const userCapabilities = useSelector(getUserCapabilities);
 
-  const { Name: releaseName, Artifacts: artifacts = [] } = release;
+  const { name: releaseName, artifacts = [] } = release;
 
   const onRemoveArtifact = artifact => dispatch(removeArtifact(artifact.id)).finally(() => setShowRemoveArtifactDialog(false));
 
