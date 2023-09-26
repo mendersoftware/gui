@@ -71,7 +71,7 @@ const Selection = ({ selected = [], options = [] }) => {
       },
       { titles: [], sum: 0 }
     );
-    content = `${titles.join(', ')}} (${sum})`;
+    content = `${titles.join(', ')} (${sum})`;
   }
   return (
     <MenuItem className={classes.menuItem} size="small" value="">
