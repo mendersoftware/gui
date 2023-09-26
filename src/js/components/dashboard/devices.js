@@ -21,7 +21,14 @@ import { advanceOnboarding } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getAcceptedDevices, getAvailableIssueOptionsByType, getDeviceCountsByStatus, getOnboardingState, getUserCapabilities } from '../../selectors';
+import {
+  getAcceptedDevices,
+  getAvailableIssueOptionsByType,
+  getDeviceCountsByStatus,
+  getOnboardingState,
+  getTenantCapabilities,
+  getUserCapabilities
+} from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -39,6 +46,7 @@ export const Devices = ({ clickHandle }) => {
   const { total: acceptedDevicesCount } = useSelector(getAcceptedDevices);
   const availableIssueOptions = useSelector(getAvailableIssueOptionsByType);
   const { canManageDevices } = useSelector(getUserCapabilities);
+  const { hasReporting } = useSelector(getTenantCapabilities);
   const onboardingState = useSelector(getOnboardingState);
   const { pending: pendingDevicesCount } = useSelector(getDeviceCountsByStatus);
 
@@ -86,8 +94,8 @@ export const Devices = ({ clickHandle }) => {
     <>
       <div className="dashboard" ref={anchor}>
         <AcceptedDevices devicesCount={acceptedDevicesCount} onClick={clickHandle} />
-        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} onClick={clickHandle} />}
-        {!!pendingDevicesCount && !acceptedDevicesCount && (
+        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} />}
+        {!!pendingDevicesCount && !(acceptedDevicesCount && hasReporting) && (
           <PendingDevices
             advanceOnboarding={step => dispatch(advanceOnboarding(step))}
             innerRef={pendingsRef}
