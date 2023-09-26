@@ -105,7 +105,7 @@ export const getPhaseStartTime = (phases, index, startDate) => {
 };
 
 export const CreateDeployment = props => {
-  const { deploymentObject = {}, onDismiss, onScheduleSubmit, open, setDeploymentSettings } = props;
+  const { deploymentObject = {}, onDismiss, onScheduleSubmit, setDeploymentSettings } = props;
 
   const { canRetry, canSchedule, hasFullFiltering } = useSelector(getTenantCapabilities);
   const { createdGroup, groups, hasDynamicGroups } = useSelector(state => {
@@ -275,7 +275,7 @@ export const CreateDeployment = props => {
   };
   const hasReleases = !!Object.keys(releasesById).length;
   return (
-    <Drawer anchor="right" open={open} onClose={closeWizard} PaperProps={{ style: { minWidth: '50vw' } }}>
+    <Drawer anchor="right" open onClose={closeWizard} PaperProps={{ style: { minWidth: '50vw' } }}>
       <div className="flexbox space-between center-aligned">
         <h3>Create a deployment</h3>
         <IconButton onClick={closeWizard} aria-label="close" size="large">
