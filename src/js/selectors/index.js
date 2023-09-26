@@ -339,7 +339,6 @@ export const getTenantCapabilities = createSelector(
   [getFeatures, getOrganization, getIsEnterprise],
   (
     {
-      hasAddons,
       hasAuditlogs: isAuditlogEnabled,
       hasDeviceConfig: isDeviceConfigEnabled,
       hasDeviceConnect: isDeviceConnectEnabled,
@@ -351,9 +350,9 @@ export const getTenantCapabilities = createSelector(
   ) => {
     const canDelta = isEnterprise || plan === PLANS.professional.id;
     const hasAuditlogs = isAuditlogEnabled && (!isHosted || isEnterprise || plan === PLANS.professional.id);
-    const hasDeviceConfig = hasAddons || isDeviceConfigEnabled || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled));
-    const hasDeviceConnect = hasAddons || isDeviceConnectEnabled || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled));
-    const hasMonitor = hasAddons || isMonitorEnabled || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled));
+    const hasDeviceConfig = isDeviceConfigEnabled || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled));
+    const hasDeviceConnect = isDeviceConnectEnabled || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled));
+    const hasMonitor = isMonitorEnabled || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled));
     return {
       canDelta,
       canRetry: canDelta,

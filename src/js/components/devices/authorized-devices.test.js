@@ -66,8 +66,7 @@ describe('AuthorizedDevices Component', () => {
         ...defaultState.app,
         features: {
           ...defaultState.app.features,
-          // hasReporting: true,
-          hasAddons: true,
+          hasMonitor: true,
           isEnterprise: true
         }
       },
