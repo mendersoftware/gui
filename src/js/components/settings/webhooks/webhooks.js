@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
@@ -102,6 +102,8 @@ export const Webhooks = ({ webhook = { ...emptyWebhook } }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(webhooks)]);
 
+  const dispatchedGetWebhookEvents = useCallback(options => dispatch(getWebhookEvents(options)), [dispatch]);
+
   return (
     <div>
       <h2>Webhooks</h2>
@@ -117,7 +119,7 @@ export const Webhooks = ({ webhook = { ...emptyWebhook } }) => {
         editing={editing}
         events={events}
         eventTotal={eventTotal}
-        getWebhookEvents={options => dispatch(getWebhookEvents(options))}
+        getWebhookEvents={dispatchedGetWebhookEvents}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onRemove={onRemoveClick}
