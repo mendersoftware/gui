@@ -29,6 +29,7 @@ import {
 } from '../constants/deviceConstants';
 import { READ_STATES, rolesByName, twoFAStates, uiPermissionsById } from '../constants/userConstants';
 import { attributeDuplicateFilter, duplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper, versionCompare } from '../helpers';
+import { onboardingSteps } from '../utils/onboardingmanager';
 
 const getAppDocsVersion = state => state.app.docsVersion;
 export const getFeatures = state => state.app.features;
@@ -238,9 +239,12 @@ export const getOfflineThresholdSettings = createSelector([getGlobalSettings], (
 export const getOnboardingState = createSelector([getOnboarding, getUserSettings], ({ complete, progress, showTips, ...remainder }, { onboarding = {} }) => ({
   ...remainder,
   ...onboarding,
-  complete,
-  progress,
-  showTips
+  complete: onboarding.complete || complete,
+  progress:
+    Object.keys(onboardingSteps).findIndex(step => step === progress) > Object.keys(onboardingSteps).findIndex(step => step === onboarding.progress)
+      ? progress
+      : onboarding.progress,
+  showTips: !onboarding.showTips ? onboarding.showTips : showTips
 }));
 
 export const getTooltipsState = createSelector([getTooltipsById, getUserSettings], (byId, { tooltips = {} }) =>
