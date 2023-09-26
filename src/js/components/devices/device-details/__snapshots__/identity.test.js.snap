@@ -252,21 +252,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  text-align: center;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
-  overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
-  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.0446rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.7545rem;
+  line-height: 1.75;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 4px 5px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #337a87;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
 }
 
 .emotion-4::-moz-focus-inner {
@@ -286,7 +286,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
 }
 
 .emotion-4:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
@@ -296,11 +298,28 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
 }
 
 .emotion-4.Mui-disabled {
-  background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
+.emotion-4:hover {
+  colors: #337a87;
+}
+
+.emotion-4.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
+}
+
 .emotion-5 {
+  display: inherit;
+  margin-right: 8px;
+  margin-left: -2px;
+}
+
+.emotion-5>*:nth-of-type(1) {
+  font-size: 18px;
+}
+
+.emotion-6 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -315,14 +334,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   font-size: 1.3929rem;
-  font-size: 1.25rem;
 }
 
-.emotion-5 iconButton {
+.emotion-6 iconButton {
   margin-right: 8px;
 }
 
-.emotion-6 {
+.emotion-7 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -334,7 +352,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   border-radius: inherit;
 }
 
-.emotion-8 {
+.emotion-9 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -352,7 +370,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   color: #337a87;
 }
 
-.emotion-8 iconButton {
+.emotion-9 iconButton {
   margin-right: 8px;
 }
 
@@ -398,23 +416,29 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
           class="MuiInputAdornment-root MuiInputAdornment-positionEnd emotion-3"
         >
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-4"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-4"
+            style="padding: 5px;"
             tabindex="0"
             type="button"
           >
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-5"
-              data-testid="EditIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-              />
-            </svg>
             <span
-              class="MuiTouchRipple-root emotion-6"
+              class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-5"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+                data-testid="EditIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                />
+              </svg>
+            </span>
+            Edit
+            <span
+              class="MuiTouchRipple-root emotion-7"
             />
           </button>
         </div>
@@ -443,7 +467,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
       <svg
         aria-hidden="true"
         aria-label="Copy to clipboard"
-        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-8"
+        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-9"
         data-mui-internal-clone-element="true"
         data-testid="FileCopyOutlinedIcon"
         focusable="false"
@@ -472,7 +496,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
       <svg
         aria-hidden="true"
         aria-label="Copy to clipboard"
-        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-8"
+        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-9"
         data-mui-internal-clone-element="true"
         data-testid="FileCopyOutlinedIcon"
         focusable="false"
@@ -501,7 +525,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
       <svg
         aria-hidden="true"
         aria-label="Copy to clipboard"
-        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-8"
+        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-9"
         data-mui-internal-clone-element="true"
         data-testid="FileCopyOutlinedIcon"
         focusable="false"
@@ -768,21 +792,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  text-align: center;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
-  overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
-  -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.0446rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
+  font-family: Lato,sans-serif;
+  font-weight: 500;
+  font-size: 0.7545rem;
+  line-height: 1.75;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 4px 5px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #337a87;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 15px;
 }
 
 .emotion-4::-moz-focus-inner {
@@ -802,7 +826,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
 }
 
 .emotion-4:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
@@ -812,11 +838,28 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
 }
 
 .emotion-4.Mui-disabled {
-  background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
 
+.emotion-4:hover {
+  colors: #337a87;
+}
+
+.emotion-4.MuiButton-text {
+  color: rgba(10, 10, 11, 0.78);
+}
+
 .emotion-5 {
+  display: inherit;
+  margin-right: 8px;
+  margin-left: -2px;
+}
+
+.emotion-5>*:nth-of-type(1) {
+  font-size: 18px;
+}
+
+.emotion-6 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -831,14 +874,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   font-size: 1.3929rem;
-  font-size: 1.25rem;
 }
 
-.emotion-5 iconButton {
+.emotion-6 iconButton {
   margin-right: 8px;
 }
 
-.emotion-6 {
+.emotion-7 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -850,7 +892,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   border-radius: inherit;
 }
 
-.emotion-8 {
+.emotion-9 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -868,7 +910,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
   color: #337a87;
 }
 
-.emotion-8 iconButton {
+.emotion-9 iconButton {
   margin-right: 8px;
 }
 
@@ -914,23 +956,29 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
           class="MuiInputAdornment-root MuiInputAdornment-positionEnd emotion-3"
         >
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-4"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-4"
+            style="padding: 5px;"
             tabindex="0"
             type="button"
           >
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-5"
-              data-testid="EditIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-              />
-            </svg>
             <span
-              class="MuiTouchRipple-root emotion-6"
+              class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-5"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-6"
+                data-testid="EditIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                />
+              </svg>
+            </span>
+            Edit
+            <span
+              class="MuiTouchRipple-root emotion-7"
             />
           </button>
         </div>
@@ -959,7 +1007,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
       <svg
         aria-hidden="true"
         aria-label="Copy to clipboard"
-        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-8"
+        class="MuiSvgIcon-root MuiSvgIcon-colorPrimary MuiSvgIcon-fontSizeSmall margin-left-small fadeOut emotion-9"
         data-mui-internal-clone-element="true"
         data-testid="FileCopyOutlinedIcon"
         focusable="false"

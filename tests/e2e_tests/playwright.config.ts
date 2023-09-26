@@ -33,7 +33,7 @@ export const contextOptions = {
   ...contextArgs,
   contextOptions: contextArgs,
   screenshot: 'only-on-failure',
-  video: 'retry-with-video',
+  video: 'retain-on-failure',
   // headless: false,
   launchOptions
 };

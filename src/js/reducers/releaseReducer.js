@@ -30,7 +30,7 @@ export const initialState = {
   byId: {
     /*
     [releaseName]: {
-      Artifacts: [
+      artifacts: [
         {
           id: '',
           name: '',
@@ -48,7 +48,9 @@ export const initialState = {
       ],
       modified: ''
       device_types_compatible,
-      Name: ''
+      name: '',
+      tags: ['something'],
+      notes: ''
     }
     */
   },
@@ -63,14 +65,16 @@ export const initialState = {
     isLoading: undefined,
     searchTerm: '',
     searchTotal: 0,
-    total: 0
+    tags: [],
+    total: 0,
+    type: ''
   },
-  releaseTags: [],
+  tags: [],
+  updateTypes: [],
   /*
    * Return single release with corresponding Artifacts
    */
-  selectedRelease: null,
-  selectedArtifact: null
+  selectedRelease: null
 };
 
 const releaseReducer = (state = initialState, action) => {
@@ -83,8 +87,18 @@ const releaseReducer = (state = initialState, action) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.release.Name]: action.release
+          [action.release.name]: action.release
         }
+      };
+    case ReleaseConstants.RECEIVE_RELEASE_TAGS:
+      return {
+        ...state,
+        tags: action.tags
+      };
+    case ReleaseConstants.RECEIVE_RELEASE_TYPES:
+      return {
+        ...state,
+        updateTypes: action.types
       };
     case ReleaseConstants.RECEIVE_RELEASES: {
       return {
@@ -98,14 +112,9 @@ const releaseReducer = (state = initialState, action) => {
       return {
         ...state,
         byId,
-        selectedRelease: action.release === state.selectedRelease ? Object.keys(byId)[0] : state.selectedRelease
+        selectedRelease: action.release === state.selectedRelease ? null : state.selectedRelease
       };
     }
-    case ReleaseConstants.SELECTED_ARTIFACT:
-      return {
-        ...state,
-        selectedArtifact: action.artifact
-      };
     case ReleaseConstants.SELECTED_RELEASE:
       return {
         ...state,

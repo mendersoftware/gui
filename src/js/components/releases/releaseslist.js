@@ -21,7 +21,7 @@ import { setSnackbar } from '../../actions/appActions';
 import { selectRelease, setReleasesListState } from '../../actions/releaseActions';
 import { SORTING_OPTIONS, canAccess as canShow } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { getFeatures, getReleasesList, getUserCapabilities } from '../../selectors';
+import { getFeatures, getHasReleases, getReleaseListState, getReleasesList, getUserCapabilities } from '../../selectors';
 import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -31,7 +31,7 @@ const columns = [
   {
     key: 'name',
     title: 'Name',
-    render: ({ Name }) => Name,
+    render: ({ name }) => name,
     sortable: true,
     defaultSortDirection: SORTING_OPTIONS.asc,
     canShow
@@ -39,14 +39,14 @@ const columns = [
   {
     key: 'artifacts-count',
     title: 'Number of artifacts',
-    render: ({ Artifacts = [] }) => Artifacts.length,
+    render: ({ artifacts = [] }) => artifacts.length,
     canShow
   },
   {
     key: 'tags',
     title: 'Tags',
     render: ({ tags = [] }) => tags.join(', ') || '-',
-    canShow: ({ features: { hasReleaseTags } }) => hasReleaseTags
+    canShow
   },
   {
     key: 'modified',
@@ -59,7 +59,6 @@ const columns = [
 ];
 
 const useStyles = makeStyles()(() => ({
-  container: { maxWidth: 1600 },
   empty: { margin: '8vh auto' }
 }));
 
@@ -85,22 +84,20 @@ const EmptyState = ({ canUpload, className = '', dropzoneRef, uploading, onDrop,
   </div>
 );
 
-export const ReleasesList = ({ onFileUploadClick }) => {
+export const ReleasesList = ({ className = '', onFileUploadClick }) => {
   const repoRef = useRef();
   const dropzoneRef = useRef();
   const uploading = useSelector(state => state.app.uploading);
-  const hasReleases = useSelector(
-    state => !!(Object.keys(state.releases.byId).length || state.releases.releasesList.total || state.releases.releasesList.searchTotal)
-  );
+  const releasesListState = useSelector(getReleaseListState);
+  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, tags = [], total, type } = releasesListState;
+  const hasReleases = useSelector(getHasReleases);
   const features = useSelector(getFeatures);
   const releases = useSelector(getReleasesList);
-  const releasesListState = useSelector(state => state.releases.releasesList);
   const userCapabilities = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
   const { classes } = useStyles();
 
   const { canUploadReleases } = userCapabilities;
-  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, total } = releasesListState;
   const { key: attribute, direction } = sort;
 
   const onSelect = useCallback(id => dispatch(selectRelease(id)), [dispatch]);
@@ -136,7 +133,8 @@ export const ReleasesList = ({ onFileUploadClick }) => {
     [JSON.stringify(features)]
   );
 
-  const potentialTotal = searchTerm ? searchTotal : total;
+  const isFiltering = !!(tags.length || type || searchTerm);
+  const potentialTotal = isFiltering ? searchTotal : total;
   if (!hasReleases) {
     return (
       <EmptyState
@@ -151,11 +149,11 @@ export const ReleasesList = ({ onFileUploadClick }) => {
   }
 
   return (
-    <div className={classes.container}>
+    <div className={className}>
       {isLoading === undefined ? (
         <Loader show />
       ) : !potentialTotal ? (
-        <p className="margin-top muted align-center margin-right">There are no Releases {searchTerm ? `for ${searchTerm}` : 'yet'}</p>
+        <p className="margin-top muted align-center margin-right">There are no Releases {isFiltering ? 'for the filter selection' : 'yet'}</p>
       ) : (
         <>
           <DetailsTable columns={applicableColumns} items={releases} onItemClick={onSelect} sort={sort} onChangeSorting={onChangeSorting} tableRef={repoRef} />

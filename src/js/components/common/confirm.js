@@ -13,8 +13,8 @@
 //    limitations under the License.
 import React, { useState } from 'react';
 
-import { Cancel as CancelIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { Cancel as CancelIcon, CheckCircle as CheckCircleIcon, Check as CheckIcon, Close as CloseIcon, Edit as EditIcon } from '@mui/icons-material';
+import { Button, IconButton } from '@mui/material';
 
 const defaultRemoving = 'Removing...';
 
@@ -82,5 +82,22 @@ export const Confirm = ({ action, cancel, classes = '', message = '', style = {}
     </div>
   );
 };
+
+export const EditButton = ({ onClick, disabled = false }) => (
+  <Button onClick={onClick} size="small" disabled={disabled} startIcon={<EditIcon />} style={{ padding: 5 }}>
+    Edit
+  </Button>
+);
+
+export const ConfirmationButtons = ({ onConfirm, onCancel }) => (
+  <div className="flexbox">
+    <IconButton onClick={onConfirm} size="small">
+      <CheckIcon color="disabled" />
+    </IconButton>
+    <IconButton onClick={onCancel} size="small">
+      <CloseIcon color="disabled" />
+    </IconButton>
+  </div>
+);
 
 export default Confirm;

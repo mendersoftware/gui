@@ -11,32 +11,34 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // material ui
 import {
   Close as CloseIcon,
-  Edit as EditIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
   Link as LinkIcon,
   Replay as ReplayIcon,
   Sort as SortIcon
 } from '@mui/icons-material';
-import { Button, Collapse, Divider, Drawer, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, Tooltip } from '@mui/material';
+import { Divider, Drawer, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, TextField, Tooltip } from '@mui/material';
 import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
 
 import { setSnackbar } from '../../actions/appActions';
-import { removeArtifact, removeRelease, selectArtifact, selectRelease } from '../../actions/releaseActions';
+import { removeArtifact, removeRelease, selectRelease, setReleaseTags, updateReleaseInfo } from '../../actions/releaseActions';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getFeatures, getUserCapabilities } from '../../selectors';
+import { getReleaseTags, getSelectedRelease, getUserCapabilities } from '../../selectors';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
+import { ConfirmationButtons, EditButton } from '../common/confirm';
+import ExpandableAttribute from '../common/expandable-attribute';
 import { RelativeTime } from '../common/time';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import Artifact from './artifact';
@@ -102,11 +104,13 @@ const useStyles = makeStyles()(theme => ({
     }
   },
   fab: { margin: theme.spacing(2) },
-  tagSelect: { maxWidth: 350 },
+  tagSelect: { marginRight: theme.spacing(2), maxWidth: 350 },
   label: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(4)
-  }
+  },
+  notes: { display: 'block', whiteSpace: 'pre-wrap' },
+  notesWrapper: { minWidth: theme.components?.MuiFormControl?.styleOverrides?.root?.minWidth }
 }));
 
 export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease, userCapabilities }) => {
@@ -149,65 +153,138 @@ export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease
   );
 };
 
-const ReleaseTags = ({ existingTags = [] }) => {
-  const [selectedTags, setSelectedTags] = useState(existingTags);
+export const EditableLongText = ({ contentFallback = '', fullWidth, original, onChange, placeholder = '-' }) => {
   const [isEditing, setIsEditing] = useState(false);
-
-  const onToggleEdit = () => {
-    setSelectedTags(existingTags);
-    setIsEditing(toggle);
-  };
-
-  const onTagSelectionChanged = ({ selection }) => setSelectedTags(selection);
-
-  const onSave = () => {
-    console.log('saving tags', selectedTags);
-  };
-
+  const [value, setValue] = useState(original);
   const { classes } = useStyles();
 
+  useEffect(() => {
+    setValue(original);
+  }, [original]);
+
+  const onCancelClick = () => {
+    setValue(original);
+    setIsEditing(false);
+  };
+
+  const onEdit = ({ target: { value } }) => setValue(value);
+
+  const onEditClick = () => setIsEditing(true);
+
+  const onToggleEditing = useCallback(
+    event => {
+      event.stopPropagation();
+      if (event.key && (event.key !== 'Enter' || event.shiftKey)) {
+        return;
+      }
+      if (isEditing) {
+        // save change
+        onChange(value);
+      }
+      setIsEditing(toggle);
+    },
+    [isEditing, onChange, value]
+  );
+
+  const fullWidthClass = fullWidth ? 'full-width' : '';
+
   return (
-    <div className="margin-bottom" style={{ maxWidth: 500 }}>
-      <div className="flexbox center-aligned">
-        <h4 className="margin-right">Tags</h4>
-        {!isEditing && (
-          <Button onClick={onToggleEdit} size="small" startIcon={<EditIcon />}>
-            Edit
-          </Button>
-        )}
-      </div>
-      <ChipSelect
-        className={classes.tagSelect}
-        id="release-tags"
-        label=""
-        onChange={onTagSelectionChanged}
-        disabled={!isEditing}
-        key={`${isEditing}`}
-        placeholder={isEditing ? 'Enter release tags' : 'Click edit to add release tags'}
-        selection={selectedTags}
-        options={existingTags}
-      />
-      <Collapse in={isEditing}>
-        <div className="flexbox center-aligned margin-top-small" style={{ justifyContent: 'end' }}>
-          <Button variant="contained" onClick={onSave} color="secondary" style={{ marginRight: 10 }}>
-            Save
-          </Button>
-          <Button onClick={onToggleEdit}>Cancel</Button>
-        </div>
-      </Collapse>
+    <div className="flexbox" style={{ alignItems: 'end' }}>
+      {isEditing ? (
+        <>
+          <TextField
+            className={`margin-right ${fullWidthClass}`}
+            multiline
+            onChange={onEdit}
+            onKeyDown={onToggleEditing}
+            placeholder={placeholder}
+            value={value}
+          />
+          <ConfirmationButtons onCancel={onCancelClick} onConfirm={onToggleEditing} />
+        </>
+      ) : (
+        <>
+          <ExpandableAttribute
+            className={`${fullWidthClass} margin-right ${classes.notesWrapper}`}
+            component="div"
+            dense
+            disableGutters
+            primary=""
+            secondary={original || value || contentFallback}
+            textClasses={{ secondary: classes.notes }}
+          />
+          <EditButton onClick={onEditClick} />
+        </>
+      )}
     </div>
   );
 };
 
-const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRemoveArtifactDialog }) => {
+const ReleaseNotes = ({ onChange, release: { notes = '' } }) => (
+  <>
+    <h4>Release notes</h4>
+    <EditableLongText contentFallback="Add release notes here" original={notes} onChange={onChange} placeholder="Release notes" />
+  </>
+);
+
+const ReleaseTags = ({ existingTags = [], release: { tags = [] }, onChange }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [initialValues] = useState({ tags });
+  const { classes } = useStyles();
+
+  const methods = useForm({ mode: 'onChange', defaultValues: initialValues });
+  const { setValue, getValues } = methods;
+
+  useEffect(() => {
+    if (!initialValues.tags.length) {
+      setValue('tags', tags);
+    }
+  }, [initialValues.tags, setValue, tags]);
+
+  const onToggleEdit = useCallback(() => {
+    setValue('tags', tags);
+    setIsEditing(toggle);
+  }, [setValue, tags]);
+
+  const onSave = () => {
+    onChange(getValues('tags'));
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="margin-bottom margin-top" style={{ maxWidth: 500 }}>
+      <div className="flexbox center-aligned">
+        <h4 className="margin-right">Tags</h4>
+        {!isEditing && <EditButton onClick={onToggleEdit} />}
+      </div>
+      <div className="flexbox" style={{ alignItems: 'end' }}>
+        <FormProvider {...methods}>
+          <form noValidate>
+            <ChipSelect
+              className={classes.tagSelect}
+              disabled={!isEditing}
+              label=""
+              name="tags"
+              options={existingTags}
+              placeholder={isEditing ? 'Enter release tags' : 'Click edit to add release tags'}
+            />
+          </form>
+        </FormProvider>
+        {isEditing && <ConfirmationButtons onConfirm={onSave} onCancel={onToggleEdit} />}
+      </div>
+    </div>
+  );
+};
+
+const ArtifactsList = ({ artifacts, selectedArtifact, setSelectedArtifact, setShowRemoveArtifactDialog }) => {
   const [sortCol, setSortCol] = useState('modified');
   const [sortDown, setSortDown] = useState(true);
 
   const onRowSelection = artifact => {
-    if (!artifact || !selectedArtifact || selectedArtifact.id !== artifact.id) {
-      return selectArtifact(artifact);
+    if (artifact?.id === selectedArtifact?.id) {
+      return setSelectedArtifact();
     }
-    selectArtifact();
+    setSelectedArtifact(artifact);
   };
 
   const sortColumn = col => {
@@ -233,7 +310,7 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
           {columns.map(item => (
             <div className="columnHeader" key={item.name} onClick={() => sortColumn(item)}>
               <Tooltip title={item.title} placement="top-start">
-                {item.title}
+                <>{item.title}</>
               </Tooltip>
               {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
               {item.tooltip}
@@ -241,16 +318,16 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
           ))}
           <div style={{ width: 48 }} />
         </div>
-        {items.map((pkg, index) => {
-          const expanded = !!(selectedArtifact && selectedArtifact.id === pkg.id);
+        {items.map((artifact, index) => {
+          const expanded = !!(selectedArtifact?.id === artifact.id);
           return (
             <Artifact
               key={`repository-item-${index}`}
-              artifact={pkg}
+              artifact={artifact}
               columns={columns}
               expanded={expanded}
               index={index}
-              onRowSelection={() => onRowSelection(pkg)}
+              onRowSelection={() => onRowSelection(artifact)}
               // this will be run after expansion + collapse and both need some time to fully settle
               // otherwise the measurements are off
               showRemoveArtifactDialog={setShowRemoveArtifactDialog}
@@ -265,40 +342,46 @@ const ArtifactsList = ({ artifacts, selectArtifact, selectedArtifact, setShowRem
 export const ReleaseDetails = () => {
   const [showRemoveDialog, setShowRemoveArtifactDialog] = useState(false);
   const [confirmReleaseDeletion, setConfirmReleaseDeletion] = useState(false);
+  const [selectedArtifact, setSelectedArtifact] = useState();
+
   // eslint-disable-next-line no-unused-vars
   const windowSize = useWindowSize();
   const creationRef = useRef();
   const drawerRef = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { hasReleaseTags } = useSelector(getFeatures);
-  const release = useSelector(state => state.releases.byId[state.releases.selectedRelease]) ?? {};
-  const selectedArtifact = useSelector(state => state.releases.selectedArtifact);
+  const release = useSelector(getSelectedRelease);
+  const existingTags = useSelector(getReleaseTags);
   const userCapabilities = useSelector(getUserCapabilities);
+
+  const { name: releaseName, artifacts = [] } = release;
 
   const onRemoveArtifact = artifact => dispatch(removeArtifact(artifact.id)).finally(() => setShowRemoveArtifactDialog(false));
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/releases') + '/releases'.length);
-    copy(`${location}/${release.Name}`);
+    copy(`${location}/${releaseName}`);
     dispatch(setSnackbar('Link copied to clipboard'));
   };
 
   const onCloseClick = () => dispatch(selectRelease());
 
-  const onCreateDeployment = () => navigate(`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(release.Name)}`);
+  const onCreateDeployment = () => navigate(`${DEPLOYMENT_ROUTES.active.route}?open=true&release=${encodeURIComponent(releaseName)}`);
 
   const onToggleReleaseDeletion = () => setConfirmReleaseDeletion(toggle);
 
-  const onDeleteRelease = () => dispatch(removeRelease(release.Name)).then(() => setConfirmReleaseDeletion(false));
+  const onDeleteRelease = () => dispatch(removeRelease(releaseName)).then(() => setConfirmReleaseDeletion(false));
 
-  const artifacts = release.Artifacts ?? [];
+  const onReleaseNotesChanged = useCallback(notes => dispatch(updateReleaseInfo(releaseName, { notes })), [dispatch, releaseName]);
+
+  const onTagSelectionChanged = useCallback(tags => dispatch(setReleaseTags(releaseName, tags)), [dispatch, releaseName]);
+
   return (
-    <Drawer anchor="right" open={!!release.Name} onClose={onCloseClick} PaperProps={{ style: { minWidth: '60vw' }, ref: drawerRef }}>
+    <Drawer anchor="right" open={!!releaseName} onClose={onCloseClick} PaperProps={{ style: { minWidth: '60vw' }, ref: drawerRef }}>
       <div className="flexbox center-aligned space-between">
         <div className="flexbox center-aligned">
           <b>
-            Release information for <i>{release.Name}</i>
+            Release information for <i>{releaseName}</i>
           </b>
           <IconButton onClick={copyLinkToClipboard} size="large">
             <LinkIcon />
@@ -315,11 +398,12 @@ export const ReleaseDetails = () => {
         </div>
       </div>
       <Divider className="margin-bottom" />
-      {hasReleaseTags && <ReleaseTags />}
+      <ReleaseNotes onChange={onReleaseNotesChanged} release={release} />
+      <ReleaseTags existingTags={existingTags} onChange={onTagSelectionChanged} release={release} />
       <ArtifactsList
         artifacts={artifacts}
-        selectArtifact={artifact => dispatch(selectArtifact(artifact))}
         selectedArtifact={selectedArtifact}
+        setSelectedArtifact={setSelectedArtifact}
         setShowRemoveArtifactDialog={setShowRemoveArtifactDialog}
       />
       <RemoveArtifactDialog

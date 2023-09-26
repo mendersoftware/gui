@@ -96,7 +96,7 @@ export const RolloutStepConnector = ({ disabled, step, onStepChange, release = {
 
   const pauseChip = <Chip className={classes.chip} icon={<PauseIcon />} label="Pause" {...stepModifier.props} />;
   const stepPauseChip =
-    step.state === defaultSteps.ArtifactReboot_Enter.state && release.Name?.includes(menderDemoArtifactName) ? (
+    step.state === defaultSteps.ArtifactReboot_Enter.state && release.name?.includes(menderDemoArtifactName) ? (
       <MenderTooltip
         arrow
         leaveDelay={TIMEOUTS.oneSecond}

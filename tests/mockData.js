@@ -457,8 +457,8 @@ export const defaultState = {
     ...initialReleasesState,
     byId: {
       r1: {
-        Name: 'r1',
-        Artifacts: [
+        name: 'r1',
+        artifacts: [
           {
             id: 'art1',
             description: 'test description',
@@ -488,7 +488,7 @@ export const defaultState = {
       releaseIds: ['r1'],
       sort: {
         direction: SORTING_OPTIONS.desc,
-        key: 'Name'
+        key: 'name'
       },
       searchTerm: '',
       searchTotal: 0,
@@ -523,7 +523,7 @@ export const defaultState = {
 
 export const releasesList = Array.from({ length: 5000 }, (x, i) => ({
   ...defaultState.releases.byId.r1,
-  Name: `release-${i + 1}`,
+  name: `release-${i + 1}`,
   modified: i
 }));
 

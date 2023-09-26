@@ -728,6 +728,7 @@ exports[`Configuration Component renders correctly 1`] = `
         </h4>
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-0"
+          style="padding: 5px;"
           tabindex="0"
           type="button"
         >
