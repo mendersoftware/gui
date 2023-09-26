@@ -212,14 +212,16 @@ export const Deployments = () => {
         </div>
         <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} isShowingDetails={reportDialog} />
       </div>
-      <Report abort={onAbortDeployment} onClose={closeReport} open={reportDialog} retry={retryDeployment} type={reportType} />
-      <CreateDeployment
-        open={createDialog}
-        onDismiss={onCreationDismiss}
-        deploymentObject={deploymentObject}
-        onScheduleSubmit={onScheduleSubmit}
-        setDeploymentSettings={setDeploymentSettings}
-      />
+      {reportDialog && <Report abort={onAbortDeployment} onClose={closeReport} retry={retryDeployment} type={reportType} />}
+      {createDialog && (
+        <CreateDeployment
+          open={createDialog}
+          onDismiss={onCreationDismiss}
+          deploymentObject={deploymentObject}
+          onScheduleSubmit={onScheduleSubmit}
+          setDeploymentSettings={setDeploymentSettings}
+        />
+      )}
       {!reportDialog && onboardingComponent}
     </>
   );
