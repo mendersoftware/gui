@@ -111,7 +111,7 @@ export const Deployments = () => {
     }
     const { deploymentObject = {}, id: selectedId = [], ...remainder } = locationParams;
     const { devices: selectedDevices = [], release: releaseName } = deploymentObject;
-    const release = releaseName ? { ...(releases[releaseName] ?? { Name: releaseName }) } : undefined;
+    const release = releaseName ? { ...(releases[releaseName] ?? { name: releaseName }) } : undefined;
     const devices = selectedDevices.length ? selectedDevices.map(device => ({ ...device, ...devicesById[device.id] })) : [];
     setDeploymentObject({ devices, release, releaseSelectionLocked: !!release });
     dispatch(setDeploymentsState({ selectedId: selectedId[0], ...remainder }));

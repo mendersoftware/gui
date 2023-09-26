@@ -51,7 +51,7 @@ describe('DeviceInventory Component', () => {
 
 describe('extractSoftwareInformation function', () => {
   it('works as expected', async () => {
-    expect(extractSoftwareInformation(defaultState.releases.byId.r1.Artifacts[0].artifact_provides)).toEqual([
+    expect(extractSoftwareInformation(defaultState.releases.byId.r1.artifacts[0].artifact_provides)).toEqual([
       { children: [], content: { version: 'v2020.10' }, key: 'data-partition.myapp', priority: 0, title: 'data-partition.myapp' }
     ]);
     expect(extractSoftwareInformation(defaultState.devices.byId.a1.attributes)).toEqual([]);

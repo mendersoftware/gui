@@ -14,7 +14,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Edit as EditIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
@@ -22,6 +21,7 @@ import { setDeviceTags } from '../../../actions/deviceActions';
 import { toggle } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
+import { EditButton } from '../../common/confirm';
 import KeyValueEditor from '../../common/forms/keyvalueeditor';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import DeviceDataCollapse from './devicedatacollapse';
@@ -88,11 +88,7 @@ export const DeviceTags = ({ device, setSnackbar, userCapabilities }) => {
         <div className="two-columns">
           <div className="flexbox center-aligned">
             <h4 className="margin-right">Tags</h4>
-            {!isEditing && canWriteDevices && (
-              <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
-                Edit
-              </Button>
-            )}
+            {!isEditing && canWriteDevices && <EditButton onClick={onStartEdit} />}
           </div>
         </div>
       }

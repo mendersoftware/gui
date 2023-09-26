@@ -55,42 +55,51 @@ exports[`Main Component renders correctly 1`] = `
             />
           </a>
         </div>
-        <div
-          class="MuiFormControl-root MuiTextField-root mui-j8sktw-MuiFormControl-root-MuiTextField-root-root"
+        <form
+          novalidate=""
         >
           <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedStart mui-s15sbk-MuiInputBase-root-MuiInput-root"
+            class="MuiFormControl-root MuiTextField-root mui-j8sktw-MuiFormControl-root-MuiTextField-root-root"
           >
             <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-standard MuiInputAdornment-sizeSmall mui-ittuaa-MuiInputAdornment-root"
+              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-adornedStart mui-s15sbk-MuiInputBase-root-MuiInput-root"
             >
-              <span
-                class="notranslate"
+              <div
+                class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-standard MuiInputAdornment-sizeSmall mui-ittuaa-MuiInputAdornment-root"
               >
-                ​
-              </span>
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeSize mui-8zz2bg-MuiSvgIcon-root"
-                data-testid="SearchIcon"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-                />
-              </svg>
+                <span
+                  class="notranslate"
+                >
+                  ​
+                </span>
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeSmall mui-10vv9h1-MuiSvgIcon-root"
+                  data-testid="SearchIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                  />
+                </svg>
+              </div>
+              <input
+                aria-invalid="false"
+                class="MuiInputBase-input MuiInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedStart mui-nqgi9r-MuiInputBase-input-MuiInput-input"
+                
+                name="search"
+                placeholder="Search devices"
+                type="text"
+                value=""
+              />
             </div>
-            <input
-              aria-invalid="false"
-              class="MuiInputBase-input MuiInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedStart mui-nqgi9r-MuiInputBase-input-MuiInput-input"
-              
-              placeholder="Search devices"
-              type="text"
-              value=""
-            />
           </div>
-        </div>
+          <input
+            class="hidden"
+            type="submit"
+          />
+        </form>
         <div
           class="flexbox center-aligned"
         >

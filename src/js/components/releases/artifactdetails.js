@@ -20,13 +20,11 @@ import {
   Cancel as CancelIcon,
   CancelOutlined as CancelOutlinedIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
-  Check as CheckIcon,
-  Edit as EditIcon,
   ExitToApp as ExitToAppIcon,
   Launch as LaunchIcon,
   Remove as RemoveIcon
 } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton, Input, InputAdornment, List, ListItem, ListItemText } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, List, ListItem, ListItemText } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import pluralize from 'pluralize';
@@ -37,12 +35,9 @@ import { getUserCapabilities } from '../../selectors';
 import ExpandableAttribute from '../common/expandable-attribute';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';
+import { EditableLongText } from './releasedetails';
 
 const useStyles = makeStyles()(theme => ({
-  editButton: {
-    color: 'rgba(0, 0, 0, 0.54)',
-    marginBottom: 10
-  },
   link: { marginTop: theme.spacing() },
   listItemStyle: {
     bordered: {
@@ -126,8 +121,6 @@ const DevicesLink = ({ artifact: { installCount }, softwareItem: { key, name, ve
 
 export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) => {
   const { classes } = useStyles();
-  const [descEdit, setDescEdit] = useState(false);
-  const [description, setDescription] = useState(artifact.description);
   const [showPayloads, setShowPayloads] = useState(false);
   const [showProvidesDepends, setShowProvidesDepends] = useState(false);
 
@@ -166,19 +159,7 @@ export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) =>
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifact.id, artifact.installCount, dispatch, open, softwareVersions.length]);
 
-  const onToggleEditing = useCallback(
-    event => {
-      event.stopPropagation();
-      if (event.keyCode === 13 || !event.keyCode) {
-        if (descEdit) {
-          // save change
-          dispatch(editArtifact(artifact.id, { description }));
-        }
-        setDescEdit(!descEdit);
-      }
-    },
-    [artifact.id, descEdit, description, dispatch]
-  );
+  const onDescriptionChanged = useCallback(description => dispatch(editArtifact(artifact.id, { description })), [artifact.id, dispatch]);
 
   const softwareItem = extractSoftwareItem(artifact.artifact_provides);
   const softwareInformation = softwareItem
@@ -209,25 +190,7 @@ export const ArtifactDetails = ({ artifact, open, showRemoveArtifactDialog }) =>
             primary="Description"
             style={{ marginBottom: -3, minWidth: 600 }}
             primaryTypographyProps={{ style: { marginBottom: 3 } }}
-            secondary={
-              <Input
-                id="artifact-description"
-                type="text"
-                disabled={!descEdit}
-                value={description}
-                placeholder="-"
-                onKeyDown={onToggleEditing}
-                style={{ width: '100%' }}
-                onChange={e => setDescription(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton className={classes.editButton} onClick={onToggleEditing} size="large">
-                      {descEdit ? <CheckIcon /> : <EditIcon />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            }
+            secondary={<EditableLongText fullWidth original={artifact.description} onChange={onDescriptionChanged} />}
             secondaryTypographyProps={{ component: 'div' }}
           />
         </ListItem>

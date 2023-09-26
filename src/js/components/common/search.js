@@ -11,7 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { Search as SearchIcon } from '@mui/icons-material';
 import { InputAdornment, TextField } from '@mui/material';
@@ -35,12 +36,20 @@ const endAdornment = (
   </InputAdornment>
 );
 
+const startAdornment = (
+  <InputAdornment position="start">
+    <SearchIcon color="disabled" fontSize="small" />
+  </InputAdornment>
+);
+
 // due to search not working reliably for single letter searches, only start at 2
 const MINIMUM_SEARCH_LENGTH = 2;
 
-const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchTerm, style = {}, trigger }) => {
-  const [searchValue, setSearchValue] = useState('');
+export const ControlledSearch = ({ isSearching, name = 'search', onSearch, placeholder = 'Search devices', style = {} }) => {
   const { classes } = useStyles();
+  const { control, watch } = useFormContext();
+
+  const searchValue = watch('search', '');
 
   const debouncedSearchTerm = useDebounce(searchValue, TIMEOUTS.debounceDefault);
 
@@ -51,39 +60,48 @@ const Search = ({ isSearching, onSearch, placeholder = 'Search devices', searchT
     onSearch(debouncedSearchTerm);
   }, [debouncedSearchTerm, onSearch]);
 
-  useEffect(() => {
-    if (!searchTerm) {
-      setSearchValue(searchTerm);
-    }
-  }, [searchTerm]);
+  const onTriggerSearch = useCallback(
+    ({ key }) => {
+      if (key === 'Enter' && (!debouncedSearchTerm || debouncedSearchTerm.length >= MINIMUM_SEARCH_LENGTH)) {
+        onSearch(debouncedSearchTerm);
+      }
+    },
+    [debouncedSearchTerm, onSearch]
+  );
 
-  const onSearchUpdated = ({ target: { value } }) => setSearchValue(value);
-
-  const onTriggerSearch = ({ key }) => {
-    if (key === 'Enter' && (!searchValue || searchValue.length >= MINIMUM_SEARCH_LENGTH)) {
-      onSearch(searchValue, !trigger);
-    }
-  };
-
-  const adornment = isSearching ? { endAdornment } : {};
+  const adornments = isSearching ? { startAdornment, endAdornment } : { startAdornment };
   return (
-    <TextField
-      className={classes.root}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon color="disabled" fontSize="size" />
-          </InputAdornment>
-        ),
-        ...adornment
-      }}
-      onChange={onSearchUpdated}
-      onKeyPress={onTriggerSearch}
-      placeholder={placeholder}
-      size="small"
-      style={style}
-      value={searchValue}
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <TextField
+          className={classes.root}
+          InputProps={adornments}
+          onKeyPress={onTriggerSearch}
+          placeholder={placeholder}
+          size="small"
+          style={style}
+          {...field}
+        />
+      )}
     />
+  );
+};
+
+ControlledSearch.displayName = 'ConnectedSearch';
+
+const Search = props => {
+  const { searchTerm, onSearch, trigger } = props;
+  const methods = useForm({ mode: 'onChange', defaultValues: { search: searchTerm ?? '' } });
+  const { handleSubmit } = methods;
+  return (
+    <FormProvider {...methods}>
+      <form noValidate onSubmit={handleSubmit(({ search }) => onSearch(search, !trigger))}>
+        <ControlledSearch {...props} />
+        <input className="hidden" type="submit" />
+      </form>
+    </FormProvider>
   );
 };
 
