@@ -205,7 +205,7 @@ const retrieveAppData = () => (dispatch, getState) => {
     dispatch(getReleases()),
     dispatch(getDeviceLimit()),
     dispatch(getRoles()),
-    dispatch(setFirstLoginAfterSignup(cookies.get('firstLoginAfterSignup')))
+    dispatch(setFirstLoginAfterSignup(stringToBoolean(cookies.get('firstLoginAfterSignup'))))
   ];
   const { hasMultitenancy, isHosted } = getFeatures(getState());
   const multitenancy = hasMultitenancy || isHosted || getIsEnterprise(getState());
