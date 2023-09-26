@@ -9163,7 +9163,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 }
 
 <div
-  aria-labelledby="mui-8-label"
+  aria-labelledby="mui-23-label"
   class="MuiPickersPopper-root emotion-0 MuiPopper-root"
   data-popper-escaped=""
   data-popper-placement="bottom-start"
@@ -9205,7 +9205,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 >
                   <div
                     class="MuiPickersCalendarHeader-label emotion-9"
-                    id="mui-9-grid-label"
+                    id="mui-24-grid-label"
                     style="opacity: 1;"
                   >
                     January 2019
@@ -9268,7 +9268,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 style="opacity: 1;"
               >
                 <div
-                  aria-labelledby="mui-9-grid-label"
+                  aria-labelledby="mui-24-grid-label"
                   role="grid"
                 >
                   <div
@@ -11213,7 +11213,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 }
 
 <div
-  aria-labelledby="mui-13-label"
+  aria-labelledby="mui-28-label"
   class="MuiPickersPopper-root emotion-0 MuiPopper-root"
   data-popper-escaped=""
   data-popper-placement="bottom-start"
@@ -11255,7 +11255,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 >
                   <div
                     class="MuiPickersCalendarHeader-label emotion-9"
-                    id="mui-14-grid-label"
+                    id="mui-29-grid-label"
                     style="opacity: 1;"
                   >
                     January 2019
@@ -11318,7 +11318,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 style="opacity: 1;"
               >
                 <div
-                  aria-labelledby="mui-14-grid-label"
+                  aria-labelledby="mui-29-grid-label"
                   role="grid"
                 >
                   <div

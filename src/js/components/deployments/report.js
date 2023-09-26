@@ -226,7 +226,7 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
   };
 
   return (
-    <Drawer className={`${open ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '75vw' } }}>
+    <Drawer anchor="right" open onClose={onClose} PaperProps={{ style: { minWidth: '75vw' } }}>
       <div className="flexbox margin-bottom-small space-between">
         <div className="flexbox">
           <h3>{`Deployment ${type !== DEPLOYMENT_STATES.scheduled ? 'details' : 'report'}`}</h3>
