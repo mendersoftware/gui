@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 import type { AuthSet } from "./AuthSet";
+import type { ExternalIdentity } from "./ExternalIdentity";
 import type { IdentityData } from "./IdentityData";
 
 export type DeviceDeviceauth = {
@@ -30,6 +31,7 @@ export type DeviceDeviceauth = {
    * Devices that are part of ongoing decommissioning process will return True
    */
   decommissioning?: boolean;
+  external_id?: ExternalIdentity;
 };
 
 export namespace DeviceDeviceauth {
