@@ -21,8 +21,7 @@ import { Payment as PaymentIcon } from '@mui/icons-material';
 import { Elements } from '@stripe/react-stripe-js';
 
 import { TIMEOUTS, canAccess } from '../../constants/appConstants';
-import { versionCompare } from '../../helpers';
-import { getCurrentUser, getFeatures, getOrganization, getTenantCapabilities, getUserCapabilities, getUserRoles, getVersionInformation } from '../../selectors';
+import { getCurrentUser, getFeatures, getOrganization, getTenantCapabilities, getUserCapabilities, getUserRoles } from '../../selectors';
 import LeftNav from '../common/left-nav';
 import SelfUserManagement from '../settings/user-management/selfusermanagement';
 import UserManagement from '../settings/user-management/usermanagement';
@@ -55,7 +54,7 @@ const sectionMap = {
   integrations: {
     component: Integrations,
     text: () => 'Integrations',
-    canAccess: ({ userRoles: { isAdmin }, version }) => isAdmin && versionCompare(version, '3.2') > -1
+    canAccess: ({ userRoles: { isAdmin } }) => isAdmin
   },
   upgrade: {
     component: Upgrade,
@@ -73,7 +72,6 @@ export const Settings = () => {
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
   const userRoles = useSelector(getUserRoles);
-  const { Integration: version } = useSelector(getVersionInformation);
   const [loadingFinished, setLoadingFinished] = useState(!stripeAPIKey);
   const { section: sectionParam } = useParams();
 
@@ -92,8 +90,7 @@ export const Settings = () => {
     }
   }, [stripeAPIKey]);
 
-  const checkDenyAccess = item =>
-    currentUser.id && !item.canAccess({ currentUser, hasMultitenancy, isTrial, tenantCapabilities, userCapabilities, userRoles, version });
+  const checkDenyAccess = item => currentUser.id && !item.canAccess({ currentUser, hasMultitenancy, isTrial, tenantCapabilities, userCapabilities, userRoles });
 
   const getCurrentSection = (sections, section = sectionParam) => {
     if (!sections.hasOwnProperty(section) || checkDenyAccess(sections[section])) {
