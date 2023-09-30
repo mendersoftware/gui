@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { Search as SearchIcon } from '@mui/icons-material';
@@ -48,6 +48,7 @@ const MINIMUM_SEARCH_LENGTH = 2;
 export const ControlledSearch = ({ isSearching, name = 'search', onSearch, placeholder = 'Search devices', style = {} }) => {
   const { classes } = useStyles();
   const { control, watch } = useFormContext();
+  const inputRef = useRef();
 
   const searchValue = watch('search', '');
 
@@ -57,13 +58,13 @@ export const ControlledSearch = ({ isSearching, name = 'search', onSearch, place
     if (debouncedSearchTerm.length < MINIMUM_SEARCH_LENGTH) {
       return;
     }
-    onSearch(debouncedSearchTerm);
+    onSearch(debouncedSearchTerm).then(() => inputRef.current.focus());
   }, [debouncedSearchTerm, onSearch]);
 
   const onTriggerSearch = useCallback(
     ({ key }) => {
       if (key === 'Enter' && (!debouncedSearchTerm || debouncedSearchTerm.length >= MINIMUM_SEARCH_LENGTH)) {
-        onSearch(debouncedSearchTerm);
+        onSearch(debouncedSearchTerm).then(() => inputRef.current.focus());
       }
     },
     [debouncedSearchTerm, onSearch]
@@ -80,6 +81,7 @@ export const ControlledSearch = ({ isSearching, name = 'search', onSearch, place
           InputProps={adornments}
           onKeyPress={onTriggerSearch}
           placeholder={placeholder}
+          inputRef={inputRef}
           size="small"
           style={style}
           {...field}
