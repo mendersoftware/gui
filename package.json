@@ -79,7 +79,7 @@
     "child_process": "1.0.2",
     "clean-webpack-plugin": "4.0.0",
     "copy-webpack-plugin": "11.0.0",
-    "core-js": "3.32.1",
+    "core-js": "3.32.2",
     "css-loader": "6.8.1",
     "esbuild-loader": "4.0.2",
     "eslint": "8.48.0",
