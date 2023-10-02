@@ -582,7 +582,8 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </span>
               </div>
               <div
-                class="flexbox space-between"
+                class="css-z9m6tn-container"
+                style="display: grid;"
               >
                 <div>
                   a1
@@ -650,7 +651,8 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 </span>
               </div>
               <div
-                class="flexbox space-between"
+                class="css-z9m6tn-container"
+                style="display: grid;"
               >
                 <div>
                   b1
