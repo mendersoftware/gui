@@ -39,7 +39,7 @@ export const defaultOnboardingState = {
   deviceType: null,
   progress: undefined,
   showConnectDeviceDialog: false,
-  showTips: null,
+  showTips: undefined,
   showTipsDialog: false,
   something: 'here'
 };
