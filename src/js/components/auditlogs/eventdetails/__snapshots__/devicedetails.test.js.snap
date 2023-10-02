@@ -17,6 +17,12 @@ exports[`DeviceDetails Component renders correctly 1`] = `
 }
 
 .emotion-3 {
+  grid-template-columns: 1fr max-content;
+  -webkit-column-gap: 8px;
+  column-gap: 8px;
+}
+
+.emotion-4 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -33,7 +39,7 @@ exports[`DeviceDetails Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-3 iconButton {
+.emotion-4 iconButton {
   margin-right: 8px;
 }
 
@@ -64,7 +70,8 @@ exports[`DeviceDetails Component renders correctly 1`] = `
         href="/devices?id=a1"
       >
         <div
-          class="flexbox space-between"
+          class="emotion-3"
+          style="display: grid;"
         >
           <div>
             a1
@@ -72,7 +79,7 @@ exports[`DeviceDetails Component renders correctly 1`] = `
         </div>
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-3"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-4"
           data-testid="LaunchIcon"
           focusable="false"
           viewBox="0 0 24 24"

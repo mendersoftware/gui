@@ -173,6 +173,12 @@ exports[`TerminalSession Component renders correctly 1`] = `
 }
 
 .emotion-15 {
+  grid-template-columns: 1fr max-content;
+  -webkit-column-gap: 8px;
+  column-gap: 8px;
+}
+
+.emotion-16 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -189,7 +195,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
   font-size: 1.1607rem;
 }
 
-.emotion-15 iconButton {
+.emotion-16 iconButton {
   margin-right: 8px;
 }
 
@@ -401,7 +407,8 @@ exports[`TerminalSession Component renders correctly 1`] = `
             href="/devices?id=a1"
           >
             <div
-              class="flexbox space-between"
+              class="emotion-15"
+              style="display: grid;"
             >
               <div>
                 a1
@@ -409,7 +416,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
             </div>
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-15"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall margin-left-small link-color emotion-16"
               data-testid="LaunchIcon"
               focusable="false"
               viewBox="0 0 24 24"

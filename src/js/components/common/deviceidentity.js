@@ -24,6 +24,10 @@ import { getDeviceIdentityText } from '../devices/base-devices';
 import DeviceNameInput from './devicenameinput';
 
 const useStyles = makeStyles()(theme => ({
+  container: {
+    gridTemplateColumns: '1fr max-content',
+    columnGap: theme.spacing()
+  },
   gatewayIcon: {
     color: theme.palette.grey[400],
     width: 'max-content',
@@ -62,9 +66,10 @@ export const DeviceIdentityDisplay = props => {
     [attributes.mender_is_gateway, attributes.mender_gateway_system_id]
   );
   return (
-    <div className="flexbox space-between">
+    // due to the specificity of the deviceListRow child class, applying the display styling through the container class doesn't work, thus the inline style in addition here
+    <div className={classes.container} style={{ display: 'grid' }}>
       <Component {...props} value={idValue} />
-      {hasAdornment && EndAdornment && <EndAdornment className={`${classes.gatewayIcon}`} />}
+      {hasAdornment && EndAdornment && <EndAdornment className={classes.gatewayIcon} />}
     </div>
   );
 };

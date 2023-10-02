@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 // material ui
@@ -35,6 +35,7 @@ export const DeviceNameInput = ({ device, isHovered }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
   const { classes } = useStyles();
+  const inputRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -46,6 +47,13 @@ export const DeviceNameInput = ({ device, isHovered }) => {
       setValue(name);
     }
   }, [device, isEditing, name, value]);
+
+  useEffect(() => {
+    if (!isEditing || !inputRef.current) {
+      return;
+    }
+    inputRef.current.focus();
+  }, [isEditing]);
 
   const onSubmit = () => dispatch(setDeviceTags(id, { ...tags, name: value })).then(() => setIsEditing(false));
 
@@ -66,6 +74,7 @@ export const DeviceNameInput = ({ device, isHovered }) => {
       id={`${device.id}-id-input`}
       className={classes.input}
       disabled={!isEditing}
+      inputRef={inputRef}
       value={value}
       placeholder={`${id.substring(0, 6)}...`}
       onClick={onInputClick}
