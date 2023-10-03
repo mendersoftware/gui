@@ -22,6 +22,9 @@ const secondaryText = 'rgba(0, 0, 0, 0.54)';
  * @example Chart dataset colors
  */
 export const palette = {
+  background: {
+    terminal: 'rgba(33, 36, 41, 0.25)'
+  },
   primary: {
     main: '#337a87'
   },

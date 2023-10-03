@@ -123,8 +123,8 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
   const onSocketClose = useCallback(
     e => {
       console.log('closing');
-      close();
       onClose(e);
+      close();
     },
     [close, onClose]
   );

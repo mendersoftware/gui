@@ -2,6 +2,10 @@
 
 exports[`FileTransfer Component renders correctly 1`] = `
 .emotion-0 {
+  max-width: 640px;
+}
+
+.emotion-1 {
   overflow: hidden;
   min-height: 48px;
   -webkit-overflow-scrolling: touch;
@@ -9,18 +13,15 @@ exports[`FileTransfer Component renders correctly 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
 }
 
 @media (max-width:599.95px) {
-  .emotion-0 .MuiTabs-scrollButtons {
+  .emotion-1 .MuiTabs-scrollButtons {
     display: none;
   }
 }
 
-.emotion-1 {
+.emotion-2 {
   position: relative;
   display: inline-block;
   -webkit-flex: 1 1 auto;
@@ -31,17 +32,14 @@ exports[`FileTransfer Component renders correctly 1`] = `
   width: 100%;
 }
 
-.emotion-2 {
+.emotion-3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
 }
 
-.emotion-3 {
+.emotion-4 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -95,37 +93,33 @@ exports[`FileTransfer Component renders correctly 1`] = `
   flex-direction: column;
   color: rgba(0, 0, 0, 0.54);
   text-transform: none;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
 }
 
-.emotion-3::-moz-focus-inner {
+.emotion-4::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-3.Mui-disabled {
+.emotion-4.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-3 {
+  .emotion-4 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-3.Mui-selected {
+.emotion-4.Mui-selected {
   color: #337a87;
 }
 
-.emotion-3.Mui-disabled {
+.emotion-4.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-4 {
+.emotion-5 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -137,27 +131,28 @@ exports[`FileTransfer Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-7 {
+.emotion-8 {
   position: absolute;
-  height: 100%;
+  height: 2px;
   bottom: 0;
-  width: 2px;
+  width: 100%;
   -webkit-transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   background-color: #337a87;
-  right: 0;
-}
-
-.emotion-8 {
-  color: rgba(0, 0, 0, 0.38);
-  margin: 15px 0;
 }
 
 .emotion-9 {
-  max-width: 400px;
+  margin: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-width: 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.12);
+  border-bottom-width: thin;
 }
 
-.emotion-10 {
+.emotion-11 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -174,16 +169,21 @@ exports[`FileTransfer Component renders correctly 1`] = `
   font-size: 1.3929rem;
 }
 
-.emotion-10 iconButton {
+.emotion-11 iconButton {
   margin-right: 8px;
 }
 
-.emotion-11 {
+.emotion-12 {
+  -webkit-align-items: end;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: end;
+  gap: 16px;
   display: grid;
-  grid-template-columns: 400px max-content;
+  grid-template-columns: 480px min-content;
 }
 
-.emotion-12 {
+.emotion-13 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -200,48 +200,6 @@ exports[`FileTransfer Component renders correctly 1`] = `
   width: 100%;
   margin-top: 18px;
   min-width: 240px;
-}
-
-.emotion-13 {
-  color: rgba(0, 0, 0, 0.54);
-  line-height: 1.4375em;
-  font-family: Lato,sans-serif;
-  font-weight: 400;
-  font-size: 0.9286rem;
-  padding: 0;
-  position: relative;
-  color: rgba(0, 0, 0, 0.54);
-  display: block;
-  transform-origin: top left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 133%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  -webkit-transform: translate(0, -1.5px) scale(0.75);
-  -moz-transform: translate(0, -1.5px) scale(0.75);
-  -ms-transform: translate(0, -1.5px) scale(0.75);
-  transform: translate(0, -1.5px) scale(0.75);
-  -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-}
-
-.emotion-13.Mui-focused {
-  color: #337a87;
-}
-
-.emotion-13.Mui-disabled {
-  color: rgba(0, 0, 0, 0.38);
-}
-
-.emotion-13.Mui-error {
-  color: #ab1000;
-}
-
-.emotion-13.Mui-focused {
-  color: #337a87;
 }
 
 .emotion-14 {
@@ -445,6 +403,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 0.01em;
+  max-height: 2em;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.54);
+  margin-left: 8px;
+}
+
+.emotion-17 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -488,39 +462,37 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.625rem;
   font-size: 1.2rem;
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-16::-moz-focus-inner {
+.emotion-17::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-16.Mui-disabled {
+.emotion-17.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-16 {
+  .emotion-17 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-16:hover {
+.emotion-17:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-16:hover {
+  .emotion-17:hover {
     background-color: transparent;
   }
 }
 
-.emotion-16.Mui-disabled {
+.emotion-17.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
@@ -629,154 +601,153 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 
 <div>
   <div
-    class="tab-container with-sub-panels"
-    style="min-height: 95%;"
+    class="emotion-0"
   >
     <div
-      class="MuiTabs-root MuiTabs-vertical leftFixed emotion-0"
+      class="MuiTabs-root emotion-1"
     >
       <div
-        class="MuiTabs-scroller MuiTabs-fixed emotion-1"
-        style="overflow: hidden; margin-right: 0px;"
+        class="MuiTabs-scroller MuiTabs-fixed emotion-2"
+        style="overflow: hidden;"
       >
         <div
-          aria-orientation="vertical"
-          class="MuiTabs-flexContainer MuiTabs-flexContainerVertical emotion-2"
+          class="MuiTabs-flexContainer emotion-3"
           role="tablist"
         >
           <button
             aria-selected="true"
-            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected capitalized emotion-3"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected capitalized emotion-4"
             role="tab"
             tabindex="0"
             type="button"
           >
             upload
             <span
-              class="MuiTouchRipple-root emotion-4"
+              class="MuiTouchRipple-root emotion-5"
             />
           </button>
           <button
             aria-selected="false"
-            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary capitalized emotion-3"
+            class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary capitalized emotion-4"
             role="tab"
             tabindex="-1"
             type="button"
           >
             download
             <span
-              class="MuiTouchRipple-root emotion-4"
+              class="MuiTouchRipple-root emotion-5"
             />
           </button>
         </div>
         <span
-          class="MuiTabs-indicator emotion-7"
-          style="top: 0px; height: 0px;"
+          class="MuiTabs-indicator emotion-8"
+          style="left: 0px; width: 0px;"
         />
       </div>
     </div>
+    <hr
+      class="MuiDivider-root MuiDivider-fullWidth emotion-9"
+    />
     <div
-      class="rightFluid padding-right"
+      class="emotion-0"
     >
-      <p
-        class="emotion-8 emotion-9"
-      >
-        Upload a file to the device
-      </p>
-      <div
-        style="max-width: 400px;"
-      >
-        <div
-          class="dropzone onboard dashboard-placeholder flexbox centered"
-          role="presentation"
-          style="padding: 15px;"
-          tabindex="0"
+      <div>
+        <p
+          class="margin-top"
         >
-          <input
-            style="display: none;"
-            tabindex="-1"
-            type="file"
-          />
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon emotion-10"
-            data-testid="CloudUploadIcon"
-            focusable="false"
-            style="height: 24px; width: 24px; vertical-align: middle; margin-top: -2px;"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
-            />
-          </svg>
+          <b>
+            Upload a file to the device
+          </b>
+        </p>
+        <div>
           <div
-            class="margin-left-small"
-            style="font-size: 11pt;"
+            class="dropzone onboard dashboard-placeholder flexbox centered"
+            role="presentation"
+            style="padding: 15px;"
+            tabindex="0"
           >
-            Drag here or 
-            <a>
-              browse
-            </a>
-             to upload a file
+            <input
+              style="display: none;"
+              tabindex="-1"
+              type="file"
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium icon emotion-11"
+              data-testid="CloudUploadOutlinedIcon"
+              focusable="false"
+              style="height: 24px; width: 24px; vertical-align: middle; margin-top: -2px;"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3zM8 13h2.55v3h2.9v-3H16l-4-4z"
+              />
+            </svg>
+            <div
+              class="margin-left-small"
+              style="font-size: 11pt;"
+            >
+              Drag here or 
+              <a>
+                browse
+              </a>
+               to upload a file
+            </div>
           </div>
         </div>
       </div>
+      <p
+        class="margin-top margin-bottom-none"
+      >
+        <b>
+          Destination directory on the device where the file will be transferred
+        </b>
+      </p>
       <div
-        class="emotion-11"
+        class="emotion-12"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-12"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-13"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-focused MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-standard emotion-13"
-            data-shrink="true"
-            for="mui-1"
-            id="mui-1-label"
-          >
-            Destination directory on the device where the file will be transferred
-          </label>
           <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth Mui-focused MuiInputBase-formControl emotion-14"
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd emotion-14"
           >
             <input
               aria-invalid="false"
-              class="MuiInputBase-input MuiInput-input emotion-15"
-              id="mui-1"
+              class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-15"
+              id="mui-2"
               placeholder="Example: /opt/installed-by-single-file"
-              style="margin-top: 16px;"
               type="text"
               value=""
             />
+            <div
+              class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-sizeMedium emotion-16"
+            >
+              <button
+                aria-label="Paste"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-17"
+                data-mui-internal-clone-element="true"
+                tabindex="0"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-11"
+                  data-testid="FileCopyIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4 6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+                  />
+                </svg>
+                <span
+                  class="MuiTouchRipple-root emotion-5"
+                />
+              </button>
+            </div>
           </div>
         </div>
-        <button
-          aria-label="Paste"
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-16"
-          data-mui-internal-clone-element="true"
-          style="align-self: flex-end;"
-          tabindex="0"
-          type="button"
-        >
-          <svg
-            aria-hidden="true"
-            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-10"
-            data-testid="FileCopyIcon"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4 6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
-            />
-          </svg>
-          <span
-            class="MuiTouchRipple-root emotion-4"
-          />
-        </button>
-      </div>
-      <div
-        class="flexbox margin-top emotion-9"
-        style="justify-content: flex-end;"
-      >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-20"
           disabled=""
