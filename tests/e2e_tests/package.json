@@ -31,6 +31,6 @@
     "playwright": "^1.38.1",
     "playwright-chromium": "1.37.1",
     "typescript": "^5.2.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   }
 }
