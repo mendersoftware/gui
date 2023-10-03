@@ -24,7 +24,7 @@ import {
   Replay as ReplayIcon,
   Sort as SortIcon
 } from '@mui/icons-material';
-import { Divider, Drawer, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, TextField, Tooltip } from '@mui/material';
+import { ClickAwayListener, Divider, Drawer, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, TextField, Tooltip } from '@mui/material';
 import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import { makeStyles } from 'tss-react/mui';
 
@@ -127,28 +127,31 @@ export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(userCapabilities)]);
 
+  const handleShowActions = () => {
+    setShowActions(!showActions);
+  };
+
+  const handleClickAway = () => {
+    setShowActions(false);
+  };
+
   return (
     <div className={classes.container} ref={innerRef}>
       <div className={classes.label}>Release actions</div>
-      <SpeedDial
-        className={classes.fab}
-        ariaLabel="device-actions"
-        icon={<SpeedDialIcon />}
-        onClose={() => setShowActions(false)}
-        onOpen={setShowActions}
-        open={Boolean(showActions)}
-      >
-        {actions.map(action => (
-          <SpeedDialAction
-            key={action.key}
-            aria-label={action.key}
-            icon={action.icon}
-            tooltipTitle={action.title}
-            tooltipOpen
-            onClick={() => action.action({ ...actionCallbacks, selection: selectedRelease })}
-          />
-        ))}
-      </SpeedDial>
+      <ClickAwayListener onClickAway={handleClickAway}>
+        <SpeedDial className={classes.fab} ariaLabel="device-actions" icon={<SpeedDialIcon />} onClick={handleShowActions} open={Boolean(showActions)}>
+          {actions.map(action => (
+            <SpeedDialAction
+              key={action.key}
+              aria-label={action.key}
+              icon={action.icon}
+              tooltipTitle={action.title}
+              tooltipOpen
+              onClick={() => action.action({ ...actionCallbacks, selection: selectedRelease })}
+            />
+          ))}
+        </SpeedDial>
+      </ClickAwayListener>
     </div>
   );
 };
