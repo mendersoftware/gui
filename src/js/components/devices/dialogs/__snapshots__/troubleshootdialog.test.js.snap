@@ -114,6 +114,12 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
 }
 
 .emotion-6 {
+  grid-template-columns: 1fr max-content;
+  -webkit-column-gap: 8px;
+  column-gap: 8px;
+}
+
+.emotion-7 {
   -webkit-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -125,11 +131,11 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   height: 75vh;
 }
 
-.MuiDialogTitle-root+.emotion-6 {
+.MuiDialogTitle-root+.emotion-7 {
   padding-top: 0;
 }
 
-.emotion-7 {
+.emotion-8 {
   overflow: hidden;
   min-height: 48px;
   -webkit-overflow-scrolling: touch;
@@ -140,12 +146,12 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
 }
 
 @media (max-width:599.95px) {
-  .emotion-7 .MuiTabs-scrollButtons {
+  .emotion-8 .MuiTabs-scrollButtons {
     display: none;
   }
 }
 
-.emotion-8 {
+.emotion-9 {
   position: relative;
   display: inline-block;
   -webkit-flex: 1 1 auto;
@@ -156,14 +162,14 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   width: 100%;
 }
 
-.emotion-9 {
+.emotion-10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
 
-.emotion-10 {
+.emotion-11 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -219,31 +225,31 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   text-transform: none;
 }
 
-.emotion-10::-moz-focus-inner {
+.emotion-11::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-10.Mui-disabled {
+.emotion-11.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-10 {
+  .emotion-11 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-10.Mui-selected {
+.emotion-11.Mui-selected {
   color: #337a87;
 }
 
-.emotion-10.Mui-disabled {
+.emotion-11.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-11 {
+.emotion-12 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -262,11 +268,11 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   margin-left: 8px;
 }
 
-.emotion-11 iconButton {
+.emotion-12 iconButton {
   margin-right: 8px;
 }
 
-.emotion-12 {
+.emotion-13 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -278,7 +284,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   border-radius: inherit;
 }
 
-.emotion-15 {
+.emotion-16 {
   position: absolute;
   height: 2px;
   bottom: 0;
@@ -288,7 +294,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   background-color: #337a87;
 }
 
-.emotion-16 {
+.emotion-17 {
   display: grid;
   grid-template-rows: max-content 0;
   -webkit-box-flex: 1;
@@ -298,26 +304,26 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   overflow: hidden;
 }
 
-.emotion-16.device-connected {
+.emotion-17.device-connected {
   grid-template-rows: max-content minmax(min-content, 1fr);
 }
 
-.emotion-17 .key>b {
+.emotion-18 .key>b {
   background-color: #f7f7f7;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.emotion-18 {
+.emotion-19 {
   max-width: -webkit-max-content;
   max-width: -moz-max-content;
   max-width: max-content;
 }
 
-.emotion-19 {
+.emotion-20 {
   background: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-20 {
+.emotion-21 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -368,23 +374,23 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   font-weight: bold;
 }
 
-.emotion-20::-moz-focus-inner {
+.emotion-21::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-20.Mui-disabled {
+.emotion-21.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-20 {
+  .emotion-21 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-20:hover {
+.emotion-21:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(65, 10, 46);
@@ -392,34 +398,34 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-20:hover {
+  .emotion-21:hover {
     background-color: #5d0f43;
   }
 }
 
-.emotion-20:active {
+.emotion-21:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-20.Mui-focusVisible {
+.emotion-21.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-20.Mui-disabled {
+.emotion-21.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-20:hover {
+.emotion-21:hover {
   colors: #337a87;
 }
 
-.emotion-20.MuiButton-text {
+.emotion-21.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-22 {
+.emotion-23 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -438,11 +444,11 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-22>:not(:first-of-type) {
+.emotion-23>:not(:first-of-type) {
   margin-left: 8px;
 }
 
-.emotion-23 {
+.emotion-24 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -492,43 +498,43 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-23::-moz-focus-inner {
+.emotion-24::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-23.Mui-disabled {
+.emotion-24.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-23 {
+  .emotion-24 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-23:hover {
+.emotion-24:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-23:hover {
+  .emotion-24:hover {
     background-color: transparent;
   }
 }
 
-.emotion-23.Mui-disabled {
+.emotion-24.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-23:hover {
+.emotion-24:hover {
   colors: #337a87;
 }
 
-.emotion-23.MuiButton-text {
+.emotion-24.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
@@ -566,7 +572,8 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
           Troubleshoot -
         </div>
         <div
-          class="flexbox space-between"
+          class="emotion-6"
+          style="display: grid;"
         >
           <div>
             a1
@@ -574,22 +581,22 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
         </div>
       </h2>
       <div
-        class="MuiDialogContent-root dialog-content flexbox column emotion-6"
+        class="MuiDialogContent-root dialog-content flexbox column emotion-7"
       >
         <div
-          class="MuiTabs-root emotion-7"
+          class="MuiTabs-root emotion-8"
         >
           <div
-            class="MuiTabs-scroller MuiTabs-fixed emotion-8"
+            class="MuiTabs-scroller MuiTabs-fixed emotion-9"
             style="overflow: hidden; margin-bottom: 0px;"
           >
             <div
-              class="MuiTabs-flexContainer emotion-9"
+              class="MuiTabs-flexContainer emotion-10"
               role="tablist"
             >
               <button
                 aria-selected="true"
-                class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected emotion-10"
+                class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected emotion-11"
                 role="tab"
                 tabindex="0"
                 type="button"
@@ -600,7 +607,7 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
                   Remote terminal 
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-11"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-12"
                     focusable="false"
                     viewBox="0 0 24 24"
                   >
@@ -610,33 +617,33 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
                   </svg>
                 </div>
                 <span
-                  class="MuiTouchRipple-root emotion-12"
+                  class="MuiTouchRipple-root emotion-13"
                 />
               </button>
               <button
                 aria-selected="false"
-                class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-10"
+                class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary emotion-11"
                 role="tab"
                 tabindex="-1"
                 type="button"
               >
                 File transfer
                 <span
-                  class="MuiTouchRipple-root emotion-12"
+                  class="MuiTouchRipple-root emotion-13"
                 />
               </button>
             </div>
             <span
-              class="MuiTabs-indicator hidden emotion-15"
+              class="MuiTabs-indicator hidden emotion-16"
               style="left: 0px; width: 0px;"
             />
           </div>
         </div>
         <div
-          class="emotion-16  "
+          class="emotion-17  "
         >
           <div
-            class="break-all two-columns emotion-17  margin-top-small margin-bottom-small emotion-18"
+            class="break-all two-columns emotion-18  margin-top-small margin-bottom-small emotion-19"
           >
             <div
               class="align-right key muted"
@@ -766,46 +773,46 @@ exports[`TroubleshootDialog Component renders correctly 1`] = `
             </div>
           </div>
           <div
-            class="flexbox centered emotion-19"
+            class="flexbox centered emotion-20"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-20"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-21"
               tabindex="0"
               type="button"
             >
               Connect Terminal
               <span
-                class="MuiTouchRipple-root emotion-12"
+                class="MuiTouchRipple-root emotion-13"
               />
             </button>
           </div>
         </div>
       </div>
       <div
-        class="MuiDialogActions-root MuiDialogActions-spacing flexbox space-between emotion-22"
+        class="MuiDialogActions-root MuiDialogActions-spacing flexbox space-between emotion-23"
       >
         <div>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-23"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
             tabindex="0"
             type="button"
           >
             Connect
              Terminal
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-13"
             />
           </button>
         </div>
         <div>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-23"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
             tabindex="0"
             type="button"
           >
             Close
             <span
-              class="MuiTouchRipple-root emotion-12"
+              class="MuiTouchRipple-root emotion-13"
             />
           </button>
         </div>

@@ -169,7 +169,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
           device
         </div>
         <div
-          class="flexbox space-between"
+          class="css-z9m6tn-container"
+          style="display: grid;"
         >
           <div>
             a1
