@@ -15,8 +15,7 @@ import React from 'react';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
-import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
-import { uiPermissionsById } from '../../../constants/userConstants';
+import { DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
 import DeviceConnection, { DeviceConnectionMissingNote, DeviceDisconnectedNote, PortForwardLink } from './connection';
 
 describe('tiny DeviceConnection components', () => {
@@ -31,41 +30,51 @@ describe('tiny DeviceConnection components', () => {
 });
 
 describe('DeviceConnection Component', () => {
-  const userCapabilities = {
-    canAuditlog: true,
-    canTroubleshoot: true,
-    canWriteDevices: true,
-    groupsPermissions: { [ALL_DEVICES]: [uiPermissionsById.connect.value, uiPermissionsById.manage.value] }
-  };
+  let socketSpyFactory;
+  const oldMatchMedia = window.matchMedia;
+
+  beforeEach(() => {
+    socketSpyFactory = jest.spyOn(window, 'WebSocket');
+    socketSpyFactory.mockImplementation(() => ({
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      close: () => {},
+      send: () => {}
+    }));
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // Deprecated
+        removeListener: jest.fn(), // Deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn()
+      }))
+    });
+  });
+
+  afterEach(() => {
+    socketSpyFactory.mockReset();
+    window.matchMedia = oldMatchMedia;
+  });
+
   it('renders correctly', async () => {
-    const { baseElement } = render(
-      <DeviceConnection device={defaultState.devices.byId.a1} userCapabilities={userCapabilities} tenantCapabilities={{ hasDeviceConnect: true }} />
-    );
+    const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('renders correctly when disconnected', async () => {
-    const { baseElement } = render(
-      <DeviceConnection
-        device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }}
-        userCapabilities={userCapabilities}
-        tenantCapabilities={{ hasDeviceConnect: true }}
-      />
-    );
+    const { baseElement } = render(<DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('renders correctly when connected', async () => {
-    const { baseElement } = render(
-      <DeviceConnection
-        device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }}
-        hasAuditlogs
-        userCapabilities={userCapabilities}
-        tenantCapabilities={{ hasDeviceConnect: true }}
-      />
-    );
+    const { baseElement } = render(<DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }} />);
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

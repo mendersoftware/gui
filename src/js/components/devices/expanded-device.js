@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,13 +40,12 @@ import {
   getUserCapabilities,
   getUserSettings
 } from '../../selectors';
-import Tracking from '../../tracking';
 import DeviceIdentityDisplay from '../common/deviceidentity';
 import DocsLink from '../common/docslink';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 import { RelativeTime } from '../common/time';
 import DeviceConfiguration from './device-details/configuration';
-import { TroubleshootTab } from './device-details/connection';
+import TroubleshootTab from './device-details/connection';
 import Deployments from './device-details/deployments';
 import DeviceInventory from './device-details/deviceinventory';
 import DeviceSystem from './device-details/devicesystem';
@@ -187,12 +186,9 @@ const tabs = [
 ];
 
 export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsTab, tabSelection }) => {
-  const [socketClosed, setSocketClosed] = useState();
-  const [troubleshootType, setTroubleshootType] = useState();
   const timer = useRef();
   const navigate = useNavigate();
   const { classes } = useStyles();
-  const closeTimer = useRef();
 
   const { latest: latestAlerts = [] } = useSelector(state => state.monitor.alerts.byDeviceId[deviceId]) || {};
   const { selectedGroup, groupFilters = [] } = useSelector(getSelectedGroupInfo);
@@ -229,22 +225,8 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
     dispatch(getGatewayDevices(device.id));
   }, [device.id, dispatch, mender_gateway_system_id]);
 
-  useEffect(() => {
-    if (!socketClosed) {
-      return;
-    }
-    clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setSocketClosed(false), TIMEOUTS.fiveSeconds);
-  }, [socketClosed]);
-
   // close expanded device
   const onDecommissionDevice = device_id => dispatch(decommissionDevice(device_id)).finally(onClose);
-
-  const launchTroubleshoot = type => {
-    Tracking.event({ category: 'devices', action: 'open_terminal' });
-    setSocketClosed(false);
-    setTroubleshootType(type);
-  };
 
   const copyLinkToClipboard = () => {
     const location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
@@ -290,16 +272,11 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
     docsVersion,
     integrations,
     latestAlerts,
-    launchTroubleshoot,
     onDecommissionDevice,
     saveGlobalSettings: dispatchedSaveGlobalSettings,
     setDetailsTab,
     setSnackbar: dispatchedSetSnackbar,
-    setSocketClosed,
-    setTroubleshootType,
-    socketClosed,
     tenantCapabilities,
-    troubleshootType,
     userCapabilities
   };
   return (
