@@ -8,7 +8,7 @@
     "@mdi/js": "7.2.96",
     "@monaco-editor/react": "4.5.2",
     "@mui/icons-material": "5.14.7",
-    "@mui/material": "5.14.7",
+    "@mui/material": "5.14.11",
     "@mui/styles": "5.14.7",
     "@mui/x-date-pickers": "6.12.1",
     "@redux-devtools/extension": "3.2.5",
