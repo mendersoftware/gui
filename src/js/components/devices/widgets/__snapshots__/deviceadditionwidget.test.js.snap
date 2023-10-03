@@ -13,20 +13,23 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   min-width: 40px;
 }
 
-.emotion-0 .MuiButtonGroup-grouped:not(:first-of-type) {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  margin-left: -1px;
-}
-
-.emotion-0 .MuiButtonGroup-grouped:not(:last-of-type) {
+.emotion-0 .MuiButtonGroup-firstButton,
+.emotion-0 .MuiButtonGroup-middleButton {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right-color: transparent;
 }
 
-.emotion-0 .MuiButtonGroup-grouped:not(:last-of-type):hover {
+.emotion-0 .MuiButtonGroup-firstButton:hover,
+.emotion-0 .MuiButtonGroup-middleButton:hover {
   border-right-color: currentColor;
+}
+
+.emotion-0 .MuiButtonGroup-lastButton,
+.emotion-0 .MuiButtonGroup-middleButton {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-left: -1px;
 }
 
 .emotion-1 {
@@ -249,7 +252,7 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
   role="group"
 >
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonGroup-firstButton emotion-1"
     tabindex="0"
     type="button"
   >
@@ -259,7 +262,7 @@ exports[`DeviceAdditionWidget Component renders correctly 1`] = `
     />
   </button>
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-3"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedOutlined MuiButtonGroup-groupedOutlinedHorizontal MuiButtonGroup-groupedOutlinedPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonGroup-lastButton emotion-3"
     tabindex="0"
     type="button"
   >

@@ -34,9 +34,9 @@ exports[`Terminal Component renders correctly 1`] = `
           <span
             aria-hidden="true"
             class="xterm-char-measure-element"
-            style="font-family: courier-new, courier, monospace; font-size: 15px;"
+            style="white-space: pre; font-kerning: none; font-family: courier-new, courier, monospace; font-size: 15px;"
           >
-            W
+            WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
           </span>
           <div
             class="composition-view"
