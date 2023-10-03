@@ -35,7 +35,7 @@ momentDurationFormatSetup(moment);
 
 const useStyles = makeStyles()(theme => ({
   connectionActions: { marginTop: theme.spacing() },
-  connectionButton: { background: theme.palette.text.primary, display: 'grid', placeContent: 'center' },
+  connectionButton: { background: theme.palette.background.terminal, display: 'grid', placeContent: 'center' },
   sessionInfo: { gap: theme.spacing(3), marginBottom: theme.spacing(), '&>div': { gap: theme.spacing(2) } },
   terminalContent: {
     display: 'grid',

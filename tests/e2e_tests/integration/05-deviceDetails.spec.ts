@@ -80,7 +80,7 @@ test.describe('Device details', () => {
     await page.click(`.deviceListItem div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
-    await page.waitForSelector('text=/Remote Terminal session/i', { timeout: timeouts.tenSeconds });
+    await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });
     const connectionButton = await page.getByRole('button', { name: /connect/i });
     await connectionButton.first().click();
     await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });

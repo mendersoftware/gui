@@ -19,8 +19,6 @@ import { InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-mater
 import { Button, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { mdiConsole as ConsoleIcon } from '@mdi/js';
-
 import { setSnackbar } from '../../../actions/appActions';
 import { getDeviceFileDownloadLink } from '../../../actions/deviceActions';
 import { BEGINNING_OF_TIME, BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
@@ -33,7 +31,6 @@ import { formatAuditlogs } from '../../../utils/locationutils';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import Loader from '../../common/loader';
-import MaterialDesignIcon from '../../common/materialdesignicon';
 import MenderTooltip from '../../common/mendertooltip';
 import Time from '../../common/time';
 import FileTransfer from '../troubleshoot/filetransfer';
@@ -44,8 +41,6 @@ const useStyles = makeStyles()(theme => ({
   buttonStyle: { textTransform: 'none', textAlign: 'left' },
   connectionIcon: { marginRight: theme.spacing() },
   content: { maxWidth: theme.spacing(80) },
-  connectedIcon: { color: theme.palette.success.main, marginLeft: theme.spacing() },
-  disconnectedIcon: { color: theme.palette.error.main, marginLeft: theme.spacing() },
   title: { marginRight: theme.spacing(0.5) },
   troubleshootButton: { marginRight: theme.spacing(2) }
 }));
@@ -110,26 +105,17 @@ export const TroubleshootButton = ({ disabled, item, onClick }) => {
   );
 };
 
-const ConnectionIndicator = ({ isConnected }) => {
-  const { classes } = useStyles();
-  return (
-    <div className="flexbox center-aligned">
-      Remote terminal {<MaterialDesignIcon className={isConnected ? classes.connectedIcon : classes.disconnectedIcon} path={ConsoleIcon} />}
-    </div>
-  );
-};
-
 const deviceAuditlogType = AUDIT_LOGS_TYPES.find(type => type.value === 'device');
 
 const tabs = {
   terminal: {
-    title: ConnectionIndicator,
+    title: 'Remote terminal',
     value: 'terminal',
     canShow: ({ canTroubleshoot, canWriteDevices, groupsPermissions }, { group }) =>
       (canTroubleshoot && canWriteDevices) || checkPermissionsObject(groupsPermissions, uiPermissionsById.connect.value, group, ALL_DEVICES),
     Component: TroubleshootContent
   },
-  transfer: { title: () => 'File transfer', value: 'transfer', canShow: ({ canTroubleshoot }) => canTroubleshoot, Component: FileTransfer }
+  transfer: { title: 'File transfer', value: 'transfer', canShow: ({ canTroubleshoot }) => canTroubleshoot, Component: FileTransfer }
 };
 
 export const DeviceConnection = ({ className = '', device }) => {
@@ -140,12 +126,14 @@ export const DeviceConnection = ({ className = '', device }) => {
   const [socketInitialized, setSocketInitialized] = useState(undefined);
   const [uploadPath, setUploadPath] = useState('');
   const closeTimer = useRef();
+  const initTimer = useRef();
 
   const userCapabilities = useSelector(getUserCapabilities);
   const { canAuditlog, canTroubleshoot } = userCapabilities;
   const { hasAuditlogs } = useSelector(getTenantCapabilities);
   const { classes } = useStyles();
-  const { connect_status, connect_updated_ts } = device;
+  const { connect_status, connect_updated_ts, isOffline } = device;
+  const [connectionStatus, setConnectionStatus] = useState(connect_status);
 
   const dispatch = useDispatch();
   const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
@@ -159,15 +147,27 @@ export const DeviceConnection = ({ className = '', device }) => {
   }, [socketClosed]);
 
   useEffect(() => {
+    setConnectionStatus(connect_status);
+    clearTimeout(initTimer.current);
+    if (connectionStatus) {
+      return;
+    }
+    initTimer.current = setTimeout(() => {
+      setConnectionStatus(!connect_status || isOffline ? DEVICE_CONNECT_STATES.unknown : connect_status);
+    }, TIMEOUTS.fiveSeconds);
+    return () => clearTimeout(initTimer.current);
+  }, [connect_status, connectionStatus, device.id, isOffline]);
+
+  useEffect(() => {
     const allowedTabs = Object.values(tabs).reduce((accu, tab) => {
-      if (tab.canShow(userCapabilities, device) && connect_status) {
+      if (tab.canShow(userCapabilities, device) && connectionStatus === DEVICE_CONNECT_STATES.connected) {
         accu.push(tab);
       }
       return accu;
     }, []);
     setAvailableTabs(allowedTabs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connect_status, JSON.stringify(device), JSON.stringify(userCapabilities)]);
+  }, [connectionStatus, JSON.stringify(device), JSON.stringify(userCapabilities)]);
 
   const onDownloadClick = useCallback(
     path => {
@@ -188,7 +188,7 @@ export const DeviceConnection = ({ className = '', device }) => {
         <div className="flexbox center-aligned">
           <h4>Troubleshooting</h4>
           <div className={`flexbox ${className}`}>
-            {connect_status !== DEVICE_CONNECT_STATES.unknown && canTroubleshoot && <PortForwardLink />}
+            {connectionStatus !== DEVICE_CONNECT_STATES.unknown && canTroubleshoot && <PortForwardLink />}
             {canAuditlog && hasAuditlogs && (
               <Link
                 className="flexbox center-aligned margin-left"
@@ -203,18 +203,16 @@ export const DeviceConnection = ({ className = '', device }) => {
       }
     >
       <div className={`flexbox column ${classes.content}`}>
-        {!connect_status && (
+        {!connectionStatus && (
           <div className="flexbox centered">
             <Loader show />
           </div>
         )}
-        {connect_status === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote />}
-        {connect_status === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote lastConnectionTs={connect_updated_ts} />}
-        {availableTabs.map(({ Component, title: Title, value }) => (
+        {connectionStatus === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote />}
+        {connectionStatus === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote lastConnectionTs={connect_updated_ts} />}
+        {availableTabs.map(({ Component, title, value }) => (
           <div key={value}>
-            <h4 className={socketInitialized ? '' : 'margin-top-large'}>
-              <Title isConnected={socketInitialized} />
-            </h4>
+            <h4 className="margin-top-large">{title}</h4>
             <Component
               device={device}
               downloadPath={downloadPath}
