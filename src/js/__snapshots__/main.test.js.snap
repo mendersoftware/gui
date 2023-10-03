@@ -512,7 +512,7 @@ exports[`Main Component renders correctly 1`] = `
                   data-mui-internal-clone-element="true"
                 >
                   <div
-                    class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault mui-1xcecd3-MuiChip-root-root-root"
+                    class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault mui-hsgqnq-MuiChip-root-root-root"
                   >
                     <span
                       class="MuiChip-label MuiChip-labelMedium mui-6od3lo-MuiChip-label"
