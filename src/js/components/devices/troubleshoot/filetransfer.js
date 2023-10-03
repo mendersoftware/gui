@@ -101,7 +101,6 @@ export const FileTransfer = ({
   const onUploadClick = useCallback(() => dispatch(deviceFileUpload(deviceId, uploadPath, file)), [dispatch, deviceId, uploadPath, file]);
 
   const fileInputProps = {
-    autoFocus: true,
     error: !isValidDestination,
     fullWidth: true,
     InputLabelProps: { shrink: true }
