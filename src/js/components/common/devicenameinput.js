@@ -15,11 +15,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 // material ui
-import { Check as CheckIcon, Clear as ClearIcon, Edit as EditIcon } from '@mui/icons-material';
-import { IconButton, Input, InputAdornment } from '@mui/material';
+import { Input, InputAdornment } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { setDeviceTags } from '../../actions/deviceActions';
+import { ConfirmationButtons, EditButton } from './confirm';
 
 const useStyles = makeStyles()(theme => ({
   icon: {
@@ -59,25 +59,6 @@ export const DeviceNameInput = ({ device, isHovered }) => {
     setIsEditing(true);
   };
 
-  const editButton = (
-    <IconButton onClick={onStartEdit} size="small">
-      <EditIcon className={classes.icon} />
-    </IconButton>
-  );
-
-  const buttonArea = isEditing ? (
-    <>
-      <IconButton onClick={onSubmit} size="small">
-        <CheckIcon className={classes.icon} />
-      </IconButton>
-      <IconButton onClick={onCancel} size="small">
-        <ClearIcon className={classes.icon} />
-      </IconButton>
-    </>
-  ) : (
-    editButton
-  );
-
   const onInputClick = e => e.stopPropagation();
 
   return (
@@ -90,7 +71,13 @@ export const DeviceNameInput = ({ device, isHovered }) => {
       onClick={onInputClick}
       onChange={({ target: { value } }) => setValue(value)}
       type="text"
-      endAdornment={(isHovered || isEditing) && <InputAdornment position="end">{buttonArea}</InputAdornment>}
+      endAdornment={
+        (isHovered || isEditing) && (
+          <InputAdornment position="end">
+            {isEditing ? <ConfirmationButtons onCancel={onCancel} onConfirm={onSubmit} /> : <EditButton onClick={onStartEdit} />}
+          </InputAdornment>
+        )
+      }
     />
   );
 };

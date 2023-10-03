@@ -20,40 +20,41 @@ import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appCons
 import { DEVICE_LIST_DEFAULTS, emptyFilter } from '../constants/deviceConstants';
 import * as ReleaseConstants from '../constants/releaseConstants';
 import { customSort, deepCompare, duplicateFilter, extractSoftwareItem } from '../helpers';
-import { deploymentsApiUrl } from './deploymentActions';
+import { formatReleases } from '../utils/locationutils';
+import { deploymentsApiUrl, deploymentsApiUrlV2 } from './deploymentActions';
 import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActions';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
 const flattenRelease = (release, stateRelease) => {
-  const updatedArtifacts = release.Artifacts?.sort(customSort(1, 'modified')) || [];
-  const { Artifacts, deviceTypes, modified } = updatedArtifacts.reduce(
+  const updatedArtifacts = release.artifacts?.sort(customSort(1, 'modified')) || [];
+  const { artifacts, deviceTypes, modified } = updatedArtifacts.reduce(
     (accu, item) => {
       accu.deviceTypes.push(...item.device_types_compatible);
-      const stateArtifact = stateRelease.Artifacts?.find(releaseArtifact => releaseArtifact.id === item.id) || {};
+      const stateArtifact = stateRelease.artifacts?.find(releaseArtifact => releaseArtifact.id === item.id) || {};
       accu.modified = accu.modified ? accu.modified : item.modified;
-      accu.Artifacts.push({
+      accu.artifacts.push({
         ...stateArtifact,
         ...item
       });
       return accu;
     },
-    { Artifacts: [], deviceTypes: [], modified: undefined }
+    { artifacts: [], deviceTypes: [], modified: undefined }
   );
-  return { ...stateRelease, ...release, Artifacts, device_types_compatible: deviceTypes.filter(duplicateFilter), modified };
+  return { ...stateRelease, ...release, artifacts, device_types_compatible: deviceTypes.filter(duplicateFilter), modified };
 };
 
 const reduceReceivedReleases = (releases, stateReleasesById) =>
   releases.reduce((accu, release) => {
-    const stateRelease = stateReleasesById[release.Name] || {};
-    accu[release.Name] = flattenRelease(release, stateRelease);
+    const stateRelease = stateReleasesById[release.name] || {};
+    accu[release.name] = flattenRelease(release, stateRelease);
     return accu;
   }, {});
 
 const findArtifactIndexInRelease = (releases, id) =>
   Object.values(releases).reduce(
     (accu, item) => {
-      let index = item.Artifacts.findIndex(releaseArtifact => releaseArtifact.id === id);
+      let index = item.artifacts.findIndex(releaseArtifact => releaseArtifact.id === id);
       if (index > -1) {
         accu = { release: item, index };
       }
@@ -68,7 +69,7 @@ export const getArtifactInstallCount = id => (dispatch, getState) => {
   if (!release || index === -1) {
     return;
   }
-  const releaseArtifacts = [...release.Artifacts];
+  const releaseArtifacts = [...release.artifacts];
   const artifact = releaseArtifacts[index];
   const { key, name, version } = extractSoftwareItem(artifact.artifact_provides) ?? {};
   const attribute = `${key}${name ? `.${name}` : ''}.version`;
@@ -88,11 +89,11 @@ export const getArtifactInstallCount = id => (dispatch, getState) => {
         return;
       }
       const installCount = Number(headers[headerNames.total]);
-      const releaseArtifacts = [...release.Artifacts];
+      const releaseArtifacts = [...release.artifacts];
       releaseArtifacts[index] = { ...releaseArtifacts[index], installCount };
       release = {
         ...release,
-        Artifacts: releaseArtifacts
+        artifacts: releaseArtifacts
       };
       return dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release });
     });
@@ -105,14 +106,14 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     if (!release || index === -1) {
       return dispatch(getReleases());
     }
-    const releaseArtifacts = [...release.Artifacts];
+    const releaseArtifacts = [...release.artifacts];
     releaseArtifacts[index] = {
       ...releaseArtifacts[index],
       url: response.data.uri
     };
     release = {
       ...release,
-      Artifacts: releaseArtifacts
+      artifacts: releaseArtifacts
     };
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
@@ -211,12 +212,12 @@ export const editArtifact = (id, body) => (dispatch, getState) =>
       if (!release || index === -1) {
         return dispatch(getReleases());
       }
-      release.Artifacts[index].description = body.description;
+      release.artifacts[index].description = body.description;
       return Promise.all([
         dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release }),
         dispatch(setSnackbar('Artifact details were updated successfully.', TIMEOUTS.fiveSeconds, '')),
-        dispatch(getRelease(release.Name)),
-        dispatch(selectRelease(release.Name))
+        dispatch(getRelease(release.name)),
+        dispatch(selectRelease(release.name))
       ]);
     });
 
@@ -225,13 +226,13 @@ export const removeArtifact = id => (dispatch, getState) =>
     .then(() => {
       const state = getState();
       let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
-      const releaseArtifacts = [...release.Artifacts];
+      const releaseArtifacts = [...release.artifacts];
       releaseArtifacts.splice(index, 1);
       if (!releaseArtifacts.length) {
         const { releasesList } = state.releases;
-        const releaseIds = releasesList.releaseIds.filter(id => release.Name !== id);
+        const releaseIds = releasesList.releaseIds.filter(id => release.name !== id);
         return Promise.all([
-          dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.Name }),
+          dispatch({ type: ReleaseConstants.RELEASE_REMOVED, release: release.name }),
           dispatch(
             setReleasesListState({
               releaseIds,
@@ -249,27 +250,10 @@ export const removeArtifact = id => (dispatch, getState) =>
     .catch(err => commonErrorHandler(err, `Error removing artifact:`, dispatch));
 
 export const removeRelease = id => (dispatch, getState) =>
-  Promise.all(getState().releases.byId[id].Artifacts.map(({ id }) => dispatch(removeArtifact(id)))).then(() => dispatch(selectRelease()));
-
-export const selectArtifact = artifact => (dispatch, getState) => {
-  if (!artifact) {
-    return dispatch({ type: ReleaseConstants.SELECTED_ARTIFACT, artifact });
-  }
-  const artifactName = artifact.hasOwnProperty('id') ? artifact.id : artifact;
-  const state = getState();
-  const release = Object.values(state.releases.byId).find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifactName));
-  if (release) {
-    const selectedArtifact = release.Artifacts.find(releaseArtifact => releaseArtifact.id === artifactName);
-    let tasks = [dispatch({ type: ReleaseConstants.SELECTED_ARTIFACT, artifact: selectedArtifact })];
-    if (release.Name !== state.releases.selectedRelease) {
-      tasks.push(dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: release.Name }));
-    }
-    return Promise.all(tasks);
-  }
-};
+  Promise.all(getState().releases.byId[id].artifacts.map(({ id }) => dispatch(removeArtifact(id)))).then(() => dispatch(selectRelease()));
 
 export const selectRelease = release => dispatch => {
-  const name = release ? release.Name || release : null;
+  const name = release ? release.name || release : null;
   let tasks = [dispatch({ type: ReleaseConstants.SELECTED_RELEASE, release: name })];
   if (name) {
     tasks.push(dispatch(getRelease(name)));
@@ -300,28 +284,30 @@ export const setReleasesListState = selectionState => (dispatch, getState) => {
 /* Releases */
 
 const releaseListRetrieval = config => {
-  const { searchTerm = '', page = defaultPage, perPage = defaultPerPage, sort = {}, selectedTags = [] } = config;
+  const { searchTerm = '', page = defaultPage, perPage = defaultPerPage, sort = {}, selectedTags = [], type = '' } = config;
   const { key: attribute, direction } = sort;
-
-  const sorting = attribute ? `&sort=${attribute}:${direction}`.toLowerCase() : '';
-  const searchQuery = searchTerm ? `&name=${searchTerm}` : '';
-  const tagQuery = selectedTags.map(tag => `&tag=${tag}`).join('');
-  return GeneralApi.get(`${deploymentsApiUrl}/deployments/releases/list?page=${page}&per_page=${perPage}${searchQuery}${sorting}${tagQuery}`);
+  const filterQuery = formatReleases({ pageState: { searchTerm, selectedTags } });
+  const updateType = type ? `update_type=${type}` : '';
+  const sorting = attribute ? `sort=${attribute}:${direction}`.toLowerCase() : '';
+  return GeneralApi.get(
+    `${deploymentsApiUrlV2}/deployments/releases?${[`page=${page}`, `per_page=${perPage}`, filterQuery, updateType, sorting].filter(i => i).join('&')}`
+  );
 };
 
 const deductSearchState = (receivedReleases, config, total, state) => {
   let releaseListState = { ...state.releasesList };
-  const { searchTerm, searchOnly, sort = {} } = config;
+  const { searchTerm, searchOnly, sort = {}, tags = [], type } = config;
   const flattenedReleases = Object.values(receivedReleases).sort(customSort(sort.direction === SORTING_OPTIONS.desc, sort.key));
-  const releaseIds = flattenedReleases.map(item => item.Name);
+  const releaseIds = flattenedReleases.map(item => item.name);
+  const isFiltering = !!(tags.length || type || searchTerm);
   if (searchOnly) {
     releaseListState = { ...releaseListState, searchedIds: releaseIds };
   } else {
     releaseListState = {
       ...releaseListState,
       releaseIds,
-      searchTotal: searchTerm ? total : state.releasesList.searchTotal,
-      total: !searchTerm ? total : state.releasesList.total
+      searchTotal: isFiltering ? total : state.releasesList.searchTotal,
+      total: !isFiltering ? total : state.releasesList.total
     };
   }
   return releaseListState;
@@ -349,8 +335,40 @@ export const getReleases =
 export const getRelease = name => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) => {
     if (releases.length) {
-      const stateRelease = getState().releases.byId[releases[0].Name] || {};
+      const stateRelease = getState().releases.byId[releases[0].name] || {};
       return Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0], stateRelease) }));
     }
     return Promise.resolve(null);
   });
+
+export const updateReleaseInfo = (name, info) => (dispatch, getState) =>
+  GeneralApi.patch(`${deploymentsApiUrlV2}/deployments/releases/${name}`, info)
+    .catch(err => commonErrorHandler(err, `Release details couldn't be updated.`, dispatch))
+    .then(() => {
+      return Promise.all([
+        dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: { ...getState().releases.byId[name], ...info } }),
+        dispatch(setSnackbar('Release details were updated successfully.', TIMEOUTS.fiveSeconds, ''))
+      ]);
+    });
+
+export const setReleaseTags =
+  (name, tags = []) =>
+  (dispatch, getState) =>
+    GeneralApi.put(`${deploymentsApiUrlV2}/deployments/releases/${name}/tags`, tags)
+      .catch(err => commonErrorHandler(err, `Release tags couldn't be set.`, dispatch))
+      .then(() => {
+        return Promise.all([
+          dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: { ...getState().releases.byId[name], tags } }),
+          dispatch(setSnackbar('Release tags were set successfully.', TIMEOUTS.fiveSeconds, ''))
+        ]);
+      });
+
+export const getExistingReleaseTags = () => dispatch =>
+  GeneralApi.get(`${deploymentsApiUrlV2}/releases/all/tags`)
+    .catch(err => commonErrorHandler(err, `Existing release tags couldn't be retrieved.`, dispatch))
+    .then(({ data: tags }) => Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE_TAGS, tags })));
+
+export const getUpdateTypes = () => dispatch =>
+  GeneralApi.get(`${deploymentsApiUrlV2}/releases/all/types`)
+    .catch(err => commonErrorHandler(err, `Existing update types couldn't be retrieved.`, dispatch))
+    .then(({ data: types }) => Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE_TYPES, types })));

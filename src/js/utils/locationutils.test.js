@@ -41,7 +41,7 @@ describe('locationutils', () => {
       const startParams = new URLSearchParams('?perPage=234&id=123-324&open=true&sort=asc&issues=issueType1&issues=issueType2');
       const { pageState, params, sort } = commonProcessor(startParams);
       expect(sort).toEqual({ direction: 'asc' });
-      expect(pageState).toEqual({ id: ['123-324'], issues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
+      expect(pageState).toEqual({ id: ['123-324'], selectedIssues: ['issueType1', 'issueType2'], open: true, perPage: 234 });
       expect(params.has('page')).not.toBeTruthy();
     });
     it('uses working utilities - formatPageState', () => {
@@ -299,9 +299,11 @@ describe('locationutils', () => {
       const endDate = new Date('2019-01-13');
       endDate.setHours(23, 59, 59, 999);
       expect(result).toEqual({
+        searchTerm: '',
         selectedRelease: 'terst',
         tab: 'flump',
-        tags: ['asd', '52534']
+        tags: ['asd', '52534'],
+        type: ''
       });
     });
     it('uses working utilities - generateReleasesPath', () => {

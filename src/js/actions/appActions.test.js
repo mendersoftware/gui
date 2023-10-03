@@ -53,14 +53,7 @@ import {
 import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, SET_ORGANIZATION } from '../constants/organizationConstants';
 import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
-import {
-  RECEIVED_PERMISSION_SETS,
-  RECEIVED_ROLES,
-  SET_GLOBAL_SETTINGS,
-  SET_SHOW_HELP,
-  SET_TOOLTIPS_STATE,
-  SET_USER_SETTINGS
-} from '../constants/userConstants';
+import { RECEIVED_PERMISSION_SETS, RECEIVED_ROLES, SET_GLOBAL_SETTINGS, SET_TOOLTIPS_STATE, SET_USER_SETTINGS } from '../constants/userConstants';
 import {
   commonErrorHandler,
   getLatestReleaseInfo,
@@ -308,7 +301,7 @@ describe('app actions', () => {
       { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
       {
         type: SET_RELEASES_LIST_STATE,
-        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.Name], page: 42 }
+        value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.name], page: 42 }
       },
       { type: SET_DEVICE_LIMIT, limit: 500 },
       { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
@@ -348,7 +341,6 @@ describe('app actions', () => {
           total: 0
         }
       },
-      { type: SET_SHOW_HELP, show: true },
       { type: SET_TOOLTIPS_STATE, value: {} },
       { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
       {
@@ -358,7 +350,7 @@ describe('app actions', () => {
         total: defaultState.devices.byStatus.accepted.total
       },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, onboarding: defaultOnboardingState, showHelptips: true } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, onboarding: defaultOnboardingState } },
       {
         type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }

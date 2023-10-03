@@ -15,14 +15,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import {
-  Block as BlockIcon,
-  CheckCircle as CheckCircleIcon,
-  Edit as EditIcon,
-  Error as ErrorIcon,
-  Refresh as RefreshIcon,
-  SaveAlt as SaveAltIcon
-} from '@mui/icons-material';
+import { Block as BlockIcon, CheckCircle as CheckCircleIcon, Error as ErrorIcon, Refresh as RefreshIcon, SaveAlt as SaveAltIcon } from '@mui/icons-material';
 import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 
 import { setSnackbar } from '../../../actions/appActions';
@@ -36,7 +29,7 @@ import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty
 import { getDeviceConfigDeployment } from '../../../selectors';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
-import Confirm from '../../common/confirm';
+import Confirm, { EditButton } from '../../common/confirm';
 import LogDialog from '../../common/dialogs/log';
 import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
@@ -355,11 +348,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
         <div className="two-columns">
           <div className="flexbox center-aligned">
             <h4 className="margin-right">Device configuration</h4>
-            {!(isEditingConfig || isUpdatingConfig) && (
-              <Button onClick={onStartEdit} startIcon={<EditIcon />} size="small">
-                Edit
-              </Button>
-            )}
+            {!(isEditingConfig || isUpdatingConfig) && <EditButton onClick={onStartEdit} />}
           </div>
           <div className="flexbox center-aligned">
             {isEditingConfig ? (

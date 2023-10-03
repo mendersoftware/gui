@@ -111,7 +111,7 @@ export const Deployments = () => {
     }
     const { deploymentObject = {}, id: selectedId = [], ...remainder } = locationParams;
     const { devices: selectedDevices = [], release: releaseName } = deploymentObject;
-    const release = releaseName ? { ...(releases[releaseName] ?? { Name: releaseName }) } : undefined;
+    const release = releaseName ? { ...(releases[releaseName] ?? { name: releaseName }) } : undefined;
     const devices = selectedDevices.length ? selectedDevices.map(device => ({ ...device, ...devicesById[device.id] })) : [];
     setDeploymentObject({ devices, release, releaseSelectionLocked: !!release });
     dispatch(setDeploymentsState({ selectedId: selectedId[0], ...remainder }));
@@ -212,14 +212,16 @@ export const Deployments = () => {
         </div>
         <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} isShowingDetails={reportDialog} />
       </div>
-      <Report abort={onAbortDeployment} onClose={closeReport} open={reportDialog} retry={retryDeployment} type={reportType} />
-      <CreateDeployment
-        open={createDialog}
-        onDismiss={onCreationDismiss}
-        deploymentObject={deploymentObject}
-        onScheduleSubmit={onScheduleSubmit}
-        setDeploymentSettings={setDeploymentSettings}
-      />
+      {reportDialog && <Report abort={onAbortDeployment} onClose={closeReport} retry={retryDeployment} type={reportType} />}
+      {createDialog && (
+        <CreateDeployment
+          open={createDialog}
+          onDismiss={onCreationDismiss}
+          deploymentObject={deploymentObject}
+          onScheduleSubmit={onScheduleSubmit}
+          setDeploymentSettings={setDeploymentSettings}
+        />
+      )}
       {!reportDialog && onboardingComponent}
     </>
   );

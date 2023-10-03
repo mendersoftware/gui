@@ -1,0 +1,14 @@
+/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+/**
+ * Information about update type.
+ */
+export type ArtifactTypeInfoDeployments = {
+  /**
+   * Note that for emtpy Artifacts, the type is 'null'
+   */
+  type?: string;
+};

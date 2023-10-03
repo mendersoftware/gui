@@ -48,7 +48,7 @@ const hardCodedStyle = {
   }
 };
 
-export const getDevicesLink = ({ devices, filter, group, hasFullFiltering, name }) => {
+export const getDevicesLink = ({ devices, filters = [], group, hasFullFiltering, name }) => {
   let devicesLink = '/devices';
   if (devices.length && (!name || isUUID(name))) {
     devicesLink = `${devicesLink}?id=${devices[0].id}`;
@@ -59,8 +59,8 @@ export const getDevicesLink = ({ devices, filter, group, hasFullFiltering, name 
       const { systemDeviceIds = [] } = devices[0];
       devicesLink = `${devicesLink}${systemDeviceIds.map(id => `&id=${id}`).join('')}`;
     }
-  } else if (group || filter) {
-    devicesLink = `${devicesLink}?${formatDeviceSearch({ pageState: {}, filters: filter ? [filter] : [], selectedGroup: group })}`;
+  } else if (group || filters.length) {
+    devicesLink = `${devicesLink}?${formatDeviceSearch({ pageState: {}, filters, selectedGroup: group })}`;
   }
   return devicesLink;
 };
@@ -126,7 +126,7 @@ export const Devices = ({
   };
 
   const { deviceText, devicesLink, targetDeviceCount, targetDevicesText } = useMemo(() => {
-    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering, filter });
+    const devicesLink = getDevicesLink({ devices, group, hasFullFiltering, filters: filter?.filters });
     let deviceText = getDeploymentTargetText({ deployment: deploymentObject, idAttribute });
     let targetDeviceCount = deploymentDeviceCount;
     let targetDevicesText = `${deploymentDeviceCount} ${pluralize('devices', deploymentDeviceCount)}`;
@@ -250,14 +250,14 @@ export const Software = ({ commonClasses, deploymentObject, releaseRef, releases
       <div className={commonClasses.columns}>
         <div ref={releaseRef} className={classes.selection}>
           {releaseSelectionLocked ? (
-            <TextField value={deploymentRelease?.Name} label="Release" disabled={true} className={classes.infoStyle} />
+            <TextField value={deploymentRelease?.name} label="Release" disabled={true} className={classes.infoStyle} />
           ) : (
             <AsyncAutocomplete
               id="deployment-release-selection"
-              initialValue={deploymentRelease?.Name}
-              labelAttribute="Name"
+              initialValue={deploymentRelease?.name}
+              labelAttribute="name"
               placeholder="Select a Release"
-              selectionAttribute="Name"
+              selectionAttribute="name"
               options={releaseItems}
               onChange={onReleaseInputChange}
               onChangeSelection={onReleaseSelectionChange}

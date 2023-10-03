@@ -23,7 +23,7 @@ const content = {
   ),
   release: ({ release }) => (
     <>
-      All artifacts in the <i>{release.Name}</i> release will be removed. Are you sure?
+      All artifacts in the <i>{release.name}</i> release will be removed. Are you sure?
     </>
   )
 };

@@ -34,6 +34,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { getReportingLimits } from '../../actions/deviceActions';
 import { toggle } from '../../helpers';
+import { InfoHintContainer } from '../common/info-hint';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 
 const useStyles = makeStyles()(theme => ({
@@ -76,8 +77,11 @@ export const ReportingLimits = () => {
 
   return (
     <>
-      <InputLabel className="margin-top" shrink id="filterable-attributes-usage-and-limit">
-        Filterable attributes usage & limit ({count}/{limit}) <MenderHelpTooltip id={HELPTOOLTIPS.attributeLimit.id} placement="top" />
+      <InputLabel className="margin-top-small padding-top-small flexbox" shrink id="filterable-attributes-usage-and-limit">
+        Filterable attributes usage & limit ({count}/{limit})
+        <InfoHintContainer>
+          <MenderHelpTooltip id={HELPTOOLTIPS.attributeLimit.id} placement="top" />
+        </InfoHintContainer>
       </InputLabel>
       <Accordion className={classes.accordion} square expanded={open} onChange={toggleOpen} disabled={!count}>
         <AccordionSummary className={classes.summary}>

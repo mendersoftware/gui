@@ -20,8 +20,8 @@ import { Button } from '@mui/material';
 import { advanceOnboarding, setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
-import BaseOnboardingTip, { BaseOnboardingTooltip } from './baseonboardingtip';
 import { onboardingSteps } from '../../constants/onboardingConstants';
+import BaseOnboardingTip, { BaseOnboardingTooltip } from './baseonboardingtip';
 
 export const DevicePendingTip = props => (
   <BaseOnboardingTip
@@ -95,7 +95,7 @@ export const DevicesDeployReleaseOnboarding = () => (
   </div>
 );
 
-export const SchedulingArtifactSelection = ({ selectedRelease }) => <div>{`Select the ${selectedRelease.Name} release we included.`}</div>;
+export const SchedulingArtifactSelection = ({ selectedRelease }) => <div>{`Select the ${selectedRelease.name} release we included.`}</div>;
 
 export const SchedulingAllDevicesSelection = () => (
   <div>
@@ -106,7 +106,7 @@ export const SchedulingAllDevicesSelection = () => (
 export const SchedulingGroupSelection = ({ createdGroup }) => <div>{`Select the ${createdGroup} device group you just made.`}</div>;
 
 export const SchedulingReleaseToDevices = ({ selectedDevice, selectedGroup, selectedRelease }) => (
-  <div>{`Create the deployment! This will deploy the ${selectedRelease.Name} Artifact to ${
+  <div>{`Create the deployment! This will deploy the ${selectedRelease.name} Artifact to ${
     selectedDevice ? selectedDevice.id : selectedGroup || ALL_DEVICES
   }`}</div>
 );

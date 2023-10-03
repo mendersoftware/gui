@@ -22,6 +22,7 @@ import * as path from 'path';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { v4 as uuid } from 'uuid';
+
 import { selectors } from './constants';
 
 export const getPeristentLoginInfo = () => {

@@ -9,7 +9,7 @@ import { DEVICE_LIST_DEFAULTS, RECEIVE_DEVICE } from '../constants/deviceConstan
 import { deepCompare, isEmpty, standardizePhases, startTimeSort } from '../helpers';
 import { getDevicesById } from '../selectors';
 import Tracking from '../tracking';
-import { getDeviceAuth, getDeviceById } from './deviceActions';
+import { getDeviceAuth, getDeviceById, mapTermsToFilters } from './deviceActions';
 import { saveGlobalSettings } from './userActions';
 
 export const deploymentsApiUrl = `${apiUrl.v1}/deployments`;
@@ -37,10 +37,12 @@ export const deriveDeploymentGroup = ({ filter = {}, group, groups = [], name })
 const transformDeployments = (deployments, deploymentsById) =>
   deployments.sort(startTimeSort).reduce(
     (accu, item) => {
+      const filter = item.filter ?? {};
       let deployment = {
         ...deploymentPrototype,
         ...deploymentsById[item.id],
         ...item,
+        filter: item.filter ? { ...filter, name: filter.name ?? filter.id, filters: mapTermsToFilters(filter.terms) } : undefined,
         name: decodeURIComponent(item.name)
       };
       // deriving the group in a second step to potentially make use of the merged data from the existing group state + the decoded name
@@ -249,18 +251,8 @@ export const resetDeviceDeployments = deviceId => dispatch =>
 
 export const getSingleDeployment = id => (dispatch, getState) =>
   GeneralApi.get(`${deploymentsApiUrl}/deployments/${id}`).then(({ data }) => {
-    const storedDeployment = getState().deployments.byId[id] || {};
-    return Promise.resolve(
-      dispatch({
-        type: RECEIVE_DEPLOYMENT,
-        deployment: {
-          ...deploymentPrototype,
-          ...storedDeployment,
-          ...data,
-          name: decodeURIComponent(data.name)
-        }
-      })
-    );
+    const { deployments } = transformDeployments([data], getState().deployments.byId);
+    return Promise.resolve(dispatch({ type: RECEIVE_DEPLOYMENT, deployment: deployments[id] }));
   });
 
 export const getDeviceLog = (deploymentId, deviceId) => (dispatch, getState) =>

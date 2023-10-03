@@ -13,6 +13,7 @@ import { cleanUpUpload, progress } from '../actions/releaseActions';
 import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes, sortingAlternatives } from '../components/devices/base-devices';
+import { filtersFilter } from '../components/devices/widgets/filters';
 import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
@@ -29,7 +30,6 @@ import {
 } from '../selectors';
 import { chartColorPalette } from '../themes/Mender';
 import { getDeviceMonitorConfig, getLatestDeviceAlerts } from './monitorActions';
-import { filtersFilter } from '../components/devices/widgets/filters';
 
 const { DEVICE_FILTERING_OPTIONS, DEVICE_STATES, DEVICE_LIST_DEFAULTS, UNGROUPED_GROUP, emptyFilter } = DeviceConstants;
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -190,14 +190,14 @@ const filterProcessors = {
 const filterAliases = {
   $nexists: { alias: DEVICE_FILTERING_OPTIONS.$exists.key, value: false }
 };
-const mapFiltersToTerms = filters =>
+export const mapFiltersToTerms = (filters = []) =>
   filters.map(filter => ({
     scope: filter.scope,
     attribute: filter.key,
     type: filterAliases[filter.operator]?.alias || filter.operator,
     value: filterProcessors.hasOwnProperty(filter.operator) ? filterProcessors[filter.operator](filter.value) : filter.value
   }));
-const mapTermsToFilters = terms =>
+export const mapTermsToFilters = (terms = []) =>
   terms.map(term => {
     const aliasedFilter = Object.entries(filterAliases).find(
       aliasDefinition => aliasDefinition[1].alias === term.type && aliasDefinition[1].value === term.value
@@ -306,8 +306,8 @@ export const selectGroup =
     tasks.push(dispatch({ type: DeviceConstants.SELECT_GROUP, group: selectedGroupName }));
     return Promise.all(tasks);
   };
+
 const getEarliestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA < dateB ? dateA : dateB);
-const getLatestTs = (dateA = '', dateB = '') => (!dateA || !dateB ? dateA || dateB : dateA >= dateB ? dateA : dateB);
 
 const reduceReceivedDevices = (devices, ids, state, status) =>
   devices.reduce(
@@ -330,7 +330,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.identity_data = { ...storedIdentity, ...identity, ...(device.identity_data ? device.identity_data : {}) };
       device.status = status ? status : device.status || identity.status;
       device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
-      device.updated_ts = getLatestTs(getLatestTs(getLatestTs(device.check_in_time, device.updated_ts), system.updated_ts), stateDevice.updated_ts);
+      device.updated_ts = device.attributes ? device.updated_ts : stateDevice.updated_ts;
       device.isNew = new Date(device.created_ts) > new Date(state.app.newThreshold);
       device.isOffline = new Date(device.updated_ts) < new Date(state.app.offlineThreshold);
       accu.devicesById[device.id] = { ...stateDevice, ...device };

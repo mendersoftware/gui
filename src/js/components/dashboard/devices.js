@@ -26,7 +26,7 @@ import {
   getAvailableIssueOptionsByType,
   getDeviceCountsByStatus,
   getOnboardingState,
-  getShowHelptips,
+  getTenantCapabilities,
   getUserCapabilities
 } from '../../selectors';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -46,9 +46,9 @@ export const Devices = ({ clickHandle }) => {
   const { total: acceptedDevicesCount } = useSelector(getAcceptedDevices);
   const availableIssueOptions = useSelector(getAvailableIssueOptionsByType);
   const { canManageDevices } = useSelector(getUserCapabilities);
+  const { hasReporting } = useSelector(getTenantCapabilities);
   const onboardingState = useSelector(getOnboardingState);
   const { pending: pendingDevicesCount } = useSelector(getDeviceCountsByStatus);
-  const showHelptips = useSelector(getShowHelptips);
 
   const refreshDevices = useCallback(() => {
     const issueRequests = Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters: [], selectedIssues: [key] })));
@@ -94,8 +94,8 @@ export const Devices = ({ clickHandle }) => {
     <>
       <div className="dashboard" ref={anchor}>
         <AcceptedDevices devicesCount={acceptedDevicesCount} onClick={clickHandle} />
-        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} onClick={clickHandle} />}
-        {!!pendingDevicesCount && !acceptedDevicesCount && (
+        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} />}
+        {!!pendingDevicesCount && !(acceptedDevicesCount && hasReporting) && (
           <PendingDevices
             advanceOnboarding={step => dispatch(advanceOnboarding(step))}
             innerRef={pendingsRef}
@@ -103,7 +103,6 @@ export const Devices = ({ clickHandle }) => {
             onboardingState={onboardingState}
             onClick={clickHandle}
             pendingDevicesCount={pendingDevicesCount}
-            showHelptips={showHelptips}
           />
         )}
         {canManageDevices && (

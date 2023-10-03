@@ -22,10 +22,10 @@ const SEPARATOR = ':';
 const defaultSelector = result => result[0];
 
 const commonFields = {
-  ...Object.keys(DEVICE_LIST_DEFAULTS).reduce((accu, key) => ({ ...accu, [key]: { parse: Number, select: defaultSelector } }), {}),
-  id: { parse: String, select: i => i },
-  issues: { parse: undefined, select: defaultSelector },
-  open: { parse: Boolean, select: defaultSelector }
+  ...Object.keys(DEVICE_LIST_DEFAULTS).reduce((accu, key) => ({ ...accu, [key]: { parse: Number, select: defaultSelector, target: key } }), {}),
+  id: { parse: String, select: i => i, target: 'id' },
+  issues: { parse: undefined, select: defaultSelector, target: 'selectedIssues' },
+  open: { parse: Boolean, select: defaultSelector, target: 'open' }
 };
 
 const scopes = {
@@ -38,16 +38,16 @@ const scopes = {
 
 export const commonProcessor = searchParams => {
   let params = new URLSearchParams(searchParams);
-  const pageState = Object.entries(commonFields).reduce((accu, [key, { parse, select }]) => {
+  const pageState = Object.entries(commonFields).reduce((accu, [key, { parse, select, target }]) => {
     const values = params.getAll(key);
     if (!values.length) {
       return accu;
     }
     if (!parse) {
-      accu[key] = values;
+      accu[target] = values;
     } else {
       try {
-        accu[key] = select(values.map(parse));
+        accu[target] = select(values.map(parse));
       } catch (error) {
         console.log('encountered faulty url param, continue...', error);
       }
@@ -304,7 +304,7 @@ export const formatDeployments = ({ deploymentObject, pageState }, { defaults, t
   if (showCreationDialog) {
     params.set('open', true);
     if (deploymentObject.release) {
-      params.set('release', deploymentObject.release.Name);
+      params.set('release', deploymentObject.release.name);
     }
     if (deploymentObject.devices?.length) {
       deploymentObject.devices.map(({ id }) => params.append('deviceId', id));
@@ -387,21 +387,24 @@ export const generateDeploymentsPath = ({ pageState }) => {
 };
 
 const releasesRoot = '/releases';
-export const formatReleases = ({ pageState: { selectedTags = [], tab } }) => {
-  const formattedFilters = selectedTags.map(tag => `tag=${tag}`);
-  if (tab) {
-    formattedFilters.push(`tab=${tab}`);
-  }
-  return formattedFilters.join('&');
-};
+export const formatReleases = ({ pageState: { searchTerm, selectedTags = [], tab, type } }) =>
+  Object.entries({ name: searchTerm, tab, type })
+    .reduce(
+      (accu, [key, value]) => (value ? [...accu, `${key}=${value}`] : accu),
+      selectedTags.map(tag => `tag=${tag}`)
+    )
+    .join('&');
+
 export const generateReleasesPath = ({ pageState: { selectedRelease } }) => `${releasesRoot}${selectedRelease ? `/${selectedRelease}` : ''}`;
 
 export const parseReleasesQuery = (queryParams, extraProps) => {
+  const name = queryParams.has('name') ? queryParams.get('name') : '';
   const tab = queryParams.has('tab') ? queryParams.get('tab') : undefined;
   const tags = queryParams.has('tag') ? queryParams.getAll('tag') : [];
+  const type = queryParams.has('type') ? queryParams.get('type') : '';
   let selectedRelease = extraProps.location.pathname.substring(releasesRoot.length + 1);
   if (!selectedRelease && extraProps.pageState.id?.length) {
     selectedRelease = extraProps.pageState.id[0];
   }
-  return { selectedRelease, tab, tags };
+  return { searchTerm: name, selectedRelease, tab, tags, type };
 };

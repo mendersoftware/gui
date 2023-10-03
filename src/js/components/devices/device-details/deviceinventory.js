@@ -15,15 +15,17 @@ import React from 'react';
 
 import { extractSoftware } from '../../../helpers';
 import { TwoColumnDataMultiple } from '../../common/configurationobject';
+import Time from '../../common/time';
 import DeviceDataCollapse from './devicedatacollapse';
 import DeviceInventoryLoader from './deviceinventoryloader';
-import { LastSyncNote } from './devicetwin';
 
 export const Title = ({ updateTime }) => {
   return (
     <div className="flexbox" style={{ alignItems: 'baseline' }}>
       <h4 className="margin-right">Device Inventory</h4>
-      <LastSyncNote updateTime={updateTime} />
+      <div className="muted slightly-smaller" style={{ marginTop: 2 }}>
+        Last changed: <Time value={updateTime} />
+      </div>
     </div>
   );
 };

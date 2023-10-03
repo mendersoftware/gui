@@ -25,7 +25,6 @@ export const initialState = {
     previousPhases: [],
     retries: 0
   },
-  showHelptips: true,
   permissionSetsById: {
     ...UserConstants.defaultPermissionSets
   },
@@ -150,11 +149,6 @@ const userReducer = (state = initialState, action) => {
           ...state.userSettings,
           ...action.settings
         }
-      };
-    case UserConstants.SET_SHOW_HELP:
-      return {
-        ...state,
-        showHelptips: action.show
       };
     case UserConstants.SET_SHOW_CONNECT_DEVICE:
       return {

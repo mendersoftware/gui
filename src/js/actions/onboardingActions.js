@@ -89,7 +89,7 @@ export const setShowOnboardingHelp =
   dispatch => {
     let tasks = [dispatch({ type: SET_SHOW_ONBOARDING_HELP, show })];
     if (update) {
-      tasks.push(dispatch(saveUserSettings({ onboarding: { showTips: show }, showHelptips: show })));
+      tasks.push(dispatch(saveUserSettings({ onboarding: { showTips: show } })));
     }
     return Promise.all(tasks);
   };

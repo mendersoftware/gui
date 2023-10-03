@@ -55,7 +55,7 @@ describe('OnboardingTips Components', () => {
       SchedulingReleaseToDevices
     ].forEach(async Component => {
       it(`renders ${Component.displayName || Component.name} correctly`, () => {
-        const { baseElement } = render(<Component createdGroup="testgroup" selectedRelease={{ Name: 'test', toString: () => 'test' }} />);
+        const { baseElement } = render(<Component createdGroup="testgroup" selectedRelease={{ name: 'test', toString: () => 'test' }} />);
         const view = baseElement.firstChild.firstChild;
         expect(view).toMatchSnapshot();
       });

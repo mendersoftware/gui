@@ -322,7 +322,7 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
             <Tooltip title="The last time the device communicated with the Mender server" placement="bottom">
               <div className="margin-right-small">Last check-in:</div>
             </Tooltip>
-            <RelativeTime updateTime={device.updated_ts} />
+            <RelativeTime updateTime={device.check_in_time} />
           </div>
           <IconButton style={{ marginLeft: 'auto' }} onClick={onCloseClick} aria-label="close" size="large">
             <CloseIcon />

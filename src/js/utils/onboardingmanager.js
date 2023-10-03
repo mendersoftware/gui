@@ -117,7 +117,7 @@ export const onboardingSteps = {
 };
 
 const getOnboardingStepCompleted = (id, onboardingState) => {
-  const { progress, complete, showHelptips, showTips } = onboardingState;
+  const { progress, complete, showTips } = onboardingState;
   const keys = Object.keys(onboardingSteps);
   const {
     condition: { min = id, max = id },
@@ -133,7 +133,6 @@ const getOnboardingStepCompleted = (id, onboardingState) => {
   );
   return (
     !complete &&
-    showHelptips &&
     showTips &&
     progressIndex >= keys.findIndex(step => step === min) &&
     progressIndex <= keys.findIndex(step => step === max) &&

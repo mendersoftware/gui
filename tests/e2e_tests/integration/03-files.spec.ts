@@ -11,15 +11,15 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+import axios from 'axios';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import * as fs from 'fs';
-import md5 from 'md5';
 import https from 'https';
+import md5 from 'md5';
 
 import test, { expect } from '../fixtures/fixtures';
 import { selectors, timeouts } from '../utils/constants';
-import axios from 'axios';
 
 dayjs.extend(isBetween);
 
@@ -35,6 +35,79 @@ test.describe('Files', () => {
     await page.click(`.MuiDialog-paper button:has-text('Upload')`);
     // give some extra time for the upload
     await page.waitForTimeout(timeouts.fiveSeconds);
+  });
+
+  test('allows release notes manipulation', async ({ loggedInPage: page }) => {
+    await page.click(`.leftNav :text('Releases')`);
+    await page.getByText(/demo-artifact/i).click();
+    expect(await page.getByRole('heading', { name: /Release notes/i }).isVisible()).toBeTruthy();
+    // layout based locators are not an option here, since the edit button is also visible on the nearby tags section
+    // and the selector would get confused due to the proximity - so instead we loop over all the divs
+    await page
+      .locator('div')
+      .filter({ hasText: /^Add release notes here Edit$/i })
+      .getByRole('button')
+      .click();
+    const input = await page.getByPlaceholder(/release notes/i);
+    await input.fill('foo notes');
+    await page.getByTestId('CheckIcon').click();
+    expect(input).not.toBeVisible();
+    expect(await page.getByText('foo notes').isVisible()).toBeTruthy();
+  });
+
+  test('allows release tags manipulation', async ({ baseUrl, loggedInPage: page }) => {
+    await page.click(`.leftNav :text('Releases')`);
+    const alreadyTagged = await page.getByText('some, tags').isVisible();
+    test.skip(alreadyTagged, 'looks like the release was tagged already');
+    await page.getByText(/demo-artifact/i).click();
+    expect(await page.getByRole('heading', { name: /Release notes/i }).isVisible()).toBeTruthy();
+    expect(await page.getByRole('button', { name: 'some' }).isVisible()).not.toBeTruthy();
+    // layout based locators are not an option here, since the edit button is also visible on the nearby release notes section
+    // and the selector would get confused due to the proximity - so instead we loop over all the divs
+    const theDiv = await page
+      .locator('div')
+      .filter({ has: page.getByRole('heading', { name: /tags/i }), hasNotText: /notes/i })
+      .filter({ has: page.getByRole('button', { name: /edit/i }) });
+    const editButton = await theDiv.getByRole('button', { name: /edit/i });
+    await editButton.click();
+    const input = await page.getByPlaceholder(/enter release tags/i);
+    await input.fill('some,tags');
+    await page.getByTestId('CheckIcon').click();
+    expect(input).not.toBeVisible();
+    await page.goto(`${baseUrl}ui/releases`);
+    expect(await page.getByText('some, tags').isVisible()).toBeTruthy();
+  });
+
+  test('allows release tags reset', async ({ loggedInPage: page }) => {
+    await page.click(`.leftNav :text('Releases')`);
+    await page.getByText(/demo-artifact/i).click();
+    const theDiv = await page
+      .locator('div')
+      .filter({ has: page.getByRole('heading', { name: /tags/i }), hasNotText: /notes/ })
+      .filter({ has: page.getByRole('button', { name: /edit/i }) });
+    const editButton = await theDiv.getByRole('button', { name: /edit/i });
+    await editButton.click();
+    const alreadyTagged = await page.getByRole('button', { name: 'some' }).isVisible();
+    if (alreadyTagged) {
+      await page.getByRole('button', { name: 'some' }).getByTestId('CancelIcon').click();
+      await page.getByRole('button', { name: 'tags' }).getByTestId('CancelIcon').click();
+      await page.getByTestId('CheckIcon').click();
+      expect(await page.getByText('add release tags').isVisible()).toBeTruthy();
+      await editButton.click();
+    }
+    await page.getByPlaceholder(/enter release tags/i).fill('someTag');
+    await page.getByTestId('CheckIcon').click();
+    await page.press('body', 'Escape');
+    expect(await page.getByText('someTag').isVisible()).toBeTruthy();
+  });
+
+  test('allows release tags filtering', async ({ loggedInPage: page }) => {
+    await page.click(`.leftNav :text('Releases')`);
+    expect(await page.getByText('someTag').isVisible()).toBeTruthy();
+    await page.getByPlaceholder(/select tags/i).fill('foo,');
+    expect(await page.getByText('someTag').isVisible()).not.toBeTruthy();
+    await page.getByText(/Clear filter/i).click();
+    expect(await page.getByText('someTag').isVisible()).toBeTruthy();
   });
 
   // test('allows uploading custom file creations', () => {
