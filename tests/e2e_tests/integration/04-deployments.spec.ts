@@ -32,7 +32,7 @@ test.describe('Deployments', () => {
   test('allows shortcut deployments', async ({ loggedInPage: page }) => {
     // create an artifact to download first
     await page.click(`text=/mender-demo-artifact/i`);
-    await page.hover('.MuiSpeedDial-fab');
+    await page.click('.MuiSpeedDial-fab');
     await page.click('[aria-label="deploy"]');
     await page.waitForSelector(selectors.deviceGroupSelect, { timeout: timeouts.fiveSeconds });
     await page.focus(selectors.deviceGroupSelect);
@@ -55,7 +55,7 @@ test.describe('Deployments', () => {
     await page.goto(`${baseUrl}ui/devices`);
     // create an artifact to download first
     await page.click(`text=/original/i`);
-    await page.hover('.MuiSpeedDial-fab');
+    await page.click('.MuiSpeedDial-fab');
     await page.click('[aria-label="create-deployment"]');
     await page.waitForSelector(selectors.releaseSelect, { timeout: timeouts.fiveSeconds });
     const releaseSelect = page.locator(selectors.releaseSelect);
