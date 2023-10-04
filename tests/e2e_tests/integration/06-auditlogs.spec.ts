@@ -49,7 +49,6 @@ test.describe('Auditlogs', () => {
     await elementHandle.screenshot({ path: screenShotPath });
     const { pass } = compareImages(expectedPath, screenShotPath);
     expect(pass).toBeTruthy();
-    await page.click(`button:has-text('Close')`);
     await page.click('[aria-label="close"]'); // short-form
     await page.click(`.leftNav.navLink:has-text('Audit log')`);
 
