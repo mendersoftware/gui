@@ -152,14 +152,12 @@ test.describe('Files', () => {
     await page.click(`.deviceListItem div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
-    await page.waitForSelector('text=/file transfer/i', { timeout: timeouts.tenSeconds });
-    await page.click(`css=.expandedDevice >> text=file transfer`);
-    await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
+    await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });
     await page.locator('.dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(selectors.placeholderExample, { clickCount: 3 });
     await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
-    await page.click(`button:text("Upload"):below(:text("Destination directory"))`);
-    await page.click('css=button >> text=Download');
+    await page.getByRole('button', { name: /upload/i }).click();
+    await page.getByRole('tab', { name: /download/i }).click();
     await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
     const [download] = await Promise.all([page.waitForEvent('download'), page.click('button:text("Download"):below(:text("file on the device"))')]);
     const downloadTargetPath = await download.path();
