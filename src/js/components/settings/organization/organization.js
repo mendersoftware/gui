@@ -83,8 +83,9 @@ export const CopyTextToClipboard = ({ onCopy, token }) => {
 
 export const Organization = () => {
   const [hasSingleSignOn, setHasSingleSignOn] = useState(false);
-  const [isResettingSSO, setIsResettingSSO] = useState(false);
   const [isConfiguringSSO, setIsConfiguringSSO] = useState(false);
+  const [isResettingSSO, setIsResettingSSO] = useState(false);
+  const [showTokenWarning, setShowTokenWarning] = useState(false);
   const isEnterprise = useSelector(getIsEnterprise);
   const { isAdmin } = useSelector(getUserRoles);
   const canPreview = useSelector(getIsPreview);
@@ -139,6 +140,8 @@ export const Organization = () => {
     [isResettingSSO, dispatch, samlConfigs]
   );
 
+  const onTokenExpansion = useCallback(() => setShowTokenWarning(true), []);
+
   const onDownloadReportClick = () =>
     dispatch(downloadLicenseReport()).then(report => createFileDownload(report, `Mender-license-report-${moment().format(moment.HTML5_FMT.DATE)}`, token));
 
@@ -167,17 +170,28 @@ export const Organization = () => {
           title={<OrgHeader />}
           content={{}}
           secondary={
-            <ExpandableAttribute
-              className={classes.tenantToken}
-              component="div"
-              disableGutters
-              dividerDisabled
-              key="org_token"
-              secondary={org.tenant_token}
-              textClasses={{ secondary: 'inventory-text tenant-token-text' }}
-            />
+            <>
+              <ExpandableAttribute
+                className={classes.tenantToken}
+                component="div"
+                disableGutters
+                dividerDisabled
+                key="org_token"
+                onExpansion={onTokenExpansion}
+                secondary={org.tenant_token}
+                textClasses={{ secondary: 'inventory-text tenant-token-text' }}
+              />
+              {showTokenWarning && (
+                <p className="warning">
+                  <b>Important</b>
+                  <br />
+                  Do not share your organization token with others. Treat this token like a password, as it can be used to request authorization for new
+                  devices.
+                </p>
+              )}
+            </>
           }
-          sideBarContent={<CopyTextToClipboard token={org.tenant_token} />}
+          sideBarContent={<CopyTextToClipboard onCopy={onTokenExpansion} token={org.tenant_token} />}
         />
       </List>
       {isEnterprise && isAdmin && (
