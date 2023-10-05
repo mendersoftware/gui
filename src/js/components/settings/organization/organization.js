@@ -61,12 +61,13 @@ export const OrgHeader = () => {
   );
 };
 
-export const CopyTextToClipboard = ({ token }) => {
+export const CopyTextToClipboard = ({ onCopy, token }) => {
   const [copied, setCopied] = useState(false);
   const { classes } = useStyles();
 
   const onCopied = () => {
     setCopied(true);
+    onCopy();
     setTimeout(() => setCopied(false), TIMEOUTS.fiveSeconds);
   };
 
@@ -109,6 +110,8 @@ export const Organization = () => {
     setHasSingleSignOn(!!samlConfigs.length);
     setIsConfiguringSSO(!!samlConfigs.length);
   }, [samlConfigs.length]);
+
+  const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
   const onSSOClick = () => {
     if (hasSingleSignOn) {
@@ -195,13 +198,7 @@ export const Organization = () => {
         </div>
       )}
       <Collapse className="margin-left-large" in={isConfiguringSSO}>
-        <SAMLConfig
-          configs={samlConfigs}
-          onSave={onSaveSSOSettings}
-          onCancel={onCancelSSOSettings}
-          setSnackbar={message => dispatch(setSnackbar(message))}
-          token={token}
-        />
+        <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={dispatchedSetSnackbar} token={token} />
       </Collapse>
       {isHosted && <Billing />}
       {(canPreview || !isHosted) && isEnterprise && isAdmin && (
