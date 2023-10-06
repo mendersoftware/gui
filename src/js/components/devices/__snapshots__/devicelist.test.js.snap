@@ -4,7 +4,7 @@ exports[`DeviceList Component renders correctly 1`] = `
 "<div>
   <div
     class="deviceList "
-    style="grid-template-columns: minmax(250px, 1fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, max-content);"
+    style="grid-template-columns: minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1.5fr) minmax(150px, 1fr);"
   >
     <div
       class="header css-nsqcrh-header"
@@ -19,21 +19,15 @@ exports[`DeviceList Component renders correctly 1`] = `
             class="flexbox center-aligned"
           />
           <div
-            class="flexbox center-aligned"
-          />
-        </div>
-        <div
-          class="columnHeader flexbox space-between relative"
-        >
-          <div
-            class="flexbox center-aligned"
-          />
-          <div
-            class="flexbox center-aligned"
+            class="flexbox center-aligned full-height"
           >
-            <span
-              class="resize-handle css-1bzlqzi-resizeHandle "
-            />
+            <div
+              class="css-3n0vsr-resizer full-height"
+            >
+              <div
+                class="full-height css-183mduf-resizeHandle "
+              />
+            </div>
           </div>
         </div>
         <div
@@ -43,7 +37,25 @@ exports[`DeviceList Component renders correctly 1`] = `
             class="flexbox center-aligned"
           />
           <div
+            class="flexbox center-aligned full-height"
+          >
+            <div
+              class="css-3n0vsr-resizer full-height"
+            >
+              <div
+                class="full-height css-183mduf-resizeHandle "
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="columnHeader flexbox space-between relative"
+        >
+          <div
             class="flexbox center-aligned"
+          />
+          <div
+            class="flexbox center-aligned full-height"
           />
         </div>
         <div
@@ -53,7 +65,7 @@ exports[`DeviceList Component renders correctly 1`] = `
             class="flexbox center-aligned"
           />
           <div
-            class="flexbox center-aligned"
+            class="flexbox center-aligned full-height"
           />
         </div>
       </div>

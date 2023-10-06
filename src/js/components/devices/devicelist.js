@@ -37,7 +37,13 @@ const useStyles = makeStyles()(theme => ({
   header: {
     color: theme.palette.text.hint
   },
+  resizer: {
+    cursor: 'col-resize',
+    paddingLeft: 5,
+    paddingRight: 5
+  },
   resizeHandle: {
+    width: 4,
     background: 'initial',
     ['&.hovering']: {
       background: theme.palette.grey[600]
@@ -50,52 +56,53 @@ const useStyles = makeStyles()(theme => ({
 
 const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onResizeChange, onResizeFinish, resizable }) => {
   const [isHovering, setIsHovering] = useState(false);
+  const [shouldRemoveListeners, setShouldRemoveListeners] = useState(false);
   const resizeRef = useRef();
   const ref = useRef();
   const { classes } = useStyles();
 
   const onMouseOut = () => setIsHovering(false);
+
   const onMouseOver = () => setIsHovering(true);
 
   const mouseMove = useCallback(
     e => {
       if (resizable && resizeRef.current) {
-        onResizeChange(e, { column, index, prev: resizeRef.current, ref });
+        onResizeChange(e, { index, prev: resizeRef.current, ref });
         resizeRef.current = e.clientX;
       }
     },
-    [column, index, onResizeChange, resizable]
+    [index, onResizeChange, resizable]
   );
-
-  const removeListeners = useCallback(() => {
-    window.removeEventListener('mousemove', mouseMove);
-    window.removeEventListener('mouseup', removeListeners);
-  }, [mouseMove]);
-
-  const mouseDown = e => {
-    resizeRef.current = e.clientX;
-  };
 
   const mouseUp = useCallback(
     e => {
       if (resizeRef.current) {
-        onResizeFinish(e, { column, index, prev: resizeRef.current, ref });
+        onResizeFinish(e, { index, prev: resizeRef.current, ref });
         resizeRef.current = null;
-        removeListeners();
+        setShouldRemoveListeners(true);
       }
     },
-    [column, index, onResizeFinish, removeListeners]
+    [index, onResizeFinish]
   );
 
+  const mouseDown = e => (resizeRef.current = e.clientX);
+
   useEffect(() => {
-    if (resizeRef.current) {
-      window.addEventListener('mousemove', mouseMove);
-      window.addEventListener('mouseup', mouseUp);
-    }
+    window.addEventListener('mousemove', mouseMove);
+    window.addEventListener('mouseup', mouseUp);
     return () => {
-      removeListeners();
+      setShouldRemoveListeners(!!resizeRef.current);
     };
-  }, [mouseMove, mouseUp, removeListeners]);
+  }, [mouseMove, mouseUp]);
+
+  useEffect(() => {
+    if (shouldRemoveListeners) {
+      window.removeEventListener('mousemove', mouseMove);
+      window.removeEventListener('mouseup', mouseUp);
+      setShouldRemoveListeners(false);
+    }
+  }, [shouldRemoveListeners, mouseMove, mouseUp]);
 
   let resizeHandleClassName = resizable && isHovering ? 'hovering' : '';
   resizeHandleClassName = resizeRef.current ? 'resizing' : resizeHandleClassName;
@@ -111,9 +118,13 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
           />
         )}
       </div>
-      <div className="flexbox center-aligned">
-        {column.customize && <SettingsIcon onClick={column.customize} style={{ fontSize: 16, marginRight: 4 }} />}
-        {index < columnCount - 2 && <span onMouseDown={mouseDown} className={`resize-handle ${classes.resizeHandle} ${resizeHandleClassName}`} />}
+      <div className="flexbox center-aligned full-height">
+        {column.customize && <SettingsIcon onClick={column.customize} style={{ fontSize: 16 }} />}
+        {index < columnCount - 2 && (
+          <div onMouseDown={mouseDown} className={`${classes.resizer} full-height`}>
+            <div className={`full-height ${classes.resizeHandle} ${resizeHandleClassName}`} />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -137,9 +148,9 @@ export const calculateResizeChange = ({ columnElements, columnHeaders, e, index,
   return relevantColumns.reduce((accu, element, columnIndex) => {
     const currentWidth = element.offsetWidth;
     let column = { attribute: columnHeaders[columnIndex + 1].attribute, size: currentWidth };
-    if (canModifyNextColumn && index - 1 === columnIndex) {
+    if (canModifyNextColumn && index === columnIndex) {
       column.size = currentWidth + columnDelta;
-    } else if (canModifyNextColumn && index === columnIndex) {
+    } else if (canModifyNextColumn && index + 1 === columnIndex) {
       column.size = currentWidth - columnDelta;
     }
     accu.push(column);
@@ -193,7 +204,11 @@ export const DeviceList = ({
       return;
     }
     const relevantColumns = getRelevantColumns(deviceListRef.current.querySelector('.deviceListRow').children, selectable);
-    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(customColumnSizes.length ? customColumnSizes : relevantColumns, '1.5fr', selectable);
+    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(
+      customColumnSizes.length && customColumnSizes.length === relevantColumns.length ? customColumnSizes : relevantColumns,
+      '1.5fr',
+      selectable
+    );
   }, [customColumnSizes, columnHeaders, selectable, resizeTrigger, size.width]);
 
   useEffect(() => {
@@ -223,16 +238,22 @@ export const DeviceList = ({
     onSelect(newSelectedRows);
   };
 
-  const handleResizeChange = (e, { index, prev, ref }) => {
-    const changedColumns = calculateResizeChange({ columnElements: [...ref.current.parentElement.children], columnHeaders, e, index, prev, selectable });
-    // applying styles via state changes would lead to less smooth changes, so we set the style directly on the components
-    deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(changedColumns, undefined, selectable);
-  };
+  const handleResizeChange = useCallback(
+    (e, { index, prev, ref }) => {
+      const changedColumns = calculateResizeChange({ columnElements: [...ref.current.parentElement.children], columnHeaders, e, index, prev, selectable });
+      // applying styles via state changes would lead to less smooth changes, so we set the style directly on the components
+      deviceListRef.current.style.gridTemplateColumns = getColumnsStyle(changedColumns, undefined, selectable);
+    },
+    [columnHeaders, selectable]
+  );
 
-  const handleResizeFinish = (e, { index, prev, ref }) => {
-    const changedColumns = calculateResizeChange({ columnElements: ref.current.parentElement.children, columnHeaders, e, index, prev, selectable });
-    onResizeColumns(changedColumns);
-  };
+  const handleResizeFinish = useCallback(
+    (e, { index, prev, ref }) => {
+      const changedColumns = calculateResizeChange({ columnElements: ref.current.parentElement.children, columnHeaders, e, index, prev, selectable });
+      onResizeColumns(changedColumns);
+    },
+    [columnHeaders, onResizeColumns, selectable]
+  );
 
   const numSelected = (selectedRows || []).length;
   return (
