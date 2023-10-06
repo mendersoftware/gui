@@ -113,7 +113,7 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
       </div>
       <div className="flexbox center-aligned">
         {column.customize && <SettingsIcon onClick={column.customize} style={{ fontSize: 16, marginRight: 4 }} />}
-        {index > 0 && index < columnCount - 2 && <span onMouseDown={mouseDown} className={`resize-handle ${classes.resizeHandle} ${resizeHandleClassName}`} />}
+        {index < columnCount - 2 && <span onMouseDown={mouseDown} className={`resize-handle ${classes.resizeHandle} ${resizeHandleClassName}`} />}
       </div>
     </div>
   );
@@ -126,13 +126,13 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
   );
 };
 
-const getRelevantColumns = (columnElements, selectable) => [...columnElements].slice(selectable ? 2 : 1, columnElements.length - 1);
+const getRelevantColumns = (columnElements, selectable) => [...columnElements].slice(selectable ? 1 : 0, columnElements.length - 1);
 
 export const calculateResizeChange = ({ columnElements, columnHeaders, e, index, prev, selectable }) => {
   const isShrinkage = prev > e.clientX ? -1 : 1;
   const columnDelta = Math.abs(e.clientX - prev) * isShrinkage;
   const relevantColumns = getRelevantColumns(columnElements, selectable);
-  const canModifyNextColumn = index >= 1 && index + 1 < columnHeaders.length - 1;
+  const canModifyNextColumn = index + 1 < columnHeaders.length - 1;
 
   return relevantColumns.reduce((accu, element, columnIndex) => {
     const currentWidth = element.offsetWidth;
@@ -149,9 +149,7 @@ export const calculateResizeChange = ({ columnElements, columnHeaders, e, index,
 
 export const minCellWidth = 150;
 const getTemplateColumns = (columns, selectable) =>
-  selectable
-    ? `52px minmax(250px, 1fr) ${columns} minmax(${minCellWidth}px, max-content)`
-    : `minmax(250px, 1fr) ${columns} minmax(${minCellWidth}px, max-content)`;
+  selectable ? `52px ${columns} minmax(${minCellWidth}px, 1fr)` : `${columns} minmax(${minCellWidth}px, 1fr)`;
 
 const getColumnsStyle = (columns, defaultSize, selectable) => {
   const template = columns.map(({ size }) => `minmax(${minCellWidth}px, ${size ? `${size}px` : defaultSize})`);
