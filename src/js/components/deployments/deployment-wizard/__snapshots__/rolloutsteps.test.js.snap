@@ -582,7 +582,9 @@ exports[`RolloutSteps Component renders correctly 1`] = `
       <p
         class="emotion-35 "
       >
-        A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI. 
+        A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing.
+        <br />
+        You can grant approval by clicking "continue" in the deployment progress UI. 
         <a
           class=""
           href="https://docs.mender.io/development/"
@@ -1179,7 +1181,9 @@ exports[`RolloutSteps Component renders correctly 2`] = `
       <p
         class="emotion-35 "
       >
-        A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant approval by clicking "continue" in the deployment progress UI. 
+        A 'pause' means each device will pause its update after completing the previous step, and wait for approval before continuing.
+        <br />
+        You can grant approval by clicking "continue" in the deployment progress UI. 
         <a
           class=""
           href="https://docs.mender.io/development/"

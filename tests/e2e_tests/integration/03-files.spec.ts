@@ -105,8 +105,10 @@ test.describe('Files', () => {
     await page.click(`.leftNav :text('Releases')`);
     expect(await page.getByText('someTag').isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill('foo,');
-    expect(await page.getByText('someTag').isVisible()).not.toBeTruthy();
+    await page.waitForTimeout(timeouts.oneSecond);
+    expect(await page.getByText(/There are no Releases/i).isVisible()).toBeTruthy();
     await page.getByText(/Clear filter/i).click();
+    await page.waitForTimeout(timeouts.oneSecond);
     expect(await page.getByText('someTag').isVisible()).toBeTruthy();
   });
 

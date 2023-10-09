@@ -81,6 +81,7 @@ const Pagination = props => {
       component="div"
       labelDisplayedRows={() => ''}
       labelRowsPerPage="Rows"
+      SelectProps={{ name: 'pagination' }}
       rowsPerPageOptions={rowsPerPageOptions}
       onRowsPerPageChange={e => onChangeRowsPerPage(e.target.value)}
       page={propsPage}

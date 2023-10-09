@@ -227,10 +227,10 @@ export const generateDevicePath = ({ pageState }) => {
 
 const formatDates = ({ endDate, params, startDate, today, tonight }) => {
   if (endDate && endDate !== tonight) {
-    params.set('endDate', new Date(endDate).toISOString().split('T')[0]);
+    params.set('endDate', endDate.split('T')[0]);
   }
   if (startDate && startDate !== today) {
-    params.set('startDate', new Date(startDate).toISOString().split('T')[0]);
+    params.set('startDate', startDate.split('T')[0]);
   }
   return params;
 };
@@ -243,7 +243,7 @@ const paramReducer = (accu, [key, value]) => {
 };
 
 export const formatAuditlogs = ({ pageState }, { today, tonight }) => {
-  const { detail, endDate, startDate, type = null, user = null } = pageState;
+  const { detail, endDate, startDate, type, user } = pageState;
   let params = new URLSearchParams();
   params = Object.entries({ objectId: detail, userId: user ? user.id ?? user : user }).reduce(paramReducer, params);
   if (type) {
@@ -266,7 +266,7 @@ const parseDateParams = (params, today, tonight) => {
 };
 
 export const parseAuditlogsQuery = (params, { today, tonight }) => {
-  const type = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('objectType')) || null;
+  const type = AUDIT_LOGS_TYPES.find(typeObject => typeObject.value === params.get('objectType'));
   const { endDate, startDate } = parseDateParams(params, today, tonight);
   return {
     detail: params.get('objectId'),
@@ -348,8 +348,9 @@ const deploymentFields = {
   release: { attribute: 'release', parse: String, select: defaultSelector }
 };
 
-export const parseDeploymentsQuery = (params, { pageState, location, today, tonight }) => {
-  const { endDate, startDate } = parseDateParams(params, today, tonight);
+export const parseDeploymentsQuery = (params, { pageState, location, tonight }) => {
+  // for deployments we get a startDate implicitly from a list of retrieved deployments if none is set, thus we're not defaulting to today
+  const { endDate, startDate } = parseDateParams(params, '', tonight);
   const deploymentObject = Object.entries(deploymentFields).reduce(
     (accu, [key, { attribute, parse, select }]) => (params.has(key) ? { ...accu, [attribute]: select(params.getAll(key).map(parse)) } : accu),
     {}

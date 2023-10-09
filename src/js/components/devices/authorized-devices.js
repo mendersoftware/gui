@@ -390,6 +390,8 @@ export const Authorized = ({
 
   const onCloseExpandedDevice = useCallback(() => dispatch(setDeviceListState({ selectedId: undefined, detailsTab: '' })), [dispatch]);
 
+  const onResizeColumns = useCallback(columns => dispatch(updateUserColumnSettings(columns)), [dispatch]);
+
   const actionCallbacks = {
     onAddDevicesToGroup: addDevicesToGroup,
     onAuthorizationChange,
@@ -462,7 +464,7 @@ export const Authorized = ({
             onChangeRowsPerPage={onPageLengthChange}
             onExpandClick={onExpandClick}
             onPageChange={handlePageChange}
-            onResizeColumns={columns => dispatch(updateUserColumnSettings(columns))}
+            onResizeColumns={onResizeColumns}
             onSelect={onSelectionChange}
             onSort={onSortChange}
             pageLoading={pageLoading}

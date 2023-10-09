@@ -25,7 +25,7 @@ import pluralize from 'pluralize';
 import { setSearchState } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';
 import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
-import { getIdAttribute, getMappedDevicesList, getOnboardingState, getUserSettings } from '../selectors';
+import { getIdAttribute, getMappedDevicesList, getUserSettings } from '../selectors';
 import { getHeaders } from './devices/authorized-devices';
 import { routes } from './devices/base-devices';
 import Devicelist from './devices/devicelist';
@@ -71,7 +71,6 @@ export const SearchResult = ({ onToggleSearchResult, open = true }) => {
   const customColumnSizes = useSelector(state => state.users.customColumns);
   const devices = useSelector(state => getMappedDevicesList(state, 'search'));
   const idAttribute = useSelector(getIdAttribute);
-  const onboardingState = useSelector(getOnboardingState);
   const searchState = useSelector(state => state.app.searchState);
 
   const { classes } = useStyles();
@@ -141,13 +140,11 @@ export const SearchResult = ({ onToggleSearchResult, open = true }) => {
         </div>
         {!!searchTotal && (
           <Devicelist
-            className=""
             columnHeaders={columnHeaders}
             customColumnSizes={customColumnSizes}
             deviceListState={{ perPage: 10, sort: {} }}
             devices={devices}
             idAttribute={idAttribute}
-            onboardingState={onboardingState}
             onSort={onSortChange}
             PaginationProps={{ rowsPerPageOptions: [10] }}
             pageTotal={searchTotal}

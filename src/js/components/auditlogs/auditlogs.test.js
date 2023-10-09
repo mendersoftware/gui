@@ -20,12 +20,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import { prettyDOM } from '@testing-library/dom';
-import { screen, render as testingLibRender, waitFor } from '@testing-library/react';
+import { screen, render as testingLibRender } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { light as lightTheme } from '../../../../src/js/themes/Mender';
 import { defaultState, undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
+import { render, selectMaterialUiSelectOption } from '../../../../tests/setupTests';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { getConfiguredStore } from '../../reducers';
 import AuditLogs from './auditlogs';
 
@@ -55,7 +56,9 @@ describe('Auditlogs Component', () => {
       </LocalizationProvider>,
       { preloadedState }
     );
-    await user.click(screen.getByText(/last 7 days/i));
+    const input = screen.getByPlaceholderText(/type/i);
+    await user.type(input, 'art');
+    await selectMaterialUiSelectOption(input, /artifact/i, user);
     await user.click(screen.getByText(/clear filter/i));
     await user.click(screen.getByRole('button', { name: /Download results as csv/i }));
     await user.click(screen.getByText(/open_terminal/i));
@@ -68,7 +71,7 @@ describe('Auditlogs Component', () => {
     const ui = (
       <LocalizationProvider dateAdapter={AdapterMoment}>
         <ThemeProvider theme={theme}>
-          <MemoryRouter initialEntries={['/auditlog?startDate=2020-01-01']}>
+          <MemoryRouter initialEntries={['/auditlog?startDate=2018-01-01']}>
             <Provider store={store}>
               <AuditLogs />
             </Provider>
@@ -76,8 +79,8 @@ describe('Auditlogs Component', () => {
         </ThemeProvider>
       </LocalizationProvider>
     );
-    const { rerender } = testingLibRender(ui);
-    await waitFor(() => rerender(ui));
+    testingLibRender(ui);
+    await jest.advanceTimersByTimeAsync(TIMEOUTS.oneSecond);
     await user.click(screen.getByText(/clear filter/i));
   });
 });

@@ -11,30 +11,29 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
-import { Autocomplete, Button, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import moment from 'moment';
 
 import historyImage from '../../../assets/img/history.png';
-import { getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
+import { getAuditLogs, getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
 import { getUserList } from '../../actions/userActions';
-import { BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { BEGINNING_OF_TIME, BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
-import { useDebounce } from '../../utils/debouncehook';
 import { useLocationParams } from '../../utils/liststatehook';
 import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
+import { ControlledAutoComplete } from '../common/forms/autocomplete';
 import ClickFilter from '../common/forms/clickfilter';
+import Filters from '../common/forms/filters';
+import TimeframePicker from '../common/forms/timeframe-picker';
 import { InfoHintContainer } from '../common/info-hint';
 import Loader from '../common/loader';
-import TimeframePicker from '../common/timeframe-picker';
-import TimerangePicker from '../common/timerange-picker';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import AuditLogsList from './auditlogslist';
 
@@ -62,6 +61,8 @@ const getOptionLabel = option => option.title || option.email || option;
 
 const renderOption = (props, option) => <li {...props}>{getOptionLabel(option)}</li>;
 
+const isUserOptionEqualToValue = ({ email, id }, value) => id === value || email === value || email === value?.email;
+
 const autoSelectProps = {
   autoSelect: true,
   filterSelectedOptions: true,
@@ -73,15 +74,11 @@ const autoSelectProps = {
 const locationDefaults = { sort: { direction: SORTING_OPTIONS.desc } };
 
 export const AuditLogs = props => {
-  const navigate = useNavigate();
   const [csvLoading, setCsvLoading] = useState(false);
 
   const [date] = useState(getISOStringBoundaries(new Date()));
   const { start: today, end: tonight } = date;
 
-  const [detailValue, setDetailValue] = useState(null);
-  const [userValue, setUserValue] = useState(null);
-  const [typeValue, setTypeValue] = useState(null);
   const isInitialized = useRef();
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: locationDefaults });
   const { classes } = useStyles();
@@ -94,12 +91,10 @@ export const AuditLogs = props => {
   const users = useSelector(state => state.users.byId);
   const { canReadUsers } = userCapabilities;
   const { hasAuditlogs } = tenantCapabilities;
+  const [detailsReset, setDetailsReset] = useState('');
+  const [dirtyField, setDirtyField] = useState('');
 
-  const debouncedDetail = useDebounce(detailValue, TIMEOUTS.debounceDefault);
-  const debouncedType = useDebounce(typeValue, TIMEOUTS.debounceDefault);
-  const debouncedUser = useDebounce(userValue, TIMEOUTS.debounceDefault);
-
-  const { detail, isLoading, perPage, endDate, user, reset: resetList, sort, startDate, total, type } = selectionState;
+  const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type = '' } = selectionState;
 
   useEffect(() => {
     if (!hasAuditlogs || !isInitialized.current) {
@@ -110,11 +105,12 @@ export const AuditLogs = props => {
   }, [detail, endDate, hasAuditlogs, perPage, selectionState.page, selectionState.selectedId, setLocationParams, startDate, type, user]);
 
   useEffect(() => {
-    if (!hasAuditlogs || !isInitialized.current) {
+    if (!isInitialized.current) {
       return;
     }
-    dispatch(setAuditlogsState({ page: 1, detail: debouncedDetail, type: debouncedType, user: debouncedUser }));
-  }, [debouncedDetail, debouncedType, debouncedUser, dispatch, hasAuditlogs]);
+    setDetailsReset('detail');
+    setTimeout(() => setDetailsReset(''), TIMEOUTS.debounceShort);
+  }, [type?.value]);
 
   useEffect(() => {
     if (canReadUsers) {
@@ -122,53 +118,54 @@ export const AuditLogs = props => {
     }
   }, [canReadUsers, dispatch]);
 
-  useEffect(() => {
-    const user = users[debouncedUser?.id];
-    if (debouncedUser?.id || !user) {
-      return;
-    }
-    setUserValue(user);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedUser, JSON.stringify(users)]);
+  const initAuditlogState = useCallback(
+    (result, state) => {
+      isInitialized.current = true;
+      const { detail, endDate, startDate, type, user } = state;
+      const resultList = result ? Object.values(result.events) : [];
+      if (resultList.length && startDate === today) {
+        let newStartDate = new Date(resultList[resultList.length - 1].time);
+        const { start } = getISOStringBoundaries(newStartDate);
+        state.startDate = start;
+      }
+      dispatch(setAuditlogsState(state));
+      setTimeout(() => {
+        let field = Object.entries({ detail, type, user }).reduce((accu, [key, value]) => (accu || value ? key : accu), '');
+        field = field || (endDate !== tonight ? 'endDate' : field);
+        field = field || (state.startDate !== today ? 'startDate' : field);
+        setDirtyField(field);
+      }, TIMEOUTS.debounceDefault);
+    },
+    [dispatch, today, tonight]
+  );
 
   useEffect(() => {
-    if (!hasAuditlogs) {
+    if (!hasAuditlogs || isInitialized.current !== undefined) {
       return;
     }
     isInitialized.current = false;
+    const { id, open, detail, endDate, startDate, type, user } = locationParams;
     let state = { ...locationParams };
-    if (locationParams.id && Boolean(locationParams.open)) {
-      state.selectedId = locationParams.id[0];
+    if (id && Boolean(open)) {
+      state.selectedId = id[0];
       const [eventAction, eventTime] = atob(state.selectedId).split('|');
       if (eventTime && !events.some(item => item.time === eventTime && item.action === eventAction)) {
         const { start, end } = getISOStringBoundaries(new Date(eventTime));
         state.endDate = end;
         state.startDate = start;
       }
+      let field = endDate !== tonight ? 'endDate' : '';
+      field = field || (startDate !== today ? 'startDate' : field);
+      setDirtyField(field);
+      isInitialized.current = true;
+      dispatch(setAuditlogsState(state));
+      return;
     }
-    dispatch(setAuditlogsState(state));
-    Object.entries({ detail: setDetailValue, user: setUserValue, type: setTypeValue }).map(([key, setter]) => (state[key] ? setter(state[key]) : undefined));
-    setTimeout(() => (isInitialized.current = true), TIMEOUTS.debounceDefault);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, hasAuditlogs, JSON.stringify(events), JSON.stringify(locationParams)]);
-
-  const reset = () => {
     dispatch(
-      setAuditlogsState({
-        detail: null,
-        endDate: tonight,
-        page: 1,
-        reset: !resetList,
-        startDate: today,
-        type: null,
-        user: null
-      })
-    );
-    setDetailValue(null);
-    setTypeValue(null);
-    setUserValue(null);
-    navigate('/auditlog');
-  };
+      getAuditLogs({ page: state.page ?? 1, perPage: 50, startDate: startDate !== today ? startDate : BEGINNING_OF_TIME, endDate, user, type, detail })
+    ).then(result => initAuditlogState(result, state));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, hasAuditlogs, JSON.stringify(events), JSON.stringify(locationParams), initAuditlogState, today, tonight]);
 
   const createCsvDownload = () => {
     setCsvLoading(true);
@@ -186,39 +183,20 @@ export const AuditLogs = props => {
     dispatch(setAuditlogsState({ page: 1, sort: { direction: currentSorting } }));
   };
 
-  const onUserFilterChange = (e, value, reason) => {
-    if (!e || reason === 'blur') {
-      return;
-    }
-    setUserValue(value);
-  };
-
-  const onTypeFilterChange = (e, value, reason) => {
-    if (!e || reason === 'blur') {
-      return;
-    }
-    if (!value) {
-      setDetailValue(null);
-    }
-    setTypeValue(value);
-  };
-
-  const onDetailFilterChange = (e, value) => {
-    if (!e) {
-      return;
-    }
-    setDetailValue(value);
-  };
-
-  const onTimeFilterChange = (currentStartDate = startDate, currentEndDate = endDate) =>
-    dispatch(setAuditlogsState({ page: 1, startDate: currentStartDate, endDate: currentEndDate }));
-
   const onChangePagination = (page, currentPerPage = perPage) => dispatch(setAuditlogsState({ page, perPage: currentPerPage }));
+
+  const onFiltersChange = useCallback(
+    ({ endDate, detail, startDate, user, type }) => {
+      const selectedUser = Object.values(users).find(item => isUserOptionEqualToValue(item, user));
+      dispatch(setAuditlogsState({ page: 1, detail, startDate, endDate, user: selectedUser, type }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dispatch, JSON.stringify(users)]
+  );
 
   const typeOptionsMap = {
     Deployment: groups,
-    User: Object.values(users),
-    Device: []
+    User: Object.values(users)
   };
   const detailOptions = typeOptionsMap[type?.title] ?? [];
 
@@ -231,62 +209,59 @@ export const AuditLogs = props => {
         </InfoHintContainer>
       </div>
       <ClickFilter disabled={!hasAuditlogs}>
-        <div className={`margin-bottom margin-top-small ${classes.filters}`}>
-          <Autocomplete
-            {...autoSelectProps}
-            disabled={!hasAuditlogs}
-            id="audit-log-user-selection"
-            freeSolo
-            options={Object.values(users)}
-            onChange={onUserFilterChange}
-            isOptionEqualToValue={({ email, id }, value) => id === value || email === value || email === value.email}
-            value={userValue}
-            renderInput={params => (
-              <TextField
-                {...params}
-                label="Filter by user"
-                placeholder="Select a user"
-                InputLabelProps={{ shrink: true }}
-                InputProps={{ ...params.InputProps }}
-              />
-            )}
-            style={{ maxWidth: 250 }}
-          />
-          <Autocomplete
-            {...autoSelectProps}
-            disabled={!hasAuditlogs}
-            id="audit-log-type-selection"
-            onChange={onTypeFilterChange}
-            options={AUDIT_LOGS_TYPES}
-            renderInput={params => (
-              <TextField {...params} label="Filter by change" placeholder="Type" InputLabelProps={{ shrink: true }} InputProps={{ ...params.InputProps }} />
-            )}
-            style={{ marginLeft: 7.5 }}
-            value={typeValue}
-          />
-          <Autocomplete
-            {...autoSelectProps}
-            className={classes.typeDetails}
-            id="audit-log-type-details-selection"
-            key={`audit-log-type-details-selection-${type}`}
-            disabled={!type || !hasAuditlogs}
-            freeSolo
-            value={detailValue}
-            onInputChange={onDetailFilterChange}
-            options={detailOptions}
-            renderInput={params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />}
-          />
-          <div />
-          <TimerangePicker disabled={!hasAuditlogs} endDate={endDate} onChange={onTimeFilterChange} startDate={startDate} />
-          <div className={classes.timeframe}>
-            <TimeframePicker disabled={!hasAuditlogs} onChange={onTimeFilterChange} endDate={endDate} startDate={startDate} tonight={tonight} />
-          </div>
-          {hasAuditlogs && !!(user || type || detail || startDate !== today || endDate !== tonight) && (
-            <span className={`link ${classes.filterReset} ${hasAuditlogs ? '' : 'muted'}`} onClick={reset}>
-              clear filter
-            </span>
-          )}
-        </div>
+        <Filters
+          initialValues={{ startDate, endDate, user, type, detail }}
+          defaultValues={{ startDate: today, endDate: tonight, user: '', type: '', detail: '' }}
+          fieldResetTrigger={detailsReset}
+          dirtyField={dirtyField}
+          clearDirty={setDirtyField}
+          filters={[
+            {
+              key: 'user',
+              title: 'By user',
+              Component: ControlledAutoComplete,
+              componentProps: {
+                ...autoSelectProps,
+                freeSolo: true,
+                isOptionEqualToValue: isUserOptionEqualToValue,
+                options: Object.values(users),
+                renderInput: params => <TextField {...params} placeholder="Select a user" InputProps={{ ...params.InputProps }} />
+              }
+            },
+            {
+              key: 'type',
+              title: 'Change type',
+              Component: ControlledAutoComplete,
+              componentProps: {
+                ...autoSelectProps,
+                options: AUDIT_LOGS_TYPES,
+                isOptionEqualToValue: (option, value) => option.value === value.value && option.object_type === value.object_type,
+                renderInput: params => <TextField {...params} placeholder="Type" InputProps={{ ...params.InputProps }} />
+              }
+            },
+            {
+              key: 'detail',
+              title: '',
+              Component: ControlledAutoComplete,
+              componentProps: {
+                ...autoSelectProps,
+                freeSolo: true,
+                options: detailOptions,
+                disabled: !type,
+                renderInput: params => <TextField {...params} placeholder={detailsMap[type] || '-'} InputProps={{ ...params.InputProps }} />
+              }
+            },
+            {
+              key: 'timeframe',
+              title: 'Start time',
+              Component: TimeframePicker,
+              componentProps: {
+                tonight
+              }
+            }
+          ]}
+          onChange={onFiltersChange}
+        />
       </ClickFilter>
       <div className="flexbox center-aligned" style={{ justifyContent: 'flex-end' }}>
         <Loader show={csvLoading} />

@@ -38,15 +38,14 @@ export const initialState = {
     events: [],
     selectionState: {
       ...DEVICE_LIST_DEFAULTS,
-      detail: null,
+      detail: undefined,
       endDate: undefined,
-      reset: false,
       selectedIssue: undefined,
       sort: { direction: SORTING_OPTIONS.desc },
       startDate: undefined,
       total: 0,
-      type: null,
-      user: null
+      type: undefined,
+      user: undefined
     }
   },
   externalDeviceIntegrations: [
