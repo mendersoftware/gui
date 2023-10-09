@@ -140,8 +140,8 @@ export const completeUpgrade = (tenantId, plan) => dispatch =>
 const prepareAuditlogQuery = ({ startDate, endDate, user: userFilter, type, detail: detailFilter, sort = {} }) => {
   const userId = userFilter?.id || userFilter;
   const detail = detailFilter?.id || detailFilter;
-  const createdAfter = endDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
-  const createdBefore = startDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
+  const createdAfter = startDate ? `&created_after=${Math.round(Date.parse(startDate) / 1000)}` : '';
+  const createdBefore = endDate ? `&created_before=${Math.round(Date.parse(endDate) / 1000)}` : '';
   const typeSearch = type ? `&object_type=${type.value}`.toLowerCase() : '';
   const userSearch = userId ? `&actor_id=${userId}` : '';
   const objectSearch = type && detail ? `&${type.queryParameter}=${encodeURIComponent(detail)}` : '';

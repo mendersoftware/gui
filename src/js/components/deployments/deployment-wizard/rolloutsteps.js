@@ -149,12 +149,17 @@ export const RolloutStepsContainer = ({ className = '', disabled, onStepChange, 
       <RolloutSteps disabled={disabled} onStepChange={onStepChange} release={release} steps={steps} />
       {onStepChange && !disabled && (
         <InfoText>
-          A &apos;pause&apos; means each device will pause its update after completing the previous step, and wait for approval before continuing. You can grant
-          approval by clicking &quot;continue&quot; in the deployment progress UI. <DocsLink path="" title="Learn more" />
+          A &apos;pause&apos; means each device will pause its update after completing the previous step, and wait for approval before continuing.
+          <br />
+          You can grant approval by clicking &quot;continue&quot; in the deployment progress UI. <DocsLink path="" title="Learn more" />
         </InfoText>
       )}
     </div>
-    {disabled && <MenderHelpTooltip id={HELPTOOLTIPS.phasedPausedDeployments.id} />}
+    {disabled && (
+      <div className="flexbox margin-left-small" style={{ marginTop: -30 }}>
+        <MenderHelpTooltip id={HELPTOOLTIPS.phasedPausedDeployments.id} />
+      </div>
+    )}
   </div>
 );
 

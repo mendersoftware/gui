@@ -89,7 +89,7 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
   const dropzoneRef = useRef();
   const uploading = useSelector(state => state.app.uploading);
   const releasesListState = useSelector(getReleaseListState);
-  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, tags = [], total, type } = releasesListState;
+  const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, selectedTags = [], total, type } = releasesListState;
   const hasReleases = useSelector(getHasReleases);
   const features = useSelector(getFeatures);
   const releases = useSelector(getReleasesList);
@@ -133,7 +133,7 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
     [JSON.stringify(features)]
   );
 
-  const isFiltering = !!(tags.length || type || searchTerm);
+  const isFiltering = !!(selectedTags.length || type || searchTerm);
   const potentialTotal = isFiltering ? searchTotal : total;
   if (!hasReleases) {
     return (

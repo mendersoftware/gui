@@ -16,15 +16,15 @@ import React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import { undefineds } from '../../../../tests/mockData';
-import { render } from '../../../../tests/setupTests';
+import { undefineds } from '../../../../../tests/mockData';
+import { formRenderWrapper } from './form.test';
 import TimeframePicker from './timeframe-picker';
 
 describe('TimeframePicker Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(
+    const { baseElement } = formRenderWrapper(
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <TimeframePicker />
+        <TimeframePicker tonight={new Date().toISOString()} />
       </LocalizationProvider>
     );
     const view = baseElement.firstChild;
