@@ -132,8 +132,7 @@ export const GlobalSettingsDialog = ({
   const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
   const [currentIntervalUnit, setCurrentIntervalUnit] = useState(offlineThresholdSettings.intervalUnit);
   const [intervalErrorText, setIntervalErrorText] = useState('');
-  const debouncedInterval = useDebounce(currentInterval, TIMEOUTS.debounceShort);
-  const debouncedIntervalUnit = useDebounce(currentIntervalUnit, TIMEOUTS.debounceShort);
+  const debouncedOfflineThreshold = useDebounce({ interval: currentInterval, intervalUnit: currentIntervalUnit }, TIMEOUTS.fiveSeconds);
   const timer = useRef(false);
   const { classes } = useStyles();
   const { needsDeploymentConfirmation = false } = settings;
@@ -153,8 +152,9 @@ export const GlobalSettingsDialog = ({
     if (!window.sessionStorage.getItem(settingsKeys.initialized) || !timer.current) {
       return;
     }
-    saveGlobalSettings({ offlineThreshold: { interval: debouncedInterval, intervalUnit: debouncedIntervalUnit } }, false, true);
-  }, [debouncedInterval, debouncedIntervalUnit, saveGlobalSettings]);
+    saveGlobalSettings({ offlineThreshold: debouncedOfflineThreshold }, false, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(debouncedOfflineThreshold), saveGlobalSettings]);
 
   useEffect(() => {
     const initTimer = setTimeout(() => (timer.current = true), TIMEOUTS.threeSeconds);

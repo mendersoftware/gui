@@ -23,7 +23,7 @@ import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } fro
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
-import { getFeatures, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization, getVersionInformation } from '../../../selectors';
+import { getFeatures, getFullVersionInformation, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization } from '../../../selectors';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import CopyCode from '../copy-code';
 import DocsLink from '../docslink';
@@ -173,7 +173,7 @@ export const PhysicalDeviceOnboarding = ({ progress }) => {
   const isPreRelease = useSelector(getIsPreview);
   const onboardingState = useSelector(getOnboardingState);
   const { tenant_token: tenantToken } = useSelector(getOrganization);
-  const { Integration: version } = useSelector(getVersionInformation);
+  const { Integration: version } = useSelector(getFullVersionInformation);
   const dispatch = useDispatch();
 
   useEffect(() => {
