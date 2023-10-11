@@ -19,14 +19,15 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
     <div
       class="flexbox centered"
     >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-fsedue-MuiButtonBase-root-MuiButton-root-addOnPill"
-        disabled=""
-        tabindex="-1"
-        type="button"
+      <div
+        class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1i7ayqp-MuiChip-root-addOnPill"
       >
-        Add-on
-      </button>
+        <span
+          class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
+        >
+          Add-on
+        </span>
+      </div>
     </div>
   </div>
   <div>
