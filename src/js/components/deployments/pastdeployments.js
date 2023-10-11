@@ -105,7 +105,6 @@ export const Past = props => {
   );
 
   useEffect(() => {
-    console.log('getting list with', startDate);
     const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
     setLoading(true);

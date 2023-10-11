@@ -42,6 +42,7 @@ import SearchResult from './search-result';
 import Uploads from './uploads';
 
 const activationPath = '/activate';
+const trackingBlacklist = [/\/password\/.+/i];
 export const timeout = 900000; // 15 minutes idle time
 const cookies = new Cookies();
 
@@ -110,6 +111,8 @@ export const AppRoot = () => {
       } else if (page.startsWith(activationPath)) {
         dispatch(setAccountActivationCode(page.substring(activationPath.length + 1)));
         navigate('/settings/my-profile', { replace: true });
+      } else if (trackingBlacklist.some(item => !!page.match(item))) {
+        return;
       }
       Tracking.pageview(page);
     },

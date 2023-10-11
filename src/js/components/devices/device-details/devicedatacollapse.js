@@ -13,11 +13,11 @@
 //    limitations under the License.
 import React from 'react';
 
-import { Button } from '@mui/material';
+import { Chip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
-  addOnPill: { marginRight: theme.spacing(2), fontWeight: 900, fontSize: 'smaller' }
+  addOnPill: { marginRight: theme.spacing(2) }
 }));
 
 export const DeviceDataCollapse = ({ children, className = '', header, isAddOn = false, title }) => {
@@ -27,13 +27,7 @@ export const DeviceDataCollapse = ({ children, className = '', header, isAddOn =
     <div className={`margin-bottom ${className}`}>
       <div className="flexbox space-between center-aligned">
         {typeof title === 'string' ? <h4 className="margin-bottom-small">{title}</h4> : title}
-        <div className="flexbox centered">
-          {isAddOn && (
-            <Button className={classes.addOnPill} variant="contained" disabled>
-              Add-on
-            </Button>
-          )}
-        </div>
+        <div className="flexbox centered">{isAddOn && <Chip className={classes.addOnPill} label="Add-on" />}</div>
       </div>
       <div>{header}</div>
       {children}
