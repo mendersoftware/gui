@@ -212,7 +212,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
 }
 
 .emotion-5 {
-  max-width: 640px;
+  max-width: 1280px;
 }
 
 <div>
