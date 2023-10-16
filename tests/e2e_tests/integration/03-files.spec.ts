@@ -23,6 +23,8 @@ import { selectors, timeouts } from '../utils/constants';
 
 dayjs.extend(isBetween);
 
+const releaseTag = 'someTag';
+
 test.describe('Files', () => {
   const fileName = 'mender-demo-artifact.mender';
   test.use({ storageState: 'storage.json' });
@@ -95,21 +97,24 @@ test.describe('Files', () => {
       expect(await page.getByText('add release tags').isVisible()).toBeTruthy();
       await editButton.click();
     }
-    await page.getByPlaceholder(/enter release tags/i).fill('someTag');
+    await page.getByPlaceholder(/enter release tags/i).fill(releaseTag);
     await page.getByTestId('CheckIcon').click();
     await page.press('body', 'Escape');
-    expect(await page.getByText('someTag').isVisible()).toBeTruthy();
+    expect(await page.getByText(releaseTag).isVisible()).toBeTruthy();
   });
 
   test('allows release tags filtering', async ({ loggedInPage: page }) => {
     await page.click(`.leftNav :text('Releases')`);
-    expect(await page.getByText('someTag').isVisible()).toBeTruthy();
+    expect(await page.getByText(releaseTag).isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill('foo,');
     await page.waitForTimeout(timeouts.oneSecond);
     expect(await page.getByText(/There are no Releases/i).isVisible()).toBeTruthy();
     await page.getByText(/Clear filter/i).click();
     await page.waitForTimeout(timeouts.oneSecond);
-    expect(await page.getByText('someTag').isVisible()).toBeTruthy();
+    expect(await page.getByText(releaseTag).isVisible()).toBeTruthy();
+    await page.getByPlaceholder(/select tags/i).fill(`${releaseTag.toLowerCase()},`);
+    await page.waitForTimeout(timeouts.oneSecond);
+    expect(await page.getByText(/There are no Releases/i).isVisible()).not.toBeTruthy();
   });
 
   // test('allows uploading custom file creations', () => {
