@@ -65,7 +65,7 @@ export const initialState = {
     isLoading: undefined,
     searchTerm: '',
     searchTotal: 0,
-    tags: [],
+    selectedTags: [],
     total: 0,
     type: ''
   },

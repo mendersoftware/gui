@@ -296,10 +296,10 @@ const releaseListRetrieval = config => {
 
 const deductSearchState = (receivedReleases, config, total, state) => {
   let releaseListState = { ...state.releasesList };
-  const { searchTerm, searchOnly, sort = {}, tags = [], type } = config;
+  const { searchTerm, searchOnly, sort = {}, selectedTags = [], type } = config;
   const flattenedReleases = Object.values(receivedReleases).sort(customSort(sort.direction === SORTING_OPTIONS.desc, sort.key));
   const releaseIds = flattenedReleases.map(item => item.name);
-  const isFiltering = !!(tags.length || type || searchTerm);
+  const isFiltering = !!(selectedTags.length || type || searchTerm);
   if (searchOnly) {
     releaseListState = { ...releaseListState, searchedIds: releaseIds };
   } else {
