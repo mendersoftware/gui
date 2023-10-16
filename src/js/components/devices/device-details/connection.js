@@ -40,7 +40,7 @@ import DeviceDataCollapse from './devicedatacollapse';
 const useStyles = makeStyles()(theme => ({
   buttonStyle: { textTransform: 'none', textAlign: 'left' },
   connectionIcon: { marginRight: theme.spacing() },
-  content: { maxWidth: theme.spacing(80) },
+  content: { maxWidth: 1280 },
   title: { marginRight: theme.spacing(0.5) },
   troubleshootButton: { marginRight: theme.spacing(2) }
 }));
