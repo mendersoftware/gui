@@ -70,7 +70,7 @@ test.describe('Layout assertions', () => {
     await page.click(selectors.deviceListCheckbox);
     await page.click('.MuiSpeedDial-fab');
     await page.click('[aria-label="group-add"]');
-    await page.type('#group-creation-selection', 'testgroup');
+    await page.getByLabel(/type to create new/i).fill('testgroup');
     await page.click('.MuiDialogTitle-root');
     await page.click(`:is(:text-matches('create group', 'i'), :text-matches('add to group', 'i'))`);
     await page.waitForSelector(`.grouplist:has-text('testgroup')`);
