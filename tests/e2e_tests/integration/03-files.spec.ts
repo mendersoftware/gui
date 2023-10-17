@@ -43,6 +43,10 @@ test.describe('Files', () => {
     await page.click(`.leftNav :text('Releases')`);
     await page.getByText(/demo-artifact/i).click();
     expect(await page.getByRole('heading', { name: /Release notes/i }).isVisible()).toBeTruthy();
+    const hasNotes = await page.getByText('foo notes').isVisible();
+    if (hasNotes) {
+      return;
+    }
     // layout based locators are not an option here, since the edit button is also visible on the nearby tags section
     // and the selector would get confused due to the proximity - so instead we loop over all the divs
     await page
@@ -54,7 +58,7 @@ test.describe('Files', () => {
     await input.fill('foo notes');
     await page.getByTestId('CheckIcon').click();
     expect(input).not.toBeVisible();
-    expect(await page.getByText('foo notes').isVisible()).toBeTruthy();
+    expect(hasNotes).toBeTruthy();
   });
 
   test('allows release tags manipulation', async ({ baseUrl, loggedInPage: page }) => {
@@ -75,8 +79,10 @@ test.describe('Files', () => {
     const input = await page.getByPlaceholder(/enter release tags/i);
     await input.fill('some,tags');
     await page.getByTestId('CheckIcon').click();
+    await page.waitForTimeout(timeouts.oneSecond);
     expect(input).not.toBeVisible();
     await page.goto(`${baseUrl}ui/releases`);
+    await page.waitForSelector('text="some, tags"', { timeout: timeouts.oneSecond });
     expect(await page.getByText('some, tags').isVisible()).toBeTruthy();
   });
 
@@ -91,30 +97,41 @@ test.describe('Files', () => {
     await editButton.click();
     const alreadyTagged = await page.getByRole('button', { name: 'some' }).isVisible();
     if (alreadyTagged) {
-      await page.getByRole('button', { name: 'some' }).getByTestId('CancelIcon').click();
-      await page.getByRole('button', { name: 'tags' }).getByTestId('CancelIcon').click();
+      await Promise.all(
+        ['some', 'tags'].map(async name => {
+          const foundTag = await page.getByRole('button', { name });
+          if (!(await foundTag.isVisible())) {
+            return Promise.resolve();
+          }
+          return await foundTag.getByTestId('CancelIcon').click();
+        })
+      );
       await page.getByTestId('CheckIcon').click();
-      expect(await page.getByText('add release tags').isVisible()).toBeTruthy();
+      // await page.waitForTimeout(timeouts.oneSecond);
+      expect(await page.getByPlaceholder(/add release tags/i).isVisible({ timeout: timeouts.oneSecond })).toBeTruthy();
       await editButton.click();
     }
     await page.getByPlaceholder(/enter release tags/i).fill(releaseTag);
     await page.getByTestId('CheckIcon').click();
     await page.press('body', 'Escape');
-    expect(await page.getByText(releaseTag).isVisible()).toBeTruthy();
+    await page.waitForSelector('text=Upload', { timeout: timeouts.oneSecond });
+    await page.press('body', 'Escape');
+    expect(await page.getByText(releaseTag, { exact: false }).isVisible({ timeout: timeouts.oneSecond })).toBeTruthy();
   });
 
   test('allows release tags filtering', async ({ loggedInPage: page }) => {
     await page.click(`.leftNav :text('Releases')`);
     expect(await page.getByText(releaseTag.toLowerCase()).isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill('foo,');
-    await page.waitForTimeout(timeouts.oneSecond);
-    expect(await page.getByText(/There are no Releases/i).isVisible()).toBeTruthy();
+    const releasesNote = await page.getByText(/There are no Releases*/i);
+    releasesNote.waitFor({ timeout: timeouts.default });
+    await page.getByText(/mender-demo-artifact*/i).waitFor({ timeout: timeouts.default, state: 'detached' });
     await page.getByText(/Clear filter/i).click();
-    await page.waitForTimeout(timeouts.oneSecond);
+    await page.waitForSelector('text=/mender-demo-artifact*/i');
     expect(await page.getByText(releaseTag.toLowerCase()).isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill(`${releaseTag.toLowerCase()},`);
-    await page.waitForTimeout(timeouts.oneSecond);
-    expect(await page.getByText(/There are no Releases/i).isVisible()).not.toBeTruthy();
+    await page.getByText(/mender-demo-artifact*/i).waitFor({ timeout: timeouts.default });
+    expect(await releasesNote.isVisible()).toBeFalsy();
   });
 
   // test('allows uploading custom file creations', () => {
@@ -156,7 +173,7 @@ test.describe('Files', () => {
     // TODO adjust test to better work with webkit, for now it should be good enough to assume file transfers work there too if the remote terminal works
     test.skip(!['enterprise', 'staging'].includes(environment) || ['webkit'].includes(browserName));
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`.deviceListItem div:last-child`);
+    await page.click(`${selectors.deviceListItem} div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
     await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });

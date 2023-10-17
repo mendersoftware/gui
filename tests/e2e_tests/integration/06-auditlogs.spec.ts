@@ -26,7 +26,7 @@ test.describe('Auditlogs', () => {
   test('will track remote terminal sessions', async ({ environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`.deviceListItem div:last-child`);
+    await page.click(`${selectors.deviceListItem} div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
     await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });

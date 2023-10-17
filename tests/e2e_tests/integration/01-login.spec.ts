@@ -109,7 +109,7 @@ test.describe('Login', () => {
     await isLoggedIn(page);
     let loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
     expect(loginVisible).toBeFalsy();
-    await page.getByText('Help & support').click();
+    await page.getByText(/Releases/i).click();
     const cookies = await context.cookies();
     await context.storageState({ path: 'storage.json' });
 
