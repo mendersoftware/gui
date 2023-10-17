@@ -36,7 +36,7 @@ test.describe('Deployments', () => {
     await page.click('[aria-label="deploy"]');
     await page.waitForSelector(selectors.deviceGroupSelect, { timeout: timeouts.fiveSeconds });
     await page.focus(selectors.deviceGroupSelect);
-    await page.type(selectors.deviceGroupSelect, 'All');
+    await page.getByPlaceholder(/select a device group/i).fill('All');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('All devices')`);
     const creationButton = await page.waitForSelector(selectors.deploymentCreation);
     await creationButton.scrollIntoViewIfNeeded();
@@ -58,15 +58,15 @@ test.describe('Deployments', () => {
     await page.click('.MuiSpeedDial-fab');
     await page.click('[aria-label="create-deployment"]');
     await page.waitForSelector(selectors.releaseSelect, { timeout: timeouts.fiveSeconds });
-    const releaseSelect = page.locator(selectors.releaseSelect);
+    const releaseSelect = await page.locator(selectors.releaseSelect);
     await releaseSelect.focus();
-    await releaseSelect.type('mender-demo');
+    await releaseSelect.fill('mender-demo');
     await page.click(`#deployment-release-selection-listbox li`);
     await page.getByRole('button', { name: 'Clear' }).click();
     const textContent = await releaseSelect.textContent();
     expect(textContent).toBeFalsy();
     await releaseSelect.focus();
-    await releaseSelect.type('mender-demo');
+    await releaseSelect.fill('mender-demo');
     await page.click(`#deployment-release-selection-listbox li`);
     const creationButton = await page.waitForSelector(selectors.deploymentCreation);
     await creationButton.scrollIntoViewIfNeeded();
@@ -86,13 +86,15 @@ test.describe('Deployments', () => {
     await page.click(`button:has-text('Create a deployment')`);
 
     await page.waitForSelector(selectors.releaseSelect, { timeout: timeouts.fiveSeconds });
-    await page.focus(selectors.releaseSelect);
-    await page.type(selectors.releaseSelect, 'mender');
+    const releaseSelect = await page.locator(selectors.releaseSelect);
+    await releaseSelect.focus();
+    await releaseSelect.fill('mender');
     await page.click(`#deployment-release-selection-listbox li:has-text('mender-demo-artifact')`);
 
     await page.waitForSelector(selectors.deviceGroupSelect, { timeout: timeouts.fiveSeconds });
-    await page.focus(selectors.deviceGroupSelect);
-    await page.type(selectors.deviceGroupSelect, 'test');
+    const deviceGroupSelect = await page.locator(selectors.deviceGroupSelect);
+    await deviceGroupSelect.focus();
+    await deviceGroupSelect.fill('test');
     await page.click(`#deployment-device-group-selection-listbox li:has-text('testgroup')`);
     const creationButton = await page.waitForSelector(selectors.deploymentCreation);
     await creationButton.scrollIntoViewIfNeeded();

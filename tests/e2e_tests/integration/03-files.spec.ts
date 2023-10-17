@@ -162,10 +162,10 @@ test.describe('Files', () => {
     await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });
     await page.locator('.dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(selectors.placeholderExample, { clickCount: 3 });
-    await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
+    await page.getByPlaceholder(/installed-by-single-file/i).fill(`/tmp/${fileName}`);
     await page.getByRole('button', { name: /upload/i }).click();
     await page.getByRole('tab', { name: /download/i }).click();
-    await page.type(selectors.placeholderExample, `/tmp/${fileName}`);
+    await page.getByPlaceholder(/\/home\/mender/i).fill(`/tmp/${fileName}`);
     const [download] = await Promise.all([page.waitForEvent('download'), page.click('button:text("Download"):below(:text("file on the device"))')]);
     const downloadTargetPath = await download.path();
     const newFile = await fs.readFileSync(downloadTargetPath);

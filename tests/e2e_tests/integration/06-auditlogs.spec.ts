@@ -38,12 +38,13 @@ test.describe('Auditlogs', () => {
     // the terminal content might take a bit to get painted - thus the waiting
     await page.click(selectors.terminalElement, { timeout: timeouts.default });
 
-    await page.type(selectors.terminalText, 'passwd');
+    const terminalText = await page.locator(selectors.terminalText);
+    await terminalText.fill('passwd');
     await page.keyboard.press('Enter');
     const expectedPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalSecretContent.png');
     const elementHandle = await page.$(selectors.terminalElement);
     await elementHandle.screenshot({ path: expectedPath });
-    await page.type(selectors.terminalText, secret);
+    await terminalText.fill(secret);
 
     const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalSecretContent-actual.png');
     await elementHandle.screenshot({ path: screenShotPath });
