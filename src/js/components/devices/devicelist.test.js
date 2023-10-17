@@ -31,7 +31,6 @@ describe('DeviceList Component', () => {
         customColumnSizes={[]}
         devices={[]}
         deviceListState={defaultState.devices.deviceList}
-        selectedRows={[]}
         onPageChange={jest.fn}
         pageTotal={50}
       />
@@ -58,23 +57,26 @@ describe('DeviceList Component', () => {
     let result = calculateResizeChange({ columnElements, columnHeaders, e: { clientX: 80 }, index: 2, prev: 90 });
     expect(result).toEqual([
       { attribute: { name: 'other', scope: 'thing' }, size: 120 },
-      { attribute: { name: 'more', scope: 'thing' }, size: 230 },
-      { attribute: { name: 'yet', scope: 'thing' }, size: 130 },
-      { attribute: { name: 'different', scope: 'thing' }, size: 150 }
+      { attribute: { name: 'more', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'yet', scope: 'thing' }, size: 230 },
+      { attribute: { name: 'different', scope: 'thing' }, size: 130 },
+      { attribute: { name: 'last', scope: 'thing' }, size: 150 }
     ]);
     result = calculateResizeChange({ columnElements, columnHeaders, e: { clientX: 90 }, index: 2, prev: 80 });
     expect(result).toEqual([
       { attribute: { name: 'other', scope: 'thing' }, size: 120 },
-      { attribute: { name: 'more', scope: 'thing' }, size: 250 },
-      { attribute: { name: 'yet', scope: 'thing' }, size: 110 },
-      { attribute: { name: 'different', scope: 'thing' }, size: 150 }
+      { attribute: { name: 'more', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'yet', scope: 'thing' }, size: 250 },
+      { attribute: { name: 'different', scope: 'thing' }, size: 110 },
+      { attribute: { name: 'last', scope: 'thing' }, size: 150 }
     ]);
     result = calculateResizeChange({ columnElements, columnHeaders, e: { clientX: 90 }, index: columnElements.length - 1, prev: 80 });
     expect(result).toEqual([
       { attribute: { name: 'other', scope: 'thing' }, size: 120 },
-      { attribute: { name: 'more', scope: 'thing' }, size: 240 },
-      { attribute: { name: 'yet', scope: 'thing' }, size: 120 },
-      { attribute: { name: 'different', scope: 'thing' }, size: 150 }
+      { attribute: { name: 'more', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'yet', scope: 'thing' }, size: 240 },
+      { attribute: { name: 'different', scope: 'thing' }, size: 120 },
+      { attribute: { name: 'last', scope: 'thing' }, size: 150 }
     ]);
   });
 
@@ -94,8 +96,6 @@ describe('DeviceList Component', () => {
         customColumnSizes={[]}
         devices={devices}
         deviceListState={defaultState.devices.deviceList}
-        selectedRows={[]}
-        headerKeys="1-2-3-4"
         idAttribute="id"
         onExpandClick={onExpandClickMock}
         onResizeColumns={onResizeColumns}
@@ -103,7 +103,6 @@ describe('DeviceList Component', () => {
         onSelect={onSelect}
         onSort={onSort}
         pageTotal={pageTotal}
-        setSnackbar={jest.fn}
       />
     );
     render(ui);

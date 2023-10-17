@@ -16,7 +16,7 @@ import Dropzone from 'react-dropzone';
 import { useDispatch } from 'react-redux';
 
 // material ui
-import { Clear as ClearIcon, CloudUpload as FileIcon } from '@mui/icons-material';
+import { Clear as ClearIcon, CloudUploadOutlined as FileIcon } from '@mui/icons-material';
 import { IconButton, TextField } from '@mui/material';
 
 import { setSnackbar } from '../../../actions/appActions';

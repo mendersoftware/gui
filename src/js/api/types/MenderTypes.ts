@@ -76,6 +76,7 @@ export { DeviceState } from "./DeviceState";
 export type { DeviceStateIot_manager } from "./DeviceStateIot_manager";
 export { DeviceStatus } from "./DeviceStatus";
 export type { DeviceWithImage } from "./DeviceWithImage";
+export type { DirectUploadMetadata } from "./DirectUploadMetadata";
 export type { EmailVerificationCompletion } from "./EmailVerificationCompletion";
 export type { EmailVerificationRequest } from "./EmailVerificationRequest";
 export type { Error } from "./Error";

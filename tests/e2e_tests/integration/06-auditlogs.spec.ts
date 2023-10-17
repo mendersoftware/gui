@@ -29,9 +29,9 @@ test.describe('Auditlogs', () => {
     await page.click(`.deviceListItem div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
-    const terminalLaunchButton = await page.waitForSelector('text=/Remote Terminal session/i', { timeout: timeouts.tenSeconds });
-    await terminalLaunchButton.scrollIntoViewIfNeeded();
-    await page.click(`css=.expandedDevice >> text=Remote Terminal session`);
+    await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });
+    const connectionButton = await page.getByRole('button', { name: /connect/i });
+    await connectionButton.first().click();
     await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
     expect(await page.isVisible('.terminal.xterm canvas')).toBeTruthy();
 
@@ -49,7 +49,6 @@ test.describe('Auditlogs', () => {
     await elementHandle.screenshot({ path: screenShotPath });
     const { pass } = compareImages(expectedPath, screenShotPath);
     expect(pass).toBeTruthy();
-    await page.click(`button:has-text('Close')`);
     await page.click('[aria-label="close"]'); // short-form
     await page.click(`.leftNav.navLink:has-text('Audit log')`);
 

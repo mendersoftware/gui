@@ -87,12 +87,10 @@ describe('locationutils', () => {
         today,
         tonight
       });
-      const endDate = new Date('2019-01-13');
-      endDate.setHours(23, 59, 59, 999);
       expect(result).toEqual({
         detail: 'testgroup',
-        endDate: endDate.toISOString(),
-        startDate,
+        endDate: '2019-01-13T23:59:59.999',
+        startDate: startDate.replace('Z', ''),
         type: AUDIT_LOGS_TYPES[2],
         user: '1'
       });
@@ -124,7 +122,7 @@ describe('locationutils', () => {
         expect(result).toEqual({
           deploymentObject: {},
           general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.finished.key },
-          [DEPLOYMENT_STATES.finished]: { startDate: today, endDate: tonight, search: 'someSearch', type: 'configuration' }
+          [DEPLOYMENT_STATES.finished]: { startDate: '', endDate: tonight, search: 'someSearch', type: 'configuration' }
         });
       });
       it('works as expected - pt3', () => {
@@ -136,7 +134,7 @@ describe('locationutils', () => {
         expect(result).toEqual({
           deploymentObject: {},
           general: { showCreationDialog: false, showReportDialog: false, state: DEPLOYMENT_ROUTES.finished.key },
-          [DEPLOYMENT_STATES.finished]: { startDate: '2000-01-25T00:00:00.000Z', endDate: '2020-05-02T23:59:59.999Z', search: '', type: '' }
+          [DEPLOYMENT_STATES.finished]: { startDate: '2000-01-25T00:00:00.000', endDate: '2020-05-02T23:59:59.999', search: '', type: '' }
         });
       });
       it('works as expected - pt4', () => {

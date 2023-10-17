@@ -50,7 +50,7 @@ test.describe('Layout assertions', () => {
       await pendingMessage.waitFor({ timeout: timeouts.sixtySeconds });
       await pendingMessage.click();
       await page.click(selectors.deviceListCheckbox);
-      await page.hover('.MuiSpeedDial-fab');
+      await page.click('.MuiSpeedDial-fab');
       await page.click('[aria-label="accept"]');
     }
     await page.locator(`input:near(:text("Status:"))`).first().click({ force: true });
@@ -68,7 +68,7 @@ test.describe('Layout assertions', () => {
     test.skip(wasGrouped, 'looks like the device was grouped already, continue with the remaining tests');
     await page.click(`.leftNav :text('Devices')`);
     await page.click(selectors.deviceListCheckbox);
-    await page.hover('.MuiSpeedDial-fab');
+    await page.click('.MuiSpeedDial-fab');
     await page.click('[aria-label="group-add"]');
     await page.type('#group-creation-selection', 'testgroup');
     await page.click('.MuiDialogTitle-root');

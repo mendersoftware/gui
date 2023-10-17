@@ -530,7 +530,7 @@ export const createFileDownload = (content, filename) => createDownload('data:te
 
 export const getISOStringBoundaries = currentDate => {
   const date = [currentDate.getUTCFullYear(), `0${currentDate.getUTCMonth() + 1}`.slice(-2), `0${currentDate.getUTCDate()}`.slice(-2)].join('-');
-  return { start: `${date}T00:00:00.000Z`, end: `${date}T23:59:59.999Z` };
+  return { start: `${date}T00:00:00.000`, end: `${date}T23:59:59.999` };
 };
 
 export const isDarkMode = mode => mode === DARK_MODE;

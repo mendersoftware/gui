@@ -65,12 +65,16 @@ export const getUpdateTypes = state => state.releases.updateTypes;
 export const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
 const getDeploymentsById = state => state.deployments.byId;
 export const getDeploymentsByStatus = state => state.deployments.byStatus;
-export const getVersionInformation = state => state.app.versionInformation;
+export const getFullVersionInformation = state => state.app.versionInformation;
 const getCurrentUserId = state => state.users.currentUser;
 const getUsersById = state => state.users.byId;
 export const getCurrentUser = createSelector([getUsersById, getCurrentUserId], (usersById, userId) => usersById[userId] ?? {});
 export const getUserSettings = state => state.users.userSettings;
-export const getIsPreview = createSelector([getVersionInformation], ({ Integration }) => versionCompare(Integration, 'next') > -1);
+
+export const getVersionInformation = createSelector([getFullVersionInformation, getFeatures], ({ Integration, ...remainder }, { isHosted }) =>
+  isHosted && Integration !== 'next' ? remainder : { ...remainder, Integration }
+);
+export const getIsPreview = createSelector([getFullVersionInformation], ({ Integration }) => versionCompare(Integration, 'next') > -1);
 
 export const getShowHelptips = createSelector([getTooltipsById], tooltips =>
   Object.values(tooltips).reduce((accu, { readState }) => accu || readState === READ_STATES.unread, false)

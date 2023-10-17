@@ -37,12 +37,12 @@ const useStyles = makeStyles()(theme => ({
   filterReset: { right: theme.spacing(3) }
 }));
 
-export const Filters = ({ className = '', defaultValues, filters = [], initialValues, onChange }) => {
+export const Filters = ({ className = '', defaultValues, filters = [], initialValues, onChange, fieldResetTrigger = '', dirtyField, clearDirty }) => {
   const { classes } = useStyles();
   const [values, setValues] = useState(initialValues);
 
   const methods = useForm({ mode: 'onChange', defaultValues });
-  const { formState, reset, watch, setValue } = methods;
+  const { formState, reset, resetField, watch, setValue, getValues } = methods;
   const { isDirty } = formState;
 
   useEffect(() => {
@@ -50,8 +50,22 @@ export const Filters = ({ className = '', defaultValues, filters = [], initialVa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(initialValues), setValue]);
 
+  useEffect(() => {
+    if (dirtyField && !formState.isDirty) {
+      setValue(dirtyField, getValues(dirtyField), { shouldDirty: true });
+      clearDirty('');
+    }
+  }, [clearDirty, dirtyField, formState, getValues, setValue]);
+
+  useEffect(() => {
+    if (!fieldResetTrigger) {
+      return;
+    }
+    resetField(fieldResetTrigger);
+  }, [fieldResetTrigger, resetField]);
+
   watch(setValues);
-  const debouncedValues = useDebounce(values, TIMEOUTS.default);
+  const debouncedValues = useDebounce(values, TIMEOUTS.oneSecond);
 
   useEffect(() => {
     onChange(debouncedValues);
@@ -76,3 +90,5 @@ export const Filters = ({ className = '', defaultValues, filters = [], initialVa
     </FormProvider>
   );
 };
+
+export default Filters;
