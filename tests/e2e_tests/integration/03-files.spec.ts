@@ -105,13 +105,13 @@ test.describe('Files', () => {
 
   test('allows release tags filtering', async ({ loggedInPage: page }) => {
     await page.click(`.leftNav :text('Releases')`);
-    expect(await page.getByText(releaseTag).isVisible()).toBeTruthy();
+    expect(await page.getByText(releaseTag.toLowerCase()).isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill('foo,');
     await page.waitForTimeout(timeouts.oneSecond);
     expect(await page.getByText(/There are no Releases/i).isVisible()).toBeTruthy();
     await page.getByText(/Clear filter/i).click();
     await page.waitForTimeout(timeouts.oneSecond);
-    expect(await page.getByText(releaseTag).isVisible()).toBeTruthy();
+    expect(await page.getByText(releaseTag.toLowerCase()).isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill(`${releaseTag.toLowerCase()},`);
     await page.waitForTimeout(timeouts.oneSecond);
     expect(await page.getByText(/There are no Releases/i).isVisible()).not.toBeTruthy();
