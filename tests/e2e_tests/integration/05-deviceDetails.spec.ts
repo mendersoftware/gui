@@ -104,7 +104,8 @@ test.describe('Device details', () => {
       const { pass } = compareImages(expectedPath, screenShotPath);
       expect(pass).toBeTruthy();
 
-      await page.type(selectors.terminalText, 'top');
+      const terminalText = await page.locator(selectors.terminalText);
+      await terminalText.fill('top');
       await page.keyboard.press('Enter');
       await page.waitForTimeout(timeouts.default);
 

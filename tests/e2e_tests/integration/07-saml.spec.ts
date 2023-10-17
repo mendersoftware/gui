@@ -76,7 +76,7 @@ test.describe('SAML Login via sso/id/login', () => {
       await page.locator('text=input with the text editor').click();
 
       const textfield = await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]');
-      await textfield.type(metadata.replace(/(?:\r\n|\r|\n)/g, ''));
+      await textfield.fill(metadata.replace(/(?:\r\n|\r|\n)/g, ''));
       console.log('typing metadata done.');
       // The screenshot saves the view of the typed metadata
       await page.screenshot({ 'path': 'saml-edit-saving.png' });
