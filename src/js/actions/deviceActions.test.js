@@ -72,7 +72,7 @@ const getGroupSuccessNotification = groupName => (
 );
 
 // eslint-disable-next-line no-unused-vars
-const { attributes, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
+const { attributes, check_in_time, updated_ts, ...expectedDevice } = defaultState.devices.byId.a1;
 const receivedExpectedDevice = { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: expectedDevice } };
 const defaultDeviceListState = {
   type: DeviceConstants.SET_DEVICE_LIST_STATE,
