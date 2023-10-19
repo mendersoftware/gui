@@ -25,6 +25,7 @@ import { BENEFITS, TIMEOUTS } from '../../constants/appConstants';
 import { useDebounce } from '../../utils/debouncehook';
 import EnterpriseNotification from '../common/enterpriseNotification';
 import InfoText from '../common/infotext';
+import Loader from '../common/loader';
 
 const useStyles = makeStyles()(theme => ({
   deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
@@ -89,10 +90,13 @@ export const ArtifactGenerationSettings = () => {
   const [inputWindow, setInputWindow] = useState(deltaConfig.inputWindow);
   const [duplicatesWindow, setDuplicatesWindow] = useState(deltaConfig.duplicatesWindow);
   const [instructionBuffer, setInstructionBuffer] = useState(deltaConfig.instructionBuffer);
-  const timer = useRef(null);
   const isInitialized = useRef(false);
 
   const { classes } = useStyles();
+
+  useEffect(() => {
+    dispatch(getDeploymentsConfig());
+  }, [dispatch]);
 
   useEffect(() => {
     if (deltaConfig.timeout === -1) {
@@ -111,35 +115,27 @@ export const ArtifactGenerationSettings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(deltaConfig), JSON.stringify(deltaLimits)]);
 
-  useEffect(() => {
-    dispatch(getDeploymentsConfig());
-  }, [dispatch]);
+  const debouncedConfig = useDebounce(
+    {
+      timeout: timeoutValue,
+      duplicatesWindow,
+      compressionLevel,
+      disableChecksum,
+      disableDecompression,
+      inputWindow,
+      instructionBuffer,
+      sourceWindow
+    },
+    TIMEOUTS.threeSeconds
+  );
 
   useEffect(() => {
     if (!isInitialized.current) {
       return;
     }
-    clearTimeout(timer.current);
-    timer.current = setTimeout(
-      () =>
-        dispatch(
-          saveDeltaDeploymentsConfig({
-            timeout: timeoutValue,
-            duplicatesWindow,
-            compressionLevel,
-            disableChecksum,
-            disableDecompression,
-            inputWindow,
-            instructionBuffer,
-            sourceWindow
-          })
-        ),
-      TIMEOUTS.twoSeconds
-    );
-    return () => {
-      clearTimeout(timer.current);
-    };
-  }, [compressionLevel, disableChecksum, disableDecompression, dispatch, duplicatesWindow, inputWindow, instructionBuffer, sourceWindow, timeoutValue]);
+    saveDeltaDeploymentsConfig(debouncedConfig);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, JSON.stringify(debouncedConfig)]);
 
   const numberInputs = useMemo(() => {
     return [
@@ -172,44 +168,52 @@ export const ArtifactGenerationSettings = () => {
         <h5 className="margin-left-small">Delta artifacts generation configuration</h5>
         <EnterpriseNotification className="margin-left-small" id={BENEFITS.deltaGeneration.id} />
       </div>
-      {deltaEnabled && isInitialized ? (
-        <div className="margin-small margin-top-none">
-          <div className="flexbox">
-            <NumberInputLimited
-              limit={{ default: deltaLimits.timeout.default, min: deltaLimits.timeout.min, max: deltaLimits.timeout.max }}
-              label="Timeout"
-              onChange={setTimeoutValue}
-              value={timeoutValue}
-            />
-            <span className="margin-left-small muted slightly-smaller">seconds</span>
-          </div>
-          <Typography className="margin-top-small" display="block" variant="caption">
-            xDelta3 arguments
-          </Typography>
-          <div className="flexbox column margin-left">
-            <FormControlLabel
-              control={<Checkbox color="primary" checked={disableChecksum} onChange={({ target: { checked } }) => setDisableChecksum(checked)} size="small" />}
-              label="Disable checksum"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={disableDecompression}
-                  onChange={({ target: { checked } }) => setDisableDecompression(checked)}
-                  size="small"
+      {deltaEnabled ? (
+        <>
+          {isInitialized.current ? (
+            <div className="margin-small margin-top-none">
+              <div className="flexbox">
+                <NumberInputLimited
+                  limit={{ default: deltaLimits.timeout.default, min: deltaLimits.timeout.min, max: deltaLimits.timeout.max }}
+                  label="Timeout"
+                  onChange={setTimeoutValue}
+                  value={timeoutValue}
                 />
-              }
-              label="Disable external decompression"
-            />
-            {numberInputs.map(({ default: defaultValue, key, setter, title, value, min = 0, max }) => (
-              <NumberInputLimited key={key} limit={{ default: defaultValue, max, min }} label={title} value={value} onChange={setter} />
-            ))}
-          </div>
-        </div>
+                <span className="margin-left-small muted slightly-smaller">seconds</span>
+              </div>
+              <Typography className="margin-top-small" display="block" variant="caption">
+                xDelta3 arguments
+              </Typography>
+              <div className="flexbox column margin-left">
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary" checked={disableChecksum} onChange={({ target: { checked } }) => setDisableChecksum(checked)} size="small" />
+                  }
+                  label="Disable checksum"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="primary"
+                      checked={disableDecompression}
+                      onChange={({ target: { checked } }) => setDisableDecompression(checked)}
+                      size="small"
+                    />
+                  }
+                  label="Disable external decompression"
+                />
+                {numberInputs.map(({ default: defaultValue, key, setter, title, value, min = 0, max }) => (
+                  <NumberInputLimited key={key} limit={{ default: defaultValue, max, min }} label={title} value={value} onChange={setter} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <Loader show />
+          )}
+        </>
       ) : (
         <InfoText>
-          <InfoOutlinedIcon style={{ fontSize: '14px', margin: '0 4px 4px 0', verticalAlign: 'middle' }} />
+          <InfoOutlinedIcon style={{ fontSize: 14, margin: '0 4px 4px 0', verticalAlign: 'middle' }} />
           Automatic delta artifacts generation is not enabled in your account. If you want to start using this feature,{' '}
           <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
             contact our team

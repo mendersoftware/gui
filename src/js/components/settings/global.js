@@ -132,7 +132,7 @@ export const GlobalSettingsDialog = ({
   const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
   const [currentIntervalUnit, setCurrentIntervalUnit] = useState(offlineThresholdSettings.intervalUnit);
   const [intervalErrorText, setIntervalErrorText] = useState('');
-  const debouncedOfflineThreshold = useDebounce({ interval: currentInterval, intervalUnit: currentIntervalUnit }, TIMEOUTS.fiveSeconds);
+  const debouncedOfflineThreshold = useDebounce({ interval: currentInterval, intervalUnit: currentIntervalUnit }, TIMEOUTS.threeSeconds);
   const timer = useRef(false);
   const { classes } = useStyles();
   const { needsDeploymentConfirmation = false } = settings;
@@ -157,7 +157,7 @@ export const GlobalSettingsDialog = ({
   }, [JSON.stringify(debouncedOfflineThreshold), saveGlobalSettings]);
 
   useEffect(() => {
-    const initTimer = setTimeout(() => (timer.current = true), TIMEOUTS.threeSeconds);
+    const initTimer = setTimeout(() => (timer.current = true), TIMEOUTS.fiveSeconds);
     return () => {
       clearTimeout(initTimer);
     };
