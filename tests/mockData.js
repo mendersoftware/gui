@@ -226,6 +226,7 @@ export const defaultState = {
           device_type: ['raspberrypi4'],
           ipv4_wlan0: '192.168.10.141/24'
         },
+        check_in_time: '2019-01-01T10:25:00.000Z',
         identity_data: { mac: defaultMacAddress },
         status: 'accepted',
         decommissioning: false,
@@ -247,6 +248,7 @@ export const defaultState = {
           ipv4_wlan0: '192.168.10.141/24',
           device_type: [deviceTypes.qemu]
         },
+        check_in_time: '2019-01-01T10:25:00.000Z',
         identity_data: { mac: defaultMacAddress },
         status: 'accepted',
         decommissioning: false,

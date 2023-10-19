@@ -63,12 +63,13 @@ export const inventoryDevice = {
     { name: 'mac_wlan0', value: 'dc:a6:32:12:ad:c0', scope: 'inventory' },
     { name: 'os', value: 'Raspbian GNU/Linux 10 (buster)', scope: 'inventory' },
     { name: 'created_ts', value: defaultCreationDate, scope: 'system' },
-    { name: 'updated_ts', value: '2019-01-01T10:25:00.000Z', scope: 'system' },
+    { name: 'updated_ts', value: defaultState.devices.byId.a1.updated_ts, scope: 'system' },
     { name: 'status', value: 'accepted', scope: 'identity' },
     { name: 'mac', value: defaultMacAddress, scope: 'identity' },
     { name: 'group', value: 'test', scope: 'system' }
   ],
-  updated_ts: '2019-01-01T10:25:00.000Z'
+  check_in_time: defaultState.devices.byId.a1.check_in_time,
+  updated_ts: defaultState.devices.byId.a1.updated_ts
 };
 
 const deviceAttributes = [
