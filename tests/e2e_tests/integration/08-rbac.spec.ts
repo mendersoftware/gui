@@ -31,7 +31,7 @@ test.describe('RBAC functionality', () => {
   });
   test('allows role creation for static groups', async ({ baseUrl, environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
-    // test.use({ storageState: 'storage.json' });
+    // test.use({ storageState: storagePath });
     await page.goto(`${baseUrl}ui/settings`);
     await page.waitForSelector('text=/Global settings/i');
     await page.click('text=/roles/i');

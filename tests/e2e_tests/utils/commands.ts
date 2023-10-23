@@ -23,7 +23,7 @@ import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import { v4 as uuid } from 'uuid';
 
-import { selectors } from './constants';
+import { selectors, storagePath } from './constants';
 
 export const getPeristentLoginInfo = () => {
   let loginInfo;
@@ -50,12 +50,41 @@ export const getStorageState = location => {
   return storageState;
 };
 
+export const getTokenFromStorage = (baseUrl: string) => {
+  const domain = baseUrlToDomain(baseUrl);
+  const origin = getStorageState(storagePath).origins.find(({ origin }) => origin === domain);
+  const textContent = origin?.localStorage.find(({ name }) => name === 'JWT').value ?? '';
+  let sessionInfo = { token: '' };
+  try {
+    sessionInfo = JSON.parse(textContent);
+  } catch (error) {
+    // most likely not logged in - nothing to do here
+  }
+  return sessionInfo.token;
+};
+
 export const prepareCookies = async (context: BrowserContext, domain: string, userId: string) => {
   await context.addCookies([
     { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
     { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
   ]);
   return context;
+};
+
+export const prepareNewPage = async ({ baseUrl, context, password, username, userId = '', token }) => {
+  let logInResult = { userId: '', token: '' };
+  if (username && password) {
+    logInResult = await login(username, password, baseUrl);
+  }
+  const domain = baseUrlToDomain(baseUrl);
+  context = await prepareCookies(context, domain, userId || logInResult.userId);
+  context.addInitScript(token => {
+    window.localStorage.setItem('JWT', JSON.stringify({ token }));
+    window.localStorage.setItem(`onboardingComplete`, 'true');
+  }, token || logInResult.token);
+  const page = await context.newPage();
+  await page.goto(`${baseUrl}ui`);
+  return page;
 };
 
 const updateConfigFileWithUrl = (fileName, serverUrl = 'https://docker.mender.io', token = '') => {

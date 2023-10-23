@@ -17,11 +17,11 @@ import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
 import { baseUrlToDomain, generateOtp, isLoggedIn, login, prepareCookies, startClient, tenantTokenRetrieval } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Settings', () => {
   test.describe('access token feature', () => {
-    test.use({ storageState: 'storage.json' });
+    test.use({ storageState: storagePath });
     test('allows access to access tokens', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings`);
       const isVisible = await page.isVisible(`text=/generate a token/i`);
@@ -69,7 +69,7 @@ test.describe('Settings', () => {
     });
   });
   test.describe('account upgrades', () => {
-    test.use({ storageState: 'storage.json' });
+    test.use({ storageState: storagePath });
     test('allows upgrading to Professional', async ({ environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
       await page.waitForTimeout(timeouts.default);
@@ -177,7 +177,7 @@ test.describe('Settings', () => {
     const replacementPassword = 'mysecretpassword!456';
 
     test('allows access to user management', async ({ baseUrl, loggedInPage: page }) => {
-      // test.use({ storageState: 'storage.json' });
+      // test.use({ storageState: storagePath });
       await page.goto(`${baseUrl}ui/settings`);
       await page.waitForSelector('text=/Global settings/i');
       await page.click('text=/user management/i');

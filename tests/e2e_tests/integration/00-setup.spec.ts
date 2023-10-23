@@ -16,7 +16,7 @@ import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
 import { baseUrlToDomain, isLoggedIn, login, prepareCookies, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Test setup', () => {
   test.describe('basic window checks', () => {
@@ -88,7 +88,7 @@ test.describe('Test setup', () => {
         localStorage.setItem(`onboardingComplete`, 'true');
       });
       await isLoggedIn(newPage);
-      await context.storageState({ path: 'storage.json' });
+      await context.storageState({ path: storagePath });
     });
   });
 
@@ -115,7 +115,7 @@ test.describe('Test setup', () => {
       if (environment === 'staging') {
         await startDockerClient(baseUrl, token);
       }
-      await context.storageState({ path: 'storage.json' });
+      await context.storageState({ path: storagePath });
       expect(token).toBeTruthy();
     });
   });

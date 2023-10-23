@@ -15,6 +15,7 @@ import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
 
 import { baseUrlToDomain, getPeristentLoginInfo, isLoggedIn, login, prepareCookies } from '../utils/commands';
+import { storagePath } from '../utils/constants';
 
 type TestFixtures = {
   baseUrl: string;
@@ -55,7 +56,7 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     await page.goto(`${baseUrl}ui/`);
     await isLoggedIn(page);
     await use(page);
-    await context.storageState({ path: 'storage.json' });
+    await context.storageState({ path: storagePath });
   },
   // eslint-disable-next-line no-empty-pattern
   environment: async ({}, use) => {

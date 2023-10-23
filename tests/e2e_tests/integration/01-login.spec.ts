@@ -16,7 +16,7 @@ import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
 import { baseUrlToDomain, isLoggedIn, prepareCookies } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {
@@ -32,7 +32,7 @@ test.describe('Login', () => {
       // confirm we have logged in successfully
       await isLoggedIn(page);
       await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
-      await context.storageState({ path: 'storage.json' });
+      await context.storageState({ path: storagePath });
     });
 
     test('does not stay logged in across sessions, after browser restart', async ({ baseUrl, page }) => {
@@ -112,9 +112,8 @@ test.describe('Login', () => {
     let loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
     expect(loginVisible).toBeFalsy();
     await page.getByText(/Releases/i).click();
-    await context.storageState({ path: 'storage.json' });
-
-    let differentContext = await browser.newContext({ storageState: 'storage.json' });
+    await context.storageState({ path: storagePath });
+    let differentContext = await browser.newContext({ storageState: storagePath });
     differentContext = await prepareCookies(differentContext, domain, '');
     const differentPage = await differentContext.newPage();
     await differentPage.goto(`${baseUrl}ui/`);
