@@ -92,7 +92,7 @@ export const loginUser = (userData, stayLoggedIn) => dispatch =>
     });
 
 export const logoutUser = () => (dispatch, getState) => {
-  if (getState().releases.uploadProgress) {
+  if (Object.keys(getState().app.uploadsById).length) {
     return Promise.reject();
   }
   return GeneralApi.post(`${useradmApiUrl}/auth/logout`).finally(() => {
