@@ -169,6 +169,8 @@ export const Header = ({ mode }) => {
     setHasOfferCookie(true);
   };
 
+  const handleClose = () => setAnchorEl(null);
+
   const showOffer =
     isHosted && moment().isBefore(currentOffer.expires) && (organization.trial ? currentOffer.trial : currentOffer[organization.plan]) && !hasOfferCookie;
 
@@ -214,7 +216,7 @@ export const Header = ({ mode }) => {
           </Button>
           <Menu
             anchorEl={anchorEl}
-            onClose={() => setAnchorEl(null)}
+            onClose={handleClose}
             open={Boolean(anchorEl)}
             anchorOrigin={{
               vertical: 'center',
@@ -225,24 +227,24 @@ export const Header = ({ mode }) => {
               horizontal: 'center'
             }}
           >
-            <MenuItem component={Link} to="/settings">
+            <MenuItem component={Link} to="/settings" onClick={handleClose}>
               Settings
             </MenuItem>
-            <MenuItem component={Link} to="/settings/my-profile">
+            <MenuItem component={Link} to="/settings/my-profile" onClick={handleClose}>
               My profile
             </MenuItem>
             {multitenancy && (
-              <MenuItem component={Link} to="/settings/organization-and-billing">
+              <MenuItem component={Link} to="/settings/organization-and-billing" onClick={handleClose}>
                 My organization
               </MenuItem>
             )}
             {allowUserManagement && (
-              <MenuItem component={Link} to="/settings/user-management">
+              <MenuItem component={Link} to="/settings/user-management" onClick={handleClose}>
                 User management
               </MenuItem>
             )}
             <MenuItem onClick={onToggleTooltips}>{`Mark help tips as ${showHelptips ? '' : 'un'}read`}</MenuItem>
-            <MenuItem component={Link} to="/help/get-started">
+            <MenuItem component={Link} to="/help/get-started" onClick={handleClose}>
               Help & support
             </MenuItem>
             <MenuItem onClick={onLogoutClick}>
