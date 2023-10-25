@@ -12,18 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import Linkify from 'react-linkify';
 
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen, render as testLibRender, waitFor } from '@testing-library/react';
 import 'jsdom-worker';
-import Cookies from 'universal-cookie';
 
 import { defaultState, mockDate, token, undefineds } from '../../../tests/mockData';
 import { render } from '../../../tests/setupTests';
 import * as DeviceActions from '../actions/deviceActions';
+import { getSessionInfo, maxSessionAge } from '../auth';
 import { TIMEOUTS } from '../constants/appConstants';
-import App, { timeout } from './app';
-
-jest.mock('../tracking');
+import App, { AppProviders } from './app';
 
 const preloadedState = {
   ...defaultState,
@@ -50,20 +49,22 @@ const preloadedState = {
 
 const reportsSpy = jest.spyOn(DeviceActions, 'deriveReportsData');
 
+jest.mock('react-linkify');
+
 describe('App Component', () => {
-  let cookies;
-  beforeEach(() => {
-    cookies = new Cookies();
-    cookies.get.mockReturnValue('omnomnom');
+  beforeAll(() => {
+    Linkify.default = jest.fn();
+    Linkify.default.mockReturnValue(null);
   });
   it(
     'renders correctly',
     async () => {
-      window.localStorage.getItem.mockReturnValueOnce('false');
       jest.replaceProperty(window.mender_environment, 'integrationVersion', 'next');
 
       const ui = <App />;
-      const { asFragment, rerender } = render(ui, { preloadedState });
+      const { asFragment, rerender } = render(ui, {
+        preloadedState: { ...preloadedState, users: { ...preloadedState.users, currentSession: getSessionInfo() } }
+      });
       await waitFor(() => expect(screen.queryByText(/see all deployments/i)).toBeInTheDocument(), { timeout: TIMEOUTS.fiveSeconds });
       await act(async () => {
         jest.runOnlyPendingTimers();
@@ -75,6 +76,10 @@ describe('App Component', () => {
       const view = asFragment();
       expect(view).toMatchSnapshot();
       expect(view).toEqual(expect.not.stringMatching(undefineds));
+      await act(async () => {
+        jest.runOnlyPendingTimers();
+        jest.runAllTicks();
+      });
       reportsSpy.mockClear();
     },
     10 * TIMEOUTS.oneSecond
@@ -83,27 +88,18 @@ describe('App Component', () => {
   it(
     'works as intended',
     async () => {
-      const state = {
-        ...preloadedState,
-        users: {
-          ...preloadedState.users,
-          currentUser: 'notNull'
-        }
-      };
-      window.localStorage.getItem.mockReturnValueOnce('false');
+      const currentSession = { expiresAt: new Date().toISOString(), token };
+      window.localStorage.getItem.mockImplementation(name => (name === 'JWT' ? JSON.stringify(currentSession) : undefined));
+
       const ui = <App />;
-      const { rerender } = render(ui, { preloadedState: state });
-      cookies.get.mockReturnValue(token);
-      act(() => {
-        jest.advanceTimersByTime(timeout + 500);
-        jest.runAllTicks();
+      const { rerender } = render(ui, {
+        preloadedState: { ...preloadedState, users: { ...preloadedState.users, currentSession, currentUser: 'a1' } }
       });
-      cookies.get.mockReturnValue('');
       await waitFor(() => expect(reportsSpy).toHaveBeenCalled(), { timeout: TIMEOUTS.threeSeconds });
-      await waitFor(() => rerender(ui));
       await act(async () => {
-        jest.runOnlyPendingTimers();
+        jest.advanceTimersByTime(maxSessionAge * 1000 + 500);
         jest.runAllTicks();
+        jest.runOnlyPendingTimers();
       });
       await waitFor(() => rerender(ui));
       await waitFor(() => expect(screen.queryByText(/Version:/i)).not.toBeInTheDocument(), { timeout: TIMEOUTS.fiveSeconds });
@@ -113,7 +109,32 @@ describe('App Component', () => {
         jest.runOnlyPendingTimers();
         jest.runAllTicks();
       });
+
       reportsSpy.mockClear();
+      window.localStorage.getItem.mockReset();
+    },
+    10 * TIMEOUTS.oneSecond
+  );
+
+  it.skip(
+    'is embedded in working providers',
+    async () => {
+      window.localStorage.getItem.mockImplementation(name => (name === 'JWT' ? JSON.stringify({ token }) : undefined));
+      // eslint-disable-next-line
+      const ui = <AppProviders basename="" />;
+      const { baseElement, rerender } = testLibRender(ui);
+      await waitFor(() => screen.queryByText('Software distribution'), { timeout: TIMEOUTS.fiveSeconds });
+      await waitFor(() => rerender(ui));
+      const view = baseElement.lastElementChild;
+      expect(view).toMatchSnapshot();
+      expect(view).toEqual(expect.not.stringMatching(undefineds));
+      await waitFor(() => expect(reportsSpy).toHaveBeenCalled(), { timeout: TIMEOUTS.fiveSeconds });
+      await act(async () => {
+        jest.runOnlyPendingTimers();
+        jest.runAllTicks();
+        return new Promise(resolve => resolve(), TIMEOUTS.fiveSeconds);
+      });
+      window.localStorage.getItem.mockReset();
     },
     10 * TIMEOUTS.oneSecond
   );
