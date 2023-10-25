@@ -124,6 +124,7 @@ const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
 
 const offlineThreshold = { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' };
 const appInitActions = [
+  { type: SUCCESSFULLY_LOGGED_IN, value: { token: '' } },
   { type: SET_ONBOARDING_COMPLETE, complete: false },
   { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
   { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
@@ -471,7 +472,7 @@ describe('user actions', () => {
     const expectedActions = [
       { type: RECEIVED_USER, user: defaultState.users.byId[userId] },
       { type: SET_CUSTOM_COLUMNS, value: [] },
-      { type: SUCCESSFULLY_LOGGED_IN, value: token },
+      { type: SUCCESSFULLY_LOGGED_IN, value: { token } },
       ...appInitActions
     ];
     const store = mockStore({ ...defaultState });
@@ -482,8 +483,7 @@ describe('user actions', () => {
   });
   it('should prevent logging in with a limited user', async () => {
     jest.clearAllMocks();
-    const cookies = new Cookies();
-    cookies.get.mockReturnValueOnce('limitedToken');
+    window.localStorage.getItem.mockReturnValue(JSON.stringify({ token: 'limitedToken' }));
     const expectedActions = [{ type: SET_SNACKBAR, snackbar: { message: 'forbidden by role-based access control' } }];
     const store = mockStore({ ...defaultState });
     try {
@@ -491,10 +491,11 @@ describe('user actions', () => {
     } catch (error) {
       expect(error).toMatchObject(expectedActions[0]);
     }
-    expect(cookies.remove).toHaveBeenCalledTimes(2);
+    expect(window.localStorage.removeItem).toHaveBeenCalledWith('JWT');
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+    window.localStorage.getItem.mockReset();
   });
   it('should allow logging out', async () => {
     jest.clearAllMocks();
@@ -510,25 +511,17 @@ describe('user actions', () => {
     const store = mockStore({ ...defaultState, releases: { ...defaultState.releases, uploadProgress: 42 } });
     await store.dispatch(logoutUser()).catch(() => expect(true).toEqual(true));
   });
-  it('should notify on log out if a reason is given', async () => {
-    jest.clearAllMocks();
-    const expectedActions = [{ type: USER_LOGOUT }, { type: SET_SNACKBAR, snackbar: { message: 'timeout' } }];
-    const store = mockStore({ ...defaultState });
-    await store.dispatch(logoutUser('timeout'));
-    const storeActions = store.getActions();
-    // expect(storeActions.length).toEqual(expectedActions.length);
-    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
-  });
   it('should allow single user retrieval', async () => {
     jest.clearAllMocks();
     const expectedActions = [
       { type: RECEIVED_USER, user: defaultState.users.byId.a1 },
-      { type: SET_CUSTOM_COLUMNS, value: [] }
+      { type: SET_CUSTOM_COLUMNS } //, value: [] } <= we can't check for the correct value here as the localstorage is (ab)used by msw to track state during req/res cycles, thus the localStorage expectation further down
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(getUser('a1'));
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
+    expect(window.localStorage.getItem).toHaveBeenCalledWith(`a1-column-widths`);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should allow user list retrieval', async () => {

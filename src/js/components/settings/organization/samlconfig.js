@@ -61,7 +61,7 @@ const defaultDetails = [
   { key: 'startURL', label: 'Start URL', getValue: id => `${window.location.origin}${useradmApiUrl}/auth/sso/${id}/login` }
 ];
 
-export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar }) => {
+export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar, token }) => {
   const [configDetails, setConfigDetails] = useState([]);
   const [fileContent, setFileContent] = useState('');
   const [hasSSOConfig, setHasSSOConfig] = useState(false);
@@ -166,6 +166,7 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar }) => {
         onClose={onOpenEditorClick}
         onSave={onSaveSSOSettings}
         setFileContent={setFileContent}
+        token={token}
       />
     </>
   );

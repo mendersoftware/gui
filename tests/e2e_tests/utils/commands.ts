@@ -50,9 +50,8 @@ export const getStorageState = location => {
   return storageState;
 };
 
-export const prepareCookies = async (context: BrowserContext, domain: string, userId: string, token: string) => {
+export const prepareCookies = async (context: BrowserContext, domain: string, userId: string) => {
   await context.addCookies([
-    { name: 'JWT', value: token, path: '/', domain },
     { name: `${userId}-onboarded`, value: 'true', path: '/', domain },
     { name: 'cookieconsent_status', value: 'allow', path: '/', domain }
   ]);

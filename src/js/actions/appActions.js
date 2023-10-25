@@ -14,7 +14,7 @@
 import Cookies from 'universal-cookie';
 
 import GeneralApi from '../api/general-api';
-import { getToken } from '../auth';
+import { getSessionInfo, getToken } from '../auth';
 import {
   SET_ENVIRONMENT_DATA,
   SET_FEATURES,
@@ -28,7 +28,7 @@ import {
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { DEVICE_STATES } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
-import { SET_TOOLTIPS_STATE } from '../constants/userConstants';
+import { SET_TOOLTIPS_STATE, SUCCESSFULLY_LOGGED_IN } from '../constants/userConstants';
 import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
 import { getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
@@ -127,6 +127,7 @@ export const parseEnvironmentInfo = () => (dispatch, getState) => {
     };
   }
   return Promise.all([
+    dispatch({ type: SUCCESSFULLY_LOGGED_IN, value: getSessionInfo() }),
     dispatch(setOnboardingComplete(onboardingComplete)),
     dispatch(setDemoArtifactPort(demoArtifactPort)),
     dispatch({ type: SET_FEATURES, value: environmentFeatures }),

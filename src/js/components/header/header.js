@@ -34,12 +34,12 @@ import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
 import { getAllDeviceCounts } from '../../actions/deviceActions';
 import { initializeSelf, logoutUser, setAllTooltipsReadState, setHideAnnouncement } from '../../actions/userActions';
-import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { READ_STATES } from '../../constants/userConstants';
-import { decodeSessionToken, isDarkMode } from '../../helpers';
+import { isDarkMode } from '../../helpers';
 import {
   getAcceptedDevices,
+  getCurrentSession,
   getCurrentUser,
   getDeviceCountsByStatus,
   getDeviceLimit,
@@ -105,10 +105,8 @@ const useStyles = makeStyles()(theme => ({
 export const Header = ({ mode }) => {
   const { classes } = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [loggingOut, setLoggingOut] = useState(false);
   const [gettingUser, setGettingUser] = useState(false);
   const [hasOfferCookie, setHasOfferCookie] = useState(false);
-  const sessionId = useDebounce(getToken(), TIMEOUTS.debounceDefault);
 
   const organization = useSelector(getOrganization);
   const { canManageUsers: allowUserManagement } = useSelector(getUserCapabilities);
@@ -124,23 +122,17 @@ export const Header = ({ mode }) => {
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
+  const { token } = useSelector(getCurrentSession);
+  const userId = useDebounce(user.id, TIMEOUTS.debounceDefault);
+
   const dispatch = useDispatch();
   const deviceTimer = useRef();
   const showHelptips = useSelector(getShowHelptips);
 
-  const updateUsername = useCallback(() => {
-    const userId = decodeSessionToken(getToken());
-    if (gettingUser || !userId) {
-      return;
-    }
-    setGettingUser(true);
-    // get current user
-    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
-  }, [dispatch, gettingUser]);
-
   useEffect(() => {
-    if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
-      updateUsername();
+    if ((!userId || !user.email?.length) && !gettingUser && token) {
+      setGettingUser(true);
+      dispatch(initializeSelf());
       return;
     }
     Tracking.setTrackingEnabled(hasTrackingEnabled);
@@ -151,7 +143,7 @@ export const Header = ({ mode }) => {
         dispatch(setFirstLoginAfterSignup(false));
       }
     }
-  }, [sessionId, user.id, user.email, gettingUser, loggingOut, user, hasTrackingEnabled, organization, updateUsername, firstLoginAfterSignup, dispatch]);
+  }, [dispatch, firstLoginAfterSignup, gettingUser, hasTrackingEnabled, organization, token, user, user.email, userId]);
 
   useEffect(() => {
     const showOfferCookie = cookies.get('offer') === currentOffer.name;
@@ -164,10 +156,8 @@ export const Header = ({ mode }) => {
   }, [dispatch]);
 
   const onLogoutClick = () => {
-    setGettingUser(false);
-    setLoggingOut(true);
     setAnchorEl(null);
-    dispatch(logoutUser());
+    dispatch(logoutUser()).then(() => window.location.replace('/ui/'));
   };
 
   const onSearch = useCallback((searchTerm, refreshTrigger) => dispatch(setSearchState({ refreshTrigger, searchTerm, page: 1 })), [dispatch]);

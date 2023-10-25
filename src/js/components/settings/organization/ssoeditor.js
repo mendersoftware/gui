@@ -48,7 +48,7 @@ const editorProps = {
   }
 };
 
-export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, onClose, onSave, setFileContent }) => {
+export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, onClose, onSave, setFileContent, token }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isMetadataValid, setIsMetadataValid] = useState(false);
   const editorRef = useRef();
@@ -64,7 +64,7 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
 
   const onEditClick = () => setIsEditing(true);
 
-  const onDownloadClick = () => createFileDownload(fileContent, 'metadata.xml');
+  const onDownloadClick = () => createFileDownload(fileContent, 'metadata.xml', token);
 
   const onCancelClick = useCallback(() => {
     if (isEditing) {

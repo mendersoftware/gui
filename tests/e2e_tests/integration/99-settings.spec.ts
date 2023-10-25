@@ -106,14 +106,8 @@ test.describe('Settings', () => {
   });
 
   test.describe('2FA setup', () => {
-    test('supports regular 2fa setup', async ({ baseUrl, context, environment, username, password }) => {
+    test('supports regular 2fa setup', async ({ baseUrl, environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
-      const { token, userId } = await login(username, password, baseUrl);
-      const domain = baseUrlToDomain(baseUrl);
-      context = await prepareCookies(context, domain, userId, token);
-      const page = await context.newPage();
-      await page.goto(`${baseUrl}ui`);
-
       let tfaSecret;
       try {
         tfaSecret = fs.readFileSync('secret.txt', 'utf8');
@@ -137,13 +131,7 @@ test.describe('Settings', () => {
       await page.fill('#token2fa', qrToken);
       await page.click(`css=button >> text=Verify`);
       await page.waitForSelector(`css=ol >> text=Verified`);
-      await page.click(`css=button >> text=Save`);
-      await page.click(`css=.header-dropdown >> text=${username}`);
-      await page.click(`css=span >> text='Log out'`);
-      await page.waitForTimeout(timeouts.default);
-      await context.clearCookies();
-      await page.goto(`${baseUrl}ui/`);
-      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
+      await page.getByRole('button', { name: /save/i }).click();
     });
     test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
@@ -152,23 +140,23 @@ test.describe('Settings', () => {
       // enter valid username and password
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
-      await page.click(`button:text('Log in')`);
+      await page.getByRole('button', { name: /log in/i }).click();
       await page.waitForTimeout(timeouts.default);
       await page.fill('#token2fa', '123456');
-      await page.click(`button:text('Log in')`);
+      await page.getByRole('button', { name: /log in/i }).click();
       // still on /login page plus an error is displayed
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
       await page.waitForSelector('text=/There was a problem logging in/', { timeout: timeouts.default });
     });
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
-      await page.goto(`${baseUrl}ui/login`);
+      await page.goto(`${baseUrl}ui/`);
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
-      await page.click(`button:text('Log in')`);
+      await page.getByRole('button', { name: /log in/i }).click();
       const newToken = await generateOtp();
       await page.fill('#token2fa', newToken);
-      await page.click(`button:text('Log in')`);
+      await page.getByRole('button', { name: /log in/i }).click();
       await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.click('text=/Enable Two Factor/');
@@ -176,10 +164,10 @@ test.describe('Settings', () => {
     });
     test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
-      await page.goto(`${baseUrl}ui/login`);
+      await page.goto(`${baseUrl}ui/`);
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
-      await page.click(`:is(button:has-text('Log in'))`);
+      await page.getByRole('button', { name: /log in/i }).click();
       await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings`);
     });
@@ -204,18 +192,26 @@ test.describe('Settings', () => {
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings/my-account`);
-      await page.click('#change_email');
+      await page.getByRole('button', { name: /change email/i }).click();
+      expect(await page.getByLabel(/current password/i).isVisible()).toBeTruthy();
     });
-    test('allows changing the password', async ({ baseUrl, browserName, loggedInPage: page, username, password }) => {
+    test('allows changing the password', async ({ baseUrl, browserName, context, username, password }) => {
       if (browserName === 'webkit') {
         test.skip();
       }
-      await page.goto(`${baseUrl}ui/settings/my-account`);
-      await page.click('#change_password');
+      const domain = baseUrlToDomain(baseUrl);
+      context = await prepareCookies(context, domain, '');
+      const page = await context.newPage();
+      await page.goto(`${baseUrl}ui/`);
+      await page.getByPlaceholder(/email/i).fill(username);
+      await page.getByLabel(/password/i).fill(password);
+      await page.getByRole('button', { name: /log in/i }).click();
+      await page.getByRole('button', { name: username }).click();
+      await page.getByText(/my profile/i).click();
+      await page.getByRole('button', { name: /change password/i }).click();
 
       expect(await page.$eval(selectors.password, (el: HTMLInputElement) => el.value)).toBeFalsy();
-      await page.click(`:is(button:has-text('Generate'))`);
-      await page.click(`:is(button:has-text('Generate'))`);
+      await page.getByRole('button', { exact: true, name: 'Generate' }).click();
       await page.click(selectors.passwordCurrent, { clickCount: 3 });
       await page.fill(selectors.passwordCurrent, password);
       const typedCurrentPassword = await page.$eval(selectors.passwordCurrent, (el: HTMLInputElement) => el.value);
@@ -226,28 +222,28 @@ test.describe('Settings', () => {
       const typedPassword = await page.$eval(selectors.password, (el: HTMLInputElement) => el.value);
       expect(typedPassword === replacementPassword);
       await page.fill(selectors.passwordConfirmation, replacementPassword);
-      await page.click(`button:has-text('Save')`);
+      await page.getByRole('button', { name: /save/i }).click();
       await page.waitForSelector('text=/user has been updated/i', { timeout: timeouts.tenSeconds });
-      await page.click(`:is(.header-dropdown:has-text('${username}'))`);
-
-      await page.click(`:is(span:has-text('Log out'))`);
-      await page.waitForSelector(`button:text('Log in')`);
-      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
+      await page.getByRole('button', { name: username }).click();
+      await page.getByText(/log out/i).click();
+      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 2 * timeouts.oneSecond });
+      expect(page.getByRole('button', { name: /log in/i }).isVisible()).toBeTruthy();
     });
 
     test('allows changing the password back', async ({ baseUrl, browserName, context, password, username }) => {
       if (browserName === 'webkit') {
         test.skip();
       }
-      const { token, userId } = await login(username, replacementPassword, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
-      context = await prepareCookies(context, domain, userId, token);
+      context = await prepareCookies(context, domain, '');
       const page = await context.newPage();
-      await page.goto(`${baseUrl}ui`);
-      await isLoggedIn(page);
-      await page.goto(`${baseUrl}ui/settings/my-account`);
-      await page.click('#change_password');
-
+      await page.goto(`${baseUrl}ui/`);
+      await page.getByPlaceholder(/email/i).fill(username);
+      await page.getByLabel(/password/i).fill(replacementPassword);
+      await page.getByRole('button', { name: /log in/i }).click();
+      await page.getByRole('button', { name: username }).click();
+      await page.getByText(/my profile/i).click();
+      await page.getByRole('button', { name: /change password/i }).click();
       await page.fill(selectors.password, password);
       const typedPassword = await page.$eval(selectors.password, (el: HTMLInputElement) => el.value);
       if (typedPassword !== password) {
@@ -258,7 +254,7 @@ test.describe('Settings', () => {
       await page.fill(selectors.passwordConfirmation, password);
       await page.click(selectors.passwordCurrent);
       await page.fill(selectors.passwordCurrent, replacementPassword);
-      await page.click(`:is(button:has-text('Save'))`);
+      await page.getByRole('button', { name: /save/i }).click();
       await page.waitForSelector('text=/user has been updated/i', { timeout: timeouts.tenSeconds });
       await page.waitForTimeout(timeouts.default);
 

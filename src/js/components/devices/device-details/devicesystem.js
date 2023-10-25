@@ -23,7 +23,7 @@ import { getSystemDevices } from '../../../actions/deviceActions';
 import { BENEFITS, SORTING_OPTIONS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { getDemoDeviceAddress, toggle } from '../../../helpers';
-import { getDevicesById, getIdAttribute, getIsPreview, getOrganization } from '../../../selectors';
+import { getCurrentSession, getDevicesById, getIdAttribute, getIsPreview, getOrganization } from '../../../selectors';
 import { TwoColumnData } from '../../common/configurationobject';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
@@ -129,13 +129,14 @@ const DeviceSystemTab = ({ device, ...remainder }) => {
   const [open, setOpen] = useState(false);
   const isPreRelease = useSelector(getIsPreview);
   const { tenant_token: tenantToken } = useSelector(getOrganization);
+  const { token } = useSelector(getCurrentSession);
 
   const gatewayIp = getDemoDeviceAddress([device]);
   const toggleDialog = () => setOpen(toggle);
   return (
     <>
       <DeviceSystem onConnectToGatewayClick={toggleDialog} {...{ device, ...remainder }} />
-      {open && <ConnectToGatewayDialog gatewayIp={gatewayIp} isPreRelease={isPreRelease} onCancel={toggleDialog} tenantToken={tenantToken} />}
+      {open && <ConnectToGatewayDialog gatewayIp={gatewayIp} isPreRelease={isPreRelease} onCancel={toggleDialog} tenantToken={tenantToken} token={token} />}
     </>
   );
 };

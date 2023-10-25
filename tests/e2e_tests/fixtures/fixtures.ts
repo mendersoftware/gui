@@ -41,17 +41,18 @@ const defaultConfig = {
 
 const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : coveredTest).extend<TestFixtures>({
   loggedInPage: async ({ baseUrl, browserName, context, password, username }, use) => {
-    // const storageState = JSON.parse(process.env.STORAGE || '{}');
-    // let context: BrowserContext = await browser.newContext({ storageState });
     if (!['firefox', 'webkit'].includes(browserName)) {
       await context.grantPermissions(['clipboard-read'], { origin: baseUrl });
     }
     const domain = baseUrlToDomain(baseUrl);
     const { token, userId } = await login(username, password, baseUrl);
-    context = await prepareCookies(context, domain, userId, token);
+    context = await prepareCookies(context, domain, userId);
+    context.addInitScript(token => {
+      window.localStorage.setItem('JWT', JSON.stringify({ token }));
+      window.localStorage.setItem(`onboardingComplete`, 'true');
+    }, token);
     const page = await context.newPage();
     await page.goto(`${baseUrl}ui/`);
-    await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
     await isLoggedIn(page);
     await use(page);
     await context.storageState({ path: 'storage.json' });

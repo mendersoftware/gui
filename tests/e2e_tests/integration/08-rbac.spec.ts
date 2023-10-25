@@ -85,7 +85,7 @@ test.describe('RBAC functionality', () => {
     await page.waitForSelector(selectors.password);
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
-    await page.click(`button:has-text('Log in')`);
+    await page.getByRole('button', { name: /log in/i }).click();
     await isLoggedIn(page);
   });
 
@@ -99,7 +99,7 @@ test.describe('RBAC functionality', () => {
     await page.waitForSelector(selectors.password);
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
-    await page.click(`button:has-text('Log in')`);
+    await page.getByRole('button', { name: /log in/i }).click();
     await isLoggedIn(page);
     await page.reload();
     const releasesButton = page.getByText(/releases/i);

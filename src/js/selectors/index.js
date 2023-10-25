@@ -37,6 +37,7 @@ export const getTooltipsById = state => state.users.tooltips.byId;
 export const getRolesById = state => state.users.rolesById;
 export const getOrganization = state => state.organization.organization;
 export const getAcceptedDevices = state => state.devices.byStatus.accepted;
+export const getCurrentSession = state => state.users.currentSession;
 const getDevicesByStatus = state => state.devices.byStatus;
 export const getDevicesById = state => state.devices.byId;
 export const getDeviceReports = state => state.devices.reports;

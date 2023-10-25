@@ -23,7 +23,7 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { BEGINNING_OF_TIME, TIMEOUTS } from '../../../constants/appConstants';
-import { getFeatures, getIsPreview, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
+import { getCurrentSession, getFeatures, getIsPreview, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import Tracking from '../../../tracking';
 import { useSession } from '../../../utils/sockethook';
 import { MaybeTime } from '../../common/time';
@@ -96,6 +96,7 @@ const TroubleshootContent = ({ device, onDownload, setSocketClosed, setUploadPat
   const { hasAuditlogs, isEnterprise } = useSelector(getTenantCapabilities);
   const { canAuditlog } = useSelector(getUserCapabilities);
   const canPreview = useSelector(getIsPreview);
+  const { token } = useSelector(getCurrentSession);
   const onMessageReceived = useCallback(message => {
     if (!termRef.current.terminal.current) {
       return;
@@ -146,7 +147,8 @@ const TroubleshootContent = ({ device, onDownload, setSocketClosed, setUploadPat
     onHealthCheckFailed,
     onMessageReceived,
     onNotify,
-    onOpen: setSocketInitialized
+    onOpen: setSocketInitialized,
+    token
   });
 
   useEffect(() => {

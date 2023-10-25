@@ -16,7 +16,6 @@ import hashString from 'md5';
 import Cookies from 'universal-cookie';
 
 import Api, { apiUrl, headerNames } from '../api/general-api';
-import { getToken } from '../auth';
 import { SET_ANNOUNCEMENT, SORTING_OPTIONS, TIMEOUTS, locations } from '../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../constants/deviceConstants';
 import {
@@ -30,7 +29,7 @@ import {
   SET_ORGANIZATION
 } from '../constants/organizationConstants';
 import { deepCompare } from '../helpers';
-import { getTenantCapabilities } from '../selectors';
+import { getCurrentSession, getTenantCapabilities } from '../selectors';
 import { commonErrorFallback, commonErrorHandler, setFirstLoginAfterSignup, setSnackbar } from './appActions';
 import { deviceAuthV2, iotManagerBaseURL } from './deviceActions';
 
@@ -191,11 +190,11 @@ export const setAuditlogsState = selectionState => (dispatch, getState) => {
   Tenant management + Hosted Mender
 */
 export const tenantDataDivergedMessage = 'The system detected there is a change in your plan or purchased add-ons. Please log out and log in again';
-export const getUserOrganization = () => dispatch => {
-  const token = getToken();
-  return Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => {
+export const getUserOrganization = () => (dispatch, getState) =>
+  Api.get(`${tenantadmApiUrlv1}/user/tenant`).then(res => {
     let tasks = [dispatch({ type: SET_ORGANIZATION, organization: res.data })];
     const { addons, plan, trial } = res.data;
+    const { token } = getCurrentSession(getState());
     const jwt = jwtDecode(token);
     const jwtData = { addons: jwt['mender.addons'], plan: jwt['mender.plan'], trial: jwt['mender.trial'] };
     if (!deepCompare({ addons, plan, trial }, jwtData)) {
@@ -205,7 +204,6 @@ export const getUserOrganization = () => dispatch => {
     }
     return Promise.all(tasks);
   });
-};
 
 export const sendSupportMessage = content => dispatch =>
   Api.post(`${tenantadmApiUrlv2}/contact/support`, content)

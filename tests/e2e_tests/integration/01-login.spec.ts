@@ -15,23 +15,18 @@ import axios from 'axios';
 import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
-import { isLoggedIn } from '../utils/commands';
+import { baseUrlToDomain, isLoggedIn, prepareCookies } from '../utils/commands';
 import { selectors, timeouts } from '../utils/constants';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {
-    test.beforeEach(async ({ baseUrl, page }) => {
-      await page.goto(`${baseUrl}ui/`);
-    });
-
-    test('Logs in using UI', async ({ context, page, password, username }) => {
+    test('Logs in using UI', async ({ baseUrl, context, page, password, username }) => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       // enter valid username and password
+      await page.goto(`${baseUrl}ui/`);
       const emailInput = await page.getByPlaceholder(/email/i);
-      await emailInput.click();
       await emailInput.fill(username);
       const passwordInput = await page.getByLabel(/password/i);
-      await passwordInput.click();
       await passwordInput.fill(password);
       await page.getByRole('button', { name: /log in/i }).click();
       // confirm we have logged in successfully
@@ -42,23 +37,27 @@ test.describe('Login', () => {
 
     test('does not stay logged in across sessions, after browser restart', async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
-      const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
+      const loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
       expect(loginVisible).toBeTruthy();
     });
 
-    test('Logs out using UI', async ({ loggedInPage: page }) => {
-      await isLoggedIn(page);
+    test('Logs out using UI', async ({ baseUrl, page, password, username }) => {
+      await page.goto(`${baseUrl}ui/`);
+      await page.getByPlaceholder(/email/i).fill(username);
+      await page.getByLabel(/password/i).fill(password);
+      await page.getByRole('button', { name: /log in/i }).click();
       // now we can log out
-      await page.click('.header-dropdown', { force: true });
-      await page.getByRole('menuitem', { name: /log out/i }).click();
-      await page.waitForSelector('text=/log in/i', { timeout: timeouts.tenSeconds });
+      await page.getByRole('button', { name: username }).click();
+      await page.getByText(/log out/i).click();
+      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 2 * timeouts.oneSecond });
+      expect(page.getByRole('button', { name: /log in/i }).isVisible()).toBeTruthy();
     });
 
     test('fails to access unknown resource', async ({ baseUrl, page }) => {
       await page.goto(`${baseUrl}ui/`);
       const request = await axios.get(`${baseUrl}/users`, { httpsAgent: new https.Agent({ rejectUnauthorized: false }) });
       expect(request.status).toEqual(200);
-      const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
+      const loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
       expect(loginVisible).toBeTruthy();
     });
 
@@ -75,7 +74,7 @@ test.describe('Login', () => {
       await page.getByRole('button', { name: /log in/i }).click();
 
       // still on /login page plus an error is displayed
-      const loginVisible = await page.isVisible(`:is(button:has-text('Log in'))`);
+      const loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
       expect(loginVisible).toBeTruthy();
       await page.waitForSelector('text=There was a problem logging in');
     });
@@ -91,8 +90,11 @@ test.describe('Login', () => {
     });
   });
 
-  test('stays logged in across sessions, after browser restart if selected', async ({ baseUrl, browser, context, password, page, username }) => {
+  test('stays logged in across sessions, after browser restart if selected', async ({ baseUrl, browser, context, password, username }) => {
     console.log(`logging in user with username: ${username} and password: ${password}`);
+    const domain = baseUrlToDomain(baseUrl);
+    await context.addCookies([{ name: 'cookieconsent_status', value: 'allow', path: '/', domain }]);
+    const page = await context.newPage();
     await page.goto(`${baseUrl}ui/`);
     // enter valid username and password
     const emailInput = await page.getByPlaceholder(/email/i);
@@ -110,11 +112,10 @@ test.describe('Login', () => {
     let loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
     expect(loginVisible).toBeFalsy();
     await page.getByText(/Releases/i).click();
-    const cookies = await context.cookies();
     await context.storageState({ path: 'storage.json' });
 
-    const differentContext = await browser.newContext();
-    await differentContext.addCookies(cookies);
+    let differentContext = await browser.newContext({ storageState: 'storage.json' });
+    differentContext = await prepareCookies(differentContext, domain, '');
     const differentPage = await differentContext.newPage();
     await differentPage.goto(`${baseUrl}ui/`);
     // page.reload();

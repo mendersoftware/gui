@@ -23,7 +23,15 @@ import { advanceOnboarding, setOnboardingApproach, setOnboardingDeviceType } fro
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { onboardingSteps } from '../../../constants/onboardingConstants';
 import { getDebConfigurationCode, versionCompare } from '../../../helpers';
-import { getFeatures, getFullVersionInformation, getIsEnterprise, getIsPreview, getOnboardingState, getOrganization } from '../../../selectors';
+import {
+  getCurrentSession,
+  getFeatures,
+  getFullVersionInformation,
+  getIsEnterprise,
+  getIsPreview,
+  getOnboardingState,
+  getOrganization
+} from '../../../selectors';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import CopyCode from '../copy-code';
 import DocsLink from '../docslink';
@@ -174,6 +182,7 @@ export const PhysicalDeviceOnboarding = ({ progress }) => {
   const onboardingState = useSelector(getOnboardingState);
   const { tenant_token: tenantToken } = useSelector(getOrganization);
   const { Integration: version } = useSelector(getFullVersionInformation);
+  const { token } = useSelector(getCurrentSession);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -208,6 +217,7 @@ export const PhysicalDeviceOnboarding = ({ progress }) => {
       onSelect={onSelect}
       selection={selection}
       tenantToken={tenantToken}
+      token={token}
       version={version}
     />
   );

@@ -15,7 +15,7 @@ import React from 'react';
 
 import { waitFor } from '@testing-library/react';
 
-import { undefineds } from '../../../../../tests/mockData';
+import { token, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import PhysicalDeviceOnboarding, { ConvertedImageNote, DeviceTypeSelectionStep, ExternalProviderTip, InstallationStep } from './physicaldeviceonboarding';
@@ -55,6 +55,7 @@ describe('PhysicalDeviceOnboarding Component', () => {
             onSelect={jest.fn}
             selection="raspberrypi7"
             tenantToken="testtoken"
+            token={token}
           />
         );
         const view = baseElement.firstChild;
