@@ -59,7 +59,7 @@ test.describe('SAML Login via sso/id/login', () => {
   });
 
   // Setups the SAML/SSO login with samltest.id Identity Provider
-  test('Set up SAML', async ({ browserName, context, environment, baseUrl, loggedInPage: page }) => {
+  test('Set up SAML', async ({ browserName, environment, baseUrl, loggedInPage: page }) => {
     test.skip(environment !== 'staging');
     // allow a lot of time to enter metadata + then some to handle uploading the config to the external service
     test.setTimeout(5 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
