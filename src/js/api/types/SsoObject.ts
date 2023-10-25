@@ -15,4 +15,8 @@ export type SsoObject = {
    * Single Sign On provider kind.
    */
   kind: string;
+  /**
+   * Single Sign On subject.
+   */
+  subject?: string;
 };
