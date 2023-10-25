@@ -168,7 +168,7 @@ exports[`LeftNav Component renders correctly 1`] = `
   </a>
   <a
     class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink test-list emotion-2"
-    href="/far/away"
+    href="/further/away"
   >
     <div
       class="MuiListItemText-root emotion-3"
