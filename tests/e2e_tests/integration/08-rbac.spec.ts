@@ -111,7 +111,7 @@ test.describe('RBAC functionality', () => {
     expect(await page.isVisible(`css=button >> text=Upload`)).toBeFalsy();
 
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`.deviceListItem div:last-child`);
+    await page.click(`${selectors.deviceListItem} div:last-child`);
     // the created role does have permission to configure devices, so the section should be visible
     await page.click(`text=/configuration/i`);
     await page.waitForSelector('text=/Device configuration/i', { timeout: timeouts.tenSeconds });
