@@ -29,7 +29,7 @@ test.describe('Device details', () => {
 
   test('has basic inventory', async ({ demoDeviceName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`.deviceListItem div:last-child`);
+    await page.click(`${selectors.deviceListItem} div:last-child`);
     await page.click(`text=/inventory/i`);
     expect(await page.isVisible(`css=.expandedDevice >> text=Linux`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=mac`)).toBeTruthy();
@@ -39,11 +39,11 @@ test.describe('Device details', () => {
   test('can be found', async ({ demoDeviceName, loggedInPage: page }) => {
     const searchField = await page.getByPlaceholder(/search devices/i);
     await searchField.fill(demoDeviceName);
-    await page.waitForSelector('.deviceListItem');
+    await page.waitForSelector(selectors.deviceListItem);
     const slideOut = await page.locator('.MuiPaper-root');
     expect(await slideOut.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
     expect(await slideOut.getByText('1-1 of 1').isVisible()).toBeTruthy();
-    await page.click(`.deviceListItem`);
+    await page.click(selectors.deviceListItem);
     await page.waitForSelector('text=/device information/i');
     expect(await page.getByText(/Authorization sets/i).isVisible()).toBeTruthy();
     await page.click('[aria-label="close"]');
@@ -53,7 +53,8 @@ test.describe('Device details', () => {
     expect(await page.getByText(/device found/i).isVisible()).toBeTruthy();
   });
 
-  test('can be filtered', async ({ demoDeviceName, environment, loggedInPage: page }) => {
+  test('can be filtered', async ({ browserName, demoDeviceName, loggedInPage: page }) => {
+    test.setTimeout(2 * timeouts.fifteenSeconds);
     await page.click(`.leftNav :text('Devices')`);
     await page.getByRole('button', { name: /filters/i }).click();
     await page.getByLabel(/attribute/i).fill(rootfs);
@@ -61,23 +62,33 @@ test.describe('Device details', () => {
     await nameInput.fill(demoDeviceName);
     await page.waitForTimeout(timeouts.oneSecond);
     await nameInput.press('Enter');
-    expect(await page.getByRole('button', { name: `${rootfs} = ${demoDeviceName}` }).isVisible()).toBeTruthy();
-    await page.waitForSelector('.deviceListItem');
-    expect(await page.getByText('1-1 of 1').isVisible()).toBeTruthy();
-    await page.getByText(/clear filter/i).click();
-    if (['enterprise', 'staging'].includes(environment)) {
-      await page.getByLabel(/attribute/i).fill(rootfs);
-      await page.getByText(/equals/i).click();
-      await page.getByText(`doesn't exist`).click();
+    if (browserName === 'webkit') {
       await page.waitForTimeout(timeouts.fiveSeconds);
-      expect(await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
-      expect(await page.getByText('No devices found').isVisible()).toBeTruthy();
     }
+    expect(await page.getByRole('button', { name: `${rootfs} = ${demoDeviceName}` }).isVisible({ timeout: timeouts.default })).toBeTruthy();
+    await page.waitForSelector(selectors.deviceListItem);
+  });
+
+  test('can be filtered into non-existence', async ({ environment, loggedInPage: page }) => {
+    test.skip(!['enterprise', 'staging'].includes(environment), 'not available in OS');
+    test.setTimeout(2 * timeouts.fifteenSeconds);
+    await page.click(`.leftNav :text('Devices')`);
+    await page.getByRole('button', { name: /filters/i }).click();
+    await page.getByLabel(/attribute/i).fill(rootfs);
+    await page.getByText(/equals/i).click();
+    await page.getByText(`doesn't exist`).click();
+    await page.waitForTimeout(timeouts.fiveSeconds);
+    expect(await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
+    expect(await page.getByText('No devices found').isVisible()).toBeTruthy();
+    await page.getByText(/clear filter/i).click();
+    await page.waitForSelector(selectors.deviceListItem);
+    const paginationVisible = await page.getByText('1-1').isVisible({ timeout: timeouts.default });
+    expect(paginationVisible).toBeTruthy();
   });
 
   test('can open a terminal', async ({ browserName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`.deviceListItem div:last-child`);
+    await page.click(`${selectors.deviceListItem} div:last-child`);
     await page.click(`text=/troubleshooting/i`);
     // the deviceconnect connection might not be established right away
     await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });

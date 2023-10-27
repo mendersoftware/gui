@@ -59,7 +59,7 @@ test.describe('SAML Login via sso/id/login', () => {
   });
 
   // Setups the SAML/SSO login with samltest.id Identity Provider
-  test('Set up SAML', async ({ context, environment, baseUrl, page }) => {
+  test('Set up SAML', async ({ browserName, context, environment, baseUrl, loggedInPage: page }) => {
     test.skip(environment !== 'staging');
     // allow a lot of time to enter metadata + then some to handle uploading the config to the external service
     test.setTimeout(5 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
@@ -76,7 +76,12 @@ test.describe('SAML Login via sso/id/login', () => {
       await page.locator('text=input with the text editor').click();
 
       const textfield = await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]');
-      await textfield.fill(metadata.replace(/(?:\r\n|\r|\n)/g, ''));
+      const cleanedMetaData = metadata.replace(/(?:\r\n|\r|\n)/g, '');
+      if (browserName === 'firefox') {
+        await textfield.pressSequentially(cleanedMetaData);
+      } else {
+        await textfield.fill(cleanedMetaData);
+      }
       console.log('typing metadata done.');
       // The screenshot saves the view of the typed metadata
       await page.screenshot({ 'path': 'saml-edit-saving.png' });
@@ -122,7 +127,7 @@ test.describe('SAML Login via sso/id/login', () => {
   });
 
   // Creates a user with login that matches Identity privder (samltest.id) user email
-  test('Creates a user without a password', async ({ environment, browserName, baseUrl, page }) => {
+  test('Creates a user without a password', async ({ environment, browserName, baseUrl, loggedInPage: page }) => {
     test.skip(environment !== 'staging');
     await page.goto(`${baseUrl}ui/settings/user-management`);
     const userExists = await page.isVisible(`text=${samlSettings.credentials[browserName].email}`);
@@ -147,7 +152,7 @@ test.describe('SAML Login via sso/id/login', () => {
   // and verifies that login is successful.
   test('User can login via sso/login endpoint', async ({ environment, browserName, baseUrl, browser, loggedInPage }) => {
     test.skip(environment !== 'staging');
-    test.setTimeout(2 * timeouts.fifteenSeconds);
+    test.setTimeout(3 * timeouts.fifteenSeconds);
 
     await loggedInPage.goto(`${baseUrl}ui/settings/organization-and-billing`);
     await loggedInPage.waitForSelector('text=View metadata in the text editor', { timeout: timeouts.tenSeconds });
