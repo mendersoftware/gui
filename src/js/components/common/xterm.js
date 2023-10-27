@@ -15,16 +15,17 @@ import React, { useEffect } from 'react';
 
 import { Terminal } from 'xterm';
 import { CanvasAddon } from 'xterm-addon-canvas';
+import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import 'xterm/css/xterm.css';
 
 const searchAddon = new SearchAddon();
-const canvasAddon = new CanvasAddon();
+const fitAddon = new FitAddon();
 
-const defaultAddons = [searchAddon];
+const addons = [fitAddon, searchAddon];
 const defaultOptions = { allowProposedApi: true, scrollback: 5000 };
 
-export const Xterm = ({ addons, className, customKeyEventHandler, options = {}, style, xtermRef, ...remainingProps }) => {
+export const Xterm = ({ className, customKeyEventHandler, options = {}, onResize, style, triggerResize, xtermRef, ...remainingProps }) => {
   /**
    * XTerm.js Terminal object.
    */
@@ -42,10 +43,7 @@ export const Xterm = ({ addons, className, customKeyEventHandler, options = {}, 
     // Setup the XTerm terminal.
     terminal.current = new Terminal({ ...defaultOptions, ...options });
     // Load addons
-    defaultAddons.forEach(addon => terminal.current.loadAddon(addon));
-    if (addons.length) {
-      addons.forEach(addon => terminal.current.loadAddon(addon));
-    }
+    addons.forEach(addon => terminal.current.loadAddon(addon));
 
     // Create Listeners
     Object.entries(remainingProps).map(([key, value]) => (value ? terminal.current[key](value) : undefined));
@@ -69,6 +67,22 @@ export const Xterm = ({ addons, className, customKeyEventHandler, options = {}, 
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addons, customKeyEventHandler, JSON.stringify(options), Object.keys(remainingProps).join('')]);
+
+  useEffect(() => {
+    if (!xtermRef.current.terminalRef.current) {
+      return;
+    }
+    try {
+      fitAddon.fit();
+      const { rows = 40, cols = 80 } = fitAddon.proposeDimensions() || {};
+      if (onResize) {
+        onResize({ rows, cols });
+      }
+    } catch {
+      /* nothing really  */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [triggerResize]);
 
   return <div className={className} ref={xtermRef.current.terminalRef} style={style} />;
 };
