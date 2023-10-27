@@ -33,7 +33,7 @@ test.describe('Auditlogs', () => {
     const connectionButton = await page.getByRole('button', { name: /connect/i });
     await connectionButton.first().click();
     await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
-    expect(await page.isVisible('.terminal.xterm canvas')).toBeTruthy();
+    expect(await page.isVisible('.terminal.xterm .xterm-screen')).toBeTruthy();
 
     // the terminal content might take a bit to get painted - thus the waiting
     await page.click(selectors.terminalElement, { timeout: timeouts.default });

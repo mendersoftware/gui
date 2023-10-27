@@ -43,7 +43,7 @@ const useStyles = makeStyles()(theme => ({
     flexGrow: 1,
     overflow: 'hidden',
     '&.device-connected': {
-      gridTemplateRows: `max-content minmax(${theme.spacing(60)}, 1fr) max-content`
+      gridTemplateRows: `max-content minmax(${theme.spacing(80)}, 1fr) max-content`
     }
   }
 }));
@@ -212,7 +212,6 @@ const TroubleshootContent = ({ device, onDownload, setSocketClosed, setUploadPat
             <Terminal
               onDownloadClick={onDownload}
               sendMessage={sendMessage}
-              setSnackbar={setSnackbar}
               socketInitialized={socketInitialized}
               style={{ position: 'absolute', width: '100%', height: '100%', ...visibilityToggle }}
               textInput={terminalInput}
