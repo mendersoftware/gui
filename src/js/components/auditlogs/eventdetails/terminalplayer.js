@@ -18,17 +18,15 @@ import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import msgpack5 from 'msgpack5';
-import { FitAddon } from 'xterm-addon-fit';
 
 import { deviceConnect } from '../../../actions/deviceActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { DEVICE_MESSAGE_PROTOCOLS as MessageProtocols, DEVICE_MESSAGE_TYPES as MessageTypes } from '../../../constants/deviceConstants';
-import { createFileDownload } from '../../../helpers';
+import { createFileDownload, toggle } from '../../../helpers';
 import { blobToString, byteArrayToString } from '../../../utils/sockethook';
 import XTerm from '../../common/xterm';
 
 const MessagePack = msgpack5();
-const fitAddon = new FitAddon();
 
 let socket = null;
 let buffer = [];
@@ -171,6 +169,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   const [wasStarted, setWasStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const [fitTrigger, setFitTrigger] = useState(false);
 
   const { classes } = useStyles();
 
@@ -179,10 +178,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
       return;
     }
     socket = new WebSocket(`wss://${window.location.host}${deviceConnect}/sessions/${item.meta.session_id[0]}/playback`);
-
-    socket.onopen = () => {
-      setSocketInitialized(true);
-    };
+    socket.onopen = () => setSocketInitialized(true);
   }, [item.meta.session_id, sessionInitialized]);
 
   useEffect(() => {
@@ -240,8 +236,8 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     if (!wasStarted) {
       setWasStarted(true);
       return setTimeout(() => {
-        fitAddon.fit();
-        xtermRef.current.terminal.focus();
+        setFitTrigger(toggle);
+        xtermRef.current.terminal.current.focus();
         setIsPlaying(!isPlaying);
       }, TIMEOUTS.debounceShort);
     }
@@ -263,7 +259,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   return (
     <div className={`${className} `}>
       <div className="relative">
-        <XTerm addons={[fitAddon]} className="xterm-min-screen" xtermRef={xtermRef} />
+        <XTerm className="xterm-min-screen" triggerResize={fitTrigger} xtermRef={xtermRef} />
         {!wasStarted && (
           <div
             className="flexbox centered clickable"
