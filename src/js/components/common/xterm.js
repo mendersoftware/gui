@@ -14,7 +14,6 @@
 import React, { useEffect } from 'react';
 
 import { Terminal } from 'xterm';
-import { CanvasAddon } from 'xterm-addon-canvas';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import 'xterm/css/xterm.css';
@@ -56,9 +55,6 @@ export const Xterm = ({ className, customKeyEventHandler, options = {}, onResize
     if (terminalRef.current) {
       // Creates the terminal within the container element.
       terminal.current.open(terminalRef.current);
-      // we need to stick to the canvas addon, due to a lack of WebGL support in Safari
-      // + to still have proper rendering performance
-      terminal.current.loadAddon(canvasAddon);
     }
     return () => {
       // When the component unmounts dispose of the terminal and all of its listeners.
