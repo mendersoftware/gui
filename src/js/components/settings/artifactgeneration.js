@@ -111,7 +111,7 @@ export const ArtifactGenerationSettings = () => {
     setInputWindow(inputWindow);
     setDuplicatesWindow(duplicatesWindow);
     setInstructionBuffer(instructionBuffer);
-    setTimeout(() => (isInitialized.current = true), TIMEOUTS.debounceShort);
+    setTimeout(() => (isInitialized.current = true), TIMEOUTS.fiveSeconds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(deltaConfig), JSON.stringify(deltaLimits)]);
 
@@ -133,7 +133,7 @@ export const ArtifactGenerationSettings = () => {
     if (!isInitialized.current) {
       return;
     }
-    saveDeltaDeploymentsConfig(debouncedConfig);
+    dispatch(saveDeltaDeploymentsConfig(debouncedConfig));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, JSON.stringify(debouncedConfig)]);
 
