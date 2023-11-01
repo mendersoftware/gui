@@ -90,15 +90,7 @@ export const SelfUserManagement = () => {
           )}
         </div>
       ) : (
-        <Form
-          defaultValues={{ email }}
-          onSubmit={editSubmit}
-          handleCancel={handleEmail}
-          submitLabel="Save"
-          showButtons={editEmail}
-          buttonColor="secondary"
-          submitButtonId="submit_email"
-        >
+        <Form defaultValues={{ email }} onSubmit={editSubmit} handleCancel={handleEmail} submitLabel="Save" showButtons={editEmail} buttonColor="secondary">
           <TextInput disabled={false} hint="Email" id="email" InputLabelProps={{ shrink: !!email }} label="Email" validations="isLength:1,isEmail" />
           <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required={true} />
         </Form>
@@ -114,14 +106,7 @@ export const SelfUserManagement = () => {
         ) : (
           <>
             <h3 className="margin-top margin-bottom-none">Change password</h3>
-            <Form
-              onSubmit={editSubmit}
-              handleCancel={handlePass}
-              submitLabel="Save"
-              submitButtonId="submit_pass"
-              buttonColor="secondary"
-              showButtons={editPass}
-            >
+            <Form onSubmit={editSubmit} handleCancel={handlePass} submitLabel="Save" buttonColor="secondary" showButtons={editPass}>
               <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required />
               <PasswordInput className="edit-pass" id="password" label="Password *" validations={`isLength:8,isNot:${email}`} create generate required />
               <PasswordInput id="password_confirmation" label="Confirm password *" validations={`isLength:8,isNot:${email}`} required />

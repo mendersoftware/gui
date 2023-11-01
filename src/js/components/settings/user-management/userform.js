@@ -157,7 +157,7 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
     <Dialog open={true} fullWidth={true} maxWidth="sm">
       <DialogTitle>Create new user</DialogTitle>
       <DialogContent style={{ overflowY: 'initial' }}>
-        <Form onSubmit={onSubmit} handleCancel={closeDialog} submitLabel="Create user" submitButtonId="submit_button" showButtons={true} autocomplete="off">
+        <Form onSubmit={onSubmit} handleCancel={closeDialog} submitLabel="Create user" showButtons={true} autocomplete="off">
           <TextInput hint="Email" label="Email" id="email" validations="isLength:1,isEmail" required autocomplete="off" />
           <PasswordInput
             id="password"

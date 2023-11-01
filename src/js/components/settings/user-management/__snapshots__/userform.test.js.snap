@@ -1603,7 +1603,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-37"
               disabled=""
-              id="submit_button"
               tabindex="-1"
               type="submit"
             >
