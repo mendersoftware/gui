@@ -196,7 +196,7 @@ export const Login = () => {
           <div className="flexbox column" id="login-box">
             <h1 className="flexbox centered">Welcome back!</h1>
             {isHosted && <OAuthHeader type="Log in" buttonProps={{ onClick: onOAuthClick }} />}
-            <Form className={classes.form} showButtons={true} buttonColor="primary" onSubmit={onLoginClick} submitLabel="Log in" submitButtonId="login_button">
+            <Form className={classes.form} showButtons={true} buttonColor="primary" onSubmit={onLoginClick} submitLabel="Log in">
               <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
               <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
               {isHosted ? (

@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Button } from '@mui/material';
@@ -104,16 +104,23 @@ export const Form = ({
   defaultValues = {},
   handleCancel,
   id,
+  initialValues = {},
   onSubmit,
   showButtons,
-  submitButtonId,
   submitLabel
 }) => {
   const methods = useForm({ mode: 'onChange', defaultValues });
   const {
     handleSubmit,
-    formState: { isValid }
+    formState: { isValid },
+    setValue
   } = methods;
+
+  useEffect(() => {
+    Object.entries(initialValues).map(([key, value]) => setValue(key, value));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialValues), setValue]);
+
   return (
     <FormProvider {...methods}>
       <form autoComplete={autocomplete} className={className} id={id} noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -125,7 +132,7 @@ export const Form = ({
                 Cancel
               </Button>
             )}
-            <Button variant="contained" type="submit" disabled={!isValid} id={submitButtonId} color={buttonColor}>
+            <Button variant="contained" type="submit" disabled={!isValid} color={buttonColor}>
               {submitLabel}
             </Button>
           </div>

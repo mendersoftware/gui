@@ -164,12 +164,12 @@ export const Signup = () => {
       <div className={`${classes.background} ${isStarting ? 'two-columns' : classes.orgData}`} id="signup-box">
         <div>
           <Form
-            defaultValues={{ email, tos, marketing, name: organization }}
-            showButtons={!(isStarting || loading)}
             buttonColor="primary"
+            defaultValues={{ email: '', tos: false, marketing: false, name: '' }}
+            initialValues={{ email, tos, marketing, name: organization }}
             onSubmit={handleSignup}
+            showButtons={!(isStarting || loading)}
             submitLabel={isStarting ? 'Sign up' : 'Complete signup'}
-            submitButtonId="login_button"
           >
             {loading ? <Loader show style={{ marginTop: '40vh' }} /> : steps[step]}
           </Form>

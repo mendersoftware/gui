@@ -56,7 +56,7 @@ export const EmailVerification = ({ activationCode, verifyEmailComplete, verifyE
           <Loader show={isLoading} />
         </div>
       ) : (
-        <Form showButtons={isVerifying} buttonColor="primary" onSubmit={completeVerification} submitLabel="Verify" submitButtonId="confirm-button">
+        <Form showButtons={isVerifying} buttonColor="primary" onSubmit={completeVerification} submitLabel="Verify">
           <TextInput hint="Verification code" label="Verification code" id="emailVerification" required={true} value={activationCode} />
         </Form>
       )}
