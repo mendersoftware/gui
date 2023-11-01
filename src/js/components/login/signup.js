@@ -170,7 +170,6 @@ export const Signup = () => {
             onSubmit={handleSignup}
             showButtons={!(isStarting || loading)}
             submitLabel={isStarting ? 'Sign up' : 'Complete signup'}
-            submitButtonId="login_button"
           >
             {loading ? <Loader show style={{ marginTop: '40vh' }} /> : steps[step]}
           </Form>

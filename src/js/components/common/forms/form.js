@@ -107,7 +107,6 @@ export const Form = ({
   initialValues = {},
   onSubmit,
   showButtons,
-  submitButtonId,
   submitLabel
 }) => {
   const methods = useForm({ mode: 'onChange', defaultValues });
@@ -133,7 +132,7 @@ export const Form = ({
                 Cancel
               </Button>
             )}
-            <Button variant="contained" type="submit" disabled={!isValid} id={submitButtonId} color={buttonColor}>
+            <Button variant="contained" type="submit" disabled={!isValid} color={buttonColor}>
               {submitLabel}
             </Button>
           </div>
