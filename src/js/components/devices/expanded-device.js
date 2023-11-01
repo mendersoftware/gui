@@ -306,7 +306,7 @@ export const ExpandedDevice = ({ actionCallbacks, deviceId, onClose, setDetailsT
           </IconButton>
         </div>
       </div>
-      <DeviceNotifications alerts={latestAlerts} device={device} isOffline={isOffline} onClick={scrollToMonitor} />
+      <DeviceNotifications alerts={latestAlerts} device={device} onClick={scrollToMonitor} />
       <Divider className={classes.dividerTop} />
       <Tabs value={selectedTab} onChange={(e, tab) => setDetailsTab(tab)} textColor="primary">
         {availableTabs.map(item => (

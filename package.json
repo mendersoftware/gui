@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
-    "@mdi/js": "7.2.96",
+    "@mdi/js": "7.3.67",
     "@monaco-editor/react": "4.5.2",
     "@mui/icons-material": "5.14.7",
     "@mui/material": "5.14.11",

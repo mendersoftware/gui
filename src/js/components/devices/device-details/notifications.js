@@ -130,11 +130,11 @@ export const DeviceOfflineHeaderNotification = ({ offlineThresholdSettings }) =>
   </BaseNotification>
 );
 
-export const DeviceNotifications = ({ alerts, device, isOffline, onClick }) => {
-  const { updated_ts = '' } = device;
+export const DeviceNotifications = ({ alerts, device, onClick }) => {
+  const { check_in_time = '', isOffline } = device;
   return (
     <>
-      {isOffline && <LastConnection updated_ts={updated_ts} />}
+      {isOffline && <LastConnection updated_ts={check_in_time} />}
       {Boolean(alerts.length) && <ServiceNotification alerts={alerts} onClick={onClick} />}
     </>
   );

@@ -11,12 +11,13 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+const deviceListItem = '.deviceListItem';
 export const selectors = {
-  deploymentCreation: 'text=/Create deployment/i',
   deploymentListItem: '.deployment-item',
   deploymentListItemContent: '.deployment-item:not(.deployment-header-item)',
   deviceGroupSelect: '#deployment-device-group-selection',
-  deviceListCheckbox: '.deviceListItem input',
+  deviceListCheckbox: `${deviceListItem} input`,
+  deviceListItem,
   email: '[name=email]',
   loggedInText: /License information/i,
   password: '[name=password]',

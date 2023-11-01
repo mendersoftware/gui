@@ -41,7 +41,7 @@ test.describe('Layout assertions', () => {
     await page.click(`.leftNav :text('Devices')`);
     let hasAcceptedDevice = false;
     try {
-      hasAcceptedDevice = await page.isVisible('.deviceListItem');
+      hasAcceptedDevice = await page.isVisible(selectors.deviceListItem);
     } catch (e) {
       console.log(`no accepted device present so far`);
     }
@@ -55,10 +55,10 @@ test.describe('Layout assertions', () => {
     }
     await page.locator(`input:near(:text("Status:"))`).first().click({ force: true });
     await page.click(`css=.MuiPaper-root >> text=/Accepted/i`);
-    await page.waitForSelector(`css=.deviceListItem >> text=/original/`, { timeout: timeouts.sixtySeconds });
-    const element = await page.textContent('.deviceListItem');
+    await page.waitForSelector(`css=${selectors.deviceListItem} >> text=/original/`, { timeout: timeouts.sixtySeconds });
+    const element = await page.textContent(selectors.deviceListItem);
     expect(element.includes('original')).toBeTruthy();
-    await page.click(`.deviceListItem div:last-child`);
+    await page.click(`${selectors.deviceListItem} div:last-child`);
     await page.waitForSelector(`text=/Device information for/i`);
     expect(await page.isVisible('text=Authentication status')).toBeTruthy();
   });
@@ -70,7 +70,7 @@ test.describe('Layout assertions', () => {
     await page.click(selectors.deviceListCheckbox);
     await page.click('.MuiSpeedDial-fab');
     await page.click('[aria-label="group-add"]');
-    await page.type('#group-creation-selection', 'testgroup');
+    await page.getByLabel(/type to create new/i).fill('testgroup');
     await page.click('.MuiDialogTitle-root');
     await page.click(`:is(:text-matches('create group', 'i'), :text-matches('add to group', 'i'))`);
     await page.waitForSelector(`.grouplist:has-text('testgroup')`);
@@ -78,6 +78,6 @@ test.describe('Layout assertions', () => {
     await page.click(`.grouplist:has-text('All devices')`);
     await page.click(selectors.deviceListCheckbox);
     await page.click(`.grouplist:has-text('testgroup')`);
-    expect(await page.locator(`css=.deviceListItem >> text=/original/`)).toBeVisible();
+    expect(await page.locator(`css=${selectors.deviceListItem} >> text=/original/`)).toBeVisible();
   });
 });

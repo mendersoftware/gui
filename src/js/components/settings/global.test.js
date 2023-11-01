@@ -13,10 +13,11 @@
 //    limitations under the License.
 import React from 'react';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import { TIMEOUTS } from '../../constants/appConstants';
 import Global from './global';
 
 const preloadedState = {
@@ -47,6 +48,7 @@ const preloadedState = {
 describe('GlobalSettings Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(<Global />, { preloadedState });
+    await act(async () => jest.advanceTimersByTime(TIMEOUTS.refreshDefault));
     await waitFor(() => expect(screen.getByText(/xDelta3/i)).toBeVisible());
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
