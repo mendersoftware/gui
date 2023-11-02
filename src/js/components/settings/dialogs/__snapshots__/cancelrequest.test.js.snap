@@ -623,7 +623,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
   flex: 0 0 auto;
 }
 
-.emotion-76>:not(:first-of-type) {
+.emotion-76>:not(style)~:not(style) {
   margin-left: 8px;
 }
 

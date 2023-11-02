@@ -41,7 +41,7 @@ describe('ChartAdditionWidget Component', () => {
     expect(screen.queryByText(/Device group/i)).not.toBeInTheDocument();
     await user.click(screen.getByText(/Add a widget/i));
     expect(screen.queryAllByText(/Device group/i).length).toBeTruthy();
-    const element = screen.getByRole('button', { name: /Device group/i });
+    const element = screen.getByRole('combobox', { name: /Device group/i });
     await selectMaterialUiSelectOption(element, 'testGroup', user);
     await user.click(screen.getByRole('button', { name: /Save/i }));
     expect(submitCheck).toHaveBeenCalled();

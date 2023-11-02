@@ -130,7 +130,7 @@ afterAll(async () => {
 
 export const selectMaterialUiSelectOption = async (element, optionText, user) => {
   // The button that opens the dropdown, which is a sibling of the input
-  const selectButton = element.parentNode.querySelector('[role=button]');
+  const selectButton = element.parentNode.querySelector('[role=combobox]');
   // Open the select dropdown
   await user.click(selectButton);
   // Get the dropdown element. We don't use getByRole() because it includes <select>s too.

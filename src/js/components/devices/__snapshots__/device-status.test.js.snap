@@ -128,8 +128,8 @@ exports[`DeviceStatus Component renders correctly 1`] = `
 .emotion-2 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 7px;
+  padding-right: 7px;
   white-space: nowrap;
 }
 

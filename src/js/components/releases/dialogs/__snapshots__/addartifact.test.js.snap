@@ -166,7 +166,7 @@ exports[`AddArtifact Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-8>:not(:first-of-type) {
+.emotion-8>:not(style)~:not(style) {
   margin-left: 8px;
 }
 

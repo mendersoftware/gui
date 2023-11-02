@@ -2094,6 +2094,14 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
   visibility: collapse;
 }
 
+.emotion-4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-5 {
   height: auto;
   overflow: hidden;
@@ -2724,7 +2732,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-4"
           >
             <div
               class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-5"
@@ -3164,6 +3172,14 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
   visibility: collapse;
 }
 
+.emotion-4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-5 {
   height: auto;
   overflow: hidden;
@@ -3794,7 +3810,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-4"
           >
             <div
               class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-5"
@@ -4376,6 +4392,14 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
   visibility: collapse;
 }
 
+.emotion-9 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-10 {
   height: auto;
   overflow: hidden;
@@ -4679,7 +4703,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
               tabindex="0"
             >
               <span
-                class="MuiChip-label MuiChip-labelMedium emotion-7"
+                class="MuiChip-label MuiChip-labelMedium emotion-9"
               >
                 <div
                   class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-10"
@@ -4745,7 +4769,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-7"
+                  class="MuiChip-label MuiChip-labelMedium emotion-9"
                 >
                   Download
                 </span>
@@ -4777,7 +4801,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-7"
+                  class="MuiChip-label MuiChip-labelMedium emotion-9"
                 >
                   Install
                 </span>
@@ -4810,7 +4834,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-7"
+                  class="MuiChip-label MuiChip-labelMedium emotion-9"
                 >
                   Reboot
                 </span>
@@ -4843,7 +4867,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-7"
+                  class="MuiChip-label MuiChip-labelMedium emotion-9"
                 >
                   Commit
                 </span>
@@ -5371,6 +5395,14 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
   visibility: collapse;
 }
 
+.emotion-10 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-11 {
   height: auto;
   overflow: hidden;
@@ -5828,7 +5860,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
               tabindex="0"
             >
               <span
-                class="MuiChip-label MuiChip-labelMedium emotion-8"
+                class="MuiChip-label MuiChip-labelMedium emotion-10"
               >
                 <div
                   class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-11"
@@ -5894,7 +5926,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-8"
+                  class="MuiChip-label MuiChip-labelMedium emotion-10"
                 >
                   Download
                 </span>
@@ -5954,7 +5986,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-8"
+                  class="MuiChip-label MuiChip-labelMedium emotion-10"
                 >
                   Install
                 </span>
@@ -6015,7 +6047,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-8"
+                  class="MuiChip-label MuiChip-labelMedium emotion-10"
                 >
                   Reboot
                 </span>
@@ -6076,7 +6108,7 @@ exports[`CreateDeployment Component smaller components renders RolloutOptions co
                 data-mui-internal-clone-element="true"
               >
                 <span
-                  class="MuiChip-label MuiChip-labelMedium emotion-8"
+                  class="MuiChip-label MuiChip-labelMedium emotion-10"
                 >
                   Commit
                 </span>
@@ -6578,6 +6610,14 @@ exports[`CreateDeployment Component smaller components renders RolloutPatternSel
   visibility: collapse;
 }
 
+.emotion-9 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-10 {
   height: auto;
   overflow: hidden;
@@ -7006,7 +7046,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
               tabindex="0"
             >
               <span
-                class="MuiChip-label MuiChip-labelMedium emotion-7"
+                class="MuiChip-label MuiChip-labelMedium emotion-9"
               >
                 <div
                   class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-10"
@@ -7064,11 +7104,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-20:focus::-ms-input-
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl emotion-19"
           >
             <div
+              aria-controls="mui-53"
               aria-disabled="true"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-standard Mui-disabled MuiInputBase-input MuiInput-input Mui-disabled emotion-20"
-              role="button"
+              role="combobox"
             >
               Single phase: 100%
             </div>
@@ -7584,6 +7625,14 @@ exports[`CreateDeployment Component smaller components renders RolloutPatternSel
   visibility: collapse;
 }
 
+.emotion-10 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-11 {
   height: auto;
   overflow: hidden;
@@ -8012,7 +8061,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
               tabindex="0"
             >
               <span
-                class="MuiChip-label MuiChip-labelMedium emotion-8"
+                class="MuiChip-label MuiChip-labelMedium emotion-10"
               >
                 <div
                   class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-11"
@@ -8070,10 +8119,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-20"
           >
             <div
+              aria-controls="mui-56"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-21"
-              role="button"
+              role="combobox"
               tabindex="0"
             >
               Single phase: 100%
@@ -9078,7 +9128,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   flex: 0 0 auto;
 }
 
-.emotion-109>:not(:first-of-type) {
+.emotion-109>:not(style)~:not(style) {
   margin-left: 8px;
 }
 
@@ -9185,8 +9235,8 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 }
 
 <div
-  aria-labelledby="mui-23-label"
-  class="MuiPickersPopper-root emotion-0 MuiPopper-root"
+  aria-labelledby="mui-26-label"
+  class="MuiPopper-root MuiPickersPopper-root emotion-0"
   data-popper-escaped=""
   data-popper-placement="bottom-start"
   data-popper-reference-hidden=""
@@ -9227,7 +9277,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 >
                   <div
                     class="MuiPickersCalendarHeader-label emotion-9"
-                    id="mui-24-grid-label"
+                    id="mui-27-grid-label"
                     style="opacity: 1;"
                   >
                     January 2019
@@ -9290,7 +9340,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 style="opacity: 1;"
               >
                 <div
-                  aria-labelledby="mui-24-grid-label"
+                  aria-labelledby="mui-27-grid-label"
                   class="MuiDayCalendar-root emotion-17"
                   role="grid"
                 >
@@ -11129,7 +11179,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   flex: 0 0 auto;
 }
 
-.emotion-109>:not(:first-of-type) {
+.emotion-109>:not(style)~:not(style) {
   margin-left: 8px;
 }
 
@@ -11236,8 +11286,8 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
 }
 
 <div
-  aria-labelledby="mui-28-label"
-  class="MuiPickersPopper-root emotion-0 MuiPopper-root"
+  aria-labelledby="mui-32-label"
+  class="MuiPopper-root MuiPickersPopper-root emotion-0"
   data-popper-escaped=""
   data-popper-placement="bottom-start"
   data-popper-reference-hidden=""
@@ -11278,7 +11328,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 >
                   <div
                     class="MuiPickersCalendarHeader-label emotion-9"
-                    id="mui-29-grid-label"
+                    id="mui-33-grid-label"
                     style="opacity: 1;"
                   >
                     January 2019
@@ -11341,7 +11391,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
                 style="opacity: 1;"
               >
                 <div
-                  aria-labelledby="mui-29-grid-label"
+                  aria-labelledby="mui-33-grid-label"
                   class="MuiDayCalendar-root emotion-17"
                   role="grid"
                 >

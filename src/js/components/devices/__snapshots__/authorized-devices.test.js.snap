@@ -19,11 +19,18 @@ exports[`AuthorizedDevices Component renders correctly 1`] = `
   -ms-flex-align: center;
   align-items: center;
   position: relative;
+  font-size: 13px;
+  margin-left: 4px;
+  margin-top: 2px;
 }
 
 .emotion-0.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
+}
+
+.emotion-0>div {
+  padding-left: 4px;
 }
 
 .emotion-1 {
@@ -470,14 +477,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
           >
             Status:
             <div
-              class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary  emotion-0"
-              style="font-size: 13px; margin-left: 8px; margin-top: 2px;"
+              class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary emotion-0"
             >
               <div
+                aria-controls="mui-1"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-1"
-                role="button"
+                role="combobox"
                 tabindex="0"
               >
                 accepted

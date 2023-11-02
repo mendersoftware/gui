@@ -304,7 +304,7 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-12>:not(:first-of-type) {
+.emotion-12>:not(style)~:not(style) {
   margin-left: 8px;
 }
 

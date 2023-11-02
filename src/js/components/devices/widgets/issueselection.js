@@ -15,7 +15,6 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 // material ui
 import { Checkbox, MenuItem, Select } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 
 import { DEVICE_ISSUE_OPTIONS } from '../../../constants/deviceConstants';
 
@@ -29,11 +28,6 @@ const menuProps = {
     horizontal: 'left'
   }
 };
-
-const useStyles = makeStyles()(theme => ({
-  menuItem: { paddingLeft: theme.spacing(), paddingRight: theme.spacing(3) }
-}));
-
 const groupOptions = (options = [], selection = []) => {
   const things = options.reduce((accu, value) => {
     const { issueCategory, key } = DEVICE_ISSUE_OPTIONS[value.key];
@@ -59,8 +53,7 @@ const groupOptions = (options = [], selection = []) => {
   return Object.values(things).flat();
 };
 
-const Selection = ({ selected = [], options = [] }) => {
-  const { classes } = useStyles();
+const getSelectionDisplayValue = ({ selected = [], options = [] }) => {
   let content = 'all';
   if (selected.length) {
     const { titles, sum } = selected.reduce(
@@ -73,19 +66,13 @@ const Selection = ({ selected = [], options = [] }) => {
     );
     content = `${titles.join(', ')} (${sum})`;
   }
-  return (
-    <MenuItem className={classes.menuItem} size="small" value="">
-      {content}
-    </MenuItem>
-  );
+  return content;
 };
 
-const DeviceIssuesSelection = ({ onChange, options, selection }) => {
+const DeviceIssuesSelection = ({ classes, onChange, options, selection }) => {
   const [open, setOpen] = useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => setOpen(false);
 
   const handleOpen = e => {
     if (e && e.target.closest('input')?.hasOwnProperty('checked')) {
@@ -123,22 +110,21 @@ const DeviceIssuesSelection = ({ onChange, options, selection }) => {
     <div className="flexbox center-aligned margin-left">
       <div>Show:</div>
       <Select
+        className={classes.selection}
         disableUnderline
         displayEmpty
         MenuProps={menuProps}
         multiple
-        size="small"
         open={open}
         onClose={handleClose}
         onOpen={handleOpen}
         onChange={onSelectionChange}
-        renderValue={selected => <Selection selected={selected} options={groupedOptions} />}
+        renderValue={selected => getSelectionDisplayValue({ selected, options: groupedOptions })}
         value={selection}
-        SelectDisplayProps={{ style: { padding: 0 } }}
       >
         {groupedOptions.map(({ checked, count, key, title, level = 0 }) => (
           <MenuItem key={key} value={key} size="small">
-            <Checkbox checked={checked} style={{ marginLeft: 8 * (level + 1) }} size="small" />
+            <Checkbox checked={checked} style={{ marginLeft: 8 * (level + 1) }} />
             {title} ({count})
           </MenuItem>
         ))}

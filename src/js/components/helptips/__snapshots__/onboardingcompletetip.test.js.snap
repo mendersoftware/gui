@@ -305,7 +305,7 @@ exports[`OnboardingCompleteTip Component renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="MuiTooltip-popper MuiTooltip-popperInteractive emotion-1 MuiPopper-root"
+    class="MuiPopper-root MuiTooltip-popper MuiTooltip-popperInteractive emotion-1"
     data-popper-escaped=""
     data-popper-placement="bottom"
     data-popper-reference-hidden=""

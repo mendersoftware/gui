@@ -280,7 +280,7 @@ exports[`CreateGroupExplainerContent Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-11>:not(:first-of-type) {
+.emotion-11>:not(style)~:not(style) {
   margin-left: 8px;
 }
 
