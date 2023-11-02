@@ -17,7 +17,7 @@
 "@redux-devtools/extension","MIT","https://github.com/reduxjs/redux-devtools"
 "@reduxjs/toolkit","MIT","https://github.com/reduxjs/redux-toolkit"
 "@stripe/react-stripe-js","MIT","https://github.com/stripe/react-stripe-js"
-"@stripe/stripe-js","MIT","https://www.stripe.com"
+"@stripe/stripe-js","MIT","https://github.com/stripe/stripe-js"
 "@svgr/webpack","MIT","https://github.com/gregberge/svgr.git#main"
 "@testing-library/dom","MIT","https://github.com/testing-library/dom-testing-library"
 "@testing-library/jest-dom","MIT","https://github.com/testing-library/jest-dom"
