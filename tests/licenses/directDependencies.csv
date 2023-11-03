@@ -44,7 +44,7 @@
 "eslint-plugin-prettier","MIT","https://github.com/prettier/eslint-plugin-prettier"
 "eslint-plugin-react-hooks","MIT","https://github.com/facebook/react"
 "eslint-plugin-react","MIT","https://github.com/jsx-eslint/eslint-plugin-react"
-"eslint-plugin-sonarjs","LGPL-3.0","https://github.com/SonarSource/eslint-plugin-sonarjs"
+"eslint-plugin-sonarjs","LGPL-3.0-only","https://github.com/SonarSource/eslint-plugin-sonarjs"
 "eslint-webpack-plugin","MIT","https://github.com/webpack-contrib/eslint-webpack-plugin"
 "eslint","MIT","https://github.com/eslint/eslint"
 "file-loader","MIT","https://github.com/webpack-contrib/file-loader"
