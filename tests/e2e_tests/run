@@ -122,6 +122,7 @@ run_tests() {
         return 1
     fi
 
+    docker exec $runnerid npm i
     docker exec $runnerid npm run test-ci || failed=1
 
     docker inspect --format '{{.State.ExitCode}}' $runnerid || true
