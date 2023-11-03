@@ -1313,7 +1313,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
   flex: 0 0 auto;
 }
 
-.emotion-38>:not(:first-of-type) {
+.emotion-38>:not(style)~:not(style) {
   margin-left: 8px;
 }
 
@@ -1545,13 +1545,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
                 required=""
               >
                 <div
+                  aria-controls="mui-3"
                   aria-disabled="true"
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-labelledby="roles-selection-label roles-selector-0"
                   class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInputBase-input MuiInput-input Mui-disabled emotion-32"
                   id="roles-selector-0"
-                  role="button"
+                  role="combobox"
                 >
                   <span
                     class="notranslate"

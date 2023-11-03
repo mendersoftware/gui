@@ -1481,12 +1481,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
           class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-23"
         >
           <div
+            aria-controls="mui-2"
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="permission-selection-label"
             class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInputBase-input MuiInput-input Mui-disabled emotion-24"
-            role="button"
+            role="combobox"
           >
             None
           </div>
@@ -1543,12 +1544,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
           class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-23"
         >
           <div
+            aria-controls="mui-4"
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="permission-selection-label"
             class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInputBase-input MuiInput-input Mui-disabled emotion-24"
-            role="button"
+            role="combobox"
           >
             None
           </div>
@@ -1605,12 +1607,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
           class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl  emotion-23"
         >
           <div
+            aria-controls="mui-6"
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="permission-selection-label"
             class="MuiSelect-select MuiSelect-standard Mui-disabled MuiSelect-multiple MuiInputBase-input MuiInput-input Mui-disabled emotion-24"
-            role="button"
+            role="combobox"
           >
             None
           </div>

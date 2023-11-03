@@ -122,8 +122,8 @@ exports[`RolloutSteps Component renders correctly 1`] = `
 .emotion-1 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -358,6 +358,14 @@ exports[`RolloutSteps Component renders correctly 1`] = `
   margin-right: 8px;
 }
 
+.emotion-9 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
 .emotion-10 {
   overflow: hidden;
   pointer-events: none;
@@ -437,7 +445,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-1"
+              class="MuiChip-label MuiChip-labelMedium emotion-9"
             >
               Add a pause
             </span>
@@ -497,7 +505,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-1"
+              class="MuiChip-label MuiChip-labelMedium emotion-9"
             >
               Add a pause
             </span>
@@ -558,7 +566,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-1"
+              class="MuiChip-label MuiChip-labelMedium emotion-9"
             >
               Add a pause
             </span>
@@ -721,8 +729,8 @@ exports[`RolloutSteps Component renders correctly 2`] = `
 .emotion-1 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -957,6 +965,14 @@ exports[`RolloutSteps Component renders correctly 2`] = `
   margin-right: 8px;
 }
 
+.emotion-9 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
 .emotion-10 {
   overflow: hidden;
   pointer-events: none;
@@ -1036,7 +1052,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-1"
+              class="MuiChip-label MuiChip-labelMedium emotion-9"
             >
               Add a pause
             </span>
@@ -1096,7 +1112,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-1"
+              class="MuiChip-label MuiChip-labelMedium emotion-9"
             >
               Add a pause
             </span>
@@ -1157,7 +1173,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               />
             </svg>
             <span
-              class="MuiChip-label MuiChip-labelMedium emotion-1"
+              class="MuiChip-label MuiChip-labelMedium emotion-9"
             >
               Add a pause
             </span>

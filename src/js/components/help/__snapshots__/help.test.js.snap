@@ -778,8 +778,8 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
 .emotion-13 {
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 11px;
+  padding-right: 11px;
   white-space: nowrap;
 }
 
@@ -955,6 +955,14 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
 
 .emotion-91:active {
   box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-93 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 12px;
+  padding-right: 12px;
+  white-space: nowrap;
 }
 
 <div>
@@ -1720,7 +1728,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
                     />
                   </svg>
                   <span
-                    class="MuiChip-label MuiChip-labelMedium emotion-13"
+                    class="MuiChip-label MuiChip-labelMedium emotion-93"
                   >
                     Unix
                   </span>
@@ -2006,7 +2014,7 @@ exports[`Help Component static components renders Downloads correctly 1`] = `
                     />
                   </svg>
                   <span
-                    class="MuiChip-label MuiChip-labelMedium emotion-13"
+                    class="MuiChip-label MuiChip-labelMedium emotion-93"
                   >
                     Unix
                   </span>

@@ -978,10 +978,11 @@ label+.emotion-15 {
     class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary margin-left-small margin-right-small emotion-9"
   >
     <div
+      aria-controls="mui-1"
       aria-expanded="false"
       aria-haspopup="listbox"
       class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-10"
-      role="button"
+      role="combobox"
       tabindex="0"
     >
       equals
@@ -1012,8 +1013,8 @@ label+.emotion-15 {
     <label
       class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-2"
       data-shrink="false"
-      for="mui-1"
-      id="mui-1-label"
+      for="mui-2"
+      id="mui-2-label"
     >
       Value
     </label>
@@ -1023,7 +1024,7 @@ label+.emotion-15 {
       <input
         aria-invalid="false"
         class="MuiInputBase-input MuiInput-input emotion-4"
-        id="mui-1"
+        id="mui-2"
         type="text"
         value=""
       />

@@ -396,7 +396,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-24>:not(:first-of-type) {
+.emotion-24>:not(style)~:not(style) {
   margin-left: 8px;
 }
 

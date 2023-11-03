@@ -102,7 +102,8 @@ describe('AuthorizedDevices Component', () => {
     await waitFor(() => expect(screen.getAllByRole('checkbox').length).toBeTruthy());
     await user.click(screen.getAllByRole('checkbox')[0]);
     expect(setListStateSpy).toHaveBeenCalledWith({ selection: [0, 1], setOnly: true });
-    await user.click(screen.getByRole('button', { name: /all/i }));
+    const combo = screen.getAllByRole('combobox').find(item => item.textContent?.includes('all'));
+    await user.click(combo);
     await user.click(screen.getByRole('option', { name: /devices with issues/i }));
     await user.keyboard('{Escape}');
     expect(setListStateSpy).toHaveBeenCalledWith({ page: 1, refreshTrigger: true, selectedIssues: ['offline', 'monitoring'] });

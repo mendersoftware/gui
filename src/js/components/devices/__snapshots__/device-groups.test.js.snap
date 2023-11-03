@@ -213,14 +213,14 @@ exports[`DeviceGroups Component renders correctly 1`] = `
               >
                 Status:
                 <div
-                  class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary  css-9qara2-MuiInputBase-root-MuiInput-root-MuiSelect-root"
-                  style="font-size: 13px; margin-left: 8px; margin-top: 2px;"
+                  class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary css-1laylde-MuiInputBase-root-MuiInput-root-MuiSelect-root-selection"
                 >
                   <div
+                    aria-controls="mui-1"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input css-emq5k1-MuiSelect-select-MuiInputBase-input-MuiInput-input"
-                    role="button"
+                    role="combobox"
                     tabindex="0"
                   >
                     accepted
@@ -384,7 +384,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-14f0tmy-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
                     class="PrivateSwitchBase-input css-1m9pwf3"
@@ -573,7 +573,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-14f0tmy-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
                     class="PrivateSwitchBase-input css-1m9pwf3"
@@ -642,7 +642,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
             >
               <div>
                 <span
-                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1c5ytc8-MuiButtonBase-root-MuiCheckbox-root"
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-14f0tmy-MuiButtonBase-root-MuiCheckbox-root"
                 >
                   <input
                     class="PrivateSwitchBase-input css-1m9pwf3"
@@ -729,12 +729,13 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
                 >
                   <div
+                    aria-controls="mui-2"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     
                     class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
                     
-                    role="button"
+                    role="combobox"
                     tabindex="0"
                   >
                     20
