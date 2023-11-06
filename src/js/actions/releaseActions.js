@@ -26,6 +26,8 @@ import { convertDeviceListStateToFilters, getSearchEndpoint } from './deviceActi
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
+const sortingDefaults = { direction: SORTING_OPTIONS.desc, key: 'modified' };
+
 const flattenRelease = (release, stateRelease) => {
   const updatedArtifacts = release.artifacts?.sort(customSort(1, 'modified')) || [];
   const { artifacts, deviceTypes, modified } = updatedArtifacts.reduce(
@@ -284,7 +286,7 @@ export const setReleasesListState = selectionState => (dispatch, getState) => {
 /* Releases */
 
 const releaseListRetrieval = config => {
-  const { searchTerm = '', page = defaultPage, perPage = defaultPerPage, sort = {}, selectedTags = [], type = '' } = config;
+  const { searchTerm = '', page = defaultPage, perPage = defaultPerPage, sort = sortingDefaults, selectedTags = [], type = '' } = config;
   const { key: attribute, direction } = sort;
   const filterQuery = formatReleases({ pageState: { searchTerm, selectedTags } });
   const updateType = type ? `update_type=${type}` : '';
@@ -333,7 +335,7 @@ export const getReleases =
   };
 
 export const getRelease = name => (dispatch, getState) =>
-  GeneralApi.get(`${deploymentsApiUrl}/deployments/releases?name=${name}`).then(({ data: releases }) => {
+  releaseListRetrieval({ searchTerm: name, page: 1, perPage: 1 }).then(({ data: releases }) => {
     if (releases.length) {
       const stateRelease = getState().releases.byId[releases[0].name] || {};
       return Promise.resolve(dispatch({ type: ReleaseConstants.RECEIVE_RELEASE, release: flattenRelease(releases[0], stateRelease) }));
