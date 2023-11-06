@@ -273,16 +273,20 @@ build:docker:
     - when: never
 
 build:docker-multiplatform:
+  rules:
+    - if: $CI_COMMIT_REF_NAME !~ /^(main|master|staging|production|feature-.+)$/
+      variables:
+        MULTIPLATFORM_PLATFORMS: 'linux/amd64'
   # by default alvaldi-gui uses the unprivileged mode
   script:
     - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
     - docker context create builder
     - docker buildx create builder --use --driver-opt network=host --buildkitd-flags '--debug --allow-insecure-entitlement network.host'
     # needed for the license generation step
-    - docker buildx build 
+    - docker buildx build
       --tag ${DOCKER_REPOSITORY}:base
       --target base
-      --output type=docker,dest=baseImage.tar 
+      --output type=docker,dest=baseImage.tar
       ${DOCKER_DIR:-.}
     # build production target
     - docker buildx build
@@ -311,7 +315,6 @@ build:docker-multiplatform:
   artifacts:
     paths:
       - baseImage.tar
-
 
 .template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
@@ -434,7 +437,7 @@ publish:disclaimer:
 publish:image:
   rules:
     - when: never
- 
+
 # excludes non multiplatform job
 publish:image:saas:
   rules:
