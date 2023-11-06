@@ -163,7 +163,7 @@ export const organizationHandlers = [
   http.get(`${iotManagerBaseURL}/integrations`, () =>
     HttpResponse.json([
       { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
-      { id: 2, provider: 'aws', something: 'new' }
+      { id: 2, provider: EXTERNAL_PROVIDER['iot-core'].provider, something: 'new' }
     ])
   ),
   http.post(`${iotManagerBaseURL}/integrations`, () =>

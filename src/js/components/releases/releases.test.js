@@ -27,6 +27,10 @@ describe('Releases Component', () => {
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
   });
 
   it('works as expected', async () => {
@@ -66,5 +70,9 @@ describe('Releases Component', () => {
     });
     await waitFor(() => expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument(), { timeout: 2000 });
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
   });
 });

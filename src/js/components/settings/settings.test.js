@@ -15,7 +15,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { render as testingLibRender } from '@testing-library/react';
+import { act, render as testingLibRender } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { getSessionInfo } from '../../auth';
@@ -57,5 +57,6 @@ describe('Settings Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => jest.runAllTicks());
   });
 });

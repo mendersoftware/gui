@@ -153,5 +153,6 @@ describe('AuthorizedDevices Component', () => {
         { id: 'inventory-testKey', key: testKey, name: testKey, scope: 'inventory', title: testKey }
       ]
     });
+    await act(async () => jest.runAllTicks());
   });
 });

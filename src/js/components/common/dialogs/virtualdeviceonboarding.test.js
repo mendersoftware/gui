@@ -13,6 +13,8 @@
 //    limitations under the License.
 import React from 'react';
 
+import { act } from '@testing-library/react';
+
 import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import VirtualDeviceOnboarding, { getDemoDeviceCreationCommand } from './virtualdeviceonboarding';
@@ -23,6 +25,7 @@ describe('VirtualDeviceOnboarding Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => jest.runAllTicks());
   });
 });
 
