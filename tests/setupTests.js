@@ -58,6 +58,7 @@ jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }));
 jest.setSystemTime(mockDate);
 
 const storage = {};
+global.HTMLCanvasElement.prototype.getContext = jest.fn();
 
 // Enable the mocking in tests.
 delete window.location;
