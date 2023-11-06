@@ -332,6 +332,14 @@ exports[`Roles Component renders correctly 1`] = `
   visibility: collapse;
 }
 
+.emotion-4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-5 {
   height: auto;
   overflow: hidden;
@@ -695,7 +703,7 @@ exports[`Roles Component renders correctly 1`] = `
           tabindex="0"
         >
           <span
-            class="MuiChip-label MuiChip-labelMedium emotion-2"
+            class="MuiChip-label MuiChip-labelMedium emotion-4"
           >
             <div
               class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-5"

@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import pluralize from 'pluralize';
 
 import { getToken } from './auth';

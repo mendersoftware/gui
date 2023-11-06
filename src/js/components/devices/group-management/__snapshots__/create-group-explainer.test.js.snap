@@ -491,6 +491,14 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
   visibility: collapse;
 }
 
+.emotion-15 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-16 {
   height: auto;
   overflow: hidden;
@@ -568,7 +576,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-22>:not(:first-of-type) {
+.emotion-22>:not(style)~:not(style) {
   margin-left: 8px;
 }
 
@@ -800,7 +808,7 @@ exports[`CreateGroupExplainer Component renders correctly 1`] = `
                       tabindex="0"
                     >
                       <span
-                        class="MuiChip-label MuiChip-labelMedium emotion-13"
+                        class="MuiChip-label MuiChip-labelMedium emotion-15"
                       >
                         <div
                           class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-16"

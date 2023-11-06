@@ -16,7 +16,7 @@ import axios from 'axios';
 import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as https from 'https';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { authenticator } from 'otplib';
 import * as path from 'path';
 import pixelmatch from 'pixelmatch';

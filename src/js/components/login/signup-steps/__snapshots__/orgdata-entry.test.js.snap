@@ -1587,10 +1587,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary  emotion-10"
       >
         <div
+          aria-controls="mui-1"
           aria-expanded="false"
           aria-haspopup="listbox"
           class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-11"
-          role="button"
+          role="combobox"
           tabindex="0"
         >
           <span

@@ -146,7 +146,7 @@ exports[`LogDialog Component renders correctly 1`] = `
   flex: 0 0 auto;
 }
 
-.emotion-7>:not(:first-of-type) {
+.emotion-7>:not(style)~:not(style) {
   margin-left: 8px;
 }
 

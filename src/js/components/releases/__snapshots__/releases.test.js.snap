@@ -2060,7 +2060,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-57:focus::-ms-input-
               />
               <p
                 class="MuiTablePagination-selectLabel emotion-55"
-                id="mui-8"
+                id="mui-9"
               >
                 Rows
               </p>
@@ -2068,12 +2068,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-57:focus::-ms-input-
                 class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input emotion-56"
               >
                 <div
+                  aria-controls="mui-7"
                   aria-expanded="false"
                   aria-haspopup="listbox"
-                  aria-labelledby="mui-8 mui-7"
+                  aria-labelledby="mui-9 mui-8"
                   class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input emotion-57"
-                  id="mui-7"
-                  role="button"
+                  id="mui-8"
+                  role="combobox"
                   tabindex="0"
                 >
                   20

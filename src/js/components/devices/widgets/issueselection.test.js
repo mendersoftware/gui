@@ -26,7 +26,7 @@ describe('DeviceIssuesSelection Component', () => {
       { ...DEVICE_ISSUE_OPTIONS.offline, count: 8 }
     ];
     const { baseElement } = render(
-      <DeviceIssuesSelection onChange={jest.fn} onSelectAll={jest.fn} options={options} selection={[DEVICE_ISSUE_OPTIONS.offline.key]} />
+      <DeviceIssuesSelection classes={{ selection: '' }} onChange={jest.fn} options={options} selection={[DEVICE_ISSUE_OPTIONS.offline.key]} />
     );
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();

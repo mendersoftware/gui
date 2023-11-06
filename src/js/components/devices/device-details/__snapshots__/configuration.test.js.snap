@@ -505,6 +505,14 @@ exports[`Configuration Component renders correctly 1`] = `
   visibility: collapse;
 }
 
+.emotion-10 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 11px;
+  padding-right: 11px;
+  white-space: nowrap;
+}
+
 .emotion-11 {
   height: auto;
   overflow: hidden;
@@ -788,7 +796,7 @@ exports[`Configuration Component renders correctly 1`] = `
               tabindex="0"
             >
               <span
-                class="MuiChip-label MuiChip-labelMedium emotion-6"
+                class="MuiChip-label MuiChip-labelMedium emotion-10"
               >
                 <div
                   class="MuiCollapse-root MuiCollapse-horizontal MuiCollapse-hidden emotion-11"

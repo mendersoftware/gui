@@ -224,12 +224,13 @@ exports[`Auditlogs Component renders correctly 1`] = `
             class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
           >
             <div
+              aria-controls="mui-1"
               aria-expanded="false"
               aria-haspopup="listbox"
               
               class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
               
-              role="button"
+              role="combobox"
               tabindex="0"
             >
               20

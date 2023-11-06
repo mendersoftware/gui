@@ -18,7 +18,6 @@ import { useNavigate } from 'react-router-dom';
 // material ui
 import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterListIcon, LockOutlined } from '@mui/icons-material';
 import { Button, MenuItem, Select } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
@@ -105,6 +104,14 @@ const useStyles = makeStyles()(theme => ({
     ['&.filter-wrapper']: {
       padding: 20,
       borderTopLeftRadius: 0
+    }
+  },
+  selection: {
+    fontSize: 13,
+    marginLeft: theme.spacing(0.5),
+    marginTop: 2,
+    '>div': {
+      paddingLeft: theme.spacing(0.5)
     }
   }
 }));
@@ -418,7 +425,12 @@ export const Authorized = ({
             <div className="flexbox">
               <DeviceStateSelection onStateChange={onDeviceStateSelectionChange} selectedState={selectedState} states={states} />
               {hasMonitor && (
-                <DeviceIssuesSelection onChange={onDeviceIssuesSelectionChange} options={Object.values(availableIssueOptions)} selection={selectedIssues} />
+                <DeviceIssuesSelection
+                  classes={classes}
+                  onChange={onDeviceIssuesSelectionChange}
+                  options={Object.values(availableIssueOptions)}
+                  selection={selectedIssues}
+                />
               )}
               {selectedGroup && !isUngroupedGroup && (
                 <div className="margin-left muted flexbox centered">
@@ -501,18 +513,13 @@ export const Authorized = ({
 export default Authorized;
 
 export const DeviceStateSelection = ({ onStateChange, selectedState = '', states }) => {
-  const theme = useTheme();
+  const { classes } = useStyles();
   const availableStates = useMemo(() => Object.values(states).filter(duplicateFilter), [states]);
 
   return (
     <div className="flexbox centered">
       Status:
-      <Select
-        disableUnderline
-        onChange={e => onStateChange(e.target.value)}
-        value={selectedState}
-        style={{ fontSize: 13, marginLeft: theme.spacing(), marginTop: 2 }}
-      >
+      <Select className={classes.selection} disableUnderline onChange={e => onStateChange(e.target.value)} value={selectedState}>
         {availableStates.map(state => (
           <MenuItem key={state.key} value={state.key}>
             {state.title()}
