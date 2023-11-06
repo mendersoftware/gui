@@ -60,17 +60,16 @@ test.describe('RBAC functionality', () => {
 
   test('allows user creation', async ({ baseUrl, environment, loggedInPage: page, password, username }) => {
     await page.goto(`${baseUrl}ui/settings/user-management`);
-    await page.click(`text=/Create new user/i`);
-    await page.locator('[placeholder="Email"]').click();
-    await page.locator('[placeholder="Email"]').fill(`limited-${username}`);
-    await page.locator('[placeholder="Password"]').click();
-    await page.locator('[placeholder="Password"]').fill(password);
+    await page.getByRole('button', { name: /Create new user/i }).click();
+    await page.getByPlaceholder(/email/i).click();
+    await page.getByPlaceholder(/email/i).fill(`limited-${username}`);
+    await page.getByPlaceholder(/Password/i).click();
+    await page.getByPlaceholder(/Password/i).fill(password);
     if (['enterprise', 'staging'].includes(environment)) {
-      const roleInput = await page.locator('label:has-text("Roles") >> ..');
-      await roleInput.locator('[role="button"]').click();
+      await page.getByRole('combobox', { name: /admin/i }).click();
       // first we need to deselect the default admin role
       await page.getByRole('option', { name: 'Admin' }).click();
-      await page.locator('text=testRole').click();
+      await page.getByRole('option', { name: 'testRole' }).click();
       await page.press('body', 'Escape');
     }
     await page.click(`text=/Create user/i`);
