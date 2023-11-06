@@ -44,7 +44,8 @@ test.describe('Auditlogs', () => {
     const expectedPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalSecretContent.png');
     const elementHandle = await page.$(selectors.terminalElement);
     await elementHandle.screenshot({ path: expectedPath });
-    await terminalText.fill(secret);
+    await page.waitForTimeout(timeouts.oneSecond);
+    await terminalText.pressSequentially(secret);
 
     const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalSecretContent-actual.png');
     await elementHandle.screenshot({ path: screenShotPath });
