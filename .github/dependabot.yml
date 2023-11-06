@@ -8,6 +8,18 @@ updates:
     schedule:
       interval: monthly
       day: saturday
+    groups:
+      development-dependencies:
+        dependency-type: development
+      production-dependencies:
+        dependency-type: production
+        exclude-patterns:
+          - '@emotion*'
+          - '@mui*'
+      mui:
+        patterns:
+          - '@emotion*'
+          - '@mui*'
   - commit-message:
       prefix: chore
     directory: /
@@ -23,3 +35,7 @@ updates:
     schedule:
       interval: monthly
       day: saturday
+    groups:
+      e2e-test-dependencies:
+        exclude-patterns:
+          - '*'
