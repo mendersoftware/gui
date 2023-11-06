@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 
 import { deploymentsApiUrl, deploymentsApiUrlV2 } from '../../src/js/actions/deploymentActions';
 import { headerNames } from '../../src/js/api/general-api';
@@ -53,112 +53,123 @@ const defaultDeploymentConfig = {
 };
 
 export const deploymentHandlers = [
-  rest.get(`${deploymentsApiUrl}/deployments`, (req, res, ctx) => {
-    return res(ctx.set(headerNames.total, Object.keys(defaultState.deployments.byId).length), ctx.json(Object.values(defaultState.deployments.byId).reverse()));
-  }),
-  rest.get(`${deploymentsApiUrl}/deployments/releases`, (req, res, ctx) => {
-    const releaseName = req.url.searchParams.get('name');
+  http.get(
+    `${deploymentsApiUrl}/deployments`,
+    () =>
+      new HttpResponse(JSON.stringify(Object.values(defaultState.deployments.byId).reverse()), {
+        headers: { [headerNames.total]: Object.keys(defaultState.deployments.byId).length }
+      })
+  ),
+  http.get(`${deploymentsApiUrl}/deployments/releases`, ({ request }) => {
+    const { searchParams } = new URL(request.url);
+    const releaseName = searchParams.get('name');
     const release = defaultState.releases.byId[releaseName] || {};
     if (releaseName) {
       // eslint-disable-next-line no-unused-vars
       const { device_types_compatible, ...remainder } = release;
-      return Object.keys(remainder).length || releaseName === 'createdRelease' ? res(ctx.status(200), ctx.json([remainder])) : res(ctx.status(520));
+      return Object.keys(remainder).length || releaseName === 'createdRelease' ? HttpResponse.json([remainder]) : new HttpResponse(null, { status: 520 });
     }
     const releases = Object.values(defaultState.releases.byId).map(stateRelease => {
       // eslint-disable-next-line no-unused-vars
       const { device_types_compatible, ...remainder } = stateRelease;
       return remainder;
     });
-    return res(ctx.json(releases));
+    return HttpResponse.json(releases);
   }),
-  rest.get(`${deploymentsApiUrl}/deployments/:deploymentId`, ({ params: { deploymentId } }, res, ctx) => {
+  http.get(`${deploymentsApiUrl}/deployments/:deploymentId`, ({ params: { deploymentId } }) => {
     if (deploymentId === createdDeployment.id) {
-      return res(ctx.json(createdDeployment));
+      return HttpResponse.json(createdDeployment);
     } else if (deploymentId === 'config1') {
-      return res(
-        ctx.json({ ...createdDeployment, id: 'config1', created: '2019-01-01T09:25:01.000Z', finished: '2019-01-01T09:25:03.000Z', status: 'finished' })
-      );
+      return HttpResponse.json({
+        ...createdDeployment,
+        id: 'config1',
+        created: '2019-01-01T09:25:01.000Z',
+        finished: '2019-01-01T09:25:03.000Z',
+        status: 'finished'
+      });
     }
-    return res(ctx.json(defaultState.deployments.byId[deploymentId]));
+    return HttpResponse.json(defaultState.deployments.byId[deploymentId]);
   }),
-  rest.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices`, ({ params: { deploymentId } }, res, ctx) => {
+  http.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices`, ({ params: { deploymentId } }) => {
     if (deploymentId === createdDeployment.id) {
-      return res(ctx.json(Object.values(createdDeployment.devices)));
+      return HttpResponse.json(Object.values(createdDeployment.devices));
     } else if (defaultState.deployments.byId[deploymentId]) {
-      return res(ctx.json(Object.values(defaultState.deployments.byId[deploymentId].devices)));
+      return HttpResponse.json(Object.values(defaultState.deployments.byId[deploymentId].devices));
     }
-    return res(ctx.status(521));
+    return new HttpResponse(null, { status: 521 });
   }),
-  rest.post(`${deploymentsApiUrl}/deployments/statistics/list`, ({ body: { deployment_ids = [] } }, res, ctx) => {
+  http.post(`${deploymentsApiUrl}/deployments/statistics/list`, async ({ request }) => {
+    const { deployment_ids = [] } = await request.json();
     if (deployment_ids.includes(createdDeployment.id)) {
-      return res(ctx.json([]));
+      return HttpResponse.json([]);
     } else if (deployment_ids.every(id => defaultState.deployments.byId[id])) {
       const stats = deployment_ids.map(id => ({ id, stats: defaultState.deployments.byId[id].statistics.status }));
-      return res(ctx.json(stats));
+      return HttpResponse.json(stats);
     }
-    return res(ctx.status(522));
+    return new HttpResponse(null, { status: 522 });
   }),
-  rest.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices/:deviceId/log`, ({ params: { deploymentId, deviceId } }, res, ctx) => {
+  http.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices/:deviceId/log`, ({ params: { deploymentId, deviceId } }) => {
     if (defaultState.deployments.byId[deploymentId] && defaultState.deployments.byId[deploymentId].devices[deviceId]) {
-      return res(ctx.text('test'));
+      return HttpResponse.text('test');
     }
-    return res(ctx.status(523));
+    return new HttpResponse(null, { status: 523 });
   }),
-  rest.post(`${deploymentsApiUrl}/deployments`, (req, res, ctx) => {
-    if (!Object.keys(req.body).length) {
-      return res(ctx.status(524), ctx.json({}));
+  http.post(`${deploymentsApiUrl}/deployments`, async ({ request }) => {
+    const body = await request.json();
+    if (!Object.keys(body).length) {
+      return new HttpResponse(JSON.stringify({}), { status: 524 });
     }
-    return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
+    return new HttpResponse(JSON.stringify({}), { headers: { location: `find/me/here/${createdDeployment.id}` } });
   }),
-  rest.post(`${deploymentsApiUrlV2}/deployments`, ({ body: { filter_id, devices = [] } }, res, ctx) => {
+  http.post(`${deploymentsApiUrlV2}/deployments`, async ({ request }) => {
+    const { filter_id, devices = [] } = await request.json();
     if (!filter_id || !!devices.length) {
-      return res(ctx.status(525), ctx.json({}));
+      return new HttpResponse(JSON.stringify({}), { status: 525 });
     }
-    return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
+    return new HttpResponse(JSON.stringify({}), { headers: { location: `find/me/here/${createdDeployment.id}` } });
   }),
-  rest.post(`${deploymentsApiUrl}/deployments/group/:deploymentGroup`, ({ params: { deploymentGroup }, body: { filter_id, devices = [] } }, res, ctx) => {
+  http.post(`${deploymentsApiUrl}/deployments/group/:deploymentGroup`, async ({ params: { deploymentGroup }, request }) => {
+    const { filter_id, devices = [] } = await request.json();
     if (filter_id || !!devices.length || deploymentGroup !== Object.keys(defaultState.devices.groups.byId)[0]) {
-      return res(ctx.status(526), ctx.json({}));
+      return new HttpResponse(JSON.stringify({}), { status: 526 });
     }
-    return res(ctx.set('location', `find/me/here/${createdDeployment.id}`), ctx.json({}));
+    return new HttpResponse(JSON.stringify({}), { headers: { location: `find/me/here/${createdDeployment.id}` } });
   }),
-  rest.patch(`${deploymentsApiUrl}/deployments/:deploymentId`, ({ params: { deploymentId }, body: { update_control_map } }, res, ctx) => {
+  http.patch(`${deploymentsApiUrl}/deployments/:deploymentId`, async ({ params: { deploymentId }, request }) => {
+    const { update_control_map } = await request.json();
     if (deploymentId === createdDeployment.id && Object.keys(update_control_map).length) {
-      return res(ctx.status(204));
+      return new HttpResponse(null, { status: 204 });
     }
-    return res(ctx.status(581));
+    return new HttpResponse(null, { status: 581 });
   }),
-  rest.put(`${deploymentsApiUrl}/deployments/:deploymentId/status`, ({ params: { deploymentId }, body: { status } }, res, ctx) =>
-    res(
-      ctx.status(
+  http.put(`${deploymentsApiUrl}/deployments/:deploymentId/status`, async ({ params: { deploymentId }, request }) => {
+    const { status } = await request.json();
+    return new HttpResponse(JSON.stringify({}), {
+      status:
         status === 'aborted' &&
-          [...defaultState.deployments.byStatus.pending.deploymentIds, ...defaultState.deployments.byStatus.inprogress.deploymentIds].includes(deploymentId)
+        [...defaultState.deployments.byStatus.pending.deploymentIds, ...defaultState.deployments.byStatus.inprogress.deploymentIds].includes(deploymentId)
           ? 200
           : 528
-      ),
-      ctx.json({})
-    )
-  ),
-  rest.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices/list`, ({ params: { deploymentId } }, res, ctx) => {
+    });
+  }),
+  http.get(`${deploymentsApiUrl}/deployments/:deploymentId/devices/list`, ({ params: { deploymentId } }) => {
     if (deploymentId === createdDeployment.id) {
-      return res(ctx.set(headerNames.total, Object.keys(createdDeployment.devices).length), ctx.json(Object.values(createdDeployment.devices)));
+      return new HttpResponse(JSON.stringify(Object.values(createdDeployment.devices)), {
+        headers: { [headerNames.total]: Object.keys(createdDeployment.devices).length }
+      });
     } else if (defaultState.deployments.byId[deploymentId]) {
-      return res(
-        ctx.set(headerNames.total, Object.keys(defaultState.deployments.byId[deploymentId].devices).length),
-        ctx.json(Object.values(defaultState.deployments.byId[deploymentId].devices))
-      );
+      return new HttpResponse(JSON.stringify(Object.values(defaultState.deployments.byId[deploymentId].devices)), {
+        headers: { [headerNames.total]: Object.keys(defaultState.deployments.byId[deploymentId].devices).length }
+      });
     }
-    return res(ctx.status(529));
+    return new HttpResponse(null, { status: 529 });
   }),
-  rest.get(`${deploymentsApiUrl}/config`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(defaultDeploymentConfig));
-  }),
-  rest.put(`${deploymentsApiUrl}/config/binary_delta`, (req, res, ctx) => res(ctx.status(200))),
-  rest.get(`${deploymentsApiUrl}/deployments/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+  http.get(`${deploymentsApiUrl}/config`, () => HttpResponse.json(defaultDeploymentConfig)),
+  http.put(`${deploymentsApiUrl}/config/binary_delta`, () => new HttpResponse(null, { status: 200 })),
+  http.get(`${deploymentsApiUrl}/deployments/devices/:deviceId`, ({ params: { deviceId } }) => {
     if (deviceId === defaultState.devices.byId.a1.id) {
-      return res(
-        ctx.set(headerNames.total, 34),
-        ctx.json([
+      return new HttpResponse(
+        JSON.stringify([
           {
             id: createdDeployment.id + 'something',
             deployment: { ...createdDeployment, id: defaultState.deployments.byId.d1.id, status: 'inprogress' },
@@ -173,10 +184,13 @@ export const deploymentHandlers = [
             attempts: 1,
             delta_job_id: ''
           }
-        ])
+        ]),
+        {
+          headers: { [headerNames.total]: 34 }
+        }
       );
     }
-    return res(ctx.status(529));
+    return new HttpResponse(null, { status: 529 });
   }),
-  rest.delete(`${deploymentsApiUrl}/deployments/devices/:deviceId/history`, (req, res, ctx) => res(ctx.status(204)))
+  http.delete(`${deploymentsApiUrl}/deployments/devices/:deviceId/history`, () => new HttpResponse(null, { status: 204 }))
 ];

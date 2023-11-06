@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 
 import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
 import { auditLogsApiUrl, ssoIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
@@ -77,70 +77,78 @@ const releasesSample = {
 
 const tagsSample = [{ name: 'saas-v2023.05.02', more: 'here' }];
 
-const signupHandler = ({ body: signup }, res, ctx) => {
+const signupHandler = async ({ request }) => {
+  const signup = await request.json();
   if (['email', 'organization', 'plan', 'tos'].every(item => !!signup[item])) {
-    return res(ctx.text('test'));
+    return HttpResponse.text('test');
   }
-  return res(ctx.status(400));
+  return new HttpResponse(null, { status: 400 });
 };
 
 export const organizationHandlers = [
-  rest.get('/tags.json', (req, res, ctx) => res(ctx.json(tagsSample))),
-  rest.get('/versions.json', (req, res, ctx) => res(ctx.json(releasesSample))),
-  rest.get(`${tenantadmApiUrlv1}/user/tenant`, (req, res, ctx) => res(ctx.json(defaultState.organization.organization))),
-  rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/cancel`, (req, res, ctx) => res(ctx.status(200))),
-  rest.post(`${tenantadmApiUrlv2}/tenants/trial`, signupHandler),
-  rest.post(`https://hosted.mender.io${tenantadmApiUrlv2}/tenants/trial`, signupHandler),
-  rest.get(`${tenantadmApiUrlv2}/billing`, (req, res, ctx) => res(ctx.json({ card: { last4: '7890', exp_month: 1, exp_year: 2024, brand: 'testCorp' } }))),
-  rest.post(`${tenantadmApiUrlv2}/billing/card`, (req, res, ctx) => res(ctx.json({ intent_id: defaultState.organization.intentId, secret: 'testSecret' }))),
-  rest.post(`${tenantadmApiUrlv2}/billing/card/:intentId/confirm`, ({ params: { intentId } }, res, ctx) => {
-    if (intentId == defaultState.organization.intentId) {
-      return res(ctx.status(200));
-    }
-    return res(ctx.status(540));
-  }),
-  rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/upgrade/:status`, ({ params: { status, tenantId }, body: { plan } }, res, ctx) => {
+  http.get('/tags.json', () => HttpResponse.json(tagsSample)),
+  http.get('/versions.json', () => HttpResponse.json(releasesSample)),
+  http.get(`${tenantadmApiUrlv1}/user/tenant`, () => HttpResponse.json(defaultState.organization.organization)),
+  http.post(`${tenantadmApiUrlv2}/tenants/:tenantId/cancel`, () => new HttpResponse(null, { status: 200 })),
+  http.post(`${tenantadmApiUrlv2}/tenants/trial`, signupHandler),
+  http.post(`https://hosted.mender.io${tenantadmApiUrlv2}/tenants/trial`, signupHandler),
+  http.get(`${tenantadmApiUrlv2}/billing`, () => HttpResponse.json({ card: { last4: '7890', exp_month: 1, exp_year: 2024, brand: 'testCorp' } })),
+  http.post(`${tenantadmApiUrlv2}/billing/card`, () => HttpResponse.json({ intent_id: defaultState.organization.intentId, secret: 'testSecret' })),
+  http.post(
+    `${tenantadmApiUrlv2}/billing/card/:intentId/confirm`,
+    ({ params: { intentId } }) => new HttpResponse(null, { status: intentId == defaultState.organization.intentId ? 200 : 540 })
+  ),
+  http.post(`${tenantadmApiUrlv2}/tenants/:tenantId/upgrade/:status`, async ({ params: { status, tenantId }, request }) => {
     if (tenantId != defaultState.organization.organization.id || !['cancel', 'complete', 'start'].includes(status)) {
-      return res(ctx.status(541));
+      return new HttpResponse(null, { status: 541 });
     }
     if (status === 'start') {
-      return res(ctx.json({ secret: 'testSecret' }));
+      return HttpResponse.json({ secret: 'testSecret' });
+    }
+    let plan;
+    try {
+      const body = await request.json();
+      plan = body.plan;
+    } catch (error) {
+      // no completion;
     }
     if (plan && !Object.keys(PLANS).includes(plan)) {
-      return res(ctx.status(542));
+      return new HttpResponse(null, { status: 542 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.post(`${tenantadmApiUrlv2}/tenants/:tenantId/plan`, ({ params: { tenantId }, body }, res, ctx) => {
+  http.post(`${tenantadmApiUrlv2}/tenants/:tenantId/plan`, async ({ params: { tenantId }, request }) => {
+    const body = await request.json();
     const expectedKeys = ['current_plan', 'requested_plan', 'current_addons', 'requested_addons', 'user_message'];
     if (tenantId != defaultState.organization.organization.id || !Object.keys(body).every(key => expectedKeys.includes(key))) {
-      return res(ctx.status(544));
+      return new HttpResponse(null, { status: 544 });
     }
     if (body.requested_plan && !Object.values(PLANS).some(item => item.name === body.requested_plan)) {
-      return res(ctx.status(545));
+      return new HttpResponse(null, { status: 545 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.post(`${tenantadmApiUrlv2}/contact/support`, ({ body: { subject, body } }, res, ctx) => {
+  http.post(`${tenantadmApiUrlv2}/contact/support`, async ({ request }) => {
+    const { subject, body } = await request.json();
     if (!(subject && body)) {
-      return res(ctx.status(543));
+      return new HttpResponse(null, { status: 543 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.get(`${auditLogsApiUrl}/logs`, ({ url: { searchParams } }, res, ctx) => {
+  http.get(`${auditLogsApiUrl}/logs`, ({ request }) => {
+    const { searchParams } = new URL(request.url);
     const perPage = Number(searchParams.get('per_page'));
     if (perPage === 500) {
-      return res(
-        ctx.json([
-          { meta: defaultState.organization.auditlog.events[2].meta, time: defaultState.organization.auditlog.events[1].time, action: 'close_terminal' }
-        ])
-      );
+      return HttpResponse.json([
+        { meta: defaultState.organization.auditlog.events[2].meta, time: defaultState.organization.auditlog.events[1].time, action: 'close_terminal' }
+      ]);
     }
-    return res(ctx.set(headerNames.total, defaultState.organization.auditlog.events.length), ctx.json(defaultState.organization.auditlog.events));
+    return new HttpResponse(JSON.stringify(defaultState.organization.auditlog.events), {
+      headers: { [headerNames.total]: defaultState.organization.auditlog.events.length }
+    });
   }),
-  rest.get(`${auditLogsApiUrl}/logs/export`, (req, res, ctx) => {
-    return res(
-      ctx.text(`action,actor.id,actor.type,actor.email,actor.identity_data,object.id,object.type,object.user.email,object.deployment.name,object.deployment.artifact_name,change
+  http.get(`${auditLogsApiUrl}/logs/export`, () =>
+    HttpResponse.text(`action,actor.id,actor.type,actor.email,actor.identity_data,object.id,object.type,object.user.email,object.deployment.name,object.deployment.artifact_name,change
     update,5c56c2ed-2a9a-5de9-bb86-cf38b3d4a5e1,user,test@example.coim,,067f23a9-76a5-5585-b119-32402a120978,user,test@example.com,,,"Update user 067f23a9-76a5-5585-b119-32402a120978 (test@example.com).
     Diff:
     --- Original
@@ -151,69 +159,53 @@ export const organizationHandlers = [
     +    ""RBAC_ROLE_PERMIT_ALL""
     "
     `)
-    );
-  }),
-  rest.get(`${iotManagerBaseURL}/integrations`, (req, res, ctx) => {
-    return res(
-      ctx.json([
-        { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
-        { id: 2, provider: 'aws', something: 'new' }
-      ])
-    );
-  }),
-  rest.post(`${iotManagerBaseURL}/integrations`, (req, res, ctx) => {
-    return res(ctx.json([{ connection_string: 'something_else', provider: EXTERNAL_PROVIDER['iot-hub'].provider }]));
-  }),
-  rest.put(`${iotManagerBaseURL}/integrations/:integrationId`, ({ params: { integrationId } }, res, ctx) => {
+  ),
+  http.get(`${iotManagerBaseURL}/integrations`, () =>
+    HttpResponse.json([
+      { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
+      { id: 2, provider: 'aws', something: 'new' }
+    ])
+  ),
+  http.post(`${iotManagerBaseURL}/integrations`, () =>
+    HttpResponse.json([{ connection_string: 'something_else', provider: EXTERNAL_PROVIDER['iot-hub'].provider }])
+  ),
+  http.put(`${iotManagerBaseURL}/integrations/:integrationId`, ({ params: { integrationId } }) => {
     if (!integrationId) {
-      return res(ctx.status(547));
+      return new HttpResponse(null, { status: 547 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.put(`${iotManagerBaseURL}/integrations/:integrationId/credentials`, ({ params: { integrationId } }, res, ctx) => {
+  http.put(`${iotManagerBaseURL}/integrations/:integrationId/credentials`, ({ params: { integrationId } }) => {
     if (!integrationId) {
-      return res(ctx.status(548));
+      return new HttpResponse(null, { status: 548 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.delete(`${iotManagerBaseURL}/integrations/:integrationId`, ({ params: { integrationId } }, res, ctx) => {
+  http.delete(`${iotManagerBaseURL}/integrations/:integrationId`, ({ params: { integrationId } }) => {
     if (!integrationId) {
-      return res(ctx.status(549));
+      return new HttpResponse(null, { status: 549 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.get(`${iotManagerBaseURL}/events`, ({ url: { searchParams } }, res, ctx) => {
+  http.get(`${iotManagerBaseURL}/events`, ({ request }) => {
+    const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get('page'));
     const perPage = Number(searchParams.get('per_page'));
-    return res(ctx.json(webhookEvents.slice(page - 1, page * perPage)));
+    return HttpResponse.json(webhookEvents.slice(page - 1, page * perPage));
   }),
-  rest.get(ssoIdpApiUrlv1, (req, res, ctx) => {
-    return res(
-      ctx.json([
-        { id: '1', issuer: 'https://samltest.id/saml/idp', valid_until: '2038-08-24T21:14:09Z' },
-        { id: '2', issuer: 'https://samltest2.id/saml/idp', valid_until: '2030-10-24T21:14:09Z' }
-      ])
-    );
+  http.get(ssoIdpApiUrlv1, () => {
+    return HttpResponse.json([
+      { id: '1', issuer: 'https://samltest.id/saml/idp', valid_until: '2038-08-24T21:14:09Z' },
+      { id: '2', issuer: 'https://samltest2.id/saml/idp', valid_until: '2030-10-24T21:14:09Z' }
+    ]);
   }),
-  rest.post(ssoIdpApiUrlv1, (req, res, ctx) => {
-    return res(ctx.status(200));
-  }),
-  rest.get(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+  http.post(ssoIdpApiUrlv1, () => new HttpResponse(null, { status: 200 })),
+  http.get(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }) => {
     if (!configId) {
-      return res(ctx.status(550));
+      return new HttpResponse(null, { status: 550 });
     }
-    return res(ctx.json({ email: 'user@acme.com', password: 'mypass1234', login: { google: 'bob@gmail.com' }, config: '<div>not quite right</div>' }));
+    return HttpResponse.json({ email: 'user@acme.com', password: 'mypass1234', login: { google: 'bob@gmail.com' }, config: '<div>not quite right</div>' });
   }),
-  rest.put(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
-    if (!configId) {
-      return res(ctx.status(551));
-    }
-    return res(ctx.status(200));
-  }),
-  rest.delete(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
-    if (!configId) {
-      return res(ctx.status(552));
-    }
-    return res(ctx.status(200));
-  })
+  http.put(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }) => new HttpResponse(null, { status: configId ? 200 : 551 })),
+  http.delete(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }) => new HttpResponse(null, { status: configId ? 200 : 552 }))
 ];

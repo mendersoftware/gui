@@ -21,7 +21,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import '@testing-library/jest-dom';
 import { act, cleanup, queryByRole, render, within } from '@testing-library/react';
 import { setupServer } from 'msw/node';
-import { TextEncoder } from 'util';
 import { MessageChannel } from 'worker_threads';
 
 import { getSessionInfo } from '../src/js/auth';
@@ -56,56 +55,55 @@ jest.mock('universal-cookie', () => {
 jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }));
 
 jest.setSystemTime(mockDate);
+jest.useFakeTimers({ now: mockDate, doNotFake: ['queueMicrotask'] });
 
 const storage = {};
 global.HTMLCanvasElement.prototype.getContext = jest.fn();
 
-// Enable the mocking in tests.
-delete window.location;
-window.location = {
-  ...oldWindowLocation,
-  hostname: TEST_LOCATION,
-  assign: jest.fn(),
-  replace: jest.fn()
-};
-delete window.sessionStorage;
-window.sessionStorage = {
-  ...oldWindowSessionStorage,
-  getItem: jest.fn(yes),
-  setItem: jest.fn(),
-  removeItem: jest.fn()
-};
-delete window.localStorage;
-window.localStorage = {
-  ...oldWindowLocalStorage,
-  getItem: jest.fn(name => {
-    if (name === 'JWT') {
-      return JSON.stringify({ token: mockToken });
-    }
-    return storage[name];
-  }),
-  setItem: jest.fn(name => storage[name]),
-  removeItem: jest.fn()
-};
-window.mender_environment = menderEnvironment;
-window.ENV = 'test';
-global.AbortController = jest.fn().mockImplementation(() => mockAbortController);
-global.MessageChannel = MessageChannel;
-global.TextEncoder = TextEncoder;
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn()
-}));
-window.RTCPeerConnection = () => {
-  return {
-    createOffer: () => {},
-    setLocalDescription: () => {},
-    createDataChannel: () => {}
-  };
-};
-
 beforeAll(async () => {
+  // Enable the mocking in tests.
+  delete window.location;
+  window.location = {
+    ...oldWindowLocation,
+    hostname: TEST_LOCATION,
+    assign: jest.fn(),
+    replace: jest.fn()
+  };
+  delete window.sessionStorage;
+  window.sessionStorage = {
+    ...oldWindowSessionStorage,
+    getItem: jest.fn(yes),
+    setItem: jest.fn(),
+    removeItem: jest.fn()
+  };
+  delete window.localStorage;
+  window.localStorage = {
+    ...oldWindowLocalStorage,
+    getItem: jest.fn(name => {
+      if (name === 'JWT') {
+        return JSON.stringify({ token: mockToken });
+      }
+      return storage[name];
+    }),
+    setItem: jest.fn(name => storage[name]),
+    removeItem: jest.fn()
+  };
+  window.mender_environment = menderEnvironment;
+  window.ENV = 'test';
+  global.AbortController = jest.fn().mockImplementation(() => mockAbortController);
+  global.MessageChannel = MessageChannel;
+  global.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn()
+  }));
+  window.RTCPeerConnection = () => {
+    return {
+      createOffer: () => {},
+      setLocalDescription: () => {},
+      createDataChannel: () => {}
+    };
+  };
   createMocks();
   server = setupServer(...handlers);
   await server.listen({ onUnhandledRequest: 'error' });

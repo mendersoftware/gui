@@ -11,158 +11,161 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 
 import { useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
 import { accessTokens, defaultPassword, defaultState, userId as defaultUserId, permissionSets, rbacRoles, token } from '../mockData';
 
 export const userHandlers = [
-  rest.post(`${useradmApiUrl}/auth/login`, ({ headers }, res, ctx) => {
-    const authHeader = headers.get('authorization');
+  http.post(`${useradmApiUrl}/auth/login`, ({ request }) => {
+    const authHeader = request.headers.get('authorization');
     const authInfo = atob(authHeader?.split(' ')[1]);
     const [user, password] = authInfo.split(':');
     if (password !== defaultPassword) {
-      return res(ctx.status(401));
+      return new HttpResponse(null, { status: 401 });
     } else if (user.includes('limited')) {
-      return res(ctx.status(200), ctx.json('limitedToken'));
+      return HttpResponse.json('limitedToken');
     } else if (user.includes('2fa')) {
-      return res(ctx.status(401), ctx.json({ error: '2fa needed' }));
+      return new HttpResponse(JSON.stringify({ error: '2fa needed' }), { status: 401 });
     }
-    return res(ctx.status(200), ctx.json(token));
+    return HttpResponse.json(token);
   }),
-  rest.get(`https://hosted.mender.io${useradmApiUrl}/auth/magic/:id`, ({ params: { id } }, res, ctx) => {
+  http.get(`https://hosted.mender.io${useradmApiUrl}/auth/magic/:id`, ({ params: { id } }) => {
     if (id) {
-      return res(ctx.text('test'), ctx.cookie('JWT', 'test'));
+      return new HttpResponse('test', { headers: { 'Set-Cookie': 'JWT=test' } });
     }
-    return res(ctx.status(400));
+    return new HttpResponse(null, { status: 400 });
   }),
-  rest.post(`${useradmApiUrl}/auth/logout`, (req, res, ctx) => res(ctx.status(200))),
-  rest.post(`${useradmApiUrl}/auth/password-reset/:status`, ({ params: { status }, body: { email, secret_hash, password } }, res, ctx) => {
+  http.post(`${useradmApiUrl}/auth/logout`, () => new HttpResponse(null, { status: 200 })),
+  http.post(`${useradmApiUrl}/auth/password-reset/:status`, async ({ params: { status }, request }) => {
+    const { email, secret_hash, password } = await request.json();
     if (!['start', 'complete'].includes(status) && ![email, secret_hash, password].some(item => item)) {
-      return res(ctx.status(560));
+      return new HttpResponse(null, { status: 560 });
     }
     if (status === 'start' && email) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
     if (status === 'complete' && secret_hash && password) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(561));
+    return new HttpResponse(null, { status: 561 });
   }),
-  rest.put(`${useradmApiUrl}/2faverify`, ({ body: { token2fa } }, res, ctx) => {
+  http.put(`${useradmApiUrl}/2faverify`, async ({ request }) => {
+    const { token2fa } = await request.json();
     if (!token2fa) {
-      return res(ctx.status(562));
+      return new HttpResponse(null, { status: 562 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.get(`${useradmApiUrl}/users`, (req, res, ctx) => res(ctx.status(200), ctx.json(Object.values(defaultState.users.byId)))),
-  rest.get(`${useradmApiUrl}/users/me`, ({ headers }, res, ctx) => {
-    const authHeader = headers.get('authorization');
+  http.get(`${useradmApiUrl}/users`, () => HttpResponse.json(Object.values(defaultState.users.byId))),
+  http.get(`${useradmApiUrl}/users/me`, ({ request }) => {
+    const authHeader = request.headers.get('authorization');
     if (authHeader?.includes('limited')) {
-      return res(ctx.status(403), ctx.json({ error: 'forbidden by role-based access control' }));
+      return new HttpResponse(JSON.stringify({ error: 'forbidden by role-based access control' }), { status: 403 });
     }
-    return res(ctx.status(200), ctx.json(defaultState.users.byId[defaultUserId]));
+    return HttpResponse.json(defaultState.users.byId[defaultUserId]);
   }),
-  rest.get(`${useradmApiUrl}/users/:userId`, ({ params: { userId } }, res, ctx) => {
+  http.get(`${useradmApiUrl}/users/:userId`, ({ params: { userId } }) => {
     if (userId === 'me' || defaultState.users.byId[userId]) {
       const user = userId === 'me' ? defaultUserId : userId;
-      return res(ctx.status(200), ctx.json(defaultState.users.byId[user]));
+      return HttpResponse.json(defaultState.users.byId[user]);
     }
-    return res(ctx.status(563));
+    return new HttpResponse(null, { status: 563 });
   }),
-  rest.post(`${useradmApiUrl}/users`, ({ body: { email, password } }, res, ctx) => {
+  http.post(`${useradmApiUrl}/users`, async ({ request }) => {
+    const { email, password } = await request.json();
     if (email === 'test@test.com' || [email, password].every(value => value)) {
-      return res(ctx.status(200), ctx.json(defaultState.users.byId.a1));
+      return HttpResponse.json(defaultState.users.byId.a1);
     }
-    return res(ctx.status(564));
+    return new HttpResponse(null, { status: 564 });
   }),
-  rest.put(`${useradmApiUrl}/users/:userId`, ({ params: { userId }, body: { email, password } }, res, ctx) => {
+  http.put(`${useradmApiUrl}/users/:userId`, async ({ params: { userId }, request }) => {
+    const { email, password } = await request.json();
     if (defaultState.users.byId[userId] && [email, password].some(value => value)) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(565));
+    return new HttpResponse(null, { status: 565 });
   }),
-  rest.delete(`${useradmApiUrl}/users/:userId`, ({ params: { userId } }, res, ctx) => {
-    if (defaultState.users.byId[userId]) {
-      return res(ctx.status(200));
-    }
-    return res(ctx.status(566));
-  }),
-  rest.get(`${useradmApiUrl}/roles`, (req, res, ctx) => res(ctx.json(rbacRoles))),
-  rest.post(`${useradmApiUrl}/roles`, ({ body: { name, permissions } }, res, ctx) => {
+  http.delete(`${useradmApiUrl}/users/:userId`, ({ params: { userId } }) => new HttpResponse(null, { status: defaultState.users.byId[userId] ? 200 : 566 })),
+  http.get(`${useradmApiUrl}/roles`, () => HttpResponse.json(rbacRoles)),
+  http.post(`${useradmApiUrl}/roles`, async ({ request }) => {
+    const { name, permissions } = await request.json();
     if (
       [name, permissions].every(value => value) &&
       permissions.every(permission => permission.action && permission.object && permission.object.type && permission.object.value)
     ) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(567));
+    return new HttpResponse(null, { status: 567 });
   }),
-  rest.put(`${useradmApiUrl}/roles/:roleId`, ({ params: { roleId }, body: { description, name, permissions } }, res, ctx) => {
+  http.put(`${useradmApiUrl}/roles/:roleId`, async ({ params: { roleId }, request }) => {
+    const { description, name, permissions } = await request.json();
     if (defaultState.users.rolesById[roleId] && [description, name, permissions].some(value => value)) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(568));
+    return new HttpResponse(null, { status: 568 });
   }),
-  rest.delete(`${useradmApiUrl}/roles/:roleId`, ({ params: { roleId } }, res, ctx) => {
+  http.delete(
+    `${useradmApiUrl}/roles/:roleId`,
+    ({ params: { roleId } }) => new HttpResponse(null, { status: defaultState.users.rolesById[roleId] ? 200 : 569 })
+  ),
+  http.get(`${useradmApiUrlv2}/roles`, () => HttpResponse.json(rbacRoles)),
+  http.get(`${useradmApiUrlv2}/roles/:roleId`, async ({ params: { roleId } }) => {
     if (defaultState.users.rolesById[roleId]) {
-      return res(ctx.status(200));
+      return HttpResponse.json(defaultState.users.rolesById[roleId]);
     }
-    return res(ctx.status(569));
+    return new HttpResponse(null, { status: 571 });
   }),
-  rest.get(`${useradmApiUrlv2}/roles`, (req, res, ctx) => res(ctx.json(rbacRoles))),
-  rest.post(`${useradmApiUrlv2}/roles`, ({ body: { name, permission_sets_with_scope } }, res, ctx) => {
+  http.post(`${useradmApiUrlv2}/roles`, async ({ request }) => {
+    const { name, permission_sets_with_scope } = await request.json();
     if (
       !!name &&
       permission_sets_with_scope.every(permission => permission.name && permissionSets.find(permissionSet => permissionSet.name === permission.name))
     ) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(572));
+    return new HttpResponse(null, { status: 572 });
   }),
-  rest.put(`${useradmApiUrlv2}/roles/:roleId`, ({ params: { roleId }, body: { description, name, permission_sets_with_scope } }, res, ctx) => {
+  http.put(`${useradmApiUrlv2}/roles/:roleId`, async ({ params: { roleId }, request }) => {
+    const { description, name, permission_sets_with_scope } = await request.json();
     if (defaultState.users.rolesById[roleId] && [description, name, permission_sets_with_scope].some(value => value)) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(573));
+    return new HttpResponse(null, { status: 573 });
   }),
-  rest.delete(`${useradmApiUrlv2}/roles/:roleId`, ({ params: { roleId } }, res, ctx) => {
+  http.delete(`${useradmApiUrlv2}/roles/:roleId`, ({ params: { roleId } }) => {
     if (defaultState.users.rolesById[roleId]) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(574));
+    return new HttpResponse(null, { status: 574 });
   }),
-  rest.get(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.json(defaultState.users.globalSettings))),
-  rest.post(`${useradmApiUrl}/settings`, (req, res, ctx) => res(ctx.status(200))),
-  rest.get(`${useradmApiUrl}/settings/me`, (req, res, ctx) => res(ctx.json(defaultState.users.userSettings))),
-  rest.post(`${useradmApiUrl}/settings/me`, (req, res, ctx) => res(ctx.status(200))),
-  rest.get(`${useradmApiUrl}/settings/tokens`, (req, res, ctx) => res(ctx.json(accessTokens))),
-  rest.post(`${useradmApiUrl}/settings/tokens`, (req, res, ctx) => res(ctx.status(200), ctx.json('aNewToken'))),
-  rest.delete(`${useradmApiUrl}/settings/tokens/:tokenId`, ({ params: { tokenId } }, res, ctx) => {
-    if (tokenId === 'some-id-1') {
-      return res(ctx.status(200));
-    }
-    return res(ctx.status(577));
-  }),
-  rest.get(`${useradmApiUrl}/2faqr`, (req, res, ctx) => res(ctx.json({ qr: btoa('test') }))),
-  rest.post(`${useradmApiUrl}/users/:userId/2fa/enable`, ({ params: { userId } }, res, ctx) => {
+  http.get(`${useradmApiUrl}/settings`, () => HttpResponse.json(defaultState.users.globalSettings)),
+  http.post(`${useradmApiUrl}/settings`, () => new HttpResponse(null, { status: 200 })),
+  http.get(`${useradmApiUrl}/settings/me`, () => HttpResponse.json(defaultState.users.userSettings)),
+  http.post(`${useradmApiUrl}/settings/me`, () => new HttpResponse(null, { status: 200 })),
+  http.get(`${useradmApiUrl}/settings/tokens`, () => HttpResponse.json(accessTokens)),
+  http.post(`${useradmApiUrl}/settings/tokens`, () => HttpResponse.json('aNewToken')),
+  http.delete(
+    `${useradmApiUrl}/settings/tokens/:tokenId`,
+    ({ params: { tokenId } }) => new HttpResponse(null, { status: tokenId === 'some-id-1' ? 200 : 577 })
+  ),
+  http.get(`${useradmApiUrl}/2faqr`, () => HttpResponse.json({ qr: btoa('test') })),
+  http.post(`${useradmApiUrl}/users/:userId/2fa/enable`, ({ params: { userId } }) => {
     if (defaultState.users.byId[userId] || userId === 'me') {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(570));
+    return new HttpResponse(null, { status: 570 });
   }),
-  rest.post(`${useradmApiUrl}/users/:userId/2fa/disable`, ({ params: { userId } }, res, ctx) => {
+  http.post(`${useradmApiUrl}/users/:userId/2fa/disable`, ({ params: { userId } }) => {
     if (defaultState.users.byId[userId] || userId === 'me') {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(571));
+    return new HttpResponse(null, { status: 571 });
   }),
-  rest.post(`${useradmApiUrl}/auth/verify-email/start`, (req, res, ctx) => res(ctx.status(200))),
-  rest.post(`${useradmApiUrl}/auth/verify-email/complete`, ({ body: { secret_hash } }, res, ctx) => {
-    if (secret_hash === 'superSecret') {
-      return res(ctx.status(200));
-    }
-    return res(ctx.status(576));
+  http.post(`${useradmApiUrl}/auth/verify-email/start`, () => new HttpResponse(null, { status: 200 })),
+  http.post(`${useradmApiUrl}/auth/verify-email/complete`, async ({ request }) => {
+    const { secret_hash } = await request.json();
+    return new HttpResponse(null, { status: secret_hash === 'superSecret' ? 200 : 576 });
   }),
-  rest.get(`${useradmApiUrlv2}/permission_sets`, (req, res, ctx) => res(ctx.json(permissionSets)))
+  http.get(`${useradmApiUrlv2}/permission_sets`, () => HttpResponse.json(permissionSets))
 ];
