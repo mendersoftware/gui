@@ -71,7 +71,7 @@ export const Signup = () => {
   const [emailVerified, setEmailVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const [oauthProvider, setOauthProvider] = useState(undefined);
-  const [oauthId, setOauthId] = useState(undefined);
+  const [oauthId, setOauthId] = useState('');
   const [marketing, setMarketing] = useState(false);
   const [organization, setOrganization] = useState('');
   const [tos, setTos] = useState(false);
@@ -91,7 +91,7 @@ export const Signup = () => {
     const usedOauthProvider = cookies.get('oauth');
     if (usedOauthProvider) {
       setOauthProvider(usedOauthProvider);
-      setOauthId(cookies.get('externalID'));
+      setOauthId(`${cookies.get('externalID')}`);
       setEmail(cookies.get('email'));
       setEmailVerified(stringToBoolean(cookies.get('emailVerified')));
       setStep(2);
