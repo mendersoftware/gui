@@ -16,7 +16,7 @@ import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
 import { baseUrlToDomain, isLoggedIn, login, prepareCookies, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Test setup', () => {
   test.describe('basic window checks', () => {
@@ -80,12 +80,15 @@ test.describe('Test setup', () => {
       // the following sets the UI up for easier navigation by disabling onboarding
       const domain = baseUrlToDomain(baseUrl);
       const { token, userId } = await login(username, password, baseUrl);
-      context = await prepareCookies(context, domain, userId, token);
+      context = await prepareCookies(context, domain, userId);
       const newPage = await context.newPage();
       await newPage.goto(baseUrl);
-      await newPage.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
+      await newPage.evaluate(() => {
+        localStorage.setItem('JWT', JSON.stringify({ token }));
+        localStorage.setItem(`onboardingComplete`, 'true');
+      });
       await isLoggedIn(newPage);
-      await context.storageState({ path: 'storage.json' });
+      await context.storageState({ path: storagePath });
     });
   });
 
@@ -95,10 +98,14 @@ test.describe('Test setup', () => {
       console.log(`logging in user with username: ${username} and password: ${password}`);
       const { token: JWT, userId } = await login(username, password, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
-      context = await prepareCookies(context, domain, userId, JWT);
+      context = await prepareCookies(context, domain, userId);
+      context.addInitScript(token => {
+        window.localStorage.setItem('JWT', JSON.stringify({ token }));
+        window.localStorage.setItem(`onboardingComplete`, 'true');
+      }, JWT);
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui/settings`);
-      const isVisible = await page.isVisible(`text=/Change email/i`);
+      const isVisible = await page.getByRole('button', { name: /change email/i }).isVisible();
       if (!isVisible) {
         console.log('settings may not be loaded - move around');
         await page.goto(`${baseUrl}ui/help`);
@@ -108,7 +115,7 @@ test.describe('Test setup', () => {
       if (environment === 'staging') {
         await startDockerClient(baseUrl, token);
       }
-      await context.storageState({ path: 'storage.json' });
+      await context.storageState({ path: storagePath });
       expect(token).toBeTruthy();
     });
   });

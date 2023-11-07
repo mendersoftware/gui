@@ -18,6 +18,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render as testingLibRender } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
+import { getSessionInfo } from '../../auth';
 import { getConfiguredStore } from '../../reducers';
 import Settings from './settings';
 
@@ -35,10 +36,8 @@ describe('Settings Component', () => {
             hasMultitenancy: true
           }
         },
-        organization: {
-          ...defaultState.organization,
-          organization: {}
-        }
+        organization: { ...defaultState.organization, organization: {} },
+        users: { ...defaultState.users, currentSession: getSessionInfo() }
       }
     });
   });

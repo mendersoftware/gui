@@ -19,7 +19,7 @@ import https from 'https';
 import md5 from 'md5';
 
 import test, { expect } from '../fixtures/fixtures';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 dayjs.extend(isBetween);
 
@@ -27,7 +27,7 @@ const releaseTag = 'someTag';
 
 test.describe('Files', () => {
   const fileName = 'mender-demo-artifact.mender';
-  test.use({ storageState: 'storage.json' });
+  test.use({ storageState: storagePath });
 
   test('allows file uploads', async ({ loggedInPage: page }) => {
     await page.click(`.leftNav :text('Releases')`);

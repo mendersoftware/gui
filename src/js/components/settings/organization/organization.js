@@ -34,7 +34,7 @@ import {
 } from '../../../actions/organizationActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { createFileDownload, toggle } from '../../../helpers';
-import { getFeatures, getIsEnterprise, getIsPreview, getOrganization, getUserRoles } from '../../../selectors';
+import { getCurrentSession, getFeatures, getIsEnterprise, getIsPreview, getOrganization, getUserRoles } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import Billing from './billing';
@@ -91,6 +91,7 @@ export const Organization = () => {
   const org = useSelector(getOrganization);
   const samlConfigs = useSelector(state => state.organization.samlConfigs);
   const dispatch = useDispatch();
+  const { token } = useSelector(getCurrentSession);
 
   const { classes } = useStyles();
 
@@ -136,7 +137,7 @@ export const Organization = () => {
   );
 
   const onDownloadReportClick = () =>
-    dispatch(downloadLicenseReport()).then(report => createFileDownload(report, `Mender-license-report-${moment().format(moment.HTML5_FMT.DATE)}`));
+    dispatch(downloadLicenseReport()).then(report => createFileDownload(report, `Mender-license-report-${moment().format(moment.HTML5_FMT.DATE)}`, token));
 
   const onTenantInfoClick = () => {
     copy(`Organization: ${org.name}, Tenant ID: ${org.id}`);
@@ -194,7 +195,13 @@ export const Organization = () => {
         </div>
       )}
       <Collapse className="margin-left-large" in={isConfiguringSSO}>
-        <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={message => dispatch(setSnackbar(message))} />
+        <SAMLConfig
+          configs={samlConfigs}
+          onSave={onSaveSSOSettings}
+          onCancel={onCancelSSOSettings}
+          setSnackbar={message => dispatch(setSnackbar(message))}
+          token={token}
+        />
       </Collapse>
       {isHosted && <Billing />}
       {(canPreview || !isHosted) && isEnterprise && isAdmin && (

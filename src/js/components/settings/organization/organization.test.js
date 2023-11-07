@@ -20,6 +20,7 @@ import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import { getSessionInfo } from '../../../auth';
 import { CancelSubscriptionAlert, CancelSubscriptionButton, DeviceLimitExpansionNotification, TrialExpirationNote } from './billing';
 import MyOrganization, { OrgHeader } from './organization';
 
@@ -82,7 +83,9 @@ describe('MyOrganization Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(<MyOrganization />, { preloadedState });
+    const { baseElement } = render(<MyOrganization />, {
+      preloadedState: { ...preloadedState, users: { ...preloadedState.users, currentSession: getSessionInfo() } }
+    });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
@@ -96,7 +99,7 @@ describe('MyOrganization Component', () => {
     File.prototype.text = jest.fn().mockResolvedValue(str);
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = <MyOrganization />;
-    const { rerender } = render(ui, { preloadedState });
+    const { rerender } = render(ui, { preloadedState: { ...preloadedState, users: { ...preloadedState.users, currentSession: getSessionInfo() } } });
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/text editor/i)).toBeVisible();
     await user.click(screen.getByText(/text editor/i));

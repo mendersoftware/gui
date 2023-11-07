@@ -31,7 +31,7 @@ test.describe('RBAC functionality', () => {
   });
   test('allows role creation for static groups', async ({ baseUrl, environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
-    // test.use({ storageState: 'storage.json' });
+    // test.use({ storageState: storagePath });
     await page.goto(`${baseUrl}ui/settings`);
     await page.waitForSelector('text=/Global settings/i');
     await page.click('text=/roles/i');
@@ -85,7 +85,7 @@ test.describe('RBAC functionality', () => {
     await page.waitForSelector(selectors.password);
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
-    await page.click(`button:has-text('Log in')`);
+    await page.getByRole('button', { name: /log in/i }).click();
     await isLoggedIn(page);
   });
 
@@ -99,7 +99,7 @@ test.describe('RBAC functionality', () => {
     await page.waitForSelector(selectors.password);
     await page.click(selectors.password);
     await page.fill(selectors.password, password);
-    await page.click(`button:has-text('Log in')`);
+    await page.getByRole('button', { name: /log in/i }).click();
     await isLoggedIn(page);
     await page.reload();
     const releasesButton = page.getByText(/releases/i);

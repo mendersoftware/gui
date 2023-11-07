@@ -20,12 +20,12 @@ import { getDebConfigurationCode } from '../../../helpers';
 import CopyCode from '../../common/copy-code';
 import DocsLink from '../../common/docslink';
 
-export const ConnectToGatewayDialog = ({ gatewayIp, isPreRelease, onCancel, tenantToken }) => (
+export const ConnectToGatewayDialog = ({ gatewayIp, isPreRelease, onCancel, tenantToken, token }) => (
   <Dialog open fullWidth maxWidth="md">
     <DialogTitle>Connecting a device to a gateway</DialogTitle>
     <DialogContent className="onboard-dialog dialog-content">
       On the device terminal, run the following command:
-      <CopyCode code={getDebConfigurationCode({ ipAddress: gatewayIp, isDemoMode: true, tenantToken, isPreRelease })} withDescription />
+      <CopyCode code={getDebConfigurationCode({ ipAddress: gatewayIp, isDemoMode: true, tenantToken, token, isPreRelease })} withDescription />
       <p>
         Note: this is only intended for demo or testing purposes. For production installation please refer to the{' '}
         <DocsLink path="get-started/mender-gateway" title="full Mender Gateway documentation" />

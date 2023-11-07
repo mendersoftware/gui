@@ -17,7 +17,9 @@ export const initialState = {
   byId: {},
   currentUser: null,
   customColumns: [],
-  jwtToken: null,
+  currentSession: {
+    // { token: window.localStorage.getItem('JWT'), expiresAt: '2023-01-01T00:15:00.000Z' | undefined }, // expiresAt depending on the stay logged in setting
+  },
   qrCode: null,
   globalSettings: {
     id_attribute: undefined,
@@ -52,7 +54,7 @@ const userReducer = (state = initialState, action) => {
     case UserConstants.SUCCESSFULLY_LOGGED_IN:
       return {
         ...state,
-        jwtToken: action.value
+        currentSession: action.value
       };
     case UserConstants.RECEIVED_USER_LIST:
       return {

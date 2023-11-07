@@ -25,7 +25,7 @@ import { getUserList } from '../../actions/userActions';
 import { BEGINNING_OF_TIME, BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { createDownload, getISOStringBoundaries } from '../../helpers';
-import { getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getCurrentSession, getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import { ControlledAutoComplete } from '../common/forms/autocomplete';
@@ -93,6 +93,7 @@ export const AuditLogs = props => {
   const { hasAuditlogs } = tenantCapabilities;
   const [detailsReset, setDetailsReset] = useState('');
   const [dirtyField, setDirtyField] = useState('');
+  const { token } = useSelector(getCurrentSession);
 
   const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type = '' } = selectionState;
 
@@ -172,7 +173,8 @@ export const AuditLogs = props => {
     dispatch(getAuditLogsCsvLink()).then(address => {
       createDownload(
         encodeURI(address),
-        `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`
+        `Mender-AuditLog-${moment(startDate).format(moment.HTML5_FMT.DATE)}-${moment(endDate).format(moment.HTML5_FMT.DATE)}.csv`,
+        token
       );
       setCsvLoading(false);
     });

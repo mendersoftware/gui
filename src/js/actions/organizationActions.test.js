@@ -15,6 +15,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { defaultState, webhookEvents } from '../../../tests/mockData';
+import { getSessionInfo } from '../auth';
 import { SET_ANNOUNCEMENT, SET_FIRST_LOGIN_AFTER_SIGNUP, SET_SNACKBAR, locations } from '../constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../constants/deviceConstants';
 import {
@@ -142,7 +143,7 @@ describe('organization actions', () => {
   });
 
   it('should handle organization retrieval', async () => {
-    const store = mockStore({ ...defaultState });
+    const store = mockStore({ ...defaultState, users: { ...defaultState.users, currentSession: getSessionInfo() } });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
       { type: SET_ORGANIZATION, organization: defaultState.organization.organization },
@@ -210,7 +211,7 @@ describe('organization actions', () => {
   });
 
   it('should handle account upgrade completion', async () => {
-    const store = mockStore({ ...defaultState });
+    const store = mockStore({ ...defaultState, users: { ...defaultState.users, currentSession: getSessionInfo() } });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
       { organization: defaultState.organization.organization, type: SET_ORGANIZATION },

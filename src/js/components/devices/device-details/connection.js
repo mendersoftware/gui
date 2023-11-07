@@ -26,7 +26,7 @@ import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceCon
 import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
 import { checkPermissionsObject, uiPermissionsById } from '../../../constants/userConstants';
 import { createDownload } from '../../../helpers';
-import { getTenantCapabilities, getUserCapabilities } from '../../../selectors';
+import { getCurrentSession, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import { formatAuditlogs } from '../../../utils/locationutils';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
@@ -131,6 +131,7 @@ export const DeviceConnection = ({ className = '', device }) => {
   const userCapabilities = useSelector(getUserCapabilities);
   const { canAuditlog, canTroubleshoot } = userCapabilities;
   const { hasAuditlogs } = useSelector(getTenantCapabilities);
+  const { token } = useSelector(getCurrentSession);
   const { classes } = useStyles();
   const { connect_status, connect_updated_ts, isOffline } = device;
   const [connectionStatus, setConnectionStatus] = useState(connect_status);
@@ -175,10 +176,10 @@ export const DeviceConnection = ({ className = '', device }) => {
       dispatch(setSnackbar('Downloading file'));
       dispatch(getDeviceFileDownloadLink(device.id, path)).then(address => {
         const filename = path.substring(path.lastIndexOf('/') + 1) || 'file';
-        createDownload(address, filename);
+        createDownload(address, filename, token);
       });
     },
-    [dispatch, device.id]
+    [dispatch, device.id, token]
   );
 
   return (

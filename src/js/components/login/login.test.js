@@ -15,7 +15,6 @@ import React from 'react';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Cookies from 'universal-cookie';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
@@ -34,10 +33,6 @@ const preloadedState = {
 };
 
 describe('Login Component', () => {
-  beforeEach(() => {
-    const cookies = new Cookies();
-    cookies.get.mockReturnValue();
-  });
   it('renders correctly', async () => {
     const { baseElement } = render(<Login />, { preloadedState });
     const view = baseElement.firstChild;

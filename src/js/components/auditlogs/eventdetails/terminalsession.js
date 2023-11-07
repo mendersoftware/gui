@@ -20,7 +20,7 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
-import { getDeviceById as getDeviceByIdSelector, getIdAttribute, getUserCapabilities } from '../../../selectors';
+import { getCurrentSession, getDeviceById as getDeviceByIdSelector, getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
 import DeviceDetails, { DetailInformation } from './devicedetails';
@@ -36,6 +36,7 @@ export const TerminalSession = ({ item, onClose }) => {
   const { canReadDevices } = useSelector(getUserCapabilities);
   const device = useSelector(state => getDeviceByIdSelector(state, object.id));
   const { attribute: idAttribute } = useSelector(getIdAttribute);
+  const { token } = useSelector(getCurrentSession);
 
   useEffect(() => {
     const { action, actor, meta, object, time } = item;
@@ -61,7 +62,7 @@ export const TerminalSession = ({ item, onClose }) => {
 
   return (
     <div className="flexbox" style={{ flexWrap: 'wrap' }}>
-      <TerminalPlayer className="flexbox column margin-top" item={item} sessionInitialized={!!sessionDetails} />
+      <TerminalPlayer className="flexbox column margin-top" item={item} sessionInitialized={!!sessionDetails} token={token} />
       <div className="flexbox column" style={{ margin: theme.spacing(3), minWidth: 'min-content' }}>
         {canReadDevices && <DeviceDetails device={device} idAttribute={idAttribute} onClose={onClose} />}
         <DetailInformation title="session" details={sessionMeta} />

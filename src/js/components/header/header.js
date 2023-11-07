@@ -34,12 +34,12 @@ import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
 import { getAllDeviceCounts } from '../../actions/deviceActions';
 import { initializeSelf, logoutUser, setAllTooltipsReadState, setHideAnnouncement } from '../../actions/userActions';
-import { getToken } from '../../auth';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { READ_STATES } from '../../constants/userConstants';
-import { decodeSessionToken, isDarkMode } from '../../helpers';
+import { isDarkMode } from '../../helpers';
 import {
   getAcceptedDevices,
+  getCurrentSession,
   getCurrentUser,
   getDeviceCountsByStatus,
   getDeviceLimit,
@@ -105,10 +105,8 @@ const useStyles = makeStyles()(theme => ({
 export const Header = ({ mode }) => {
   const { classes } = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [loggingOut, setLoggingOut] = useState(false);
   const [gettingUser, setGettingUser] = useState(false);
   const [hasOfferCookie, setHasOfferCookie] = useState(false);
-  const sessionId = useDebounce(getToken(), TIMEOUTS.debounceDefault);
 
   const organization = useSelector(getOrganization);
   const { canManageUsers: allowUserManagement } = useSelector(getUserCapabilities);
@@ -124,23 +122,17 @@ export const Header = ({ mode }) => {
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const user = useSelector(getCurrentUser);
+  const { token } = useSelector(getCurrentSession);
+  const userId = useDebounce(user.id, TIMEOUTS.debounceDefault);
+
   const dispatch = useDispatch();
   const deviceTimer = useRef();
   const showHelptips = useSelector(getShowHelptips);
 
-  const updateUsername = useCallback(() => {
-    const userId = decodeSessionToken(getToken());
-    if (gettingUser || !userId) {
-      return;
-    }
-    setGettingUser(true);
-    // get current user
-    return dispatch(initializeSelf()).finally(() => setGettingUser(false));
-  }, [dispatch, gettingUser]);
-
   useEffect(() => {
-    if ((!sessionId || !user?.id || !user.email.length) && !gettingUser && !loggingOut) {
-      updateUsername();
+    if ((!userId || !user.email?.length) && !gettingUser && token) {
+      setGettingUser(true);
+      dispatch(initializeSelf());
       return;
     }
     Tracking.setTrackingEnabled(hasTrackingEnabled);
@@ -151,7 +143,7 @@ export const Header = ({ mode }) => {
         dispatch(setFirstLoginAfterSignup(false));
       }
     }
-  }, [sessionId, user.id, user.email, gettingUser, loggingOut, user, hasTrackingEnabled, organization, updateUsername, firstLoginAfterSignup, dispatch]);
+  }, [dispatch, firstLoginAfterSignup, gettingUser, hasTrackingEnabled, organization, token, user, user.email, userId]);
 
   useEffect(() => {
     const showOfferCookie = cookies.get('offer') === currentOffer.name;
@@ -164,10 +156,8 @@ export const Header = ({ mode }) => {
   }, [dispatch]);
 
   const onLogoutClick = () => {
-    setGettingUser(false);
-    setLoggingOut(true);
     setAnchorEl(null);
-    dispatch(logoutUser());
+    dispatch(logoutUser()).then(() => window.location.replace('/ui/'));
   };
 
   const onSearch = useCallback((searchTerm, refreshTrigger) => dispatch(setSearchState({ refreshTrigger, searchTerm, page: 1 })), [dispatch]);
@@ -178,6 +168,8 @@ export const Header = ({ mode }) => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
     setHasOfferCookie(true);
   };
+
+  const handleClose = () => setAnchorEl(null);
 
   const showOffer =
     isHosted && moment().isBefore(currentOffer.expires) && (organization.trial ? currentOffer.trial : currentOffer[organization.plan]) && !hasOfferCookie;
@@ -224,7 +216,7 @@ export const Header = ({ mode }) => {
           </Button>
           <Menu
             anchorEl={anchorEl}
-            onClose={() => setAnchorEl(null)}
+            onClose={handleClose}
             open={Boolean(anchorEl)}
             anchorOrigin={{
               vertical: 'center',
@@ -235,24 +227,24 @@ export const Header = ({ mode }) => {
               horizontal: 'center'
             }}
           >
-            <MenuItem component={Link} to="/settings">
+            <MenuItem component={Link} to="/settings" onClick={handleClose}>
               Settings
             </MenuItem>
-            <MenuItem component={Link} to="/settings/my-profile">
+            <MenuItem component={Link} to="/settings/my-profile" onClick={handleClose}>
               My profile
             </MenuItem>
             {multitenancy && (
-              <MenuItem component={Link} to="/settings/organization-and-billing">
+              <MenuItem component={Link} to="/settings/organization-and-billing" onClick={handleClose}>
                 My organization
               </MenuItem>
             )}
             {allowUserManagement && (
-              <MenuItem component={Link} to="/settings/user-management">
+              <MenuItem component={Link} to="/settings/user-management" onClick={handleClose}>
                 User management
               </MenuItem>
             )}
             <MenuItem onClick={onToggleTooltips}>{`Mark help tips as ${showHelptips ? '' : 'un'}read`}</MenuItem>
-            <MenuItem component={Link} to="/help/get-started">
+            <MenuItem component={Link} to="/help/get-started" onClick={handleClose}>
               Help & support
             </MenuItem>
             <MenuItem onClick={onLogoutClick}>

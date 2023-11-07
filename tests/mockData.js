@@ -11,6 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+import { maxSessionAge } from '../src/js/auth';
 import { SORTING_OPTIONS } from '../src/js/constants/appConstants';
 import * as DeviceConstants from '../src/js/constants/deviceConstants';
 import { ALL_RELEASES } from '../src/js/constants/releaseConstants';
@@ -49,7 +50,7 @@ export const menderEnvironment = {
 };
 export const TEST_SESSION_DATETIME = '2019-01-13T13:00:00.000Z';
 const testDate = new Date(TEST_SESSION_DATETIME);
-export const mockDate = new Date(testDate.setMilliseconds(testDate.getMilliseconds() + 900));
+export const mockDate = new Date(testDate.setMilliseconds(testDate.getMilliseconds() + maxSessionAge));
 
 export const defaultPassword = 'mysecretpassword!123';
 export const defaultCreationDate = '2019-01-13T06:25:00.000Z';

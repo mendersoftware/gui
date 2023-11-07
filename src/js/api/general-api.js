@@ -13,7 +13,7 @@
 //    limitations under the License.
 import axios, { isCancel } from 'axios';
 
-import { getToken, logout } from '../auth';
+import { cleanUp, getToken } from '../auth';
 import { TIMEOUTS } from '../constants/appConstants';
 
 export const headerNames = {
@@ -31,8 +31,9 @@ export const apiUrl = {
 export const MAX_PAGE_SIZE = 500;
 
 const unauthorizedRedirect = error => {
-  if (!isCancel(error) && error.response?.status === 401) {
-    logout();
+  if (!isCancel(error) && error.response?.status === 401 && getToken()) {
+    cleanUp();
+    window.location.replace('/ui/');
   }
   return Promise.reject(error);
 };

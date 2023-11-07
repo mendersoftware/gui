@@ -18,6 +18,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import { getSessionInfo } from '../../auth';
 import Upgrade, { PostUpgradeNote, PricingContactNote } from './upgrade';
 
 describe('smaller components', () => {
@@ -39,18 +40,6 @@ describe('smaller components', () => {
   });
 });
 
-const preloadedState = {
-  ...defaultState,
-  app: {
-    ...defaultState.app,
-    features: {
-      ...defaultState.app.features,
-      hasDeviceConfig: true,
-      hasDeviceConnect: true
-    }
-  }
-};
-
 describe('Upgrade Component', () => {
   it('renders correctly', async () => {
     jest.mock('@stripe/stripe-js', () => ({
@@ -61,7 +50,13 @@ describe('Upgrade Component', () => {
       <Elements stripe={stripe}>
         <Upgrade />
       </Elements>,
-      { preloadedState }
+      {
+        preloadedState: {
+          ...defaultState,
+          app: { ...defaultState.app, features: { ...defaultState.app.features, hasDeviceConfig: true, hasDeviceConnect: true } },
+          users: { ...defaultState.users, currentSession: getSessionInfo() }
+        }
+      }
     );
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();

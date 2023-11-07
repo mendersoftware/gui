@@ -75,7 +75,6 @@ describe('AddArtifact Component', () => {
     await user.click(screen.getByPlaceholderText(placeholderText));
     await user.type(screen.getByPlaceholderText(placeholderText), 'some/path');
     await waitFor(() => rerender(ui));
-    screen.debug(screen.getByPlaceholderText(placeholderText));
     await waitFor(() => expect(screen.getByText(/Destination has to be an absolute path/i)).toBeInTheDocument());
     await user.click(screen.getByPlaceholderText(placeholderText));
     await user.clear(screen.getByPlaceholderText(placeholderText));

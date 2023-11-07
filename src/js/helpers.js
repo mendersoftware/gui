@@ -13,10 +13,9 @@
 //    limitations under the License.
 import React from 'react';
 
-import { jwtDecode } from 'jwt-decode';
 import pluralize from 'pluralize';
+import Cookies from 'universal-cookie';
 
-import { getToken } from './auth';
 import { DARK_MODE } from './constants/appConstants';
 import {
   DEPLOYMENT_STATES,
@@ -85,16 +84,6 @@ export const getDeploymentState = deployment => {
     status = deploymentDisplayStates.paused;
   }
   return status;
-};
-
-export const decodeSessionToken = token => {
-  try {
-    var decoded = jwtDecode(token);
-    return decoded.sub;
-  } catch (err) {
-    //console.log(err);
-    return;
-  }
 };
 
 export const isEmpty = obj => {
@@ -457,8 +446,8 @@ const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, ten
 };
 
 export const getDebConfigurationCode = props => {
-  const { tenantToken, isPreRelease } = props;
-  const envVars = tenantToken ? `JWT_TOKEN="${getToken()}"\nTENANT_TOKEN="${tenantToken}"\n` : '';
+  const { tenantToken, token, isPreRelease } = props;
+  const envVars = tenantToken ? `JWT_TOKEN="${token}"\nTENANT_TOKEN="${tenantToken}"\n` : '';
   const installScriptArgs = getInstallScriptArgs(props);
   const scriptUrl = isPreRelease ? 'https://get.mender.io/staging' : 'https://get.mender.io';
   const menderSetupArgs = getSetupArgs(props);
@@ -516,17 +505,20 @@ export const extractSoftwareItem = (artifactProvides = {}) => {
   );
 };
 
-export const createDownload = (target, filename) => {
+const cookies = new Cookies();
+
+export const createDownload = (target, filename, token) => {
   let link = document.createElement('a');
   link.setAttribute('href', target);
   link.setAttribute('download', filename);
   link.style.display = 'none';
   document.body.appendChild(link);
+  cookies.set('JWT', token, { path: '/', secure: true, sameSite: 'strict', maxAge: 5 });
   link.click();
   document.body.removeChild(link);
 };
 
-export const createFileDownload = (content, filename) => createDownload('data:text/plain;charset=utf-8,' + encodeURIComponent(content), filename);
+export const createFileDownload = (content, filename, token) => createDownload('data:text/plain;charset=utf-8,' + encodeURIComponent(content), filename, token);
 
 export const getISOStringBoundaries = currentDate => {
   const date = [currentDate.getUTCFullYear(), `0${currentDate.getUTCMonth() + 1}`.slice(-2), `0${currentDate.getUTCDate()}`.slice(-2)].join('-');

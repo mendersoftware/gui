@@ -79,7 +79,7 @@ const tagsSample = [{ name: 'saas-v2023.05.02', more: 'here' }];
 
 const signupHandler = ({ body: signup }, res, ctx) => {
   if (['email', 'organization', 'plan', 'tos'].every(item => !!signup[item])) {
-    return res(ctx.text('test'), ctx.cookie('JWT', 'test'));
+    return res(ctx.text('test'));
   }
   return res(ctx.status(400));
 };

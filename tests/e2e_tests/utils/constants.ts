@@ -29,6 +29,8 @@ export const selectors = {
   terminalText: '.terminal.xterm textarea'
 };
 
+export const storagePath = 'storage.json';
+
 const oneSecond = 1000;
 export const timeouts = {
   oneSecond,
