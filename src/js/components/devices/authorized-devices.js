@@ -390,10 +390,7 @@ export const Authorized = ({
     }
   };
 
-  const onCreateDeploymentClick = devices => {
-    const devicesLink = !onboardingState.complete ? '' : `&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`;
-    return navigate(`/deployments?open=true${devicesLink}`);
-  };
+  const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
 
   const onCloseExpandedDevice = useCallback(() => dispatch(setDeviceListState({ selectedId: undefined, detailsTab: '' })), [dispatch]);
 
