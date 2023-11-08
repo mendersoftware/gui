@@ -21,10 +21,9 @@ import copy from 'copy-to-clipboard';
 import Cookies from 'universal-cookie';
 
 import { setSnackbar } from '../../actions/appActions';
-import { getToken } from '../../auth';
 import { canAccess } from '../../constants/appConstants';
 import { detectOsIdentifier, toggle } from '../../helpers';
-import { getCurrentUser, getIsEnterprise, getTenantCapabilities, getVersionInformation } from '../../selectors';
+import { getCurrentSession, getCurrentUser, getIsEnterprise, getTenantCapabilities, getVersionInformation } from '../../selectors';
 import Tracking from '../../tracking';
 import CommonDocsLink from '../common/docslink';
 import Time from '../common/time';
@@ -106,31 +105,31 @@ const nonOsLocationFormatter = ({ tool, versionInfo }) => {
   };
 };
 
-const getAuthHeader = (headerFlag, tokens) => {
-  let header = `${headerFlag} "Cookie: JWT=${getToken()}"`;
-  if (tokens.length) {
-    header = `${headerFlag} "Authorization: Bearer ${tokens[0]}"`;
+const getAuthHeader = (headerFlag, personalAccessTokens, token) => {
+  let header = `${headerFlag} "Cookie: JWT=${token}"`;
+  if (personalAccessTokens.length) {
+    header = `${headerFlag} "Authorization: Bearer ${personalAccessTokens[0]}"`;
   }
   return header;
 };
 
-const defaultCurlDownload = ({ location, tokens }) => `curl ${getAuthHeader('-H', tokens)} -LO ${location}`;
+const defaultCurlDownload = ({ location, tokens, token }) => `curl ${getAuthHeader('-H', tokens, token)} -LO ${location}`;
 
-const defaultWgetDownload = ({ location, tokens }) => `wget ${getAuthHeader('--header', tokens)} ${location}`;
+const defaultWgetDownload = ({ location, tokens, token }) => `wget ${getAuthHeader('--header', tokens, token)} ${location}`;
 
-const defaultGitlabJob = ({ location, tokens }) => {
+const defaultGitlabJob = ({ location, tokens, token }) => {
   const filename = location.substring(location.lastIndexOf('/') + 1);
   return `
 download:mender-tools:
   image: curlimages/curl
   stage: download
   variables:
-    ${tokens.length ? `MENDER_TOKEN: ${tokens}` : `MENDER_JWT: ${getToken()}`}
+    ${tokens.length ? `MENDER_TOKEN: ${tokens}` : `MENDER_JWT: ${token}`}
   script:
     - if [ -n "$MENDER_TOKEN" ]; then
     - curl -H "Authorization: Bearer $MENDER_TOKEN" -LO ${location}
     - else
-    - ${defaultCurlDownload({ location, tokens })}
+    - ${defaultCurlDownload({ location, tokens, token })}
     - fi
   artifacts:
     expire_in: 1w
@@ -243,10 +242,10 @@ const DocsLink = ({ title, ...remainder }) => (
   />
 );
 
-const DownloadableComponents = ({ locations, onMenuClick }) => {
+const DownloadableComponents = ({ locations, onMenuClick, token }) => {
   const onLocationClick = (location, title) => {
     Tracking.event({ category: 'download', action: title });
-    cookies.set('JWT', getToken(), { path: '/', maxAge: 60, domain: '.mender.io', sameSite: false });
+    cookies.set('JWT', token, { path: '/', maxAge: 60, domain: '.mender.io', sameSite: false });
     const link = document.createElement('a');
     link.href = location;
     link.rel = 'noopener noreferrer';
@@ -272,7 +271,7 @@ const DownloadableComponents = ({ locations, onMenuClick }) => {
   ));
 };
 
-const DownloadSection = ({ item, isEnterprise, onMenuClick, os, versionInformation }) => {
+const DownloadSection = ({ item, isEnterprise, onMenuClick, os, token, versionInformation }) => {
   const [open, setOpen] = useState(false);
   const { id, getLocations, packageId, title } = item;
   const { locations, ...extraLocations } = getLocations({ isEnterprise, tool: item, versionInfo: versionInformation.repos, os });
@@ -289,11 +288,11 @@ const DownloadSection = ({ item, isEnterprise, onMenuClick, os, versionInformati
       </AccordionSummary>
       <AccordionDetails>
         <div>
-          <DownloadableComponents locations={locations} onMenuClick={onMenuClick} />
+          <DownloadableComponents locations={locations} onMenuClick={onMenuClick} token={token} />
           {Object.entries(extraLocations).map(([key, locations]) => (
             <React.Fragment key={key}>
               <h5 className="margin-bottom-none muted">{key}</h5>
-              <DownloadableComponents locations={locations} onMenuClick={onMenuClick} />
+              <DownloadableComponents locations={locations} onMenuClick={onMenuClick} token={token} />
             </React.Fragment>
           ))}
         </div>
@@ -309,6 +308,7 @@ export const Downloads = () => {
   const [os] = useState(detectOsIdentifier());
   const dispatch = useDispatch();
   const { tokens = [] } = useSelector(getCurrentUser);
+  const { token } = useSelector(getCurrentSession);
   const isEnterprise = useSelector(getIsEnterprise);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const { latestRelease: versions = { repos: {}, releaseDate: '' } } = useSelector(getVersionInformation);
@@ -335,10 +335,10 @@ export const Downloads = () => {
     event => {
       const value = event?.target.getAttribute('value') || 'curl';
       const option = copyOptions.find(item => item.id === value);
-      copy(option.format({ location: currentLocation, tokens }));
+      copy(option.format({ location: currentLocation, tokens, token }));
       dispatch(setSnackbar('Copied to clipboard'));
     },
-    [currentLocation, dispatch, tokens]
+    [currentLocation, dispatch, tokens, token]
   );
 
   return (
@@ -346,7 +346,7 @@ export const Downloads = () => {
       <h2>Downloads</h2>
       <p>To get the most out of Mender, download the tools listed below.</p>
       {availableTools.map(tool => (
-        <DownloadSection key={tool.id} item={tool} isEnterprise={isEnterprise} onMenuClick={handleToggle} os={os} versionInformation={versions} />
+        <DownloadSection key={tool.id} item={tool} isEnterprise={isEnterprise} onMenuClick={handleToggle} os={os} token={token} versionInformation={versions} />
       ))}
       <Menu id="download-options-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleToggle} variant="menu">
         {copyOptions.map(option => (

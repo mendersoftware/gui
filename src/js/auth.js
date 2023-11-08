@@ -11,50 +11,60 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { jwtDecode } from 'jwt-decode';
 import Cookies from 'universal-cookie';
 
 import { TIMEOUTS } from './constants/appConstants';
 
 const cookies = new Cookies();
 
-export const getToken = () => cookies.get('JWT', { doNotParse: true });
+const emptySession = Object.freeze({ token: '', exiresAt: undefined });
+
+let tokenCache = '';
+
+export const getSessionInfo = () => {
+  let sessionInfo = { ...emptySession };
+  try {
+    sessionInfo = JSON.parse(window.localStorage.getItem('JWT') ?? '');
+  } catch (error) {
+    // most likely not logged in - nothing to do here
+  }
+  if (sessionInfo.expiresAt && new Date(sessionInfo.expiresAt) < new Date()) {
+    cleanUp();
+    return { ...emptySession };
+  }
+  sessionInfo.token = sessionInfo.token ?? cookies.get('JWT', { doNotParse: true });
+  tokenCache = sessionInfo.token;
+  return sessionInfo;
+};
+
+export const getToken = () => tokenCache;
+
+export const setSessionInfo = ({ token, expiresAt }) => {
+  tokenCache = token;
+  window.localStorage.setItem('JWT', JSON.stringify({ token, expiresAt }));
+};
 
 export const cleanUp = () => {
-  cookies.remove('JWT', { path: '/' });
-  cookies.remove('JWT', { path: '/ui' });
+  tokenCache = '';
+  window.localStorage.removeItem('JWT');
   window.localStorage.removeItem('oauth');
 };
 
-export const logout = () => {
-  cleanUp();
-  window.location.replace('/ui/');
-};
+export const maxSessionAge = 900;
 
-const maxAge = 900;
-
-export const updateMaxAge = () => {
-  const userCookie = getToken();
+export const updateMaxAge = ({ expiresAt, token }) => {
   const oAuthExpiration = Number(window.localStorage.getItem('oauth'));
   let updateWithOAuth = false;
   if (oAuthExpiration) {
-    const soon = Date.now() + maxAge * TIMEOUTS.oneSecond;
+    const soon = Date.now() + maxSessionAge * TIMEOUTS.oneSecond;
     updateWithOAuth = oAuthExpiration <= soon;
     if (updateWithOAuth) {
       window.localStorage.removeItem('oauth');
     }
   }
-  if (userCookie && expirySet() && (!oAuthExpiration || updateWithOAuth)) {
-    cookies.set('JWT', userCookie, { maxAge, sameSite: 'strict', secure: true, path: '/' });
+  if (token && expiresAt && (!oAuthExpiration || updateWithOAuth)) {
+    const expiration = new Date();
+    expiration.setSeconds(expiration.getSeconds() + maxSessionAge);
+    setSessionInfo({ token, expiresAt: expiration.toISOString() });
   }
-};
-
-export const expirySet = () => {
-  let jwt;
-  try {
-    jwt = jwtDecode(getToken());
-  } catch {
-    return false;
-  }
-  return !!jwt?.exp;
 };

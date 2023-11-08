@@ -16,8 +16,8 @@ import * as fs from 'fs';
 import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
-import { getStorageState, isLoggedIn } from '../utils/commands';
-import { timeouts } from '../utils/constants';
+import { getTokenFromStorage, isLoggedIn } from '../utils/commands';
+import { storagePath, timeouts } from '../utils/constants';
 
 const samlSettings = {
   credentials: {
@@ -33,13 +33,13 @@ const defaultHeaders = { 'Content-Type': 'application/json' };
 
 test.describe('SAML Login via sso/id/login', () => {
   test.describe.configure({ mode: 'serial' });
-  test.use({ storageState: 'storage.json' });
+  test.use({ storageState: storagePath });
   test.afterAll(async ({ environment, baseUrl, browserName }, testInfo) => {
     if (testInfo.status === 'skipped' || environment !== 'staging') {
       return;
     }
-    const jwt = getStorageState('storage.json').cookies.find(cookie => cookie.name === 'JWT').value;
-    const requestInfo = { headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` }, httpsAgent, method: 'GET' };
+    const token = await getTokenFromStorage(baseUrl);
+    const requestInfo = { headers: { ...defaultHeaders, Authorization: `Bearer ${token}` }, httpsAgent, method: 'GET' };
     console.log(`Finished ${testInfo.title} with status ${testInfo.status}. Cleaning up.`);
     const response = await axios({
       ...requestInfo,
@@ -59,7 +59,7 @@ test.describe('SAML Login via sso/id/login', () => {
   });
 
   // Setups the SAML/SSO login with samltest.id Identity Provider
-  test('Set up SAML', async ({ browserName, context, environment, baseUrl, loggedInPage: page }) => {
+  test('Set up SAML', async ({ browserName, environment, baseUrl, loggedInPage: page }) => {
     test.skip(environment !== 'staging');
     // allow a lot of time to enter metadata + then some to handle uploading the config to the external service
     test.setTimeout(5 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
@@ -97,9 +97,8 @@ test.describe('SAML Login via sso/id/login', () => {
     expect(downloadTargetPath).toBeTruthy();
     const dialog = await page.locator('text=SAML metadata >> .. >> ..');
     await dialog.locator('data-testid=CloseIcon').click();
-    const storage = await context.storageState();
-    const jwt = storage.cookies.find(cookie => cookie.name === 'JWT').value;
-    const requestInfo = { method: 'GET', headers: { ...defaultHeaders, Authorization: `Bearer ${jwt}` }, httpsAgent };
+    const token = await getTokenFromStorage(baseUrl);
+    const requestInfo = { method: 'GET', headers: { ...defaultHeaders, Authorization: `Bearer ${token}` }, httpsAgent };
     const { data } = await axios({ ...requestInfo, url: `${baseUrl}api/management/v1/useradm/sso/idp/metadata` });
     const metadataId = data[0].id;
     console.log(`looking for config info for metadata id: ${metadataId}`);

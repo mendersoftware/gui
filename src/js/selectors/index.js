@@ -37,6 +37,7 @@ export const getTooltipsById = state => state.users.tooltips.byId;
 export const getRolesById = state => state.users.rolesById;
 export const getOrganization = state => state.organization.organization;
 export const getAcceptedDevices = state => state.devices.byStatus.accepted;
+export const getCurrentSession = state => state.users.currentSession;
 const getDevicesByStatus = state => state.devices.byStatus;
 export const getDevicesById = state => state.devices.byId;
 export const getDeviceReports = state => state.devices.reports;
@@ -65,6 +66,8 @@ export const getUpdateTypes = state => state.releases.updateTypes;
 export const getExternalIntegrations = state => state.organization.externalDeviceIntegrations;
 const getDeploymentsById = state => state.deployments.byId;
 export const getDeploymentsByStatus = state => state.deployments.byStatus;
+const getSelectedDeploymentDeviceIds = state => state.deployments.selectedDeviceIds;
+export const getDeploymentsSelectionState = state => state.deployments.selectionState;
 export const getFullVersionInformation = state => state.app.versionInformation;
 const getCurrentUserId = state => state.users.currentUser;
 const getUsersById = state => state.users.byId;
@@ -79,8 +82,6 @@ export const getIsPreview = createSelector([getFullVersionInformation], ({ Integ
 export const getShowHelptips = createSelector([getTooltipsById], tooltips =>
   Object.values(tooltips).reduce((accu, { readState }) => accu || readState === READ_STATES.unread, false)
 );
-
-export const getDeploymentsSelectionState = state => state.deployments.selectionState;
 
 export const getMappedDeploymentSelection = createSelector(
   [getDeploymentsSelectionState, (_, deploymentsState) => deploymentsState, getDeploymentsById],
@@ -100,6 +101,18 @@ export const getDeploymentRelease = createSelector(
   (deploymentsById, { selectedId }, releasesById) => {
     const deployment = deploymentsById[selectedId] || {};
     return deployment.artifact_name && releasesById[deployment.artifact_name] ? releasesById[deployment.artifact_name] : { device_types_compatible: [] };
+  }
+);
+
+export const getSelectedDeploymentData = createSelector(
+  [getDeploymentsById, getDeploymentsSelectionState, getDevicesById, getSelectedDeploymentDeviceIds],
+  (deploymentsById, { selectedId }, devicesById, selectedDeviceIds) => {
+    const deployment = deploymentsById[selectedId] ?? {};
+    const { devices = {} } = deployment;
+    return {
+      deployment,
+      selectedDevices: selectedDeviceIds.map(deviceId => ({ ...devicesById[deviceId], ...devices[deviceId] }))
+    };
   }
 );
 
@@ -201,6 +214,26 @@ export const getFilterAttributes = createSelector(
       ...systemAttributes.map(item => ({ key: item, value: item, scope: ATTRIBUTE_SCOPES.system, category: ATTRIBUTE_SCOPES.system, priority: 4 }))
     ];
     return attributeDuplicateFilter(attributes, 'key');
+  }
+);
+
+const getFilteringAttributesLimit = state => state.devices.filteringAttributesLimit;
+
+export const getDeviceIdentityAttributes = createSelector(
+  [getFilteringAttributes, getFilteringAttributesLimit],
+  ({ identityAttributes }, filteringAttributesLimit) => {
+    // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
+    const attributes = identityAttributes.slice(0, filteringAttributesLimit);
+    return attributes.reduce(
+      (accu, value) => {
+        accu.push({ value, label: value, scope: 'identity' });
+        return accu;
+      },
+      [
+        { value: 'name', label: 'Name', scope: 'tags' },
+        { value: 'id', label: 'Device ID', scope: 'identity' }
+      ]
+    );
   }
 );
 

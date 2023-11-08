@@ -18,7 +18,7 @@ import Cookies from 'universal-cookie';
 
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
-import { cleanUp, logout } from '../auth';
+import { cleanUp, maxSessionAge, setSessionInfo } from '../auth';
 import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
 import * as AppConstants from '../constants/appConstants';
 import * as UserConstants from '../constants/userConstants';
@@ -71,9 +71,12 @@ export const loginUser = (userData, stayLoggedIn) => dispatch =>
       if (!token) {
         return;
       }
-      // save token as cookie & set maxAge if noexpiry checkbox not checked
-      cookies.set('JWT', token, { sameSite: 'strict', secure: true, path: '/', maxAge: stayLoggedIn ? undefined : 900 });
-
+      // save token to local storage & set maxAge if noexpiry checkbox not checked
+      let now = new Date();
+      now.setSeconds(now.getSeconds() + maxSessionAge);
+      const expiresAt = stayLoggedIn ? undefined : now.toISOString();
+      setSessionInfo({ token, expiresAt });
+      cookies.remove('JWT', { path: '/' });
       return dispatch(getUser(OWN_USER_ID))
         .catch(e => {
           cleanUp();
@@ -84,22 +87,18 @@ export const loginUser = (userData, stayLoggedIn) => dispatch =>
           if (window.location.pathname !== '/ui/') {
             window.location.replace('/ui/');
           }
-          return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(initializeAppData())]);
+          return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: { expiresAt, token } }), dispatch(initializeAppData())]);
         });
     });
 
-export const logoutUser = reason => (dispatch, getState) => {
-  if (getState().releases.uploadProgress) {
+export const logoutUser = () => (dispatch, getState) => {
+  if (Object.keys(getState().app.uploadsById).length) {
     return Promise.reject();
   }
-  let tasks = [dispatch({ type: UserConstants.USER_LOGOUT })];
   return GeneralApi.post(`${useradmApiUrl}/auth/logout`).finally(() => {
+    cleanUp();
     clearAllRetryTimers(setSnackbar);
-    if (reason) {
-      tasks.push(dispatch(setSnackbar(reason)));
-    }
-    logout();
-    return Promise.all(tasks);
+    return Promise.resolve(dispatch({ type: UserConstants.USER_LOGOUT }));
   });
 };
 

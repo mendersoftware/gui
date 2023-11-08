@@ -37,8 +37,8 @@ describe('user reducer', () => {
   });
 
   it('should handle SUCCESSFULLY_LOGGED_IN', async () => {
-    expect(reducer(undefined, { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: '123' }).jwtToken).toEqual('123');
-    expect(reducer(initialState, { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: '123' }).jwtToken).toEqual('123');
+    expect(reducer(undefined, { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: '123' }).currentSession).toEqual('123');
+    expect(reducer(initialState, { type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: '123' }).currentSession).toEqual('123');
   });
 
   it('should handle RECEIVED_USER_LIST', async () => {

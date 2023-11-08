@@ -12,11 +12,11 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Layout assertions', () => {
   const navbar = '.leftFixed.leftNav';
-  test.use({ storageState: 'storage.json' });
+  test.use({ storageState: storagePath });
 
   test.describe('Overall layout and structure', () => {
     test('shows the left navigation', async ({ loggedInPage: page }) => {

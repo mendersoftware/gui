@@ -153,7 +153,7 @@ const OnboardingComponent = ({ deviceListRef, onboardingState }) => {
   let onboardingComponent = null;
   const element = deviceListRef.current?.querySelector('body .deviceListItem > div');
   if (element) {
-    const anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
+    const anchor = { left: 200, top: element.offsetTop + element.offsetHeight };
     onboardingComponent = getOnboardingComponentFor(onboardingSteps.DEVICES_PENDING_ONBOARDING, onboardingState, { anchor }, onboardingComponent);
   } else if (deviceListRef.current) {
     const anchor = { top: deviceListRef.current.offsetTop + deviceListRef.current.offsetHeight / 3, left: deviceListRef.current.offsetWidth / 2 + 30 };
@@ -390,10 +390,7 @@ export const Authorized = ({
     }
   };
 
-  const onCreateDeploymentClick = devices => {
-    const devicesLink = !onboardingState.complete ? '' : `&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`;
-    return navigate(`/deployments?open=true${devicesLink}`);
-  };
+  const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
 
   const onCloseExpandedDevice = useCallback(() => dispatch(setDeviceListState({ selectedId: undefined, detailsTab: '' })), [dispatch]);
 

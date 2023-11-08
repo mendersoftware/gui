@@ -18,6 +18,7 @@ import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
+import { getSessionInfo } from '../../../auth';
 import { yes } from '../../../constants/appConstants';
 import SelfUserManagement from './selfusermanagement';
 
@@ -33,7 +34,8 @@ describe('SelfUserManagement Component', () => {
             ...defaultState.users.byId[defaultState.users.currentUser],
             sso: [{ kind: 'oauth2/google' }]
           }
-        }
+        },
+        currentSession: getSessionInfo()
       }
     };
     const { baseElement } = render(<SelfUserManagement />, { preloadedState });

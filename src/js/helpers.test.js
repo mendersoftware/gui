@@ -13,15 +13,12 @@
 //    limitations under the License.
 import React from 'react';
 
-import Cookies from 'universal-cookie';
-
-import { defaultState, token, undefineds, userId } from '../../tests/mockData';
+import { defaultState, token, undefineds } from '../../tests/mockData';
 import { render } from '../../tests/setupTests';
 import { DARK_MODE, LIGHT_MODE } from './constants/appConstants.js';
 import {
   FileSize,
   customSort,
-  decodeSessionToken,
   deepCompare,
   detectOsIdentifier,
   duplicateFilter,
@@ -123,7 +120,7 @@ describe('getDebConfigurationCode function', () => {
   let code;
   describe('configuring devices for hosted mender', () => {
     beforeEach(() => {
-      code = getDebConfigurationCode({ ipAddress: '192.168.7.41', isDemoMode: true, deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ ipAddress: '192.168.7.41', isDemoMode: true, deviceType: 'raspberrypi3', token: 'omnomnom' });
     });
     afterEach(postTestCleanUp);
     it('should not contain any template string leftovers', async () => {
@@ -145,15 +142,11 @@ describe('getDebConfigurationCode function', () => {
         ...window.location,
         hostname: 'hosted.mender.io'
       };
-      jest.clearAllMocks();
-      const cookies = new Cookies();
-      cookies.get.mockReturnValue('omnomnom');
-      cookies.set.mockReturnValueOnce();
     });
     afterEach(postTestCleanUp);
 
     it('should contain sane information for hosted calls', async () => {
-      code = getDebConfigurationCode({ isHosted: true, isOnboarding: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ isHosted: true, isOnboarding: true, tenantToken: 'token', token: 'omnomnom', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `JWT_TOKEN="omnomnom"
 TENANT_TOKEN="token"
@@ -167,15 +160,18 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo --commercial --jwt-token
         ...window.location,
         hostname: 'staging.hosted.mender.io'
       };
-      jest.clearAllMocks();
-      const cookies = new Cookies();
-      cookies.get.mockReturnValue('omnomnom');
-      cookies.set.mockReturnValueOnce();
     });
     afterEach(postTestCleanUp);
 
     it('should contain sane information for staging preview calls', async () => {
-      code = getDebConfigurationCode({ isHosted: true, isOnboarding: true, tenantToken: 'token', deviceType: 'raspberrypi3', isPreRelease: true });
+      code = getDebConfigurationCode({
+        isHosted: true,
+        isOnboarding: true,
+        tenantToken: 'token',
+        token: 'omnomnom',
+        deviceType: 'raspberrypi3',
+        isPreRelease: true
+      });
       expect(code).toMatch(
         `JWT_TOKEN="omnomnom"
 TENANT_TOKEN="token"
@@ -189,15 +185,11 @@ wget -O- https://get.mender.io/staging | sudo bash -s -- --demo -c experimental 
         ...window.location,
         hostname: 'fancy.enterprise.on.prem'
       };
-      jest.clearAllMocks();
-      const cookies = new Cookies();
-      cookies.get.mockReturnValue('omnomnom');
-      cookies.set.mockReturnValueOnce();
     });
     afterEach(postTestCleanUp);
 
     it('should contain sane information for enterprise demo on-prem calls', async () => {
-      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: true, tenantToken: 'token', token: 'omnomnom', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `TENANT_TOKEN="token"
 wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --server-ip 1.2.3.4`
@@ -221,13 +213,13 @@ wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type
     afterEach(postTestCleanUp);
 
     it('should contain sane information for OS demo on-prem calls', async () => {
-      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: true, tenantToken: 'token', deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: true, tenantToken: 'token', token: 'omnomnom', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --demo --server-ip 1.2.3.4`
       );
     });
     it('should contain sane information for OS production on-prem calls', async () => {
-      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: false, tenantToken: 'token', deviceType: 'raspberrypi3' });
+      code = getDebConfigurationCode({ ipAddress: '1.2.3.4', isDemoMode: false, tenantToken: 'token', token: 'omnomnom', deviceType: 'raspberrypi3' });
       expect(code).toMatch(
         `wget -O- https://get.mender.io | sudo bash -s -- --demo -- --quiet --device-type "raspberrypi3" --tenant-token $TENANT_TOKEN --retry-poll 300 --update-poll 1800 --inventory-poll 28800 --server-url https://fancy.opensource.on.prem --server-cert=""`
       );
@@ -349,14 +341,6 @@ describe('customSort function', () => {
     const idSortedDown = Object.values(defaultState.deployments.byId).sort(customSort(true, 'id'));
     expect(idSortedDown[1].id).toEqual(defaultState.deployments.byId.d1.id);
     expect(idSortedDown[0].id).toEqual(defaultState.deployments.byId.d2.id);
-  });
-});
-describe('decodeSessionToken function', () => {
-  it('works as expected', async () => {
-    expect(decodeSessionToken(token)).toEqual(userId);
-  });
-  it('does not crash with faulty input', async () => {
-    expect(decodeSessionToken(false)).toEqual(undefined);
   });
 });
 describe('deepCompare function', () => {

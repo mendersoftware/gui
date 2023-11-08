@@ -37,7 +37,7 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { statCollector, toggle } from '../../helpers';
-import { getDeploymentRelease, getDevicesById, getIdAttribute, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import { getDeploymentRelease, getDevicesById, getIdAttribute, getSelectedDeploymentData, getTenantCapabilities, getUserCapabilities } from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import Confirm from '../common/confirm';
 import LogDialog from '../common/dialogs/log';
@@ -89,15 +89,7 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
   const timer = useRef();
   const { classes } = useStyles();
   const dispatch = useDispatch();
-  const { deployment, selectedDevices } = useSelector(state => {
-    const deployment = state.deployments.byId[state.deployments.selectionState.selectedId] || {};
-    const { devices = {} } = deployment;
-    const { selectedDeviceIds } = state.deployments;
-    return {
-      deployment,
-      selectedDevices: selectedDeviceIds.map(deviceId => ({ ...state.devices.byId[deviceId], ...devices[deviceId] }))
-    };
-  });
+  const { deployment, selectedDevices } = useSelector(getSelectedDeploymentData);
   const devicesById = useSelector(getDevicesById);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const release = useSelector(getDeploymentRelease);

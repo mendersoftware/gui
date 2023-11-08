@@ -17,10 +17,10 @@ import * as readline from 'readline';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Auditlogs', () => {
-  test.use({ storageState: 'storage.json' });
+  test.use({ storageState: storagePath });
 
   const secret = 'super secret something text';
   test('will track remote terminal sessions', async ({ environment, loggedInPage: page }) => {

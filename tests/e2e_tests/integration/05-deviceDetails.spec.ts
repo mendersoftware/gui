@@ -15,7 +15,7 @@ import * as path from 'path';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { selectors, storagePath, timeouts } from '../utils/constants';
 
 const terminalReferenceFileMap = {
   default: 'terminalContent.png',
@@ -25,7 +25,7 @@ const terminalReferenceFileMap = {
 const rootfs = 'rootfs-image.version';
 
 test.describe('Device details', () => {
-  test.use({ storageState: 'storage.json' });
+  test.use({ storageState: storagePath });
 
   test('has basic inventory', async ({ demoDeviceName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);

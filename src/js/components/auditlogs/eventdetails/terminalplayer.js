@@ -18,6 +18,7 @@ import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import msgpack5 from 'msgpack5';
+import Cookies from 'universal-cookie';
 
 import { deviceConnect } from '../../../actions/deviceActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
@@ -26,6 +27,7 @@ import { createFileDownload, toggle } from '../../../helpers';
 import { blobToString, byteArrayToString } from '../../../utils/sockethook';
 import XTerm from '../../common/xterm';
 
+const cookies = new Cookies();
 const MessagePack = msgpack5();
 
 let socket = null;
@@ -161,7 +163,7 @@ const generateHtml = (versions, content) => {
   </html>`;
 };
 
-export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
+export const TerminalPlayer = ({ className, item, sessionInitialized, token }) => {
   const xtermRef = useRef({ terminal: React.createRef(), terminalRef: React.createRef() });
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [bufferIndex, setBufferIndex] = useState(0);
@@ -177,9 +179,10 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
     if (!sessionInitialized) {
       return;
     }
+    cookies.set('JWT', token, { path: '/', secure: true, sameSite: 'strict', maxAge: 5 });
     socket = new WebSocket(`wss://${window.location.host}${deviceConnect}/sessions/${item.meta.session_id[0]}/playback`);
     socket.onopen = () => setSocketInitialized(true);
-  }, [item.meta.session_id, sessionInitialized]);
+  }, [item.meta.session_id, sessionInitialized, token]);
 
   useEffect(() => {
     if (!socketInitialized) {
@@ -253,7 +256,7 @@ export const TerminalPlayer = ({ className, item, sessionInitialized }) => {
   const onDownloadClick = () => {
     // eslint-disable-next-line no-undef
     const text = generateHtml({ fit: XTERM_FIT_VERSION, search: XTERM_SEARCH_VERSION, xterm: XTERM_VERSION }, buffer);
-    createFileDownload(text, 'terminalsession.html');
+    createFileDownload(text, 'terminalsession.html', token);
   };
 
   return (

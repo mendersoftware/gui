@@ -14,10 +14,13 @@
 import { useCallback, useRef, useState } from 'react';
 
 import msgpack5 from 'msgpack5';
+import Cookies from 'universal-cookie';
 
 import { apiUrl } from '../api/general-api';
 import { TIMEOUTS } from '../constants/appConstants';
 import { DEVICE_MESSAGE_PROTOCOLS as MessageProtocols, DEVICE_MESSAGE_TYPES as MessageTypes } from '../constants/deviceConstants';
+
+const cookies = new Cookies();
 
 const MessagePack = msgpack5();
 
@@ -32,7 +35,7 @@ export const blobToString = blob =>
     fr.readAsArrayBuffer(blob);
   });
 
-export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, onNotify, onOpen }) => {
+export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, onNotify, onOpen, token }) => {
   const [sessionId, setSessionId] = useState();
   const healthcheckTimeout = useRef();
   const socketRef = useRef();
@@ -133,6 +136,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
     deviceId => {
       const uri = `wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`;
       setSessionId();
+      cookies.set('JWT', token, { path: '/', secure: true, sameSite: 'strict', maxAge: 5 });
       try {
         socketRef.current = new WebSocket(uri);
         socketRef.current.addEventListener('close', onSocketClose);
@@ -149,7 +153,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
         socketRef.current.removeEventListener('open', onSocketOpen);
       };
     },
-    [onSocketClose, onSocketOpen, onSocketError, onSocketMessage]
+    [onSocketClose, onSocketOpen, onSocketError, onSocketMessage, token]
   );
 
   return [connect, sendMessage, close, socketRef.current?.readyState ?? WebSocket.CLOSED, sessionId];

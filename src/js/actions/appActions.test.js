@@ -15,7 +15,8 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
-import { defaultState, receivedPermissionSets, receivedRoles } from '../../../tests/mockData';
+import { defaultState, receivedPermissionSets, receivedRoles, token } from '../../../tests/mockData';
+import { getSessionInfo } from '../auth';
 import {
   SET_ANNOUNCEMENT,
   SET_ENVIRONMENT_DATA,
@@ -53,7 +54,14 @@ import {
 import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
 import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, SET_ORGANIZATION } from '../constants/organizationConstants';
 import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
-import { RECEIVED_PERMISSION_SETS, RECEIVED_ROLES, SET_GLOBAL_SETTINGS, SET_TOOLTIPS_STATE, SET_USER_SETTINGS } from '../constants/userConstants';
+import {
+  RECEIVED_PERMISSION_SETS,
+  RECEIVED_ROLES,
+  SET_GLOBAL_SETTINGS,
+  SET_TOOLTIPS_STATE,
+  SET_USER_SETTINGS,
+  SUCCESSFULLY_LOGGED_IN
+} from '../constants/userConstants';
 import {
   commonErrorHandler,
   getLatestReleaseInfo,
@@ -120,15 +128,19 @@ describe('app actions', () => {
   });
 
   it('should try to get all required app information', async () => {
-    window.localStorage.getItem.mockReturnValueOnce('false');
     const store = mockStore({
       ...defaultState,
       app: { ...defaultState.app, features: { ...defaultState.app.features, isHosted: true } },
-      users: { ...defaultState.users, globalSettings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } } },
+      users: {
+        ...defaultState.users,
+        currentSession: getSessionInfo(),
+        globalSettings: { ...defaultState.users.globalSettings, id_attribute: { attribute: 'mac', scope: 'identity' } }
+      },
       releases: { ...defaultState.releases, releasesList: { ...defaultState.releases.releasesList, page: 42 } }
     });
 
     const expectedActions = [
+      { type: SUCCESSFULLY_LOGGED_IN, value: { token } },
       { type: SET_ONBOARDING_COMPLETE, complete: false },
       { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
       { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },

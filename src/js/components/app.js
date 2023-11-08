@@ -13,24 +13,30 @@
 //    limitations under the License.
 import React, { useCallback, useEffect, useState } from 'react';
 import { useIdleTimer, workerTimers } from 'react-idle-timer';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import withStyles from '@mui/styles/withStyles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { makeStyles } from 'tss-react/mui';
 
 import Cookies from 'universal-cookie';
 
 import { parseEnvironmentInfo, setSnackbar } from '../actions/appActions';
 import { logoutUser, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
-import { expirySet, getToken, updateMaxAge } from '../auth';
+import { maxSessionAge, updateMaxAge } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
+import { TIMEOUTS } from '../constants/appConstants';
 import ErrorBoundary from '../errorboundary';
 import { isDarkMode, toggle } from '../helpers';
-import { getUserSettings } from '../selectors';
+import store from '../reducers';
+import { getCurrentSession, getCurrentUser, getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
@@ -41,9 +47,11 @@ import LeftNav from './leftnav';
 import SearchResult from './search-result';
 import Uploads from './uploads';
 
+const cache = createCache({ key: 'mui', prepend: true });
+
 const activationPath = '/activate';
 const trackingBlacklist = [/\/password\/.+/i];
-export const timeout = 900000; // 15 minutes idle time
+const timeout = maxSessionAge * 1000; // 15 minutes idle time
 const cookies = new Cookies();
 
 const reducePalette =
@@ -92,12 +100,13 @@ export const AppRoot = () => {
   const { pathname = '', hash } = useLocation();
 
   const dispatch = useDispatch();
-  const currentUser = useSelector(state => state.users.currentUser);
+  const { id: currentUser } = useSelector(getCurrentUser);
   const showDismissHelptipsDialog = useSelector(state => !state.onboarding.complete && state.onboarding.showTipsDialog);
   const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
   const snackbar = useSelector(state => state.app.snackbar);
   const trackingCode = useSelector(state => state.app.trackerCode);
   const { mode } = useSelector(getUserSettings);
+  const { expiresAt, token } = useSelector(getCurrentSession);
 
   const trackLocationChange = useCallback(
     pathname => {
@@ -151,14 +160,22 @@ export const AppRoot = () => {
     }
   }, [hash, navigate, pathname, trackLocationChange]);
 
-  const onIdle = () => {
-    if (expirySet() && currentUser) {
-      // logout user and warn
-      return dispatch(logoutUser('Your session has expired. You have been automatically logged out due to inactivity.')).catch(updateMaxAge);
-    }
-  };
+  const updateExpiryDate = useCallback(() => updateMaxAge({ expiresAt, token }), [expiresAt, token]);
 
-  useIdleTimer({ crossTab: true, onAction: updateMaxAge, onActive: updateMaxAge, onIdle, syncTimers: 400, timeout, timers: workerTimers });
+  const onIdle = useCallback(() => {
+    if (!!expiresAt && currentUser) {
+      // logout user and warn
+      return dispatch(logoutUser())
+        .catch(updateExpiryDate)
+        .then(() => {
+          navigate('//'); // double / to ensure the logged out URL conforms to `/ui/` in order to not trigger a redirect and potentially use state
+          // async snackbar setting to ensure the login screen has loaded as the snackbar might be cleared by other actions otherwise
+          setTimeout(() => dispatch(setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.')), TIMEOUTS.oneSecond);
+        });
+    }
+  }, [currentUser, dispatch, expiresAt, navigate, updateExpiryDate]);
+
+  useIdleTimer({ crossTab: true, onAction: updateExpiryDate, onActive: updateExpiryDate, onIdle, syncTimers: 400, timeout, timers: workerTimers });
 
   const onToggleSearchResult = () => setShowSearchResult(toggle);
 
@@ -170,7 +187,7 @@ export const AppRoot = () => {
     <ThemeProvider theme={theme}>
       <WrappedBaseline enableColorScheme />
       <>
-        {getToken() ? (
+        {token ? (
           <div id="app">
             <Header mode={mode} />
             <LeftNav />
@@ -195,5 +212,21 @@ export const AppRoot = () => {
     </ThemeProvider>
   );
 };
+
+export const AppProviders = ({ basename = 'ui' }) => (
+  <React.StrictMode>
+    <Provider store={store}>
+      <CacheProvider value={cache}>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <ErrorBoundary>
+            <BrowserRouter basename={basename}>
+              <AppRoot />
+            </BrowserRouter>
+          </ErrorBoundary>
+        </LocalizationProvider>
+      </CacheProvider>
+    </Provider>
+  </React.StrictMode>
+);
 
 export default AppRoot;

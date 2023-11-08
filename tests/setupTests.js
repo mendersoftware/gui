@@ -24,6 +24,7 @@ import { setupServer } from 'msw/node';
 import { TextEncoder } from 'util';
 import { MessageChannel } from 'worker_threads';
 
+import { getSessionInfo } from '../src/js/auth';
 import { yes } from '../src/js/constants/appConstants';
 import { getConfiguredStore } from '../src/js/reducers';
 import { light as lightTheme } from '../src/js/themes/Mender';
@@ -45,11 +46,7 @@ const oldWindowSessionStorage = window.sessionStorage;
 jest.retryTimes(RETRY_TIMES);
 jest.mock('universal-cookie', () => {
   const mockCookie = {
-    get: jest.fn(name => {
-      if (name === 'JWT') {
-        return mockToken;
-      }
-    }),
+    get: jest.fn(),
     set: jest.fn(),
     remove: jest.fn()
   };
@@ -59,6 +56,8 @@ jest.mock('universal-cookie', () => {
 jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }));
 
 jest.setSystemTime(mockDate);
+
+const storage = {};
 
 beforeAll(async () => {
   // Enable the mocking in tests.
@@ -79,8 +78,13 @@ beforeAll(async () => {
   delete window.localStorage;
   window.localStorage = {
     ...oldWindowLocalStorage,
-    getItem: jest.fn(),
-    setItem: jest.fn(),
+    getItem: jest.fn(name => {
+      if (name === 'JWT') {
+        return JSON.stringify({ token: mockToken });
+      }
+      return storage[name];
+    }),
+    setItem: jest.fn(name => storage[name]),
     removeItem: jest.fn()
   };
   window.mender_environment = menderEnvironment;
@@ -102,7 +106,7 @@ beforeAll(async () => {
   };
   createMocks();
   server = setupServer(...handlers);
-  await server.listen();
+  await server.listen({ onUnhandledRequest: 'error' });
   Object.defineProperty(navigator, 'appVersion', { value: 'Test', writable: true });
   const intersectionObserverMock = () => ({
     observe: jest.fn,
@@ -147,7 +151,11 @@ export const selectMaterialUiSelectOption = async (element, optionText, user) =>
 const theme = createTheme(lightTheme);
 
 const customRender = (ui, options = {}) => {
-  const { preloadedState = { ...defaultState }, store = getConfiguredStore({ preloadedState }), ...remainder } = options;
+  const {
+    preloadedState = { ...defaultState, users: { ...defaultState.users, currentSession: getSessionInfo() } },
+    store = getConfiguredStore({ preloadedState }),
+    ...remainder
+  } = options;
   const AllTheProviders = ({ children }) => (
     <ThemeProvider theme={theme}>
       <MemoryRouter>

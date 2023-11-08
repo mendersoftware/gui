@@ -25,6 +25,7 @@ import { offlineThresholds } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
 import {
+  getDeviceIdentityAttributes,
   getFeatures,
   getGlobalSettings as getGlobalSettingsSelector,
   getIdAttribute,
@@ -248,20 +249,7 @@ export const GlobalSettingsDialog = ({
 
 export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
   const dispatch = useDispatch();
-  const attributes = useSelector(state => {
-    // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
-    const attributes = state.devices.filteringAttributes.identityAttributes.slice(0, state.devices.filteringAttributesLimit);
-    return attributes.reduce(
-      (accu, value) => {
-        accu.push({ value, label: value, scope: 'identity' });
-        return accu;
-      },
-      [
-        { value: 'name', label: 'Name', scope: 'tags' },
-        { value: 'id', label: 'Device ID', scope: 'identity' }
-      ]
-    );
-  });
+  const attributes = useSelector(getDeviceIdentityAttributes);
   const { hasReporting } = useSelector(getFeatures);
   const { isAdmin } = useSelector(getUserRoles);
   const notificationChannelSettings = useSelector(state => state.monitor.settings.global.channels);

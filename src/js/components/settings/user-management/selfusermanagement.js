@@ -19,11 +19,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../../actions/appActions';
 import { editUser, saveUserSettings } from '../../../actions/userActions';
-import { getToken } from '../../../auth';
 import { DARK_MODE, LIGHT_MODE } from '../../../constants/appConstants';
 import * as UserConstants from '../../../constants/userConstants';
 import { isDarkMode, toggle } from '../../../helpers';
-import { getCurrentUser, getFeatures, getIsEnterprise, getUserSettings } from '../../../selectors';
+import { getCurrentSession, getCurrentUser, getFeatures, getIsEnterprise, getUserSettings } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import Form from '../../common/forms/form';
 import PasswordInput from '../../common/forms/passwordinput';
@@ -55,6 +54,7 @@ export const SelfUserManagement = () => {
   const currentUser = useSelector(getCurrentUser);
   const hasTracking = useSelector(state => !!state.app.trackerCode);
   const { trackingConsentGiven: hasTrackingConsent, mode } = useSelector(getUserSettings);
+  const { token } = useSelector(getCurrentSession);
 
   const editSubmit = userData => {
     if (userData.password != userData.password_confirmation) {
@@ -136,12 +136,12 @@ export const SelfUserManagement = () => {
             component="div"
             disableGutters
             dividerDisabled
-            secondary={getToken()}
+            secondary={token}
             textClasses={{ secondary: 'inventory-text tenant-token-text' }}
           />
         </div>
         <div className="flexbox center-aligned">
-          <CopyTextToClipboard token={getToken()} />
+          <CopyTextToClipboard token={token} />
         </div>
       </div>
       {!isOAuth2 && <AccessTokenManagement />}
