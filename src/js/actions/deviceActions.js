@@ -321,9 +321,6 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
         group: storedGroup
       } = stateDevice;
       const { identity, inventory, monitor, system = {}, tags } = mapDeviceAttributes(device.attributes);
-      // all the other mapped attributes return as empty objects if there are no attributes to map, but identity will be initialized with an empty state
-      // for device_type and artifact_name, potentially overwriting existing info, so rely on stored information instead if there are no attributes
-      device.attributes = device.attributes ? { ...storedAttributes, ...inventory } : storedAttributes;
       device.tags = { ...storedTags, ...tags };
       device.group = system.group ?? storedGroup;
       device.monitor = { ...storedMonitor, ...monitor };
@@ -334,6 +331,9 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.updated_ts = device.attributes ? device.updated_ts : stateDevice.updated_ts;
       device.isNew = new Date(device.created_ts) > new Date(state.app.newThreshold);
       device.isOffline = new Date(device.check_in_time) < new Date(state.app.offlineThreshold);
+      // all the other mapped attributes return as empty objects if there are no attributes to map, but identity will be initialized with an empty state
+      // for device_type and artifact_name, potentially overwriting existing info, so rely on stored information instead if there are no attributes
+      device.attributes = device.attributes ? { ...storedAttributes, ...inventory } : storedAttributes;
       accu.devicesById[device.id] = { ...stateDevice, ...device };
       accu.ids.push(device.id);
       return accu;
