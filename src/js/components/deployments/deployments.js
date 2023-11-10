@@ -215,7 +215,6 @@ export const Deployments = () => {
       {reportDialog && <Report abort={onAbortDeployment} onClose={closeReport} retry={retryDeployment} type={reportType} />}
       {createDialog && (
         <CreateDeployment
-          open={createDialog}
           onDismiss={onCreationDismiss}
           deploymentObject={deploymentObject}
           onScheduleSubmit={onScheduleSubmit}
