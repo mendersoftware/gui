@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 // material ui
 import { FileCopyOutlined as CopyToClipboardIcon } from '@mui/icons-material';
@@ -27,6 +27,7 @@ export const ExpandableAttribute = ({
   className = '',
   copyToClipboard,
   dividerDisabled,
+  onExpansion,
   primary,
   secondary,
   secondaryTypographyProps = {},
@@ -50,18 +51,17 @@ export const ExpandableAttribute = ({
     }
   }, [expanded, overflowActive, textContent]);
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     if (copyToClipboard) {
       // Date/Time components
-      if (secondary.props && secondary.props.value) {
-        copy(secondary.props.value);
-      } else {
-        copy(secondary);
-      }
+      copy(secondary);
       setSnackbar('Value copied to clipboard');
     }
+    if (!expanded) {
+      onExpansion();
+    }
     setExpanded(toggle);
-  };
+  }, [copyToClipboard, expanded, onExpansion, secondary, setSnackbar]);
 
   const currentTextClasses = `${textClasses ? textClasses.secondary : 'inventory-text'}${expanded && overflowActive ? ' expanded-attribute' : ''}`;
   const secondaryText = (
