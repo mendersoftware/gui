@@ -83,7 +83,7 @@ export const DeploymentAbortButton = ({ abort, deployment }) => {
   );
 };
 
-export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) => {
+export const DeploymentReport = ({ abort, onClose, past, retry, type }) => {
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
   const timer = useRef();
@@ -119,11 +119,13 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
   }, [deployment.id, dispatch]);
 
   useEffect(() => {
-    if (!open) {
+    if (!deployment.id) {
       return;
     }
     clearInterval(timer.current);
-    if (!(deployment.finished || deployment.status === DEPLOYMENT_STATES.finished)) {
+    const now = new Date();
+    now.setSeconds(now.getSeconds() + TIMEOUTS.refreshDefault / TIMEOUTS.oneSecond);
+    if (!deployment.finished || new Date(deployment.finished) > now) {
       timer.current = past ? null : setInterval(refreshDeployment, TIMEOUTS.fiveSeconds);
     }
     if ((deployment.type === DEPLOYMENT_TYPES.software || !release.device_types_compatible.length) && deployment.artifact_name) {
@@ -155,7 +157,6 @@ export const DeploymentReport = ({ abort, open, onClose, past, retry, type }) =>
     deployment.type,
     dispatch,
     hasAuditlogs,
-    open,
     past,
     refreshDeployment,
     release.device_types_compatible.length

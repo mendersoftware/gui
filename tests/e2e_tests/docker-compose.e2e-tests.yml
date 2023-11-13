@@ -14,7 +14,6 @@ services:
       - mender-gui
       - mender-client
       - mender-deployments
-      - mender-reporting
       - mender-device-auth
       - mender-inventory
       - mender-useradm
