@@ -26,7 +26,6 @@ import { deepCompare, toggle } from '../../../helpers';
 import { getDeviceFilters, getFilterAttributes, getGlobalSettings, getIsEnterprise, getSelectedGroupInfo, getTenantCapabilities } from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { InfoHintContainer } from '../../common/info-hint';
-import MenderTooltip from '../../common/mendertooltip';
 import FilterItem from './filteritem';
 
 export const getFilterLabelByKey = (key, attributes) => {
@@ -125,6 +124,7 @@ export const Filters = ({ className = '', onGroupClick, open }) => {
                 <Chip
                   className="margin-right-small"
                   key={`filter-${item.key}-${item.operator}-${item.value}`}
+                  title={item.isGroupFilter ? 'Group definition filter' : ''}
                   label={`${getFilterLabelByKey(item.key, attributes)} ${DEVICE_FILTERING_OPTIONS[item.operator].shortform} ${
                     item.operator !== DEVICE_FILTERING_OPTIONS.$exists.key && item.operator !== DEVICE_FILTERING_OPTIONS.$nexists.key
                       ? item.operator === DEVICE_FILTERING_OPTIONS.$regex.key
@@ -132,7 +132,7 @@ export const Filters = ({ className = '', onGroupClick, open }) => {
                         : item.value
                       : ''
                   }`}
-                  onDelete={() => removeFilter(item)}
+                  onDelete={item.isGroupFilter ? undefined : () => removeFilter(item)}
                 />
               ))}
             </div>
@@ -154,18 +154,7 @@ export const Filters = ({ className = '', onGroupClick, open }) => {
         )}
         {isEnterprise && !!filters.length && (
           <div>
-            {selectedGroup ? (
-              !!groupFilters.length && (
-                <MenderTooltip
-                  title="Saved changes will not change the target devices of any ongoing deployments to this group, but will take effect for new deployments"
-                  arrow
-                >
-                  <Button variant="contained" color="secondary" onClick={onGroupClick}>
-                    Save group
-                  </Button>
-                </MenderTooltip>
-              )
-            ) : (
+            {!selectedGroup && (
               <Button variant="contained" color="secondary" onClick={onGroupClick}>
                 Create group with this filter
               </Button>
