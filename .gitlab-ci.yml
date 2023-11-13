@@ -93,7 +93,7 @@ test:types:
       - src/js/api/types
 
 test:licenses:
-  image: denoland/deno:alpine
+  image: denoland/deno:alpine-1.38.0
   stage: test
   except:
     - master
@@ -109,8 +109,7 @@ test:licenses:
     - apk add --no-cache nodejs npm
     - npm ci
   script:
-    - cd tests/licenses
-    - deno run --allow-read --allow-env licenseCheck.ts
+    - deno run --allow-env --allow-read --allow-sys tests/licenses/licenseCheck.ts
   tags:
     - mender-qa-worker-generic-light
 

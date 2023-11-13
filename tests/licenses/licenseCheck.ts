@@ -11,11 +11,14 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { parse } from 'https://deno.land/std@0.175.0/flags/mod.ts';
+import { parse } from 'https://deno.land/std@0.206.0/flags/mod.ts';
+import { dirname, fromFileUrl, resolve as resolvePath } from 'https://deno.land/std@0.206.0/path/mod.ts';
 import { DiffTerm, diff } from 'https://deno.land/x/diff_kit@v2.0.4/mod.ts';
-import { asCSV, asSummary, init } from 'npm:license-checker-rseidelsohn@4.1.1';
+import { asCSV, asSummary, init } from 'npm:license-checker-rseidelsohn@4.2.10';
 
-const licenseFileLocation = './directDependencies.csv';
+const licenseFile = 'directDependencies.csv';
+const licenseFileLocation = resolvePath(dirname(fromFileUrl(Deno.mainModule)), licenseFile);
+
 const knownOptions = [
   { key: 'update', description: 'to update the current license file (needs "--allow-write")' },
   { key: 'summary', description: 'give an overview of the license usage' },
@@ -27,8 +30,7 @@ const usageMessage = [
   ''
 ].join('\n');
 
-const collectUsedLicenses = () =>
-  new Promise((resolve, reject) => init({ direct: 0, start: '../../.' }, (err, packages) => (err ? reject(err) : resolve(packages))));
+const collectUsedLicenses = () => new Promise((resolve, reject) => init({ direct: 0, start: '.' }, (err, packages) => (err ? reject(err) : resolve(packages))));
 
 const createPackageData = packageData => ({ licenses: packageData.licenses ?? 'unknown', repository: packageData.repository || packageData.url || '' });
 
