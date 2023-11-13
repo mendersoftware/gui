@@ -74,7 +74,6 @@
     "@typescript-eslint/parser": "6.9.1",
     "assert": "2.1.0",
     "autoprefixer": "10.4.16",
-    "axios-mock-adapter": "1.22.0",
     "babel-jest": "~29.7.0",
     "child_process": "1.0.2",
     "clean-webpack-plugin": "4.0.0",

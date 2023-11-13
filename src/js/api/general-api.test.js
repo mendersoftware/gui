@@ -11,27 +11,15 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import MockAdapter from 'axios-mock-adapter';
-
-import Api, { authenticatedRequest } from './general-api';
+import Api from './general-api';
 
 const testLocation = '/test';
 
-let mockApi;
-
 describe('General API module', () => {
-  beforeAll(() => {
-    mockApi = new MockAdapter(authenticatedRequest);
-    mockApi.onGet(testLocation).reply(200).onPost(testLocation).reply(200, {}).onPut(testLocation).reply(200, {}).onDelete(testLocation).reply(200, {});
-  });
-
-  afterAll(() => {
-    mockApi.restore();
-  });
-
   it('should allow GET requests', done => {
     Api.get(testLocation)
       .then(res => {
+        console.log(res.config.headers.Authorization);
         expect(res.config.headers.Authorization).toMatch(/Bearer/);
         return res.config.method === 'get' ? done() : done('failed');
       })

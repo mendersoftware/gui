@@ -28,7 +28,6 @@
 "@typescript-eslint/parser","BSD-2-Clause","https://github.com/typescript-eslint/typescript-eslint"
 "assert","MIT","https://github.com/browserify/commonjs-assert"
 "autoprefixer","MIT","https://github.com/postcss/autoprefixer"
-"axios-mock-adapter","MIT","https://github.com/ctimmerm/axios-mock-adapter"
 "axios","MIT","https://github.com/axios/axios"
 "babel-jest","MIT","https://github.com/jestjs/jest"
 "buffer","MIT","https://github.com/feross/buffer"
