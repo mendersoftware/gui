@@ -37,7 +37,7 @@ export const getSessionInfo = () => {
   return sessionInfo;
 };
 
-export const getToken = () => tokenCache;
+export const getToken = () => (tokenCache ? tokenCache : getSessionInfo().token);
 
 export const setSessionInfo = ({ token, expiresAt }) => {
   tokenCache = token;
