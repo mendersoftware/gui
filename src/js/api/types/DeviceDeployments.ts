@@ -12,6 +12,7 @@ export type DeviceDeployments = {
   id: string;
   status: DeviceStatus;
   created?: string;
+  started?: string;
   finished?: string;
   deleted?: string;
   device_type?: string;
