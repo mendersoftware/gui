@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "extends": "./tsconfig.json",
+  "exclude": ["src/js/api/types/Settings.ts"]
+}
