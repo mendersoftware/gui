@@ -93,6 +93,7 @@ import {
   getTokens,
   getUser,
   getUserList,
+  initializeSelf,
   loginUser,
   logoutUser,
   passwordResetComplete,
@@ -124,7 +125,9 @@ const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
 
 const offlineThreshold = { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' };
 const appInitActions = [
-  { type: SUCCESSFULLY_LOGGED_IN, value: { token: '' } },
+  { type: RECEIVED_USER, user: defaultState.users.byId[userId] },
+  { type: SET_CUSTOM_COLUMNS, value: [] },
+  { type: SUCCESSFULLY_LOGGED_IN, value: { token: undefined } },
   { type: SET_ONBOARDING_COMPLETE, complete: false },
   { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
   { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
@@ -472,8 +475,7 @@ describe('user actions', () => {
     const expectedActions = [
       { type: RECEIVED_USER, user: defaultState.users.byId[userId] },
       { type: SET_CUSTOM_COLUMNS, value: [] },
-      { type: SUCCESSFULLY_LOGGED_IN, value: { token } },
-      ...appInitActions
+      { type: SUCCESSFULLY_LOGGED_IN, value: { token } }
     ];
     const store = mockStore({ ...defaultState });
     await store.dispatch(loginUser({ email: 'test@example.com', password: defaultPassword }));
@@ -522,6 +524,15 @@ describe('user actions', () => {
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expect(window.localStorage.getItem).toHaveBeenCalledWith(`a1-column-widths`);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow current user initialization', async () => {
+    jest.clearAllMocks();
+    const expectedActions = appInitActions;
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(initializeSelf());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
   it('should allow user list retrieval', async () => {
