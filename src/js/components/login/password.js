@@ -63,7 +63,7 @@ export const Password = () => {
       ))}
       {!confirm && (
         <Form showButtons={true} buttonColor="primary" onSubmit={handleSubmit} submitLabel="Send password reset link">
-          <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
+          <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail,trim" />
         </Form>
       )}
     </PasswordScreenContainer>
