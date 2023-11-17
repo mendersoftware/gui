@@ -29,7 +29,7 @@ import Cookies from 'universal-cookie';
 
 import { parseEnvironmentInfo, setSnackbar } from '../actions/appActions';
 import { logoutUser, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
-import { maxSessionAge, updateMaxAge } from '../auth';
+import { getSessionInfo, maxSessionAge, updateMaxAge } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
 import { TIMEOUTS } from '../constants/appConstants';
@@ -106,7 +106,8 @@ export const AppRoot = () => {
   const snackbar = useSelector(state => state.app.snackbar);
   const trackingCode = useSelector(state => state.app.trackerCode);
   const { mode } = useSelector(getUserSettings);
-  const { expiresAt, token } = useSelector(getCurrentSession);
+  const { token: storedToken } = getSessionInfo();
+  const { expiresAt, token = storedToken } = useSelector(getCurrentSession);
 
   const trackLocationChange = useCallback(
     pathname => {

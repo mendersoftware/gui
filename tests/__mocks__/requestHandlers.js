@@ -11,6 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+import { rest } from 'msw';
+
 import { deploymentHandlers } from './deploymentHandlers';
 import { deviceHandlers } from './deviceHandlers';
 import { monitorHandlers } from './monitorHandlers';
@@ -18,6 +20,15 @@ import { organizationHandlers } from './organizationHandlers';
 import { releaseHandlers } from './releaseHandlers';
 import { userHandlers } from './userHandlers';
 
-const handlers = [...deploymentHandlers, ...deviceHandlers, ...monitorHandlers, ...organizationHandlers, ...releaseHandlers, ...userHandlers];
+const testLocation = '/test';
+
+const baseHandlers = [
+  rest.get(testLocation, (_, res, ctx) => res(ctx.status(200))),
+  rest.post(testLocation, (_, res, ctx) => res(ctx.status(200), ctx.json({}))),
+  rest.put(testLocation, (_, res, ctx) => res(ctx.status(200), ctx.json({}))),
+  rest.delete(testLocation, (_, res, ctx) => res(ctx.status(200), ctx.json({})))
+];
+
+const handlers = [...baseHandlers, ...deploymentHandlers, ...deviceHandlers, ...monitorHandlers, ...organizationHandlers, ...releaseHandlers, ...userHandlers];
 
 export default handlers;
