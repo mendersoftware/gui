@@ -32,12 +32,12 @@ export const getSessionInfo = () => {
     cleanUp();
     return { ...emptySession };
   }
-  sessionInfo.token = sessionInfo.token ?? cookies.get('JWT', { doNotParse: true });
+  sessionInfo.token = sessionInfo.token || cookies.get('JWT', { doNotParse: true });
   tokenCache = sessionInfo.token;
   return sessionInfo;
 };
 
-export const getToken = () => tokenCache;
+export const getToken = () => (tokenCache ? tokenCache : getSessionInfo().token);
 
 export const setSessionInfo = ({ token, expiresAt }) => {
   tokenCache = token;

@@ -87,7 +87,7 @@ export const loginUser = (userData, stayLoggedIn) => dispatch =>
           if (window.location.pathname !== '/ui/') {
             window.location.replace('/ui/');
           }
-          return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: { expiresAt, token } }), dispatch(initializeAppData())]);
+          return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: { expiresAt, token } })]);
         });
     });
 

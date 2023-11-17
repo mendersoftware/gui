@@ -3,6 +3,20 @@
 /* tslint:disable */
 /* eslint-disable */
 
+/**
+ * An array of deployments phases. Phases define a starting point and
+ * a relative batch size of devices to which the deployment applies.
+ *
+ * A single phase allows scheduling a deployment to start at a specific
+ * time.
+ *
+ * Multiple phases split the deployment into smaller batches of devices
+ * at the time giving a higher level of control of the rate devices are
+ * updated.
+ *
+ * *NOTE*: Professional plan is only allowed to specify a single phase to
+ * schedule deployments, this feature is not available for Starter plan.
+ */
 export type NewDeploymentPhase = {
   /**
    * Percentage of devices to update in the phase.
