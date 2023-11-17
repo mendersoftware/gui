@@ -46,6 +46,8 @@ export const setSessionInfo = ({ token, expiresAt }) => {
 
 export const cleanUp = () => {
   tokenCache = '';
+  cookies.remove('JWT');
+  cookies.remove('JWT', { path: '/' });
   window.localStorage.removeItem('JWT');
   window.localStorage.removeItem('oauth');
 };
