@@ -34,7 +34,7 @@ export const UserDataEntry = ({ classes, onProgessClick }) => {
     <div className={classes.userData} onKeyPress={handleKeyPress}>
       <h1 className="flexbox centered">Create your account</h1>
       <OAuthHeader type="Sign up" />
-      <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail" />
+      <TextInput hint="Email *" label="Email *" id="email" required={true} validations="isLength:1,isEmail,trim" />
       <PasswordInput
         id="password"
         label="Password *"

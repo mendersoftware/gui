@@ -37,8 +37,8 @@ export const OrgDataEntry = ({ classes, emailVerified, recaptchaSiteKey = '', se
         <br />
         please fill in a few details
       </h2>
-      <TextInput hint="Company or organization name *" label="Company or organization name *" id="name" required validations="isLength:1" />
-      {!emailVerified && <TextInput hint="Email *" label="Email *" id="email" required validations="isLength:1,isEmail" />}
+      <TextInput hint="Company or organization name *" label="Company or organization name *" id="name" required validations="isLength:1,trim" />
+      {!emailVerified && <TextInput hint="Email *" label="Email *" id="email" required validations="isLength:1,isEmail,trim" />}
       <div className={classes.locationSelect}>
         <div className="flexbox center-aligned margin-top slightly-smaller">
           <p className="margin-bottom-none margin-top-none muted" style={{ marginRight: 4 }}>

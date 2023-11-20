@@ -31,7 +31,7 @@ export const TextInput = ({
   value: passedValue = '',
   type,
   control,
-  validations
+  validations = ''
 }) => {
   const {
     clearErrors,
@@ -73,7 +73,7 @@ export const TextInput = ({
             }}
             value={value ?? passedValue}
             onChange={({ target: { value } }) => onChange(value)}
-            onBlur={onBlur}
+            onBlur={() => (validations.includes('trim') ? onChange(value.trim()) : onBlur)}
             placeholder={hint}
             required={required}
             type={type}
