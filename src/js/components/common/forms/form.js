@@ -90,7 +90,7 @@ export const runValidations = ({ required, value, id, validations }) => {
     return runPasswordValidations({ required, value, validations, isValid, errortext });
   } else {
     if (value || required) {
-      return tryApplyValidations(value, validations, { isValid, errortext });
+      return tryApplyValidations(validations.includes('trim') ? value.trim() : value, validations, { isValid, errortext });
     }
   }
   return { isValid, errortext };

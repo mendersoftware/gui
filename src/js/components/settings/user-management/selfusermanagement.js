@@ -91,7 +91,7 @@ export const SelfUserManagement = () => {
         </div>
       ) : (
         <Form defaultValues={{ email }} onSubmit={editSubmit} handleCancel={handleEmail} submitLabel="Save" showButtons={editEmail} buttonColor="secondary">
-          <TextInput disabled={false} hint="Email" id="email" InputLabelProps={{ shrink: !!email }} label="Email" validations="isLength:1,isEmail" />
+          <TextInput disabled={false} hint="Email" id="email" InputLabelProps={{ shrink: !!email }} label="Email" validations="isLength:1,isEmail,trim" />
           <PasswordInput id="current_password" label="Current password *" validations={`isLength:8,isNot:${email}`} required={true} />
         </Form>
       )}
