@@ -105,7 +105,7 @@ const deviceListColumns = [
     },
     canShow
   },
-  { key: 'started', title: 'Started', render: ({ device: { created } }) => <MaybeTime value={formatTime(created)} />, sortable: false, canShow },
+  { key: 'started', title: 'Started', render: ({ device: { started } }) => <MaybeTime value={formatTime(started)} />, sortable: false, canShow },
   { key: 'finished', title: 'Finished', render: ({ device: { finished } }) => <MaybeTime value={formatTime(finished)} />, sortable: false, canShow },
   {
     key: 'artifact_size',
