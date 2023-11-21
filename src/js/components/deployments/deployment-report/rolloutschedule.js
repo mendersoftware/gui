@@ -71,7 +71,7 @@ export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, on
             <TwoColumnData
               {...defaultColumnDataProps}
               config={{
-                'Start time': <Time value={formatTime(creationTime)} />,
+                'Start time': <Time value={formatTime(start_time)} />,
                 'Current phase': currentPhaseTime
               }}
             />
@@ -90,7 +90,7 @@ export const RolloutSchedule = ({ deployment, headerClass, innerRef, onAbort, on
           const deviceCountText = !filter ? ` (${deviceCount} ${pluralize('device', deviceCount)})` : '';
           const startTime = phase.start_ts ?? getPhaseStartTime(phases, index, start_time);
           const phaseObject = {
-            'Start time': <Time value={startTime} />,
+            'Phase start time': <Time value={startTime} />,
             'Batch size': <div className="muted">{`${phase.batch_size}%${deviceCountText}`}</div>
           };
           let phaseTitle = status !== DEPLOYMENT_STATES.scheduled ? <div className="muted">Complete</div> : null;
