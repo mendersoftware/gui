@@ -360,7 +360,7 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
           class="align-right  muted"
         >
           <b>
-            Start time
+            Phase start time
           </b>
         </div>
         <div
