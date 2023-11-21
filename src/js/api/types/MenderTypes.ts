@@ -119,6 +119,7 @@ export type { PreAuthSet } from "./PreAuthSet";
 export type { Release } from "./Release";
 export type { ReleaseDeployments } from "./ReleaseDeployments";
 export type { Releases } from "./Releases";
+export type { ReleasesDeleteError } from "./ReleasesDeleteError";
 export type { ReleasesDeployments } from "./ReleasesDeployments";
 export type { ReleaseUpdate } from "./ReleaseUpdate";
 export type { Role } from "./Role";
