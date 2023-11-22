@@ -81,7 +81,7 @@ export const useLocationParams = (key, extras) => {
       navigate({ pathname, replace: true, search: `?${searchQuery}`, ...options });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(extras), key, location.search, location.pathname, navigate]
+    [JSON.stringify(extras), key]
   );
 
   return [value, setValue];
