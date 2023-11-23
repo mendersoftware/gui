@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { prettyDOM } from '@testing-library/dom';
 
@@ -34,8 +35,29 @@ const preloadedState = {
   }
 };
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'), // if you want to still use the actual other parts of the module
+  useLocation: jest.fn(),
+  useSearchParams: jest.fn()
+}));
+
 describe('DeviceGroups Component', () => {
+  const searchParams = `inventory=group:eq:${preloadedState.devices.groups.selectedGroup}`;
   it('renders correctly', async () => {
+    const location = {
+      pathname: '/ui/devices/accepted',
+      search: `?${searchParams}`,
+      hash: '',
+      state: {},
+      key: 'testKey'
+    };
+    const mockSearchParams = new URLSearchParams(searchParams);
+    const setParams = jest.fn();
+
+    // mock location and search params as DeviceGroups component pays attention to the url and parses state from it
+    useLocation.mockImplementation(() => location);
+    useSearchParams.mockReturnValue([mockSearchParams, setParams]);
+
     const { baseElement } = render(<DeviceGroups />, { preloadedState });
     // special snapshot handling here to work around unstable ids in mui code...
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
