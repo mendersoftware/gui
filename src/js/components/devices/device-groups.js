@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { AddCircle as AddIcon } from '@mui/icons-material';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
@@ -35,6 +35,7 @@ import {
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
+import * as DeviceConstants from '../../constants/deviceConstants.js';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle } from '../../helpers';
 import {
@@ -99,6 +100,7 @@ export const DeviceGroups = () => {
   const isEnterprise = useSelector(getIsEnterprise);
   const dispatch = useDispatch();
   const isInitialized = useRef(false);
+  const location = useLocation();
 
   const [locationParams, setLocationParams] = useLocationParams('devices', {
     filteringAttributes,
@@ -121,7 +123,6 @@ export const DeviceGroups = () => {
     deviceListState.selectedIssues,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(deviceListState.sort),
-    refreshTrigger,
     selectedId,
     filters,
     selectedGroup,
@@ -130,22 +131,34 @@ export const DeviceGroups = () => {
   ]);
 
   useEffect(() => {
+    // set isInitialized ref to false when location changes, otherwise when you go back setLocationParams will be set with a duplicate item
+    isInitialized.current = false;
+  }, [location]);
+
+  useEffect(() => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
     const { hasFullFiltering } = tenantCapabilities;
     if (groupName) {
       dispatch(selectGroup(groupName, filters));
-    } else if (filters.length) {
+    } else {
+      // dispatch setDeviceFilters even when filters are empty, otherwise filter will not be reset
       dispatch(setDeviceFilters(filters));
+      // if selected group exists in the state, but not set in locationParams then unset it
+      selectedGroup && dispatch({ type: DeviceConstants.SELECT_GROUP, group: undefined });
     }
-    let listState = { ...remainder };
+    // preset selectedIssues and selectedId with empty values, in case if remain properties are missing them
+    let listState = { selectedIssues: [], selectedId: undefined, ...remainder };
+
     if (statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam)) {
       listState.state = statusParam;
     }
+
     if (id.length === 1 && Boolean(locationParams.open)) {
       listState.selectedId = id[0];
     } else if (id.length && hasFullFiltering) {
       dispatch(setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]));
     }
+
     dispatch(setDeviceListState(listState)).then(() => {
       if (isInitialized.current) {
         return;
