@@ -25,7 +25,7 @@ export const FormCheckbox = ({ className, control, id, handleClick, style, label
       return (
         <FormControlLabel
           className={className}
-          control={<Checkbox name={id} onClick={handleClick} style={style} color="primary" onChange={() => onChange(!value)} />}
+          control={<Checkbox name={id} onClick={handleClick} checked={value} style={style} color="primary" onChange={() => onChange(!value)} />}
           label={label}
         />
       );
