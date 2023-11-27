@@ -29,7 +29,7 @@ export const CreateGroup = ({ addListOfDevices, fromFilters, isCreation, onClose
   const { selectedGroup } = useSelector(getSelectedGroupInfo);
   // ensure that existing dynamic groups are only listed if a dynamic group should be created
   const { dynamic, static: staticGroups } = useSelector(getGroups);
-  const groups = fromFilters ? [...Object.keys(staticGroups), ...Object.keys(dynamic)] : Object.keys(staticGroups);
+  const groups = fromFilters ? [...staticGroups.map(g => g.groupId), ...dynamic.map(g => g.groupId)] : staticGroups.map(g => g.groupId);
 
   const onNameChange = (isInvalid, newGroupName, isModification) => {
     const title = !isCreationDynamic ? `Add ${selectedDevices.length ? 'selected ' : ''}devices to group` : 'Create a new group';
