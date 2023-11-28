@@ -73,7 +73,7 @@ const defaultManagementUrl = 'https://hosted.mender.io/api/management';
 const baseSpec = {
   openapi: '3.0.3',
   info: {
-    contact: { name: 'contact@mender.io' },
+    contact: { name: 'support@mender.io' },
     description: 'Combined API specification for the management features of the different Mender backend services, suitable for code generation applications',
     title: 'Mender Management API',
     version: '1.0'
