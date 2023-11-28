@@ -59,7 +59,7 @@ export const DeviceLimitExpansionNotification = ({ isTrial }) => (
     {isTrial ? (
       <Link to="/settings/upgrade">upgrade to a paid plan</Link>
     ) : (
-      <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
+      <a href="mailto:support@mender.io" target="_blank" rel="noopener noreferrer">
         contact our sales team
       </a>
     )}

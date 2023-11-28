@@ -215,7 +215,7 @@ export const ArtifactGenerationSettings = () => {
         <InfoText>
           <InfoOutlinedIcon style={{ fontSize: 14, margin: '0 4px 4px 0', verticalAlign: 'middle' }} />
           Automatic delta artifacts generation is not enabled in your account. If you want to start using this feature,{' '}
-          <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
+          <a href="mailto:support@mender.io" target="_blank" rel="noopener noreferrer">
             contact our team
           </a>
           .
