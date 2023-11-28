@@ -232,7 +232,7 @@ const AttributeLimit = () => {
   return isHosted ? (
     <>
       Expand to see the list of attributes currently in use. Please{' '}
-      <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
+      <a href="mailto:support@mender.io" target="_blank" rel="noopener noreferrer">
         contact our team
       </a>{' '}
       if your use case requires a different set of attributes.

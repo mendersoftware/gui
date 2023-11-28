@@ -54,7 +54,7 @@ export const PricingContactNote = () => (
   <InfoText>
     <InfoOutlinedIcon style={{ fontSize: '14px', margin: '0 4px 4px 0', verticalAlign: 'middle' }} />
     If you have any questions about the plan pricing or device limits,{' '}
-    <a href="mailto:contact@mender.io" target="_blank" rel="noopener noreferrer">
+    <a href="mailto:support@mender.io" target="_blank" rel="noopener noreferrer">
       contact our team
     </a>
     .

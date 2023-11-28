@@ -974,7 +974,7 @@ exports[`smaller components renders PricingContactNote correctly 1`] = `
   If you have any questions about the plan pricing or device limits,
    
   <a
-    href="mailto:contact@mender.io"
+    href="mailto:support@mender.io"
     rel="noopener noreferrer"
     target="_blank"
   >
