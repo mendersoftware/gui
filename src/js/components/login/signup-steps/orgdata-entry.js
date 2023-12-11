@@ -13,6 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useFormContext } from 'react-hook-form';
 
 import { MenuItem, Select } from '@mui/material';
 
@@ -23,10 +24,14 @@ import TextInput from '../../common/forms/textinput';
 
 export const OrgDataEntry = ({ classes, emailVerified, recaptchaSiteKey = '', setCaptchaTimestamp, location, setLocation, setRecaptcha }) => {
   const handleLocationChange = ({ target: { value } }) => setLocation(value);
+  const { register, setValue, trigger } = useFormContext();
+  const captchaFieldName = 'captcha';
 
   const handleCaptchaChange = value => {
     setCaptchaTimestamp(new Date().getTime());
     setRecaptcha(value);
+    setValue(captchaFieldName, value ? 'validated' : '');
+    trigger(captchaFieldName);
   };
 
   return (
@@ -88,6 +93,7 @@ export const OrgDataEntry = ({ classes, emailVerified, recaptchaSiteKey = '', se
       />
       {recaptchaSiteKey && (
         <div className="margin-top">
+          <input type="hidden" {...register(captchaFieldName, { required: 'reCAPTCHA is not completed' })} />
           <ReCAPTCHA sitekey={recaptchaSiteKey} onChange={handleCaptchaChange} />
         </div>
       )}

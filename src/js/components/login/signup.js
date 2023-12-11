@@ -165,8 +165,8 @@ export const Signup = () => {
         <div>
           <Form
             buttonColor="primary"
-            defaultValues={{ email: '', tos: false, marketing: false, name: '' }}
-            initialValues={{ email, tos, marketing, name: organization }}
+            defaultValues={{ email: '', tos: false, marketing: false, name: '', captcha: '' }}
+            initialValues={{ email, tos, marketing, name: organization, captcha: '' }}
             onSubmit={handleSignup}
             showButtons={!(isStarting || loading)}
             submitLabel={isStarting ? 'Sign up' : 'Complete signup'}
