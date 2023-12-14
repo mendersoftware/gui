@@ -46,6 +46,8 @@ const columns = [
     key: 'tags',
     title: 'Tags',
     render: ({ tags = [] }) => tags.join(', ') || '-',
+    defaultSortDirection: SORTING_OPTIONS.asc,
+    sortable: true,
     canShow
   },
   {

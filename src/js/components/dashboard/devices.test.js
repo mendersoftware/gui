@@ -13,13 +13,23 @@
 //    limitations under the License.
 import React from 'react';
 
-import { undefineds } from '../../../../tests/mockData';
+import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import Devices from './devices';
 
 describe('Devices Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<Devices getAllDevicesByStatus={jest.fn()} />);
+    const preloadedState = {
+      ...defaultState,
+      organization: {
+        ...defaultState.organization,
+        organization: {
+          ...defaultState.organization.organization,
+          plan: 'enterprise'
+        }
+      }
+    };
+    const { baseElement } = render(<Devices getAllDevicesByStatus={jest.fn()} />, { preloadedState });
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

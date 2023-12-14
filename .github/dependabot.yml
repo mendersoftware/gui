@@ -20,6 +20,8 @@ updates:
         patterns:
           - '@emotion*'
           - '@mui*'
+    reviewers:
+      - "mendersoftware/frontend-dependabot-reviewers"
   - commit-message:
       prefix: chore
     directory: /
@@ -39,3 +41,5 @@ updates:
       e2e-test-dependencies:
         exclude-patterns:
           - '*'
+    reviewers:
+      - "mendersoftware/frontend-dependabot-reviewers"
