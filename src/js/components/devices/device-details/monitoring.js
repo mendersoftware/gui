@@ -19,7 +19,7 @@ import { useTheme } from '@mui/material/styles';
 import { getDeviceAlerts, setAlertListState } from '../../../actions/monitorActions';
 import { BENEFITS } from '../../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
-import { getOfflineThresholdSettings } from '../../../selectors';
+import { getOfflineThresholdSettings, getTenantCapabilities } from '../../../selectors';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import Pagination from '../../common/pagination';
@@ -58,6 +58,7 @@ const MonitoringAlert = ({ alert, onDetailsClick, style }) => {
 const paginationCutoff = defaultPerPage;
 export const DeviceMonitoring = ({ device, onDetailsClick }) => {
   const theme = useTheme();
+  const { hasMonitor } = useSelector(state => getTenantCapabilities(state));
   const { alerts = [], latest: latestAlerts = [] } = useSelector(state => state.monitor.alerts.byDeviceId[device.id]) ?? {};
   const alertListState = useSelector(state => state.monitor.alerts.alertList) ?? {};
   const offlineThresholdSettings = useSelector(getOfflineThresholdSettings);
@@ -65,7 +66,9 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
   const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, total: alertCount } = alertListState;
 
   useEffect(() => {
-    dispatch(getDeviceAlerts(device.id, alertListState));
+    if (hasMonitor) {
+      dispatch(getDeviceAlerts(device.id, alertListState));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [device.id, dispatch, pageNo, pageLength]);
 
