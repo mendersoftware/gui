@@ -121,6 +121,7 @@ export const Header = ({ mode }) => {
   const { isSearching, searchTerm, refreshTrigger } = useSelector(state => state.app.searchState);
   const multitenancy = hasMultitenancy || isEnterprise || isHosted;
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
+  const userSettingInitialized = useSelector(state => state.users.settingsInitialized);
   const user = useSelector(getCurrentUser);
   const { token } = useSelector(getCurrentSession);
   const userId = useDebounce(user.id, TIMEOUTS.debounceDefault);
@@ -130,7 +131,7 @@ export const Header = ({ mode }) => {
   const showHelptips = useSelector(getShowHelptips);
 
   useEffect(() => {
-    if ((!userId || !user.email?.length) && !gettingUser && token) {
+    if ((!userId || !user.email?.length || !userSettingInitialized) && !gettingUser && token) {
       setGettingUser(true);
       dispatch(initializeSelf());
       return;
@@ -143,7 +144,7 @@ export const Header = ({ mode }) => {
         dispatch(setFirstLoginAfterSignup(false));
       }
     }
-  }, [dispatch, firstLoginAfterSignup, gettingUser, hasTrackingEnabled, organization, token, user, user.email, userId]);
+  }, [dispatch, firstLoginAfterSignup, gettingUser, hasTrackingEnabled, organization, token, user, user.email, userId, userSettingInitialized]);
 
   useEffect(() => {
     const showOfferCookie = cookies.get('offer') === currentOffer.name;
