@@ -46,7 +46,7 @@ export const Devices = ({ clickHandle }) => {
   const { total: acceptedDevicesCount } = useSelector(getAcceptedDevices);
   const availableIssueOptions = useSelector(getAvailableIssueOptionsByType);
   const { canManageDevices } = useSelector(getUserCapabilities);
-  const { hasReporting } = useSelector(getTenantCapabilities);
+  const { hasReporting, plan } = useSelector(getTenantCapabilities);
   const onboardingState = useSelector(getOnboardingState);
   const { pending: pendingDevicesCount } = useSelector(getDeviceCountsByStatus);
 
@@ -90,11 +90,12 @@ export const Devices = ({ clickHandle }) => {
       onboardingComponent = getOnboardingComponentFor(onboardingSteps.DASHBOARD_ONBOARDING_PENDINGS, onboardingState, { anchor: pendingsAnchor });
     }
   }
+  const shouldShowActionableDevices = plan !== 'os';
   return (
     <>
       <div className="dashboard" ref={anchor}>
         <AcceptedDevices devicesCount={acceptedDevicesCount} onClick={clickHandle} />
-        {!!acceptedDevicesCount && <ActionableDevices issues={availableIssueOptions} />}
+        {!!acceptedDevicesCount && shouldShowActionableDevices && <ActionableDevices issues={availableIssueOptions} />}
         {!!pendingDevicesCount && !(acceptedDevicesCount && hasReporting) && (
           <PendingDevices
             advanceOnboarding={step => dispatch(advanceOnboarding(step))}
