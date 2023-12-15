@@ -529,11 +529,10 @@ exports[`DeviceConnectionDialog Component renders correctly 1`] = `
                 </a>
               </li>
             </ul>
-            Or visit
-             
+            Or visit 
             <a
               href="https://hub.mender.io/c/board-integrations"
-              rel="noopener noreferrer"
+              rel="noopener"
               target="_blank"
             >
               Mender Hub

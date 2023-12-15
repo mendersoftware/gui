@@ -226,7 +226,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
       <a
         class="margin-left-small"
         href="https://mender.io/plans/features"
-        rel="noopener noreferrer"
+        rel="noopener"
         target="_blank"
       >
         Learn more
@@ -283,7 +283,7 @@ exports[`AddOnSelection component renders correctly 1`] = `
       <a
         class="margin-left-small"
         href="https://mender.io/plans/features"
-        rel="noopener noreferrer"
+        rel="noopener"
         target="_blank"
       >
         Learn more
