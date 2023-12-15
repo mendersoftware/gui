@@ -371,23 +371,15 @@ export const getUserCapabilities = createSelector([getUserRoles], ({ uiPermissio
 export const getTenantCapabilities = createSelector(
   [getFeatures, getOrganization, getIsEnterprise],
   (
-    {
-      hasAddons,
-      hasAuditlogs: isAuditlogEnabled,
-      hasDeviceConfig: isDeviceConfigEnabled,
-      hasDeviceConnect: isDeviceConnectEnabled,
-      hasMonitor: isMonitorEnabled,
-      isHosted
-    },
+    { hasAuditlogs: isAuditlogEnabled, hasDeviceConfig: isDeviceConfigEnabled, hasDeviceConnect: isDeviceConnectEnabled, hasMonitor: isMonitorEnabled },
     { addons = [], plan = PLANS.os.id },
     isEnterprise
   ) => {
     const canDelta = isEnterprise || plan === PLANS.professional.id;
-    const hasAuditlogs = isAuditlogEnabled && (!isHosted || isEnterprise || plan === PLANS.professional.id);
-    const hasDeviceConfig = hasAddons || (isDeviceConfigEnabled && (!isHosted || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled))));
-    const hasDeviceConnect =
-      hasAddons || (isDeviceConnectEnabled && (!isHosted || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled))));
-    const hasMonitor = hasAddons || (isMonitorEnabled && (!isHosted || addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled))));
+    const hasAuditlogs = isAuditlogEnabled && (isEnterprise || plan === PLANS.professional.id);
+    const hasDeviceConfig = isDeviceConfigEnabled && (!isEnterprise || addons.some(addon => addon.name === 'configure' && Boolean(addon.enabled)));
+    const hasDeviceConnect = isDeviceConnectEnabled && (!isEnterprise || addons.some(addon => addon.name === 'troubleshoot' && Boolean(addon.enabled)));
+    const hasMonitor = isMonitorEnabled && addons.some(addon => addon.name === 'monitor' && Boolean(addon.enabled));
     return {
       canDelta,
       canRetry: canDelta,

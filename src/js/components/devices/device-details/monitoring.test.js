@@ -37,8 +37,7 @@ describe('DeviceMonitoring Component', () => {
       app: {
         ...defaultState.app,
         features: {
-          ...defaultState.app.features,
-          hasAddons: true
+          ...defaultState.app.features
         }
       },
       monitor: {

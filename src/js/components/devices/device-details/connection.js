@@ -130,7 +130,7 @@ export const DeviceConnection = ({ className = '', device }) => {
 
   const userCapabilities = useSelector(getUserCapabilities);
   const { canAuditlog, canTroubleshoot } = userCapabilities;
-  const { hasAuditlogs } = useSelector(getTenantCapabilities);
+  const { hasAuditlogs, hasDeviceConnect } = useSelector(getTenantCapabilities);
   const { token } = useSelector(getCurrentSession);
   const { classes } = useStyles();
   const { connect_status, connect_updated_ts, isOffline } = device;
@@ -189,8 +189,8 @@ export const DeviceConnection = ({ className = '', device }) => {
         <div className="flexbox center-aligned">
           <h4>Troubleshooting</h4>
           <div className={`flexbox ${className}`}>
-            {connectionStatus !== DEVICE_CONNECT_STATES.unknown && canTroubleshoot && <PortForwardLink />}
-            {canAuditlog && hasAuditlogs && (
+            {hasDeviceConnect && connectionStatus !== DEVICE_CONNECT_STATES.unknown && canTroubleshoot && <PortForwardLink />}
+            {hasDeviceConnect && canAuditlog && hasAuditlogs && (
               <Link
                 className="flexbox center-aligned margin-left"
                 to={`/auditlog?${formatAuditlogs({ pageState: { type: deviceAuditlogType, detail: device.id, startDate: BEGINNING_OF_TIME } }, {})}`}
@@ -203,35 +203,37 @@ export const DeviceConnection = ({ className = '', device }) => {
         </div>
       }
     >
-      <div className={`flexbox column ${classes.content}`}>
-        {!connectionStatus && (
-          <div className="flexbox centered">
-            <Loader show />
-          </div>
-        )}
-        {connectionStatus === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote />}
-        {connectionStatus === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote lastConnectionTs={connect_updated_ts} />}
-        {availableTabs.map(({ Component, title, value }) => (
-          <div key={value}>
-            <h4 className="margin-top-large">{title}</h4>
-            <Component
-              device={device}
-              downloadPath={downloadPath}
-              file={file}
-              onDownload={onDownloadClick}
-              setDownloadPath={setDownloadPath}
-              setFile={setFile}
-              setSnackbar={dispatchedSetSnackbar}
-              setSocketClosed={setSocketClosed}
-              setSocketInitialized={setSocketInitialized}
-              setUploadPath={setUploadPath}
-              socketInitialized={socketInitialized}
-              uploadPath={uploadPath}
-              userCapabilities={userCapabilities}
-            />
-          </div>
-        ))}
-      </div>
+      {hasDeviceConnect && (
+        <div className={`flexbox column ${classes.content}`}>
+          {!connectionStatus && (
+            <div className="flexbox centered">
+              <Loader show />
+            </div>
+          )}
+          {connectionStatus === DEVICE_CONNECT_STATES.unknown && <DeviceConnectionMissingNote />}
+          {connectionStatus === DEVICE_CONNECT_STATES.disconnected && <DeviceDisconnectedNote lastConnectionTs={connect_updated_ts} />}
+          {availableTabs.map(({ Component, title, value }) => (
+            <div key={value}>
+              <h4 className="margin-top-large">{title}</h4>
+              <Component
+                device={device}
+                downloadPath={downloadPath}
+                file={file}
+                onDownload={onDownloadClick}
+                setDownloadPath={setDownloadPath}
+                setFile={setFile}
+                setSnackbar={dispatchedSetSnackbar}
+                setSocketClosed={setSocketClosed}
+                setSocketInitialized={setSocketInitialized}
+                setUploadPath={setUploadPath}
+                socketInitialized={socketInitialized}
+                uploadPath={uploadPath}
+                userCapabilities={userCapabilities}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </DeviceDataCollapse>
   );
 };

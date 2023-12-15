@@ -31,7 +31,7 @@ const preloadedState = {
   ...defaultState,
   app: {
     ...defaultState.app,
-    features: { ...defaultState.app.features, hasAddons: true, isEnterprise: true },
+    features: { ...defaultState.app.features, isEnterprise: true },
     versionInformation: { latestRelease: helpProps.versions }
   }
 };
