@@ -85,11 +85,32 @@ const deviceListColumns = [
     canShow
   },
   {
+    key: 'current-artifact',
+    title: 'Current artifact',
+    render: ({ device: { attributes = {} }, userCapabilities: { canReadReleases } }) => {
+      const { artifact_name } = attributes;
+      const softwareName = artifact_name;
+      const encodedArtifactName = encodeURIComponent(softwareName);
+      return softwareName ? (
+        canReadReleases ? (
+          <Link style={{ fontWeight: 'initial' }} to={`/releases/${encodedArtifactName}`}>
+            {softwareName}
+          </Link>
+        ) : (
+          softwareName
+        )
+      ) : (
+        '-'
+      );
+    },
+    canShow
+  },
+  {
     key: 'current-software',
     title: 'Current software',
     render: ({ device: { attributes = {} }, userCapabilities: { canReadReleases } }) => {
-      const { artifact_name, [rootfsImageVersionAttribute]: rootfsImageVersion } = attributes;
-      const softwareName = rootfsImageVersion || artifact_name;
+      const { [rootfsImageVersionAttribute]: rootfsImageVersion } = attributes;
+      const softwareName = rootfsImageVersion;
       const encodedArtifactName = encodeURIComponent(softwareName);
       return softwareName ? (
         canReadReleases ? (
