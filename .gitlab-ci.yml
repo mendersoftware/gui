@@ -335,7 +335,7 @@ build:docker-multiplatform:
     - curl -fsSL https://get.docker.com | sh
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
     - mv /e2e/mender-demo-artifact.mender .
-    - docker pull mendersoftware/mender-client-docker-addons:master
+    - docker pull mendersoftware/mender-client-docker-addons:mender-3.6.x
     - npm ci --cache .npm --prefer-offline
   script:
     - npm run test-ci

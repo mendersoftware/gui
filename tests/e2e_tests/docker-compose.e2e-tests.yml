@@ -36,7 +36,7 @@ services:
       - ${GUI_REPOSITORY}/videos:/e2e/videos
 
   mender-client:
-    image: mendersoftware/mender-client-docker-addons:master
+    image: mendersoftware/mender-client-docker-addons:mender-3.6.x
     volumes:
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json:/etc/mender/mender.conf
       - ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf
