@@ -38,13 +38,15 @@ const Support = () => (
     <h3>Trial or open source users</h3>
     <div>
       <p>Find technical help at</p>
-      <a href="https://hub.mender.io" target="_blank" rel="noopener noreferrer">
+      {/* eslint-disable-next-line react/jsx-no-target-blank */}
+      <a href="https://hub.mender.io" target="_blank" rel="noopener">
         <span>
           <img style={{ 'width': '50%' }} src={hubLogo} />
         </span>
       </a>
       <p>Mender Hub is a forum where you can find help, ask technical questions and start discussions with our active and knowledgeable community.</p>
-      <a href="https://hub.mender.io" target="_blank" rel="noopener noreferrer">
+      {/* eslint-disable-next-line react/jsx-no-target-blank */}
+      <a href="https://hub.mender.io" target="_blank" rel="noopener">
         <span>Ask a question at Mender Hub</span> <LaunchIcon style={{ 'verticalAlign': 'text-bottom' }} fontSize="small" />
       </a>
     </div>

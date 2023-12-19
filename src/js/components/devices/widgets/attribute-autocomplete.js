@@ -75,7 +75,21 @@ export const AttributeAutoComplete = ({ attributes, disabled = false, filter = e
   useEffect(() => {
     setKey(emptyFilter.key);
     setScope(emptyFilter.scope);
-    setOptions(attributes.sort((a, b) => a.priority - b.priority));
+    let attributesClean = attributes.map(attr => {
+      if (!attr.category && attr.scope) {
+        attr.category = attr.scope;
+      }
+      return attr;
+    });
+    setOptions(
+      attributesClean.sort((a, b) =>
+        a.category == b.category
+          ? a.priority == b.priority
+            ? (a.key || '').localeCompare(b.key || '', { sensitivity: 'case' })
+            : a.priority - b.priority
+          : (a.category || '').localeCompare(b.category || '', { sensitivity: 'case' })
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attributes.length, reset]);
 

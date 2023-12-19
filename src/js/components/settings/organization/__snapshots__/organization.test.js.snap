@@ -1150,7 +1150,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
           <a
             class="flexbox center-aligned"
             href="https://mender.io/plans/pricing"
-            rel="noopener noreferrer"
+            rel="noopener"
             target="_blank"
           >
             <div

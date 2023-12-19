@@ -544,20 +544,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
     Upgrade your plan or purchase an add-on to connect more devices, access more features and advanced support.
   </p>
   <p>
-    Learn more about the different plans and at
-     
+    Learn more about the different plans and at 
     <a
       href="https://mender.io/plans/pricing"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       mender.io/plans/pricing
     </a>
-    . Prices can change at larger device counts, please see our
-     
+    . Prices can change at larger device counts, please see our 
     <a
       href="https://mender.io/plans/pricing#calculator"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       price calculator
@@ -753,7 +751,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
       <a
         class="margin-left-small"
         href="https://mender.io/plans/features"
-        rel="noopener noreferrer"
+        rel="noopener"
         target="_blank"
       >
         Learn more
@@ -810,7 +808,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
       <a
         class="margin-left-small"
         href="https://mender.io/plans/features"
-        rel="noopener noreferrer"
+        rel="noopener"
         target="_blank"
       >
         Learn more

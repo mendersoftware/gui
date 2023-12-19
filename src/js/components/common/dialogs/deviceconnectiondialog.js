@@ -92,8 +92,8 @@ const DeviceConnectionExplainer = ({ hasMonitor, setOnDevice, setVirtualDevice }
               </li>
             ))}
           </ul>
-          Or visit{' '}
-          <a href="https://hub.mender.io/c/board-integrations" target="_blank" rel="noopener noreferrer">
+          Or visit {/* eslint-disable-next-line react/jsx-no-target-blank */}
+          <a href="https://hub.mender.io/c/board-integrations" target="_blank" rel="noopener">
             Mender Hub
           </a>{' '}
           and search integrations for your device and OS.

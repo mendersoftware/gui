@@ -61,8 +61,8 @@ const DeviceNotifications = ({ total, limit, pending }) => {
           )}
           <DeviceLimitContact />
           <p>
-            Learn about the different plans available by visiting{' '}
-            <a href="https://mender.io/pricing" target="_blank" rel="noopener noreferrer">
+            Learn about the different plans available by visiting {/* eslint-disable-next-line react/jsx-no-target-blank */}
+            <a href="https://mender.io/pricing" target="_blank" rel="noopener">
               mender.io/pricing
             </a>
           </p>

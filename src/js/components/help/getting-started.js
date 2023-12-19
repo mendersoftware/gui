@@ -39,8 +39,8 @@ const GettingStarted = () => (
       .
     </p>
     <p>
-      Integrations for different boards and operating systems can be found on{' '}
-      <a href="https://hub.mender.io/c/board-integrations/6" target="_blank" rel="noopener noreferrer">
+      Integrations for different boards and operating systems can be found on {/* eslint-disable-next-line react/jsx-no-target-blank */}
+      <a href="https://hub.mender.io/c/board-integrations/6" target="_blank" rel="noopener">
         Mender Hub <InlineLaunchIcon />
       </a>
     </p>

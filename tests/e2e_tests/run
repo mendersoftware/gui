@@ -96,7 +96,7 @@ run_tests() {
         docker run --name connect-client -d --network=gui-tests_mender \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json:/etc/mender/mender.conf \
             -v ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-connect.json:/etc/mender/mender-connect.conf \
-            mendersoftware/mender-client-docker-addons:master
+            mendersoftware/mender-client-docker-addons:mender-3.6.x
     else
         while [[ $retries -gt 0 && -z $containerid ]]; do
             containerid=$(get_container_id mender-useradm)

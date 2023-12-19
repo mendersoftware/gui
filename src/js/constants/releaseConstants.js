@@ -23,6 +23,7 @@ export const RECEIVE_RELEASES = 'RECEIVE_RELEASES';
 export const RELEASE_REMOVED = 'RELEASE_REMOVED';
 export const SELECTED_RELEASE = 'SELECTED_RELEASE';
 export const SET_RELEASES_LIST_STATE = 'SET_RELEASES_LIST_STATE';
+export const currentArtifact = 'artifact_name';
 export const rootfsImageVersion = 'rootfs-image.version';
 
 export const softwareTitleMap = { [rootfsImageVersion]: { title: 'Root filesystem', priority: 0, key: rootfsImageVersion } };
