@@ -269,11 +269,10 @@ exports[`Help Component renders correctly 1`] = `
           .
         </p>
         <p>
-          Integrations for different boards and operating systems can be found on
-           
+          Integrations for different boards and operating systems can be found on 
           <a
             href="https://hub.mender.io/c/board-integrations/6"
-            rel="noopener noreferrer"
+            rel="noopener"
             target="_blank"
           >
             Mender Hub 
@@ -4034,11 +4033,10 @@ exports[`Help Component static components renders GettingStarted correctly 1`] =
     .
   </p>
   <p>
-    Integrations for different boards and operating systems can be found on
-     
+    Integrations for different boards and operating systems can be found on 
     <a
       href="https://hub.mender.io/c/board-integrations/6"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       Mender Hub 
@@ -4115,7 +4113,7 @@ exports[`Help Component static components renders MenderHub correctly 1`] = `
   </h3>
   <a
     href="https://hub.mender.io"
-    rel="noopener noreferrer"
+    rel="noopener"
     target="_blank"
   >
     <span>
@@ -4128,7 +4126,7 @@ exports[`Help Component static components renders MenderHub correctly 1`] = `
   <p>
     <a
       href="https://hub.mender.io"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       Mender Hub
@@ -4163,7 +4161,7 @@ exports[`Help Component static components renders MenderHub correctly 1`] = `
   <p>
     <a
       href="https://hub.mender.io"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       Visit Mender Hub 
@@ -4251,7 +4249,7 @@ exports[`Help Component static components renders Support correctly 1`] = `
     </p>
     <a
       href="https://hub.mender.io"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       <span>
@@ -4266,7 +4264,7 @@ exports[`Help Component static components renders Support correctly 1`] = `
     </p>
     <a
       href="https://hub.mender.io"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       <span>

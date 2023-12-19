@@ -140,12 +140,12 @@ export const Upgrade = () => {
       <h2 style={{ marginTop: 15 }}>{title}</h2>
       <p>{description}</p>
       <p>
-        Learn more about the different plans and at{' '}
-        <a href="https://mender.io/plans/pricing" target="_blank" rel="noopener noreferrer">
+        Learn more about the different plans and at {/* eslint-disable-next-line react/jsx-no-target-blank */}
+        <a href="https://mender.io/plans/pricing" target="_blank" rel="noopener">
           mender.io/plans/pricing
         </a>
-        . Prices can change at larger device counts, please see our{' '}
-        <a href="https://mender.io/plans/pricing#calculator" target="_blank" rel="noopener noreferrer">
+        . Prices can change at larger device counts, please see our {/* eslint-disable-next-line react/jsx-no-target-blank */}
+        <a href="https://mender.io/plans/pricing#calculator" target="_blank" rel="noopener">
           price calculator
         </a>{' '}
         for more.

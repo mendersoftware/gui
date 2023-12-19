@@ -156,7 +156,7 @@ export const startDockerClient = async (baseUrl, token) => {
     `${projectRoot}/dockerClient/mender-test.json:/etc/mender/mender.conf`,
     '-v',
     `${projectRoot}/dockerClient/mender-connect-test.json:/etc/mender/mender-connect.conf`,
-    'mendersoftware/mender-client-docker-addons:master'
+    'mendersoftware/mender-client-docker-addons:mender-3.6.x'
   ];
   console.log(`starting with token: ${token}`);
   console.log(`starting using: docker ${args.join(' ')}`);

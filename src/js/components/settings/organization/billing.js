@@ -161,7 +161,8 @@ export const Billing = () => {
           notification={organization.trial && <TrialExpirationNote trial_expiration={organization.trial_expiration} />}
           sideBarContent={
             <div className="margin-left-small margin-bottom">
-              <a className="flexbox center-aligned" href="https://mender.io/plans/pricing" target="_blank" rel="noopener noreferrer">
+              {/* eslint-disable-next-line react/jsx-no-target-blank */}
+              <a className="flexbox center-aligned" href="https://mender.io/plans/pricing" target="_blank" rel="noopener">
                 <div style={{ maxWidth: 200 }}>Compare plans and add-ons at mender.io</div>
                 <OpenInNewIcon fontSize="small" />
               </a>

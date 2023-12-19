@@ -42,7 +42,6 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
     Learn more about Mender's new add-ons at 
     <a
       href="https://mender.io/plans/pricing"
-      rel="noreferrer"
       target="_blank"
     >
       mender.io/plans/pricing
