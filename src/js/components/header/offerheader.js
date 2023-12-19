@@ -22,7 +22,8 @@ const OfferHeader = ({ onHide }) => (
     <AnnouncmentIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
     <span>
       Learn more about Mender&apos;s new add-ons at&nbsp;
-      <a href="https://mender.io/plans/pricing" target="_blank" rel="noreferrer">
+      {/* eslint-disable-next-line react/jsx-no-target-blank */}
+      <a href="https://mender.io/plans/pricing" target="_blank">
         mender.io/plans/pricing
       </a>
       .&nbsp;

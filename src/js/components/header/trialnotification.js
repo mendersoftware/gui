@@ -35,8 +35,8 @@ const TrialInformation = () => (
       <Link to="/settings/upgrade">Upgrade to a plan</Link> to add more devices and continue using Mender after the trial expires.
     </p>
     <p>
-      Or compare the plans at{' '}
-      <a href={`https://mender.io/plans/pricing`} target="_blank" rel="noopener noreferrer">
+      Or compare the plans at {/* eslint-disable-next-line react/jsx-no-target-blank */}
+      <a href={`https://mender.io/plans/pricing`} target="_blank" rel="noopener">
         mender.io/plans/pricing
       </a>
       .

@@ -74,7 +74,8 @@ export const AddOnSelection = ({ addons = [], features, onChange, updatedPlan = 
                 </div>
               )}
               <InfoText variant="dense">{addOn.description}</InfoText>
-              <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener noreferrer">
+              {/* eslint-disable-next-line react/jsx-no-target-blank */}
+              <a className="margin-left-small" href="https://mender.io/plans/features" target="_blank" rel="noopener">
                 Learn more
               </a>
             </div>
