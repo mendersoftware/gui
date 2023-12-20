@@ -52,7 +52,7 @@ export const LeftNav = ({ sections }) => {
           <ListSubheader disableSticky={true}>{title}</ListSubheader>
           {items.map(({ exact, path, icon = null, style = {}, title = '', url }) => {
             const props = url
-              ? { component: 'a', exact: `${exact}`, href: url, rel: 'noopener noreferrer', target: '_blank', to: url }
+              ? { component: 'a', exact: `${exact}`, href: url, rel: 'noopener', target: '_blank', to: url }
               : { component: NavLink, end: exact, to: path };
             return (
               <ListItem className={`navLink ${itemClass} ${classes.list}`} key={path} style={style} {...props}>

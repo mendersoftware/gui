@@ -139,7 +139,9 @@ export const DeviceGroups = () => {
     const { groupName, filters = [], id = [], ...remainder } = locationParams;
     const { hasFullFiltering } = tenantCapabilities;
     if (groupName) {
-      dispatch(selectGroup(groupName, filters));
+      if (groupName != selectedGroup) {
+        dispatch(selectGroup(groupName, filters));
+      }
     } else {
       // dispatch setDeviceFilters even when filters are empty, otherwise filter will not be reset
       dispatch(setDeviceFilters(filters));

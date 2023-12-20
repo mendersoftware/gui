@@ -248,7 +248,7 @@ const DownloadableComponents = ({ locations, onMenuClick, token }) => {
     cookies.set('JWT', token, { path: '/', maxAge: 60, domain: '.mender.io', sameSite: false });
     const link = document.createElement('a');
     link.href = location;
-    link.rel = 'noopener noreferrer';
+    link.rel = 'noopener';
     link.target = '_blank';
     document.body.appendChild(link);
     link.click();
