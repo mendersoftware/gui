@@ -1703,7 +1703,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
           <a
             class=""
             href="https://docs.mender.io/client-installation/identity"
-            rel="noopener noreferrer"
+            rel="noopener"
             target="_blank"
           >
             Learn how to add custom identity attributes

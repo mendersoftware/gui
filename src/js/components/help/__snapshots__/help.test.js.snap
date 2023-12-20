@@ -180,7 +180,7 @@ exports[`Help Component renders correctly 1`] = `
       class="MuiListItem-root MuiListItem-gutters MuiListItem-padding navLink helpNav emotion-2"
       exact="true"
       href="https://docs.mender.io/"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
       to="https://docs.mender.io/"
     >
