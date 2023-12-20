@@ -175,7 +175,7 @@ export const getSelectedGroupInfo = createSelector(
     let groupFilters = [];
     if (selectedGroup && groupsById[selectedGroup]) {
       groupCount = groupsById[selectedGroup].total;
-      groupFilters = groupsById[selectedGroup].filters.map(filter => ({ ...filter, isGroupFilter: true })) || [];
+      groupFilters = groupsById[selectedGroup].filters || [];
     }
     return { groupCount, selectedGroup, groupFilters };
   }
