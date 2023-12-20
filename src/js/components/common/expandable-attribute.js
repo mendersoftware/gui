@@ -57,7 +57,7 @@ export const ExpandableAttribute = ({
       copy(secondary);
       setSnackbar('Value copied to clipboard');
     }
-    if (!expanded) {
+    if (!expanded && !!onExpansion) {
       onExpansion();
     }
     setExpanded(toggle);

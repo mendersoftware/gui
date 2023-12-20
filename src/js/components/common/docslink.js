@@ -126,7 +126,7 @@ export const DocsLink = forwardRef(({ children, className = '', path, title = ''
 
   return (
     // eslint-disable-next-line react/jsx-no-target-blank
-    <a className={className} {...remainder} href={target} onClick={onClickHandler} ref={ref} target="_blank" rel={isHosted ? 'noopener noreferrer' : ''}>
+    <a className={className} {...remainder} href={target} onClick={onClickHandler} ref={ref} target="_blank" rel={isHosted ? 'noopener' : ''}>
       {children ? children : title}
     </a>
   );

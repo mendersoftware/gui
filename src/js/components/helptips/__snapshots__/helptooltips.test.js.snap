@@ -44,7 +44,7 @@ NodeList [
     <a
       class=""
       href="https://docs.mender.io/overview/device-authentication"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       Device authentication
@@ -68,7 +68,7 @@ NodeList [
     <a
       class=""
       href="https://docs.mender.io/overview/device-authentication"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       Device authentication
@@ -300,7 +300,7 @@ exports[`Helptooltips Components renders DeviceSupportTip correctly 1`] = `
   <a
     class=""
     href="https://docs.mender.io/overview/device-support"
-    rel="noopener noreferrer"
+    rel="noopener"
     target="_blank"
   >
     our documentation
@@ -349,7 +349,7 @@ NodeList [
     <a
       class=""
       href="https://docs.mender.io/artifact-creation/create-an-artifact"
-      rel="noopener noreferrer"
+      rel="noopener"
       target="_blank"
     >
       see the documentation
