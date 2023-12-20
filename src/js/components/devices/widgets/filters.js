@@ -111,7 +111,7 @@ export const Filters = ({ className = '', onGroupClick, open }) => {
   };
 
   const isFilterDefined = Object.values(newFilter).every(thing => !!thing);
-  const currentFilters = [...groupFilters, ...filters].filter(filtersFilter);
+  const currentFilters = filters.filter(filtersFilter);
   return (
     <Collapse in={open} timeout="auto" className={`${className} filter-wrapper`} unmountOnExit>
       <>
