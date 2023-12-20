@@ -20,16 +20,15 @@ export default (env, argv) => {
     node: {
       global: true
     },
-    entry: './src/js/main.js',
     module: {
       rules: [
         {
-          test: /\.m?[jt]sx?$/,
+          test: /\.m?[jt]s[x]?$/,
           exclude: [/node_modules/, /\.test\./, /__snapshots__/],
           resolve: { fullySpecified: false },
           loader: 'esbuild-loader',
           options: {
-            loader: 'tsx',
+            loader: 'jsx',
             jsx: 'automatic'
           }
         },
@@ -119,7 +118,6 @@ export default (env, argv) => {
       alias: {
         '@babel/runtime/helpers/esm': path.resolve(__dirname, 'node_modules/@babel/runtime/helpers/esm')
       },
-      extensions: ['.ts', '.tsx', '.js', '.jsx'],
       fallback: {
         assert: require.resolve('assert/'),
         buffer: require.resolve('buffer/'),
