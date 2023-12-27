@@ -32,7 +32,16 @@ export const getSessionInfo = () => {
     cleanUp();
     return { ...emptySession };
   }
-  sessionInfo.token = sessionInfo.token || cookies.get('JWT', { doNotParse: true });
+  if (!sessionInfo.token) {
+    let jwtTokenFromCookie = cookies.get('JWT', { doNotParse: true }) ?? '';
+    if (jwtTokenFromCookie) {
+      setSessionInfo({ token: jwtTokenFromCookie, undefined });
+      sessionInfo.token = jwtTokenFromCookie;
+      cookies.remove('JWT');
+      cookies.remove('JWT', { path: '/' });
+    }
+  }
+  sessionInfo.token = sessionInfo.token || undefined;
   tokenCache = sessionInfo.token;
   return sessionInfo;
 };
