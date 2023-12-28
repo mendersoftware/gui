@@ -67,6 +67,7 @@ describe('AuthorizedDevices Component', () => {
         features: {
           ...defaultState.app.features,
           // hasReporting: true,
+          hasMonitor: true,
           isEnterprise: true
         }
       },
@@ -78,6 +79,13 @@ describe('AuthorizedDevices Component', () => {
           accepted: { ...defaultState.devices.byStatus.accepted, total: pageTotal },
           pending: { ...defaultState.devices.byStatus.pending, total: 4 },
           rejected: { ...defaultState.devices.byStatus.rejected, total: 38 }
+        }
+      },
+      organization: {
+        ...defaultState.organization,
+        organization: {
+          ...defaultState.organization.organization,
+          addons: [{ enabled: true, name: 'monitor' }]
         }
       },
       users: {

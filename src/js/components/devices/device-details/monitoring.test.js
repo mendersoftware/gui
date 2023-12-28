@@ -53,6 +53,13 @@ describe('DeviceMonitoring Component', () => {
             }
           }
         }
+      },
+      organization: {
+        ...defaultState.organization,
+        organization: {
+          ...defaultState.organization.organization,
+          addons: [{ enabled: true, name: 'monitor' }]
+        }
       }
     };
     const { baseElement } = render(<DeviceMonitoring device={defaultState.devices.byId.a1} />, { preloadedState });

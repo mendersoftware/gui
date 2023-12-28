@@ -31,8 +31,25 @@ const preloadedState = {
   ...defaultState,
   app: {
     ...defaultState.app,
-    features: { ...defaultState.app.features, isEnterprise: true },
+    features: {
+      ...defaultState.app.features,
+      hasDeviceConfig: true,
+      hasDeviceConnect: true,
+      hasMonitor: true,
+      isEnterprise: true
+    },
     versionInformation: { latestRelease: helpProps.versions }
+  },
+  organization: {
+    ...defaultState.organization,
+    organization: {
+      ...defaultState.organization.organization,
+      addons: [
+        { enabled: true, name: 'configure' },
+        { enabled: true, name: 'monitor' },
+        { enabled: true, name: 'troubleshoot' }
+      ]
+    }
   }
 };
 

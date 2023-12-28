@@ -260,7 +260,8 @@ describe('organization actions', () => {
         ...defaultState.app,
         features: {
           ...defaultState.app.features,
-          hasAuditlogs: true
+          hasAuditlogs: true,
+          isEnterprise: true
         }
       }
     });
