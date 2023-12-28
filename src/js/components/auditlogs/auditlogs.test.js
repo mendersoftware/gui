@@ -30,7 +30,29 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { getConfiguredStore } from '../../reducers';
 import AuditLogs from './auditlogs';
 
-const preloadedState = { ...defaultState, app: { ...defaultState.app, features: { ...defaultState.app.features, hasAuditlogs: true } } };
+const preloadedState = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: {
+      ...defaultState.app.features,
+      hasAuditlogs: true,
+      isEnterprise: true
+    }
+  }
+};
+
+const preloadedStateNoAuditlogs = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: {
+      ...defaultState.app.features,
+      hasAuditlogs: true,
+      isEnterprise: false
+    }
+  }
+};
 
 describe('Auditlogs Component', () => {
   it('renders correctly', async () => {
@@ -38,7 +60,7 @@ describe('Auditlogs Component', () => {
       <LocalizationProvider dateAdapter={AdapterMoment}>
         <AuditLogs />
       </LocalizationProvider>,
-      { preloadedState }
+      { preloadedState: preloadedStateNoAuditlogs }
     );
     const view = prettyDOM(baseElement.firstChild, 100000, { highlight: false })
       .replace(/id="mui-[0-9]*"/g, '')
@@ -49,10 +71,13 @@ describe('Auditlogs Component', () => {
   });
 
   it('works as expected', async () => {
+    let store = getConfiguredStore({ preloadedState });
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     render(
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <AuditLogs />
+        <Provider store={store}>
+          <AuditLogs />
+        </Provider>
       </LocalizationProvider>,
       { preloadedState }
     );

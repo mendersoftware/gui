@@ -29,7 +29,6 @@ export const initialState = {
   },
   // return boolean rather than organization details
   features: {
-    hasAddons: false,
     hasAuditlogs: false,
     hasDeltaProgress: false,
     hasMultitenancy: false,
