@@ -49,6 +49,13 @@ describe('Configuration Component', () => {
   it('renders correctly', async () => {
     preloadedState = {
       ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasDeviceConfig: true
+        }
+      },
       devices: {
         ...defaultState.devices,
         byId: {
@@ -63,6 +70,13 @@ describe('Configuration Component', () => {
             }
           }
         }
+      },
+      organization: {
+        ...defaultState.organization,
+        organization: {
+          ...defaultState.organization.organization,
+          addons: [{ enabled: true, name: 'configure' }]
+        }
       }
     };
     const { baseElement } = render(<Configuration device={preloadedState.devices.byId.a1} />, { preloadedState });
@@ -75,6 +89,13 @@ describe('Configuration Component', () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     let preloadedState = {
       ...defaultState,
+      app: {
+        ...defaultState.app,
+        features: {
+          ...defaultState.app.features,
+          hasDeviceConfig: true
+        }
+      },
       devices: {
         ...defaultState.devices,
         byId: {
@@ -88,6 +109,13 @@ describe('Configuration Component', () => {
               reported_ts: reportedTime
             }
           }
+        }
+      },
+      organization: {
+        ...defaultState.organization,
+        organization: {
+          ...defaultState.organization.organization,
+          addons: [{ enabled: true, name: 'configure' }]
         }
       }
     };

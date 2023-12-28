@@ -37,8 +37,7 @@ describe('DeviceMonitoring Component', () => {
       app: {
         ...defaultState.app,
         features: {
-          ...defaultState.app.features,
-          hasAddons: true
+          ...defaultState.app.features
         }
       },
       monitor: {
@@ -53,6 +52,13 @@ describe('DeviceMonitoring Component', () => {
               latest: defaultState.monitor.alerts.byDeviceId.a1.alerts
             }
           }
+        }
+      },
+      organization: {
+        ...defaultState.organization,
+        organization: {
+          ...defaultState.organization.organization,
+          addons: [{ enabled: true, name: 'monitor' }]
         }
       }
     };

@@ -62,7 +62,6 @@ export const commonErrorHandler = (err, errorContext, dispatch, fallback, mightB
 const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && version !== 'next' ? 'master' : version);
 
 const featureFlags = [
-  'hasAddons',
   'hasAuditlogs',
   'hasMultitenancy',
   'hasDeltaProgress',

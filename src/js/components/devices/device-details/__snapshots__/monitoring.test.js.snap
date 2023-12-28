@@ -15,6 +15,20 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
       >
         Monitoring
       </h4>
+      <div
+        class=""
+        data-mui-internal-clone-element="true"
+      >
+        <div
+          class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault margin-left-small css-hsgqnq-MuiChip-root-root-root"
+        >
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
+          >
+            Professional
+          </span>
+        </div>
+      </div>
     </div>
     <div
       class="flexbox centered"
@@ -130,7 +144,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
           class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
         >
           <div
-            aria-controls="mui-1"
+            aria-controls="mui-2"
             aria-expanded="false"
             aria-haspopup="listbox"
             

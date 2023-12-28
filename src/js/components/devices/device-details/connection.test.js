@@ -29,6 +29,26 @@ describe('tiny DeviceConnection components', () => {
   });
 });
 
+const preloadedState = {
+  ...defaultState,
+  app: {
+    ...defaultState.app,
+    features: {
+      ...defaultState.app.features,
+      hasAuditlogs: true,
+      hasDeviceConnect: true,
+      isEnterprise: true
+    }
+  },
+  organization: {
+    ...defaultState.organization,
+    organization: {
+      ...defaultState.organization.organization,
+      addons: [{ enabled: true, name: 'troubleshoot' }]
+    }
+  }
+};
+
 describe('DeviceConnection Component', () => {
   let socketSpyFactory;
   const oldMatchMedia = window.matchMedia;
@@ -62,19 +82,23 @@ describe('DeviceConnection Component', () => {
   });
 
   it('renders correctly', async () => {
-    const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} />);
+    const { baseElement } = render(<DeviceConnection device={defaultState.devices.byId.a1} />, { preloadedState });
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('renders correctly when disconnected', async () => {
-    const { baseElement } = render(<DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }} />);
+    const { baseElement } = render(<DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.disconnected }} />, {
+      preloadedState
+    });
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });
   it('renders correctly when connected', async () => {
-    const { baseElement } = render(<DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }} />);
+    const { baseElement } = render(<DeviceConnection device={{ ...defaultState.devices.byId.a1, connect_status: DEVICE_CONNECT_STATES.connected }} />, {
+      preloadedState
+    });
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));

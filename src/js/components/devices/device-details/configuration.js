@@ -26,7 +26,7 @@ import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
-import { getDeviceConfigDeployment } from '../../../selectors';
+import { getDeviceConfigDeployment, getTenantCapabilities } from '../../../selectors';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm, { EditButton } from '../../common/confirm';
@@ -135,6 +135,7 @@ export const ConfigUpdateFailureActions = ({ hasLog, onSubmit, onCancel, setShow
 
 export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId } }) => {
   const { device, deviceConfigDeployment: deployment } = useSelector(state => getDeviceConfigDeployment(state, deviceId));
+  const { hasDeviceConfig } = useSelector(state => getTenantCapabilities(state));
   const { config = {}, status } = device;
   const { configured = {}, deployment_id, reported = {}, reported_ts, updated_ts } = config;
   const isRelevantDeployment = deployment.created > updated_ts && (!reported_ts || deployment.finished > reported_ts);
@@ -288,12 +289,12 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
 
   const onAbortClick = () => setIsAborting(toggle);
 
-  const hasDeviceConfig = !isEmpty(reported);
-  let footer = hasDeviceConfig ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={updated_ts} />;
+  const hasDeviceConfiguration = !isEmpty(reported);
+  let footer = hasDeviceConfiguration ? <ConfigUpToDateNote updated_ts={reported_ts} /> : <ConfigEmptyNote updated_ts={updated_ts} />;
   if (isEditingConfig) {
     footer = (
       <ConfigEditingActions
-        hasDeviceConfig={hasDeviceConfig}
+        hasDeviceConfig={hasDeviceConfiguration}
         isSetAsDefault={isSetAsDefault}
         onSetAsDefaultChange={onSetAsDefaultChange}
         onSubmit={onSubmit}
@@ -348,7 +349,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
         <div className="two-columns">
           <div className="flexbox center-aligned">
             <h4 className="margin-right">Device configuration</h4>
-            {!(isEditingConfig || isUpdatingConfig) && <EditButton onClick={onStartEdit} />}
+            {hasDeviceConfig && !(isEditingConfig || isUpdatingConfig) && <EditButton onClick={onStartEdit} />}
           </div>
           <div className="flexbox center-aligned">
             {isEditingConfig ? (
@@ -377,7 +378,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
         ) : (
           hasDeviceConfig && <ConfigurationObject config={reported} setSnackbar={onSetSnackbar} />
         )}
-        <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>
+        {hasDeviceConfig && <div className="flexbox center-aligned margin-bottom margin-top">{footer}</div>}
         {showLog && <LogDialog logData={updateLog} onClose={() => setShowLog(false)} type="configUpdateLog" />}
         {showConfigImport && <ConfigImportDialog onCancel={() => setShowConfigImport(false)} onSubmit={onConfigImport} />}
       </div>
