@@ -274,7 +274,7 @@ build:docker:
 build:docker-multiplatform:
   # by default alvaldi-gui uses the unprivileged mode
   script:
-    - if [[ ! $CI_COMMIT_REF_NAME =~ "(main|master|staging|production|feature-.+)" ]]; then
+    - if [[ ! $CI_COMMIT_REF_NAME =~ "(main|master|staging|production|feature-.+|\d+\.\d+\..+)" ]]; then
     -   export MULTIPLATFORM_PLATFORMS='linux/amd64'
     - fi
     - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
