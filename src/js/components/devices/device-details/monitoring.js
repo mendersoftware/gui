@@ -91,7 +91,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
             {isOffline && <DeviceOfflineHeaderNotification offlineThresholdSettings={offlineThresholdSettings} />}
           </>
         ) : (
-          <DeviceMonitorsMissingNote />
+          hasMonitor && <DeviceMonitorsMissingNote />
         )
       }
       isAddOn

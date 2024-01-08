@@ -53,12 +53,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
-  text-transform: uppercase;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
-  text-transform: uppercase;
+  margin-right: 16px;
 }
 
 .emotion-1.Mui-disabled {
@@ -111,14 +106,6 @@ exports[`DeviceConnection Component renders correctly 1`] = `
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-1:hover {
-  font-weight: bold;
-}
-
-.emotion-1:hover {
-  font-weight: bold;
-}
-
 .emotion-2 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -128,90 +115,6 @@ exports[`DeviceConnection Component renders correctly 1`] = `
 }
 
 .emotion-3 {
-  max-width: 100%;
-  font-family: Lato,sans-serif;
-  font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  height: 32px;
-  color: rgba(10, 10, 11, 0.78);
-  background-color: rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  white-space: nowrap;
-  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  margin-right: 16px;
-}
-
-.emotion-3.Mui-disabled {
-  opacity: 0.38;
-  pointer-events: none;
-}
-
-.emotion-3 .MuiChip-avatar {
-  margin-left: 5px;
-  margin-right: -6px;
-  width: 24px;
-  height: 24px;
-  color: #bcbcbc;
-  font-size: 0.6964rem;
-}
-
-.emotion-3 .MuiChip-avatarColorPrimary {
-  color: #fff;
-  background-color: rgb(35, 85, 94);
-}
-
-.emotion-3 .MuiChip-avatarColorSecondary {
-  color: #fff;
-  background-color: rgb(65, 10, 46);
-}
-
-.emotion-3 .MuiChip-avatarSmall {
-  margin-left: 4px;
-  margin-right: -4px;
-  width: 18px;
-  height: 18px;
-  font-size: 0.5804rem;
-}
-
-.emotion-3 .MuiChip-icon {
-  margin-left: 5px;
-  margin-right: -6px;
-  color: #bcbcbc;
-}
-
-.emotion-3 .MuiChip-deleteIcon {
-  -webkit-tap-highlight-color: transparent;
-  color: rgba(10, 10, 11, 0.26);
-  font-size: 22px;
-  cursor: pointer;
-  margin: 0 5px 0 -6px;
-}
-
-.emotion-3 .MuiChip-deleteIcon:hover {
-  color: rgba(10, 10, 11, 0.4);
-}
-
-.emotion-5 {
   max-width: 1280px;
 }
 
@@ -251,27 +154,19 @@ exports[`DeviceConnection Component renders correctly 1`] = `
               />
             </svg>
           </a>
-        </div>
-        <div
-          class=""
-          data-mui-internal-clone-element="true"
-        >
-          <div
-            class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault margin-left-small emotion-1"
+          <a
+            class="flexbox center-aligned margin-left"
+            href="/auditlog?objectId=a1&objectType=device&startDate=2016-01-01"
           >
-            <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
-            >
-              Basic
-            </span>
-          </div>
+            List all log entries for this device
+          </a>
         </div>
       </div>
       <div
         class="flexbox centered"
       >
         <div
-          class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault emotion-3"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault emotion-1"
         >
           <span
             class="MuiChip-label MuiChip-labelMedium emotion-2"
@@ -283,7 +178,7 @@ exports[`DeviceConnection Component renders correctly 1`] = `
     </div>
     <div />
     <div
-      class="flexbox column emotion-5"
+      class="flexbox column emotion-3"
     >
       <div
         class="flexbox centered"
@@ -367,12 +262,7 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
-  text-transform: uppercase;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
-  text-transform: uppercase;
+  margin-right: 16px;
 }
 
 .emotion-1.Mui-disabled {
@@ -425,14 +315,6 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-1:hover {
-  font-weight: bold;
-}
-
-.emotion-1:hover {
-  font-weight: bold;
-}
-
 .emotion-2 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -442,94 +324,10 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
 }
 
 .emotion-3 {
-  max-width: 100%;
-  font-family: Lato,sans-serif;
-  font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  height: 32px;
-  color: rgba(10, 10, 11, 0.78);
-  background-color: rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  white-space: nowrap;
-  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  margin-right: 16px;
-}
-
-.emotion-3.Mui-disabled {
-  opacity: 0.38;
-  pointer-events: none;
-}
-
-.emotion-3 .MuiChip-avatar {
-  margin-left: 5px;
-  margin-right: -6px;
-  width: 24px;
-  height: 24px;
-  color: #bcbcbc;
-  font-size: 0.6964rem;
-}
-
-.emotion-3 .MuiChip-avatarColorPrimary {
-  color: #fff;
-  background-color: rgb(35, 85, 94);
-}
-
-.emotion-3 .MuiChip-avatarColorSecondary {
-  color: #fff;
-  background-color: rgb(65, 10, 46);
-}
-
-.emotion-3 .MuiChip-avatarSmall {
-  margin-left: 4px;
-  margin-right: -4px;
-  width: 18px;
-  height: 18px;
-  font-size: 0.5804rem;
-}
-
-.emotion-3 .MuiChip-icon {
-  margin-left: 5px;
-  margin-right: -6px;
-  color: #bcbcbc;
-}
-
-.emotion-3 .MuiChip-deleteIcon {
-  -webkit-tap-highlight-color: transparent;
-  color: rgba(10, 10, 11, 0.26);
-  font-size: 22px;
-  cursor: pointer;
-  margin: 0 5px 0 -6px;
-}
-
-.emotion-3 .MuiChip-deleteIcon:hover {
-  color: rgba(10, 10, 11, 0.4);
-}
-
-.emotion-5 {
   max-width: 1280px;
 }
 
-.emotion-6 {
+.emotion-4 {
   display: grid;
   grid-template-rows: max-content 0 minmax(480px, 1fr) max-content;
   -webkit-box-flex: 1;
@@ -539,26 +337,26 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   overflow: hidden;
 }
 
-.emotion-6.device-connected {
+.emotion-4.device-connected {
   grid-template-rows: max-content minmax(640px, 1fr) max-content;
 }
 
-.emotion-7 {
+.emotion-5 {
   gap: 24px;
   margin-bottom: 8px;
 }
 
-.emotion-7>div {
+.emotion-5>div {
   gap: 16px;
 }
 
-.emotion-8 {
+.emotion-6 {
   background: rgba(33, 36, 41, 0.25);
   display: grid;
   place-content: center;
 }
 
-.emotion-9 {
+.emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -609,23 +407,23 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   font-weight: bold;
 }
 
-.emotion-9::-moz-focus-inner {
+.emotion-7::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-9 {
+  .emotion-7 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-9:hover {
+.emotion-7:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgb(65, 10, 46);
@@ -633,34 +431,34 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
 }
 
 @media (hover: none) {
-  .emotion-9:hover {
+  .emotion-7:hover {
     background-color: #5d0f43;
   }
 }
 
-.emotion-9:active {
+.emotion-7:active {
   box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 
-.emotion-9.Mui-focusVisible {
+.emotion-7.Mui-focusVisible {
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
 
-.emotion-9.Mui-disabled {
+.emotion-7.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.12);
 }
 
-.emotion-9:hover {
+.emotion-7:hover {
   colors: #337a87;
 }
 
-.emotion-9.MuiButton-text {
+.emotion-7.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
-.emotion-10 {
+.emotion-8 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -672,11 +470,11 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   border-radius: inherit;
 }
 
-.emotion-11 {
+.emotion-9 {
   margin-top: 8px;
 }
 
-.emotion-12 {
+.emotion-10 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -726,43 +524,43 @@ exports[`DeviceConnection Component renders correctly when connected 1`] = `
   padding: 10px 15px;
 }
 
-.emotion-12::-moz-focus-inner {
+.emotion-10::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-12.Mui-disabled {
+.emotion-10.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-12 {
+  .emotion-10 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-12:hover {
+.emotion-10:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: rgba(51, 122, 135, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-12:hover {
+  .emotion-10:hover {
     background-color: transparent;
   }
 }
 
-.emotion-12.Mui-disabled {
+.emotion-10.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-12:hover {
+.emotion-10:hover {
   colors: #337a87;
 }
 
-.emotion-12.MuiButton-text {
+.emotion-10.MuiButton-text {
   color: rgba(10, 10, 11, 0.78);
 }
 
@@ -1388,27 +1186,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
               />
             </svg>
           </a>
-        </div>
-        <div
-          class=""
-          data-mui-internal-clone-element="true"
-        >
-          <div
-            class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault margin-left-small emotion-1"
+          <a
+            class="flexbox center-aligned margin-left"
+            href="/auditlog?objectId=a1&objectType=device&startDate=2016-01-01"
           >
-            <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
-            >
-              Basic
-            </span>
-          </div>
+            List all log entries for this device
+          </a>
         </div>
       </div>
       <div
         class="flexbox centered"
       >
         <div
-          class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault emotion-3"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault emotion-1"
         >
           <span
             class="MuiChip-label MuiChip-labelMedium emotion-2"
@@ -1420,7 +1210,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
     </div>
     <div />
     <div
-      class="flexbox column emotion-5"
+      class="flexbox column emotion-3"
     >
       <div>
         <h4
@@ -1429,10 +1219,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
           Remote terminal
         </h4>
         <div
-          class="emotion-6 "
+          class="emotion-4 "
         >
           <div
-            class="flexbox emotion-7"
+            class="flexbox emotion-5"
           >
             <div
               class="flexbox"
@@ -1612,33 +1402,43 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
             </div>
           </div>
           <div
-            class="emotion-8"
+            class="emotion-6"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-9"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-7"
               tabindex="0"
               type="button"
             >
               Connect Terminal
               <span
-                class="MuiTouchRipple-root emotion-10"
+                class="MuiTouchRipple-root emotion-8"
               />
             </button>
           </div>
           <div
-            class="flexbox space-between emotion-11"
+            class="flexbox space-between emotion-9"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-12"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-10"
               tabindex="0"
               type="button"
             >
               Connect
                Terminal
               <span
-                class="MuiTouchRipple-root emotion-10"
+                class="MuiTouchRipple-root emotion-8"
               />
             </button>
+            <a
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-10"
+              href="/auditlog?objectType=device&objectId=a1&startDate=2016-01-01T00:00:00.000Z"
+              tabindex="0"
+            >
+              View Session Logs for this device
+              <span
+                class="MuiTouchRipple-root emotion-8"
+              />
+            </a>
           </div>
         </div>
       </div>
@@ -1671,7 +1471,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                 >
                   upload
                   <span
-                    class="MuiTouchRipple-root emotion-10"
+                    class="MuiTouchRipple-root emotion-8"
                   />
                 </button>
                 <button
@@ -1683,7 +1483,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                 >
                   download
                   <span
-                    class="MuiTouchRipple-root emotion-10"
+                    class="MuiTouchRipple-root emotion-8"
                   />
                 </button>
               </div>
@@ -1763,7 +1563,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                   <input
                     aria-invalid="false"
                     class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-29"
-                    id="mui-13"
+                    id="mui-10"
                     placeholder="Example: /opt/installed-by-single-file"
                     type="text"
                     value=""
@@ -1790,7 +1590,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                         />
                       </svg>
                       <span
-                        class="MuiTouchRipple-root emotion-10"
+                        class="MuiTouchRipple-root emotion-8"
                       />
                     </button>
                   </div>
@@ -1866,12 +1666,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
-  text-transform: uppercase;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
-  text-transform: uppercase;
+  margin-right: 16px;
 }
 
 .emotion-1.Mui-disabled {
@@ -1924,14 +1719,6 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
   color: rgba(10, 10, 11, 0.4);
 }
 
-.emotion-1:hover {
-  font-weight: bold;
-}
-
-.emotion-1:hover {
-  font-weight: bold;
-}
-
 .emotion-2 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1941,94 +1728,10 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
 }
 
 .emotion-3 {
-  max-width: 100%;
-  font-family: Lato,sans-serif;
-  font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  height: 32px;
-  color: rgba(10, 10, 11, 0.78);
-  background-color: rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  white-space: nowrap;
-  -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  margin-right: 16px;
-}
-
-.emotion-3.Mui-disabled {
-  opacity: 0.38;
-  pointer-events: none;
-}
-
-.emotion-3 .MuiChip-avatar {
-  margin-left: 5px;
-  margin-right: -6px;
-  width: 24px;
-  height: 24px;
-  color: #bcbcbc;
-  font-size: 0.6964rem;
-}
-
-.emotion-3 .MuiChip-avatarColorPrimary {
-  color: #fff;
-  background-color: rgb(35, 85, 94);
-}
-
-.emotion-3 .MuiChip-avatarColorSecondary {
-  color: #fff;
-  background-color: rgb(65, 10, 46);
-}
-
-.emotion-3 .MuiChip-avatarSmall {
-  margin-left: 4px;
-  margin-right: -4px;
-  width: 18px;
-  height: 18px;
-  font-size: 0.5804rem;
-}
-
-.emotion-3 .MuiChip-icon {
-  margin-left: 5px;
-  margin-right: -6px;
-  color: #bcbcbc;
-}
-
-.emotion-3 .MuiChip-deleteIcon {
-  -webkit-tap-highlight-color: transparent;
-  color: rgba(10, 10, 11, 0.26);
-  font-size: 22px;
-  cursor: pointer;
-  margin: 0 5px 0 -6px;
-}
-
-.emotion-3 .MuiChip-deleteIcon:hover {
-  color: rgba(10, 10, 11, 0.4);
-}
-
-.emotion-5 {
   max-width: 1280px;
 }
 
-.emotion-6 {
+.emotion-4 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -2046,11 +1749,11 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
   margin-right: 8px;
 }
 
-.emotion-6 iconButton {
+.emotion-4 iconButton {
   margin-right: 8px;
 }
 
-.emotion-7 {
+.emotion-5 {
   margin: 0;
   line-height: 1.5;
   font-family: Lato,sans-serif;
@@ -2096,27 +1799,19 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
               />
             </svg>
           </a>
-        </div>
-        <div
-          class=""
-          data-mui-internal-clone-element="true"
-        >
-          <div
-            class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault margin-left-small emotion-1"
+          <a
+            class="flexbox center-aligned margin-left"
+            href="/auditlog?objectId=a1&objectType=device&startDate=2016-01-01"
           >
-            <span
-              class="MuiChip-label MuiChip-labelMedium emotion-2"
-            >
-              Basic
-            </span>
-          </div>
+            List all log entries for this device
+          </a>
         </div>
       </div>
       <div
         class="flexbox centered"
       >
         <div
-          class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault emotion-3"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault emotion-1"
         >
           <span
             class="MuiChip-label MuiChip-labelMedium emotion-2"
@@ -2128,14 +1823,14 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
     </div>
     <div />
     <div
-      class="flexbox column emotion-5"
+      class="flexbox column emotion-3"
     >
       <div
         class="flexbox muted"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-6"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall emotion-4"
           data-testid="InfoOutlinedIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -2145,7 +1840,7 @@ exports[`DeviceConnection Component renders correctly when disconnected 1`] = `
           />
         </svg>
         <p
-          class="MuiTypography-root MuiTypography-body1 emotion-7"
+          class="MuiTypography-root MuiTypography-body1 emotion-5"
         >
           The troubleshoot add-on is not currently connected on this device, it was last connected on 
           <time
