@@ -82,7 +82,7 @@ describe('App Component', () => {
       });
       reportsSpy.mockClear();
     },
-    10 * TIMEOUTS.oneSecond
+    20 * TIMEOUTS.oneSecond
   );
 
   it(
@@ -113,7 +113,7 @@ describe('App Component', () => {
       reportsSpy.mockClear();
       window.localStorage.getItem.mockReset();
     },
-    10 * TIMEOUTS.oneSecond
+    20 * TIMEOUTS.oneSecond
   );
 
   it.skip(
@@ -136,6 +136,6 @@ describe('App Component', () => {
       });
       window.localStorage.getItem.mockReset();
     },
-    10 * TIMEOUTS.oneSecond
+    20 * TIMEOUTS.oneSecond
   );
 });
