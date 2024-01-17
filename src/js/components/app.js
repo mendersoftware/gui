@@ -18,9 +18,7 @@ import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import withStyles from '@mui/styles/withStyles';
+import { CssBaseline, ThemeProvider, createTheme, styled } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { makeStyles } from 'tss-react/mui';
@@ -68,7 +66,7 @@ const reducePalette =
     return accu;
   };
 
-const cssVariables = ({ palette }) => {
+const cssVariables = ({ theme: { palette } }) => {
   const muiVariables = Object.entries(palette).reduce(reducePalette('--mui'), {});
   return {
     '@global': {
@@ -80,7 +78,7 @@ const cssVariables = ({ palette }) => {
   };
 };
 
-const WrappedBaseline = withStyles(cssVariables)(CssBaseline);
+const WrappedBaseline = styled(CssBaseline)(cssVariables);
 
 const useStyles = makeStyles()(() => ({
   public: {
