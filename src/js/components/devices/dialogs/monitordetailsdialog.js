@@ -20,8 +20,19 @@ import {
   FileCopy as CopyPasteIcon,
   ReportProblemOutlined as WarningIcon
 } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  styled
+} from '@mui/material';
 
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { toggle } from '../../../helpers';
@@ -62,7 +73,7 @@ const LogLine = ({ beExplicit, line, prefix }) => {
   );
 };
 
-const CustomAccordion = withStyles({
+const CustomAccordion = styled(Accordion)({
   root: {
     '&:before': {
       display: 'none'
@@ -73,7 +84,7 @@ const CustomAccordion = withStyles({
     }
   },
   expanded: {}
-})(Accordion);
+});
 
 const LogSection = ({ section = 'previous', lines }) => {
   const [expanded, setExpanded] = useState(false);
