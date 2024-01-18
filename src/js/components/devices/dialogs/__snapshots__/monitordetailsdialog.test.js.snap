@@ -186,6 +186,15 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
   background-color: #f7f7f7;
 }
 
+.emotion-6 root:before {
+  display: none;
+}
+
+.emotion-6 root$expanded {
+  background-color: transparent;
+  margin: 0;
+}
+
 .emotion-7 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -629,7 +638,7 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
         style="min-width: 600px;"
       >
         <div
-          class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 MuiAccordion-root ForwardRef(Accordion)-root-1 MuiAccordion-gutters emotion-6"
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 MuiAccordion-root MuiAccordion-gutters emotion-6"
         >
           <div
             aria-expanded="false"
