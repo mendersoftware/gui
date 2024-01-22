@@ -264,13 +264,7 @@ exports[`TerminalSession Component renders correctly 1`] = `
             >
               <div
                 style="width: 0px; height: 0px; line-height: 0px; overflow: hidden;"
-              >
-                <span
-                  class="xterm-cursor xterm-cursor-outline"
-                >
-                   
-                </span>
-              </div>
+              />
               <div
                 style="width: 0px; height: 0px; line-height: 0px; overflow: hidden;"
               />
