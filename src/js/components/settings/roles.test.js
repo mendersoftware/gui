@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
@@ -41,14 +41,16 @@ describe('Roles Component', () => {
     const role = screen.getByText(/test description/i).parentElement;
     await user.click(within(role).getByText(/view details/i));
     let collapse = screen.getByText(/edit role/i).parentElement.parentElement;
-    await user.click(screen.getByRole('button', { name: /delete/i }));
+    await user.click(screen.getByRole('button', {name: /delete/i}));
     expect(screen.queryByText(/delete the role/i)).toBeInTheDocument();
     const dialog = screen.getByText(/delete role\?/i).parentElement.parentElement;
-    await user.click(within(dialog).getByRole('button', { name: /delete/i }));
+    await user.click(within(dialog).getByRole('button', {name: /delete/i}));
     expect(removeRoleSpy).toHaveBeenCalled();
     await user.click(within(role).getByText(/view details/i));
     collapse = screen.getByText(/edit role/i).parentElement.parentElement;
-    await user.type(within(collapse).getByLabelText(/Description/i), 'something');
+    await act(async () => {
+      await user.type(within(collapse).getByLabelText(/Description/i), 'something');
+    });
     const groupSelect = within(collapse).getByText(Object.keys(defaultState.devices.groups.byId)[0]);
     await selectMaterialUiSelectOption(groupSelect, ALL_DEVICES, user);
     expect(screen.getByText(/For 'All devices',/)).toBeVisible();

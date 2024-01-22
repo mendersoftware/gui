@@ -35,7 +35,7 @@ describe('Password Component', () => {
     const ui = <Password />;
     const { rerender } = render(ui);
     await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
-    await user.click(screen.getByRole('button', { name: /Send password reset link/i }));
+    await user.click(screen.getByRole('button', {name: /Send password reset link/i}));
     await waitFor(() => expect(startSpy).toHaveBeenCalledWith('something@example.com'));
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(/sending you an email/i)).toBeInTheDocument(), { timeout: 5000 });

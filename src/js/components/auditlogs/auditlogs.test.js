@@ -20,7 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import { prettyDOM } from '@testing-library/dom';
-import { screen, render as testingLibRender } from '@testing-library/react';
+import { act, screen, render as testingLibRender } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { light as lightTheme } from '../../../../src/js/themes/Mender';
@@ -82,7 +82,9 @@ describe('Auditlogs Component', () => {
       { preloadedState }
     );
     const input = screen.getByPlaceholderText(/type/i);
-    await user.type(input, 'art');
+    await act(async () => {
+      await user.type(input, 'art');
+    });
     await selectMaterialUiSelectOption(input, /artifact/i, user);
     await user.click(screen.getByText(/clear filter/i));
     await user.click(screen.getByRole('button', { name: /Download results as csv/i }));

@@ -42,24 +42,36 @@ describe('Signup Component', () => {
     );
     const { container, rerender } = render(ui);
     expect(screen.getByText('Sign up with:')).toBeInTheDocument();
-    await user.type(screen.getByLabelText(/Email/i), 'test@example.com');
-    await user.type(screen.getByLabelText('Password *'), 'mysecretpassword!123');
+    await act(async () => {
+      await user.type(screen.getByLabelText(/Email/i), 'test@example.com');
+      await user.type(screen.getByLabelText('Password *'), 'mysecretpassword!123');
+    });
     expect(screen.getByRole('button', { name: /sign up/i })).toBeDisabled();
-    await user.type(screen.getByLabelText(/Confirm password/i), 'mysecretpassword!123');
+    await act(async () => {
+      await user.type(screen.getByLabelText(/Confirm password/i), 'mysecretpassword!123');
+    });
     expect(container.querySelector('#pass-strength > meter')).toBeVisible();
     await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /sign up/i })).toBeEnabled();
-    await user.click(screen.getByRole('button', { name: /sign up/i }));
+    await act(async () => {
+      await user.click(screen.getByRole('button', {name: /sign up/i}));
+    });
     await waitFor(() => screen.queryByText('Company or organization name *'));
-    await user.type(screen.getByRole('textbox', { name: /company or organization name \*/i }), 'test');
+    await act(async () => {
+      await user.type(screen.getByRole('textbox', {name: /company or organization name \*/i}), 'test');
+    });
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeDisabled();
-    await user.click(screen.getByRole('checkbox', { name: /by checking this you agree to our/i }));
+    await act(async () => {
+      await user.click(screen.getByRole('checkbox', {name: /by checking this you agree to our/i}));
+    });
     await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeEnabled();
 
     const cookies = new Cookies();
     cookies.set.mockReturnValue();
-    await user.click(screen.getByRole('button', { name: /complete signup/i }));
+    await act(async () => {
+      await user.click(screen.getByRole('button', {name: /complete signup/i}));
+    });
     await waitFor(() => expect(container.querySelector('.loaderContainer')).toBeVisible());
     await act(async () => jest.advanceTimersByTime(5000));
     await waitFor(() => rerender(ui));

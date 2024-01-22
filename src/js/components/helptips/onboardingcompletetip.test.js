@@ -54,5 +54,6 @@ describe('OnboardingCompleteTip Component', () => {
     const view = baseElement;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => {});
   });
 });
