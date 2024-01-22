@@ -17,7 +17,7 @@ import { Provider } from 'react-redux';
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
@@ -61,7 +61,9 @@ describe('PreauthDialog Component', () => {
     expect(screen.getByText(/upload a public key file/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector(dropzone);
-    await user.upload(uploadInput, menderFile);
+    await act(async () => {
+      await user.upload(uploadInput, menderFile);
+    });
     await waitFor(() => rerender(ui));
 
     expect(uploadInput.files).toHaveLength(1);
@@ -69,8 +71,10 @@ describe('PreauthDialog Component', () => {
     expect(screen.getByDisplayValue('test.pem')).toBeInTheDocument();
     const fabSelector = '.MuiFab-root';
     expect(document.querySelector(fabSelector)).toBeDisabled();
-    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    await act(async () => {
+      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+      await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    });
     expect(document.querySelector(fabSelector)).not.toBeDisabled();
     await user.click(document.querySelector(fabSelector));
     await waitFor(() => rerender(ui));
@@ -103,7 +107,9 @@ describe('PreauthDialog Component', () => {
     const { rerender } = render(ui);
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector(dropzone);
-    await user.upload(uploadInput, menderFile);
+    await act(async () => {
+      await user.upload(uploadInput, menderFile);
+    });
     await waitFor(() => rerender(ui));
     await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
     await user.type(screen.getByPlaceholderText(/value/i), 'testValue');

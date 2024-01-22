@@ -17,7 +17,7 @@ import { Provider } from 'react-redux';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render, selectMaterialUiSelectOption } from '../../../../../tests/setupTests';

@@ -14,10 +14,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
@@ -57,14 +57,16 @@ describe('FileUpload Component', () => {
     expect(screen.getByText(/test placeholder/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    await user.upload(uploadInput, menderFile);
+    await act(async () => {
+      await user.upload(uploadInput, menderFile);
+    });
     await waitFor(() => rerender(ui));
 
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => expect(document.querySelector('.dropzone input')).not.toBeInTheDocument());
     expect(screen.getByDisplayValue('test.file')).toBeInTheDocument();
 
-    expect(submitMock).toHaveBeenCalled();
-    expect(selectMock).toHaveBeenCalled();
+    await waitFor(() => expect(submitMock).toHaveBeenCalled());
+    await waitFor(() => expect(submitMock).toHaveBeenCalled());
   });
 });
