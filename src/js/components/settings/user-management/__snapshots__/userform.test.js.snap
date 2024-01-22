@@ -1337,13 +1337,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
     tabindex="-1"
   >
     <div
-      aria-labelledby="mui-1"
+      aria-labelledby=":r0:"
       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm MuiDialog-paperFullWidth emotion-3"
       role="dialog"
     >
       <h2
         class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-4"
-        id="mui-1"
+        id=":r0:"
       >
         Create new user
       </h2>
@@ -1545,7 +1545,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
                 required=""
               >
                 <div
-                  aria-controls="mui-3"
+                  aria-controls=":r2:"
                   aria-disabled="true"
                   aria-expanded="false"
                   aria-haspopup="listbox"
