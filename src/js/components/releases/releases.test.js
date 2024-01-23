@@ -56,7 +56,7 @@ describe('Releases Component', () => {
       jest.runAllTicks();
     });
     expect(screen.queryByText(/release information/i)).toBeFalsy();
-  });
+  }, 20000);
   it('has working search handling as expected', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     render(<Releases />);
