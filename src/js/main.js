@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 import './../less/main.less';
 import { AppProviders } from './components/app';
@@ -31,4 +31,5 @@ Open an issue, or contribute a fix to:
 `;
 
 console.log(welcomeMessage);
-render(<AppProviders />, document.getElementById('main') || document.createElement('div'));
+const root = ReactDOM.createRoot(document.getElementById('main'));
+root.render(<AppProviders />);
