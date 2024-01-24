@@ -79,8 +79,10 @@ describe('Deployments Component', () => {
     const view = asFragment();
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => {});
     await waitFor(() => expect(get).toHaveBeenCalledWith('/api/management/v2/inventory/filters?per_page=500'));
     expect(get).toHaveBeenCalledWith('/api/management/v2/inventory/filters?per_page=500');
+    await act(async () => {});
   });
 
   it('works as expected', async () => {
