@@ -77,7 +77,7 @@ describe('PasswordReset Component', () => {
     });
     await waitFor(() => rerender(ui));
     await act(async () => {
-      await user.click(screen.getByRole('button', {name: /Save password/i}));
+      await user.click(screen.getByRole('button', { name: /Save password/i }));
     });
     await waitFor(() => expect(completeSpy).toHaveBeenCalledWith(secretHash, goodPassword));
     await act(async () => {

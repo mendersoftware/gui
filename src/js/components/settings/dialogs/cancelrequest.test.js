@@ -45,7 +45,7 @@ describe('CancelRequestDialog Component', () => {
     expect(screen.getByRole('button', { name: /Continue/i })).not.toBeDisabled();
     await act(async () => {
       await user.type(screen.getByPlaceholderText(/suggestions/i), 'test suggestion');
-      await user.click(screen.getByRole('button', {name: /Continue/i}));
+      await user.click(screen.getByRole('button', { name: /Continue/i }));
     });
 
     expect(screen.queryByText(/thank you/i)).toBeInTheDocument();

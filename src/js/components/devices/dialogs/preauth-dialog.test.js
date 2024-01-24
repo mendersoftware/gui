@@ -92,7 +92,7 @@ describe('PreauthDialog Component', () => {
     });
     await waitFor(() => expect(screen.queryByText(errorText)).not.toBeInTheDocument());
     await act(async () => {
-      await user.click(screen.getByRole('button', {name: 'Save and add another'}));
+      await user.click(screen.getByRole('button', { name: 'Save and add another' }));
     });
     await waitFor(() => rerender(ui));
     expect(screen.queryByText('reached your limit')).toBeFalsy();

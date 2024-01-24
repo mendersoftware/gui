@@ -54,15 +54,15 @@ describe('Signup Component', () => {
     await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /sign up/i })).toBeEnabled();
     await act(async () => {
-      await user.click(screen.getByRole('button', {name: /sign up/i}));
+      await user.click(screen.getByRole('button', { name: /sign up/i }));
     });
     await waitFor(() => screen.queryByText('Company or organization name *'));
     await act(async () => {
-      await user.type(screen.getByRole('textbox', {name: /company or organization name \*/i}), 'test');
+      await user.type(screen.getByRole('textbox', { name: /company or organization name \*/i }), 'test');
     });
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeDisabled();
     await act(async () => {
-      await user.click(screen.getByRole('checkbox', {name: /by checking this you agree to our/i}));
+      await user.click(screen.getByRole('checkbox', { name: /by checking this you agree to our/i }));
     });
     await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeEnabled();
@@ -70,7 +70,7 @@ describe('Signup Component', () => {
     const cookies = new Cookies();
     cookies.set.mockReturnValue();
     await act(async () => {
-      await user.click(screen.getByRole('button', {name: /complete signup/i}));
+      await user.click(screen.getByRole('button', { name: /complete signup/i }));
     });
     await waitFor(() => expect(container.querySelector('.loaderContainer')).toBeVisible());
     await act(async () => jest.advanceTimersByTime(5000));

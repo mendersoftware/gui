@@ -135,8 +135,8 @@ describe('Configuration Component', () => {
     });
     expect(fabButton).not.toBeDisabled();
     await act(async () => {
-      await user.click(screen.getByRole('checkbox', {name: /save/i}));
-      await user.click(screen.getByRole('button', {name: /save/i}));
+      await user.click(screen.getByRole('checkbox', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
     });
     await waitFor(() => rerender(ui));
 
@@ -155,7 +155,7 @@ describe('Configuration Component', () => {
     await act(async () => {
       await user.clear(valueInput);
       await user.type(valueInput, 'testValue');
-      await user.click(screen.getByRole('button', {name: /Retry/i}));
+      await user.click(screen.getByRole('button', { name: /Retry/i }));
     });
     await waitFor(() => expect(screen.queryByText(/Updating configuration/i)).toBeInTheDocument());
   });

@@ -89,13 +89,13 @@ describe('AddArtifact Component', () => {
     });
     await waitFor(() => expect(screen.getByRole('combobox', { name: /device types compatible/i })).toBeInTheDocument());
     await act(async () => {
-      await user.type(screen.getByRole('combobox', {name: /device types compatible/i}), 'something');
+      await user.type(screen.getByRole('combobox', { name: /device types compatible/i }), 'something');
       await user.type(screen.getByLabelText(/release name/i), 'some release');
     });
-    await user.click(screen.getByRole('button', {name: /next/i}));
+    await user.click(screen.getByRole('button', { name: /next/i }));
     await waitFor(() => rerender(ui));
     await act(async () => {
-      await user.click(screen.getByRole('button', {name: /upload/i}));
+      await user.click(screen.getByRole('button', { name: /upload/i }));
     });
     expect(creationSpy).toHaveBeenCalled();
   });
