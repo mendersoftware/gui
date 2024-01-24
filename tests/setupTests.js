@@ -59,7 +59,7 @@ jest.setSystemTime(mockDate);
 
 const storage = {};
 
-beforeAll(async () => {
+
   // Enable the mocking in tests.
   delete window.location;
   window.location = {
@@ -104,6 +104,8 @@ beforeAll(async () => {
       createDataChannel: () => {}
     };
   };
+
+beforeAll(async () => {
   createMocks();
   server = setupServer(...handlers);
   await server.listen({ onUnhandledRequest: 'error' });
