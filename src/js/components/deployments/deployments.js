@@ -70,6 +70,7 @@ export const Deployments = () => {
   const size = useWindowSize();
   const tabsRef = useRef();
   const isInitialized = useRef(false);
+  const deploymentObjInitialized = useRef(false);
   const navigate = useNavigate();
   const { reportType, showCreationDialog: createDialog, showReportDialog: reportDialog, state } = selectionState.general;
   const { canDeploy, canReadReleases } = userCapabilities;
@@ -117,6 +118,14 @@ export const Deployments = () => {
     dispatch(setDeploymentsState({ selectedId: selectedId[0], ...remainder }));
     isInitialized.current = true;
   }, [dispatch, isEnterprise]);
+
+  useEffect(() => {
+    if (Object.keys(deploymentObject).length > 0) {
+      // render create deployment dialog when the deployment object is initialized
+      // otherwise CreateDeployment.setDeploymentSettings will remove device id
+      deploymentObjInitialized.current = true;
+    }
+  }, [deploymentObject]);
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
     const { artifact_name, name, update_control_map = {} } = deployment;
@@ -213,7 +222,7 @@ export const Deployments = () => {
         <ComponentToShow abort={onAbortDeployment} createClick={onCreationShow} openReport={showReport} isShowingDetails={reportDialog} />
       </div>
       {reportDialog && <Report abort={onAbortDeployment} onClose={closeReport} retry={retryDeployment} type={reportType} />}
-      {createDialog && (
+      {createDialog && deploymentObjInitialized.current && (
         <CreateDeployment
           onDismiss={onCreationDismiss}
           deploymentObject={deploymentObject}
