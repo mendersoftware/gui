@@ -330,7 +330,7 @@ const reduceReceivedDevices = (devices, ids, state, status) =>
       device.created_ts = getEarliestTs(getEarliestTs(system.created_ts, device.created_ts), stateDevice.created_ts);
       device.updated_ts = device.attributes ? device.updated_ts : stateDevice.updated_ts;
       device.isNew = new Date(device.created_ts) > new Date(state.app.newThreshold);
-      device.isOffline = new Date(device.check_in_time) < new Date(state.app.offlineThreshold);
+      device.isOffline = new Date(device.check_in_time) < new Date(state.app.offlineThreshold) || device.check_in_time === undefined;
       // all the other mapped attributes return as empty objects if there are no attributes to map, but identity will be initialized with an empty state
       // for device_type and artifact_name, potentially overwriting existing info, so rely on stored information instead if there are no attributes
       device.attributes = device.attributes ? { ...storedAttributes, ...inventory } : storedAttributes;
