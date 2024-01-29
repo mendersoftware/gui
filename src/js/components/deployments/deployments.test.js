@@ -76,6 +76,7 @@ describe('Deployments Component', () => {
       jest.advanceTimersByTime(2000);
     });
     await waitFor(() => rerender(ui));
+    await act(async () => {});
     const view = asFragment();
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
