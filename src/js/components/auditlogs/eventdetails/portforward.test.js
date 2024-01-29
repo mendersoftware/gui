@@ -25,6 +25,7 @@ describe('PortForward Component', () => {
     const sessionSpy = jest.spyOn(DeviceActions, 'getSessionDetails');
     const ui = <PortForward item={defaultState.organization.auditlog.events[2]} />;
     const { baseElement, rerender } = render(ui);
+    await act(async () => {});
     await waitFor(() => rerender(ui));
     await act(async () => {
       jest.runOnlyPendingTimers();
