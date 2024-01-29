@@ -67,6 +67,6 @@ describe('FileUpload Component', () => {
     expect(screen.getByDisplayValue('test.file')).toBeInTheDocument();
 
     await waitFor(() => expect(submitMock).toHaveBeenCalled());
-    await waitFor(() => expect(submitMock).toHaveBeenCalled());
+    await waitFor(() => expect(selectMock).toHaveBeenCalled());
   });
 });
