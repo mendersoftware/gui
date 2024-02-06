@@ -292,13 +292,13 @@ exports[`AddArtifact Component renders correctly 1`] = `
     tabindex="-1"
   >
     <div
-      aria-labelledby="mui-1"
+      aria-labelledby=":r0:"
       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm MuiDialog-paperFullWidth emotion-3"
       role="dialog"
     >
       <h2
         class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-4"
-        id="mui-1"
+        id=":r0:"
       >
         Upload an Artifact
       </h2>

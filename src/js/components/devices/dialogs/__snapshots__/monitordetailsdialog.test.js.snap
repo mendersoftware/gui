@@ -623,13 +623,13 @@ exports[`MonitorLogDialog Component renders correctly 1`] = `
     tabindex="-1"
   >
     <div
-      aria-labelledby="mui-1"
+      aria-labelledby=":r0:"
       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthMd emotion-3"
       role="dialog"
     >
       <h2
         class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-4"
-        id="mui-1"
+        id=":r0:"
       >
         Log excerpt for SSH Daemon is not running
       </h2>
@@ -1123,13 +1123,13 @@ exports[`MonitorLogDialog Component renders correctly for description only 1`] =
     tabindex="-1"
   >
     <div
-      aria-labelledby="mui-2"
+      aria-labelledby=":r1:"
       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthMd emotion-3"
       role="dialog"
     >
       <h2
         class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-4"
-        id="mui-2"
+        id=":r1:"
       >
         Details for SSH Daemon is not running
       </h2>

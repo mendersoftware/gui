@@ -56,12 +56,14 @@ describe('Releases Component', () => {
       jest.runAllTicks();
     });
     expect(screen.queryByText(/release information/i)).toBeFalsy();
-  });
+  }, 20000);
   it('has working search handling as expected', async () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     render(<Releases />);
     expect(screen.queryByText(/Filtered from/i)).not.toBeInTheDocument();
-    await user.type(screen.getByPlaceholderText(/starts with/i), 'b1');
+    await act(async () => {
+      await user.type(screen.getByPlaceholderText(/starts with/i), 'b1');
+    });
     await waitFor(() => expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument(), { timeout: 2000 });
     expect(screen.queryByText(/Filtered from/i)).toBeInTheDocument();
   });

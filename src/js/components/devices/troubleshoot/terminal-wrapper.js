@@ -166,9 +166,11 @@ const TroubleshootContent = ({ device, onDownload, setSocketClosed, setUploadPat
   useEffect(() => {
     return () => {
       clearTimeout(snackTimer.current);
-      close();
+      if (socketInitialized !== undefined) {
+        close();
+      }
     };
-  }, [close]);
+  }, [close, socketInitialized]);
 
   useEffect(() => {
     if (sessionState !== WebSocket.OPEN) {

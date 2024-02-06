@@ -76,12 +76,14 @@ describe('Deployments Component', () => {
       jest.advanceTimersByTime(2000);
     });
     await waitFor(() => rerender(ui));
+    await act(async () => {});
     const view = asFragment();
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
     await act(async () => {});
     await waitFor(() => expect(get).toHaveBeenCalledWith('/api/management/v2/inventory/filters?per_page=500'));
     expect(get).toHaveBeenCalledWith('/api/management/v2/inventory/filters?per_page=500');
+    await act(async () => {});
   });
 
   it('works as expected', async () => {
@@ -175,7 +177,9 @@ describe('Deployments Component', () => {
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     expect(within(releaseSelect).queryByDisplayValue(releaseId)).not.toBeInTheDocument();
-    await user.click(releaseSelect);
+    await act(async () => {
+      await user.click(releaseSelect);
+    });
     await user.keyboard(specialKeys.ArrowDown);
     await user.keyboard(specialKeys.Enter);
     act(() => jest.advanceTimersByTime(2000));
@@ -266,7 +270,9 @@ describe('Deployments Component', () => {
     expect(groupSelect).toHaveValue(ALL_DEVICES);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
-    await user.click(releaseSelect);
+    await act(async () => {
+      await user.click(releaseSelect);
+    });
     await user.keyboard(specialKeys.ArrowDown);
     await user.keyboard(specialKeys.Enter);
     act(() => jest.advanceTimersByTime(2000));

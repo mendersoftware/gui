@@ -1193,8 +1193,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-1"
         data-shrink="true"
-        for="mui-2"
-        id="mui-2-label"
+        for=":r0:"
+        id=":r0:-label"
       >
         From
       </label>
@@ -1206,7 +1206,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           autocomplete="off"
           class="MuiInputBase-input MuiInput-input Mui-disabled MuiInputBase-inputAdornedEnd emotion-3"
           disabled=""
-          id="mui-2"
+          id=":r0:"
           inputmode="text"
           placeholder="MMMM DD"
           type="text"
@@ -1243,8 +1243,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-1"
         data-shrink="true"
-        for="mui-4"
-        id="mui-4-label"
+        for=":r2:"
+        id=":r2:-label"
       >
         To
       </label>
@@ -1255,7 +1255,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           aria-invalid="false"
           autocomplete="off"
           class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-3"
-          id="mui-4"
+          id=":r2:"
           inputmode="text"
           placeholder="MMMM DD"
           type="text"

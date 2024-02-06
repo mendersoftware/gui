@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
@@ -58,10 +58,14 @@ describe('Header Component', () => {
     const { rerender } = render(view, { preloadedState });
     expect(screen.queryByText(defaultState.users.byId[defaultState.users.currentUser].email)).toBeInTheDocument();
     const selectButton = screen.getByRole('button', { name: defaultState.users.byId[defaultState.users.currentUser].email });
-    await user.click(selectButton);
+    await act(async () => {
+      await user.click(selectButton);
+    });
     const listbox = document.body.querySelector('ul[role=menu]');
     const listItem = within(listbox).getByText(/log out/i);
-    await user.click(listItem);
+    await act(async () => {
+      await user.click(listItem);
+    });
     await waitFor(() => rerender(view));
     expect(screen.queryByText(defaultState.users.byId[defaultState.users.currentUser].email)).not.toBeInTheDocument();
   });

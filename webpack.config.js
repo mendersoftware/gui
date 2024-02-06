@@ -123,7 +123,8 @@ export default (env, argv) => {
         buffer: require.resolve('buffer/'),
         crypto: 'crypto-browserify',
         stream: require.resolve('stream-browserify'),
-        util: require.resolve('util/')
+        util: require.resolve('util/'),
+        'process/browser': require.resolve('process/browser')
       }
     },
     target: 'web'
