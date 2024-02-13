@@ -967,8 +967,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-27"
             data-shrink="true"
-            for="mui-1"
-            id="mui-1-label"
+            for=":r0:"
+            id=":r0:-label"
           >
             Email
           </label>
@@ -979,7 +979,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-29"
               disabled=""
-              id="mui-1"
+              id=":r0:"
               type="text"
               value="a@b.com"
             />
@@ -1018,8 +1018,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-27"
             data-shrink="true"
-            for="mui-2"
-            id="mui-2-label"
+            for=":r1:"
+            id=":r1:-label"
           >
             Password
           </label>
@@ -1030,7 +1030,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input Mui-disabled emotion-29"
               disabled=""
-              id="mui-2"
+              id=":r1:"
               type="password"
               value="********"
             />

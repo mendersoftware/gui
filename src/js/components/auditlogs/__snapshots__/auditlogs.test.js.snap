@@ -65,7 +65,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   autocapitalize="none"
                   autocomplete="off"
                   class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
-                  
+                  id=":r1:"
                   placeholder="Select a user"
                   role="combobox"
                   spellcheck="false"
@@ -127,7 +127,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   autocapitalize="none"
                   autocomplete="off"
                   class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
-                  
+                  id=":r3:"
                   placeholder="Type"
                   role="combobox"
                   spellcheck="false"
@@ -210,7 +210,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   autocomplete="off"
                   class="MuiInputBase-input MuiInput-input Mui-disabled MuiAutocomplete-input MuiAutocomplete-inputFocused css-15e8ec1-MuiInputBase-input-MuiInput-input"
                   disabled=""
-                  
+                  id=":r5:"
                   placeholder="-"
                   role="combobox"
                   spellcheck="false"
@@ -239,8 +239,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
                 data-shrink="true"
-                for="mui-9"
-                id="mui-9-label"
+                for=":r7:"
+                id=":r7:-label"
               >
                 From
               </label>
@@ -251,7 +251,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   aria-invalid="false"
                   autocomplete="off"
                   class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
-                  
+                  id=":r7:"
                   inputmode="text"
                   placeholder="MMMM DD"
                   type="text"
@@ -290,8 +290,8 @@ exports[`Auditlogs Component renders correctly 1`] = `
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard css-1diiyoc-MuiFormLabel-root-MuiInputLabel-root"
                 data-shrink="true"
-                for="mui-11"
-                id="mui-11-label"
+                for=":r9:"
+                id=":r9:-label"
               >
                 To
               </label>
@@ -302,7 +302,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   aria-invalid="false"
                   autocomplete="off"
                   class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd css-15e8ec1-MuiInputBase-input-MuiInput-input"
-                  
+                  id=":r9:"
                   inputmode="text"
                   placeholder="MMMM DD"
                   type="text"
@@ -589,7 +589,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             />
             <p
               class="MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel"
-              
+              id=":rc:"
             >
               Rows
             </p>
@@ -597,12 +597,12 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
             >
               <div
-                aria-controls="mui-12"
+                aria-controls=":rd:"
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                
+                aria-labelledby=":rc: :rb:"
                 class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
-                
+                id=":rb:"
                 role="combobox"
                 tabindex="0"
               >

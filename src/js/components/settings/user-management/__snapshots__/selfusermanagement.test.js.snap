@@ -705,8 +705,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-disabled MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-2"
         data-shrink="true"
-        for="mui-1"
-        id="mui-1-label"
+        for=":r0:"
+        id=":r0:-label"
       >
         Email
       </label>
@@ -717,7 +717,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           aria-invalid="false"
           class="MuiInputBase-input MuiInput-input Mui-disabled emotion-4"
           disabled=""
-          id="mui-1"
+          id=":r0:"
           type="text"
           value="a@b.com"
         />

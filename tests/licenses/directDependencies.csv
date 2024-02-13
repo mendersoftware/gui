@@ -88,6 +88,7 @@
 "react-router-dom","MIT","https://github.com/remix-run/react-router"
 "react","MIT","https://github.com/facebook/react"
 "redux-mock-store","MIT","https://github.com/arnaudbenard/redux-mock-store"
+"redux-thunk","MIT","https://github.com/reduxjs/redux-thunk"
 "stream-browserify","MIT","https://github.com/browserify/stream-browserify"
 "tss-react","MIT","https://github.com/garronej/tss-react"
 "universal-cookie","MIT","https://github.com/bendotcodes/cookies"

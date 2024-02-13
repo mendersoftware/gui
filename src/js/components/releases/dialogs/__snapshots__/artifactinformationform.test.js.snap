@@ -897,8 +897,8 @@ label+.emotion-16 {
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary Mui-focused MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-1"
         data-shrink="true"
-        for="mui-1"
-        id="mui-1-label"
+        for=":r0:"
+        id=":r0:-label"
       >
         Destination directory where the file will be installed on your devices
       </label>
@@ -908,7 +908,7 @@ label+.emotion-16 {
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiInput-input emotion-3"
-          id="mui-1"
+          id=":r0:"
           placeholder="Example: /opt/installed-by-single-file"
           style="margin-top: 16px;"
           type="text"

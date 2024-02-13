@@ -157,9 +157,7 @@ export const CreateDeployment = props => {
       nextDeploymentObject.deploymentDeviceCount = acceptedDeviceCount;
     }
     if (groups[group]) {
-      return dispatch(getGroupDevices(group, { perPage: 1 })).then(({ group: { total: deploymentDeviceCount } }) =>
-        setDeploymentSettings({ deploymentDeviceCount })
-      );
+      dispatch(getGroupDevices(group, { perPage: 1 })).then(({ group: { total: deploymentDeviceCount } }) => setDeploymentSettings({ deploymentDeviceCount }));
     }
     setDeploymentSettings(nextDeploymentObject);
     // eslint-disable-next-line react-hooks/exhaustive-deps

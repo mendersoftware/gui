@@ -39,7 +39,6 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
   const [sessionId, setSessionId] = useState();
   const healthcheckTimeout = useRef();
   const socketRef = useRef();
-
   const sendMessage = useCallback(({ typ, body, props }) => {
     if (!socketRef.current) {
       return;
@@ -50,7 +49,7 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
   }, []);
 
   const close = useCallback(() => {
-    if (socketRef.current?.readyState !== WebSocket.OPEN) {
+    if (!socketRef.current || socketRef.current?.readyState !== WebSocket.OPEN) {
       return;
     }
     sendMessage({ typ: MessageTypes.Stop, body: {}, props: {} });

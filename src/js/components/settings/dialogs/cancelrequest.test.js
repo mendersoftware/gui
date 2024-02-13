@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { undefineds } from '../../../../../tests/mockData';
@@ -39,10 +39,14 @@ describe('CancelRequestDialog Component', () => {
     expect(screen.getByRole('button', { name: /Continue/i })).not.toBeDisabled();
     await user.click(screen.getByRole('radio', { name: /other/i }));
     expect(screen.getByRole('button', { name: /Continue/i })).toBeDisabled();
-    await user.type(screen.getByPlaceholderText(/reason/i), 'test reason');
+    await act(async () => {
+      await user.type(screen.getByPlaceholderText(/reason/i), 'test reason');
+    });
     expect(screen.getByRole('button', { name: /Continue/i })).not.toBeDisabled();
-    await user.type(screen.getByPlaceholderText(/suggestions/i), 'test suggestion');
-    await user.click(screen.getByRole('button', { name: /Continue/i }));
+    await act(async () => {
+      await user.type(screen.getByPlaceholderText(/suggestions/i), 'test suggestion');
+      await user.click(screen.getByRole('button', { name: /Continue/i }));
+    });
 
     expect(screen.queryByText(/thank you/i)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Confirm/i }));

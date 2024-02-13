@@ -121,8 +121,10 @@ describe('AuthorizedDevices Component', () => {
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/Customize Columns/i)).toBeVisible();
     const attributeSelect = screen.getByLabelText(/add a column/i);
-    await user.type(attributeSelect, testKey);
-    await user.keyboard('{Enter}');
+    await act(async () => {
+      await user.type(attributeSelect, testKey);
+      await user.keyboard('{Enter}');
+    });
     act(() => jest.advanceTimersByTime(5000));
     await waitFor(() => expect(screen.getByLabelText(/add a column/i)).toBeVisible());
     const button = screen.getByRole('button', { name: /Save/i });

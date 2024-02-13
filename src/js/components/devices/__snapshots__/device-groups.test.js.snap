@@ -216,7 +216,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary css-1laylde-MuiInputBase-root-MuiInput-root-MuiSelect-root-selection"
                 >
                   <div
-                    aria-controls="mui-1"
+                    aria-controls=":r0:"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input css-emq5k1-MuiSelect-select-MuiInputBase-input-MuiInput-input"
@@ -721,7 +721,7 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                 />
                 <p
                   class="MuiTablePagination-selectLabel css-1ecnf2s-MuiTablePagination-selectLabel"
-                  
+                  id=":r2:"
                 >
                   Rows
                 </p>
@@ -729,12 +729,12 @@ exports[`DeviceGroups Component renders correctly 1`] = `
                   class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input css-7kd4nt-MuiInputBase-root-MuiTablePagination-select"
                 >
                   <div
-                    aria-controls="mui-2"
+                    aria-controls=":r3:"
                     aria-expanded="false"
                     aria-haspopup="listbox"
-                    
+                    aria-labelledby=":r2: :r1:"
                     class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input css-194a1fa-MuiSelect-select-MuiInputBase-input"
-                    
+                    id=":r1:"
                     role="combobox"
                     tabindex="0"
                   >

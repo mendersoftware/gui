@@ -715,7 +715,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd emotion-15"
-              id="mui-2"
+              id=":r0:"
               placeholder="Example: /opt/installed-by-single-file"
               type="text"
               value=""

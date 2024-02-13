@@ -889,13 +889,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
 }
 
 <div
-  aria-labelledby="mui-12"
+  aria-labelledby=":rc:"
   class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm emotion-0"
   role="dialog"
 >
   <h2
     class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-1"
-    id="mui-12"
+    id=":rc:"
   >
     Create new token
   </h2>
@@ -913,7 +913,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
             aria-invalid="false"
             class="MuiInputBase-input MuiInput-input Mui-disabled emotion-5"
             disabled=""
-            id="mui-13"
+            id=":rd:"
             placeholder="Name"
             type="text"
             value=""
@@ -935,7 +935,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-9:focus::-ms-input-p
           class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl  emotion-8"
         >
           <div
-            aria-controls="mui-14"
+            aria-controls=":re:"
             aria-disabled="true"
             aria-expanded="false"
             aria-haspopup="listbox"
@@ -1219,13 +1219,13 @@ exports[`UserManagement Component renders AccessTokenRevocationDialog correctly 
 }
 
 <div
-  aria-labelledby="mui-15"
+  aria-labelledby=":rf:"
   class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm emotion-0"
   role="dialog"
 >
   <h2
     class="MuiTypography-root MuiTypography-h6 MuiDialogTitle-root emotion-1"
-    id="mui-15"
+    id=":rf:"
   >
     Revoke token
   </h2>

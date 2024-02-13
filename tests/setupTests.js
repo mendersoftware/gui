@@ -59,51 +59,52 @@ jest.setSystemTime(mockDate);
 
 const storage = {};
 
+// Enable the mocking in tests.
+delete window.location;
+window.location = {
+  ...oldWindowLocation,
+  hostname: TEST_LOCATION,
+  assign: jest.fn(),
+  replace: jest.fn()
+};
+delete window.sessionStorage;
+window.sessionStorage = {
+  ...oldWindowSessionStorage,
+  getItem: jest.fn(yes),
+  setItem: jest.fn(),
+  removeItem: jest.fn()
+};
+delete window.localStorage;
+window.localStorage = {
+  ...oldWindowLocalStorage,
+  getItem: jest.fn(name => {
+    if (name === 'JWT') {
+      return JSON.stringify({ token: mockToken });
+    }
+    return storage[name];
+  }),
+  setItem: jest.fn(name => storage[name]),
+  removeItem: jest.fn()
+};
+window.mender_environment = menderEnvironment;
+window.ENV = 'test';
+global.AbortController = jest.fn().mockImplementation(() => mockAbortController);
+global.MessageChannel = MessageChannel;
+global.TextEncoder = TextEncoder;
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn()
+}));
+window.RTCPeerConnection = () => {
+  return {
+    createOffer: () => {},
+    setLocalDescription: () => {},
+    createDataChannel: () => {}
+  };
+};
+
 beforeAll(async () => {
-  // Enable the mocking in tests.
-  delete window.location;
-  window.location = {
-    ...oldWindowLocation,
-    hostname: TEST_LOCATION,
-    assign: jest.fn(),
-    replace: jest.fn()
-  };
-  delete window.sessionStorage;
-  window.sessionStorage = {
-    ...oldWindowSessionStorage,
-    getItem: jest.fn(yes),
-    setItem: jest.fn(),
-    removeItem: jest.fn()
-  };
-  delete window.localStorage;
-  window.localStorage = {
-    ...oldWindowLocalStorage,
-    getItem: jest.fn(name => {
-      if (name === 'JWT') {
-        return JSON.stringify({ token: mockToken });
-      }
-      return storage[name];
-    }),
-    setItem: jest.fn(name => storage[name]),
-    removeItem: jest.fn()
-  };
-  window.mender_environment = menderEnvironment;
-  window.ENV = 'test';
-  global.AbortController = jest.fn().mockImplementation(() => mockAbortController);
-  global.MessageChannel = MessageChannel;
-  global.TextEncoder = TextEncoder;
-  global.ResizeObserver = jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-    disconnect: jest.fn()
-  }));
-  window.RTCPeerConnection = () => {
-    return {
-      createOffer: () => {},
-      setLocalDescription: () => {},
-      createDataChannel: () => {}
-    };
-  };
   createMocks();
   server = setupServer(...handlers);
   await server.listen({ onUnhandledRequest: 'error' });
