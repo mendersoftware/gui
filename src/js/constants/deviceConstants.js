@@ -49,6 +49,12 @@ export const DEVICE_FILTERING_OPTIONS = {
     shortform: '<=',
     help: 'The "lesser than or equal" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
   },
+  $ltne: {
+    key: '$ltne',
+    title: '$ltne',
+    shortform: 'ltne',
+    help: 'The "lesser than or does not exist" operator can work both on numbers and strings. In the latter case, the operator applies the lexicographical order to the value strings.'
+  },
   $in: {
     key: '$in',
     title: 'in',
@@ -199,7 +205,7 @@ export const DEVICE_ISSUE_OPTIONS = {
     filterRule: {
       scope: 'system',
       key: 'updated_ts',
-      operator: DEVICE_FILTERING_OPTIONS.$lt.key,
+      operator: DEVICE_FILTERING_OPTIONS.$ltne.key,
       value: ({ offlineThreshold }) => offlineThreshold
     },
     title: 'Offline devices'
