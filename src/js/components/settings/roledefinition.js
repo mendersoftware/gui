@@ -14,8 +14,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 // material ui
-import { Close as CloseIcon, InfoOutlined as InfoOutlinedIcon } from '@mui/icons-material';
+import { Close as CloseIcon, InfoOutlined as InfoOutlinedIcon, WarningAmber as WarningIcon } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Checkbox,
   Dialog,
@@ -205,12 +206,22 @@ const ItemSelection = ({
     setter(changedSelection);
   };
 
+  // find missing items in selected items
+  itemsSelection.forEach((selection, key) => {
+    if (selection.item && !items.includes(selection.item)) {
+      items.push(selection.item);
+      itemsSelection[key].notFound = true;
+    }
+  });
+
   const onItemPermissionSelect = (index, selectedPermissions, currentSelection) => {
     let changedSelection = [...currentSelection];
     changedSelection[index] = { ...changedSelection[index], uiPermissions: selectedPermissions };
     changedSelection = maybeExtendPermissionSelection(changedSelection, changedSelection[index], items);
     setter(changedSelection);
   };
+
+  const isItemNotFound = item => !!itemsSelection.filter(selection => selection.item === item && selection.notFound === true).length;
 
   const { title, uiPermissions, explanation } = uiPermissionsByArea[permissionsArea];
   return (
@@ -229,8 +240,11 @@ const ItemSelection = ({
                   <InputLabel id="permissions-group-selection-label">{!itemSelection.item ? placeholder : ''}</InputLabel>
                   <Select labelId="permissions-group-selection-label" onChange={e => onItemSelect(index, e, itemsSelection)} value={itemSelection.item}>
                     {items.map(item => (
-                      <MenuItem key={item} value={item}>
-                        {item}
+                      <MenuItem disabled={isItemNotFound(item)} key={item} value={item}>
+                        <Box title={isItemNotFound(item) ? 'This item was removed' : ''} className="flexbox center-aligned">
+                          {isItemNotFound(item) && <WarningIcon style={{ marginRight: 4 }} />}
+                          {item}
+                        </Box>
                       </MenuItem>
                     ))}
                   </Select>
