@@ -445,13 +445,15 @@ const getSetupArgs = ({ deviceType = 'generic-armv6', ipAddress, isDemoMode, ten
   return menderSetupArgs;
 };
 
+const installComponents = '--force-mender-client4';
+
 export const getDebConfigurationCode = props => {
   const { tenantToken, token, isPreRelease } = props;
   const envVars = tenantToken ? `JWT_TOKEN="${token}"\nTENANT_TOKEN="${tenantToken}"\n` : '';
   const installScriptArgs = getInstallScriptArgs(props);
   const scriptUrl = isPreRelease ? 'https://get.mender.io/staging' : 'https://get.mender.io';
   const menderSetupArgs = getSetupArgs(props);
-  return `${envVars}wget -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} -- ${menderSetupArgs}`;
+  return `${envVars}wget -O- ${scriptUrl} | sudo bash -s -- ${installScriptArgs} ${installComponents} -- ${menderSetupArgs}`;
 };
 
 export const getSnackbarMessage = (skipped, done) => {
