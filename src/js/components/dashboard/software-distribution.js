@@ -21,7 +21,6 @@ import {
   defaultReports,
   deriveReportsData,
   getDeviceAttributes,
-  getDevicesInBounds,
   getGroupDevices,
   getReportingLimits,
   getReportsData
@@ -34,16 +33,13 @@ import {
   getAttributesList,
   getDeviceReports,
   getDeviceReportsForUser,
-  getDevicesById,
   getFeatures,
-  getGroupNames,
   getGroupsByIdWithoutUngrouped,
   getIsEnterprise
 } from '../../selectors';
 import { extractSoftwareInformation } from '../devices/device-details/installedsoftware';
 import ChartAdditionWidget from './widgets/chart-addition';
 import DistributionReport from './widgets/distribution';
-import MapWrapper from './widgets/mapwidget';
 
 const reportTypes = {
   distribution: DistributionReport
@@ -100,8 +96,6 @@ export const SoftwareDistribution = () => {
   const hasDevices = !!total;
   const isEnterprise = useSelector(getIsEnterprise);
   const reportsData = useSelector(getDeviceReports);
-  const groupNames = useSelector(getGroupNames);
-  const devicesById = useSelector(getDevicesById);
 
   useEffect(() => {
     dispatch(getDeviceAttributes());
@@ -133,7 +127,6 @@ export const SoftwareDistribution = () => {
   const removeReport = removedReport => dispatch(saveUserSettings({ reports: reports.filter(report => report !== removedReport) }));
 
   const onGetGroupDevices = useCallback((...args) => dispatch(getGroupDevices(...args)), [dispatch]);
-  const onGetDevicesInBounds = useCallback((...args) => dispatch(getDevicesInBounds(...args)), [dispatch]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const software = useMemo(() => listSoftware(hasReporting ? attributes : [rootfsImageVersion]), [JSON.stringify(attributes), hasReporting]);
@@ -148,15 +141,6 @@ export const SoftwareDistribution = () => {
 
   return hasDevices ? (
     <div className="dashboard margin-bottom-large">
-      {hasReporting && (
-        <MapWrapper
-          groups={groups}
-          groupNames={groupNames}
-          devicesById={devicesById}
-          getGroupDevices={onGetGroupDevices}
-          getDevicesInBounds={onGetDevicesInBounds}
-        />
-      )}
       {reports.map((report, index) => {
         const Component = reportTypes[report.type || defaultReportType];
         return (
