@@ -40,6 +40,7 @@ export type { DBusSubsystem } from "./DBusSubsystem";
 export type { DeltaConfiguration } from "./DeltaConfiguration";
 export type { Deployment } from "./Deployment";
 export { DeploymentDeployments } from "./DeploymentDeployments";
+export type { DeploymentIdentifier } from "./DeploymentIdentifier";
 export type { DeploymentPhase } from "./DeploymentPhase";
 export type { DeploymentStatistics } from "./DeploymentStatistics";
 export type { DeploymentStatusStatistics } from "./DeploymentStatusStatistics";
