@@ -51,7 +51,7 @@ describe('Roles Component', () => {
     await act(async () => {
       await user.type(within(collapse).getByLabelText(/Description/i), 'something');
     });
-    const groupSelect = within(collapse).getByText(Object.keys(defaultState.devices.groups.byId)[0]);
+    const groupSelect = within(collapse).getByText(Object.keys(defaultState.devices.groups.byId)[0]).parentNode;
     await selectMaterialUiSelectOption(groupSelect, ALL_DEVICES, user);
     expect(screen.getByText(/For 'All devices',/)).toBeVisible();
 
