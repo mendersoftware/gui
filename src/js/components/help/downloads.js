@@ -70,12 +70,23 @@ const defaultLocationFormatter = ({ os, tool, versionInfo }) => {
   return { locations };
 };
 
+/**
+ * [MEN-7004]: gateway and monitor packages changed their url patterns.
+ * new urls are not like https://downloads.customer.mender.io/content/hosted/repos/debian/pool/main/m/mender-monitor/mender-monitor_1.3.0-1%2Bdebian%2Bbuster_all.deb anymore.
+ * and should be like https://downloads.customer.mender.io/content/hosted/mender-monitor/debian/1.3.0/mender-monitor_1.3.0-1%2Bdebian%2Bbuster_all.deb
+ */
+const locationFormatter = ({ location, id, packageName, packageId, os, arch, versionInfo }) => {
+  const isPackageMonitorOrGateway = packageId === menderGateway || packageId === menderMonitor;
+  const version = getVersion(versionInfo, id);
+  return isPackageMonitorOrGateway
+    ? `${location}/${packageId}/debian/${version}/${encodeURIComponent(`${packageId}_${version}-1+${os}_${arch}.deb`)}`
+    : `${location}/repos/debian/pool/main/${id[0]}/${packageName || packageId || id}/${encodeURIComponent(`${packageId}_${version}-1+${os}_${arch}.deb`)}`;
+};
+
 const osArchLocationReducer = ({ archList, location = downloadLocations.public, packageName, packageId, id, osList, versionInfo }) =>
   osList.reduce((accu, os) => {
     const osArchitectureLocations = archList.map(arch => ({
-      location: `${location}/repos/debian/pool/main/${id[0]}/${packageName || packageId || id}/${encodeURIComponent(
-        `${packageId}_${getVersion(versionInfo, id)}-1+${os}_${arch}.deb`
-      )}`,
+      location: locationFormatter({ location, id, packageName, packageId, os, arch, versionInfo }),
       title: `${os} - ${arch}`
     }));
     accu.push(...osArchitectureLocations);
@@ -137,6 +148,9 @@ download:mender-tools:
       - ${filename}
 `;
 };
+
+const menderGateway = 'mender-gateway';
+const menderMonitor = 'mender-monitor';
 
 const tools = [
   {
@@ -205,7 +219,7 @@ const tools = [
     canAccess
   },
   {
-    id: 'mender-gateway',
+    id: menderGateway,
     title: 'Mender Gateway',
     getLocations: multiArchLocationFormatter,
     location: downloadLocations.private,
@@ -215,7 +229,7 @@ const tools = [
   },
   {
     id: 'monitor-client',
-    packageId: 'mender-monitor',
+    packageId: menderMonitor,
     title: 'Mender Monitor',
     getLocations: multiArchLocationFormatter,
     location: downloadLocations.private,
