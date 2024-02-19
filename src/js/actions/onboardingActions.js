@@ -160,7 +160,7 @@ export const advanceOnboarding = stepId => (dispatch, getState) => {
   const madeProgress = steps[stepIndex + 1];
   const state = { ...getCurrentOnboardingState(getState()), progress: madeProgress };
   state.complete =
-    stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED) ? true : state.complete;
+    stepIndex + 1 >= Object.keys(onboardingSteps).findIndex(step => step === onboardingStepNames.DEPLOYMENTS_PAST_COMPLETED_FAILURE) ? true : state.complete;
   Tracking.event({ category: 'onboarding', action: stepId });
   return Promise.all([dispatch(setOnboardingProgress(madeProgress)), dispatch(saveUserSettings({ onboarding: state }))]);
 };
