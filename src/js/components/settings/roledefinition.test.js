@@ -13,8 +13,11 @@
 //    limitations under the License.
 import React from 'react';
 
+import { screen } from '@testing-library/react';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
+import { ALL_DEVICES } from '../../constants/deviceConstants.js';
 import { emptyRole } from '../../constants/userConstants';
 import RoleDefinition from './roledefinition';
 
@@ -36,5 +39,56 @@ describe('Roles Component', () => {
     const view = baseElement.lastElementChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+  });
+
+  it('displays missing groups', async () => {
+    const groupPermissions = ['read'];
+    const nonExistingGroupName = 'nonExistingGroup';
+    // removes read-only
+    const copiedEmptyRole = JSON.parse(JSON.stringify(emptyRole));
+    let selectedRole = {
+      ...copiedEmptyRole,
+      editable: true,
+      uiPermissions: {
+        ...copiedEmptyRole.uiPermissions,
+        groups: {
+          [nonExistingGroupName]: groupPermissions,
+          [ALL_DEVICES]: groupPermissions
+        }
+      }
+    };
+
+    const { rerender } = render(
+      <RoleDefinition
+        adding
+        editing
+        features={{}}
+        onCancel={jest.fn}
+        onSubmit={jest.fn}
+        removeRole={jest.fn}
+        stateGroups={defaultState.devices.groups.byId}
+        stateReleaseTags={{}}
+        selectedRole={selectedRole}
+      />
+    );
+    expect(screen.getByDisplayValue(nonExistingGroupName)).toBeInTheDocument();
+    expect(screen.getByTitle(/This item was removed/)).toBeInTheDocument();
+
+    delete selectedRole.uiPermissions.groups[nonExistingGroupName];
+    rerender(
+      <RoleDefinition
+        adding
+        editing
+        features={{}}
+        onCancel={jest.fn}
+        onSubmit={jest.fn}
+        removeRole={jest.fn}
+        stateGroups={defaultState.devices.groups.byId}
+        stateReleaseTags={{}}
+        selectedRole={selectedRole}
+      />
+    );
+    expect(screen.queryByDisplayValue(nonExistingGroupName)).not.toBeInTheDocument();
+    expect(screen.queryByTitle(/This item was removed/)).not.toBeInTheDocument();
   });
 });

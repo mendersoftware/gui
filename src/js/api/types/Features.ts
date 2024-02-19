@@ -14,4 +14,5 @@ export type Features = {
   file_transfer?: boolean;
   configuration?: boolean;
   monitoring?: boolean;
+  reporting?: boolean;
 };
