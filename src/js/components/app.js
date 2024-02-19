@@ -18,7 +18,7 @@ import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import { CssBaseline, ThemeProvider, createTheme, styled } from '@mui/material';
+import { CssBaseline, GlobalStyles, ThemeProvider, createTheme, styled } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { makeStyles } from 'tss-react/mui';
@@ -181,10 +181,12 @@ export const AppRoot = () => {
   const theme = createTheme(isDarkMode(mode) ? darkTheme : lightTheme);
 
   const { classes } = useStyles();
+  const globalCssVars = cssVariables({ theme })['@global'];
 
   return (
     <ThemeProvider theme={theme}>
       <WrappedBaseline enableColorScheme />
+      <GlobalStyles styles={globalCssVars} />
       <>
         {token ? (
           <div id="app">
