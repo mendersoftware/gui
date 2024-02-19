@@ -34,7 +34,7 @@ import Upgrade from './upgrade';
 let stripePromise = null;
 
 const sectionMap = {
-  'global-settings': { component: Global, text: () => 'Global settings', canAccess },
+  'global-settings': { component: Global, text: () => 'Global settings', canAccess: ({ userCapabilities: { canManageUsers } }) => canManageUsers },
   'my-profile': { component: SelfUserManagement, text: () => 'My profile', canAccess },
   'organization-and-billing': {
     component: Organization,
