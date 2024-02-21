@@ -49,7 +49,6 @@ export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
         timer.current = setTimeout(() => dispatch(setOnboardingComplete(true)), 120000);
       });
     return () => {
-      dispatch(setOnboardingComplete(true));
       clearTimeout(timer.current);
     };
   }, [dispatch]);
