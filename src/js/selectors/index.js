@@ -73,6 +73,7 @@ const getCurrentUserId = state => state.users.currentUser;
 const getUsersById = state => state.users.byId;
 export const getCurrentUser = createSelector([getUsersById, getCurrentUserId], (usersById, userId) => usersById[userId] ?? {});
 export const getUserSettings = state => state.users.userSettings;
+export const getSsoConfig = ({ organization: { ssoConfigs = [] } }) => ssoConfigs[0];
 
 export const getVersionInformation = createSelector([getFullVersionInformation, getFeatures], ({ Integration, ...remainder }, { isHosted }) =>
   isHosted && Integration !== 'next' ? remainder : { ...remainder, Integration }

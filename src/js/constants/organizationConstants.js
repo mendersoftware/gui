@@ -13,6 +13,14 @@
 //    limitations under the License.
 import { EXTERNAL_PROVIDER } from './deviceConstants';
 
+export const XML_METADATA_FORMAT = 'xml';
+export const JSON_METADATA_FORMAT = 'json';
+
+export const SSO_TYPES = [
+  { id: 'saml', title: 'SAML', metadataFormat: XML_METADATA_FORMAT, editorLanguage: XML_METADATA_FORMAT, contentType: 'application/samlmetadata+xml' },
+  { id: 'oidc', title: 'OpenID Connect', metadataFormat: JSON_METADATA_FORMAT, editorLanguage: JSON_METADATA_FORMAT, contentType: 'application/json' }
+];
+
 export const AUDIT_LOGS_TYPES = [
   { title: 'Artifact', queryParameter: 'object_type', value: 'artifact' },
   { title: 'Deployment', queryParameter: 'object_deployment_name', value: 'deployment' },
@@ -25,7 +33,7 @@ export const RECEIVE_SETUP_INTENT = 'RECEIVE_SETUP_INTENT';
 export const SET_AUDITLOG_STATE = 'SET_AUDITLOG_STATE';
 export const SET_ORGANIZATION = 'SET_ORGANIZATION';
 export const RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS = 'RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS';
-export const RECEIVE_SAML_CONFIGS = 'RECEIVE_SAML_CONFIGS';
+export const RECEIVE_SSO_CONFIGS = 'RECEIVE_SSO_CONFIGS';
 export const RECEIVE_WEBHOOK_EVENTS = 'RECEIVE_WEBHOOK_EVENTS';
 export const emptyWebhook = {
   description: '',
