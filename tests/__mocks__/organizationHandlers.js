@@ -14,7 +14,7 @@
 import { rest } from 'msw';
 
 import { iotManagerBaseURL } from '../../src/js/actions/deviceActions';
-import { auditLogsApiUrl, samlIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
+import { auditLogsApiUrl, ssoIdpApiUrlv1, tenantadmApiUrlv1, tenantadmApiUrlv2 } from '../../src/js/actions/organizationActions';
 import { headerNames } from '../../src/js/api/general-api';
 import { PLANS } from '../../src/js/constants/appConstants';
 import { EXTERNAL_PROVIDER } from '../../src/js/constants/deviceConstants';
@@ -187,7 +187,7 @@ export const organizationHandlers = [
     const perPage = Number(searchParams.get('per_page'));
     return res(ctx.json(webhookEvents.slice(page - 1, page * perPage)));
   }),
-  rest.get(samlIdpApiUrlv1, (req, res, ctx) => {
+  rest.get(ssoIdpApiUrlv1, (req, res, ctx) => {
     return res(
       ctx.json([
         { id: '1', issuer: 'https://samltest.id/saml/idp', valid_until: '2038-08-24T21:14:09Z' },
@@ -195,22 +195,22 @@ export const organizationHandlers = [
       ])
     );
   }),
-  rest.post(samlIdpApiUrlv1, (req, res, ctx) => {
+  rest.post(ssoIdpApiUrlv1, (req, res, ctx) => {
     return res(ctx.status(200));
   }),
-  rest.get(`${samlIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+  rest.get(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
     if (!configId) {
       return res(ctx.status(550));
     }
     return res(ctx.json({ email: 'user@acme.com', password: 'mypass1234', login: { google: 'bob@gmail.com' }, config: '<div>not quite right</div>' }));
   }),
-  rest.put(`${samlIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+  rest.put(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
     if (!configId) {
       return res(ctx.status(551));
     }
     return res(ctx.status(200));
   }),
-  rest.delete(`${samlIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
+  rest.delete(`${ssoIdpApiUrlv1}/:configId`, ({ params: { configId } }, res, ctx) => {
     if (!configId) {
       return res(ctx.status(552));
     }

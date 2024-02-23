@@ -22,8 +22,8 @@ import {
   RECEIVE_AUDIT_LOGS,
   RECEIVE_CURRENT_CARD,
   RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-  RECEIVE_SSO_CONFIGS,
   RECEIVE_SETUP_INTENT,
+  RECEIVE_SSO_CONFIGS,
   RECEIVE_WEBHOOK_EVENTS,
   SET_AUDITLOG_STATE,
   SET_ORGANIZATION
@@ -65,7 +65,7 @@ const expectedDeviceProviders = [
   { id: 2, provider: 'aws', something: 'new' }
 ];
 
-const expectedssoConfigs = [
+const expectedSsoConfigs = [
   { id: '1', issuer: 'https://samltest.id/saml/idp', valid_until: '2038-08-24T21:14:09Z' },
   { id: '2', issuer: 'https://samltest2.id/saml/idp', valid_until: '2030-10-24T21:14:09Z' }
 ];
@@ -456,8 +456,8 @@ describe('organization actions', () => {
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: SET_SNACKBAR, snackbar: { message: 'The SAML configuration was stored successfully' } },
-      { type: RECEIVE_SSO_CONFIGS, value: expectedssoConfigs }
+      { type: SET_SNACKBAR, snackbar: { message: 'The SSO configuration was stored successfully' } },
+      { type: RECEIVE_SSO_CONFIGS, value: expectedSsoConfigs }
     ];
     const request = store.dispatch(storeSsoConfig({ connection_string: 'testString', provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
@@ -480,8 +480,8 @@ describe('organization actions', () => {
     });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: SET_SNACKBAR, snackbar: { message: 'The SAML configuration was updated successfully' } },
-      { type: RECEIVE_SSO_CONFIGS, value: expectedssoConfigs }
+      { type: SET_SNACKBAR, snackbar: { message: 'The SSO configuration was updated successfully' } },
+      { type: RECEIVE_SSO_CONFIGS, value: expectedSsoConfigs }
     ];
     const request = store.dispatch(changeSsoConfig({ connection_string: 'testString2', id: 1, provider: 'iot-hub' }));
     expect(request).resolves.toBeTruthy();
@@ -503,7 +503,7 @@ describe('organization actions', () => {
       }
     });
     expect(store.getActions()).toHaveLength(0);
-    const expectedActions = [{ type: RECEIVE_SSO_CONFIGS, value: expectedssoConfigs }];
+    const expectedActions = [{ type: RECEIVE_SSO_CONFIGS, value: expectedSsoConfigs }];
     const request = store.dispatch(getSsoConfigs());
     expect(request).resolves.toBeTruthy();
     await request.then(() => {
@@ -513,11 +513,11 @@ describe('organization actions', () => {
     });
   });
   it('should allow deleting external identity providers', async () => {
-    const store = mockStore({ ...defaultState, organization: { ...defaultState.organization, ssoConfigs: [...expectedssoConfigs] } });
+    const store = mockStore({ ...defaultState, organization: { ...defaultState.organization, ssoConfigs: [...expectedSsoConfigs] } });
     expect(store.getActions()).toHaveLength(0);
     const expectedActions = [
-      { type: SET_SNACKBAR, snackbar: { message: 'The SAML configuration was removed successfully' } },
-      { type: RECEIVE_SSO_CONFIGS, value: [expectedssoConfigs[1]] }
+      { type: SET_SNACKBAR, snackbar: { message: 'The SSO configuration was removed successfully' } },
+      { type: RECEIVE_SSO_CONFIGS, value: [expectedSsoConfigs[1]] }
     ];
     const request = store.dispatch(deleteSsoConfig({ id: '1' }));
     expect(request).resolves.toBeTruthy();
