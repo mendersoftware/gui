@@ -28,7 +28,7 @@ exports[`DeviceNameInput Component renders correctly 1`] = `
   cursor: default;
 }
 
-.emotion-0:after {
+.emotion-0::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -51,12 +51,12 @@ exports[`DeviceNameInput Component renders correctly 1`] = `
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-0.Mui-error:before,
-.emotion-0.Mui-error:after {
+.emotion-0.Mui-error::before,
+.emotion-0.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-0:before {
+.emotion-0::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -378,7 +378,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-1:focus::-ms-input-p
           viewBox="0 0 24 24"
         >
           <path
-            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"
           />
         </svg>
       </span>

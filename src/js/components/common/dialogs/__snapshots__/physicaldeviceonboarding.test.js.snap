@@ -229,7 +229,7 @@ label+.emotion-3 {
   margin-top: 16px;
 }
 
-.emotion-3:after {
+.emotion-3::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -252,12 +252,12 @@ label+.emotion-3 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-3.Mui-error:before,
-.emotion-3.Mui-error:after {
+.emotion-3.Mui-error::before,
+.emotion-3.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-3:before {
+.emotion-3::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -626,7 +626,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         viewBox="0 0 24 24"
       >
         <path
-          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
         />
       </svg>
     </div>
@@ -882,7 +882,7 @@ label+.emotion-3 {
   margin-top: 16px;
 }
 
-.emotion-3:after {
+.emotion-3::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -905,12 +905,12 @@ label+.emotion-3 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-3.Mui-error:before,
-.emotion-3.Mui-error:after {
+.emotion-3.Mui-error::before,
+.emotion-3.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-3:before {
+.emotion-3::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -1319,7 +1319,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         viewBox="0 0 24 24"
       >
         <path
-          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
         />
       </svg>
     </div>
@@ -1338,7 +1338,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
           viewBox="0 0 24 24"
         >
           <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 17h-2v-2h2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25"
           />
         </svg>
         <div
@@ -1399,7 +1399,7 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders Externa
       viewBox="0 0 24 24"
     >
       <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
       />
     </svg>
   </div>
@@ -1577,7 +1577,7 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders Install
           viewBox="0 0 24 24"
         >
           <path
-            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4 6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12zm-1 4 6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2zm-1 7h5.5L14 6.5z"
           />
         </svg>
       </span>

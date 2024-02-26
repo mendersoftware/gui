@@ -57,7 +57,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
         viewBox="0 0 24 24"
       >
         <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-2h2zm0-4h-2V7h2z"
         />
       </svg>
       <div
@@ -98,7 +98,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
         viewBox="0 0 24 24"
       >
         <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-2h2zm0-4h-2V7h2z"
         />
       </svg>
       <div
@@ -197,7 +197,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
+                d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6z"
               />
             </svg>
             <span
@@ -218,7 +218,7 @@ exports[`DeviceMonitoring Component renders correctly 1`] = `
                 viewBox="0 0 24 24"
               >
                 <path
-                  d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                  d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"
                 />
               </svg>
               <span
@@ -278,7 +278,7 @@ exports[`tiny components renders DeviceMonitorsMissingNote correctly 1`] = `
       viewBox="0 0 24 24"
     >
       <path
-        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
       />
     </svg>
     <p

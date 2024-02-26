@@ -384,7 +384,7 @@ label+.emotion-12 {
   margin-top: 16px;
 }
 
-.emotion-12:after {
+.emotion-12::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -407,12 +407,12 @@ label+.emotion-12 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-12.Mui-error:before,
-.emotion-12.Mui-error:after {
+.emotion-12.Mui-error::before,
+.emotion-12.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-12:before {
+.emotion-12::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -584,7 +584,7 @@ label+.emotion-16 {
   margin-top: 16px;
 }
 
-.emotion-16:after {
+.emotion-16::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -607,12 +607,12 @@ label+.emotion-16 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-16.Mui-error:before,
-.emotion-16.Mui-error:after {
+.emotion-16.Mui-error::before,
+.emotion-16.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-16:before {
+.emotion-16::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -848,7 +848,7 @@ label+.emotion-23 {
   margin-top: 16px;
 }
 
-.emotion-23:after {
+.emotion-23::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -871,12 +871,12 @@ label+.emotion-23 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-23.Mui-error:before,
-.emotion-23.Mui-error:after {
+.emotion-23.Mui-error::before,
+.emotion-23.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-23:before {
+.emotion-23::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -1463,7 +1463,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
           viewBox="0 0 24 24"
         >
           <path
-            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
           />
         </svg>
       </div>
@@ -1524,7 +1524,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
           viewBox="0 0 24 24"
         >
           <path
-            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
           />
         </svg>
       </div>
@@ -1585,7 +1585,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
           viewBox="0 0 24 24"
         >
           <path
-            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
           />
         </svg>
       </div>

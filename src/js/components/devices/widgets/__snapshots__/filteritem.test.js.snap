@@ -229,7 +229,7 @@ label+.emotion-3 {
   margin-top: 16px;
 }
 
-.emotion-3:after {
+.emotion-3::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -252,12 +252,12 @@ label+.emotion-3 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-3.Mui-error:before,
-.emotion-3.Mui-error:after {
+.emotion-3.Mui-error::before,
+.emotion-3.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-3:before {
+.emotion-3::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -545,7 +545,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   cursor: default;
 }
 
-.emotion-9:after {
+.emotion-9::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -568,12 +568,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-9.Mui-error:before,
-.emotion-9.Mui-error:after {
+.emotion-9.Mui-error::before,
+.emotion-9.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-9:before {
+.emotion-9::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -845,7 +845,7 @@ label+.emotion-15 {
   margin-top: 16px;
 }
 
-.emotion-15:after {
+.emotion-15::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -868,12 +868,12 @@ label+.emotion-15 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-15.Mui-error:before,
-.emotion-15.Mui-error:after {
+.emotion-15.Mui-error::before,
+.emotion-15.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-15:before {
+.emotion-15::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
