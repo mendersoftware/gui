@@ -1,8 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Deployments Component renders correctly 1`] = `<DocumentFragment />`;
-
-exports[`Deployments Component renders correctly 2`] = `
+exports[`Deployments Component renders correctly 1`] = `
 <DocumentFragment>
   .emotion-0 {
   overflow: hidden;
