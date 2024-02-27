@@ -19,7 +19,7 @@
   },
   "homepage": "https://mender.io",
   "devDependencies": {
-    "@bgotink/playwright-coverage": "^0.2.1",
+    "@bgotink/playwright-coverage": "^0.2.2",
     "@nuintun/qrcode": "^3.4.0",
     "@playwright/test": "1.39.0",
     "axios": "^1.6.7",
