@@ -90,7 +90,7 @@ label+.emotion-2 {
   margin-top: 16px;
 }
 
-.emotion-2:after {
+.emotion-2::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -113,12 +113,12 @@ label+.emotion-2 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-2.Mui-error:before,
-.emotion-2.Mui-error:after {
+.emotion-2.Mui-error::before,
+.emotion-2.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-2:before {
+.emotion-2::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;

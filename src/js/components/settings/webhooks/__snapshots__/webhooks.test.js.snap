@@ -259,7 +259,7 @@ exports[`Webhooks Component static components renders WebhookActivity correctly 
   padding: 0;
 }
 
-.emotion-1:before {
+.emotion-1::before {
   position: absolute;
   left: 0;
   top: -1px;
@@ -272,11 +272,11 @@ exports[`Webhooks Component static components renders WebhookActivity correctly 
   transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-1:first-of-type:before {
+.emotion-1:first-of-type::before {
   display: none;
 }
 
-.emotion-1.Mui-expanded:before {
+.emotion-1.Mui-expanded::before {
   opacity: 0;
 }
 
@@ -288,7 +288,7 @@ exports[`Webhooks Component static components renders WebhookActivity correctly 
   margin-bottom: 0;
 }
 
-.emotion-1.Mui-expanded+.emotion-1.Mui-expanded:before {
+.emotion-1.Mui-expanded+.emotion-1.Mui-expanded::before {
   display: none;
 }
 
@@ -527,7 +527,7 @@ exports[`Webhooks Component static components renders WebhookActivity correctly 
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2"
                   />
                 </svg>
                 <div
@@ -610,7 +610,7 @@ exports[`Webhooks Component static components renders WebhookActivity correctly 
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"
+                    d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2"
                   />
                 </svg>
                 <div
@@ -980,7 +980,7 @@ label+.emotion-11 {
   margin-top: 16px;
 }
 
-.emotion-11:after {
+.emotion-11::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -1003,12 +1003,12 @@ label+.emotion-11 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-11.Mui-error:before,
-.emotion-11.Mui-error:after {
+.emotion-11.Mui-error::before,
+.emotion-11.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-11:before {
+.emotion-11::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -1180,7 +1180,7 @@ label+.emotion-15 {
   margin-top: 16px;
 }
 
-.emotion-15:after {
+.emotion-15::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -1203,12 +1203,12 @@ label+.emotion-15 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-15.Mui-error:before,
-.emotion-15.Mui-error:after {
+.emotion-15.Mui-error::before,
+.emotion-15.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-15:before {
+.emotion-15::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -1501,7 +1501,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                 viewBox="0 0 24 24"
               >
                 <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 17h-2v-2h2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25"
                 />
               </svg>
               <div
@@ -2140,7 +2140,7 @@ label+.emotion-19 {
   margin-top: 16px;
 }
 
-.emotion-19:after {
+.emotion-19::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -2163,12 +2163,12 @@ label+.emotion-19 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-19.Mui-error:before,
-.emotion-19.Mui-error:after {
+.emotion-19.Mui-error::before,
+.emotion-19.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-19:before {
+.emotion-19::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -2340,7 +2340,7 @@ label+.emotion-23 {
   margin-top: 16px;
 }
 
-.emotion-23:after {
+.emotion-23::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -2363,12 +2363,12 @@ label+.emotion-23 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-23.Mui-error:before,
-.emotion-23.Mui-error:after {
+.emotion-23.Mui-error::before,
+.emotion-23.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-23:before {
+.emotion-23::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;

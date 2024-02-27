@@ -92,7 +92,7 @@ label+.emotion-2 {
   margin-top: 16px;
 }
 
-.emotion-2:after {
+.emotion-2::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -115,12 +115,12 @@ label+.emotion-2 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-2.Mui-error:before,
-.emotion-2.Mui-error:after {
+.emotion-2.Mui-error::before,
+.emotion-2.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-2:before {
+.emotion-2::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -683,7 +683,7 @@ label+.emotion-16 {
   margin-top: 16px;
 }
 
-.emotion-16:after {
+.emotion-16::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -706,12 +706,12 @@ label+.emotion-16 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-16.Mui-error:before,
-.emotion-16.Mui-error:after {
+.emotion-16.Mui-error::before,
+.emotion-16.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-16:before {
+.emotion-16::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -947,7 +947,7 @@ label+.emotion-16 {
                 viewBox="0 0 24 24"
               >
                 <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 17h-2v-2h2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25"
                 />
               </svg>
               <div
@@ -993,7 +993,7 @@ label+.emotion-16 {
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
+                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm2 16H8v-2h8zm0-4H8v-2h8zm-3-5V3.5L18.5 9z"
                   />
                 </svg>
                 <div

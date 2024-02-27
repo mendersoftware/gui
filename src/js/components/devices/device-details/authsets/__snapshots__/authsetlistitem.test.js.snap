@@ -16,7 +16,7 @@ exports[`AuthsetListItem Component renders correctly 1`] = `
   padding: 0;
 }
 
-.emotion-0:before {
+.emotion-0::before {
   position: absolute;
   left: 0;
   top: -1px;
@@ -29,11 +29,11 @@ exports[`AuthsetListItem Component renders correctly 1`] = `
   transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-0:first-of-type:before {
+.emotion-0:first-of-type::before {
   display: none;
 }
 
-.emotion-0.Mui-expanded:before {
+.emotion-0.Mui-expanded::before {
   opacity: 0;
 }
 
@@ -45,7 +45,7 @@ exports[`AuthsetListItem Component renders correctly 1`] = `
   margin-bottom: 0;
 }
 
-.emotion-0.Mui-expanded+.emotion-0.Mui-expanded:before {
+.emotion-0.Mui-expanded+.emotion-0.Mui-expanded::before {
   display: none;
 }
 
@@ -220,7 +220,7 @@ exports[`AuthsetListItem Component renders correctly 1`] = `
   justify-content: flex-end;
 }
 
-.emotion-7>:not(:first-of-type) {
+.emotion-7>:not(style)~:not(style) {
   margin-left: 8px;
 }
 

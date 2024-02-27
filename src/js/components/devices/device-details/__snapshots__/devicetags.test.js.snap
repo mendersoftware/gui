@@ -48,7 +48,7 @@ label+.emotion-1 {
   margin-top: 16px;
 }
 
-.emotion-1:after {
+.emotion-1::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -71,12 +71,12 @@ label+.emotion-1 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-1.Mui-error:before,
-.emotion-1.Mui-error:after {
+.emotion-1.Mui-error::before,
+.emotion-1.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-1:before {
+.emotion-1::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -634,7 +634,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-2:focus::-ms-input-p
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
               />
             </svg>
           </button>
