@@ -22,13 +22,13 @@ import {
   RECEIVE_AUDIT_LOGS,
   RECEIVE_CURRENT_CARD,
   RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-  RECEIVE_SAML_CONFIGS,
   RECEIVE_SETUP_INTENT,
+  RECEIVE_SSO_CONFIGS,
   RECEIVE_WEBHOOK_EVENTS,
   SET_AUDITLOG_STATE,
   SET_ORGANIZATION
 } from '../constants/organizationConstants';
-import { deepCompare } from '../helpers';
+import { deepCompare, getSsoByContentType } from '../helpers';
 import { getCurrentSession, getTenantCapabilities } from '../selectors';
 import { commonErrorFallback, commonErrorHandler, setFirstLoginAfterSignup, setSnackbar } from './appActions';
 import { deviceAuthV2, iotManagerBaseURL } from './deviceActions';
@@ -37,7 +37,7 @@ const cookies = new Cookies();
 export const auditLogsApiUrl = `${apiUrl.v1}/auditlogs`;
 export const tenantadmApiUrlv1 = `${apiUrl.v1}/tenantadm`;
 export const tenantadmApiUrlv2 = `${apiUrl.v2}/tenantadm`;
-export const samlIdpApiUrlv1 = `${apiUrl.v1}/useradm/sso/idp/metadata`;
+export const ssoIdpApiUrlv1 = `${apiUrl.v1}/useradm/sso/idp/metadata`;
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 
@@ -279,50 +279,57 @@ export const getWebhookEvents =
       });
   };
 
-const samlConfigActions = {
+const ssoConfigActions = {
   create: { success: 'stored', error: 'storing' },
   edit: { success: 'updated', error: 'updating' },
   read: { success: '', error: 'retrieving' },
   remove: { success: 'removed', error: 'removing' }
 };
 
-const samlConfigActionErrorHandler = (err, type) => dispatch =>
-  commonErrorHandler(err, `There was an error ${samlConfigActions[type].error} the SAML configuration.`, dispatch, commonErrorFallback);
+const ssoConfigActionErrorHandler = (err, type) => dispatch =>
+  commonErrorHandler(err, `There was an error ${ssoConfigActions[type].error} the SSO configuration.`, dispatch, commonErrorFallback);
 
-const samlConfigActionSuccessHandler = type => dispatch => dispatch(setSnackbar(`The SAML configuration was ${samlConfigActions[type].success} successfully`));
+const ssoConfigActionSuccessHandler = type => dispatch => dispatch(setSnackbar(`The SSO configuration was ${ssoConfigActions[type].success} successfully`));
 
-export const storeSamlConfig = config => dispatch =>
-  Api.post(samlIdpApiUrlv1, config, { headers: { 'Content-Type': 'application/samlmetadata+xml', Accept: 'application/json' } })
-    .catch(err => dispatch(samlConfigActionErrorHandler(err, 'create')))
-    .then(() => Promise.all([dispatch(samlConfigActionSuccessHandler('create')), dispatch(getSamlConfigs())]));
-
-export const changeSamlConfig =
-  ({ id, config }) =>
+export const storeSsoConfig =
+  ({ config, contentType }) =>
   dispatch =>
-    Api.put(`${samlIdpApiUrlv1}/${id}`, config, { headers: { 'Content-Type': 'application/samlmetadata+xml', Accept: 'application/json' } })
-      .catch(err => dispatch(samlConfigActionErrorHandler(err, 'edit')))
-      .then(() => Promise.all([dispatch(samlConfigActionSuccessHandler('edit')), dispatch(getSamlConfigs())]));
+    Api.post(ssoIdpApiUrlv1, config, { headers: { 'Content-Type': contentType, Accept: 'application/json' } })
+      .catch(err => dispatch(ssoConfigActionErrorHandler(err, 'create')))
+      .then(() => Promise.all([dispatch(ssoConfigActionSuccessHandler('create')), dispatch(getSsoConfigs())]));
 
-export const deleteSamlConfig =
+export const changeSsoConfig =
+  ({ id, config, contentType }) =>
+  dispatch =>
+    Api.put(`${ssoIdpApiUrlv1}/${id}`, config, { headers: { 'Content-Type': contentType, Accept: 'application/json' } })
+      .catch(err => dispatch(ssoConfigActionErrorHandler(err, 'edit')))
+      .then(() => Promise.all([dispatch(ssoConfigActionSuccessHandler('edit')), dispatch(getSsoConfigs())]));
+
+export const deleteSsoConfig =
   ({ id }) =>
   (dispatch, getState) =>
-    Api.delete(`${samlIdpApiUrlv1}/${id}`)
-      .catch(err => dispatch(samlConfigActionErrorHandler(err, 'remove')))
+    Api.delete(`${ssoIdpApiUrlv1}/${id}`)
+      .catch(err => dispatch(ssoConfigActionErrorHandler(err, 'remove')))
       .then(() => {
-        const configs = getState().organization.samlConfigs.filter(item => id !== item.id);
-        return Promise.all([dispatch(samlConfigActionSuccessHandler('remove')), dispatch({ type: RECEIVE_SAML_CONFIGS, value: configs })]);
+        const configs = getState().organization.ssoConfigs.filter(item => id !== item.id);
+        return Promise.all([dispatch(ssoConfigActionSuccessHandler('remove')), dispatch({ type: RECEIVE_SSO_CONFIGS, value: configs })]);
       });
 
-const getSamlConfigById = config => dispatch =>
-  Api.get(`${samlIdpApiUrlv1}/${config.id}`)
-    .catch(err => dispatch(samlConfigActionErrorHandler(err, 'read')))
-    .then(({ data }) => Promise.resolve({ ...config, config: data }));
+const getSsoConfigById = config => dispatch =>
+  Api.get(`${ssoIdpApiUrlv1}/${config.id}`)
+    .catch(err => dispatch(ssoConfigActionErrorHandler(err, 'read')))
+    .then(({ data, headers }) => {
+      const sso = getSsoByContentType(headers['content-type']);
+      return sso ? Promise.resolve({ ...config, config: data, type: sso.id }) : Promise.reject('Not supported SSO config content type.');
+    });
 
-export const getSamlConfigs = () => dispatch =>
-  Api.get(samlIdpApiUrlv1)
-    .catch(err => commonErrorHandler(err, 'There was an error retrieving SAML configurations', dispatch, commonErrorFallback))
+export const getSsoConfigs = () => dispatch =>
+  Api.get(ssoIdpApiUrlv1)
+    .catch(err => commonErrorHandler(err, 'There was an error retrieving SSO configurations', dispatch, commonErrorFallback))
     .then(({ data }) =>
-      Promise.all(data.map(config => Promise.resolve(dispatch(getSamlConfigById(config))))).then(configs => {
-        return dispatch({ type: RECEIVE_SAML_CONFIGS, value: configs });
-      })
+      Promise.all(data.map(config => Promise.resolve(dispatch(getSsoConfigById(config)))))
+        .then(configs => {
+          return dispatch({ type: RECEIVE_SSO_CONFIGS, value: configs });
+        })
+        .catch(err => commonErrorHandler(err, err, dispatch, ''))
     );

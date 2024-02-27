@@ -427,7 +427,8 @@ exports[`SSOEditor Component renders correctly 1`] = `
         class="flexbox margin-bottom-small space-between"
       >
         <h3>
-          SAML metadata
+          SAML
+           metadata
         </h3>
         <div
           class="flexbox center-aligned"

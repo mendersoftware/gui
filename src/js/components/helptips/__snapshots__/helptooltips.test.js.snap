@@ -413,11 +413,11 @@ exports[`Helptooltips Components renders ReleaseName correctly 1`] = `If a Relea
 
 exports[`Helptooltips Components renders ResetHistory correctly 1`] = `Greyed out items will not be considered during deployment roll out`;
 
-exports[`Helptooltips Components renders SamlMetadata correctly 1`] = `Submit the metadata document from your Identity Provider`;
-
 exports[`Helptooltips Components renders ScheduleDeployment correctly 1`] = `This time is relative to the server only – each device's time zone will not be taken into account. Devices across different time zones will receive the update at the same time.`;
 
 exports[`Helptooltips Components renders SingleFileUpload correctly 1`] = `This will generate a single file application update Artifact, which requires some additional metadata to be entered.`;
+
+exports[`Helptooltips Components renders SsoMetadata correctly 1`] = `Submit the metadata document from your Identity Provider`;
 
 exports[`Helptooltips Components renders TenantToken correctly 1`] = `
 NodeList [
