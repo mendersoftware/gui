@@ -20,7 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import { prettyDOM } from '@testing-library/dom';
-import { act, screen, render as testingLibRender } from '@testing-library/react';
+import { act, screen, render as testingLibRender, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { light as lightTheme } from '../../../../src/js/themes/Mender';
@@ -106,8 +106,9 @@ describe('Auditlogs Component', () => {
         </ThemeProvider>
       </LocalizationProvider>
     );
-    testingLibRender(ui);
+    const { rerender } = testingLibRender(ui);
     await jest.advanceTimersByTimeAsync(TIMEOUTS.oneSecond);
+    await waitFor(() => rerender(ui));
     await user.click(screen.getByText(/clear filter/i));
   });
 });

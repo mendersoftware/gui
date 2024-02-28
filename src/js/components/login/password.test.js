@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { undefineds } from '../../../../tests/mockData';
@@ -34,8 +34,12 @@ describe('Password Component', () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = <Password />;
     const { rerender } = render(ui);
-    await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
-    await user.click(screen.getByRole('button', { name: /Send password reset link/i }));
+    await act(async () => {
+      await user.type(screen.queryByLabelText(/your email/i), 'something@example.com');
+    });
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: /Send password reset link/i }));
+    });
     await waitFor(() => expect(startSpy).toHaveBeenCalledWith('something@example.com'));
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(/sending you an email/i)).toBeInTheDocument(), { timeout: 5000 });

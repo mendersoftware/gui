@@ -127,7 +127,12 @@ const offlineThreshold = { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00
 const appInitActions = [
   { type: RECEIVED_USER, user: defaultState.users.byId[userId] },
   { type: SET_CUSTOM_COLUMNS, value: [] },
-  { type: SUCCESSFULLY_LOGGED_IN, value: { token: undefined } },
+  {
+    type: SUCCESSFULLY_LOGGED_IN,
+    value: {
+      token: undefined
+    }
+  },
   { type: SET_ONBOARDING_COMPLETE, complete: false },
   { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
   { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
@@ -147,9 +152,25 @@ const appInitActions = [
   },
   { type: SET_ENVIRONMENT_DATA, value: { hostAddress: null, hostedAnnouncement: '', recaptchaSiteKey: '', stripeAPIKey: '', trackerCode: '' } },
   { type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
-  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
-  offlineThreshold,
+  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+  {
+    type: RECEIVE_FINISHED_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'finished',
+    total: Object.keys(defaultState.deployments.byId).length
+  },
+  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+  {
+    type: RECEIVE_INPROGRESS_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'inprogress',
+    total: Object.keys(defaultState.deployments.byId).length
+  },
+  {
+    type: SELECT_INPROGRESS_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'inprogress'
+  },
   {
     type: SET_FILTER_ATTRIBUTES,
     attributes: {
@@ -175,24 +196,79 @@ const appInitActions = [
       tagAttributes: []
     }
   },
-  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+  { type: SET_DEVICE_LIMIT, limit: 500 },
   {
-    type: RECEIVE_FINISHED_DEPLOYMENTS,
-    deploymentIds: Object.keys(defaultState.deployments.byId),
-    status: 'finished',
-    total: Object.keys(defaultState.deployments.byId).length
-  },
-  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
-  {
-    type: RECEIVE_INPROGRESS_DEPLOYMENTS,
-    deploymentIds: Object.keys(defaultState.deployments.byId),
-    status: 'inprogress',
-    total: Object.keys(defaultState.deployments.byId).length
+    type: RECEIVE_GROUPS,
+    groups: {
+      testGroup: defaultState.devices.groups.byId.testGroup,
+      testGroupDynamic: {
+        filters: [{ key: 'group', operator: '$eq', scope: 'system', value: 'things' }],
+        id: 'filter1'
+      }
+    }
   },
   {
-    type: SELECT_INPROGRESS_DEPLOYMENTS,
-    deploymentIds: Object.keys(defaultState.deployments.byId),
-    status: 'inprogress'
+    type: RECEIVE_DYNAMIC_GROUPS,
+    groups: {
+      testGroup: defaultState.devices.groups.byId.testGroup,
+      testGroupDynamic: {
+        deviceIds: [],
+        filters: [
+          { key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] },
+          { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
+          { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
+        ],
+        id: 'filter1',
+        total: 0
+      }
+    }
+  },
+  {
+    type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
+    value: [
+      { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
+      { id: 2, provider: EXTERNAL_PROVIDER['iot-core'].provider, something: 'new' }
+    ]
+  },
+  { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
+  {
+    type: SET_RELEASES_LIST_STATE,
+    value: {
+      ...defaultState.releases.releasesList,
+      releaseIds: [
+        'release-999',
+        'release-998',
+        'release-997',
+        'release-996',
+        'release-995',
+        'release-994',
+        'release-993',
+        'release-992',
+        'release-991',
+        'release-990',
+        'release-99',
+        'release-989',
+        'release-988',
+        'release-987',
+        'release-986',
+        'release-985',
+        'release-984',
+        'release-983',
+        'release-982',
+        'release-981'
+      ],
+      page: 1,
+      total: 5000
+    }
+  },
+  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
+  offlineThreshold,
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+  { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+  { type: RECEIVED_ROLES, value: receivedRoles },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }
   },
   {
     type: RECEIVE_DEVICES,
@@ -242,81 +318,19 @@ const appInitActions = [
   { type: RECEIVE_DEVICES, devicesById: {} },
   { type: SET_REJECTED_DEVICES, deviceIds: [], status: 'rejected', total: 0 },
   {
-    type: RECEIVE_DYNAMIC_GROUPS,
-    groups: {
-      testGroup: defaultState.devices.groups.byId.testGroup,
-      testGroupDynamic: {
-        deviceIds: [],
-        filters: [
-          { key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] },
-          { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
-          { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
-        ],
-        id: 'filter1',
-        total: 0
-      }
-    }
-  },
-  {
-    type: RECEIVE_GROUPS,
-    groups: {
-      testGroup: defaultState.devices.groups.byId.testGroup,
-      testGroupDynamic: {
-        filters: [{ key: 'group', operator: '$eq', scope: 'system', value: 'things' }],
-        id: 'filter1'
-      }
-    }
-  },
-  {
-    type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-    value: [
-      { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
-      { id: 2, provider: 'aws', something: 'new' }
-    ]
-  },
-  { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
-  {
-    type: SET_RELEASES_LIST_STATE,
-    value: {
-      ...defaultState.releases.releasesList,
-      releaseIds: [
-        'release-999',
-        'release-998',
-        'release-997',
-        'release-996',
-        'release-995',
-        'release-994',
-        'release-993',
-        'release-992',
-        'release-991',
-        'release-990',
-        'release-99',
-        'release-989',
-        'release-988',
-        'release-987',
-        'release-986',
-        'release-985',
-        'release-984',
-        'release-983',
-        'release-982',
-        'release-981'
-      ],
-      page: 1,
-      total: 5000
-    }
-  },
-  { type: SET_DEVICE_LIMIT, limit: 500 },
-  { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
-  { type: RECEIVED_ROLES, value: receivedRoles },
-  {
-    type: RECEIVE_DEVICES,
-    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isOffline: true, monitor: {}, tags: {} } }
-  },
-  {
     type: RECEIVE_DEVICES,
     devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
   },
-  { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: {
+      [expectedDevice.id]: {
+        ...receivedInventoryDevice,
+        attributes: defaultState.devices.byId.a1.attributes,
+        identity_data: defaultState.devices.byId.a1.identity_data
+      }
+    }
+  },
   {
     type: RECEIVE_DEVICES,
     devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }
@@ -342,6 +356,11 @@ const appInitActions = [
     }
   },
   { type: SET_TOOLTIPS_STATE, value: {} },
+  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
+  offlineThreshold,
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
   { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
   {
     type: SET_ACCEPTED_DEVICES,
@@ -349,11 +368,6 @@ const appInitActions = [
     status: DEVICE_STATES.accepted,
     total: defaultState.devices.byStatus.accepted.total
   },
-  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
-  offlineThreshold,
-  { type: SET_GLOBAL_SETTINGS, settings: { '2fa': 'enabled', previousFilters: [] } },
   {
     type: RECEIVE_DEVICES,
     devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isOffline: true, monitor: {}, tags: {} } }

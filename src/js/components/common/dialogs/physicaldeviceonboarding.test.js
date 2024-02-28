@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { act, waitFor } from "@testing-library/react";
+import { act, waitFor } from '@testing-library/react';
 
 import { token, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
