@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 
 import {
   deviceAuthV2,
@@ -95,9 +95,10 @@ const deviceAttributes = [
   { name: 'group', scope: 'system', count: 1 }
 ];
 
-const searchHandler = ({ body: { page, per_page, filters } }, res, ctx) => {
+const searchHandler = async ({ request }) => {
+  const { page, per_page, filters } = await request.json();
   if ([page, per_page, filters].some(item => !item)) {
-    return res(ctx.status(509));
+    return new HttpResponse(null, { status: 509 });
   }
   const filter = filters.find(
     filter => filter.scope === 'identity' && filter.attribute === 'status' && Object.values(DeviceConstants.DEVICE_STATES).includes(filter.value)
@@ -105,134 +106,134 @@ const searchHandler = ({ body: { page, per_page, filters } }, res, ctx) => {
   const status = filter?.value || '';
   if (!status || filters.length > 1) {
     if (filters.find(filter => filter.attribute === 'group' && filter.value.includes(Object.keys(defaultState.devices.groups.byId)[0]))) {
-      return res(ctx.set(headerNames.total, 2), ctx.json([inventoryDevice]));
+      return new HttpResponse(JSON.stringify([inventoryDevice]), { headers: { [headerNames.total]: 2 } });
     }
     if (filters.find(filter => filter.scope === 'monitor' && ['failed_last_update', 'alerts', 'auth_request'].includes(filter.attribute))) {
-      return res(ctx.set(headerNames.total, 4), ctx.json([inventoryDevice]));
+      return new HttpResponse(JSON.stringify([inventoryDevice]), { headers: { [headerNames.total]: 4 } });
     }
-    return res(ctx.set(headerNames.total, 0), ctx.json([]));
+    return new HttpResponse(JSON.stringify([]), { headers: { [headerNames.total]: 0 } });
   }
   let deviceList = Array.from({ length: defaultState.devices.byStatus[status].total }, (_, index) => ({
     ...inventoryDevice,
     attributes: [...inventoryDevice.attributes, { name: 'test-count', value: index, scope: 'system' }]
   }));
   deviceList = deviceList.slice((page - 1) * per_page, page * per_page);
-  return res(ctx.set(headerNames.total, defaultState.devices.byStatus[status].total), ctx.json(deviceList));
+  return new HttpResponse(JSON.stringify(deviceList), { headers: { [headerNames.total]: defaultState.devices.byStatus[status].total } });
 };
 
 export const deviceHandlers = [
-  rest.delete(`${deviceAuthV2}/devices/:deviceId/auth/:authId`, ({ params: { authId, deviceId } }, res, ctx) => {
+  http.delete(`${deviceAuthV2}/devices/:deviceId/auth/:authId`, ({ params: { authId, deviceId } }) => {
     if (defaultState.devices.byId[deviceId].auth_sets.find(authSet => authSet.id === authId)) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(501));
+    return new HttpResponse(null, { status: 501 });
   }),
-  rest.delete(`${deviceAuthV2}/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+  http.delete(`${deviceAuthV2}/devices/:deviceId`, ({ params: { deviceId } }) => {
     if (defaultState.devices.byId[deviceId]) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(502));
+    return new HttpResponse(null, { status: 502 });
   }),
-  rest.delete(`${inventoryApiUrl}/groups/:group`, ({ params: { group } }, res, ctx) => {
+  http.delete(`${inventoryApiUrl}/groups/:group`, ({ params: { group } }) => {
     if (defaultState.devices.groups.byId[group]) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(515));
+    return new HttpResponse(null, { status: 515 });
   }),
-  rest.delete(`${inventoryApiUrl}/groups/:group/devices`, ({ params: { group }, body: deviceIds }, res, ctx) => {
+  http.delete(`${inventoryApiUrl}/groups/:group/devices`, async ({ params: { group }, request }) => {
+    const deviceIds = await request.json();
     if (defaultState.devices.groups.byId[group] && deviceIds.every(id => !!defaultState.devices.byId[id])) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(503));
+    return new HttpResponse(null, { status: 503 });
   }),
-  rest.delete(`${inventoryApiUrlV2}/filters/:filterId`, ({ params: { filterId } }, res, ctx) => {
+  http.delete(`${inventoryApiUrlV2}/filters/:filterId`, ({ params: { filterId } }) => {
     if (Object.values(defaultState.devices.groups.byId).find(group => group.id === filterId)) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(504));
+    return new HttpResponse(null, { status: 504 });
   }),
-  rest.get(`${deviceAuthV2}/devices`, (req, res, ctx) => {
-    const deviceIds = req.url.searchParams.getAll('id');
+  http.get(`${deviceAuthV2}/devices`, ({ request }) => {
+    const { searchParams } = new URL(request.url);
+    const deviceIds = searchParams.getAll('id');
     if (deviceIds.every(id => !!defaultState.devices.byId[id])) {
-      return res(ctx.json(deviceIds.map(id => ({ ...deviceAuthDevice, id }))));
+      return HttpResponse.json(deviceIds.map(id => ({ ...deviceAuthDevice, id })));
     }
-    return res(ctx.status(505));
+    return new HttpResponse(null, { status: 505 });
   }),
-  rest.get(`${deviceAuthV2}/limits/max_devices`, (req, res, ctx) => res(ctx.json({ limit: defaultState.devices.limit }))),
-  rest.get(`${inventoryApiUrl}/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+  http.get(`${deviceAuthV2}/limits/max_devices`, () => HttpResponse.json({ limit: defaultState.devices.limit })),
+  http.get(`${inventoryApiUrl}/devices/:deviceId`, ({ params: { deviceId } }) => {
     if (defaultState.devices.byId[deviceId]) {
-      return res(ctx.json(inventoryDevice));
+      return HttpResponse.json(inventoryDevice);
     }
-    return res(ctx.status(506));
+    return new HttpResponse(null, { status: 506 });
   }),
-  rest.put(`${inventoryApiUrl}/devices/:deviceId/tags`, ({ params: { deviceId }, body: tags }, res, ctx) => {
+  http.put(`${inventoryApiUrl}/devices/:deviceId/tags`, async ({ params: { deviceId }, request }) => {
+    const tags = await request.json();
     if (!defaultState.devices.byId[deviceId] && !Array.isArray(tags) && !tags.every(item => item.name && item.value)) {
-      return res(ctx.status(506));
+      return new HttpResponse(null, { status: 506 });
     }
-    return res(ctx.json(tags));
+    return HttpResponse.json(tags);
   }),
-  rest.get(`${inventoryApiUrl}/groups`, (req, res, ctx) => {
+  http.get(`${inventoryApiUrl}/groups`, () => {
     const groups = Object.entries(defaultState.devices.groups.byId).reduce((accu, [groupName, group]) => {
       if (!group.id) {
         accu.push(groupName);
       }
       return accu;
     }, []);
-    return res(ctx.json(groups));
+    return HttpResponse.json(groups);
   }),
-  rest.get(`${inventoryApiUrlV2}/filters/attributes`, (req, res, ctx) => res(ctx.json(deviceAttributes))),
-  rest.get(`${reportingApiUrl}/devices/attributes`, (req, res, ctx) =>
-    res(ctx.json({ attributes: deviceAttributes, count: deviceAttributes.length, limit: 100 }))
+  http.get(`${inventoryApiUrlV2}/filters/attributes`, () => HttpResponse.json(deviceAttributes)),
+  http.get(`${reportingApiUrl}/devices/attributes`, () => HttpResponse.json({ attributes: deviceAttributes, count: deviceAttributes.length, limit: 100 })),
+  http.get(`${reportingApiUrl}/devices/search/attributes`, () => HttpResponse.json(deviceAttributes)),
+  http.post(`${reportingApiUrl}/devices/aggregate`, () =>
+    HttpResponse.json([
+      {
+        name: '*',
+        items: [
+          { key: 'test', count: 6 },
+          { key: 'original', count: 1 }
+        ],
+        other_count: 42
+      }
+    ])
   ),
-  rest.get(`${reportingApiUrl}/devices/search/attributes`, (req, res, ctx) => res(ctx.json(deviceAttributes))),
-  rest.post(`${reportingApiUrl}/devices/aggregate`, (req, res, ctx) =>
-    res(
-      ctx.json([
-        {
-          name: '*',
-          items: [
-            { key: 'test', count: 6 },
-            { key: 'original', count: 1 }
-          ],
-          other_count: 42
-        }
-      ])
-    )
+  http.get(`${inventoryApiUrlV2}/filters`, () =>
+    HttpResponse.json([
+      {
+        id: 'filter1',
+        name: 'testGroupDynamic',
+        terms: [
+          { scope: 'identity', attribute: 'id', type: '$in', value: ['a1'] },
+          { scope: 'identity', attribute: 'mac', type: '$exists', value: false },
+          { scope: 'identity', attribute: 'kernel', type: '$exists', value: true }
+        ]
+      }
+    ])
   ),
-  rest.get(`${inventoryApiUrlV2}/filters`, (req, res, ctx) =>
-    res(
-      ctx.json([
-        {
-          id: 'filter1',
-          name: 'testGroupDynamic',
-          terms: [
-            { scope: 'identity', attribute: 'id', type: '$in', value: ['a1'] },
-            { scope: 'identity', attribute: 'mac', type: '$exists', value: false },
-            { scope: 'identity', attribute: 'kernel', type: '$exists', value: true }
-          ]
-        }
-      ])
-    )
-  ),
-  rest.patch(`${inventoryApiUrl}/groups/:group/devices`, ({ params: { group }, body: deviceIds }, res, ctx) => {
+  http.patch(`${inventoryApiUrl}/groups/:group/devices`, async ({ params: { group }, request }) => {
+    const deviceIds = await request.json();
     if (!!group && deviceIds.every(id => !!defaultState.devices.byId[id])) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(508));
+    return new HttpResponse(null, { status: 508 });
   }),
-  rest.post(`${deviceAuthV2}/devices`, ({ body: authset }, res, ctx) => {
+  http.post(`${deviceAuthV2}/devices`, async ({ request }) => {
+    const authset = await request.json();
     if (
       Object.values(defaultState.devices.byId).some(device =>
         device.auth_sets.some(deviceAuthSet => deviceAuthSet.pubkey == authset.pubkey || deviceAuthSet.identity_data == authset.identity_data)
       )
     ) {
-      return res(ctx.status(409));
+      return new HttpResponse(null, { status: 409 });
     }
-    return res(ctx.status(200));
+    return new HttpResponse(null, { status: 200 });
   }),
-  rest.post(`${inventoryApiUrlV2}/filters/search`, searchHandler),
-  rest.post(`${reportingApiUrl}/filters/search`, searchHandler),
-  rest.post(`${inventoryApiUrlV2}/filters`, ({ body: { name, terms } }, res, ctx) => {
+  http.post(`${inventoryApiUrlV2}/filters/search`, searchHandler),
+  http.post(`${reportingApiUrl}/filters/search`, searchHandler),
+  http.post(`${inventoryApiUrlV2}/filters`, async ({ request }) => {
+    const { name, terms } = await request.json();
     if (
       [name, terms].some(item => !item) ||
       defaultState.devices.groups[name] ||
@@ -241,79 +242,70 @@ export const deviceHandlers = [
           DeviceConstants.DEVICE_FILTERING_OPTIONS[term.type] && ['identity', 'inventory', 'system'].includes(term.scope) && !!term.value && !!term.attribute
       )
     ) {
-      return res(ctx.status(510));
+      return new HttpResponse(null, { status: 510 });
     }
-    return res(ctx.set('location', 'find/me/here/createdFilterId'), ctx.json({}));
+    return new HttpResponse(JSON.stringify({}), { headers: { location: 'find/me/here/createdFilterId' } });
   }),
-  rest.put(`${deviceAuthV2}/devices/:deviceId/auth/:authId/status`, ({ params: { authId, deviceId }, body: { status } }, res, ctx) => {
+  http.put(`${deviceAuthV2}/devices/:deviceId/auth/:authId/status`, async ({ params: { authId, deviceId }, request }) => {
+    const { status } = await request.json();
     if (defaultState.devices.byId[deviceId].auth_sets.find(authSet => authSet.id === authId) && DeviceConstants.DEVICE_STATES[status]) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(511));
+    return new HttpResponse(null, { status: 511 });
   }),
-  rest.get(`${deviceConfig}/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+  http.get(`${deviceConfig}/:deviceId`, ({ params: { deviceId } }) => {
     if (deviceId === 'testId') {
-      return res(ctx.status(404), ctx.json({ error: { status_code: 404 } }));
+      return new HttpResponse(JSON.stringify({ error: { status_code: 404 } }), { status: 404 });
     }
     if (defaultState.devices.byId[deviceId]) {
-      return res(
-        ctx.json({
-          configured: { test: true, something: 'else', aNumber: 42 },
-          deployment_id: 'config1',
-          reported: { test: true, something: 'else', aNumber: 42 },
-          updated_ts: defaultState.devices.byId.a1.updated_ts,
-          reported_ts: '2019-01-01T09:25:01.000Z'
-        })
-      );
+      return HttpResponse.json({
+        configured: { test: true, something: 'else', aNumber: 42 },
+        deployment_id: 'config1',
+        reported: { test: true, something: 'else', aNumber: 42 },
+        updated_ts: defaultState.devices.byId.a1.updated_ts,
+        reported_ts: '2019-01-01T09:25:01.000Z'
+      });
     }
-    return res(ctx.status(512));
+    return new HttpResponse(null, { status: 512 });
   }),
-  rest.put(`${deviceConfig}/:deviceId`, ({ params: { deviceId }, body }, res, ctx) => {
-    if (JSON.stringify(body).includes('evilValue')) {
-      return res(ctx.status(418));
+  http.put(`${deviceConfig}/:deviceId`, async ({ params: { deviceId }, request }) => {
+    const body = await request.text();
+    if (body.includes('evilValue')) {
+      return new HttpResponse(null, { status: 418 });
     }
+    return new HttpResponse(null, { status: defaultState.devices.byId[deviceId] ? 201 : 513 });
+  }),
+  http.post(`${deviceConfig}/:deviceId/deploy`, ({ params: { deviceId } }) => {
     if (defaultState.devices.byId[deviceId]) {
-      return res(ctx.status(201));
+      return HttpResponse.json({ deployment_id: 'config1' });
     }
-    return res(ctx.status(513));
+    return new HttpResponse(null, { status: 514 });
   }),
-  rest.post(`${deviceConfig}/:deviceId/deploy`, ({ params: { deviceId } }, res, ctx) => {
-    if (defaultState.devices.byId[deviceId]) {
-      return res(ctx.status(200), ctx.json({ deployment_id: 'config1' }));
-    }
-    return res(ctx.status(514));
-  }),
-  rest.get(`${deviceConnect}/devices/:deviceId`, ({ params: { deviceId } }, res, ctx) => {
+  http.get(`${deviceConnect}/devices/:deviceId`, ({ params: { deviceId } }) => {
     if (deviceId === 'testId') {
-      return res(ctx.status(404), ctx.json({ error: { status_code: 404 } }));
+      return new HttpResponse(JSON.stringify({ error: { status_code: 404 } }), { status: 404 });
     }
     if (defaultState.devices.byId[deviceId]) {
-      return res(
-        ctx.json({
-          status: 'connected',
-          updated_ts: defaultState.devices.byId[deviceId].updated_ts
-        })
-      );
+      return HttpResponse.json({ status: 'connected', updated_ts: defaultState.devices.byId[deviceId].updated_ts });
     }
-    return res(ctx.status(512));
+    return new HttpResponse(null, { status: 512 });
   }),
-  rest.get(`${iotManagerBaseURL}/devices/:deviceId/state`, ({ params: { deviceId } }, res, ctx) => {
+  http.get(`${iotManagerBaseURL}/devices/:deviceId/state`, ({ params: { deviceId } }) => {
     if (defaultState.devices.byId[deviceId]) {
-      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+      return HttpResponse.json({ deployment_id: defaultState.deployments.byId.d1.id });
     }
-    return res(ctx.status(515));
+    return new HttpResponse(null, { status: 515 });
   }),
-  rest.put(`${iotManagerBaseURL}/devices/:deviceId/state/:integrationId`, ({ params: { deviceId }, body }, res, ctx) => {
+  http.put(`${iotManagerBaseURL}/devices/:deviceId/state/:integrationId`, async ({ params: { deviceId }, request }) => {
+    const body = await request.json();
     if (defaultState.devices.byId[deviceId] && body) {
-      return res(ctx.status(200), ctx.json({ deployment_id: defaultState.deployments.byId.d1.id }));
+      return HttpResponse.json({ deployment_id: defaultState.deployments.byId.d1.id });
     }
-    return res(ctx.status(516));
+    return new HttpResponse(null, { status: 516 });
   }),
-  rest.put(`${deviceConnect}/devices/:deviceId/upload`, ({ params: { deviceId } }, res, ctx) => {
-    if (defaultState.devices.byId[deviceId]) {
-      return res(ctx.status(200));
-    }
-    return res(ctx.status(517));
-  }),
-  rest.get(`${deviceAuthV2}/reports/devices`, (req, res, ctx) => res(ctx.text('test,report')))
+  http.put(
+    `${deviceConnect}/devices/:deviceId/upload`,
+    ({ params: { deviceId } }) => new HttpResponse(null, { status: defaultState.devices.byId[deviceId] ? 200 : 517 })
+  ),
+  http.get(`${deviceAuthV2}/reports/devices`, () => HttpResponse.text('test,report'))
 ];

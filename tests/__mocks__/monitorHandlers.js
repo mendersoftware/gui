@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { rest } from 'msw';
+import { HttpResponse, http } from 'msw';
 
 import { monitorApiUrlv1 } from '../../src/js/actions/monitorActions';
 import { headerNames } from '../../src/js/api/general-api';
@@ -19,22 +19,19 @@ import { alertChannels } from '../../src/js/constants/monitorConstants';
 import { defaultState } from '../mockData';
 
 export const monitorHandlers = [
-  rest.get(`${monitorApiUrlv1}/devices/:id/alerts`, (req, res, ctx) => {
-    return res(ctx.set(headerNames.total, '1'), ctx.json([]));
-  }),
-  rest.get(`${monitorApiUrlv1}/devices/:id/alerts/latest`, (req, res, ctx) => {
-    return res(ctx.json([]));
-  }),
-  rest.get(`${monitorApiUrlv1}/devices/:id/config`, ({ params: { id } }, res, ctx) => {
+  http.get(`${monitorApiUrlv1}/devices/:id/alerts`, () => new HttpResponse(JSON.stringify([]), { headers: { [headerNames.total]: 1 } })),
+  http.get(`${monitorApiUrlv1}/devices/:id/alerts/latest`, () => HttpResponse.json([])),
+  http.get(`${monitorApiUrlv1}/devices/:id/config`, ({ params: { id } }) => {
     if (id === defaultState.devices.byId.a1.id) {
-      return res(ctx.json([{ something: 'here' }]));
+      return HttpResponse.json([{ something: 'here' }]);
     }
-    return res(ctx.json([]));
+    return HttpResponse.json([]);
   }),
-  rest.put(`${monitorApiUrlv1}/settings/global/channel/alerts/:channel/status`, ({ params: { channel }, body }, res, ctx) => {
+  http.put(`${monitorApiUrlv1}/settings/global/channel/alerts/:channel/status`, async ({ params: { channel }, request }) => {
+    const body = await request.json();
     if (Object.keys(alertChannels).includes(channel) && body.hasOwnProperty('enabled')) {
-      return res(ctx.status(200));
+      return new HttpResponse(null, { status: 200 });
     }
-    return res(ctx.status(590));
+    return new HttpResponse(null, { status: 590 });
   })
 ];

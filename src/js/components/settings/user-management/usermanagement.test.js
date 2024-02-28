@@ -117,7 +117,9 @@ describe('UserManagement Component', () => {
       await user.clear(passwordInput);
     });
     expect(submitButton).toBeEnabled();
-    await user.click(submitButton);
+    await act(async () => {
+      await user.click(submitButton);
+    });
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(createUserSpy).toHaveBeenCalled(), { timeout: 3000 });
   });

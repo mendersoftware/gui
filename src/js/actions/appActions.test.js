@@ -98,6 +98,196 @@ export const receivedInventoryDevice = {
 };
 const latestSaasReleaseTag = 'saas-v2023.05.02';
 
+export const commonAppInitActions = [
+  { type: SET_ONBOARDING_COMPLETE, complete: false },
+  { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
+  { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
+  {
+    type: SET_VERSION_INFORMATION,
+    docsVersion: '',
+    value: {
+      Deployments: '1.2.3',
+      Deviceauth: null,
+      GUI: undefined,
+      Integration: 'master',
+      Inventory: null,
+      'Mender-Artifact': undefined,
+      'Mender-Client': 'next',
+      'Meta-Mender': 'saas-123.34'
+    }
+  },
+  { type: SET_ENVIRONMENT_DATA, value: { hostAddress: null, hostedAnnouncement: '', recaptchaSiteKey: '', stripeAPIKey: '', trackerCode: '' } },
+  { type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
+
+  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+  {
+    type: RECEIVE_FINISHED_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'finished',
+    total: Object.keys(defaultState.deployments.byId).length
+  },
+  { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
+  {
+    type: RECEIVE_INPROGRESS_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'inprogress',
+    total: Object.keys(defaultState.deployments.byId).length
+  },
+  {
+    type: SELECT_INPROGRESS_DEPLOYMENTS,
+    deploymentIds: Object.keys(defaultState.deployments.byId),
+    status: 'inprogress'
+  },
+  {
+    type: SET_FILTER_ATTRIBUTES,
+    attributes: {
+      identityAttributes: ['status', 'mac'],
+      inventoryAttributes: [
+        'artifact_name',
+        'cpu_model',
+        'device_type',
+        'hostname',
+        'ipv4_wlan0',
+        'ipv6_wlan0',
+        'kernel',
+        'mac_eth0',
+        'mac_wlan0',
+        'mem_total_kB',
+        'mender_bootloader_integration',
+        'mender_client_version',
+        'network_interfaces',
+        'os',
+        'rootfs_type'
+      ],
+      systemAttributes: ['created_ts', 'updated_ts', 'group'],
+      tagAttributes: []
+    }
+  },
+  { type: SET_DEVICE_LIMIT, limit: 500 },
+  {
+    type: RECEIVE_GROUPS,
+    groups: {
+      testGroup: defaultState.devices.groups.byId.testGroup,
+      testGroupDynamic: {
+        filters: [{ key: 'group', operator: '$eq', scope: 'system', value: 'things' }],
+        id: 'filter1'
+      }
+    }
+  },
+  {
+    type: RECEIVE_DYNAMIC_GROUPS,
+    groups: {
+      testGroup: defaultState.devices.groups.byId.testGroup,
+      testGroupDynamic: {
+        deviceIds: [],
+        filters: [
+          { key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] },
+          { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
+          { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
+        ],
+        id: 'filter1',
+        total: 0
+      }
+    }
+  }
+];
+
+export const deviceInitActions = [
+  { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
+  { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+  { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
+  { type: RECEIVED_ROLES, value: receivedRoles },
+  { type: RECEIVE_DEVICES, devicesById: { a1: { ...receivedInventoryDevice, group: 'test' } } },
+  { type: RECEIVE_DEVICES, devicesById: { a1: { ...receivedInventoryDevice, group: 'test' } } },
+  {
+    type: SET_ACCEPTED_DEVICES,
+    deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
+    status: 'accepted',
+    total: defaultState.devices.byStatus.accepted.deviceIds.length
+  },
+  { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test', status: 'pending' } } },
+  {
+    type: SET_PENDING_DEVICES,
+    deviceIds: Array.from({ length: defaultState.devices.byStatus.pending.total }, () => defaultState.devices.byId.a1.id),
+    status: 'pending',
+    total: defaultState.devices.byStatus.pending.deviceIds.length
+  },
+  { type: RECEIVE_DEVICES, devicesById: {} },
+  { type: SET_PREAUTHORIZED_DEVICES, deviceIds: [], status: 'preauthorized', total: 0 },
+  { type: RECEIVE_DEVICES, devicesById: {} },
+  { type: SET_REJECTED_DEVICES, deviceIds: [], status: 'rejected', total: 0 },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
+  },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: {
+      [expectedDevice.id]: {
+        ...defaultState.devices.byId.a1,
+        group: undefined,
+        identity_data: { ...defaultState.devices.byId.a1.identity_data },
+        isNew: false,
+        isOffline: true,
+        monitor: {},
+        tags: {}
+      }
+    }
+  },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
+  },
+  {
+    type: ADD_DYNAMIC_GROUP,
+    groupName: UNGROUPED_GROUP.id,
+    group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
+  },
+  {
+    type: SET_DEVICE_LIST_STATE,
+    state: {
+      ...DEVICE_LIST_DEFAULTS,
+      deviceIds: [],
+      isLoading: true,
+      selectedAttributes: [],
+      selectedIssues: [],
+      selection: [],
+      setOnly: false,
+      sort: { direction: SORTING_OPTIONS.desc },
+      state: 'accepted',
+      total: 0
+    }
+  }
+];
+
+export const deviceInitActions2 = [
+  { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
+  {
+    type: SET_ACCEPTED_DEVICES,
+    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+    status: DEVICE_STATES.accepted,
+    total: defaultState.devices.byStatus.accepted.total
+  },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
+  },
+  {
+    type: SET_DEVICE_LIST_STATE,
+    state: {
+      ...DEVICE_LIST_DEFAULTS,
+      deviceIds: ['a1', 'a1'],
+      isLoading: false,
+      selectedAttributes: [],
+      selectedIssues: [],
+      selection: [],
+      sort: { direction: SORTING_OPTIONS.desc },
+      state: 'accepted',
+      total: 2
+    }
+  }
+];
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -141,25 +331,7 @@ describe('app actions', () => {
 
     const expectedActions = [
       { type: SUCCESSFULLY_LOGGED_IN, value: { token } },
-      { type: SET_ONBOARDING_COMPLETE, complete: false },
-      { type: SET_DEMO_ARTIFACT_PORT, value: 85 },
-      { type: SET_FEATURES, value: { ...defaultState.app.features, hasMultitenancy: true } },
-      {
-        type: SET_VERSION_INFORMATION,
-        docsVersion: '',
-        value: {
-          Deployments: '1.2.3',
-          Deviceauth: null,
-          GUI: undefined,
-          Integration: 'master',
-          Inventory: null,
-          'Mender-Artifact': undefined,
-          'Mender-Client': 'next',
-          'Meta-Mender': 'saas-123.34'
-        }
-      },
-      { type: SET_ENVIRONMENT_DATA, value: { hostAddress: null, hostedAnnouncement: '', recaptchaSiteKey: '', stripeAPIKey: '', trackerCode: '' } },
-      { type: SET_FIRST_LOGIN_AFTER_SIGNUP, firstLoginAfterSignup: false },
+      ...commonAppInitActions,
       {
         type: SET_VERSION_INFORMATION,
         docsVersion: '',
@@ -181,133 +353,13 @@ describe('app actions', () => {
           }
         }
       },
-      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      { type: SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
-      { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
-      {
-        type: SET_FILTER_ATTRIBUTES,
-        attributes: {
-          identityAttributes: ['status', 'mac'],
-          inventoryAttributes: [
-            'artifact_name',
-            'cpu_model',
-            'device_type',
-            'hostname',
-            'ipv4_wlan0',
-            'ipv6_wlan0',
-            'kernel',
-            'mac_eth0',
-            'mac_wlan0',
-            'mem_total_kB',
-            'mender_bootloader_integration',
-            'mender_client_version',
-            'network_interfaces',
-            'os',
-            'rootfs_type'
-          ],
-          systemAttributes: ['created_ts', 'updated_ts', 'group'],
-          tagAttributes: []
-        }
-      },
-      { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
-      {
-        type: RECEIVE_FINISHED_DEPLOYMENTS,
-        deploymentIds: Object.keys(defaultState.deployments.byId),
-        status: 'finished',
-        total: Object.keys(defaultState.deployments.byId).length
-      },
-      { type: RECEIVE_DEPLOYMENTS, deployments: defaultState.deployments.byId },
-      {
-        type: RECEIVE_INPROGRESS_DEPLOYMENTS,
-        deploymentIds: Object.keys(defaultState.deployments.byId),
-        status: 'inprogress',
-        total: Object.keys(defaultState.deployments.byId).length
-      },
-      {
-        type: SELECT_INPROGRESS_DEPLOYMENTS,
-        deploymentIds: Object.keys(defaultState.deployments.byId),
-        status: 'inprogress'
-      },
-      {
-        type: RECEIVE_DEVICES,
-        devicesById: {
-          a1: {
-            ...defaultState.devices.byId.a1,
-            attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
-            group: 'test',
-            identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-            isNew: false,
-            isOffline: true,
-            monitor: {},
-            tags: {},
-            updated_ts: inventoryDevice.updated_ts
-          }
-        }
-      },
-      {
-        type: SET_ACCEPTED_DEVICES,
-        deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
-        status: 'accepted',
-        total: defaultState.devices.byStatus.accepted.deviceIds.length
-      },
-      {
-        type: RECEIVE_DEVICES,
-        devicesById: {
-          a1: {
-            ...defaultState.devices.byId.a1,
-            attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
-            group: 'test',
-            identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
-            isNew: false,
-            isOffline: true,
-            monitor: {},
-            status: 'pending',
-            tags: {},
-            updated_ts: inventoryDevice.updated_ts
-          }
-        }
-      },
-      {
-        type: SET_PENDING_DEVICES,
-        deviceIds: Array.from({ length: defaultState.devices.byStatus.pending.total }, () => defaultState.devices.byId.a1.id),
-        status: 'pending',
-        total: defaultState.devices.byStatus.pending.deviceIds.length
-      },
-      { type: RECEIVE_DEVICES, devicesById: {} },
-      { type: SET_PREAUTHORIZED_DEVICES, deviceIds: [], status: 'preauthorized', total: 0 },
-      { type: RECEIVE_DEVICES, devicesById: {} },
-      { type: SET_REJECTED_DEVICES, deviceIds: [], status: 'rejected', total: 0 },
-      {
-        type: RECEIVE_DYNAMIC_GROUPS,
-        groups: {
-          testGroup: defaultState.devices.groups.byId.testGroup,
-          testGroupDynamic: {
-            deviceIds: [],
-            filters: [
-              { key: 'id', operator: '$in', scope: 'identity', value: [defaultState.devices.byId.a1.id] },
-              { key: 'mac', operator: '$nexists', scope: 'identity', value: false },
-              { key: 'kernel', operator: '$exists', scope: 'identity', value: true }
-            ],
-            id: 'filter1',
-            total: 0
-          }
-        }
-      },
-      {
-        type: RECEIVE_GROUPS,
-        groups: {
-          testGroup: defaultState.devices.groups.byId.testGroup,
-          testGroupDynamic: {
-            filters: [{ key: 'group', operator: '$eq', scope: 'system', value: 'things' }],
-            id: 'filter1'
-          }
-        }
-      },
+      { type: SET_ORGANIZATION, organization: defaultState.organization.organization },
+      { type: SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage },
       {
         type: RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
         value: [
           { connection_string: 'something_else', id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider },
-          { id: 2, provider: 'aws', something: 'new' }
+          { id: 2, provider: 'iot-core', something: 'new' }
         ]
       },
       { type: RECEIVE_RELEASES, releases: defaultState.releases.byId },
@@ -315,45 +367,12 @@ describe('app actions', () => {
         type: SET_RELEASES_LIST_STATE,
         value: { ...defaultState.releases.releasesList, releaseIds: [defaultState.releases.byId.r1.name], page: 42 }
       },
-      { type: SET_DEVICE_LIMIT, limit: 500 },
-      { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
-      { type: RECEIVED_ROLES, value: receivedRoles },
-      { type: SET_ORGANIZATION, organization: defaultState.organization.organization },
-      { type: SET_ANNOUNCEMENT, announcement: tenantDataDivergedMessage },
-      {
-        type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, isNew: false, isOffline: true, monitor: {}, tags: {} } }
-      },
-      {
-        type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
-      },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
-      {
-        type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
-      },
-      {
-        type: ADD_DYNAMIC_GROUP,
-        groupName: UNGROUPED_GROUP.id,
-        group: { deviceIds: [], total: 0, filters: [{ key: 'group', value: ['testGroup'], operator: '$nin', scope: 'system' }] }
-      },
-      {
-        type: SET_DEVICE_LIST_STATE,
-        state: {
-          ...DEVICE_LIST_DEFAULTS,
-          deviceIds: [],
-          isLoading: true,
-          selectedAttributes: [],
-          selectedIssues: [],
-          selection: [],
-          setOnly: false,
-          sort: { direction: SORTING_OPTIONS.desc },
-          state: 'accepted',
-          total: 0
-        }
-      },
+      { type: SET_GLOBAL_SETTINGS, settings: { ...defaultState.users.globalSettings } },
+
+      ...deviceInitActions,
       { type: SET_TOOLTIPS_STATE, value: {} },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
+      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, onboarding: defaultOnboardingState } },
       { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
       {
         type: SET_ACCEPTED_DEVICES,
@@ -361,8 +380,6 @@ describe('app actions', () => {
         status: DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
-      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
-      { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, onboarding: defaultOnboardingState } },
       {
         type: RECEIVE_DEVICES,
         devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }

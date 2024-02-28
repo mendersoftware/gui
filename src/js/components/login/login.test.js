@@ -63,6 +63,7 @@ describe('Login Component', () => {
       await user.type(screen.getByLabelText(/Two Factor Authentication Code/i), '123456');
     });
     await user.click(screen.getByRole('button', { name: /Log in/i }));
+    await act(async () => jest.runAllTicks());
     expect(loginSpy).toHaveBeenCalledWith({ email: 'something@example.com', password: 'mysecretpassword!123', token2fa: '123456' }, false);
   }, 10000);
 });

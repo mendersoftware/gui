@@ -88,6 +88,7 @@
 "redux-thunk","MIT","https://github.com/reduxjs/redux-thunk"
 "stream-browserify","MIT","https://github.com/browserify/stream-browserify"
 "tss-react","MIT","https://github.com/garronej/tss-react"
+"undici","MIT","https://github.com/nodejs/undici"
 "universal-cookie","MIT","https://github.com/bendotcodes/cookies"
 "util","MIT","https://github.com/browserify/node-util"
 "uuid","MIT","https://github.com/uuidjs/uuid"

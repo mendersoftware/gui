@@ -11,6 +11,7 @@ import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState } from '../../../tests/mockData';
 import { mockAbortController } from '../../../tests/setupTests';
 import { SET_SNACKBAR, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appConstants';
+import * as DeploymentConstants from '../constants/deploymentConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import * as DeploymentActions from './deploymentActions';
 import {
@@ -762,8 +763,8 @@ describe('device retrieval ', () => {
     const expectedActions = [
       { type: DeviceConstants.RECEIVE_DEVICES, devicesById: { [id]: { ...expectedDevice, id } } },
       { type: DeviceConstants.RECEIVE_DEVICE, device: { attributes, id } },
-      { type: DeviceConstants.RECEIVE_DEVICE, device: expectedDevice },
-      { type: DeviceConstants.RECEIVE_DEVICE_CONNECT, device: { connect_status: 'connected', connect_updated_ts: updated_ts, id } }
+      { type: DeviceConstants.RECEIVE_DEVICE_CONNECT, device: { connect_status: 'connected', connect_updated_ts: updated_ts, id } },
+      { type: DeviceConstants.RECEIVE_DEVICE, device: expectedDevice }
     ];
     await store.dispatch(getDeviceInfo(defaultState.devices.byId.a1.id));
     const storeActions = store.getActions();
@@ -873,7 +874,10 @@ describe('device config ', () => {
   });
   it('should allow single device config deployment', async () => {
     const store = mockStore({ ...defaultState });
-    const expectedActions = [{ type: DeviceConstants.RECEIVE_DEVICE, device: { ...defaultState.devices.byId.a1, config: { deployment_id: '' } } }];
+    const expectedActions = [
+      { type: DeviceConstants.RECEIVE_DEVICE, device: { ...defaultState.devices.byId.a1, config: { deployment_id: '' } } },
+      { type: DeploymentConstants.RECEIVE_DEPLOYMENT, deployment: { ...defaultState.deployments.byId.d1, id: 'config1', created: '2019-01-01T09:25:01.000Z' } }
+    ];
     const result = store.dispatch(applyDeviceConfig(defaultState.devices.byId.a1.id), { something: 'asdl' });
     await act(async () => jest.runAllTicks());
     result.then(() => {
@@ -884,7 +888,6 @@ describe('device config ', () => {
     await waitFor(async () => expect(deploymentsSpy).toHaveBeenCalled(), { timeout: TIMEOUTS.threeSeconds });
     deploymentsSpy.mockClear();
   });
-
   it('should allow setting device tags', async () => {
     const store = mockStore({ ...defaultState });
     const { attributes, id } = defaultState.devices.byId.a1;

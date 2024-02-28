@@ -81,6 +81,7 @@ describe('App Component', () => {
         jest.runAllTicks();
       });
       reportsSpy.mockClear();
+      await act(async () => jest.runAllTicks());
     },
     20 * TIMEOUTS.oneSecond
   );
@@ -116,7 +117,7 @@ describe('App Component', () => {
     20 * TIMEOUTS.oneSecond
   );
 
-  it.skip(
+  it(
     'is embedded in working providers',
     async () => {
       window.localStorage.getItem.mockImplementation(name => (name === 'JWT' ? JSON.stringify({ token }) : undefined));

@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 
 import { token, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
@@ -70,6 +70,7 @@ describe('PhysicalDeviceOnboarding Component', () => {
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => {});
     await waitFor(() => expect(store.getState().onboarding.approach === 'physical').toBeTruthy());
   });
 });
