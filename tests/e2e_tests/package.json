@@ -21,15 +21,15 @@
   "devDependencies": {
     "@bgotink/playwright-coverage": "^0.2.2",
     "@nuintun/qrcode": "^3.4.0",
-    "@playwright/test": "1.39.0",
+    "@playwright/test": "1.42.0",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
     "jwt-decode": "^4.0.0",
     "md5": "^2.3.0",
     "otplib": "^12.0.1",
     "pixelmatch": "^5.3.0",
-    "playwright": "^1.39.0",
-    "playwright-chromium": "1.39.0",
+    "playwright": "^1.42.0",
+    "playwright-chromium": "1.42.0",
     "typescript": "^5.3.3",
     "uuid": "^9.0.1"
   }
