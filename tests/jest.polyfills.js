@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
-const { TextDecoder, TextEncoder } = require('node:util');
+const { TextDecoder, TextEncoder, ReadableStream } = require('node:util');
 
 Reflect.set(globalThis, 'TextDecoder', TextDecoder);
 Reflect.set(globalThis, 'TextEncoder', TextEncoder);
+Reflect.set(globalThis, 'ReadableStream', ReadableStream);
 
 const { Blob } = require('node:buffer');
 const { fetch, FormData, Headers, Request, Response } = require('undici');
