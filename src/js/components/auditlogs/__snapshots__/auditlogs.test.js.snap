@@ -56,7 +56,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
             >
               <div
-                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
+                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1jyrrab-MuiInputBase-root-MuiInput-root"
               >
                 <input
                   aria-autocomplete="list"
@@ -118,7 +118,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
             >
               <div
-                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
+                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-1jyrrab-MuiInputBase-root-MuiInput-root"
               >
                 <input
                   aria-autocomplete="list"
@@ -200,7 +200,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-lzl4b9-MuiFormControl-root-MuiTextField-root"
             >
               <div
-                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-1wsxxsk-MuiInputBase-root-MuiInput-root"
+                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary Mui-disabled MuiInputBase-fullWidth MuiInputBase-formControl MuiAutocomplete-inputRoot css-1jyrrab-MuiInputBase-root-MuiInput-root"
               >
                 <input
                   aria-autocomplete="list"
@@ -245,7 +245,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 From
               </label>
               <div
-                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-s15sbk-MuiInputBase-root-MuiInput-root"
+                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-jn07ck-MuiInputBase-root-MuiInput-root"
               >
                 <input
                   aria-invalid="false"
@@ -296,7 +296,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 To
               </label>
               <div
-                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-s15sbk-MuiInputBase-root-MuiInput-root"
+                class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd css-jn07ck-MuiInputBase-root-MuiInput-root"
               >
                 <input
                   aria-invalid="false"
@@ -423,7 +423,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             viewBox="0 0 24 24"
           >
             <path
-              d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"
+              d="M3 18h6v-2H3zM3 6v2h18V6zm0 7h12v-2H3z"
             />
           </svg>
         </div>
@@ -651,7 +651,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
+                    d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6z"
                   />
                 </svg>
               </button>
@@ -670,7 +670,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                      d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"
                     />
                   </svg>
                 </button>
@@ -729,7 +729,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             viewBox="0 0 24 24"
           >
             <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 17h-2v-2h2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25"
             />
           </svg>
           <div

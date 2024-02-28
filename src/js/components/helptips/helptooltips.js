@@ -218,7 +218,7 @@ const TenantToken = () => (
   </>
 );
 
-const SamlMetadata = () => <>Submit the metadata document from your Identity Provider</>;
+const SsoMetadata = () => <>Submit the metadata document from your Identity Provider</>;
 
 const ReleaseName = () => (
   <>
@@ -279,7 +279,7 @@ export const HELPTOOLTIPS = {
   phasedPausedDeployments: { id: 'phasedPausedDeployments', Component: PhasedPausedDeployments },
   releaseName: { id: 'releaseName', Component: ReleaseName },
   resetHistory: { id: 'resetHistory', Component: ResetHistory },
-  samlMetadata: { id: 'samlMetadata', Component: SamlMetadata },
+  ssoMetadata: { id: 'ssoMetadata', Component: SsoMetadata },
   scheduleDeployment: { id: 'scheduleDeployment', Component: ScheduleDeployment },
   singleFileUpload: { id: 'singleFileUpload', Component: SingleFileUpload },
   tenantToken: { id: 'tenantToken', Component: TenantToken },

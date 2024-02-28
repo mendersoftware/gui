@@ -17,8 +17,8 @@ import {
   RECEIVE_AUDIT_LOGS,
   RECEIVE_CURRENT_CARD,
   RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS,
-  RECEIVE_SAML_CONFIGS,
   RECEIVE_SETUP_INTENT,
+  RECEIVE_SSO_CONFIGS,
   RECEIVE_WEBHOOK_EVENTS,
   SET_AUDITLOG_STATE,
   SET_ORGANIZATION
@@ -51,7 +51,7 @@ export const initialState = {
   externalDeviceIntegrations: [
     // { <connection_string|x509|...>, id, provider }
   ],
-  samlConfigs: [],
+  ssoConfigs: [],
   webhooks: {
     // [id]: { events: [] }
     // for now:
@@ -104,10 +104,10 @@ const organizationReducer = (state = initialState, action) => {
         ...state,
         externalDeviceIntegrations: action.value
       };
-    case RECEIVE_SAML_CONFIGS:
+    case RECEIVE_SSO_CONFIGS:
       return {
         ...state,
-        samlConfigs: action.value
+        ssoConfigs: action.value
       };
     case RECEIVE_WEBHOOK_EVENTS:
       return {

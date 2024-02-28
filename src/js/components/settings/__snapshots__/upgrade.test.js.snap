@@ -257,7 +257,7 @@ label+.emotion-31 {
   margin-top: 16px;
 }
 
-.emotion-31:after {
+.emotion-31::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -280,12 +280,12 @@ label+.emotion-31 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-31.Mui-error:before,
-.emotion-31.Mui-error:after {
+.emotion-31.Mui-error::before,
+.emotion-31.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-31:before {
+.emotion-31::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -965,7 +965,7 @@ exports[`smaller components renders PricingContactNote correctly 1`] = `
     viewBox="0 0 24 24"
   >
     <path
-      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
     />
   </svg>
   If you have any questions about the plan pricing or device limits,

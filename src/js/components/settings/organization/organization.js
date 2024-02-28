@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // material ui
 import { FileCopy as CopyPasteIcon } from '@mui/icons-material';
-import { Button, Checkbox, Collapse, FormControlLabel, List } from '@mui/material';
+import { Button, Checkbox, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, List, MenuItem, Select } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
@@ -25,30 +25,31 @@ import moment from 'moment';
 
 import { setSnackbar } from '../../../actions/appActions';
 import {
-  changeSamlConfig,
-  deleteSamlConfig,
+  changeSsoConfig,
+  deleteSsoConfig,
   downloadLicenseReport,
-  getSamlConfigs,
+  getSsoConfigs,
   getUserOrganization,
-  storeSamlConfig
+  storeSsoConfig
 } from '../../../actions/organizationActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
-import { createFileDownload, toggle } from '../../../helpers';
-import { getCurrentSession, getFeatures, getIsEnterprise, getIsPreview, getOrganization, getUserRoles } from '../../../selectors';
+import { SSO_TYPES } from '../../../constants/organizationConstants.js';
+import { createFileDownload, getSsoByType, toggle } from '../../../helpers';
+import { getCurrentSession, getFeatures, getIsEnterprise, getIsPreview, getOrganization, getSsoConfig, getUserRoles } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import Billing from './billing';
 import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
-import { SAMLConfig } from './samlconfig';
+import { SSOConfig } from './ssoconfig';
 
 const useStyles = makeStyles()(theme => ({
   copyNotification: { height: 30, padding: 15 },
   deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
-  ssoToggle: { width: `calc(${maxWidth}px + ${theme.spacing(4)})` },
   tenantInfo: { marginTop: 11, paddingBottom: 3, 'span': { marginLeft: theme.spacing(0.5), color: theme.palette.text.disabled } },
   tenantToken: { width: `calc(${maxWidth}px - ${theme.spacing(4)})` },
   tokenTitle: { paddingRight: 10 },
-  tokenExplanation: { margin: '1em 0' }
+  tokenExplanation: { margin: '1em 0' },
+  ssoSelect: { minWidth: 265 }
 }));
 
 export const OrgHeader = () => {
@@ -86,15 +87,16 @@ export const Organization = () => {
   const [isConfiguringSSO, setIsConfiguringSSO] = useState(false);
   const [isResettingSSO, setIsResettingSSO] = useState(false);
   const [showTokenWarning, setShowTokenWarning] = useState(false);
+  const [newSso, setNewSso] = useState(undefined);
+  const [selectedSsoItem, setSelectedSsoItem] = useState(undefined);
   const isEnterprise = useSelector(getIsEnterprise);
   const { isAdmin } = useSelector(getUserRoles);
   const canPreview = useSelector(getIsPreview);
   const { isHosted } = useSelector(getFeatures);
   const org = useSelector(getOrganization);
-  const samlConfigs = useSelector(state => state.organization.samlConfigs);
+  const ssoConfig = useSelector(getSsoConfig);
   const dispatch = useDispatch();
   const { token } = useSelector(getCurrentSession);
-
   const { classes } = useStyles();
 
   useEffect(() => {
@@ -102,43 +104,37 @@ export const Organization = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (isEnterprise) {
-      dispatch(getSamlConfigs());
-    }
-  }, [dispatch, isEnterprise]);
+    dispatch(getSsoConfigs());
+  }, [dispatch]);
 
   useEffect(() => {
-    setHasSingleSignOn(!!samlConfigs.length);
-    setIsConfiguringSSO(!!samlConfigs.length);
-  }, [samlConfigs.length]);
+    setHasSingleSignOn(!!ssoConfig);
+    setIsConfiguringSSO(!!ssoConfig);
+    if (ssoConfig) {
+      setSelectedSsoItem(getSsoByType(ssoConfig.type));
+    }
+  }, [ssoConfig]);
 
   const dispatchedSetSnackbar = useCallback((...args) => dispatch(setSnackbar(...args)), [dispatch]);
 
-  const onSSOClick = () => {
-    if (hasSingleSignOn) {
-      setIsConfiguringSSO(false);
-      return setIsResettingSSO(true);
-    }
-    setIsConfiguringSSO(toggle);
-  };
+  const onSaveSSOSettings = useCallback(
+    (id, config) => {
+      const { contentType } = getSsoByType(selectedSsoItem.id);
+      if (isResettingSSO) {
+        return dispatch(deleteSsoConfig(ssoConfig)).then(() => setIsResettingSSO(false));
+      }
+      if (id) {
+        return dispatch(changeSsoConfig({ id, config, contentType }));
+      }
+      return dispatch(storeSsoConfig({ config, contentType }));
+    },
+    [isResettingSSO, dispatch, ssoConfig, selectedSsoItem]
+  );
 
   const onCancelSSOSettings = () => {
     setIsResettingSSO(false);
     setIsConfiguringSSO(hasSingleSignOn);
   };
-
-  const onSaveSSOSettings = useCallback(
-    (id, fileContent) => {
-      if (isResettingSSO) {
-        return dispatch(deleteSamlConfig(samlConfigs[0])).then(() => setIsResettingSSO(false));
-      }
-      if (id) {
-        return dispatch(changeSamlConfig({ id, config: fileContent }));
-      }
-      return dispatch(storeSamlConfig(fileContent));
-    },
-    [isResettingSSO, dispatch, samlConfigs]
-  );
 
   const onTokenExpansion = useCallback(() => setShowTokenWarning(true), []);
 
@@ -148,6 +144,33 @@ export const Organization = () => {
   const onTenantInfoClick = () => {
     copy(`Organization: ${org.name}, Tenant ID: ${org.id}`);
     setSnackbar('Copied to clipboard');
+  };
+
+  const onSSOClick = () => {
+    if (hasSingleSignOn) {
+      setIsConfiguringSSO(false);
+      return setIsResettingSSO(true);
+    }
+    setIsConfiguringSSO(toggle);
+  };
+
+  const onSsoSelect = useCallback(
+    ({ target: { value: type = '' } }) => {
+      if (ssoConfig) {
+        setNewSso(type);
+      } else {
+        setSelectedSsoItem(getSsoByType(type));
+      }
+    },
+    [ssoConfig]
+  );
+
+  const changeSSO = () => {
+    dispatch(deleteSsoConfig(ssoConfig)).then(() => {
+      setSelectedSsoItem(getSsoByType(newSso));
+      setIsConfiguringSSO(true);
+      setNewSso(undefined);
+    });
   };
 
   return (
@@ -194,34 +217,79 @@ export const Organization = () => {
           sideBarContent={<CopyTextToClipboard onCopy={onTokenExpansion} token={org.tenant_token} />}
         />
       </List>
+
       {isEnterprise && isAdmin && (
-        <div className="flexbox center-aligned">
+        <div>
           <FormControlLabel
-            className={`margin-bottom-small ${classes.ssoToggle}`}
+            className="margin-bottom-small"
             control={<Checkbox checked={!isResettingSSO && (hasSingleSignOn || isConfiguringSSO)} onChange={onSSOClick} />}
-            label="Enable SAML single sign-on"
+            label="Enable Single Sign-On"
           />
-          {isResettingSSO && !isConfiguringSSO && (
-            <>
-              <Button onClick={onCancelSSOSettings}>Cancel</Button>
-              <Button onClick={onSaveSSOSettings} disabled={!hasSingleSignOn} variant="contained">
-                Save
-              </Button>
-            </>
-          )}
         </div>
       )}
-      <Collapse className="margin-left-large" in={isConfiguringSSO}>
-        <SAMLConfig configs={samlConfigs} onSave={onSaveSSOSettings} onCancel={onCancelSSOSettings} setSnackbar={dispatchedSetSnackbar} token={token} />
-      </Collapse>
+
+      {isConfiguringSSO && (
+        <div>
+          <Select className={classes.ssoSelect} displayEmpty onChange={onSsoSelect} value={selectedSsoItem?.id || ''}>
+            <MenuItem value="">Select type</MenuItem>
+            {SSO_TYPES.map(item => (
+              <MenuItem key={item.id} value={item.id}>
+                <div className="capitalized-start">{item.title}</div>
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+      )}
+
+      <div className="flexbox center-aligned">
+        {isResettingSSO && !isConfiguringSSO && (
+          <>
+            <Button onClick={onCancelSSOSettings}>Cancel</Button>
+            <Button onClick={onSaveSSOSettings} disabled={!hasSingleSignOn} variant="contained">
+              Save
+            </Button>
+          </>
+        )}
+      </div>
+      {selectedSsoItem && (
+        <div className="margin-top">
+          <Collapse className="margin-left-large" in={isConfiguringSSO}>
+            <SSOConfig
+              ssoItem={selectedSsoItem}
+              config={ssoConfig}
+              onSave={onSaveSSOSettings}
+              onCancel={onCancelSSOSettings}
+              setSnackbar={dispatchedSetSnackbar}
+              token={token}
+            />
+          </Collapse>
+        </div>
+      )}
+
       {isHosted && <Billing />}
       {(canPreview || !isHosted) && isEnterprise && isAdmin && (
         <Button className="margin-top" onClick={onDownloadReportClick} variant="contained">
           Download license report
         </Button>
       )}
+      <ChangeSsoDialog dismiss={() => setNewSso(undefined)} open={!!newSso} submit={changeSSO} />
     </div>
   );
 };
+
+const ChangeSsoDialog = ({ dismiss, open, submit }) => (
+  <Dialog open={open}>
+    <DialogTitle>Change Single Sign-On type</DialogTitle>
+    <DialogContent style={{ overflow: 'hidden' }}>Are you sure you want to change SSO type? This will lose your current settings.</DialogContent>
+    <DialogActions>
+      <Button style={{ marginRight: 10 }} onClick={dismiss}>
+        Cancel
+      </Button>
+      <Button variant="contained" color="primary" onClick={() => submit()}>
+        Change
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
 
 export default Organization;

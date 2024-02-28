@@ -21,15 +21,14 @@ import { Button, Divider, Drawer, IconButton } from '@mui/material';
 import Editor, { loader } from '@monaco-editor/react';
 import copy from 'copy-to-clipboard';
 
+import { JSON_METADATA_FORMAT, XML_METADATA_FORMAT } from '../../../constants/organizationConstants.js';
 import { createFileDownload } from '../../../helpers';
 import Loader from '../../common/loader';
 
 loader.config({ paths: { vs: '/ui/vs' } });
 
 const editorProps = {
-  defaultLanguage: 'xml',
   height: 700,
-  language: 'xml',
   loading: <Loader show />,
   options: {
     autoClosingOvertype: 'auto',
@@ -48,7 +47,7 @@ const editorProps = {
   }
 };
 
-export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, onClose, onSave, setFileContent, token }) => {
+export const SSOEditor = ({ ssoItem, config, fileContent, hasSSOConfig, open, onCancel, onClose, onSave, setFileContent, token }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isMetadataValid, setIsMetadataValid] = useState(false);
   const editorRef = useRef();
@@ -57,14 +56,29 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
     if (!fileContent) {
       return;
     }
+
     const parser = new DOMParser();
-    const theDom = parser.parseFromString(fileContent, 'application/xml');
-    setIsMetadataValid(!theDom.getElementsByTagName('parsererror').length);
-  }, [fileContent]);
+    let valid = false;
+    switch (ssoItem.metadataFormat) {
+      case JSON_METADATA_FORMAT:
+        try {
+          JSON.parse(fileContent);
+          valid = true;
+        } catch (error) {
+          valid = false;
+        }
+        break;
+      case XML_METADATA_FORMAT:
+      default:
+        valid = !parser.parseFromString(fileContent, 'application/xml').getElementsByTagName('parsererror').length;
+        break;
+    }
+    setIsMetadataValid(valid);
+  }, [fileContent, ssoItem.metadataFormat]);
 
   const onEditClick = () => setIsEditing(true);
 
-  const onDownloadClick = () => createFileDownload(fileContent, 'metadata.xml', token);
+  const onDownloadClick = () => createFileDownload(fileContent, `metadata.${ssoItem.metadataFormat}`, token);
 
   const onCancelClick = useCallback(() => {
     if (isEditing) {
@@ -74,8 +88,8 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
       }
       return setIsEditing(false);
     }
-    onCancel();
-  }, [config, hasSSOConfig, isEditing, onCancel, setFileContent]);
+    onClose();
+  }, [config, hasSSOConfig, isEditing, onCancel, setFileContent, onClose]);
 
   const onSubmitClick = () => {
     onSave();
@@ -99,14 +113,14 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
   };
 
   const handleEditorDidMount = (editor, monaco) => {
-    monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
+    monaco.languages.html.registerHTMLLanguageService(ssoItem.metadataFormat, {}, { documentFormattingEdits: true });
     editorRef.current = { editor, monaco, modifiedEditor: editor };
   };
 
   return (
     <Drawer className={`${open ? 'fadeIn' : 'fadeOut'}`} anchor="right" open={open} onClose={onClose} PaperProps={{ style: { minWidth: '75vw' } }}>
       <div className="flexbox margin-bottom-small space-between">
-        <h3>SAML metadata</h3>
+        <h3>{ssoItem.title} metadata</h3>
         <div className="flexbox center-aligned">
           <Dropzone multiple={false} onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
@@ -127,6 +141,8 @@ export const SSOEditor = ({ config, fileContent, hasSSOConfig, open, onCancel, o
       <Divider light />
       <Editor
         {...editorProps}
+        language={ssoItem.editorLanguage}
+        defaultLanguage={ssoItem.editorLanguage}
         options={{
           ...editorProps.options,
           readOnly: hasSSOConfig && !isEditing

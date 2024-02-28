@@ -25,6 +25,7 @@ import {
   deploymentStatesToSubstatesWithSkipped
 } from './constants/deploymentConstants';
 import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+import { SSO_TYPES } from './constants/organizationConstants.js';
 
 const isEncoded = uri => {
   uri = uri || '';
@@ -528,3 +529,6 @@ export const getISOStringBoundaries = currentDate => {
 };
 
 export const isDarkMode = mode => mode === DARK_MODE;
+
+export const getSsoByType = type => SSO_TYPES.find(item => item.id === type);
+export const getSsoByContentType = contentType => SSO_TYPES.find(item => item.contentType === contentType);

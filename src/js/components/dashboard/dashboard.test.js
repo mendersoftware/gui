@@ -33,6 +33,7 @@ describe('Dashboard Component', () => {
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     const view = baseElement.firstChild;
+    await act(async () => {});
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
     reportsSpy.mockClear();
@@ -74,9 +75,11 @@ describe('Dashboard Component', () => {
         <Route path="/devices/*" element={<div>accepted devices route</div>} />
       </Routes>
     );
+    await act(async () => {});
     const { rerender } = render(ui);
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
+    await act(async () => {});
     await user.click(screen.getByText(/Accepted devices/i));
     await waitFor(() => screen.queryByText(/accepted devices route/i));
     expect(screen.getByText(/accepted devices route/i)).toBeVisible();
@@ -101,9 +104,11 @@ describe('Dashboard Component', () => {
         <Route path="/deployments/*" element={<div>deployments route</div>} />
       </Routes>
     );
+    await act(async () => {});
     const { rerender } = render(ui, { preloadedState });
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
+    await act(async () => {});
     await user.click(screen.getAllByText('test deployment 2')[0]);
     await waitFor(() => screen.queryByText(/deployments route/i));
     expect(screen.getByText(/deployments route/i)).toBeVisible();

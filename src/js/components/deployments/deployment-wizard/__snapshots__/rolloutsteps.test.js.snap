@@ -421,7 +421,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="m10 17 5-5-5-5v10z"
+                d="m10 17 5-5-5-5z"
               />
             </svg>
           </div>
@@ -441,7 +441,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
               />
             </svg>
             <span
@@ -481,7 +481,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="m10 17 5-5-5-5v10z"
+                d="m10 17 5-5-5-5z"
               />
             </svg>
           </div>
@@ -501,7 +501,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
               />
             </svg>
             <span
@@ -542,7 +542,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="m10 17 5-5-5-5v10z"
+                d="m10 17 5-5-5-5z"
               />
             </svg>
           </div>
@@ -562,7 +562,7 @@ exports[`RolloutSteps Component renders correctly 1`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
               />
             </svg>
             <span
@@ -1028,7 +1028,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="m10 17 5-5-5-5v10z"
+                d="m10 17 5-5-5-5z"
               />
             </svg>
           </div>
@@ -1048,7 +1048,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
               />
             </svg>
             <span
@@ -1088,7 +1088,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="m10 17 5-5-5-5v10z"
+                d="m10 17 5-5-5-5z"
               />
             </svg>
           </div>
@@ -1108,7 +1108,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
               />
             </svg>
             <span
@@ -1149,7 +1149,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="m10 17 5-5-5-5v10z"
+                d="m10 17 5-5-5-5z"
               />
             </svg>
           </div>
@@ -1169,7 +1169,7 @@ exports[`RolloutSteps Component renders correctly 2`] = `
               viewBox="0 0 24 24"
             >
               <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
               />
             </svg>
             <span

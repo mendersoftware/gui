@@ -130,7 +130,7 @@ label+.emotion-4 {
   margin-top: 16px;
 }
 
-.emotion-4:after {
+.emotion-4::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -153,12 +153,12 @@ label+.emotion-4 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-4.Mui-error:before,
-.emotion-4.Mui-error:after {
+.emotion-4.Mui-error::before,
+.emotion-4.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-4:before {
+.emotion-4::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -462,7 +462,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
   padding: 0;
 }
 
-.emotion-13:before {
+.emotion-13::before {
   position: absolute;
   left: 0;
   top: -1px;
@@ -475,11 +475,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
   transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-13:first-of-type:before {
+.emotion-13:first-of-type::before {
   display: none;
 }
 
-.emotion-13.Mui-expanded:before {
+.emotion-13.Mui-expanded::before {
   opacity: 0;
 }
 
@@ -491,7 +491,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
   margin-bottom: 0;
 }
 
-.emotion-13.Mui-expanded+.emotion-13.Mui-expanded:before {
+.emotion-13.Mui-expanded+.emotion-13.Mui-expanded::before {
   display: none;
 }
 
@@ -1182,7 +1182,7 @@ label+.emotion-100 {
   margin-top: 16px;
 }
 
-.emotion-100:after {
+.emotion-100::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -1205,12 +1205,12 @@ label+.emotion-100 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-100.Mui-error:before,
-.emotion-100.Mui-error:after {
+.emotion-100.Mui-error::before,
+.emotion-100.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-100:before {
+.emotion-100::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -1521,7 +1521,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
   cursor: default;
 }
 
-.emotion-142:after {
+.emotion-142::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -1544,12 +1544,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-142.Mui-error:before,
-.emotion-142.Mui-error:after {
+.emotion-142.Mui-error::before,
+.emotion-142.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-142:before {
+.emotion-142::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -1634,7 +1634,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
           viewBox="0 0 24 24"
         >
           <path
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 17h-2v-2h2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25"
           />
         </svg>
         <div
@@ -1741,7 +1741,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
             viewBox="0 0 24 24"
           >
             <path
-              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 17h-2v-2h2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25"
             />
           </svg>
           <div

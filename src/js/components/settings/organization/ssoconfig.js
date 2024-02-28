@@ -61,15 +61,17 @@ const defaultDetails = [
   { key: 'startURL', label: 'Start URL', getValue: id => `${window.location.origin}${useradmApiUrl}/auth/sso/${id}/login` }
 ];
 
-export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar, token }) => {
+export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, token }) => {
   const [configDetails, setConfigDetails] = useState([]);
-  const [fileContent, setFileContent] = useState('');
+  const [fileContent, setFileContentState] = useState('');
   const [hasSSOConfig, setHasSSOConfig] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const config = configs.length ? configs[0] : undefined;
   const { id, ...content } = config || {};
   const configContent = content.config || '';
+
+  // file content should be text, otherwise editor will fail
+  const setFileContent = content => setFileContentState(typeof content === 'object' ? JSON.stringify(content) : content);
 
   const { classes } = useStyles();
 
@@ -113,7 +115,7 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar, token }) =>
           <a onClick={onOpenEditorClick}>View metadata in the text editor</a>
         ) : (
           <>
-            <MenderHelpTooltip id={HELPTOOLTIPS.samlMetadata.id} style={{ position: 'absolute', left: -35 }} placement="left" />
+            <MenderHelpTooltip id={HELPTOOLTIPS.ssoMetadata.id} style={{ position: 'absolute', left: -35 }} placement="left" />
             <Dropzone multiple={false} onDrop={onDrop}>
               {({ getRootProps, getInputProps }) => (
                 <div {...getRootProps()} className="dropzone onboard dashboard-placeholder flexbox centered">
@@ -159,6 +161,7 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar, token }) =>
       )}
       <SSOEditor
         open={isEditing}
+        ssoItem={ssoItem}
         config={configContent}
         fileContent={fileContent}
         hasSSOConfig={hasSSOConfig}
@@ -172,4 +175,4 @@ export const SAMLConfig = ({ configs, onCancel, onSave, setSnackbar, token }) =>
   );
 };
 
-export default SAMLConfig;
+export default SSOConfig;

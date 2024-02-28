@@ -70,8 +70,8 @@ describe('organization reducer', () => {
       eventsTotal: 5
     });
   });
-  it('should handle RECEIVE_SAML_CONFIGS', async () => {
-    expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: [] }).samlConfigs).toEqual([]);
-    expect(reducer(initialState, { type: OrganizationConstants.RECEIVE_SAML_CONFIGS, value: [12, 23] }).samlConfigs).toEqual([12, 23]);
+  it('should handle RECEIVE_SSO_CONFIGS', async () => {
+    expect(reducer(undefined, { type: OrganizationConstants.RECEIVE_SSO_CONFIGS, value: [] }).ssoConfigs).toEqual([]);
+    expect(reducer(initialState, { type: OrganizationConstants.RECEIVE_SSO_CONFIGS, value: [12, 23] }).ssoConfigs).toEqual([12, 23]);
   });
 });

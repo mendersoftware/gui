@@ -255,7 +255,7 @@ label+.emotion-4 {
   margin-top: 16px;
 }
 
-.emotion-4:after {
+.emotion-4::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -278,12 +278,12 @@ label+.emotion-4 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-4.Mui-error:before,
-.emotion-4.Mui-error:after {
+.emotion-4.Mui-error::before,
+.emotion-4.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-4:before {
+.emotion-4::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -650,7 +650,7 @@ label+.emotion-21 {
   margin-top: 16px;
 }
 
-.emotion-21:after {
+.emotion-21::after {
   border-bottom: 2px solid #337a87;
   left: 0;
   bottom: 0;
@@ -673,12 +673,12 @@ label+.emotion-21 {
   transform: scaleX(1) translateX(0);
 }
 
-.emotion-21.Mui-error:before,
-.emotion-21.Mui-error:after {
+.emotion-21.Mui-error::before,
+.emotion-21.Mui-error::after {
   border-bottom-color: #ab1000;
 }
 
-.emotion-21:before {
+.emotion-21::before {
   border-bottom: 1px solid rgba(0, 0, 0, 0.42);
   left: 0;
   bottom: 0;
@@ -1932,7 +1932,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-42:focus::-ms-input-
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
+                    d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6z"
                   />
                 </svg>
               </button>
@@ -1951,7 +1951,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-42:focus::-ms-input-
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+                      d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"
                     />
                   </svg>
                 </button>
