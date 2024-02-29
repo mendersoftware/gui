@@ -137,6 +137,7 @@ export const versionCompare = (v1, v2) => {
 export function deepCompare() {
   var i, l, leftChain, rightChain;
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   function compare2Objects(x, y) {
     var p;
 
