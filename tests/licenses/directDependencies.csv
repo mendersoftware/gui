@@ -37,7 +37,7 @@
 "core-js","MIT","https://github.com/zloirock/core-js"
 "crypto-browserify","MIT","https://github.com/crypto-browserify/crypto-browserify"
 "css-loader","MIT","https://github.com/webpack-contrib/css-loader"
-"esbuild-loader","MIT","https://github.com/esbuild-kit/esbuild-loader"
+"esbuild-loader","MIT","https://github.com/privatenumber/esbuild-loader"
 "eslint-plugin-import","MIT","https://github.com/import-js/eslint-plugin-import"
 "eslint-plugin-prettier","MIT","https://github.com/prettier/eslint-plugin-prettier"
 "eslint-plugin-react-hooks","MIT","https://github.com/facebook/react"

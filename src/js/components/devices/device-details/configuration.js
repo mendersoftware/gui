@@ -108,8 +108,8 @@ export const ConfigUpdateNote = ({ isUpdatingConfig, isAccepted }) => (
       {!isAccepted
         ? 'Configuration will be applied once the device is connected'
         : isUpdatingConfig
-        ? 'Updating configuration on device...'
-        : 'Configuration could not be updated on device'}
+          ? 'Updating configuration on device...'
+          : 'Configuration could not be updated on device'}
     </Typography>
     <Typography variant="caption" className="muted" style={textStyle}>
       Status: {isUpdatingConfig || !isAccepted ? 'pending' : 'failed'}
