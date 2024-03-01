@@ -250,7 +250,7 @@ export const Authorized = ({
   }, [settingsInitialized, devicesInitialized, pageLoading]);
 
   const onDeviceStateSelectionChange = useCallback(
-    newState => dispatch(setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger })),
+    newState => dispatch(setDeviceListState({ state: newState, page: 1, refreshTrigger: !refreshTrigger }, true, false, false)),
     [dispatch, refreshTrigger]
   );
 
@@ -277,13 +277,19 @@ export const Authorized = ({
   useEffect(() => {
     setShowFilters(false);
   }, [selectedGroup]);
+  const dispatchDeviceListState = useCallback(
+    (options, shouldSelectDevices = true, forceRefresh = false, fetchAuth = false) => {
+      return dispatch(setDeviceListState(options, shouldSelectDevices, forceRefresh, fetchAuth));
+    },
+    [dispatch]
+  );
 
   const refreshDevices = useCallback(() => {
     const refreshLength = deviceRefreshTimes[selectedState] ?? deviceRefreshTimes.default;
-    return dispatch(setDeviceListState({}, true, true)).catch(err =>
+    return dispatchDeviceListState({}, true, true).catch(err =>
       setRetryTimer(err, 'devices', `Devices couldn't be loaded.`, refreshLength, dispatchedSetSnackbar)
     );
-  }, [dispatch, dispatchedSetSnackbar, selectedState]);
+  }, [dispatchedSetSnackbar, selectedState, dispatchDeviceListState]);
 
   useEffect(() => {
     if (!devicesInitialized) {
@@ -319,13 +325,13 @@ export const Authorized = ({
 
   const onAuthorizationChange = (devices, changedState) => {
     const deviceIds = devicesToIds(devices);
-    return dispatch(setDeviceListState({ isLoading: true }))
+    return dispatchDeviceListState({ isLoading: true })
       .then(() => dispatch(updateDevicesAuth(deviceIds, changedState)))
       .then(() => onSelectionChange([]));
   };
 
   const onDeviceDismiss = devices =>
-    dispatch(setDeviceListState({ isLoading: true }))
+    dispatchDeviceListState({ isLoading: true })
       .then(() => {
         const deleteRequests = devices.reduce((accu, device) => {
           if (device.auth_sets?.length) {
@@ -337,9 +343,9 @@ export const Authorized = ({
       })
       .then(() => onSelectionChange([]));
 
-  const handlePageChange = useCallback(page => dispatch(setDeviceListState({ selectedId: undefined, page })), [dispatch]);
+  const handlePageChange = useCallback(page => dispatchDeviceListState({ selectedId: undefined, page }), [dispatchDeviceListState]);
 
-  const onPageLengthChange = perPage => dispatch(setDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger }));
+  const onPageLengthChange = perPage => dispatchDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger });
 
   const onSortChange = attribute => {
     let changedSortCol = attribute.name;
@@ -347,24 +353,22 @@ export const Authorized = ({
     if (changedSortCol !== sortCol) {
       changedSortDown = SORTING_OPTIONS.desc;
     }
-    dispatch(
-      setDeviceListState({
-        sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope },
-        refreshTrigger: !refreshTrigger
-      })
-    );
+    dispatchDeviceListState({
+      sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope },
+      refreshTrigger: !refreshTrigger
+    });
   };
 
-  const setDetailsTab = detailsTab => dispatch(setDeviceListState({ detailsTab, setOnly: true }));
+  const setDetailsTab = detailsTab => dispatchDeviceListState({ detailsTab, setOnly: true });
 
   const onDeviceIssuesSelectionChange = ({ target: { value: selectedIssues } }) =>
-    dispatch(setDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger }));
+    dispatchDeviceListState({ selectedIssues, page: 1, refreshTrigger: !refreshTrigger });
 
   const onSelectionChange = (selection = []) => {
     if (!onboardingState.complete && selection.length) {
       dispatch(advanceOnboarding(onboardingSteps.DEVICES_PENDING_ACCEPTING_ONBOARDING));
     }
-    dispatch(setDeviceListState({ selection, setOnly: true }));
+    dispatchDeviceListState({ selection, setOnly: true });
   };
 
   const onToggleCustomizationClick = () => setShowCustomization(toggle);
@@ -375,16 +379,16 @@ export const Authorized = ({
       dispatch(updateUserColumnSettings(columnSizes));
       dispatch(saveUserSettings({ columnSelection: changedColumns }));
       // we don't need an explicit refresh trigger here, since the selectedAttributes will be different anyway & otherwise the shown list should still be valid
-      dispatch(setDeviceListState({ selectedAttributes }));
+      dispatchDeviceListState({ selectedAttributes });
       setShowCustomization(false);
     },
-    [dispatch]
+    [dispatch, dispatchDeviceListState]
   );
 
   const onExpandClick = (device = {}) => {
     dispatchedSetSnackbar('');
     const { id } = device;
-    dispatch(setDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id, detailsTab: deviceListState.detailsTab || 'identity' }));
+    dispatchDeviceListState({ selectedId: deviceListState.selectedId === id ? undefined : id, detailsTab: deviceListState.detailsTab || 'identity' });
     if (!onboardingState.complete) {
       dispatch(advanceOnboarding(onboardingSteps.DEVICES_PENDING_ONBOARDING));
     }
@@ -392,7 +396,7 @@ export const Authorized = ({
 
   const onCreateDeploymentClick = devices => navigate(`/deployments?open=true&${devices.map(({ id }) => `deviceId=${id}`).join('&')}`);
 
-  const onCloseExpandedDevice = useCallback(() => dispatch(setDeviceListState({ selectedId: undefined, detailsTab: '' })), [dispatch]);
+  const onCloseExpandedDevice = useCallback(() => dispatchDeviceListState({ selectedId: undefined, detailsTab: '' }), [dispatchDeviceListState]);
 
   const onResizeColumns = useCallback(columns => dispatch(updateUserColumnSettings(columns)), [dispatch]);
 
