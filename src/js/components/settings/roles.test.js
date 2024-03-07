@@ -89,5 +89,6 @@ describe('Roles Component', () => {
       },
       source: { ...defaultState.users.rolesById.test, id: defaultState.users.rolesById.test.name }
     });
+    await act(async () => jest.runAllTicks());
   });
 });

@@ -155,7 +155,7 @@ test.describe('Files', () => {
     const downloadButton = await page.getByText(/download artifact/i);
     expect(await downloadButton.isVisible()).toBeTruthy();
     const [download] = await Promise.all([page.waitForEvent('download'), downloadButton.click()]);
-    let downloadTargetPath = await download.path();
+    let downloadTargetPath;
     const downloadError = await download.failure();
     if (downloadError) {
       const downloadUrl = download.url();
@@ -163,6 +163,8 @@ test.describe('Files', () => {
       const fileData = Buffer.from(response.data, 'binary');
       downloadTargetPath = `./${download.suggestedFilename()}`;
       fs.writeFileSync(downloadTargetPath, fileData);
+    } else {
+      downloadTargetPath = await download.path();
     }
     const newFile = await fs.readFileSync(downloadTargetPath);
     const testFile = await fs.readFileSync(`fixtures/${fileName}`);

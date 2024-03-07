@@ -16,6 +16,8 @@ import React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
+import { act } from '@testing-library/react';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import Past from './pastdeployments';
@@ -45,5 +47,6 @@ describe('PastDeployments Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => jest.runAllTicks());
   });
 });

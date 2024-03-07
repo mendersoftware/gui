@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { undefineds } from '../../../../../tests/mockData';
@@ -37,5 +37,6 @@ describe('DeviceConnectionDialog Component', () => {
     await user.click(screen.getByText(/Try a virtual device/i));
     expect(screen.getByText(/run the following command to start the virtual device/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Waiting for device/i })).toBeInTheDocument();
+    await act(async () => jest.runAllTicks());
   });
 });

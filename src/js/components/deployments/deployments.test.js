@@ -285,7 +285,9 @@ describe('Deployments Component', () => {
     await selectMaterialUiSelectOption(within(firstPhase).getByDisplayValue(/hours/i), /minutes/i, user);
     fireEvent.change(within(firstPhase).getByDisplayValue(20), { target: { value: '50' } });
     fireEvent.change(within(firstPhase).getByDisplayValue('2'), { target: { value: '30' } });
-    await user.click(screen.getByText(/Add a phase/i));
+    await act(async () => {
+      await user.click(screen.getByText(/Add a phase/i));
+    });
     const secondPhase = screen.getByText(/Phase 2/i).parentElement.parentElement.parentElement;
     await selectMaterialUiSelectOption(within(secondPhase).getByDisplayValue(/hours/i), /days/i, user);
     expect(within(secondPhase).getByText(/Phases must have at least 1 device/i)).toBeTruthy();

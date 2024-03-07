@@ -13,6 +13,8 @@
 //    limitations under the License.
 import React from 'react';
 
+import { act } from '@testing-library/react';
+
 import { defaultState, undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import OrganizationPaymentSettings from './organizationpaymentsettings';
@@ -36,5 +38,6 @@ describe('OrganizationPaymentSettings Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => jest.runAllTicks());
   });
 });

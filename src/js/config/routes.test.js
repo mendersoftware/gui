@@ -15,7 +15,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
-import { screen, render as testingLibRender } from '@testing-library/react';
+import { act, screen, render as testingLibRender } from '@testing-library/react';
 
 import { defaultState } from '../../../tests/mockData';
 import { getConfiguredStore } from '../reducers';
@@ -48,6 +48,7 @@ describe('Router', () => {
     );
     expect(screen.getAllByText('Log in')).toBeTruthy();
     expect(screen.queryByText('Settings')).toBeFalsy();
+    await act(async () => jest.runAllTicks());
   });
 
   test('valid path should not redirect to 404', async () => {
@@ -60,5 +61,6 @@ describe('Router', () => {
     );
     expect(screen.getAllByText('Log in')).toBeTruthy();
     expect(screen.queryByText('Settings')).toBeFalsy();
+    await act(async () => jest.runAllTicks());
   });
 });

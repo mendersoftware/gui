@@ -13,6 +13,8 @@
 //    limitations under the License.
 import React from 'react';
 
+import { act } from '@testing-library/react';
+
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
 import { EXTERNAL_PROVIDER } from '../../constants/deviceConstants';
@@ -41,6 +43,10 @@ describe('IntegrationConfiguration Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
   });
 });
 
@@ -50,5 +56,9 @@ describe('Integrations Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
   });
 });

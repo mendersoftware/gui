@@ -15,6 +15,7 @@ import React from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { prettyDOM } from '@testing-library/dom';
+import { act } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';
@@ -66,5 +67,6 @@ describe('DeviceGroups Component', () => {
       .replace(/\\/g, '');
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => jest.runAllTicks());
   });
 });

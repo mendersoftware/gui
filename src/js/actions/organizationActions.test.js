@@ -62,7 +62,7 @@ const mockStore = configureMockStore(middlewares);
 
 const expectedDeviceProviders = [
   { id: 1, provider: EXTERNAL_PROVIDER['iot-hub'].provider, something: 'something', connection_string: 'something_else' },
-  { id: 2, provider: 'aws', something: 'new' }
+  { id: 2, provider: EXTERNAL_PROVIDER['iot-core'].provider, something: 'new' }
 ];
 
 const expectedSsoConfigs = [
@@ -334,7 +334,7 @@ describe('organization actions', () => {
         ...defaultState.organization,
         externalDeviceIntegrations: [
           { id: 1, something: 'something' },
-          { id: 2, provider: 'aws', something: 'new' }
+          { id: 2, provider: 'iot-core', something: 'new' }
         ]
       }
     });
@@ -358,7 +358,7 @@ describe('organization actions', () => {
         ...defaultState.organization,
         externalDeviceIntegrations: [
           { id: 1, something: 'something' },
-          { id: 2, provider: 'aws', something: 'new' }
+          { id: 2, provider: 'iot-core', something: 'new' }
         ]
       }
     });
