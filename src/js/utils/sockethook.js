@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import msgpack5 from 'msgpack5';
 import Cookies from 'universal-cookie';
@@ -138,22 +138,30 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
       cookies.set('JWT', token, { path: '/', secure: true, sameSite: 'strict', maxAge: 5 });
       try {
         socketRef.current = new WebSocket(uri);
-        socketRef.current.addEventListener('close', onSocketClose);
-        socketRef.current.addEventListener('error', onSocketError);
-        socketRef.current.addEventListener('message', onSocketMessage);
-        socketRef.current.addEventListener('open', onSocketOpen);
       } catch (error) {
         console.log(error);
       }
-      return () => {
-        socketRef.current.removeEventListener('close', onSocketClose);
-        socketRef.current.removeEventListener('error', onSocketError);
-        socketRef.current.removeEventListener('message', onSocketMessage);
-        socketRef.current.removeEventListener('open', onSocketOpen);
-      };
     },
-    [onSocketClose, onSocketOpen, onSocketError, onSocketMessage, token]
+    [token]
   );
+
+  useEffect(() => {
+    if (!socketRef.current) {
+      return;
+    }
+
+    socketRef.current.addEventListener('close', onSocketClose);
+    socketRef.current.addEventListener('error', onSocketError);
+    socketRef.current.addEventListener('message', onSocketMessage);
+    socketRef.current.addEventListener('open', onSocketOpen);
+
+    return () => {
+      socketRef.current.removeEventListener('close', onSocketClose);
+      socketRef.current.removeEventListener('error', onSocketError);
+      socketRef.current.removeEventListener('message', onSocketMessage);
+      socketRef.current.removeEventListener('open', onSocketOpen);
+    };
+  }, [onSocketClose, onSocketError, onSocketMessage, onSocketOpen, socketRef.current?.readyState]);
 
   return [connect, sendMessage, close, socketRef.current?.readyState ?? WebSocket.CLOSED, sessionId];
 };
