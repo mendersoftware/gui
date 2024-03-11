@@ -125,14 +125,18 @@ const TroubleshootContent = ({ device, onDownload, setSocketClosed, setUploadPat
 
   const onSocketClose = useCallback(
     event => {
+      // abnormal socket close might happen without socket being initialized, in case of forbidden permissions
+      // this should be checked before socketInitialized condition
+      if (event.code === 1006) {
+        // 1006: abnormal closure
+        onNotify('Connection to the remote terminal is forbidden.');
+      }
+
       if (!socketInitialized) {
         return;
       }
       if (event.wasClean) {
         onNotify(`Connection with the device closed.`);
-      } else if (event.code == 1006) {
-        // 1006: abnormal closure
-        onNotify('Connection to the remote terminal is forbidden.');
       } else {
         onNotify('Connection with the device died.');
       }
