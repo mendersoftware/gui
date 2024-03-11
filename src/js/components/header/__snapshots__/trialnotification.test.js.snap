@@ -156,12 +156,12 @@ exports[`DeviceNotifications Component renders correctly 1`] = `
     Trial plan
   </div>
   <a
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-1"
     href="/settings/upgrade"
     tabindex="0"
   >
     <span
-      class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
+      class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
     >
       <svg
         aria-hidden="true"
@@ -339,12 +339,12 @@ exports[`DeviceNotifications Component renders correctly with an expiration date
     Trial plan
   </div>
   <a
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-1"
     href="/settings/upgrade"
     tabindex="0"
   >
     <span
-      class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
+      class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
     >
       <svg
         aria-hidden="true"

@@ -73,7 +73,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   value=""
                 />
                 <div
-                  class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
+                  class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
                 >
                   <button
                     aria-label="Clear"
@@ -135,7 +135,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
                   value=""
                 />
                 <div
-                  class="MuiAutocomplete-endAdornment css-1q60rmi-MuiAutocomplete-endAdornment"
+                  class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
                 >
                   <button
                     aria-label="Clear"
@@ -364,7 +364,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1fxol34-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary css-1fxol34-MuiButtonBase-root-MuiButton-root"
         style="margin-left: 15px;"
         tabindex="0"
         type="button"
