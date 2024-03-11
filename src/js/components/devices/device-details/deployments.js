@@ -19,8 +19,10 @@ import { Button, Table, TableBody, TableCell, TableHead, TableRow, buttonClasses
 import { makeStyles } from 'tss-react/mui';
 
 import { deploymentsApiUrl, getDeviceDeployments, resetDeviceDeployments } from '../../../actions/deploymentActions';
+import { getToken } from '../../../auth.js';
 import { deploymentDisplayStates, deploymentStatesToSubstates } from '../../../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
+import { createDownload } from '../../../helpers.js';
 import Confirm from '../../common/confirm';
 import Pagination from '../../common/pagination';
 import { MaybeTime } from '../../common/time';
@@ -67,9 +69,17 @@ const columns = [
   {
     content: '',
     key: 'log',
-    Component: ({ deviceDeployment: { id, log, deviceId } }) =>
+    Component: ({ deviceDeployment: { id, log, deviceId }, token }) =>
       log && (
-        <Button component="a" href={`${window.location.origin}${deploymentsApiUrl}/deployments/${id}/devices/${deviceId}/log`} target="_blank">
+        <Button
+          onClick={() =>
+            createDownload(
+              ` ${window.location.origin}${deploymentsApiUrl}/deployments/${id}/devices/${deviceId}/log`,
+              `device_${deviceId}_deployment_${id}.log`,
+              token
+            )
+          }
+        >
           Log
         </Button>
       )
@@ -77,6 +87,7 @@ const columns = [
 ];
 
 const History = ({ className, items, page, perPage, setPage, setPerPage, total }) => {
+  const token = getToken();
   const onChangeRowsPerPage = perPage => {
     setPage(1);
     setPerPage(perPage);
@@ -102,7 +113,7 @@ const History = ({ className, items, page, perPage, setPage, setPerPage, total }
             <TableRow className={item.deleted ? 'deleted' : ''} key={item.id}>
               {columns.map(({ key, Component }) => (
                 <TableCell key={`${item.id}-${key}`}>
-                  <Component deviceDeployment={item} />
+                  <Component token={token} deviceDeployment={item} />
                 </TableCell>
               ))}
             </TableRow>
