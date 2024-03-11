@@ -569,7 +569,7 @@ export const getDeviceLimit = () => dispatch =>
   );
 
 export const setDeviceListState =
-  (selectionState, shouldSelectDevices = true, forceRefresh) =>
+  (selectionState, shouldSelectDevices = true, forceRefresh, fetchAuth = true) =>
   (dispatch, getState) => {
     const currentState = getState().devices.deviceList;
     const refreshTrigger = forceRefresh ? !currentState.refreshTrigger : selectionState.refreshTrigger;
@@ -594,7 +594,7 @@ export const setDeviceListState =
       const applicableSelectedState = nextState.state === routes.allDevices.key ? undefined : nextState.state;
       nextState.isLoading = true;
       tasks.push(
-        dispatch(getDevicesByStatus(applicableSelectedState, { ...nextState, sortOptions: sortBy }))
+        dispatch(getDevicesByStatus(applicableSelectedState, { ...nextState, sortOptions: sortBy }, fetchAuth))
           .then(results => {
             const { deviceAccu, total } = results[results.length - 1];
             const devicesState = shouldSelectDevices
@@ -641,7 +641,7 @@ export const convertDeviceListStateToFilters = ({ filters = [], group, groups = 
 
 // get devices from inventory
 export const getDevicesByStatus =
-  (status, options = {}) =>
+  (status, options = {}, fetchAuth = true) =>
   (dispatch, getState) => {
     const { filterSelection, group, selectedIssues = [], page = defaultPage, perPage = defaultPerPage, sortOptions = [], selectedAttributes = [] } = options;
     const { applicableFilters, filterTerms } = convertDeviceListStateToFilters({
@@ -685,7 +685,7 @@ export const getDevicesByStatus =
         }
         // for each device, get device identity info
         const receivedDevices = Object.values(deviceAccu.devicesById);
-        if (receivedDevices.length) {
+        if (receivedDevices.length && fetchAuth) {
           tasks.push(dispatch(getDevicesWithAuth(receivedDevices)));
         }
         tasks.push(Promise.resolve({ deviceAccu, total: Number(response.headers[headerNames.total]) }));
