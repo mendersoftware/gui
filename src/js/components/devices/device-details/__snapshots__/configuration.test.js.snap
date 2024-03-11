@@ -619,13 +619,13 @@ exports[`Configuration Component renders correctly 1`] = `
           Device configuration
         </h4>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-0"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-0"
           style="padding: 5px;"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-1"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-1"
           >
             <svg
               aria-hidden="true"
@@ -1178,7 +1178,7 @@ exports[`tiny components renders ConfigEditingActions correctly 1`] = `
     </div>
   </div>
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-6"
+    class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-6"
     style="margin-left: 30px;"
     tabindex="0"
     type="button"
@@ -1445,13 +1445,13 @@ exports[`tiny components renders ConfigUpdateFailureActions correctly 1`] = `
 
 <div>
   <button
-    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-0"
+    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorSecondary emotion-0"
     style="margin-left: 30px;"
     tabindex="0"
     type="button"
   >
     <span
-      class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-1"
+      class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-1"
     >
       <svg
         aria-hidden="true"
