@@ -1055,12 +1055,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             </svg>
           </a>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium header-dropdown emotion-8"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary header-dropdown emotion-8"
             tabindex="0"
             type="button"
           >
             <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-9"
+              class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-9"
             >
               <svg
                 aria-hidden="true"
@@ -1075,7 +1075,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
               </svg>
             </span>
             <span
-              class="MuiButton-endIcon MuiButton-iconSizeMedium emotion-11"
+              class="MuiButton-icon MuiButton-endIcon MuiButton-iconSizeMedium emotion-11"
             >
               <svg
                 aria-hidden="true"
@@ -2618,12 +2618,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             </svg>
           </a>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium header-dropdown emotion-8"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary header-dropdown emotion-8"
             tabindex="0"
             type="button"
           >
             <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-9"
+              class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-9"
             >
               <svg
                 aria-hidden="true"
@@ -2639,7 +2639,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-5:focus::-ms-input-p
             </span>
             a@b.com
             <span
-              class="MuiButton-endIcon MuiButton-iconSizeMedium emotion-11"
+              class="MuiButton-icon MuiButton-endIcon MuiButton-iconSizeMedium emotion-11"
             >
               <svg
                 aria-hidden="true"

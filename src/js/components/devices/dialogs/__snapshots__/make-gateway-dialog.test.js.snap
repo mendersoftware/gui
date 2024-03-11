@@ -436,13 +436,13 @@ exports[`CreateGroupExplainerContent Component renders correctly 1`] = `
           class="code emotion-6 "
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-7"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-7"
             style="float: right; margin: -20px 0px 0px 10px;"
             tabindex="0"
             type="button"
           >
             <span
-              class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-8"
+              class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-8"
             >
               <svg
                 aria-hidden="true"
@@ -487,7 +487,7 @@ wget -O- https://get.mender.io | sudo bash -s -- --jwt-token $JWT_TOKEN mender-g
         class="MuiDialogActions-root MuiDialogActions-spacing emotion-11"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-7"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-7"
           tabindex="0"
           type="button"
         >
@@ -500,7 +500,7 @@ wget -O- https://get.mender.io | sudo bash -s -- --jwt-token $JWT_TOKEN mender-g
           style="flex-grow: 1;"
         />
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-14"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorSecondary emotion-14"
           tabindex="0"
           type="button"
         >

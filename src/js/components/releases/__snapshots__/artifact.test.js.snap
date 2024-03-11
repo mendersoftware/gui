@@ -1028,13 +1028,13 @@ exports[`Artifact Component renders correctly 1`] = `
                             </div>
                           </div>
                           <button
-                            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall emotion-21"
+                            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary emotion-21"
                             style="padding: 5px;"
                             tabindex="0"
                             type="button"
                           >
                             <span
-                              class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-22"
+                              class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall emotion-22"
                             >
                               <svg
                                 aria-hidden="true"
@@ -1145,7 +1145,7 @@ exports[`Artifact Component renders correctly 1`] = `
                   style="max-width: fit-content;"
                 >
                   <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-38"
+                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary Mui-disabled MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-38"
                     disabled=""
                     download=""
                     tabindex="-1"
@@ -1153,7 +1153,7 @@ exports[`Artifact Component renders correctly 1`] = `
                     type="button"
                   >
                     <span
-                      class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-39"
+                      class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-39"
                     >
                       <svg
                         aria-hidden="true"
@@ -1171,12 +1171,12 @@ exports[`Artifact Component renders correctly 1`] = `
                     Download Artifact
                   </button>
                   <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-38"
+                    class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-38"
                     tabindex="0"
                     type="button"
                   >
                     <span
-                      class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-39"
+                      class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-39"
                     >
                       <svg
                         aria-hidden="true"

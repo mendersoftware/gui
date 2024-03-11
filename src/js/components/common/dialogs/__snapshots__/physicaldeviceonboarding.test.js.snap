@@ -402,7 +402,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 .emotion-5 {
   position: absolute;
   right: 0;
-  top: calc(50% - 14px);
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+  -moz-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
 }
 
 .emotion-6 {
@@ -1055,7 +1059,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
 .emotion-5 {
   position: absolute;
   right: 0;
-  top: calc(50% - 14px);
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+  -moz-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
 }
 
 .emotion-6 {
@@ -1561,13 +1569,13 @@ exports[`PhysicalDeviceOnboarding Component tiny onboarding tips renders Install
     class="code emotion-0 "
   >
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-1"
+      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-1"
       style="float: right; margin: -20px 0px 0px 10px;"
       tabindex="0"
       type="button"
     >
       <span
-        class="MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
+        class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeMedium emotion-2"
       >
         <svg
           aria-hidden="true"
