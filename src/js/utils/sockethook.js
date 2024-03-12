@@ -11,15 +11,14 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import msgpack5 from 'msgpack5';
 import Cookies from 'universal-cookie';
 
-import GeneralApi, { apiUrl } from '../api/general-api';
+import { apiUrl } from '../api/general-api';
 import { TIMEOUTS } from '../constants/appConstants';
 import { DEVICE_MESSAGE_PROTOCOLS as MessageProtocols, DEVICE_MESSAGE_TYPES as MessageTypes } from '../constants/deviceConstants';
-import { extractErrorMessage } from '../helpers.js';
 
 const cookies = new Cookies();
 
@@ -133,46 +132,36 @@ export const useSession = ({ onClose, onHealthCheckFailed, onMessageReceived, on
   );
 
   const connect = useCallback(
-    async deviceId => {
-      const uri = `${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`;
+    deviceId => {
+      const uri = `wss://${window.location.host}${apiUrl.v1}/deviceconnect/devices/${deviceId}/connect`;
       setSessionId();
       cookies.set('JWT', token, { path: '/', secure: true, sameSite: 'strict', maxAge: 5 });
-
-      let connectionForbidden = false;
-      /**
-       * [MEN-6890] Send an HTTP get request to verify if the status is forbidden or not.
-       * This is needed because in the case of a forbidden request, the backend won't follow the websocket handshake process
-       * and closes the connection abnormally (from the websockets point of view).
-       */
-      await GeneralApi.get(uri).catch(error => {
-        if (error?.response?.status === 403) {
-          onNotify(`Connection error: ${extractErrorMessage(error)}`);
-          connectionForbidden = true;
-        }
-      });
-
       try {
-        if (!connectionForbidden) {
-          socketRef.current = new WebSocket(`wss://${window.location.host}${uri}`);
-          socketRef.current.addEventListener('close', onSocketClose);
-          socketRef.current.addEventListener('error', onSocketError);
-          socketRef.current.addEventListener('message', onSocketMessage);
-          socketRef.current.addEventListener('open', onSocketOpen);
-        }
+        socketRef.current = new WebSocket(uri);
       } catch (error) {
         console.log(error);
       }
-      return () => {
-        if (socketRef.current) {
-          socketRef.current.removeEventListener('close', onSocketClose);
-          socketRef.current.removeEventListener('error', onSocketError);
-          socketRef.current.removeEventListener('message', onSocketMessage);
-          socketRef.current.removeEventListener('open', onSocketOpen);
-        }
-      };
     },
-    [onSocketClose, onSocketOpen, onSocketError, onSocketMessage, token, onNotify]
+    [token]
   );
+
+  useEffect(() => {
+    if (!socketRef.current) {
+      return;
+    }
+
+    socketRef.current.addEventListener('close', onSocketClose);
+    socketRef.current.addEventListener('error', onSocketError);
+    socketRef.current.addEventListener('message', onSocketMessage);
+    socketRef.current.addEventListener('open', onSocketOpen);
+
+    return () => {
+      socketRef.current.removeEventListener('close', onSocketClose);
+      socketRef.current.removeEventListener('error', onSocketError);
+      socketRef.current.removeEventListener('message', onSocketMessage);
+      socketRef.current.removeEventListener('open', onSocketOpen);
+    };
+  }, [onSocketClose, onSocketError, onSocketMessage, onSocketOpen, socketRef.current?.readyState]);
 
   return [connect, sendMessage, close, socketRef.current?.readyState ?? WebSocket.CLOSED, sessionId];
 };
