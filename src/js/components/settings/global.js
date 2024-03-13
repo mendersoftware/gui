@@ -181,7 +181,11 @@ export const GlobalSettingsDialog = ({
   const toggleDeploymentConfirmation = () => {
     saveGlobalSettings({ needsDeploymentConfirmation: !needsDeploymentConfirmation });
   };
-
+  // sets interval to one day whenever disabled interval unit is used (MEN-6831). Should be removed later
+  if (currentIntervalUnit && currentIntervalUnit !== 'days') {
+    setCurrentIntervalUnit('days');
+    setCurrentInterval(1);
+  }
   return (
     <div style={{ maxWidth }} className="margin-top-small">
       <div className="flexbox center-aligned">

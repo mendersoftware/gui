@@ -21,8 +21,8 @@ const credentialTypes = {
   sas: 'sas',
   x509: 'x509'
 };
-
-export const offlineThresholds = ['minutes', 'hours', 'days'];
+// minutes and hours thresholds are temporarily disabled (MEN-6831)
+export const offlineThresholds = [/*'minutes', 'hours',*/ 'days'];
 
 export const DEVICE_FILTERING_OPTIONS = {
   $eq: { key: '$eq', title: 'equals', shortform: '=' },
@@ -258,7 +258,7 @@ export const DEVICE_CONNECT_STATES = {
   disconnected: 'disconnected',
   unknown: 'unknown'
 };
-export const DEVICE_ONLINE_CUTOFF = { interval: 24, intervalName: offlineThresholds[1] };
+export const DEVICE_ONLINE_CUTOFF = { interval: 1, intervalName: offlineThresholds[0] };
 export const ATTRIBUTE_SCOPES = {
   inventory: 'inventory',
   identity: 'identity',
