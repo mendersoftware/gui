@@ -267,7 +267,7 @@ export const rolesById = Object.freeze({
     uiPermissions: {
       ...emptyUiPermissions,
       deployments: uiPermissionsByArea.deployments.uiPermissions.map(permissionMapper),
-      groups: { [ALL_DEVICES]: [uiPermissionsById.deploy.value] },
+      groups: { [ALL_DEVICES]: [uiPermissionsById.deploy.value, uiPermissionsById.read.value] },
       releases: { [ALL_RELEASES]: [uiPermissionsById.read.value] }
     }
   },
