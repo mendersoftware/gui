@@ -95,10 +95,12 @@ export const BaseNotification = ({ bordered = true, className = '', children, se
 export const LastConnection = ({ updated_ts }) => {
   const { classes } = useStyles();
 
-  return (
+  return updated_ts ? (
     <BaseNotification severity={monitoringSeverities.CRITICAL}>
       Device has not connected to the server since <Time className={classes.textSpacing} value={updated_ts} />
     </BaseNotification>
+  ) : (
+    <BaseNotification severity={monitoringSeverities.WARNING}>The device has never connected to the server</BaseNotification>
   );
 };
 
