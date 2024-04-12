@@ -135,6 +135,10 @@ exports[`FilterItem Component renders correctly 1`] = `
   -ms-flex-positive: 1;
   flex-grow: 1;
   text-overflow: ellipsis;
+  opacity: 0;
+}
+
+.emotion-0 .MuiAutocomplete-input {
   opacity: 1;
 }
 

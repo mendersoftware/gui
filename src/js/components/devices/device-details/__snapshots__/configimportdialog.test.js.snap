@@ -627,7 +627,7 @@ exports[`ConfigImportDialog Component renders correctly 1`] = `
         style="overflow: hidden;"
       >
         <div
-          class="MuiFormGroup-root emotion-6"
+          class="MuiFormGroup-root MuiRadioGroup-root emotion-6"
           role="radiogroup"
         >
           <label
