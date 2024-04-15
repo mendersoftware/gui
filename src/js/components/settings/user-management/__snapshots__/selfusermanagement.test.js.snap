@@ -855,5 +855,24 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
       </div>
     </div>
   </div>
+  <div
+    class="flexbox space-between margin-top "
+  >
+    <p
+      class="help-content"
+    >
+      Personal access token management
+    </p>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorPrimary emotion-17"
+      tabindex="0"
+      type="button"
+    >
+      Generate a token
+      <span
+        class="MuiTouchRipple-root emotion-9"
+      />
+    </button>
+  </div>
 </div>
 `;

@@ -144,7 +144,7 @@ export const SelfUserManagement = () => {
           <CopyTextToClipboard token={token} />
         </div>
       </div>
-      {!isOAuth2 && <AccessTokenManagement />}
+      <AccessTokenManagement />
       {isEnterprise && hasTracking && (
         <div className="margin-top">
           <div className="clickable flexbox space-between" onClick={() => dispatch(saveUserSettings({ trackingConsentGiven: !hasTrackingConsent }))}>

@@ -20,6 +20,7 @@ import { Button } from '@mui/material';
 import { listItemTextClasses } from '@mui/material/ListItemText';
 import { makeStyles } from 'tss-react/mui';
 
+import { XML_METADATA_FORMAT } from '../../../constants/organizationConstants.js';
 import { useradmApiUrl } from '../../../constants/userConstants';
 import { toggle } from '../../../helpers';
 import ExpandableAttribute from '../../common/expandable-attribute';
@@ -66,7 +67,6 @@ export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, toke
   const [fileContent, setFileContentState] = useState('');
   const [hasSSOConfig, setHasSSOConfig] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
   const { id, ...content } = config || {};
   const configContent = content.config || '';
 
@@ -78,7 +78,7 @@ export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, toke
   useEffect(() => {
     setHasSSOConfig(!!config);
     setFileContent(configContent);
-    if (config?.config) {
+    if (config?.id) {
       setConfigDetails(defaultDetails.map(item => ({ ...item, value: item.getValue(config.id) })));
     }
   }, [config, configContent]);
@@ -108,6 +108,9 @@ export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, toke
 
   const onOpenEditorClick = () => setIsEditing(toggle);
 
+  // disable save button if there is no metadata content and metadata format is not xml that means SAML. As we allow to save empty SAML SSO config
+  const saveButtonDisabled = !fileContent && ssoItem.metadataFormat !== XML_METADATA_FORMAT;
+
   return (
     <>
       <div className={`flexbox center-aligned ${classes.wrapper} ${hasSSOConfig ? 'has-sso' : ''}`}>
@@ -136,7 +139,7 @@ export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, toke
           ) : (
             <>
               <Button onClick={onCancelSSOSettings}>Cancel</Button>
-              <Button className={classes.tinyMargin} onClick={onSaveSSOSettings} disabled={!fileContent} variant="contained">
+              <Button className={classes.tinyMargin} onClick={onSaveSSOSettings} disabled={saveButtonDisabled} variant="contained">
                 Save
               </Button>
             </>
