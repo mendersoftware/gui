@@ -182,7 +182,7 @@ export const uiPermissionsByArea = {
     explanation: 'Release permissions can be granted to allow artifact & release modifications, as well as the creation of new releases.',
     scope: 'ReleaseTags',
     uiPermissions: [uiPermissionsById.read, uiPermissionsById.manage, uiPermissionsById.upload],
-    title: 'Releases'
+    title: 'Release Management'
   },
   userManagement: {
     endpoints: [
