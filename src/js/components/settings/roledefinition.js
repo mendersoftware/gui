@@ -299,8 +299,6 @@ const deriveItemsAndPermissions = (stateItems, roleItems, options = {}) => {
   return { filtered: filteredStateItems, selections: itemSelections };
 };
 
-const permissionCompatibilityReducer = (accu, permission) => ({ [ALL_RELEASES]: [...accu[ALL_RELEASES], permission] });
-
 const DeleteRoleDialog = ({ dismiss, open, submit, name }) => (
   <Dialog open={open}>
     <DialogTitle>Delete role?</DialogTitle>
@@ -322,17 +320,7 @@ const DeleteRoleDialog = ({ dismiss, open, submit, name }) => (
   </Dialog>
 );
 
-export const RoleDefinition = ({
-  adding,
-  editing,
-  features,
-  stateGroups,
-  stateReleaseTags,
-  onCancel,
-  onSubmit,
-  removeRole,
-  selectedRole = { ...emptyRole }
-}) => {
+export const RoleDefinition = ({ adding, editing, stateGroups, stateReleaseTags, onCancel, onSubmit, removeRole, selectedRole = { ...emptyRole } }) => {
   const [description, setDescription] = useState(selectedRole.description);
   const [groups, setGroups] = useState([]);
   const [releases, setReleases] = useState([]);
@@ -345,7 +333,6 @@ export const RoleDefinition = ({
   const [removeDialog, setRemoveDialog] = useState(false);
   const [userManagementPermissions, setUserManagementPermissions] = useState([]);
   const { classes } = useStyles();
-  const { hasReleaseTags } = features;
 
   useEffect(() => {
     const { name: roleName = '', description: roleDescription = '' } = selectedRole;
@@ -395,7 +382,7 @@ export const RoleDefinition = ({
       uiPermissions: {
         auditlog: auditlogPermissions,
         groups: groupSelections,
-        releases: hasReleaseTags ? releaseTagSelections : [{ item: ALL_RELEASES, uiPermissions: releasesPermissions }],
+        releases: releaseTagSelections,
         userManagement: userManagementPermissions
       }
     };
@@ -417,9 +404,7 @@ export const RoleDefinition = ({
       auditlog: auditlogPermissions,
       userManagement: userManagementPermissions,
       groups: groupSelections.reduce(itemUiPermissionsReducer, {}),
-      releases: hasReleaseTags
-        ? releaseTagSelections.reduce(itemUiPermissionsReducer, {})
-        : releasesPermissions.reduce(permissionCompatibilityReducer, { [ALL_RELEASES]: [] })
+      releases: releaseTagSelections.reduce(itemUiPermissionsReducer, {})
     };
     const { hasPartiallyDefinedAreas, hasAreaPermissions } = [...groupSelections, ...releaseTagSelections].reduce(
       (accu, { item, uiPermissions }) => {
@@ -442,7 +427,6 @@ export const RoleDefinition = ({
     auditlogPermissions,
     userManagementPermissions,
     groupSelections,
-    hasReleaseTags,
     releaseTagSelections,
     releasesPermissions,
     disableEdit,
@@ -500,11 +484,8 @@ export const RoleDefinition = ({
           values={userManagementPermissions}
         />
         <PermissionsItem disabled={disableEdit} area={uiPermissionsByArea.auditlog} onChange={setAuditlogPermissions} values={auditlogPermissions} />
-        {!hasReleaseTags && (
-          <PermissionsItem disabled={disableEdit} area={uiPermissionsByArea.releases} onChange={setReleasesPermissions} values={releasesPermissions} />
-        )}
       </div>
-      {(!disableEdit || !!releaseTagSelections.length) && hasReleaseTags && (
+      {(!disableEdit || !!releaseTagSelections.length) && (
         <ItemSelection
           disableEdit={disableEdit}
           excessiveAccessConfig={scopedPermissionAreas.releases.excessiveAccessConfig}

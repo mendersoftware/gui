@@ -35,7 +35,6 @@ export const initialState = {
     hasDeviceConfig: false,
     hasDeviceConnect: false,
     hasMonitor: false,
-    hasReleaseTags: false,
     hasReporting: false,
     isDemoMode: false,
     isHosted: false,
