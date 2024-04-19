@@ -1233,6 +1233,93 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 }
 
 .emotion-41 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
+  color: rgba(0, 0, 0, 0.54);
+  color: rgba(10, 10, 11, 0.78);
+}
+
+.emotion-41::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-41.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-41 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-41:hover {
+  background-color: rgba(51, 122, 135, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-41:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-41.Mui-checked,
+.emotion-41.MuiCheckbox-indeterminate {
+  color: #337a87;
+}
+
+.emotion-41.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-42 {
+  cursor: inherit;
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+}
+
+.emotion-43 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1249,15 +1336,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   font-size: 1.3929rem;
 }
 
-.emotion-41 iconButton {
+.emotion-43 iconButton {
   margin-right: 8px;
 }
 
-.emotion-47 {
+.emotion-52 {
   display: table-row-group;
 }
 
-.emotion-49 {
+.emotion-54 {
   font-family: Lato,sans-serif;
   font-weight: 400;
   font-size: 0.8125rem;
@@ -1272,17 +1359,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   height: 48px;
 }
 
-.emotion-148 {
+.emotion-253 {
   overflow: auto;
   color: rgba(10, 10, 11, 0.78);
   font-size: 0.8125rem;
 }
 
-.emotion-148:last-child {
+.emotion-253:last-child {
   padding: 0;
 }
 
-.emotion-149 {
+.emotion-254 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1300,7 +1387,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 }
 
 @media (min-width:600px) {
-  .emotion-149 {
+  .emotion-254 {
     padding-left: 24px;
     padding-right: 24px;
   }
@@ -1308,45 +1395,45 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 
 @media (min-width:0px) {
   @media (orientation: landscape) {
-    .emotion-149 {
+    .emotion-254 {
       min-height: 48px;
     }
   }
 }
 
 @media (min-width:600px) {
-  .emotion-149 {
+  .emotion-254 {
     min-height: 64px;
   }
 }
 
 @media (min-width:0px) and (orientation: landscape) {
-  .emotion-149 {
+  .emotion-254 {
     min-height: 52px;
   }
 }
 
 @media (min-width:600px) {
-  .emotion-149 {
+  .emotion-254 {
     min-height: 52px;
     padding-right: 2px;
   }
 }
 
-.emotion-149 .MuiTablePagination-actions {
+.emotion-254 .MuiTablePagination-actions {
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
   margin-left: 20px;
 }
 
-.emotion-150 {
+.emotion-255 {
   -webkit-flex: 1 1 100%;
   -ms-flex: 1 1 100%;
   flex: 1 1 100%;
 }
 
-.emotion-151 {
+.emotion-256 {
   font-family: Lato,sans-serif;
   font-weight: 400;
   font-size: 0.8125rem;
@@ -1356,7 +1443,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   flex-shrink: 0;
 }
 
-.emotion-152 {
+.emotion-257 {
   line-height: 1.4375em;
   font-family: Lato,sans-serif;
   font-weight: 400;
@@ -1382,12 +1469,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   margin-left: 8px;
 }
 
-.emotion-152.Mui-disabled {
+.emotion-257.Mui-disabled {
   color: rgba(0, 0, 0, 0.38);
   cursor: default;
 }
 
-.emotion-152 .MuiTablePagination-select {
+.emotion-257 .MuiTablePagination-select {
   padding-left: 8px;
   padding-right: 24px;
   text-align: right;
@@ -1395,7 +1482,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   text-align-last: right;
 }
 
-.emotion-153 {
+.emotion-258 {
   -moz-appearance: none;
   -webkit-appearance: none;
   -webkit-user-select: none;
@@ -1423,34 +1510,34 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   animation-duration: 10ms;
 }
 
-.emotion-153:focus {
+.emotion-258:focus {
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 0;
 }
 
-.emotion-153::-ms-expand {
+.emotion-258::-ms-expand {
   display: none;
 }
 
-.emotion-153.Mui-disabled {
+.emotion-258.Mui-disabled {
   cursor: default;
 }
 
-.emotion-153[multiple] {
+.emotion-258[multiple] {
   height: auto;
 }
 
-.emotion-153:not([multiple]) option,
-.emotion-153:not([multiple]) optgroup {
+.emotion-258:not([multiple]) option,
+.emotion-258:not([multiple]) optgroup {
   background-color: #fff;
 }
 
-.emotion-153.emotion-153.emotion-153 {
+.emotion-258.emotion-258.emotion-258 {
   padding-right: 24px;
   min-width: 16px;
 }
 
-.emotion-153.MuiSelect-select {
+.emotion-258.MuiSelect-select {
   height: auto;
   min-height: 1.4375em;
   text-overflow: ellipsis;
@@ -1458,91 +1545,91 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   overflow: hidden;
 }
 
-.emotion-153::-webkit-input-placeholder {
+.emotion-258::-webkit-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-153::-moz-placeholder {
+.emotion-258::-moz-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-153:-ms-input-placeholder {
+.emotion-258:-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-153::-ms-input-placeholder {
+.emotion-258::-ms-input-placeholder {
   color: currentColor;
   opacity: 0.42;
   -webkit-transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.emotion-153:focus {
+.emotion-258:focus {
   outline: 0;
 }
 
-.emotion-153:invalid {
+.emotion-258:invalid {
   box-shadow: none;
 }
 
-.emotion-153::-webkit-search-decoration {
+.emotion-258::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258::-webkit-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258::-moz-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258::-ms-input-placeholder {
   opacity: 0!important;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-webkit-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus::-webkit-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-moz-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus::-moz-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus:-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus:-ms-input-placeholder {
   opacity: 0.42;
 }
 
-label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input-placeholder {
+label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus::-ms-input-placeholder {
   opacity: 0.42;
 }
 
-.emotion-153.Mui-disabled {
+.emotion-258.Mui-disabled {
   opacity: 1;
   -webkit-text-fill-color: rgba(0, 0, 0, 0.38);
 }
 
-.emotion-153:-webkit-autofill {
+.emotion-258:-webkit-autofill {
   -webkit-animation-duration: 5000s;
   animation-duration: 5000s;
   -webkit-animation-name: mui-auto-fill;
   animation-name: mui-auto-fill;
 }
 
-.emotion-154 {
+.emotion-259 {
   bottom: 0;
   left: 0;
   position: absolute;
@@ -1552,7 +1639,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
   box-sizing: border-box;
 }
 
-.emotion-155 {
+.emotion-260 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1574,15 +1661,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-155 iconButton {
+.emotion-260 iconButton {
   margin-right: 8px;
 }
 
-.emotion-155.Mui-disabled {
+.emotion-260.Mui-disabled {
   color: rgba(0, 0, 0, 0.26);
 }
 
-.emotion-156 {
+.emotion-261 {
   font-family: Lato,sans-serif;
   font-weight: 400;
   font-size: 0.8125rem;
@@ -1592,7 +1679,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
   flex-shrink: 0;
 }
 
-.emotion-157 {
+.emotion-262 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1642,33 +1729,33 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
   color: rgba(0, 0, 0, 0.54);
 }
 
-.emotion-157::-moz-focus-inner {
+.emotion-262::-moz-focus-inner {
   border-style: none;
 }
 
-.emotion-157.Mui-disabled {
+.emotion-262.Mui-disabled {
   pointer-events: none;
   cursor: default;
 }
 
 @media print {
-  .emotion-157 {
+  .emotion-262 {
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
   }
 }
 
-.emotion-157:hover {
+.emotion-262:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
 
 @media (hover: none) {
-  .emotion-157:hover {
+  .emotion-262:hover {
     background-color: transparent;
   }
 }
 
-.emotion-157.Mui-disabled {
+.emotion-262.Mui-disabled {
   background-color: transparent;
   color: rgba(0, 0, 0, 0.26);
 }
@@ -1964,13 +2051,41 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-head emotion-39"
             >
               <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium emotion-40"
+                scope="col"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </th>
+              <th
                 class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium columnHeader  emotion-40"
                 scope="col"
               >
                 Name
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected true emotion-41"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon selected true emotion-43"
                   data-testid="SortIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -1993,7 +2108,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
                 Tags
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true emotion-41"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true emotion-43"
                   data-testid="SortIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -2010,7 +2125,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
                 Last modified
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true emotion-41"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium sortIcon  true emotion-43"
                   data-testid="SortIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -2023,28 +2138,55 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
             </tr>
           </thead>
           <tbody
-            class="MuiTableBody-root emotion-47"
+            class="MuiTableBody-root emotion-52"
           >
             <tr
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-999
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2063,22 +2205,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-998
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2097,22 +2266,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-997
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2131,22 +2327,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-996
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2165,22 +2388,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-995
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2199,22 +2449,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-994
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2233,22 +2510,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-993
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2267,22 +2571,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-992
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2301,22 +2632,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-991
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2335,22 +2693,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-990
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2369,22 +2754,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-99
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2403,22 +2815,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-989
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2437,22 +2876,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-988
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2471,22 +2937,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-987
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2505,22 +2998,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-986
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2539,22 +3059,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-985
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2573,22 +3120,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-984
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2607,22 +3181,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-983
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2641,22 +3242,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-982
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2675,22 +3303,49 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
               class="MuiTableRow-root MuiTableRow-hover clickable emotion-39"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-54"
+              >
+                <span
+                  class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-41"
+                >
+                  <input
+                    class="PrivateSwitchBase-input emotion-42"
+                    data-indeterminate="false"
+                    type="checkbox"
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
+                    data-testid="CheckBoxOutlineBlankIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                  <span
+                    class="MuiTouchRipple-root emotion-4"
+                  />
+                </span>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 release-981
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 1
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 -
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-49"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium relative emotion-54"
               >
                 <span
                   aria-label="Thu Sep 10 2020 12:16:22 GMT+0000"
@@ -2711,29 +3366,29 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
           class="flexbox"
         >
           <div
-            class="MuiTablePagination-root flexbox margin-top margin-top-none emotion-148"
+            class="MuiTablePagination-root flexbox margin-top margin-top-none emotion-253"
           >
             <div
-              class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar emotion-149"
+              class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular MuiTablePagination-toolbar emotion-254"
             >
               <div
-                class="MuiTablePagination-spacer flexbox no-basis emotion-150"
+                class="MuiTablePagination-spacer flexbox no-basis emotion-255"
               />
               <p
-                class="MuiTablePagination-selectLabel emotion-151"
+                class="MuiTablePagination-selectLabel emotion-256"
                 id=":r9:"
               >
                 Rows
               </p>
               <div
-                class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input emotion-152"
+                class="MuiInputBase-root MuiInputBase-colorPrimary MuiTablePagination-input emotion-257"
               >
                 <div
                   aria-controls=":ra:"
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-labelledby=":r9: :r8:"
-                  class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input emotion-153"
+                  class="MuiSelect-select MuiTablePagination-select MuiSelect-standard MuiInputBase-input emotion-258"
                   id=":r8:"
                   role="combobox"
                   tabindex="0"
@@ -2743,14 +3398,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
                 <input
                   aria-hidden="true"
                   aria-invalid="false"
-                  class="MuiSelect-nativeInput emotion-154"
+                  class="MuiSelect-nativeInput emotion-259"
                   name="pagination"
                   tabindex="-1"
                   value="20"
                 />
                 <svg
                   aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard emotion-155"
+                  class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiTablePagination-selectIcon MuiSelect-iconStandard emotion-260"
                   data-testid="ArrowDropDownIcon"
                   focusable="false"
                   viewBox="0 0 24 24"
@@ -2761,7 +3416,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
                 </svg>
               </div>
               <p
-                class="MuiTablePagination-displayedRows emotion-156"
+                class="MuiTablePagination-displayedRows emotion-261"
               />
               <div
                 class="flexbox center-aligned"
@@ -2770,14 +3425,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
                   1-20 of 5000
                 </div>
                 <button
-                  class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge emotion-157"
+                  class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge emotion-262"
                   disabled=""
                   tabindex="-1"
                   type="button"
                 >
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-41"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
                     data-testid="KeyboardArrowLeftIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -2789,13 +3444,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-153:focus::-ms-input
                 </button>
                 <div>
                   <button
-                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-157"
+                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge emotion-262"
                     tabindex="0"
                     type="button"
                   >
                     <svg
                       aria-hidden="true"
-                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-41"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-43"
                       data-testid="KeyboardArrowRightIcon"
                       focusable="false"
                       viewBox="0 0 24 24"

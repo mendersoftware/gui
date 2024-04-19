@@ -489,6 +489,7 @@ export const defaultState = {
       searchedIds: [],
       isLoading: false,
       releaseIds: ['r1'],
+      selection: [],
       sort: {
         direction: SORTING_OPTIONS.desc,
         key: 'name'
