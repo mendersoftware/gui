@@ -11,14 +11,14 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles } from 'tss-react/mui';
 
 import { setSnackbar } from '../../actions/appActions';
-import { selectRelease, setReleasesListState } from '../../actions/releaseActions';
+import { removeRelease, selectRelease, setReleasesListState } from '../../actions/releaseActions.js';
 import { SORTING_OPTIONS, canAccess as canShow } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
 import { getFeatures, getHasReleases, getReleaseListState, getReleasesList, getUserCapabilities } from '../../selectors';
@@ -26,6 +26,8 @@ import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import { RelativeTime } from '../common/time';
+import AddTagsDialog from './dialogs/addTags.js';
+import { DeleteReleasesConfirmationDialog, ReleaseQuickActions } from './releasedetails.js';
 
 const columns = [
   {
@@ -91,6 +93,7 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
   const dropzoneRef = useRef();
   const uploading = useSelector(state => state.app.uploading);
   const releasesListState = useSelector(getReleaseListState);
+  const { selection: selectedRows } = releasesListState;
   const { isLoading, page = defaultPage, perPage = defaultPerPage, searchTerm, sort = {}, searchTotal, selectedTags = [], total, type } = releasesListState;
   const hasReleases = useSelector(getHasReleases);
   const features = useSelector(getFeatures);
@@ -98,6 +101,9 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
   const userCapabilities = useSelector(getUserCapabilities);
   const dispatch = useDispatch();
   const { classes } = useStyles();
+  const [addTagsDialog, setAddTagsDialog] = useState(false);
+  const [deleteDialogConfirmation, setDeleteDialogConfirmation] = useState(false);
+  const [selectedReleases, setSelectedReleases] = useState([]);
 
   const { canUploadReleases } = userCapabilities;
   const { key: attribute, direction } = sort;
@@ -135,6 +141,34 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
     [JSON.stringify(features)]
   );
 
+  const onDeleteRelease = releases => {
+    setSelectedReleases(releases);
+    setDeleteDialogConfirmation(true);
+  };
+
+  const deleteReleases = () => {
+    setDeleteDialogConfirmation(false);
+    dispatch(setReleasesListState({ loading: true }))
+      .then(() => {
+        const deleteRequests = selectedReleases.reduce((accu, release) => {
+          accu.push(dispatch(removeRelease(release.name)));
+          return accu;
+        }, []);
+        return Promise.all(deleteRequests);
+      })
+      .then(() => onSelectionChange([]));
+  };
+
+  const onTagRelease = releases => {
+    setSelectedReleases(releases);
+    setAddTagsDialog(true);
+  };
+
+  const actionCallbacks = {
+    onDeleteRelease,
+    onTagRelease
+  };
+
   const isFiltering = !!(selectedTags.length || type || searchTerm);
   const potentialTotal = isFiltering ? searchTotal : total;
   if (!hasReleases) {
@@ -150,6 +184,9 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
     );
   }
 
+  const onSelectionChange = (selection = []) => {
+    dispatch(setReleasesListState({ selection }));
+  };
   return (
     <div className={className}>
       {isLoading === undefined ? (
@@ -158,7 +195,16 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
         <p className="margin-top muted align-center margin-right">There are no Releases {isFiltering ? 'for the filter selection' : 'yet'}</p>
       ) : (
         <>
-          <DetailsTable columns={applicableColumns} items={releases} onItemClick={onSelect} sort={sort} onChangeSorting={onChangeSorting} tableRef={repoRef} />
+          <DetailsTable
+            columns={applicableColumns}
+            items={releases}
+            onItemClick={onSelect}
+            sort={sort}
+            onChangeSorting={onChangeSorting}
+            tableRef={repoRef}
+            onRowSelected={onSelectionChange}
+            selectedRows={selectedRows}
+          />
           <div className="flexbox">
             <Pagination
               className="margin-top-none"
@@ -170,6 +216,11 @@ export const ReleasesList = ({ className = '', onFileUploadClick }) => {
             />
             <Loader show={isLoading} small />
           </div>
+          {selectedRows.length > 0 && <ReleaseQuickActions actionCallbacks={actionCallbacks} userCapabilities={userCapabilities} releases={releases} />}
+          {addTagsDialog && <AddTagsDialog selectedReleases={selectedReleases} onClose={() => setAddTagsDialog(false)}></AddTagsDialog>}
+          {deleteDialogConfirmation && (
+            <DeleteReleasesConfirmationDialog onClose={() => setDeleteDialogConfirmation(false)} onSubmit={deleteReleases}></DeleteReleasesConfirmationDialog>
+          )}
         </>
       )}
     </div>
