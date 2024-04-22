@@ -516,7 +516,8 @@ export const defaultState = {
         editable: true,
         uiPermissions: {
           ...emptyUiPermissions,
-          groups: { testGroup: [uiPermissionsById.read.value] }
+          groups: { testGroup: [uiPermissionsById.read.value] },
+          releases: { bar: [uiPermissionsById.read.value] }
         }
       }
     },
