@@ -20,7 +20,9 @@ import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
 import { cleanUp, maxSessionAge, setSessionInfo } from '../auth';
 import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
+import { getSsoStartUrlById } from '../components/settings/organization/ssoconfig.js';
 import * as AppConstants from '../constants/appConstants';
+import { APPLICATION_JSON_CONTENT_TYPE, APPLICATION_JWT_CONTENT_TYPE } from '../constants/appConstants';
 import { ALL_RELEASES } from '../constants/releaseConstants.js';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
@@ -45,18 +47,26 @@ const {
   useradmApiUrlv2
 } = UserConstants;
 
-const handleLoginError = (err, has2FA) => dispatch => {
-  const errorText = extractErrorMessage(err);
-  const is2FABackend = errorText.includes('2fa');
-  if (is2FABackend && !has2FA) {
-    return Promise.reject({ error: '2fa code missing' });
-  }
-  const twoFAError = is2FABackend ? ' and verification code' : '';
-  const errorMessage = `There was a problem logging in. Please check your email${
-    twoFAError ? ',' : ' and'
-  } password${twoFAError}. If you still have problems, contact an administrator.`;
-  return Promise.reject(dispatch(setSnackbar(preformatWithRequestID(err.response, errorMessage), null, 'Copy to clipboard')));
-};
+const handleLoginError =
+  (err, { token2fa: has2FA, password }) =>
+  dispatch => {
+    const errorText = extractErrorMessage(err);
+    const is2FABackend = errorText.includes('2fa');
+    if (is2FABackend && !has2FA) {
+      return Promise.reject({ error: '2fa code missing' });
+    }
+    if (password === undefined) {
+      // Enterprise supports two-steps login. On the first step you can enter only email
+      // and in case of SSO set up you will receive a redirect URL
+      // otherwise you will receive 401 status code and password field will be shown.
+      return Promise.reject();
+    }
+    const twoFAError = is2FABackend ? ' and verification code' : '';
+    const errorMessage = `There was a problem logging in. Please check your email${
+      twoFAError ? ',' : ' and'
+    } password${twoFAError}. If you still have problems, contact an administrator.`;
+    return Promise.reject(dispatch(setSnackbar(preformatWithRequestID(err.response, errorMessage), null, 'Copy to clipboard')));
+  };
 
 /*
   User management
@@ -65,11 +75,20 @@ export const loginUser = (userData, stayLoggedIn) => dispatch =>
   UsersApi.postLogin(`${useradmApiUrl}/auth/login`, { ...userData, no_expiry: stayLoggedIn })
     .catch(err => {
       cleanUp();
-      return Promise.resolve(dispatch(handleLoginError(err, userData['token2fa'])));
+      return Promise.resolve(dispatch(handleLoginError(err, userData)));
     })
-    .then(res => {
-      const token = res.text;
-      if (!token) {
+    .then(({ text: response, contentType }) => {
+      // If the content type is application/json then backend returned SSO configuration.
+      // user should be redirected to the start sso url to finish login process.
+      if (contentType.includes(APPLICATION_JSON_CONTENT_TYPE)) {
+        const { id } = response;
+        const ssoLoginUrl = getSsoStartUrlById(id);
+        window.location.replace(ssoLoginUrl);
+        return;
+      }
+
+      const token = response;
+      if (contentType !== APPLICATION_JWT_CONTENT_TYPE || !token) {
         return;
       }
       // save token to local storage & set maxAge if noexpiry checkbox not checked
