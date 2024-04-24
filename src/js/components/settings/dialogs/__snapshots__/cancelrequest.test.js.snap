@@ -844,7 +844,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-73:focus::-ms-input-
           style="margin-top: 0px;"
         >
           <div
-            class="MuiFormGroup-root emotion-7"
+            class="MuiFormGroup-root MuiRadioGroup-root emotion-7"
             role="radiogroup"
           >
             <label
