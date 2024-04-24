@@ -859,7 +859,7 @@ const initializeDistributionData = (report, groups, devices, totalDeviceCount) =
 };
 
 export const deriveReportsData = () => (dispatch, getState) =>
-  Promise.all([dispatch(getGroups()), dispatch(getDynamicGroups())]).then(() => {
+  Promise.all([dispatch(getAllDevicesByStatus(DEVICE_STATES.accepted)), dispatch(getGroups()), dispatch(getDynamicGroups())]).then(() => {
     const { dynamic: dynamicGroups, static: staticGroups } = getGroupsSelector(getState());
     return Promise.all([
       ...staticGroups.map(group => dispatch(getAllGroupDevices(group))),

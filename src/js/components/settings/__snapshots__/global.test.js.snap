@@ -2474,7 +2474,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
         <div
           class="capitalized-start"
         >
-          hours
+          days
         </div>
       </div>
       <input
@@ -2482,7 +2482,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
         aria-invalid="false"
         class="MuiSelect-nativeInput emotion-6"
         tabindex="-1"
-        value="hours"
+        value="days"
       />
       <svg
         aria-hidden="true"
@@ -2509,7 +2509,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
           max="1000"
           min="1"
           type="number"
-          value="24"
+          value="1"
         />
       </div>
     </div>

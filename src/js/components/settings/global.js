@@ -21,7 +21,7 @@ import { getDeviceAttributes } from '../../actions/deviceActions';
 import { changeNotificationSetting } from '../../actions/monitorActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { offlineThresholds } from '../../constants/deviceConstants';
+import { offlineThresholds, timeUnits } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
 import {
@@ -181,7 +181,11 @@ export const GlobalSettingsDialog = ({
   const toggleDeploymentConfirmation = () => {
     saveGlobalSettings({ needsDeploymentConfirmation: !needsDeploymentConfirmation });
   };
-
+  // sets interval to one day whenever disabled interval unit is used (MEN-6831). Should be removed later
+  if (currentIntervalUnit && currentIntervalUnit !== timeUnits.days) {
+    setCurrentIntervalUnit(timeUnits.days);
+    setCurrentInterval(1);
+  }
   return (
     <div style={{ maxWidth }} className="margin-top-small">
       <div className="flexbox center-aligned">
