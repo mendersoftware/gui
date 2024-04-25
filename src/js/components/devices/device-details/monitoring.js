@@ -76,7 +76,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
 
   const onChangeRowsPerPage = perPage => dispatch(setAlertListState({ page: 1, perPage }));
 
-  const { monitors = [], isOffline, updated_ts = '' } = device;
+  const { monitors = [], isOffline, inv_check_in_time = '' } = device;
   const hasMonitorsDefined = !!(monitors.length || alerts.length || latestAlerts.length);
 
   return (
@@ -98,7 +98,7 @@ export const DeviceMonitoring = ({ device, onDetailsClick }) => {
       title={
         <div className="flexbox center-aligned">
           <h4 className="margin-bottom-small margin-right">Monitoring</h4>
-          {!!monitors.length && <Time className="muted" value={updated_ts} />}
+          {!!monitors.length && <Time className="muted" value={inv_check_in_time} />}
           <EnterpriseNotification className="margin-left-small" id={BENEFITS.deviceMonitor.id} />
         </div>
       }

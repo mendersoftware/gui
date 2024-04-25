@@ -1,4 +1,4 @@
-// Copyright 2021 Northern.tech AS
+// Copyright 2024 Northern.tech AS
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ describe('tiny components', () => {
           alerts={[1, 2]}
           onClick={jest.fn}
           offlineThresholdSettings={{ intervalUnit: 'hour', interval: 24 }}
-          updated_ts={defaultState.devices.byId.a1.updated_ts}
+          inv_check_in_time={defaultState.devices.byId.a1.inv_check_in_time}
         />
       );
       const view = baseElement.firstChild;

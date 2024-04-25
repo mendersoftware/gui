@@ -1,4 +1,4 @@
-// Copyright 2020 Northern.tech AS
+// Copyright 2024 Northern.tech AS
 //
 //    Licensed under the Apache License, Version 2.0 (the "License");
 //    you may not use this file except in compliance with the License.
@@ -227,7 +227,8 @@ export const defaultState = {
           device_type: ['raspberrypi4'],
           ipv4_wlan0: '192.168.10.141/24'
         },
-        check_in_time: '2019-01-01T10:25:00.000Z',
+        inv_check_in_time: '2019-01-01T10:25:00.000Z',
+        devauth_check_in_time: '2019-01-01T10:25:00.000Z',
         identity_data: { mac: defaultMacAddress },
         status: 'accepted',
         decommissioning: false,
