@@ -19,6 +19,7 @@ import { Add as AddIcon, ArrowRightAlt as ArrowRightAltIcon } from '@mui/icons-m
 import { Chip } from '@mui/material';
 
 import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
+import { getExistingReleaseTags } from '../../actions/releaseActions.js';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { BENEFITS } from '../../constants/appConstants';
 import { emptyRole, rolesById } from '../../constants/userConstants';
@@ -53,6 +54,10 @@ export const RoleManagement = () => {
   const releaseTags = useSelector(getReleaseTagsById);
   const roles = useSelector(getRolesList);
   const isEnterprise = useSelector(getIsEnterprise);
+
+  useEffect(() => {
+    dispatch(getExistingReleaseTags());
+  }, [dispatch]);
 
   useEffect(() => {
     if (Object.keys(groups).length) {

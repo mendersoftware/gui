@@ -489,6 +489,7 @@ export const defaultState = {
       searchedIds: [],
       isLoading: false,
       releaseIds: ['r1'],
+      selection: [],
       sort: {
         direction: SORTING_OPTIONS.desc,
         key: 'name'
@@ -515,7 +516,8 @@ export const defaultState = {
         editable: true,
         uiPermissions: {
           ...emptyUiPermissions,
-          groups: { testGroup: [uiPermissionsById.read.value] }
+          groups: { testGroup: [uiPermissionsById.read.value] },
+          releases: { bar: [uiPermissionsById.read.value] }
         }
       }
     },

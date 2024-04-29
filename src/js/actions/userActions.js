@@ -21,6 +21,7 @@ import UsersApi from '../api/users-api';
 import { cleanUp, maxSessionAge, setSessionInfo } from '../auth';
 import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
 import * as AppConstants from '../constants/appConstants';
+import { ALL_RELEASES } from '../constants/releaseConstants.js';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
 import { getCurrentUser, getOnboardingState, getTooltipsState, getUserSettings as getUserSettingsSelector } from '../selectors';
@@ -464,13 +465,13 @@ export const getRoles = () => (dispatch, getState) =>
     })
     .catch(() => console.log('Role retrieval failed - likely accessing a non-RBAC backend'));
 
-const deriveImpliedAreaPermissions = (area, areaPermissions) => {
+const deriveImpliedAreaPermissions = (area, areaPermissions, skipPermissions = []) => {
   const highestAreaPermissionLevelSelected = areaPermissions.reduce(
     (highest, current) => (uiPermissionsById[current].permissionLevel > highest ? uiPermissionsById[current].permissionLevel : highest),
     1
   );
   return uiPermissionsByArea[area].uiPermissions.reduce((permissions, current) => {
-    if (current.permissionLevel < highestAreaPermissionLevelSelected || areaPermissions.includes(current.value)) {
+    if ((current.permissionLevel < highestAreaPermissionLevelSelected || areaPermissions.includes(current.value)) && !skipPermissions.includes(current.value)) {
       permissions.push(current.value);
     }
     return permissions;
@@ -483,7 +484,9 @@ const deriveImpliedAreaPermissions = (area, areaPermissions) => {
  */
 const transformAreaRoleDataToScopedPermissionsSets = (area, areaPermissions, excessiveAccessSelector) => {
   const permissionSetObject = areaPermissions.reduce((accu, { item, uiPermissions }) => {
-    const impliedPermissions = deriveImpliedAreaPermissions(area, uiPermissions);
+    // if permission area is release and item is release tag (not all releases) then exclude upload permission as it cannot be applied to tags
+    const skipPermissions = scopedPermissionAreas.releases.key === area && item !== ALL_RELEASES ? [uiPermissionsById.upload.value] : [];
+    const impliedPermissions = deriveImpliedAreaPermissions(area, uiPermissions, skipPermissions);
     accu = impliedPermissions.reduce((itemPermissionAccu, impliedPermission) => {
       const permissionSetState = itemPermissionAccu[uiPermissionsById[impliedPermission].permissionSets[area]] ?? {
         type: uiPermissionsByArea[area].scope,

@@ -20,21 +20,38 @@ import { useNavigate } from 'react-router-dom';
 import {
   Close as CloseIcon,
   HighlightOffOutlined as HighlightOffOutlinedIcon,
+  LabelOutlined as LabelOutlinedIcon,
   Link as LinkIcon,
   Replay as ReplayIcon,
   Sort as SortIcon
 } from '@mui/icons-material';
-import { ClickAwayListener, Divider, Drawer, IconButton, SpeedDial, SpeedDialAction, SpeedDialIcon, TextField, Tooltip } from '@mui/material';
+import {
+  Button,
+  ClickAwayListener,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Drawer,
+  IconButton,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  TextField,
+  Tooltip
+} from '@mui/material';
 import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import { makeStyles } from 'tss-react/mui';
 
 import copy from 'copy-to-clipboard';
+import pluralize from 'pluralize';
 
 import { setSnackbar } from '../../actions/appActions';
 import { removeArtifact, removeRelease, selectRelease, setReleaseTags, updateReleaseInfo } from '../../actions/releaseActions';
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getReleaseTags, getSelectedRelease, getUserCapabilities } from '../../selectors';
+import { getReleaseListState, getReleaseTags, getSelectedRelease, getUserCapabilities } from '../../selectors';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
 import { ConfirmationButtons, EditButton } from '../common/confirm';
@@ -75,16 +92,23 @@ const defaultActions = [
   {
     action: ({ onCreateDeployment, selection }) => onCreateDeployment(selection),
     icon: <ReplayIcon />,
-    isApplicable: ({ userCapabilities: { canDeploy } }) => canDeploy,
+    isApplicable: ({ userCapabilities: { canDeploy }, selectedSingleRelease }) => canDeploy && selectedSingleRelease,
     key: 'deploy',
-    title: 'Create a deployment for this release'
+    title: () => 'Create a deployment for this release'
   },
   {
-    action: ({ onDeleteRelease, selection }) => onDeleteRelease(selection),
+    action: ({ onTagRelease, selectedReleases }) => onTagRelease(selectedReleases),
+    icon: <LabelOutlinedIcon />,
+    isApplicable: ({ userCapabilities: { canManageReleases } }) => canManageReleases,
+    key: 'tag',
+    title: pluralized => `Tag ${pluralized}`
+  },
+  {
+    action: ({ onDeleteRelease, selection, selectedReleases }) => onDeleteRelease(selection || selectedReleases),
     icon: <HighlightOffOutlinedIcon className="red" />,
     isApplicable: ({ userCapabilities: { canManageReleases } }) => canManageReleases,
     key: 'delete',
-    title: 'Delete release'
+    title: pluralized => `Delete ${pluralized}`
   }
 ];
 
@@ -113,19 +137,27 @@ const useStyles = makeStyles()(theme => ({
   notesWrapper: { minWidth: theme.components?.MuiFormControl?.styleOverrides?.root?.minWidth }
 }));
 
-export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease, userCapabilities }) => {
+export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease, userCapabilities, releases }) => {
   const [showActions, setShowActions] = useState(false);
+  const [selectedReleases, setSelectedReleases] = useState([]);
   const { classes } = useStyles();
+  const { selection: selectedRows } = useSelector(getReleaseListState);
+
+  useEffect(() => {
+    if (releases) {
+      setSelectedReleases(selectedRows.map(row => releases[row]));
+    }
+  }, [releases, selectedRows, setSelectedReleases]);
 
   const actions = useMemo(() => {
     return Object.values(defaultActions).reduce((accu, action) => {
-      if (action.isApplicable({ userCapabilities })) {
+      if (action.isApplicable({ userCapabilities, selectedSingleRelease: !!selectedRelease })) {
         accu.push(action);
       }
       return accu;
     }, []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(userCapabilities)]);
+  }, [JSON.stringify(userCapabilities), selectedRelease]);
 
   const handleShowActions = () => {
     setShowActions(!showActions);
@@ -135,9 +167,11 @@ export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease
     setShowActions(false);
   };
 
+  const pluralized = pluralize('releases', selectedRows.length);
+
   return (
     <div className={classes.container} ref={innerRef}>
-      <div className={classes.label}>Release actions</div>
+      <div className={classes.label}>{selectedRelease ? 'Release actions' : `${selectedRows.length} ${pluralized} selected`}</div>
       <ClickAwayListener onClickAway={handleClickAway}>
         <SpeedDial className={classes.fab} ariaLabel="device-actions" icon={<SpeedDialIcon />} onClick={handleShowActions} open={Boolean(showActions)}>
           {actions.map(action => (
@@ -145,9 +179,9 @@ export const ReleaseQuickActions = ({ actionCallbacks, innerRef, selectedRelease
               key={action.key}
               aria-label={action.key}
               icon={action.icon}
-              tooltipTitle={action.title}
+              tooltipTitle={action.title(pluralized)}
               tooltipOpen
-              onClick={() => action.action({ ...actionCallbacks, selection: selectedRelease })}
+              onClick={() => action.action({ ...actionCallbacks, selection: selectedRelease, selectedReleases })}
             />
           ))}
         </SpeedDial>
@@ -427,3 +461,18 @@ export const ReleaseDetails = () => {
 };
 
 export default ReleaseDetails;
+
+export const DeleteReleasesConfirmationDialog = ({ onClose, onSubmit }) => (
+  <Dialog open={true}>
+    <DialogTitle>Delete releases?</DialogTitle>
+    <DialogContent style={{ overflow: 'hidden' }}>All releases artifacts will be deleted. Are you sure you want to delete these releases ?</DialogContent>
+    <DialogActions>
+      <Button style={{ marginRight: 10 }} onClick={onClose}>
+        Cancel
+      </Button>
+      <Button variant="contained" color="primary" onClick={onSubmit}>
+        Delete
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
