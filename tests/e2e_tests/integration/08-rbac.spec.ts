@@ -48,10 +48,14 @@ test.describe('RBAC functionality', () => {
     // we need to check the entire page here, since the selection list is rendered in a portal, so likely outside
     // of the dialog tree
     await page.locator('li[role="option"]:has-text("testgroup")').click();
-    await dialog.locator('text=Select​').click({ force: true });
+    await dialog.locator('text=Select​').nth(1).click({ force: true });
     await page.locator('text=Configure').click();
     await page.press('body', 'Escape');
-    await dialog.locator('input:right-of(:text("Releases")) >> ..').first().click();
+
+    await page.waitForTimeout(timeouts.oneSecond);
+    await dialog.locator('text=Search release tags​').click({ force: true });
+    await page.locator('li[role="option"]:has-text("All releases")').click({ force: true });
+    await dialog.locator('text=Select​').first().click({ force: true });
     await page.locator('li[role="option"]:has-text("Read")').click();
     await page.press('body', 'Escape');
     await dialog.locator('text=Submit').scrollIntoViewIfNeeded();
