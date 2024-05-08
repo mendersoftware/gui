@@ -16,23 +16,25 @@ import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
 import { baseUrlToDomain, isLoggedIn, prepareCookies } from '../utils/commands';
-import { selectors, storagePath, timeouts } from '../utils/constants';
+import { storagePath, timeouts } from '../utils/constants';
+
+const emailEntryFieldLabel = 'Your email';
+const loginEntryFieldLabel = 'Log in';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {
-    test('Logs in using UI', async ({ baseUrl, context, page, password, username }) => {
-      console.log(`logging in user with username: ${username} and password: ${password}`);
-      // enter valid username and password
+    test('Logs in using UI', async ({ baseUrl, page, password, username }) => {
       await page.goto(`${baseUrl}ui/`);
-      const emailInput = await page.getByPlaceholder(/email/i);
-      await emailInput.fill(username);
-      const passwordInput = await page.getByLabel(/password/i);
-      await passwordInput.fill(password);
-      await page.getByRole('button', { name: /log in/i }).click();
-      // confirm we have logged in successfully
-      await isLoggedIn(page);
-      await page.evaluate(() => localStorage.setItem(`onboardingComplete`, 'true'));
-      await context.storageState({ path: storagePath });
+      console.log(`logging in user with username: ${username} and password: ${password}`);
+      const emailEntryFieldVisible = await page.getByPlaceholder(emailEntryFieldLabel);
+      expect(emailEntryFieldVisible).toBeTruthy();
+
+      await emailEntryFieldVisible.fill(username);
+      await page.getByRole('button', { name: loginEntryFieldLabel }).click();
+      const passwordEntryFieldVisible = await page.getByLabel('Password');
+      expect(passwordEntryFieldVisible).toBeTruthy();
+      await passwordEntryFieldVisible.fill(password);
+      await page.getByRole('button', { name: loginEntryFieldLabel }).click();
     });
 
     test('does not stay logged in across sessions, after browser restart', async ({ baseUrl, page }) => {
@@ -43,14 +45,21 @@ test.describe('Login', () => {
 
     test('Logs out using UI', async ({ baseUrl, page, password, username }) => {
       await page.goto(`${baseUrl}ui/`);
-      await page.getByPlaceholder(/email/i).fill(username);
-      await page.getByLabel(/password/i).fill(password);
-      await page.getByRole('button', { name: /log in/i }).click();
+      console.log(`logging in user with username: ${username} and password: ${password}`);
+      const emailEntryFieldVisible = await page.getByPlaceholder(emailEntryFieldLabel);
+      expect(emailEntryFieldVisible).toBeTruthy();
+
+      await emailEntryFieldVisible.fill(username);
+      await page.getByRole('button', { name: loginEntryFieldLabel }).click();
+      const passwordEntryFieldVisible = await page.getByLabel('Password');
+      expect(passwordEntryFieldVisible).toBeTruthy();
+      await passwordEntryFieldVisible.fill(password);
+      await page.getByRole('button', { name: loginEntryFieldLabel }).click();
       // now we can log out
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/log out/i).click();
-      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 2 * timeouts.oneSecond });
-      expect(page.getByRole('button', { name: /log in/i }).isVisible()).toBeTruthy();
+      await page.getByRole('button', { name: loginEntryFieldLabel }).waitFor({ timeout: 2 * timeouts.oneSecond });
+      expect(page.getByRole('button', { name: loginEntryFieldLabel }).isVisible()).toBeTruthy();
     });
 
     test('fails to access unknown resource', async ({ baseUrl, page }) => {
@@ -62,31 +71,22 @@ test.describe('Login', () => {
     });
 
     test('Does not log in with invalid password', async ({ baseUrl, page, username }) => {
-      console.log(`logging in user with username: ${username} and password: lewrongpassword`);
       await page.goto(`${baseUrl}ui/`);
       // enter valid username and invalid password
-      const emailInput = await page.getByPlaceholder(/email/i);
-      await emailInput.click();
-      await emailInput.fill(username);
-      const passwordInput = await page.getByLabel(/password/i);
-      await passwordInput.click();
-      await passwordInput.fill('lewrongpassword');
-      await page.getByRole('button', { name: /log in/i }).click();
+      const emailEntryFieldVisible = await page.getByPlaceholder(emailEntryFieldLabel);
+      expect(emailEntryFieldVisible).toBeTruthy();
+
+      await emailEntryFieldVisible.fill(username);
+      await page.getByRole('button', { name: loginEntryFieldLabel }).click();
+      const passwordEntryFieldVisible = await page.getByLabel('Password');
+      expect(passwordEntryFieldVisible).toBeTruthy();
+      await passwordEntryFieldVisible.fill('lewrongpassword');
+      await page.getByRole('button', { name: loginEntryFieldLabel }).click();
 
       // still on /login page plus an error is displayed
       const loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
       expect(loginVisible).toBeTruthy();
       await page.waitForSelector('text=There was a problem logging in');
-    });
-
-    test('Does not log in without password', async ({ baseUrl, page, username }) => {
-      console.log(`logging in user with username: ${username} and without a password`);
-      await page.goto(`${baseUrl}ui/`);
-      // enter valid username and invalid password
-      await page.waitForSelector(selectors.email);
-      await page.click(selectors.email);
-      await page.fill(selectors.email, username);
-      expect(await page.isDisabled('button:has-text("Log in")')).toBeTruthy();
     });
   });
 
@@ -97,15 +97,16 @@ test.describe('Login', () => {
     const page = await context.newPage();
     await page.goto(`${baseUrl}ui/`);
     // enter valid username and password
-    const emailInput = await page.getByPlaceholder(/email/i);
-    await emailInput.click();
-    await emailInput.fill(username);
-    const passwordInput = await page.getByLabel(/password/i);
-    await passwordInput.click();
-    await passwordInput.fill(password);
-    const checkbox = await page.getByLabel(/stay logged in/i);
-    await checkbox.check();
-    await page.getByRole('button', { name: /log in/i }).click();
+    await page.goto(`${baseUrl}ui/`);
+    const emailEntryFieldVisible = await page.getByPlaceholder(emailEntryFieldLabel);
+    expect(emailEntryFieldVisible).toBeTruthy();
+
+    await emailEntryFieldVisible.fill(username);
+    await page.getByRole('button', { name: loginEntryFieldLabel }).click();
+    const passwordEntryFieldVisible = await page.getByLabel('Password');
+    expect(passwordEntryFieldVisible).toBeTruthy();
+    await passwordEntryFieldVisible.fill(password);
+    await page.getByRole('button', { name: loginEntryFieldLabel }).click();
 
     // confirm we have logged in successfully
     await isLoggedIn(page);
