@@ -145,10 +145,10 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(!isEnterprise);
 
   useEffect(() => {
-    if (isEnterprise) {
+    if (isEnterprise || isHosted) {
       setShowPassword(false);
     }
-  }, [isEnterprise]);
+  }, [isEnterprise, isHosted]);
 
   useEffect(() => {
     clearAllRetryTimers(message => dispatch(setSnackbar(message)));
@@ -209,7 +209,9 @@ export const Login = () => {
             {isHosted && <OAuthHeader type="Log in" buttonProps={{ onClick: onOAuthClick }} />}
             <Form className={classes.form} showButtons={true} buttonColor="primary" onSubmit={onLoginClick} submitLabel="Log in">
               <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail,trim" />
-              {showPassword && <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />}
+              <Collapse in={showPassword}>
+                <PasswordInput className="margin-bottom-small" id="password" label="Password" required={showPassword} />
+              </Collapse>
               {isHosted ? (
                 <div className="flexbox">
                   <Link className={classes.link} to="/password">
