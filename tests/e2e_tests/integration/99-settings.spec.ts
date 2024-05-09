@@ -16,7 +16,7 @@ import * as fs from 'fs';
 import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
-import { baseUrlToDomain, generateOtp, isLoggedIn, login, prepareCookies, startClient, tenantTokenRetrieval } from '../utils/commands';
+import { baseUrlToDomain, generateOtp, isLoggedIn, login, prepareCookies, processLoginForm, startClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Settings', () => {
@@ -138,9 +138,7 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/`);
       expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
       // enter valid username and password
-      await page.fill(selectors.email, username);
-      await page.fill(selectors.password, password);
-      await page.getByRole('button', { name: /log in/i }).click();
+      await processLoginForm({ username, password, page, environment });
       await page.waitForTimeout(timeouts.default);
       await page.fill('#token2fa', '123456');
       await page.getByRole('button', { name: /log in/i }).click();
@@ -151,9 +149,7 @@ test.describe('Settings', () => {
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/`);
-      await page.fill(selectors.email, username);
-      await page.fill(selectors.password, password);
-      await page.getByRole('button', { name: /log in/i }).click();
+      await processLoginForm({ username, password, page, environment });
       const newToken = await generateOtp();
       await page.fill('#token2fa', newToken);
       await page.getByRole('button', { name: /log in/i }).click();
@@ -165,9 +161,7 @@ test.describe('Settings', () => {
     test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/`);
-      await page.fill(selectors.email, username);
-      await page.fill(selectors.password, password);
-      await page.getByRole('button', { name: /log in/i }).click();
+      await processLoginForm({ username, password, page, environment });
       await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings`);
     });
@@ -195,7 +189,7 @@ test.describe('Settings', () => {
       await page.getByRole('button', { name: /change email/i }).click();
       expect(await page.getByLabel(/current password/i).isVisible()).toBeTruthy();
     });
-    test('allows changing the password', async ({ baseUrl, browserName, context, username, password }) => {
+    test('allows changing the password', async ({ baseUrl, environment, browserName, context, username, password }) => {
       if (browserName === 'webkit') {
         test.skip();
       }
@@ -203,9 +197,7 @@ test.describe('Settings', () => {
       context = await prepareCookies(context, domain, '');
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui/`);
-      await page.getByPlaceholder(/email/i).fill(username);
-      await page.getByLabel(/password/i).fill(password);
-      await page.getByRole('button', { name: /log in/i }).click();
+      await processLoginForm({ username, password, page, environment });
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/my profile/i).click();
       await page.getByRole('button', { name: /change password/i }).click();
@@ -226,11 +218,11 @@ test.describe('Settings', () => {
       await page.waitForSelector('text=/user has been updated/i', { timeout: timeouts.tenSeconds });
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/log out/i).click();
-      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 2 * timeouts.oneSecond });
+      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 3 * timeouts.oneSecond });
       expect(page.getByRole('button', { name: /log in/i }).isVisible()).toBeTruthy();
     });
 
-    test('allows changing the password back', async ({ baseUrl, browserName, context, password, username }) => {
+    test('allows changing the password back', async ({ baseUrl, environment, browserName, context, password, username }) => {
       if (browserName === 'webkit') {
         test.skip();
       }
@@ -238,9 +230,7 @@ test.describe('Settings', () => {
       context = await prepareCookies(context, domain, '');
       const page = await context.newPage();
       await page.goto(`${baseUrl}ui/`);
-      await page.getByPlaceholder(/email/i).fill(username);
-      await page.getByLabel(/password/i).fill(replacementPassword);
-      await page.getByRole('button', { name: /log in/i }).click();
+      await processLoginForm({ username, password: replacementPassword, page, environment });
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/my profile/i).click();
       await page.getByRole('button', { name: /change password/i }).click();

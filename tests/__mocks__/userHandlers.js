@@ -13,22 +13,27 @@
 //    limitations under the License.
 import { HttpResponse, http } from 'msw';
 
+import { APPLICATION_JWT_CONTENT_TYPE } from '../../src/js/constants/appConstants.js';
 import { useradmApiUrl, useradmApiUrlv2 } from '../../src/js/constants/userConstants';
-import { accessTokens, defaultPassword, defaultState, userId as defaultUserId, permissionSets, rbacRoles, token } from '../mockData';
+import { accessTokens, defaultPassword, defaultState, userId as defaultUserId, permissionSets, rbacRoles, testSsoId, token } from '../mockData';
 
 export const userHandlers = [
   http.post(`${useradmApiUrl}/auth/login`, ({ request }) => {
     const authHeader = request.headers.get('authorization');
     const authInfo = atob(authHeader?.split(' ')[1]);
     const [user, password] = authInfo.split(':');
-    if (password !== defaultPassword) {
+
+    if (!password) {
+      return HttpResponse.json({ id: testSsoId });
+    } else if (password !== defaultPassword) {
       return new HttpResponse(null, { status: 401 });
     } else if (user.includes('limited')) {
-      return HttpResponse.json('limitedToken');
+      return new HttpResponse('limitedToken', { headers: { 'Content-Type': APPLICATION_JWT_CONTENT_TYPE } });
     } else if (user.includes('2fa')) {
       return new HttpResponse(JSON.stringify({ error: '2fa needed' }), { status: 401 });
     }
-    return HttpResponse.json(token);
+
+    return new HttpResponse(token, { headers: { 'Content-Type': APPLICATION_JWT_CONTENT_TYPE } });
   }),
   http.get(`https://hosted.mender.io${useradmApiUrl}/auth/magic/:id`, ({ params: { id } }) => {
     if (id) {

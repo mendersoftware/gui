@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
-import { isLoggedIn } from '../utils/commands';
+import { isLoggedIn, processLoginForm } from '../utils/commands';
 import { selectors, timeouts } from '../utils/constants';
 
 test.describe('RBAC functionality', () => {
@@ -48,10 +48,14 @@ test.describe('RBAC functionality', () => {
     // we need to check the entire page here, since the selection list is rendered in a portal, so likely outside
     // of the dialog tree
     await page.locator('li[role="option"]:has-text("testgroup")').click();
-    await dialog.locator('text=Select​').click({ force: true });
+    await dialog.locator('text=Select​').nth(1).click({ force: true });
     await page.locator('text=Configure').click();
     await page.press('body', 'Escape');
-    await dialog.locator('input:right-of(:text("Releases")) >> ..').first().click();
+
+    await page.waitForTimeout(timeouts.oneSecond);
+    await dialog.locator('text=Search release tags​').click({ force: true });
+    await page.locator('li[role="option"]:has-text("All releases")').click({ force: true });
+    await dialog.locator('text=Select​').first().click({ force: true });
     await page.locator('li[role="option"]:has-text("Read")').click();
     await page.press('body', 'Escape');
     await dialog.locator('text=Submit').scrollIntoViewIfNeeded();
@@ -76,16 +80,10 @@ test.describe('RBAC functionality', () => {
     await page.waitForSelector('text=The user was created successfully.');
   });
 
-  test('can log in to a newly created user', async ({ baseUrl, page, password, username }) => {
+  test('can log in to a newly created user', async ({ baseUrl, page, environment, password, username }) => {
     await page.goto(`${baseUrl}ui/`);
     // enter valid username and password of the new user
-    await page.waitForSelector(selectors.email);
-    await page.click(selectors.email);
-    await page.fill(selectors.email, `limited-${username}`);
-    await page.waitForSelector(selectors.password);
-    await page.click(selectors.password);
-    await page.fill(selectors.password, password);
-    await page.getByRole('button', { name: /log in/i }).click();
+    await processLoginForm({ username, password, environment, page });
     await isLoggedIn(page);
   });
 
@@ -93,13 +91,7 @@ test.describe('RBAC functionality', () => {
     test.skip(!['enterprise', 'staging'].includes(environment));
     await page.goto(`${baseUrl}ui/`);
     // enter valid username and password of the new user
-    await page.waitForSelector(selectors.email);
-    await page.click(selectors.email);
-    await page.fill(selectors.email, `limited-${username}`);
-    await page.waitForSelector(selectors.password);
-    await page.click(selectors.password);
-    await page.fill(selectors.password, password);
-    await page.getByRole('button', { name: /log in/i }).click();
+    await processLoginForm({ username: `limited-${username}`, password, page, environment });
     await isLoggedIn(page);
     await page.reload();
     const releasesButton = page.getByText(/releases/i);

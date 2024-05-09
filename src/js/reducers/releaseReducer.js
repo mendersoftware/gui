@@ -58,6 +58,7 @@ export const initialState = {
     ...DeviceConstants.DEVICE_LIST_DEFAULTS,
     searchedIds: [],
     releaseIds: [],
+    selection: [],
     sort: {
       direction: SORTING_OPTIONS.desc,
       key: 'modified'

@@ -56,6 +56,8 @@ export const defaultPassword = 'mysecretpassword!123';
 export const defaultCreationDate = '2019-01-13T06:25:00.000Z';
 export const defaultMacAddress = 'dc:a6:32:12:ad:bf';
 
+export const testSsoId = 'sso_id';
+
 const deviceTypes = { qemu: 'qemux86-64' };
 const permissionSetObjectTypes = {
   any: 'Any',
@@ -489,6 +491,7 @@ export const defaultState = {
       searchedIds: [],
       isLoading: false,
       releaseIds: ['r1'],
+      selection: [],
       sort: {
         direction: SORTING_OPTIONS.desc,
         key: 'name'
@@ -515,7 +518,8 @@ export const defaultState = {
         editable: true,
         uiPermissions: {
           ...emptyUiPermissions,
-          groups: { testGroup: [uiPermissionsById.read.value] }
+          groups: { testGroup: [uiPermissionsById.read.value] },
+          releases: { bar: [uiPermissionsById.read.value] }
         }
       }
     },

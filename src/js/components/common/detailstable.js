@@ -15,7 +15,7 @@ import React from 'react';
 
 // material ui
 import { Sort as SortIcon } from '@mui/icons-material';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { SORTING_OPTIONS } from '../../constants/appConstants';
@@ -32,12 +32,48 @@ const useStyles = makeStyles()(() => ({
   }
 }));
 
-export const DetailsTable = ({ className = '', columns, items, onChangeSorting, onItemClick, sort = {}, style = {}, tableRef }) => {
+export const DetailsTable = ({
+  className = '',
+  columns,
+  items,
+  onChangeSorting,
+  onItemClick,
+  sort = {},
+  style = {},
+  tableRef,
+  onRowSelected = undefined,
+  selectedRows = []
+}) => {
   const { classes } = useStyles();
+
+  const onRowSelection = selectedRow => {
+    let updatedSelection = [...selectedRows];
+    const selectedIndex = updatedSelection.indexOf(selectedRow);
+    if (selectedIndex === -1) {
+      updatedSelection.push(selectedRow);
+    } else {
+      updatedSelection.splice(selectedIndex, 1);
+    }
+    onRowSelected(updatedSelection);
+  };
+
+  const onSelectAllClick = () => {
+    let newSelectedRows = Array.from({ length: items.length }, (_, index) => index);
+    if (selectedRows.length && selectedRows.length <= items.length) {
+      newSelectedRows = [];
+    }
+    onRowSelected(newSelectedRows);
+  };
+
   return (
     <Table className={`margin-bottom ${className}`} style={style} ref={tableRef}>
       <TableHead className={classes.header}>
         <TableRow>
+          {onRowSelected !== undefined && (
+            <TableCell>
+              <Checkbox indeterminate={false} checked={selectedRows.length === items.length} onChange={onSelectAllClick} />
+            </TableCell>
+          )}
           {columns.map(({ extras, key, renderTitle, sortable, title }) => (
             <TableCell key={key} className={`columnHeader ${sortable ? '' : 'nonSortable'}`} onClick={() => (sortable ? onChangeSorting(key) : null)}>
               {renderTitle ? renderTitle(extras) : title}
@@ -48,9 +84,14 @@ export const DetailsTable = ({ className = '', columns, items, onChangeSorting, 
       </TableHead>
       <TableBody>
         {items.map((item, index) => (
-          <TableRow className={onItemClick ? 'clickable' : ''} hover key={item.id || index} onClick={() => (onItemClick ? onItemClick(item) : null)}>
+          <TableRow className={onItemClick ? 'clickable' : ''} hover key={item.id || index}>
+            {onRowSelected !== undefined && (
+              <TableCell>
+                <Checkbox checked={selectedRows.includes(index)} onChange={() => onRowSelection(index)} />
+              </TableCell>
+            )}
             {columns.map(column => (
-              <TableCell className="relative" key={column.key}>
+              <TableCell className="relative" key={column.key} onClick={() => (onItemClick ? onItemClick(item) : null)}>
                 {column.render(item, column.extras)}
               </TableCell>
             ))}

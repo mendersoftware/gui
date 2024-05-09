@@ -28,7 +28,7 @@ import { loginUser, logoutUser } from '../../actions/userActions';
 import { getToken } from '../../auth';
 import { TIMEOUTS, locations } from '../../constants/appConstants';
 import { useradmApiUrl } from '../../constants/userConstants';
-import { getCurrentUser, getFeatures } from '../../selectors';
+import { getCurrentUser, getFeatures, getIsEnterprise } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
@@ -141,6 +141,14 @@ export const Login = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(getCurrentUser);
   const { isHosted } = useSelector(getFeatures);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const [showPassword, setShowPassword] = useState(!isEnterprise);
+
+  useEffect(() => {
+    if (isEnterprise) {
+      setShowPassword(false);
+    }
+  }, [isEnterprise]);
 
   useEffect(() => {
     clearAllRetryTimers(message => dispatch(setSnackbar(message)));
@@ -171,9 +179,12 @@ export const Login = () => {
         if (err?.error?.includes('2fa')) {
           setHas2FA(true);
         }
+        if (!showPassword) {
+          setShowPassword(true);
+        }
       });
     },
-    [dispatch, noExpiry]
+    [dispatch, noExpiry, showPassword]
   );
 
   const onOAuthClick = ({ target: { textContent } }) => {
@@ -198,7 +209,7 @@ export const Login = () => {
             {isHosted && <OAuthHeader type="Log in" buttonProps={{ onClick: onOAuthClick }} />}
             <Form className={classes.form} showButtons={true} buttonColor="primary" onSubmit={onLoginClick} submitLabel="Log in">
               <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail,trim" />
-              <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
+              {showPassword && <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />}
               {isHosted ? (
                 <div className="flexbox">
                   <Link className={classes.link} to="/password">

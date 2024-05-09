@@ -56,10 +56,12 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
+export const getSsoStartUrlById = id => `${window.location.origin}${useradmApiUrl}/auth/sso/${id}/login`;
+
 const defaultDetails = [
   { key: 'entityID', label: 'Entity ID', getValue: id => `${window.location.origin}${useradmApiUrl}/sso/sp/metadata/${id}` },
   { key: 'acs', label: 'ACS URL', getValue: id => `${window.location.origin}${useradmApiUrl}/auth/sso/${id}/acs` },
-  { key: 'startURL', label: 'Start URL', getValue: id => `${window.location.origin}${useradmApiUrl}/auth/sso/${id}/login` }
+  { key: 'startURL', label: 'Start URL', getValue: id => getSsoStartUrlById(id) }
 ];
 
 export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, token }) => {

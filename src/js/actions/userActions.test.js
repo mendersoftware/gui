@@ -11,13 +11,15 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+import { act } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 import { thunk } from 'redux-thunk';
 import Cookies from 'universal-cookie';
 
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
-import { accessTokens, defaultPassword, defaultState, receivedPermissionSets, receivedRoles, token, userId } from '../../../tests/mockData';
+import { accessTokens, defaultPassword, defaultState, receivedPermissionSets, receivedRoles, testSsoId, token, userId } from '../../../tests/mockData';
 import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
+import { getSsoStartUrlById } from '../components/settings/organization/ssoconfig.js';
 import {
   SET_ANNOUNCEMENT,
   SET_ENVIRONMENT_DATA,
@@ -496,6 +498,16 @@ describe('user actions', () => {
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should redirect on SSO login', async () => {
+    const store = mockStore({ ...defaultState });
+    const replaceSpy = jest.spyOn(window.location, 'replace');
+    await store.dispatch(loginUser({ email: 'test@example.com' }));
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
+    expect(replaceSpy).toHaveBeenCalledWith(getSsoStartUrlById(testSsoId));
   });
   it('should prevent logging in with a limited user', async () => {
     jest.clearAllMocks();
