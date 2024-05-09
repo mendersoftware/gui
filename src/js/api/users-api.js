@@ -18,7 +18,9 @@ import { commonRequestConfig } from './general-api';
 
 const Api = {
   postLogin: (url, { email: username, password, ...body }) =>
-    axios.post(url, body, { ...commonRequestConfig, auth: { username, password } }).then(res => ({ text: res.data, code: res.status })),
+    axios
+      .post(url, body, { ...commonRequestConfig, auth: { username, password } })
+      .then(res => ({ text: res.data, code: res.status, contentType: res.headers?.['content-type'] })),
   putVerifyTFA: (url, userData) => {
     let body = {};
     if (userData.hasOwnProperty('token2fa')) {

@@ -173,3 +173,6 @@ export const canAccess = yes;
 
 export const DARK_MODE = 'dark';
 export const LIGHT_MODE = 'light';
+
+export const APPLICATION_JSON_CONTENT_TYPE = 'application/json';
+export const APPLICATION_JWT_CONTENT_TYPE = 'application/jwt';

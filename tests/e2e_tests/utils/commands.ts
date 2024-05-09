@@ -220,6 +220,28 @@ export const isLoggedIn = async (page: Page, timeout: number = 0) => {
   return page.getByText(selectors.loggedInText).waitFor({ timeout });
 };
 
+export const isEnterpriseOrStaging = environment => ['enterprise', 'staging'].includes(environment);
+
+export const processLoginForm = async ({ username, password, environment, page, stayLoggedIn = false }) => {
+  await page.click(selectors.email);
+  await page.fill(selectors.email, username);
+
+  if (isEnterpriseOrStaging(environment)) {
+    // enterprise supports two-step login, and the first screen does not have password field until submit clicked
+    await page.getByRole('button', { name: /log in/i }).click();
+  }
+
+  await page.click(selectors.password);
+  await page.fill(selectors.password, password);
+
+  if (stayLoggedIn) {
+    const checkbox = await page.getByLabel(/stay logged in/i);
+    await checkbox.check();
+  }
+
+  await page.getByRole('button', { name: /log in/i }).click();
+};
+
 export const tenantTokenRetrieval = async (baseUrl: string, page: Page) => {
   await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
   await page.waitForSelector('.tenant-token-text');
