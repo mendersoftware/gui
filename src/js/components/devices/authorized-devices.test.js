@@ -55,7 +55,7 @@ describe('AuthorizedDevices Component', () => {
     const attributeNames = {
       artifact: 'rootfs-image.version',
       deviceType: 'device_type',
-      updateTime: 'updated_ts'
+      checkInTime: 'check_in_time'
     };
     // const devices = defaultState.devices.byStatus.accepted.deviceIds.map(id => defaultState.devices.byId[id]);
     const pageTotal = defaultState.devices.byStatus.accepted.deviceIds.length;
@@ -90,7 +90,7 @@ describe('AuthorizedDevices Component', () => {
       },
       users: {
         ...defaultState.users,
-        customColumns: [{ attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 }]
+        customColumns: [{ attribute: { name: attributeNames.checkInTime, scope: 'system' }, size: 220 }]
       }
     };
     let ui = (
@@ -134,7 +134,7 @@ describe('AuthorizedDevices Component', () => {
     expect(setColumnsSpy).toHaveBeenCalledWith([
       { attribute: { name: attributeNames.deviceType, scope: 'inventory' }, size: 150 },
       { attribute: { name: attributeNames.artifact, scope: 'inventory' }, size: 150 },
-      { attribute: { name: attributeNames.updateTime, scope: 'system' }, size: 220 },
+      { attribute: { name: attributeNames.checkInTime, scope: 'system' }, size: 220 },
       { attribute: { name: testKey, scope: 'inventory' }, size: 150 }
     ]);
     expect(setListStateSpy).toHaveBeenCalledWith(
@@ -142,7 +142,7 @@ describe('AuthorizedDevices Component', () => {
         selectedAttributes: [
           { attribute: attributeNames.deviceType, scope: 'inventory' },
           { attribute: attributeNames.artifact, scope: 'inventory' },
-          { attribute: attributeNames.updateTime, scope: 'system' },
+          { attribute: attributeNames.checkInTime, scope: 'system' },
           { attribute: testKey, scope: 'inventory' }
         ]
       },
@@ -154,7 +154,7 @@ describe('AuthorizedDevices Component', () => {
       columnSelection: [
         { id: 'inventory-device_type', key: attributeNames.deviceType, name: attributeNames.deviceType, scope: 'inventory', title: 'Device type' },
         { id: 'inventory-rootfs-image.version', key: attributeNames.artifact, name: attributeNames.artifact, scope: 'inventory', title: 'Current software' },
-        { id: 'system-updated_ts', key: attributeNames.updateTime, name: attributeNames.updateTime, scope: 'system', title: 'Latest activity' },
+        { id: 'system-check_in_time', key: attributeNames.checkInTime, name: attributeNames.checkInTime, scope: 'system', title: 'Latest activity' },
         { id: 'inventory-testKey', key: testKey, name: testKey, scope: 'inventory', title: testKey }
       ]
     });

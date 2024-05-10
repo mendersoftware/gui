@@ -25,7 +25,7 @@ describe('tiny components', () => {
           alerts={[1, 2]}
           onClick={jest.fn}
           offlineThresholdSettings={{ intervalUnit: 'hour', interval: 24 }}
-          updated_ts={defaultState.devices.byId.a1.updated_ts}
+          check_in_time={defaultState.devices.byId.a1.check_in_time_exact}
         />
       );
       const view = baseElement.firstChild;

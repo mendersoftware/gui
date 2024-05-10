@@ -209,7 +209,7 @@ export const DEVICE_ISSUE_OPTIONS = {
     needsReporting: false,
     filterRule: {
       scope: 'system',
-      key: 'updated_ts',
+      key: 'check_in_time',
       operator: DEVICE_FILTERING_OPTIONS.$ltne.key,
       value: ({ offlineThreshold }) => offlineThreshold
     },
