@@ -8255,6 +8255,17 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   -ms-flex-direction: column;
   flex-direction: column;
   height: 336px;
+  grid-column: 1;
+}
+
+.emotion-4.MuiMultiSectionDigitalClock-root {
+  border-bottom: 0px solid;
+}
+
+.emotion-4.MuiMultiSectionDigitalClock-root,
+.emotion-4 .MuiMultiSectionDigitalClockSection-root,
+.emotion-4.MuiDigitalClock-root {
+  max-height: 336px;
 }
 
 .emotion-5 {
@@ -8887,6 +8898,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   border-bottom-width: 0;
   height: 100%;
   border-right-width: thin;
+  grid-column: 2;
 }
 
 .emotion-68 {
@@ -8910,6 +8922,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   flex-direction: row;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  grid-column: 3;
 }
 
 .emotion-68.MuiMultiSectionDigitalClock-root {
@@ -10355,6 +10368,17 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   -ms-flex-direction: column;
   flex-direction: column;
   height: 336px;
+  grid-column: 1;
+}
+
+.emotion-4.MuiMultiSectionDigitalClock-root {
+  border-bottom: 0px solid;
+}
+
+.emotion-4.MuiMultiSectionDigitalClock-root,
+.emotion-4 .MuiMultiSectionDigitalClockSection-root,
+.emotion-4.MuiDigitalClock-root {
+  max-height: 336px;
 }
 
 .emotion-5 {
@@ -10987,6 +11011,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   border-bottom-width: 0;
   height: 100%;
   border-right-width: thin;
+  grid-column: 2;
 }
 
 .emotion-68 {
@@ -11010,6 +11035,7 @@ exports[`CreateDeployment Component smaller components renders ScheduleRollout c
   flex-direction: row;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  grid-column: 3;
 }
 
 .emotion-68.MuiMultiSectionDigitalClock-root {
