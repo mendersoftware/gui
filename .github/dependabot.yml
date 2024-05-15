@@ -21,7 +21,7 @@ updates:
           - '@emotion*'
           - '@mui*'
     reviewers:
-      - "mendersoftware/frontend-dependabot-reviewers"
+      - 'mendersoftware/frontend-dependabot-reviewers'
   - commit-message:
       prefix: chore
     directory: /
@@ -38,8 +38,14 @@ updates:
       interval: monthly
       day: saturday
     groups:
+      playwright:
+        patterns:
+          - '@playwright*'
+          - 'playwright*'
       e2e-test-dependencies:
+        dependency-type: development
         exclude-patterns:
-          - '*'
+          - '@playwright*'
+          - 'playwright*'
     reviewers:
-      - "mendersoftware/frontend-dependabot-reviewers"
+      - 'mendersoftware/frontend-dependabot-reviewers'
