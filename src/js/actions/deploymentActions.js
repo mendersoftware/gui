@@ -202,12 +202,11 @@ export const getDeploymentDevices =
   };
 
 const parseDeviceDeployment = ({
-  deployment: { id, artifact_name: release, groups = [], name, device: deploymentDevice, status: deploymentStatus },
+  deployment: { id, artifact_name: release, status: deploymentStatus },
   device: { created, deleted, id: deviceId, finished, status, log }
 }) => ({
   id,
   release,
-  target: groups.length === 1 && groups[0] ? groups[0] : deploymentDevice ? deploymentDevice : name,
   created,
   deleted,
   deviceId,
@@ -219,8 +218,7 @@ const parseDeviceDeployment = ({
       return states.includes(deploymentStatus) ? key : accu;
     }
     return accu;
-  }, ''),
-  deploymentStatus
+  }, '')
 });
 
 export const getDeviceDeployments =
