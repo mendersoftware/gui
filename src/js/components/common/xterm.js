@@ -13,10 +13,10 @@
 //    limitations under the License.
 import React, { useEffect } from 'react';
 
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
-import { SearchAddon } from 'xterm-addon-search';
-import 'xterm/css/xterm.css';
+import { FitAddon } from '@xterm/addon-fit';
+import { SearchAddon } from '@xterm/addon-search';
+import { Terminal } from '@xterm/xterm';
+import '@xterm/xterm/css/xterm.css';
 
 const searchAddon = new SearchAddon();
 const fitAddon = new FitAddon();
