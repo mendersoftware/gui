@@ -1,4 +1,4 @@
-image: node:20-alpine
+image: node:22-alpine
 
 stages:
   - pre-test
@@ -11,8 +11,8 @@ stages:
 variables:
   DOCKER_REPOSITORY: mendersoftware/gui
   DOCS_VERSION: development
-  MULTIPLATFORM_BUILD: "true"
-  MULTIPLATFORM_PLATFORMS: "linux/amd64,linux/arm64"
+  MULTIPLATFORM_BUILD: 'true'
+  MULTIPLATFORM_PLATFORMS: 'linux/amd64,linux/arm64'
 
 include:
   - project: 'Northern.tech/Mender/mendertesting'
@@ -503,8 +503,8 @@ coveralls:done:
     SYNC_IMAGE_TAG: $DOCKER_PUBLISH_COMMIT_TAG
     CONTAINER: gui
     DOCKER_PUBLISH_COMMIT_TAG: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}
-    GITHUB_HELM_REPO: "github.com/mendersoftware/mender-helm.git"
-    CHART_DIR: "mender"
+    GITHUB_HELM_REPO: 'github.com/mendersoftware/mender-helm.git'
+    CHART_DIR: 'mender'
 
 trigger:mender-helm-version-bump:staging:
   extends:
