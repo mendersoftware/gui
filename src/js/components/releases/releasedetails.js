@@ -356,7 +356,7 @@ const ArtifactsList = ({ artifacts, selectedArtifact, setSelectedArtifact, setSh
           <div style={{ width: 48 }} />
         </div>
         {items.map((artifact, index) => {
-          const expanded = !!(selectedArtifact?.id === artifact.id);
+          const expanded = selectedArtifact?.id === artifact.id;
           return (
             <Artifact
               key={`repository-item-${index}`}
