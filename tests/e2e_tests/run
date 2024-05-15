@@ -122,7 +122,10 @@ run_tests() {
         return 1
     fi
 
+    # the following two lines are needed to help with updates to the playwright packages as we rely on the prebuilt mender-test-containers image
     docker exec $runnerid npm i
+    docker exec $runnerid npx playwright install
+
     docker exec $runnerid npm run test-ci || failed=1
 
     docker inspect --format '{{.State.ExitCode}}' $runnerid || true
