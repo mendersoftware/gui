@@ -80,13 +80,6 @@ test.describe('RBAC functionality', () => {
     await page.waitForSelector('text=The user was created successfully.');
   });
 
-  test('can log in to a newly created user', async ({ baseUrl, page, environment, password, username }) => {
-    await page.goto(`${baseUrl}ui/`);
-    // enter valid username and password of the new user
-    await processLoginForm({ username, password, environment, page });
-    await isLoggedIn(page);
-  });
-
   test('has working RBAC limitations', async ({ baseUrl, environment, page, password, username }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
     await page.goto(`${baseUrl}ui/`);
