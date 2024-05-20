@@ -47,6 +47,13 @@ describe('Login Component', () => {
     const { rerender } = render(ui, { preloadedState });
     await act(async () => {
       await user.type(screen.getByLabelText(/your email/i), 'something-2fa@example.com');
+    });
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: /Log in/i }));
+    });
+    expect(loginSpy).toHaveBeenCalled();
+    await waitFor(() => rerender(ui));
+    await act(async () => {
       await user.type(screen.getByLabelText(/password/i), 'mysecretpassword!123');
     });
     expect(await screen.findByLabelText(/Two Factor Authentication Code/i)).not.toBeVisible();
