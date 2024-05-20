@@ -99,9 +99,9 @@ export default (env, argv) => {
       }),
       new webpack.DefinePlugin({
         ENV: JSON.stringify(argv.mode),
-        XTERM_VERSION: JSON.stringify(require('./package.json').dependencies.xterm),
-        XTERM_FIT_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-fit']),
-        XTERM_SEARCH_VERSION: JSON.stringify(require('./package.json').dependencies['xterm-addon-search'])
+        XTERM_VERSION: JSON.stringify(require('./package.json').dependencies['@xterm/xterm']),
+        XTERM_FIT_VERSION: JSON.stringify(require('./package.json').dependencies['@xterm/addon-fit']),
+        XTERM_SEARCH_VERSION: JSON.stringify(require('./package.json').dependencies['@xterm/addon-search'])
       }),
       new HtmlWebPackPlugin({
         favicon: './src/favicon.svg',

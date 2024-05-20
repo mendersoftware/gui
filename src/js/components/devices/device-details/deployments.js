@@ -24,6 +24,7 @@ import { deploymentDisplayStates, deploymentStatesToSubstates } from '../../../c
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { createDownload } from '../../../helpers.js';
 import Confirm from '../../common/confirm';
+import InfoHint from '../../common/info-hint';
 import Pagination from '../../common/pagination';
 import { MaybeTime } from '../../common/time';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
@@ -42,13 +43,16 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 const EmptyState = ({ isFiltered }) => (
-  <div className="flexbox column centered margin-large">
-    <p className="align-center muted">
-      No deployments were found.
-      <br />
-      {isFiltered && <>Try adjusting the filters</>}
-    </p>
-  </div>
+  <>
+    <div className="flexbox column centered margin-large">
+      <p className="align-center muted">
+        No deployments were found.
+        <br />
+        {isFiltered && <>Try adjusting the filters</>}
+      </p>
+    </div>
+    <InfoHint content="If this device is part of a pending or scheduled deployment, the deployment will only appear here once it has started and the device has reported its update status to the server." />
+  </>
 );
 
 const columns = [
