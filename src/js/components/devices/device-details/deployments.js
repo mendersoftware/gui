@@ -20,7 +20,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { deploymentsApiUrl, getDeviceDeployments, resetDeviceDeployments } from '../../../actions/deploymentActions';
 import { getToken } from '../../../auth.js';
-import { deploymentDisplayStates, deploymentStatesToSubstates } from '../../../constants/deploymentConstants';
+import { deploymentStatesToSubstates } from '../../../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
 import { createDownload } from '../../../helpers.js';
 import Confirm from '../../common/confirm';
@@ -57,18 +57,8 @@ const EmptyState = ({ isFiltered }) => (
 
 const columns = [
   { content: 'Release', key: 'release', Component: ({ deviceDeployment: { release } }) => <Link to={`/releases/${release}`}>{release}</Link> },
-  {
-    content: 'Target device(s)',
-    key: 'target',
-    Component: ({ deviceDeployment: { id, target, route } }) => <Link to={`/deployments/${route}?id=${id}&open=true`}>{target}</Link>
-  },
   { content: 'Started', key: 'created', Component: ({ deviceDeployment: { created } }) => <MaybeTime value={created} /> },
   { content: 'Finished', key: 'finished', Component: ({ deviceDeployment: { finished } }) => <MaybeTime value={finished} /> },
-  {
-    content: 'Deployment progress',
-    key: 'deploymentStatus',
-    Component: ({ deviceDeployment: { deploymentStatus } }) => deploymentDisplayStates[deploymentStatus] ?? deploymentStatus
-  },
   { content: 'Device status', key: 'status', Component: ({ deviceDeployment: { status } }) => status },
   {
     content: '',
@@ -87,6 +77,11 @@ const columns = [
           Log
         </Button>
       )
+  },
+  {
+    content: '',
+    key: 'target',
+    Component: ({ deviceDeployment: { id, route } }) => <Link to={`/deployments/${route}?id=${id}&open=true`}>View deployment</Link>
   }
 ];
 
@@ -198,7 +193,7 @@ export const Deployments = ({ device }) => {
                 classes="confirmation-overlay"
                 cancel={() => setIsChecking(false)}
                 action={onResetConfirm}
-                message={`This will reset the stored device deployment history for this device. Are you sure?`}
+                message="This will reset the stored device deployment history for this device. Are you sure?"
                 style={{ marginRight: 0 }}
               />
             )}
