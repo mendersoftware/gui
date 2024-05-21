@@ -21,7 +21,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  FormControlLabel,
   FormHelperText,
   InputLabel,
   ListItemText,
@@ -34,9 +33,9 @@ import pluralize from 'pluralize';
 
 import { BENEFITS } from '../../../constants/appConstants';
 import { rolesById, rolesByName, uiPermissionsById } from '../../../constants/userConstants';
-import { toggle } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import Form from '../../common/forms/form';
+import FormCheckbox from '../../common/forms/formcheckbox';
 import PasswordInput from '../../common/forms/passwordinput';
 import TextInput from '../../common/forms/textinput';
 
@@ -138,7 +137,6 @@ const PasswordLabel = () => (
 export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterprise, roles, submit }) => {
   const [hadRoleChanges, setHadRoleChanges] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState();
-  const [shouldResetPassword, setShouldResetPassword] = useState(false);
 
   const onSelect = (newlySelectedRoles, hadRoleChanges) => {
     setSelectedRoles(newlySelectedRoles);
@@ -150,8 +148,6 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
     const roleData = hadRoleChanges ? { roles: selectedRoles } : {};
     return submit({ ...remainder, ...roleData, password }, 'create');
   };
-
-  const togglePasswordReset = () => setShouldResetPassword(toggle);
 
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">
@@ -171,10 +167,7 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
             placeholder="Password"
             validations="isLength:8"
           />
-          <FormControlLabel
-            control={<Checkbox checked={shouldResetPassword} onChange={togglePasswordReset} />}
-            label="Send an email to the user containing a link to reset the password"
-          />
+          <FormCheckbox id="shouldResetPassword" label="Send an email to the user containing a link to reset the password" />
           <UserRolesSelect currentUser={currentUser} disabled={!(canManageUsers && isEnterprise)} onSelect={onSelect} roles={roles} user={{}} />
         </Form>
       </DialogContent>

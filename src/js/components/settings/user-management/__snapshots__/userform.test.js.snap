@@ -1501,6 +1501,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-32:focus::-ms-input-
               <input
                 class="PrivateSwitchBase-input emotion-25"
                 data-indeterminate="false"
+                name="shouldResetPassword"
                 type="checkbox"
               />
               <svg

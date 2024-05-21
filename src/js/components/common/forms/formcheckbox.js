@@ -21,7 +21,7 @@ export const FormCheckbox = ({ className, control, id, handleClick, style, label
     name={id}
     rules={{ required }}
     control={control}
-    render={({ field: { value, onChange } }) => {
+    render={({ field: { value = false, onChange } }) => {
       return (
         <FormControlLabel
           className={className}

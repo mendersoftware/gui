@@ -216,16 +216,18 @@ const actions = {
 
 const userActionErrorHandler = (err, type, dispatch) => commonErrorHandler(err, `There was an error ${actions[type].errorMessage} the user.`, dispatch);
 
-export const createUser = userData => dispatch =>
-  GeneralApi.post(`${useradmApiUrl}/users`, userData)
-    .then(() =>
-      Promise.all([
-        dispatch({ type: UserConstants.CREATED_USER, user: userData }),
-        dispatch(getUserList()),
-        dispatch(setSnackbar(actions.create.successMessage))
-      ])
-    )
-    .catch(err => userActionErrorHandler(err, 'create', dispatch));
+export const createUser =
+  ({ shouldResetPassword, ...userData }) =>
+  dispatch =>
+    GeneralApi.post(`${useradmApiUrl}/users`, { ...userData, send_reset_password: shouldResetPassword })
+      .then(() =>
+        Promise.all([
+          dispatch({ type: UserConstants.CREATED_USER, user: userData }),
+          dispatch(getUserList()),
+          dispatch(setSnackbar(actions.create.successMessage))
+        ])
+      )
+      .catch(err => userActionErrorHandler(err, 'create', dispatch));
 
 export const removeUser = userId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/users/${userId}`)
