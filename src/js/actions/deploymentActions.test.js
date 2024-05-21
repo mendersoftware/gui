@@ -274,12 +274,10 @@ describe('deployment actions', () => {
             {
               id: defaultState.deployments.byId.d1.id,
               release: defaultState.deployments.byId.d1.artifact_name,
-              target: defaultState.deployments.byId.d1.name,
               created: '2019-01-01T12:35:00.000Z',
               finished: '2019-01-01T12:40:00.000Z',
               status: 'noartifact',
-              route: DeploymentConstants.DEPLOYMENT_ROUTES.active.key,
-              deploymentStatus: 'inprogress'
+              route: DeploymentConstants.DEPLOYMENT_ROUTES.active.key
             }
           ]
         }
@@ -302,12 +300,10 @@ describe('deployment actions', () => {
             {
               id: defaultState.deployments.byId.d1.id,
               release: defaultState.deployments.byId.d1.artifact_name,
-              target: defaultState.deployments.byId.d1.name,
               created: '2019-01-01T12:35:00.000Z',
               finished: '2019-01-01T12:40:00.000Z',
               status: 'noartifact',
-              route: DeploymentConstants.DEPLOYMENT_ROUTES.active.key,
-              deploymentStatus: 'inprogress'
+              route: DeploymentConstants.DEPLOYMENT_ROUTES.active.key
             }
           ]
         }
