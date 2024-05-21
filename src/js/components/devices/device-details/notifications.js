@@ -92,12 +92,12 @@ export const BaseNotification = ({ bordered = true, className = '', children, se
   );
 };
 
-export const LastConnection = ({ updated_ts }) => {
+export const LastConnection = ({ check_in_time }) => {
   const { classes } = useStyles();
 
-  return updated_ts ? (
+  return check_in_time ? (
     <BaseNotification severity={monitoringSeverities.CRITICAL}>
-      Device has not connected to the server since <Time className={classes.textSpacing} value={updated_ts} />
+      Device has not connected to the server since <Time className={classes.textSpacing} value={check_in_time} />
     </BaseNotification>
   ) : (
     <BaseNotification severity={monitoringSeverities.WARNING}>The device has never connected to the server</BaseNotification>
@@ -133,10 +133,10 @@ export const DeviceOfflineHeaderNotification = ({ offlineThresholdSettings }) =>
 );
 
 export const DeviceNotifications = ({ alerts, device, onClick }) => {
-  const { check_in_time = '', isOffline } = device;
+  const { check_in_time = '', check_in_time_exact = undefined, isOffline } = device;
   return (
     <>
-      {isOffline && <LastConnection updated_ts={check_in_time} />}
+      {isOffline && <LastConnection check_in_time={check_in_time_exact ?? check_in_time} />}
       {Boolean(alerts.length) && <ServiceNotification alerts={alerts} onClick={onClick} />}
     </>
   );

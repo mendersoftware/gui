@@ -115,6 +115,9 @@ export const adminUserCapabilities = {
   canWriteDevices: true
 };
 
+let checkInTimeRounded = '2019-01-01T00:00:00.000Z';
+let checkInTimeExact = '2019-01-01T10:25:00.000Z';
+
 export const userId = 'a30a780b-b843-5344-80e3-0fd95a4f6fc3';
 export const defaultState = {
   app: {
@@ -229,7 +232,12 @@ export const defaultState = {
           device_type: ['raspberrypi4'],
           ipv4_wlan0: '192.168.10.141/24'
         },
-        check_in_time: '2019-01-01T10:25:00.000Z',
+        system: {
+          check_in_time: checkInTimeRounded
+        },
+        check_in_time: checkInTimeExact,
+        check_in_time_exact: checkInTimeExact,
+        check_in_time_rounded: checkInTimeRounded,
         identity_data: { mac: defaultMacAddress },
         status: 'accepted',
         decommissioning: false,
@@ -251,7 +259,12 @@ export const defaultState = {
           ipv4_wlan0: '192.168.10.141/24',
           device_type: [deviceTypes.qemu]
         },
-        check_in_time: '2019-01-01T10:25:00.000Z',
+        system: {
+          check_in_time: checkInTimeRounded
+        },
+        check_in_time: checkInTimeExact,
+        check_in_time_exact: checkInTimeExact,
+        check_in_time_rounded: checkInTimeRounded,
         identity_data: { mac: defaultMacAddress },
         status: 'accepted',
         decommissioning: false,

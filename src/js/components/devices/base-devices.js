@@ -77,7 +77,7 @@ export const DeviceTypes = ({ device }) => (
 
 export const RelativeDeviceTime = ({ device }) => (
   <div>
-    <ApproximateRelativeDate updateTime={device.updated_ts} />
+    <ApproximateRelativeDate updateTime={device.check_in_time_rounded} />
   </div>
 );
 
@@ -185,7 +185,7 @@ export const defaultHeaders = {
   },
   lastCheckIn: {
     title: 'Latest activity',
-    attribute: { name: 'updated_ts', scope: 'system' },
+    attribute: { name: 'check_in_time', scope: 'system' },
     component: RelativeDeviceTime,
     sortable: true
   }
