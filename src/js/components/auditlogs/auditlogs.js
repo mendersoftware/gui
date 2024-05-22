@@ -65,7 +65,7 @@ const useStyles = makeStyles()(theme => ({
   upgradeNote: { marginTop: '5vh', placeSelf: 'center' }
 }));
 
-const getOptionLabel = option => option.title || option.email || option;
+const getOptionLabel = option => option.title ?? option.email ?? option;
 
 const renderOption = (props, option) => <li {...props}>{getOptionLabel(option)}</li>;
 
@@ -104,7 +104,7 @@ export const AuditLogs = props => {
   const [dirtyField, setDirtyField] = useState('');
   const { token } = useSelector(getCurrentSession);
 
-  const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type = '' } = selectionState;
+  const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type } = selectionState;
 
   useEffect(() => {
     if (!hasAuditlogs || !isInitialized.current) {
@@ -222,7 +222,7 @@ export const AuditLogs = props => {
       <ClickFilter disabled={!hasAuditlogs}>
         <Filters
           initialValues={{ startDate, endDate, user, type, detail }}
-          defaultValues={{ startDate: today, endDate: tonight, user: '', type: '', detail: '' }}
+          defaultValues={{ startDate: today, endDate: tonight, user: '', type: null, detail: '' }}
           fieldResetTrigger={detailsReset}
           dirtyField={dirtyField}
           clearDirty={setDirtyField}
