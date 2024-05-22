@@ -25,7 +25,15 @@ import { getUserList } from '../../actions/userActions';
 import { BEGINNING_OF_TIME, BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { createDownload, getISOStringBoundaries } from '../../helpers';
-import { getCurrentSession, getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import {
+  getAuditLog,
+  getAuditLogEntry,
+  getAuditLogSelectionState,
+  getCurrentSession,
+  getGroupNames,
+  getTenantCapabilities,
+  getUserCapabilities
+} from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import { ControlledAutoComplete } from '../common/forms/autocomplete';
@@ -83,9 +91,10 @@ export const AuditLogs = props => {
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: locationDefaults });
   const { classes } = useStyles();
   const dispatch = useDispatch();
-  const events = useSelector(state => state.organization.auditlog.events);
+  const events = useSelector(getAuditLog);
+  const eventItem = useSelector(getAuditLogEntry);
   const groups = useSelector(getGroupNames);
-  const selectionState = useSelector(state => state.organization.auditlog.selectionState);
+  const selectionState = useSelector(getAuditLogSelectionState);
   const userCapabilities = useSelector(getUserCapabilities);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const users = useSelector(state => state.users.byId);
@@ -275,6 +284,7 @@ export const AuditLogs = props => {
         <AuditLogsList
           {...props}
           items={events}
+          eventItem={eventItem}
           loading={isLoading}
           onChangePage={onChangePagination}
           onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}

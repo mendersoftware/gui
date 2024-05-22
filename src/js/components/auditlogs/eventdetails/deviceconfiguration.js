@@ -17,24 +17,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
 import { getDeviceById } from '../../../actions/deviceActions';
-import { getDeviceById as getDeviceByIdSelector, getIdAttribute, getUserCapabilities } from '../../../selectors';
+import { getAuditlogDevice, getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 
 export const DeviceConfiguration = ({ item, onClose }) => {
   const { object = {} } = item;
   const { canReadDevices } = useSelector(getUserCapabilities);
-  const device = useSelector(state => getDeviceByIdSelector(state, object.id));
+  const device = useSelector(getAuditlogDevice);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const dispatch = useDispatch();
 
   const theme = useTheme();
   useEffect(() => {
-    const { object } = item;
-    if (!device.id && canReadDevices) {
+    if (canReadDevices) {
       dispatch(getDeviceById(object.id));
     }
-  }, [canReadDevices, device.id, dispatch, item]);
+  }, [canReadDevices, dispatch, object.id]);
 
   if (canReadDevices && !device.id) {
     return <Loader show={true} />;
