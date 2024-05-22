@@ -130,7 +130,6 @@ export const AuditLogs = props => {
 
   const initAuditlogState = useCallback(
     (result, state) => {
-      isInitialized.current = true;
       const { detail, endDate, startDate, type, user } = state;
       const resultList = result ? Object.values(result.events) : [];
       if (resultList.length && startDate === today) {
@@ -145,6 +144,8 @@ export const AuditLogs = props => {
         field = field || (state.startDate !== today ? 'startDate' : field);
         setDirtyField(field);
       }, TIMEOUTS.debounceDefault);
+      // the timeout here is slightly longer than the debounce in the filter component, otherwise the population of the filters with the url state would trigger a reset to page 1
+      setTimeout(() => (isInitialized.current = true), TIMEOUTS.oneSecond + TIMEOUTS.debounceDefault);
     },
     [dispatch, today, tonight]
   );
@@ -167,8 +168,8 @@ export const AuditLogs = props => {
       let field = endDate !== tonight ? 'endDate' : '';
       field = field || (startDate !== today ? 'startDate' : field);
       setDirtyField(field);
-      isInitialized.current = true;
-      dispatch(setAuditlogsState(state));
+      // the timeout here is slightly longer than the debounce in the filter component, otherwise the population of the filters with the url state would trigger a reset to page 1
+      dispatch(setAuditlogsState(state)).then(() => setTimeout(() => (isInitialized.current = true), TIMEOUTS.oneSecond + TIMEOUTS.debounceDefault));
       return;
     }
     dispatch(
@@ -198,6 +199,9 @@ export const AuditLogs = props => {
 
   const onFiltersChange = useCallback(
     ({ endDate, detail, startDate, user, type }) => {
+      if (!isInitialized.current) {
+        return;
+      }
       const selectedUser = Object.values(users).find(item => isUserOptionEqualToValue(item, user));
       dispatch(setAuditlogsState({ page: 1, detail, startDate, endDate, user: selectedUser, type }));
     },
