@@ -78,8 +78,11 @@ export const userHandlers = [
     return new HttpResponse(null, { status: 563 });
   }),
   http.post(`${useradmApiUrl}/users`, async ({ request }) => {
-    const { email, password } = await request.json();
+    const { email, password, sso } = await request.json();
     if (email === 'test@test.com' || [email, password].every(value => value)) {
+      return HttpResponse.json(defaultState.users.byId.a1);
+    }
+    if (email && sso.length) {
       return HttpResponse.json(defaultState.users.byId.a1);
     }
     return new HttpResponse(null, { status: 564 });

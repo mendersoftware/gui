@@ -217,17 +217,24 @@ const actions = {
 const userActionErrorHandler = (err, type, dispatch) => commonErrorHandler(err, `There was an error ${actions[type].errorMessage} the user.`, dispatch);
 
 export const createUser =
-  ({ shouldResetPassword, ...userData }) =>
-  dispatch =>
-    GeneralApi.post(`${useradmApiUrl}/users`, { ...userData, send_reset_password: shouldResetPassword })
+  ({ assignToSso, shouldResetPassword, ...userData }) =>
+  (dispatch, getState) => {
+    const { email, sso = [] } = getCurrentUser(getState());
+    let ssoConfig = sso.find(({ subject }) => subject === email);
+    if (!ssoConfig && sso.length) {
+      ssoConfig = sso[0];
+    }
+    const user = {
+      ...userData,
+      send_reset_password: shouldResetPassword,
+      sso: !userData.password && !shouldResetPassword && assignToSso ? [ssoConfig] : undefined
+    };
+    return GeneralApi.post(`${useradmApiUrl}/users`, user)
       .then(() =>
-        Promise.all([
-          dispatch({ type: UserConstants.CREATED_USER, user: userData }),
-          dispatch(getUserList()),
-          dispatch(setSnackbar(actions.create.successMessage))
-        ])
+        Promise.all([dispatch({ type: UserConstants.CREATED_USER, user }), dispatch(getUserList()), dispatch(setSnackbar(actions.create.successMessage))])
       )
       .catch(err => userActionErrorHandler(err, 'create', dispatch));
+  };
 
 export const removeUser = userId => dispatch =>
   GeneralApi.delete(`${useradmApiUrl}/users/${userId}`)
