@@ -26,9 +26,10 @@ import {
   RECEIVE_SSO_CONFIGS,
   RECEIVE_WEBHOOK_EVENTS,
   SET_AUDITLOG_STATE,
-  SET_ORGANIZATION
+  SET_ORGANIZATION,
+  SSO_TYPES
 } from '../constants/organizationConstants';
-import { deepCompare, getSsoByContentType } from '../helpers';
+import { deepCompare } from '../helpers';
 import { getCurrentSession, getTenantCapabilities } from '../selectors';
 import { commonErrorFallback, commonErrorHandler, setFirstLoginAfterSignup, setSnackbar } from './appActions';
 import { deviceAuthV2, iotManagerBaseURL } from './deviceActions';
@@ -319,8 +320,8 @@ const getSsoConfigById = config => dispatch =>
   Api.get(`${ssoIdpApiUrlv1}/${config.id}`)
     .catch(err => dispatch(ssoConfigActionErrorHandler(err, 'read')))
     .then(({ data, headers }) => {
-      const sso = getSsoByContentType(headers['content-type']);
-      return sso ? Promise.resolve({ ...config, config: data, type: sso.id }) : Promise.reject('Not supported SSO config content type.');
+      const sso = Object.values(SSO_TYPES).find(({ contentType }) => contentType === headers['content-type']);
+      return sso ? Promise.resolve({ ...config, config: data, type: sso.id }) : Promise.reject('Unsupported SSO config content type.');
     });
 
 export const getSsoConfigs = () => dispatch =>
@@ -328,8 +329,6 @@ export const getSsoConfigs = () => dispatch =>
     .catch(err => commonErrorHandler(err, 'There was an error retrieving SSO configurations', dispatch, commonErrorFallback))
     .then(({ data }) =>
       Promise.all(data.map(config => Promise.resolve(dispatch(getSsoConfigById(config)))))
-        .then(configs => {
-          return dispatch({ type: RECEIVE_SSO_CONFIGS, value: configs });
-        })
+        .then(configs => dispatch({ type: RECEIVE_SSO_CONFIGS, value: configs }))
         .catch(err => commonErrorHandler(err, err, dispatch, ''))
     );

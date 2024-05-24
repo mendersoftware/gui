@@ -24,7 +24,7 @@ export const userHandlers = [
     const [user, password] = authInfo.split(':');
 
     if (!password) {
-      return HttpResponse.json({ id: testSsoId });
+      return HttpResponse.json({ id: testSsoId, kind: 'sso/saml' });
     } else if (password !== defaultPassword) {
       return new HttpResponse(null, { status: 401 });
     } else if (user.includes('limited')) {

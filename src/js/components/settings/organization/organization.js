@@ -34,7 +34,7 @@ import {
 } from '../../../actions/organizationActions';
 import { TIMEOUTS } from '../../../constants/appConstants';
 import { SSO_TYPES } from '../../../constants/organizationConstants.js';
-import { createFileDownload, getSsoByType, toggle } from '../../../helpers';
+import { createFileDownload, toggle } from '../../../helpers';
 import { getCurrentSession, getFeatures, getIsEnterprise, getIsPreview, getOrganization, getSsoConfig, getUserRoles } from '../../../selectors';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
@@ -87,7 +87,7 @@ export const Organization = () => {
   const [isConfiguringSSO, setIsConfiguringSSO] = useState(false);
   const [isResettingSSO, setIsResettingSSO] = useState(false);
   const [showTokenWarning, setShowTokenWarning] = useState(false);
-  const [newSso, setNewSso] = useState(undefined);
+  const [newSso, setNewSso] = useState('');
   const [selectedSsoItem, setSelectedSsoItem] = useState(undefined);
   const isEnterprise = useSelector(getIsEnterprise);
   const { isAdmin } = useSelector(getUserRoles);
@@ -111,7 +111,7 @@ export const Organization = () => {
     setHasSingleSignOn(!!ssoConfig);
     setIsConfiguringSSO(!!ssoConfig);
     if (ssoConfig) {
-      setSelectedSsoItem(getSsoByType(ssoConfig.type));
+      setSelectedSsoItem(SSO_TYPES[ssoConfig.type]);
     }
   }, [ssoConfig]);
 
@@ -119,7 +119,7 @@ export const Organization = () => {
 
   const onSaveSSOSettings = useCallback(
     (id, config) => {
-      const { contentType } = getSsoByType(selectedSsoItem.id);
+      const { contentType } = SSO_TYPES[selectedSsoItem.type];
       if (isResettingSSO) {
         return dispatch(deleteSsoConfig(ssoConfig)).then(() => setIsResettingSSO(false));
       }
@@ -159,19 +159,18 @@ export const Organization = () => {
       if (ssoConfig) {
         setNewSso(type);
       } else {
-        setSelectedSsoItem(getSsoByType(type));
+        setSelectedSsoItem(SSO_TYPES[type]);
       }
     },
     [ssoConfig]
   );
 
-  const changeSSO = () => {
+  const changeSSO = () =>
     dispatch(deleteSsoConfig(ssoConfig)).then(() => {
-      setSelectedSsoItem(getSsoByType(newSso));
+      setSelectedSsoItem(SSO_TYPES[newSso]);
       setIsConfiguringSSO(true);
-      setNewSso(undefined);
+      setNewSso('');
     });
-  };
 
   return (
     <div className="margin-top-small">
@@ -230,10 +229,10 @@ export const Organization = () => {
 
       {isConfiguringSSO && (
         <div>
-          <Select className={classes.ssoSelect} displayEmpty onChange={onSsoSelect} value={selectedSsoItem?.id || ''}>
+          <Select className={classes.ssoSelect} displayEmpty onChange={onSsoSelect} value={selectedSsoItem?.type || ''}>
             <MenuItem value="">Select type</MenuItem>
-            {SSO_TYPES.map(item => (
-              <MenuItem key={item.id} value={item.id}>
+            {Object.values(SSO_TYPES).map(item => (
+              <MenuItem key={item.type} value={item.type}>
                 <div className="capitalized-start">{item.title}</div>
               </MenuItem>
             ))}

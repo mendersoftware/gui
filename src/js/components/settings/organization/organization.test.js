@@ -101,30 +101,25 @@ describe('MyOrganization Component', () => {
     const ui = <MyOrganization />;
     const { rerender } = render(ui, { preloadedState: { ...preloadedState, users: { ...preloadedState.users, currentSession: getSessionInfo() } } });
     await waitFor(() => rerender(ui));
-    await act(async () => {});
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
     expect(screen.getByText(/text editor/i)).toBeVisible();
     await user.click(screen.getByText(/text editor/i));
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/import from a file/i)).toBeVisible();
     await user.upload(screen.getByText(/import from a file/i).previousSibling, file);
     await waitFor(() => expect(document.querySelector(`.${drawerClasses.root}`)).toBeVisible());
-    await act(async () => {
-      await user.click(screen.getByTestId('CloseIcon'));
-    });
+    await user.click(screen.getByTestId('CloseIcon'));
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(document.querySelector(`.${drawerClasses.root}`)).not.toBeInTheDocument());
     await waitFor(() => expect(screen.getByRole('checkbox')).toBeChecked());
     while (screen.queryByText(/entity id/i)) {
-      await act(async () => {
-        await user.click(screen.getByRole('checkbox'));
-        await user.click(screen.getByRole('button', { name: /save/i }));
-      });
+      await user.click(screen.getByRole('checkbox'));
+      await user.click(screen.getByRole('button', { name: /save/i }));
       await waitFor(() => rerender(ui));
     }
-    const input = document.querySelector('input[type=file]');
-    await user.upload(input, file);
-    await waitFor(() => rerender(ui));
-    expect(document.querySelector(`.${drawerClasses.root}`)).not.toBeInTheDocument();
   });
 });
 

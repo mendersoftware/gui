@@ -19,7 +19,6 @@ import Cookies from 'universal-cookie';
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { accessTokens, defaultPassword, defaultState, receivedPermissionSets, receivedRoles, testSsoId, token, userId } from '../../../tests/mockData';
 import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
-import { getSsoStartUrlById } from '../components/settings/organization/ssoconfig.js';
 import {
   SET_ANNOUNCEMENT,
   SET_ENVIRONMENT_DATA,
@@ -54,7 +53,7 @@ import {
   UNGROUPED_GROUP
 } from '../constants/deviceConstants';
 import { SET_DEMO_ARTIFACT_PORT, SET_ONBOARDING_COMPLETE } from '../constants/onboardingConstants';
-import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS } from '../constants/organizationConstants';
+import { RECEIVE_EXTERNAL_DEVICE_INTEGRATIONS, getSamlStartUrl } from '../constants/organizationConstants';
 import { RECEIVE_RELEASES, SET_RELEASES_LIST_STATE } from '../constants/releaseConstants';
 import {
   CREATED_ROLE,
@@ -507,7 +506,7 @@ describe('user actions', () => {
       jest.runOnlyPendingTimers();
       jest.runAllTicks();
     });
-    expect(replaceSpy).toHaveBeenCalledWith(getSsoStartUrlById(testSsoId));
+    expect(replaceSpy).toHaveBeenCalledWith(getSamlStartUrl(testSsoId));
   });
   it('should prevent logging in with a limited user', async () => {
     jest.clearAllMocks();

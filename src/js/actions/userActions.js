@@ -20,9 +20,9 @@ import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
 import { cleanUp, maxSessionAge, setSessionInfo } from '../auth';
 import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
-import { getSsoStartUrlById } from '../components/settings/organization/ssoconfig.js';
 import * as AppConstants from '../constants/appConstants';
 import { APPLICATION_JSON_CONTENT_TYPE, APPLICATION_JWT_CONTENT_TYPE } from '../constants/appConstants';
+import { SSO_TYPES } from '../constants/organizationConstants.js';
 import { ALL_RELEASES } from '../constants/releaseConstants.js';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
@@ -81,8 +81,9 @@ export const loginUser = (userData, stayLoggedIn) => dispatch =>
       // If the content type is application/json then backend returned SSO configuration.
       // user should be redirected to the start sso url to finish login process.
       if (contentType.includes(APPLICATION_JSON_CONTENT_TYPE)) {
-        const { id } = response;
-        const ssoLoginUrl = getSsoStartUrlById(id);
+        const { id, kind } = response;
+        const type = kind.split('/')[1];
+        const ssoLoginUrl = SSO_TYPES[type].getStartUrl(id);
         window.location.replace(ssoLoginUrl);
         return;
       }
