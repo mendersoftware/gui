@@ -179,5 +179,6 @@ export const userHandlers = [
   http.post(`${useradmApiUrl}/users/:userId/assign`, async ({ request }) => {
     const { tenant_ids } = await request.json();
     return new HttpResponse(null, { status: tenant_ids.length ? 200 : 577 });
-  })
+  }),
+  http.get(`${useradmApiUrl}/users/tenants/:tenantId/token`, () => HttpResponse.text('differentToken'))
 ];

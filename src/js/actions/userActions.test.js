@@ -110,6 +110,7 @@ import {
   setHideAnnouncement,
   setShowConnectingDialog,
   setTooltipReadState,
+  switchUserOrganization,
   updateUserColumnSettings,
   verify2FA,
   verifyEmailComplete,
@@ -538,6 +539,20 @@ describe('user actions', () => {
     jest.clearAllMocks();
     const store = mockStore({ ...defaultState, releases: { ...defaultState.releases, uploadProgress: 42 } });
     await store.dispatch(logoutUser()).catch(() => expect(true).toEqual(true));
+  });
+  it('should allow switching users', async () => {
+    jest.clearAllMocks();
+    const reloadSpy = jest.spyOn(window.location, 'reload');
+    const store = mockStore({ ...defaultState, releases: { ...defaultState.releases, uploadProgress: 42 } });
+    await store.dispatch(switchUserOrganization('a1'));
+    expect(localStorage.getItem).toHaveBeenCalledWith('JWT');
+    expect(localStorage.setItem).toHaveBeenCalledWith('JWT', JSON.stringify({ token: 'differentToken' }));
+    expect(reloadSpy).toHaveBeenCalled();
+  });
+  it('should not allow switching users during uploads', async () => {
+    jest.clearAllMocks();
+    const store = mockStore({ ...defaultState, releases: { ...defaultState.releases, uploadProgress: 42 } });
+    await store.dispatch(switchUserOrganization('a1')).catch(() => expect(true).toEqual(true));
   });
   it('should allow single user retrieval', async () => {
     jest.clearAllMocks();
