@@ -69,6 +69,8 @@ export const getDeploymentsByStatus = state => state.deployments.byStatus;
 const getSelectedDeploymentDeviceIds = state => state.deployments.selectedDeviceIds;
 export const getDeploymentsSelectionState = state => state.deployments.selectionState;
 export const getFullVersionInformation = state => state.app.versionInformation;
+export const getAuditLog = state => state.organization.auditlog.events;
+export const getAuditLogSelectionState = state => state.organization.auditlog.selectionState;
 const getCurrentUserId = state => state.users.currentUser;
 const getUsersById = state => state.users.byId;
 export const getCurrentUser = createSelector([getUsersById, getCurrentUserId], (usersById, userId) => usersById[userId] ?? {});
@@ -161,6 +163,24 @@ export const getDeviceCountsByStatus = createSelector([getDevicesByStatus], bySt
 );
 
 export const getDeviceById = createSelector([getDevicesById, (_, deviceId) => deviceId], (devicesById, deviceId = '') => devicesById[deviceId] ?? {});
+
+export const getAuditLogEntry = createSelector([getAuditLog, getAuditLogSelectionState], (events, { selectedId }) => {
+  if (!selectedId) {
+    return;
+  }
+  const [eventAction, eventTime] = atob(selectedId).split('|');
+  return events.find(item => item.action === eventAction && item.time === eventTime);
+});
+
+export const getAuditlogDevice = createSelector([getAuditLogEntry, getDevicesById], (auditlogEvent, devicesById) => {
+  let auditlogDevice = {};
+  if (auditlogEvent) {
+    const { object = {} } = auditlogEvent;
+    const { device = {}, id, type } = object;
+    auditlogDevice = type === 'device' ? { id, ...device } : auditlogDevice;
+  }
+  return { ...auditlogDevice, ...devicesById[auditlogDevice.id] };
+});
 
 export const getDeviceConfigDeployment = createSelector([getDeviceById, getDeploymentsById], (device, deploymentsById) => {
   const { config = {} } = device;

@@ -19,7 +19,21 @@ import FileTransfer from './filetransfer';
 
 describe('FileTransfer Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<FileTransfer item={{ ...defaultState.organization.auditlog.events[2], meta: { path: ['/dev/null'] } }} />);
+    const { baseElement } = render(<FileTransfer item={{ ...defaultState.organization.auditlog.events[2], meta: { path: ['/dev/null'] } }} />, {
+      preloadedState: {
+        ...defaultState,
+        organization: {
+          ...defaultState.organization,
+          auditlog: {
+            ...defaultState.organization.auditlog,
+            selectionState: {
+              ...defaultState.organization.auditlog.selectionState,
+              selectedId: btoa(`${defaultState.organization.auditlog.events[2].action}|${defaultState.organization.auditlog.events[2].time}`)
+            }
+          }
+        }
+      }
+    });
 
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
