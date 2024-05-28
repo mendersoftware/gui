@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { ArrowRightAlt as ArrowRightAltIcon, Sort as SortIcon } from '@mui/icons-material';
@@ -128,19 +128,21 @@ const auditLogColumns = [
   { title: 'Time', sortable: true, render: TimeWrapper }
 ];
 
-export const AuditLogsList = ({ items, loading, onChangePage, onChangeRowsPerPage, onChangeSorting, selectionState, setAuditlogsState, userCapabilities }) => {
-  const { page, perPage, selectedId, sort = {}, total: count } = selectionState;
+export const AuditLogsList = ({
+  eventItem,
+  items,
+  loading,
+  onChangePage,
+  onChangeRowsPerPage,
+  onChangeSorting,
+  selectionState,
+  setAuditlogsState,
+  userCapabilities
+}) => {
+  const { page, perPage, sort = {}, total: count } = selectionState;
 
   const onIssueSelection = selectedIssue =>
     setAuditlogsState({ selectedId: selectedIssue ? btoa(`${selectedIssue.action}|${selectedIssue.time}`) : undefined });
-
-  const eventItem = useMemo(() => {
-    if (!selectedId) {
-      return;
-    }
-    const [eventAction, eventTime] = atob(selectedId).split('|');
-    return items.find(item => item.action === eventAction && item.time === eventTime);
-  }, [items, selectedId]);
 
   return (
     !!items.length && (

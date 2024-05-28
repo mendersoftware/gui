@@ -24,7 +24,21 @@ describe('PortForward Component', () => {
   it('renders correctly', async () => {
     const sessionSpy = jest.spyOn(DeviceActions, 'getSessionDetails');
     const ui = <PortForward item={defaultState.organization.auditlog.events[2]} />;
-    const { baseElement, rerender } = render(ui);
+    const { baseElement, rerender } = render(ui, {
+      preloadedState: {
+        ...defaultState,
+        organization: {
+          ...defaultState.organization,
+          auditlog: {
+            ...defaultState.organization.auditlog,
+            selectionState: {
+              ...defaultState.organization.auditlog.selectionState,
+              selectedId: btoa(`${defaultState.organization.auditlog.events[2].action}|${defaultState.organization.auditlog.events[2].time}`)
+            }
+          }
+        }
+      }
+    });
     await act(async () => {});
     await waitFor(() => rerender(ui));
     await act(async () => {

@@ -542,9 +542,9 @@ exports[`TerminalSession Component renders correctly 1`] = `
           class="flexbox "
         >
           <div
-            title="-"
+            title="raspotifyInstaller"
           >
-            -
+            raspotifyInstaller
           </div>
         </div>
         <div

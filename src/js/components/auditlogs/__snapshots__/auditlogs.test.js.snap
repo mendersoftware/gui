@@ -111,7 +111,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             Change type
           </h5>
           <div
-            class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon css-clttge-MuiAutocomplete-root"
+            class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-clttge-MuiAutocomplete-root"
             name="type"
           >
             <div
@@ -137,28 +137,6 @@ exports[`Auditlogs Component renders correctly 1`] = `
                 <div
                   class="MuiAutocomplete-endAdornment css-p1olib-MuiAutocomplete-endAdornment"
                 >
-                  <button
-                    aria-label="Clear"
-                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-clearIndicator css-1qk9ba-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator"
-                    tabindex="-1"
-                    title="Clear"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-1cwsc1r-MuiSvgIcon-root"
-                      data-testid="CloseIcon"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                      />
-                    </svg>
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
                   <button
                     aria-label="Open"
                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium MuiAutocomplete-popupIndicator css-1xk1zqq-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator"
@@ -679,7 +657,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           </div>
         </div>
         <div
-          class="loaderContainer"
+          class="loaderContainer shrunk"
         >
           <div
             class="small  loader"

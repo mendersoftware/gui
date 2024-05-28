@@ -20,7 +20,7 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
 import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
-import { getCurrentSession, getDeviceById as getDeviceByIdSelector, getIdAttribute, getUserCapabilities } from '../../../selectors';
+import { getAuditlogDevice, getCurrentSession, getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
 import DeviceDetails, { DetailInformation } from './devicedetails';
@@ -32,21 +32,20 @@ export const TerminalSession = ({ item, onClose }) => {
   const theme = useTheme();
   const [sessionDetails, setSessionDetails] = useState();
   const dispatch = useDispatch();
-  const { object = {} } = item;
+  const { action, actor, meta, object = {}, time } = item;
   const { canReadDevices } = useSelector(getUserCapabilities);
-  const device = useSelector(state => getDeviceByIdSelector(state, object.id));
+  const device = useSelector(getAuditlogDevice);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const { token } = useSelector(getCurrentSession);
 
   useEffect(() => {
-    const { action, actor, meta, object, time } = item;
-    if (canReadDevices && !device) {
+    if (canReadDevices) {
       dispatch(getDeviceById(object.id));
     }
     dispatch(
       getSessionDetails(meta.session_id[0], object.id, actor.id, action.startsWith('open') ? time : undefined, action.startsWith('close') ? time : undefined)
     ).then(setSessionDetails);
-  }, [canReadDevices, device, dispatch, item]);
+  }, [action, actor.id, canReadDevices, dispatch, meta.session_id, object.id, time]);
 
   if (!sessionDetails || (canReadDevices && !device)) {
     return <Loader show={true} />;

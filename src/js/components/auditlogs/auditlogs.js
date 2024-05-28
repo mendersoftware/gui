@@ -25,7 +25,15 @@ import { getUserList } from '../../actions/userActions';
 import { BEGINNING_OF_TIME, BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { createDownload, getISOStringBoundaries } from '../../helpers';
-import { getCurrentSession, getGroupNames, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import {
+  getAuditLog,
+  getAuditLogEntry,
+  getAuditLogSelectionState,
+  getCurrentSession,
+  getGroupNames,
+  getTenantCapabilities,
+  getUserCapabilities
+} from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import { ControlledAutoComplete } from '../common/forms/autocomplete';
@@ -57,7 +65,7 @@ const useStyles = makeStyles()(theme => ({
   upgradeNote: { marginTop: '5vh', placeSelf: 'center' }
 }));
 
-const getOptionLabel = option => option.title || option.email || option;
+const getOptionLabel = option => option.title ?? option.email ?? option;
 
 const renderOption = (props, option) => <li {...props}>{getOptionLabel(option)}</li>;
 
@@ -83,9 +91,10 @@ export const AuditLogs = props => {
   const [locationParams, setLocationParams] = useLocationParams('auditlogs', { today, tonight, defaults: locationDefaults });
   const { classes } = useStyles();
   const dispatch = useDispatch();
-  const events = useSelector(state => state.organization.auditlog.events);
+  const events = useSelector(getAuditLog);
+  const eventItem = useSelector(getAuditLogEntry);
   const groups = useSelector(getGroupNames);
-  const selectionState = useSelector(state => state.organization.auditlog.selectionState);
+  const selectionState = useSelector(getAuditLogSelectionState);
   const userCapabilities = useSelector(getUserCapabilities);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const users = useSelector(state => state.users.byId);
@@ -95,7 +104,7 @@ export const AuditLogs = props => {
   const [dirtyField, setDirtyField] = useState('');
   const { token } = useSelector(getCurrentSession);
 
-  const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type = '' } = selectionState;
+  const { detail, isLoading, perPage, endDate, user, sort, startDate, total, type } = selectionState;
 
   useEffect(() => {
     if (!hasAuditlogs || !isInitialized.current) {
@@ -121,7 +130,6 @@ export const AuditLogs = props => {
 
   const initAuditlogState = useCallback(
     (result, state) => {
-      isInitialized.current = true;
       const { detail, endDate, startDate, type, user } = state;
       const resultList = result ? Object.values(result.events) : [];
       if (resultList.length && startDate === today) {
@@ -136,6 +144,8 @@ export const AuditLogs = props => {
         field = field || (state.startDate !== today ? 'startDate' : field);
         setDirtyField(field);
       }, TIMEOUTS.debounceDefault);
+      // the timeout here is slightly longer than the debounce in the filter component, otherwise the population of the filters with the url state would trigger a reset to page 1
+      setTimeout(() => (isInitialized.current = true), TIMEOUTS.oneSecond + TIMEOUTS.debounceDefault);
     },
     [dispatch, today, tonight]
   );
@@ -158,8 +168,8 @@ export const AuditLogs = props => {
       let field = endDate !== tonight ? 'endDate' : '';
       field = field || (startDate !== today ? 'startDate' : field);
       setDirtyField(field);
-      isInitialized.current = true;
-      dispatch(setAuditlogsState(state));
+      // the timeout here is slightly longer than the debounce in the filter component, otherwise the population of the filters with the url state would trigger a reset to page 1
+      dispatch(setAuditlogsState(state)).then(() => setTimeout(() => (isInitialized.current = true), TIMEOUTS.oneSecond + TIMEOUTS.debounceDefault));
       return;
     }
     dispatch(
@@ -189,6 +199,9 @@ export const AuditLogs = props => {
 
   const onFiltersChange = useCallback(
     ({ endDate, detail, startDate, user, type }) => {
+      if (!isInitialized.current) {
+        return;
+      }
       const selectedUser = Object.values(users).find(item => isUserOptionEqualToValue(item, user));
       dispatch(setAuditlogsState({ page: 1, detail, startDate, endDate, user: selectedUser, type }));
     },
@@ -213,7 +226,7 @@ export const AuditLogs = props => {
       <ClickFilter disabled={!hasAuditlogs}>
         <Filters
           initialValues={{ startDate, endDate, user, type, detail }}
-          defaultValues={{ startDate: today, endDate: tonight, user: '', type: '', detail: '' }}
+          defaultValues={{ startDate: today, endDate: tonight, user: '', type: null, detail: '' }}
           fieldResetTrigger={detailsReset}
           dirtyField={dirtyField}
           clearDirty={setDirtyField}
@@ -275,6 +288,7 @@ export const AuditLogs = props => {
         <AuditLogsList
           {...props}
           items={events}
+          eventItem={eventItem}
           loading={isLoading}
           onChangePage={onChangePagination}
           onChangeRowsPerPage={newPerPage => onChangePagination(1, newPerPage)}

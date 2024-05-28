@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
 import { getDeviceById } from '../../../actions/deviceActions';
-import { getDeviceById as getDeviceByIdSelector, getIdAttribute, getUserCapabilities } from '../../../selectors';
+import { getAuditlogDevice, getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import DeviceDetails, { DetailInformation } from './devicedetails';
 
@@ -28,17 +28,16 @@ export const FileTransfer = ({ item, onClose }) => {
     meta: { path = [] },
     object = {}
   } = item;
-  const device = useSelector(state => getDeviceByIdSelector(state, object.id));
+  const device = useSelector(getAuditlogDevice);
   const { canReadDevices } = useSelector(getUserCapabilities);
   const { attribute: idAttribute } = useSelector(getIdAttribute);
   const theme = useTheme();
 
   useEffect(() => {
-    const { object } = item;
-    if (!device && canReadDevices) {
+    if (canReadDevices) {
       dispatch(getDeviceById(object.id));
     }
-  }, [canReadDevices, device, dispatch, item]);
+  }, [canReadDevices, dispatch, object.id]);
 
   if (canReadDevices && !device) {
     return <Loader show={true} />;

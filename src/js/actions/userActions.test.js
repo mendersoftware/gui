@@ -584,6 +584,32 @@ describe('user actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
+  it('should allow single user creation for sso', async () => {
+    jest.clearAllMocks();
+    const createdUser = { email: 'a@b.com', assignToSso: true };
+    const expectedActions = [
+      { type: CREATED_USER, user: { email: 'a@b.com', sso: [{ foo: 'bar' }] } },
+      { type: SET_SNACKBAR, snackbar: { message: 'The user was created successfully.' } },
+      { type: RECEIVED_USER_LIST, users: defaultState.users.byId }
+    ];
+    const store = mockStore({
+      ...defaultState,
+      users: {
+        ...defaultState.users,
+        byId: {
+          ...defaultState.users.byId,
+          a1: {
+            ...defaultState.users.byId.a1,
+            sso: [{ foo: 'bar' }]
+          }
+        }
+      }
+    });
+    await store.dispatch(createUser(createdUser));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
   it('should allow single user edits', async () => {
     jest.clearAllMocks();
     const expectedActions = [

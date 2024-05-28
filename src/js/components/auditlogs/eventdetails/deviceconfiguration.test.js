@@ -21,9 +21,28 @@ describe('DeviceConfiguration Component', () => {
   it('renders correctly', async () => {
     const { baseElement } = render(
       <DeviceConfiguration
-        item={{ ...defaultState.organization.auditlog.events[2], object: { id: defaultState.devices.byId.a1.id }, change: '{"something":"here"}' }}
+        item={{
+          ...defaultState.organization.auditlog.events[2],
+          object: { ...defaultState.organization.auditlog.events[2].object, id: defaultState.devices.byId.a1.id },
+          change: '{"something":"here"}'
+        }}
         onClose={jest.fn}
-      />
+      />,
+      {
+        preloadedState: {
+          ...defaultState,
+          organization: {
+            ...defaultState.organization,
+            auditlog: {
+              ...defaultState.organization.auditlog,
+              selectionState: {
+                ...defaultState.organization.auditlog.selectionState,
+                selectedId: btoa(`${defaultState.organization.auditlog.events[2].action}|${defaultState.organization.auditlog.events[2].time}`)
+              }
+            }
+          }
+        }
+      }
     );
 
     const view = baseElement.firstChild.firstChild;
