@@ -38,7 +38,7 @@ export const LogDialog = ({ context = {}, logData = '', onClose, type = 'deviceL
   const exportLog = () => createFileDownload(logData, dialogTypes[type].filename(context), '');
 
   return (
-    <Dialog open={true}>
+    <Dialog open={true} maxWidth="lg">
       <DialogTitle>{dialogTypes[type].title}</DialogTitle>
       <DialogContent>
         <Code className="log">{logData}</Code>

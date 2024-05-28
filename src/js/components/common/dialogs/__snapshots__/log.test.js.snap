@@ -80,7 +80,7 @@ exports[`LogDialog Component renders correctly 1`] = `
   -ms-flex-direction: column;
   flex-direction: column;
   max-height: calc(100% - 64px);
-  max-width: 600px;
+  max-width: 1200px;
 }
 
 @media print {
@@ -90,7 +90,7 @@ exports[`LogDialog Component renders correctly 1`] = `
   }
 }
 
-@media (max-width:663.95px) {
+@media (max-width:1263.95px) {
   .emotion-3.MuiDialog-paperScrollBody {
     max-width: calc(100% - 64px);
   }
@@ -375,7 +375,7 @@ exports[`LogDialog Component renders correctly 1`] = `
   >
     <div
       aria-labelledby=":r0:"
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthSm emotion-3"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation24 MuiDialog-paper MuiDialog-paperScrollPaper MuiDialog-paperWidthLg emotion-3"
       role="dialog"
     >
       <h2
