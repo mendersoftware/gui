@@ -78,12 +78,9 @@ export const CancelRequestDialog = ({ onCancel, onSubmit }) => {
       ) : (
         <DialogContent>
           <p>
-            <strong>You can now click &#39;confirm&#39; to cancel your plan and deactivate your account.</strong>
+            You can now click <strong>confirm deactivation</strong> to cancel your subscription and deactivate your Mender account.
           </p>
-          <p>
-            We will start the process of closing your account. Meanwhile, you can continue using Mender until the end of the current month. You will receive
-            your final charge for this period at the beginning of next month.
-          </p>
+          <p>Meanwhile, you can continue using your account until the end of your current billing cycle.</p>
           <p>Thank you for using Mender!</p>
         </DialogContent>
       )}
