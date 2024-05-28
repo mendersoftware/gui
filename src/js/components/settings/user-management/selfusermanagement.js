@@ -31,7 +31,7 @@ import InfoText from '../../common/infotext';
 import AccessTokenManagement from '../accesstokenmanagement';
 import { CopyTextToClipboard } from '../organization/organization';
 import TwoFactorAuthSetup from './twofactorauthsetup';
-import { getUserSSOState } from './userdefinition';
+import { UserId, getUserSSOState } from './userdefinition';
 
 const useStyles = makeStyles()(() => ({
   formField: { width: 400, maxWidth: '100%' },
@@ -39,6 +39,7 @@ const useStyles = makeStyles()(() => ({
   infoText: { margin: 0, width: '75%' },
   jwt: { maxWidth: '70%' },
   oauthIcon: { fontSize: '36px', marginRight: 10 },
+  userId: { '&.full-width': { maxWidth: '100%' } },
   widthLimit: { maxWidth: 750 }
 }));
 
@@ -52,6 +53,8 @@ export const SelfUserManagement = () => {
   const isEnterprise = useSelector(getIsEnterprise);
   const canHave2FA = isEnterprise || isHosted;
   const currentUser = useSelector(getCurrentUser);
+  const { isOAuth2, provider } = getUserSSOState(currentUser);
+  const { email, id: userId } = currentUser;
   const hasTracking = useSelector(state => !!state.app.trackerCode);
   const { trackingConsentGiven: hasTrackingConsent, mode } = useSelector(getUserSettings);
   const { token } = useSelector(getCurrentSession);
@@ -75,13 +78,13 @@ export const SelfUserManagement = () => {
   };
 
   const handlePass = () => setEditPass(toggle);
-  const email = currentUser.email;
-  const { isOAuth2, provider } = getUserSSOState(currentUser);
+
   return (
     <div className={`margin-top-small ${classes.widthLimit}`}>
       <h2 className="margin-top-small">My profile</h2>
-      {!editEmail && currentUser.email ? (
-        <div className="flexbox space-between">
+      <UserId className={`full-width ${classes.userId}`} userId={userId} />
+      {!editEmail && email ? (
+        <div className="flexbox space-between margin-bottom-small">
           <TextField className={classes.formField} label="Email" key={email} InputLabelProps={{ shrink: !!email }} disabled defaultValue={email} />
           {!isOAuth2 && (
             <Button className={`inline-block ${classes.changeButton}`} color="primary" id="change_email" onClick={handleEmail}>
