@@ -16,6 +16,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
+import { createFileDownload } from '../../../helpers';
 import { Code } from '../copy-code';
 
 const wrapperStyle = { marginRight: 10, display: 'inline-block' };
@@ -23,25 +24,18 @@ const wrapperStyle = { marginRight: 10, display: 'inline-block' };
 const dialogTypes = {
   'deviceLog': {
     title: 'Deployment log for device',
-    filename: 'deviceLog'
+    filename: ({ device, releaseName, date }) => `deployment-log-${device}-${releaseName}-${date}.log`
   },
   'configUpdateLog': {
     title: 'Config update log for device',
-    filename: 'updateLog'
-  },
-  'monitorLog': {
-    title: 'Alert log for device',
-    filename: 'monitorLog'
+    filename: () => 'configuration-update.log'
   }
 };
 
-export const LogDialog = ({ logData = '', onClose, type = 'deviceLog' }) => {
+export const LogDialog = ({ context = {}, logData = '', onClose, type = 'deviceLog' }) => {
   const [copied, setCopied] = useState(false);
 
-  const exportLog = () => {
-    const uriContent = `data:application/octet-stream,${encodeURIComponent(logData)}`;
-    window.open(uriContent, dialogTypes[type].filename);
-  };
+  const exportLog = () => createFileDownload(logData, dialogTypes[type].filename(context), '');
 
   return (
     <Dialog open={true}>
