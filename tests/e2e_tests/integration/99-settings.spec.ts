@@ -176,13 +176,13 @@ test.describe('Settings', () => {
       await page.waitForSelector('text=/Global settings/i');
       await page.click('text=/user management/i');
       await page.goto(`${baseUrl}ui/settings/user-management`);
-      const isVisible = await page.isVisible(`text=/Create new user/i`);
+      const isVisible = await page.isVisible(`text=/Add new user/i`);
       if (!isVisible) {
         console.log('settings may not be loaded - move around');
         await page.goto(`${baseUrl}ui/help`);
         await page.goto(`${baseUrl}ui/settings/user-management`);
       }
-      await page.waitForSelector('css=button >> text=Create new user');
+      await page.waitForSelector('css=button >> text=Add new user');
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings/my-account`);

@@ -26,7 +26,7 @@ import { APPLICATION_JSON_CONTENT_TYPE, APPLICATION_JWT_CONTENT_TYPE } from '../
 import { ALL_RELEASES } from '../constants/releaseConstants.js';
 import * as UserConstants from '../constants/userConstants';
 import { duplicateFilter, extractErrorMessage, isEmpty, preformatWithRequestID } from '../helpers';
-import { getCurrentUser, getOnboardingState, getTooltipsState, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getCurrentUser, getOnboardingState, getOrganization, getTooltipsState, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 import { commonErrorFallback, commonErrorHandler, initializeAppData, setOfflineThreshold, setSnackbar } from './appActions';
 
@@ -200,6 +200,10 @@ export const updateUserColumnSettings = (columns, currentUserId) => (dispatch, g
 };
 
 const actions = {
+  add: {
+    successMessage: 'The user was added successfully.',
+    errorMessage: 'adding'
+  },
   create: {
     successMessage: 'The user was created successfully.',
     errorMessage: 'creating'
@@ -243,13 +247,19 @@ export const removeUser = userId => dispatch =>
     )
     .catch(err => userActionErrorHandler(err, 'remove', dispatch));
 
-export const editUser = (userId, userData) => (dispatch, getState) => {
-  return GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData).then(() =>
+export const editUser = (userId, userData) => (dispatch, getState) =>
+  GeneralApi.put(`${useradmApiUrl}/users/${userId}`, userData).then(() =>
     Promise.all([
       dispatch({ type: UserConstants.UPDATED_USER, userId: userId === UserConstants.OWN_USER_ID ? getState().users.currentUser : userId, user: userData }),
       dispatch(setSnackbar(actions.edit.successMessage))
     ])
   );
+
+export const addUserToCurrentTenant = userId => (dispatch, getState) => {
+  const { id } = getOrganization(getState());
+  return GeneralApi.post(`${useradmApiUrl}/users/${userId}/assign`, { tenant_ids: [id] })
+    .catch(err => commonErrorHandler(err, `There was an error adding the user to your organization:`, dispatch))
+    .then(() => Promise.all([dispatch(setSnackbar(actions.add.successMessage)), dispatch(getUserList())]));
 };
 
 export const enableUser2fa =

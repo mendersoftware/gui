@@ -175,5 +175,9 @@ export const userHandlers = [
     const { secret_hash } = await request.json();
     return new HttpResponse(null, { status: secret_hash === 'superSecret' ? 200 : 576 });
   }),
-  http.get(`${useradmApiUrlv2}/permission_sets`, () => HttpResponse.json(permissionSets))
+  http.get(`${useradmApiUrlv2}/permission_sets`, () => HttpResponse.json(permissionSets)),
+  http.post(`${useradmApiUrl}/users/:userId/assign`, async ({ request }) => {
+    const { tenant_ids } = await request.json();
+    return new HttpResponse(null, { status: tenant_ids.length ? 200 : 577 });
+  })
 ];
