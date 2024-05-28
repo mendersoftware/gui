@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React, { useMemo, useState } from 'react';
+import { useWatch } from 'react-hook-form';
 
 import { InfoOutlined } from '@mui/icons-material';
 import {
@@ -134,6 +135,21 @@ const PasswordLabel = () => (
   </div>
 );
 
+const SsoAssignment = ({ currentUser }) => {
+  const { sso = [] } = currentUser;
+
+  const password = useWatch({ name: 'password' });
+  const shouldResetPassword = useWatch({ name: 'shouldResetPassword' });
+  return (
+    <FormCheckbox
+      id="assignToSso"
+      disabled={!sso.length || password || shouldResetPassword}
+      className="margin-top-none"
+      label="Add to organization Single Sign-On provider"
+    />
+  );
+};
+
 export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterprise, roles, submit }) => {
   const [hadRoleChanges, setHadRoleChanges] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState();
@@ -168,6 +184,7 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
             validations="isLength:8"
           />
           <FormCheckbox id="shouldResetPassword" label="Send an email to the user containing a link to reset the password" />
+          <SsoAssignment currentUser={currentUser} />
           <UserRolesSelect currentUser={currentUser} disabled={!(canManageUsers && isEnterprise)} onSelect={onSelect} roles={roles} user={{}} />
         </Form>
       </DialogContent>

@@ -16,7 +16,7 @@ import { Controller } from 'react-hook-form';
 
 import { Checkbox, FormControlLabel } from '@mui/material';
 
-export const FormCheckbox = ({ className, control, id, handleClick, style, label, required }) => (
+export const FormCheckbox = ({ className, control, disabled, id, handleClick, style, label, required }) => (
   <Controller
     name={id}
     rules={{ required }}
@@ -25,7 +25,9 @@ export const FormCheckbox = ({ className, control, id, handleClick, style, label
       return (
         <FormControlLabel
           className={className}
-          control={<Checkbox name={id} onClick={handleClick} checked={value} style={style} color="primary" onChange={() => onChange(!value)} />}
+          control={
+            <Checkbox name={id} onClick={handleClick} disabled={disabled} checked={value} style={style} color="primary" onChange={() => onChange(!value)} />
+          }
           label={label}
         />
       );
