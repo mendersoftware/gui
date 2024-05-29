@@ -37,11 +37,21 @@ import { TIMEOUTS } from '../../constants/appConstants';
 import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
 import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
 import { statCollector, toggle } from '../../helpers';
-import { getDeploymentRelease, getDevicesById, getIdAttribute, getSelectedDeploymentData, getTenantCapabilities, getUserCapabilities } from '../../selectors';
+import {
+  getDeploymentRelease,
+  getDevicesById,
+  getIdAttribute,
+  getOnboardingState,
+  getSelectedDeploymentData,
+  getTenantCapabilities,
+  getUserCapabilities
+} from '../../selectors';
 import ConfigurationObject from '../common/configurationobject';
 import Confirm from '../common/confirm';
 import LogDialog from '../common/dialogs/log';
 import LinedHeader from '../common/lined-header';
+import BaseOnboardingTip from '../helptips/baseonboardingtip.js';
+import { DeploymentUploadFinished } from '../helptips/onboardingtips.js';
 import DeploymentStatus, { DeploymentPhaseNotification } from './deployment-report/deploymentstatus';
 import DeviceList from './deployment-report/devicelist';
 import DeploymentOverview from './deployment-report/overview';
@@ -87,6 +97,7 @@ export const DeploymentReport = ({ abort, onClose, past, retry, type }) => {
   const [deviceId, setDeviceId] = useState('');
   const rolloutSchedule = useRef();
   const timer = useRef();
+  const onboardingTooltipAnchor = useRef();
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const { deployment, selectedDevices } = useSelector(getSelectedDeploymentData);
@@ -95,6 +106,7 @@ export const DeploymentReport = ({ abort, onClose, past, retry, type }) => {
   const release = useSelector(getDeploymentRelease);
   const tenantCapabilities = useSelector(getTenantCapabilities);
   const userCapabilities = useSelector(getUserCapabilities);
+  const onboardingState = useSelector(getOnboardingState);
   // we can't filter by auditlog action via the api, so
   // - fall back to the following filter
   // - hope the deployment creation event is retrieved with the call to auditlogs api on report open
@@ -217,9 +229,25 @@ export const DeploymentReport = ({ abort, onClose, past, retry, type }) => {
     totalDeviceCount,
     viewLog
   };
+  let onboardingComponent = null;
+  if (!onboardingState.complete && onboardingTooltipAnchor.current && finished) {
+    const anchor = {
+      left: onboardingTooltipAnchor.current.offsetLeft + (onboardingTooltipAnchor.current.offsetWidth / 100) * 50,
+      top: onboardingTooltipAnchor.current.offsetTop + onboardingTooltipAnchor.current.offsetHeight
+    };
+    onboardingComponent = (
+      <BaseOnboardingTip
+        id={onboardingState.progress}
+        progress={onboardingState.progress}
+        component={<DeploymentUploadFinished></DeploymentUploadFinished>}
+        anchor={anchor}
+      />
+    );
+  }
 
   return (
     <Drawer anchor="right" open onClose={onClose} PaperProps={{ style: { minWidth: '75vw' } }}>
+      {!!onboardingComponent && onboardingComponent}
       <div className="flexbox margin-bottom-small space-between">
         <div className="flexbox">
           <h3>{`Deployment ${type !== DEPLOYMENT_STATES.scheduled ? 'details' : 'report'}`}</h3>
@@ -246,7 +274,7 @@ export const DeploymentReport = ({ abort, onClose, past, retry, type }) => {
               <h3>Finished</h3>
             </div>
           )}
-          <IconButton onClick={onClose} aria-label="close" size="large">
+          <IconButton ref={onboardingTooltipAnchor} onClick={onClose} aria-label="close" size="large">
             <CloseIcon />
           </IconButton>
         </div>

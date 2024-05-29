@@ -31,6 +31,7 @@ import { getDeviceCountsByStatus, getOnboardingState, getTenantCapabilities } fr
 import InfoText from '../../common/infotext';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import DocsLink from '../docslink';
+import Loader from '../loader.js';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 
@@ -174,7 +175,12 @@ export const DeviceConnectionDialog = ({ onCancel }) => {
                 Next
               </Button>
             ) : (
-              <Button variant="contained" disabled={!onboardingComplete} onClick={onCancel}>
+              <Button
+                variant="contained"
+                disabled={!onboardingComplete}
+                onClick={onCancel}
+                endIcon={!onboardingComplete && <Loader show small table style={{ top: -24 }} />}
+              >
                 {onboardingComplete ? 'Close' : 'Waiting for device'}
               </Button>
             )}
