@@ -265,7 +265,6 @@ export const Authorized = ({
     if (!acceptedCount) {
       return;
     }
-    dispatch(advanceOnboarding(onboardingSteps.DEVICES_ACCEPTED_ONBOARDING));
 
     if (acceptedCount < 2 && !window.sessionStorage.getItem('pendings-redirect')) {
       window.sessionStorage.setItem('pendings-redirect', true);
