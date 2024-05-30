@@ -52,6 +52,7 @@ import { removeArtifact, removeRelease, selectRelease, setReleaseTags, updateRel
 import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
 import { getReleaseListState, getReleaseTags, getSelectedRelease, getUserCapabilities } from '../../selectors';
+import { generateReleasesPath } from '../../utils/locationutils';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
 import { ConfirmationButtons, EditButton } from '../common/confirm';
@@ -396,8 +397,8 @@ export const ReleaseDetails = () => {
   const onRemoveArtifact = artifact => dispatch(removeArtifact(artifact.id)).finally(() => setShowRemoveArtifactDialog(false));
 
   const copyLinkToClipboard = () => {
-    const location = window.location.href.substring(0, window.location.href.indexOf('/releases') + '/releases'.length);
-    copy(`${location}/${releaseName}`);
+    const location = window.location.href.substring(0, window.location.href.indexOf('/releases'));
+    copy(`${location}${generateReleasesPath({ pageState: { selectedRelease: releaseName } })}`);
     dispatch(setSnackbar('Link copied to clipboard'));
   };
 

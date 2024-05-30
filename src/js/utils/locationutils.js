@@ -396,14 +396,15 @@ export const formatReleases = ({ pageState: { searchTerm, selectedTags = [], tab
     )
     .join('&');
 
-export const generateReleasesPath = ({ pageState: { selectedRelease } }) => `${releasesRoot}${selectedRelease ? `/${selectedRelease}` : ''}`;
+export const generateReleasesPath = ({ pageState: { selectedRelease } }) =>
+  `${releasesRoot}${selectedRelease ? `/${encodeURIComponent(selectedRelease)}` : ''}`;
 
 export const parseReleasesQuery = (queryParams, extraProps) => {
   const name = queryParams.has('name') ? queryParams.get('name') : '';
   const tab = queryParams.has('tab') ? queryParams.get('tab') : undefined;
   const tags = queryParams.has('tag') ? queryParams.getAll('tag') : [];
   const type = queryParams.has('type') ? queryParams.get('type') : '';
-  let selectedRelease = extraProps.location.pathname.substring(releasesRoot.length + 1);
+  let selectedRelease = decodeURIComponent(extraProps.location.pathname.substring(releasesRoot.length + 1));
   if (!selectedRelease && extraProps.pageState.id?.length) {
     selectedRelease = extraProps.pageState.id[0];
   }
