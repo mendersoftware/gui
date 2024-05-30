@@ -32,7 +32,7 @@ import {
   getUserOrganization,
   storeSsoConfig
 } from '../../../actions/organizationActions';
-import { TIMEOUTS } from '../../../constants/appConstants';
+import { TIMEOUTS, yes } from '../../../constants/appConstants';
 import { SSO_TYPES } from '../../../constants/organizationConstants.js';
 import { createFileDownload, getSsoByType, toggle } from '../../../helpers';
 import { getCurrentSession, getFeatures, getIsEnterprise, getIsPreview, getOrganization, getSsoConfig, getUserRoles } from '../../../selectors';
@@ -43,7 +43,7 @@ import OrganizationSettingsItem, { maxWidth } from './organizationsettingsitem';
 import { SSOConfig } from './ssoconfig';
 
 const useStyles = makeStyles()(theme => ({
-  copyNotification: { height: 30, padding: 15 },
+  copyNotification: { height: 15 },
   deviceLimitBar: { backgroundColor: theme.palette.grey[500], margin: '15px 0' },
   tenantInfo: { marginTop: 11, paddingBottom: 3, 'span': { marginLeft: theme.spacing(0.5), color: theme.palette.text.disabled } },
   tenantToken: { width: `calc(${maxWidth}px - ${theme.spacing(4)})` },
@@ -62,7 +62,7 @@ export const OrgHeader = () => {
   );
 };
 
-export const CopyTextToClipboard = ({ onCopy, token }) => {
+export const CopyTextToClipboard = ({ onCopy = yes, token }) => {
   const [copied, setCopied] = useState(false);
   const { classes } = useStyles();
 
@@ -77,7 +77,7 @@ export const CopyTextToClipboard = ({ onCopy, token }) => {
       <CopyToClipboard text={token} onCopy={onCopied}>
         <Button startIcon={<CopyPasteIcon />}>Copy to clipboard</Button>
       </CopyToClipboard>
-      <div className={classes.copyNotification}>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</div>
+      <p className={classes.copyNotification}>{copied && <span className="green fadeIn">Copied to clipboard.</span>}</p>
     </div>
   );
 };
