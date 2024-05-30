@@ -310,7 +310,13 @@ export const DeploymentReport = ({ abort, onClose, past, retry, type }) => {
           onAbort={abort}
           innerRef={rolloutSchedule}
         />
-        {Boolean(deviceId.length) && <LogDialog logData={logData} onClose={() => setDeviceId('')} />}
+        {Boolean(deviceId.length) && (
+          <LogDialog
+            context={{ device: deviceId, releaseName: deployment.artifact_name, date: deployment.finished }}
+            logData={logData}
+            onClose={() => setDeviceId('')}
+          />
+        )}
       </div>
       <Divider className={classes.divider} light />
     </Drawer>
