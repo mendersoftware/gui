@@ -22,7 +22,7 @@
     "@bgotink/playwright-coverage": "^0.2.2",
     "@nuintun/qrcode": "^4.1.2",
     "@playwright/test": "1.44.1",
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "dayjs": "^1.11.11",
     "jwt-decode": "^4.0.0",
     "md5": "^2.3.0",
