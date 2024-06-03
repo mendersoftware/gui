@@ -15,11 +15,13 @@ import React from 'react';
 import Linkify from 'react-linkify';
 
 import { act, screen, render as testLibRender, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import 'jsdom-worker';
 
 import { defaultState, mockDate, token, undefineds } from '../../../tests/mockData';
 import { render } from '../../../tests/setupTests';
 import * as DeviceActions from '../actions/deviceActions';
+import GeneralApi from '../api/general-api';
 import { getSessionInfo, maxSessionAge } from '../auth';
 import { TIMEOUTS } from '../constants/appConstants';
 import App, { AppProviders } from './app';
@@ -138,5 +140,48 @@ describe('App Component', () => {
       window.localStorage.getItem.mockReset();
     },
     20 * TIMEOUTS.oneSecond
+  );
+  it(
+    'allows offline threshold migration',
+    async () => {
+      window.localStorage.getItem.mockImplementation(name => (name === 'JWT' ? JSON.stringify({ token }) : undefined));
+      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      const ui = <App />;
+      render(ui, {
+        preloadedState: {
+          ...preloadedState,
+          users: {
+            ...preloadedState.users,
+            currentSession: getSessionInfo(),
+            settingsInitialized: false,
+            globalSettings: {
+              ...preloadedState.users.globalSettings,
+              offlineThreshold: { interval: 15, intervalUnit: 'minutes' }
+            }
+          }
+        }
+      });
+      await act(async () => {
+        jest.advanceTimersByTime(TIMEOUTS.fiveSeconds);
+        jest.runAllTicks();
+      });
+      await waitFor(() => expect(screen.queryByText(/granular device connectivity/i)).toBeInTheDocument(), { timeout: TIMEOUTS.fiveSeconds * 2 });
+      const post = jest.spyOn(GeneralApi, 'post');
+      await user.click(screen.getByRole('button', { name: /close/i }));
+      await act(async () => {
+        jest.runOnlyPendingTimers();
+        jest.runAllTicks();
+      });
+      expect(post).toHaveBeenCalledWith(
+        '/api/management/v1/useradm/settings',
+        {
+          id_attribute: { attribute: 'mac', scope: 'identity' },
+          previousFilters: [],
+          offlineThreshold: { interval: 1, intervalUnit: 'days' }
+        },
+        { headers: {} }
+      );
+    },
+    15 * TIMEOUTS.oneSecond
   );
 });
