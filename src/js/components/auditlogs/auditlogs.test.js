@@ -19,8 +19,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import { prettyDOM } from '@testing-library/dom';
-import { act, screen, render as testingLibRender, waitFor } from '@testing-library/react';
+import { act, prettyDOM, screen, render as testingLibRender, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { light as lightTheme } from '../../../../src/js/themes/Mender';

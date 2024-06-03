@@ -18,7 +18,6 @@
 "@stripe/react-stripe-js","MIT","https://github.com/stripe/react-stripe-js"
 "@stripe/stripe-js","MIT","https://github.com/stripe/stripe-js"
 "@svgr/webpack","MIT","https://github.com/gregberge/svgr.git#main"
-"@testing-library/dom","MIT","https://github.com/testing-library/dom-testing-library"
 "@testing-library/jest-dom","MIT","https://github.com/testing-library/jest-dom"
 "@testing-library/react","MIT","https://github.com/testing-library/react-testing-library"
 "@testing-library/user-event","MIT","https://github.com/testing-library/user-event"
