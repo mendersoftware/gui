@@ -26,8 +26,6 @@ export const timeUnits = {
   minutes: 'minutes',
   hours: 'hours'
 };
-// minutes and hours thresholds are temporarily disabled (MEN-6831)
-export const offlineThresholds = [/*timeUnits.minutes, timeUnits.hours,*/ timeUnits.days];
 
 export const DEVICE_FILTERING_OPTIONS = {
   $eq: { key: '$eq', title: 'equals', shortform: '=' },
@@ -263,7 +261,7 @@ export const DEVICE_CONNECT_STATES = {
   disconnected: 'disconnected',
   unknown: 'unknown'
 };
-export const DEVICE_ONLINE_CUTOFF = { interval: 1, intervalName: offlineThresholds[0] };
+export const DEVICE_ONLINE_CUTOFF = { interval: 1, intervalName: timeUnits.days };
 export const ATTRIBUTE_SCOPES = {
   inventory: 'inventory',
   identity: 'identity',
