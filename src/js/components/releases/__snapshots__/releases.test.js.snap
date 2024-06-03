@@ -710,26 +710,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   animation-name: mui-auto-fill;
 }
 
-.emotion-23.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-@media (pointer: fine) {
-  .emotion-23:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-}
-
 .emotion-23 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
-}
-
-.emotion-23 .MuiAutocomplete-inputRoot {
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
 }
 
 .MuiAutocomplete-hasPopupIcon.emotion-23 .MuiAutocomplete-inputRoot,
@@ -744,6 +727,24 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 .emotion-23 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
+}
+
+.emotion-23.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+.emotion-23.Mui-focused .MuiAutocomplete-input {
+  min-width: 0;
+}
+
+@media (pointer: fine) {
+  .emotion-23:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+
+  .emotion-23:hover .MuiAutocomplete-input {
+    min-width: 0;
+  }
 }
 
 .emotion-23 .MuiInput-root {
@@ -849,6 +850,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 
 .emotion-23 .MuiAutocomplete-input {
   opacity: 1;
+}
+
+.emotion-23 .MuiAutocomplete-inputRoot {
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .emotion-24 {
@@ -1068,6 +1076,148 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   animation-duration: 5000s;
   -webkit-animation-name: mui-auto-fill;
   animation-name: mui-auto-fill;
+}
+
+.emotion-27 .MuiAutocomplete-tag {
+  margin: 3px;
+  max-width: calc(100% - 6px);
+}
+
+.MuiAutocomplete-hasPopupIcon.emotion-27 .MuiAutocomplete-inputRoot,
+.MuiAutocomplete-hasClearIcon.emotion-27 .MuiAutocomplete-inputRoot {
+  padding-right: 30px;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-27 .MuiAutocomplete-inputRoot {
+  padding-right: 56px;
+}
+
+.emotion-27 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
+  width: 0;
+  min-width: 30px;
+}
+
+.emotion-27.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+.emotion-27.Mui-focused .MuiAutocomplete-input {
+  min-width: 0;
+}
+
+@media (pointer: fine) {
+  .emotion-27:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+
+  .emotion-27:hover .MuiAutocomplete-input {
+    min-width: 0;
+  }
+}
+
+.emotion-27 .MuiInput-root {
+  padding-bottom: 1px;
+}
+
+.emotion-27 .MuiInput-root .MuiInput-input {
+  padding: 4px 4px 4px 0px;
+}
+
+.emotion-27 .MuiInput-root.MuiInputBase-sizeSmall .MuiInput-input {
+  padding: 2px 4px 3px 0;
+}
+
+.emotion-27 .MuiOutlinedInput-root {
+  padding: 9px;
+}
+
+.MuiAutocomplete-hasPopupIcon.emotion-27 .MuiOutlinedInput-root,
+.MuiAutocomplete-hasClearIcon.emotion-27 .MuiOutlinedInput-root {
+  padding-right: 39px;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-27 .MuiOutlinedInput-root {
+  padding-right: 65px;
+}
+
+.emotion-27 .MuiOutlinedInput-root .MuiAutocomplete-input {
+  padding: 7.5px 4px 7.5px 5px;
+}
+
+.emotion-27 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
+  right: 9px;
+}
+
+.emotion-27 .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
+}
+
+.emotion-27 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding: 2.5px 4px 2.5px 8px;
+}
+
+.emotion-27 .MuiFilledInput-root {
+  padding-top: 19px;
+  padding-left: 8px;
+}
+
+.MuiAutocomplete-hasPopupIcon.emotion-27 .MuiFilledInput-root,
+.MuiAutocomplete-hasClearIcon.emotion-27 .MuiFilledInput-root {
+  padding-right: 39px;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.emotion-27 .MuiFilledInput-root {
+  padding-right: 65px;
+}
+
+.emotion-27 .MuiFilledInput-root .MuiFilledInput-input {
+  padding: 7px 4px;
+}
+
+.emotion-27 .MuiFilledInput-root .MuiAutocomplete-endAdornment {
+  right: 9px;
+}
+
+.emotion-27 .MuiFilledInput-root.MuiInputBase-sizeSmall {
+  padding-bottom: 1px;
+}
+
+.emotion-27 .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input {
+  padding: 2.5px 4px;
+}
+
+.emotion-27 .MuiInputBase-hiddenLabel {
+  padding-top: 8px;
+}
+
+.emotion-27 .MuiFilledInput-root.MuiInputBase-hiddenLabel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emotion-27 .MuiFilledInput-root.MuiInputBase-hiddenLabel .MuiAutocomplete-input {
+  padding-top: 16px;
+  padding-bottom: 17px;
+}
+
+.emotion-27 .MuiFilledInput-root.MuiInputBase-hiddenLabel.MuiInputBase-sizeSmall .MuiAutocomplete-input {
+  padding-top: 8px;
+  padding-bottom: 9px;
+}
+
+.emotion-27 .MuiAutocomplete-input {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  opacity: 0;
+}
+
+.emotion-27 .MuiAutocomplete-input {
+  opacity: 1;
 }
 
 .emotion-31 {
@@ -1984,7 +2134,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus::-ms-input
               Contains Artifact type
             </h5>
             <div
-              class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon emotion-23"
+              class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon emotion-27"
               name="type"
             >
               <div

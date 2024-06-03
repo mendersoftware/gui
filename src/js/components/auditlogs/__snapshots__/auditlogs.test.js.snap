@@ -49,7 +49,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             By user
           </h5>
           <div
-            class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon css-clttge-MuiAutocomplete-root"
+            class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon css-1j0qgw8-MuiAutocomplete-root"
             name="user"
           >
             <div
@@ -111,7 +111,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             Change type
           </h5>
           <div
-            class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-clttge-MuiAutocomplete-root"
+            class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1j0qgw8-MuiAutocomplete-root"
             name="type"
           >
             <div
@@ -171,7 +171,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
             class="margin-top-small margin-bottom-none muted"
           />
           <div
-            class="MuiAutocomplete-root css-clttge-MuiAutocomplete-root"
+            class="MuiAutocomplete-root css-1j0qgw8-MuiAutocomplete-root"
             name="detail"
           >
             <div
