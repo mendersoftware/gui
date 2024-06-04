@@ -20,8 +20,7 @@ import { Button } from '@mui/material';
 import { listItemTextClasses } from '@mui/material/ListItemText';
 import { makeStyles } from 'tss-react/mui';
 
-import { XML_METADATA_FORMAT } from '../../../constants/organizationConstants.js';
-import { useradmApiUrl } from '../../../constants/userConstants';
+import { SSO_TYPES, XML_METADATA_FORMAT } from '../../../constants/organizationConstants.js';
 import { toggle } from '../../../helpers';
 import ExpandableAttribute from '../../common/expandable-attribute';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
@@ -56,20 +55,12 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-export const getSsoStartUrlById = id => `${window.location.origin}${useradmApiUrl}/auth/sso/${id}/login`;
-
-const defaultDetails = [
-  { key: 'entityID', label: 'Entity ID', getValue: id => `${window.location.origin}${useradmApiUrl}/sso/sp/metadata/${id}` },
-  { key: 'acs', label: 'ACS URL', getValue: id => `${window.location.origin}${useradmApiUrl}/auth/sso/${id}/acs` },
-  { key: 'startURL', label: 'Start URL', getValue: id => getSsoStartUrlById(id) }
-];
-
 export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, token }) => {
   const [configDetails, setConfigDetails] = useState([]);
   const [fileContent, setFileContentState] = useState('');
   const [hasSSOConfig, setHasSSOConfig] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const { id, ...content } = config || {};
+  const { id, type, ...content } = config || {};
   const configContent = content.config || '';
 
   // file content should be text, otherwise editor will fail
@@ -81,9 +72,9 @@ export const SSOConfig = ({ ssoItem, config, onCancel, onSave, setSnackbar, toke
     setHasSSOConfig(!!config);
     setFileContent(configContent);
     if (config?.id) {
-      setConfigDetails(defaultDetails.map(item => ({ ...item, value: item.getValue(config.id) })));
+      setConfigDetails(SSO_TYPES[type].configDetails.map(item => ({ ...item, value: item.getValue(config.id) })));
     }
-  }, [config, configContent]);
+  }, [config, configContent, type]);
 
   const onCancelSSOSettings = () => {
     setHasSSOConfig(!!config);

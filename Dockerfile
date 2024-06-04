@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:22.1.0-alpine AS base
+FROM --platform=$BUILDPLATFORM node:22.2.0-alpine AS base
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
 RUN npm ci
@@ -25,7 +25,7 @@ HEALTHCHECK --interval=8s --timeout=15s --start-period=120s --retries=128 CMD wg
 CMD ["nginx"]
 
 
-FROM nginx:1.26.0-alpine AS production
+FROM nginx:1.27.0-alpine AS production
 EXPOSE 8080
 WORKDIR /var/www/mender-gui/dist
 ARG GIT_COMMIT_TAG

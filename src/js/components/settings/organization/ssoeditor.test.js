@@ -23,7 +23,7 @@ describe('SSOEditor Component', () => {
     const config = '<div>not quite right</div>';
     const { baseElement } = render(
       <SSOEditor
-        ssoItem={SSO_TYPES[0]}
+        ssoItem={SSO_TYPES.saml}
         config={config}
         onCancel={jest.fn}
         onSave={jest.fn}
