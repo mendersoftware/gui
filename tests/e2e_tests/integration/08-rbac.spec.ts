@@ -21,13 +21,13 @@ test.describe('RBAC functionality', () => {
     await page.waitForSelector('text=/Global settings/i');
     await page.click('text=/user management/i');
     await page.goto(`${baseUrl}ui/settings/user-management`);
-    const isVisible = await page.isVisible(`text=/Create new user/i`);
+    const isVisible = await page.getByRole('button', { name: /new user/i }).isVisible();
     if (!isVisible) {
       console.log('settings may not be loaded - move around');
       await page.goto(`${baseUrl}ui/help`);
       await page.goto(`${baseUrl}ui/settings/user-management`);
     }
-    await page.waitForSelector('css=button >> text=Create new user');
+    await page.getByRole('button', { name: /new user/i }).isVisible();
   });
   test('allows role creation for static groups', async ({ baseUrl, environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
@@ -64,7 +64,7 @@ test.describe('RBAC functionality', () => {
 
   test('allows user creation', async ({ baseUrl, environment, loggedInPage: page, password, username }) => {
     await page.goto(`${baseUrl}ui/settings/user-management`);
-    await page.getByRole('button', { name: /Create new user/i }).click();
+    await page.getByRole('button', { name: /new user/i }).click();
     await page.getByPlaceholder(/email/i).click();
     await page.getByPlaceholder(/email/i).fill(`limited-${username}`);
     await page.getByPlaceholder(/Password/i).click();

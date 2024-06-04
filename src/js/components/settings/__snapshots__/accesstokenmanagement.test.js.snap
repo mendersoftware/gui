@@ -1373,7 +1373,7 @@ exports[`UserManagement Component renders correctly 1`] = `
 }
 
 <div
-  class="flexbox space-between margin-top emotion-0"
+  class="flexbox space-between margin-top-small emotion-0"
 >
   <p
     class="help-content"

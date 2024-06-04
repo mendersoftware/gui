@@ -35,6 +35,8 @@ const getErrorMsg = (validateMethod, args) => {
       return 'Please enter a valid code';
     case 'isEmail':
       return 'Please enter a valid email address';
+    case 'isUUID':
+      return 'Please enter a valid ID';
     case 'isNot':
       if (args[0] === args[1]) {
         return `This field should have a value other than ${args[0]}`;
@@ -45,32 +47,41 @@ const getErrorMsg = (validateMethod, args) => {
   }
 };
 
+const tryApplyValidationEntry = (value, validations = [], validationResults = []) => {
+  const validation = validations.shift();
+  if (!validation) {
+    return validationResults.pop();
+  }
+  let args = validation.split(':');
+  const validateMethod = args.shift();
+  // We use JSON.parse to convert the string values passed to the
+  // correct type. Ex. 'isLength:1' will make '1' actually a number
+  args = args.map(arg => JSON.parse(JSON.stringify(arg)));
+
+  const tmpArgs = args;
+  // We then merge two arrays, ending up with the value
+  // to pass first, then options, if any. ['valueFromInput', 5]
+  args = [value].concat(args);
+  try {
+    // So the next line of code is actually:
+    // validator.isLength('valueFromInput', 5)
+    if (!validator[validateMethod].apply(validator, args)) {
+      return tryApplyValidationEntry(value, validations, [...validationResults, { errortext: getErrorMsg(validateMethod, tmpArgs), isValid: false }]);
+    }
+  } catch {
+    const errortext = getErrorMsg(validateMethod, args) || '';
+    return tryApplyValidationEntry(value, validations, [...validationResults, { errortext, isValid: !errortext }]);
+  }
+  return { errortext: '', isValid: true };
+};
+
 const tryApplyValidations = (value, validations, initialValidationResult) =>
   validations.split(',').reduce((accu, validation) => {
     if (!accu.isValid || !validation) {
       return accu;
     }
-    var args = validation.split(':');
-    var validateMethod = args.shift();
-    // We use JSON.parse to convert the string values passed to the
-    // correct type. Ex. 'isLength:1' will make '1' actually a number
-    args = args.map(arg => JSON.parse(JSON.stringify(arg)));
-
-    var tmpArgs = args;
-    // We then merge two arrays, ending up with the value
-    // to pass first, then options, if any. ['valueFromInput', 5]
-    args = [value].concat(args);
-    try {
-      // So the next line of code is actually:
-      // validator.isLength('valueFromInput', 5)
-      if (!validator[validateMethod].apply(validator, args)) {
-        return { errortext: getErrorMsg(validateMethod, tmpArgs), isValid: false };
-      }
-    } catch {
-      const errortext = getErrorMsg(validateMethod, args) || '';
-      return { errortext, isValid: !errortext };
-    }
-    return accu;
+    const alternatives = validation.split('||');
+    return tryApplyValidationEntry(value, alternatives, [accu]);
   }, initialValidationResult);
 
 const runPasswordValidations = ({ required, value, validations, isValid, errortext }) => {

@@ -73,7 +73,7 @@ export const TextInput = ({
             }}
             value={value ?? passedValue}
             onChange={({ target: { value } }) => onChange(value)}
-            onBlur={() => (validations.includes('trim') ? onChange(value.trim()) : onBlur)}
+            onBlur={() => (validations.includes('trim') ? onChange((value ?? passedValue).trim()) : onBlur)}
             placeholder={hint}
             required={required}
             type={type}

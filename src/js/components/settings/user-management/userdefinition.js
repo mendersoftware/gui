@@ -15,7 +15,19 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 // material ui
 import { Close as CloseIcon } from '@mui/icons-material';
-import { Button, Checkbox, Divider, Drawer, FormControl, FormControlLabel, FormHelperText, IconButton, InputLabel, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  IconButton,
+  InputLabel,
+  TextField,
+  textFieldClasses
+} from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import validator from 'validator';
@@ -25,6 +37,7 @@ import { uiPermissionsByArea, uiPermissionsById } from '../../../constants/userC
 import { toggle } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import { OAuth2Providers, genericProvider } from '../../login/oauth2providers';
+import { CopyTextToClipboard } from '../organization/organization';
 import { UserRolesSelect } from './userform';
 
 const useStyles = makeStyles()(theme => ({
@@ -32,6 +45,14 @@ const useStyles = makeStyles()(theme => ({
   divider: { marginTop: theme.spacing(4) },
   leftButton: { marginRight: theme.spacing(2) },
   oauthIcon: { fontSize: 36, marginRight: 10 },
+  userId: { marginTop: theme.spacing(3) },
+  userIdWrapper: {
+    // the following 2 lines are required to align the CopyTextToClipboard with the tenant token without sacrificing consistent behaviour
+    marginBottom: theme.spacing(-3),
+    '.copy-button': { marginTop: theme.spacing(3) },
+    [`.${textFieldClasses.root}`]: { width: 400 },
+    maxWidth: 600
+  },
   widthLimit: { maxWidth: 400 }
 }));
 
@@ -45,6 +66,18 @@ export const getUserSSOState = user => {
 const mapPermissions = permissions => permissions.map(permission => uiPermissionsById[permission].title).join(', ');
 
 const scopedPermissionAreas = ['groups', 'releases'];
+
+export const UserId = ({ className = '', userId }) => {
+  const { classes } = useStyles();
+  return (
+    <div className={`flexbox space-between ${classes.userIdWrapper} ${className}`}>
+      <TextField label="User ID" key={userId} InputLabelProps={{ shrink: !!userId }} disabled defaultValue={userId} />
+      <div className="flexbox center-aligned copy-button">
+        <CopyTextToClipboard token={userId} />
+      </div>
+    </div>
+  );
+};
 
 export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, onRemove, roles, selectedUser }) => {
   const { email = '', id } = selectedUser;
@@ -129,7 +162,8 @@ export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, 
         </div>
       </div>
       <Divider />
-      <FormControl className={classes.widthLimit}>
+      <UserId className={classes.userId} userId={id} />
+      <FormControl className={`${classes.widthLimit} margin-top-none`}>
         <TextField label="Email" id="email" value={currentEmail} disabled={isOAuth2 || currentUser.id === id} error={nameError} onChange={validateNameChange} />
         {nameError && <FormHelperText className="warning">Please enter a valid email address</FormHelperText>}
       </FormControl>

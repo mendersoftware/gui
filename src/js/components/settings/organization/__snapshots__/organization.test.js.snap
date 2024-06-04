@@ -397,8 +397,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-23 {
-  height: 30px;
-  padding: 15px;
+  height: 15px;
 }
 
 .emotion-24 {
@@ -706,7 +705,7 @@ exports[`MyOrganization Component renders correctly 1`] = `
             class="MuiTouchRipple-root emotion-22"
           />
         </button>
-        <div
+        <p
           class="emotion-23"
         />
       </div>
