@@ -57,9 +57,7 @@ describe('FileUpload Component', () => {
     expect(screen.getByText(/test placeholder/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    await act(async () => {
-      await user.upload(uploadInput, menderFile);
-    });
+    await act(async () => await user.upload(uploadInput, menderFile));
     await waitFor(() => rerender(ui));
 
     expect(uploadInput.files).toHaveLength(1);

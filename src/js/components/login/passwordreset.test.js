@@ -69,7 +69,7 @@ describe('PasswordReset Component', () => {
     expect(screen.getByText('The passwords you provided do not match, please check again.')).toBeVisible();
     await user.clear(passwordInput);
     await user.type(passwordInput, goodPassword);
-    await waitFor(() => rerender(ui));
+    await act(async () => jest.runOnlyPendingTimers());
     await user.click(screen.getByRole('button', { name: /Save password/i }));
     await waitFor(() => expect(completeSpy).toHaveBeenCalledWith(secretHash, goodPassword));
     await act(async () => {

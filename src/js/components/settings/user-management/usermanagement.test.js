@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds, userId } from '../../../../../tests/mockData';
@@ -77,6 +77,10 @@ describe('UserManagement Component', () => {
     await user.click(listItem);
     await user.type(listbox, '{Escape}');
     await user.click(screen.getByRole('button', { name: /Save/i }));
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
   });
 
   it('supports user creation', async () => {
@@ -96,6 +100,7 @@ describe('UserManagement Component', () => {
     await user.type(input, 'test@test');
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
     await user.type(input, '.com');
+    await waitFor(() => rerender(ui));
     expect(submitButton).toBeEnabled();
     await user.click(screen.getByRole('button', { name: /generate/i }));
     expect(copyCheck).toHaveBeenCalled();
@@ -103,10 +108,11 @@ describe('UserManagement Component', () => {
     const passwordInput = screen.getByPlaceholderText(/password/i);
     await user.clear(passwordInput);
     expect(submitButton).toBeEnabled();
+    await user.click(submitButton);
     await act(async () => {
-      await user.click(submitButton);
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
     });
-    await waitFor(() => rerender(ui));
     await waitFor(() => expect(createUserSpy).toHaveBeenCalled(), { timeout: 3000 });
   });
 

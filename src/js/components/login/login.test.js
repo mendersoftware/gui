@@ -13,7 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
@@ -46,6 +46,7 @@ describe('Login Component', () => {
     const ui = <Login />;
     const { rerender } = render(ui, { preloadedState });
     await user.type(screen.getByLabelText(/your email/i), 'something-2fa@example.com');
+    await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(loginSpy).toHaveBeenCalled();
     await waitFor(() => rerender(ui));
@@ -54,11 +55,13 @@ describe('Login Component', () => {
     await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(loginSpy).toHaveBeenCalled();
     await waitFor(() => rerender(ui));
+    await act(async () => jest.runAllTicks());
     expect(await screen.findByLabelText(/Two Factor Authentication Code/i)).toBeVisible();
     const input = screen.getByDisplayValue('something-2fa@example.com');
     await user.clear(input);
     await user.type(input, 'something@example.com');
     await user.type(screen.getByLabelText(/Two Factor Authentication Code/i), '123456');
+    await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /Log in/i }));
     await act(async () => jest.runAllTicks());
     expect(loginSpy).toHaveBeenCalledWith({ email: 'something@example.com', password: 'mysecretpassword!123', token2fa: '123456' }, false);

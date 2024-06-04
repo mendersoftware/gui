@@ -43,9 +43,7 @@ describe('AddArtifact Component', () => {
     expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    await act(async () => {
-      await user.upload(uploadInput, menderFile);
-    });
+    await act(async () => await user.upload(uploadInput, menderFile));
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.getByRole('button', { name: /upload/i })).toBeInTheDocument());
@@ -66,9 +64,7 @@ describe('AddArtifact Component', () => {
     expect(screen.getByText(/Upload a premade/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector('.dropzone input');
-    await act(async () => {
-      await user.upload(uploadInput, menderFile);
-    });
+    await act(async () => await user.upload(uploadInput, menderFile));
     expect(uploadInput.files).toHaveLength(1);
     await waitFor(() => rerender(ui));
     const placeholderText = 'Example: /opt/installed-by-single-file';

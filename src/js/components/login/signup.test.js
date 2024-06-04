@@ -47,14 +47,14 @@ describe('Signup Component', () => {
     expect(screen.getByRole('button', { name: /sign up/i })).toBeDisabled();
     await user.type(screen.getByLabelText(/Confirm password/i), 'mysecretpassword!123');
     expect(container.querySelector('#pass-strength > meter')).toBeVisible();
-    await waitFor(() => rerender(ui));
+    await act(async () => jest.runOnlyPendingTimers());
     expect(screen.getByRole('button', { name: /sign up/i })).toBeEnabled();
     await user.click(screen.getByRole('button', { name: /sign up/i }));
     await waitFor(() => screen.queryByText('Company or organization name *'));
     await user.type(screen.getByRole('textbox', { name: /company or organization name \*/i }), 'test');
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeDisabled();
     await user.click(screen.getByRole('checkbox', { name: /by checking this you agree to our/i }));
-    await waitFor(() => rerender(ui));
+    await act(async () => jest.runOnlyPendingTimers());
     expect(screen.getByRole('button', { name: /complete signup/i })).toBeEnabled();
 
     const cookies = new Cookies();

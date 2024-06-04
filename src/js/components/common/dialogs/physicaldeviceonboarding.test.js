@@ -70,7 +70,10 @@ describe('PhysicalDeviceOnboarding Component', () => {
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
-    await act(async () => {});
     await waitFor(() => expect(store.getState().onboarding.approach === 'physical').toBeTruthy());
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
   });
 });

@@ -51,7 +51,6 @@ describe('GlobalSettings Component', () => {
     await act(async () => jest.advanceTimersByTime(TIMEOUTS.refreshDefault));
     await waitFor(() => expect(screen.getByText(/xDelta3/i)).toBeVisible());
     const view = baseElement.firstChild.firstChild;
-    await act(async () => {});
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
   });

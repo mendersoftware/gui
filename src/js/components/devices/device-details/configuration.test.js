@@ -134,8 +134,7 @@ describe('Configuration Component', () => {
     expect(fabButton).not.toBeDisabled();
     await user.click(screen.getByRole('checkbox', { name: /save/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
-    await waitFor(() => rerender(ui));
-
+    await act(async () => jest.runOnlyPendingTimers());
     expect(screen.getByText(/Configuration could not be updated on device/i)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Retry/i }));
     await waitFor(() => rerender(ui));

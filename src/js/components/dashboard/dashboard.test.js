@@ -14,7 +14,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
@@ -26,13 +26,31 @@ import Dashboard from './dashboard';
 const reportsSpy = jest.spyOn(DeviceActions, 'getReportsDataWithoutBackendSupport');
 
 describe('Dashboard Component', () => {
+  afterEach(async () => {
+    // wait for all requests to settle
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
+  });
   it('renders correctly', async () => {
+    const preloadedState = {
+      ...defaultState,
+      deployments: {
+        ...defaultState.deployments,
+        byStatus: {
+          ...defaultState.deployments.byStatus,
+          finished: { deploymentIds: ['d1', 'd2'], total: 2 },
+          inprogress: { deploymentIds: ['d1', 'd2'], total: 2 },
+          pending: { deploymentIds: ['d1', 'd2'], total: 2 }
+        }
+      }
+    };
     const ui = <Dashboard />;
-    const { baseElement, rerender } = render(ui);
+    const { baseElement, rerender } = render(ui, { preloadedState });
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
     const view = baseElement.firstChild;
-    await act(async () => {});
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
     reportsSpy.mockClear();
@@ -59,7 +77,7 @@ describe('Dashboard Component', () => {
     const { rerender, store } = render(ui, { preloadedState });
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
-    store.dispatch({ type: SET_ACCEPTED_DEVICES_COUNT, status: 'accepted', count: 0 });
+    await act(() => store.dispatch({ type: SET_ACCEPTED_DEVICES_COUNT, status: 'accepted', count: 0 }));
     await user.click(screen.getByText(/pending devices/i));
     await waitFor(() => screen.queryByText(/pendings route/i));
     expect(screen.getByText(/pendings route/i)).toBeVisible();
@@ -74,11 +92,9 @@ describe('Dashboard Component', () => {
         <Route path="/devices/*" element={<div>accepted devices route</div>} />
       </Routes>
     );
-    await act(async () => {});
     const { rerender } = render(ui);
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
-    await act(async () => {});
     await user.click(screen.getByText(/Accepted devices/i));
     await waitFor(() => screen.queryByText(/accepted devices route/i));
     expect(screen.getByText(/accepted devices route/i)).toBeVisible();
@@ -103,11 +119,9 @@ describe('Dashboard Component', () => {
         <Route path="/deployments/*" element={<div>deployments route</div>} />
       </Routes>
     );
-    await act(async () => {});
     const { rerender } = render(ui, { preloadedState });
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
     await waitFor(() => rerender(ui));
-    await act(async () => {});
     await user.click(screen.getAllByText('test deployment 2')[0]);
     await waitFor(() => screen.queryByText(/deployments route/i));
     expect(screen.getByText(/deployments route/i)).toBeVisible();
