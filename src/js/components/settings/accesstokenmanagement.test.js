@@ -60,13 +60,9 @@ describe('UserManagement Component', () => {
     await user.click(screen.getByRole('button', { name: /generate a token/i }));
     const generateButton = screen.getByRole('button', { name: /create token/i });
     expect(generateButton).toBeDisabled();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/name/i), 'somename');
-    });
+    await user.type(screen.getByPlaceholderText(/name/i), 'somename');
     expect(generateButton).not.toBeDisabled();
-    await act(async () => {
-      await user.click(generateButton);
-    });
+    await user.click(generateButton);
     await waitFor(() => rerender(ui));
     expect(createSpy).toHaveBeenCalledWith({ expiresIn: 31536000, name: 'somename' });
     await waitFor(() => expect(getSpy.mock.calls.length).toBeGreaterThanOrEqual(4));

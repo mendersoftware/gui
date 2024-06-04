@@ -76,27 +76,19 @@ describe('AddArtifact Component', () => {
     expect(screen.getByText('testFile.txt')).toBeInTheDocument();
     // FileSize component is not an input based component -> query text only
     expect(screen.getByText('17.00 Bytes')).toBeInTheDocument();
-    await act(async () => {
-      await user.click(screen.getByPlaceholderText(placeholderText));
-      await user.type(screen.getByPlaceholderText(placeholderText), 'some/path');
-    });
+    await user.click(screen.getByPlaceholderText(placeholderText));
+    await user.type(screen.getByPlaceholderText(placeholderText), 'some/path');
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.getByText(/Destination has to be an absolute path/i)).toBeInTheDocument());
-    await act(async () => {
-      await user.click(screen.getByPlaceholderText(placeholderText));
-      await user.clear(screen.getByPlaceholderText(placeholderText));
-      await user.type(screen.getByPlaceholderText(placeholderText), '/some/path');
-    });
+    await user.click(screen.getByPlaceholderText(placeholderText));
+    await user.clear(screen.getByPlaceholderText(placeholderText));
+    await user.type(screen.getByPlaceholderText(placeholderText), '/some/path');
     await waitFor(() => expect(screen.getByRole('combobox', { name: /device types compatible/i })).toBeInTheDocument());
-    await act(async () => {
-      await user.type(screen.getByRole('combobox', { name: /device types compatible/i }), 'something');
-      await user.type(screen.getByLabelText(/release name/i), 'some release');
-    });
+    await user.type(screen.getByRole('combobox', { name: /device types compatible/i }), 'something');
+    await user.type(screen.getByLabelText(/release name/i), 'some release');
     await user.click(screen.getByRole('button', { name: /next/i }));
     await waitFor(() => rerender(ui));
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: /upload/i }));
-    });
+    await user.click(screen.getByRole('button', { name: /upload/i }));
     expect(creationSpy).toHaveBeenCalled();
   });
 });

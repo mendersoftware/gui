@@ -14,7 +14,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { act, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
@@ -29,9 +29,8 @@ describe('Dashboard Component', () => {
   it('renders correctly', async () => {
     const ui = <Dashboard />;
     const { baseElement, rerender } = render(ui);
-    await act(async () => {});
-    await waitFor(() => rerender(ui));
     await waitFor(() => expect(reportsSpy).toHaveBeenCalled());
+    await waitFor(() => rerender(ui));
     const view = baseElement.firstChild;
     await act(async () => {});
     expect(view).toMatchSnapshot();

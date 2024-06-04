@@ -87,13 +87,9 @@ describe('PreauthDialog Component', () => {
     });
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(errorText)).toBeTruthy());
-    await act(async () => {
-      await user.type(screen.getByDisplayValue('testValue'), 'testValues');
-    });
+    await user.type(screen.getByDisplayValue('testValue'), 'testValues');
     await waitFor(() => expect(screen.queryByText(errorText)).not.toBeInTheDocument());
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: 'Save and add another' }));
-    });
+    await user.click(screen.getByRole('button', { name: 'Save and add another' }));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText('reached your limit')).toBeFalsy();
     expect(preAuthSpy).toHaveBeenCalled();
@@ -115,10 +111,8 @@ describe('PreauthDialog Component', () => {
       await user.upload(uploadInput, menderFile);
     });
     await waitFor(() => rerender(ui));
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-      await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/You have reached your limit/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();

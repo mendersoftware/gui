@@ -15,7 +15,7 @@ import React from 'react';
 
 import { drawerClasses } from '@mui/material';
 
-import { act, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { defaultState, undefineds } from '../../../../../tests/mockData';
@@ -101,10 +101,6 @@ describe('MyOrganization Component', () => {
     const ui = <MyOrganization />;
     const { rerender } = render(ui, { preloadedState: { ...preloadedState, users: { ...preloadedState.users, currentSession: getSessionInfo() } } });
     await waitFor(() => rerender(ui));
-    await act(async () => {
-      jest.runOnlyPendingTimers();
-      jest.runAllTicks();
-    });
     expect(screen.getByText(/text editor/i)).toBeVisible();
     await user.click(screen.getByText(/text editor/i));
     await waitFor(() => rerender(ui));

@@ -55,14 +55,10 @@ describe('SelfUserManagement Component', () => {
 
     await user.click(screen.getByRole('button', { name: /email/i }));
     const input = screen.getByDisplayValue(defaultState.users.byId.a1.email);
-    await act(async () => {
-      await user.clear(input);
-      await user.type(input, 'test@test');
-    });
+    await user.clear(input);
+    await user.type(input, 'test@test');
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
-    await act(async () => {
-      await user.type(input, '.com');
-    });
+    await user.type(input, '.com');
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /cancel/i }));
 
@@ -75,14 +71,10 @@ describe('SelfUserManagement Component', () => {
     await user.click(screen.getByText(/Enable Two Factor authentication/i));
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/Scan the QR code on the right/i)).toBeInTheDocument();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/Verification code/i), '1234');
-    });
+    await user.type(screen.getByPlaceholderText(/Verification code/i), '1234');
     expect(screen.getByText(/Must be at least 6 characters long/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Verify/i })).toBeDisabled();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/Verification code/i), '56');
-    });
+    await user.type(screen.getByPlaceholderText(/Verification code/i), '56');
     expect(screen.getByRole('button', { name: /Verify/i })).not.toBeDisabled();
     expect(screen.queryByText(/Must be at least 6 characters long/i)).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Verify/i }));

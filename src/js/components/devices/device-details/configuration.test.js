@@ -129,15 +129,11 @@ describe('Configuration Component', () => {
     expect(screen.getByRole('button', { name: /import configuration/i })).toBeInTheDocument();
     const fabButton = document.querySelector('.MuiFab-root');
     expect(fabButton).toBeDisabled();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-      await user.type(screen.getByPlaceholderText(/value/i), 'evilValue');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'evilValue');
     expect(fabButton).not.toBeDisabled();
-    await act(async () => {
-      await user.click(screen.getByRole('checkbox', { name: /save/i }));
-      await user.click(screen.getByRole('button', { name: /save/i }));
-    });
+    await user.click(screen.getByRole('checkbox', { name: /save/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
     await waitFor(() => rerender(ui));
 
     expect(screen.getByText(/Configuration could not be updated on device/i)).toBeInTheDocument();
@@ -152,11 +148,9 @@ describe('Configuration Component', () => {
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(document.querySelector('.loaderContainer')).not.toBeInTheDocument());
     const valueInput = screen.getByDisplayValue('evilValue');
-    await act(async () => {
-      await user.clear(valueInput);
-      await user.type(valueInput, 'testValue');
-      await user.click(screen.getByRole('button', { name: /Retry/i }));
-    });
+    await user.clear(valueInput);
+    await user.type(valueInput, 'testValue');
+    await user.click(screen.getByRole('button', { name: /Retry/i }));
     await waitFor(() => expect(screen.queryByText(/Updating configuration/i)).toBeInTheDocument());
   });
 });

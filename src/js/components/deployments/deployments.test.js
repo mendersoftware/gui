@@ -177,9 +177,7 @@ describe('Deployments Component', () => {
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     expect(within(releaseSelect).queryByDisplayValue(releaseId)).not.toBeInTheDocument();
-    await act(async () => {
-      await user.click(releaseSelect);
-    });
+    await user.click(releaseSelect);
     await user.keyboard(specialKeys.ArrowDown);
     await user.keyboard(specialKeys.Enter);
     act(() => jest.advanceTimersByTime(2000));
@@ -270,9 +268,7 @@ describe('Deployments Component', () => {
     expect(groupSelect).toHaveValue(ALL_DEVICES);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
-    await act(async () => {
-      await user.click(releaseSelect);
-    });
+    await user.click(releaseSelect);
     await user.keyboard(specialKeys.ArrowDown);
     await user.keyboard(specialKeys.Enter);
     act(() => jest.advanceTimersByTime(2000));
