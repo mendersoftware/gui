@@ -171,9 +171,9 @@ export const UserDefinition = ({ currentUser, isEnterprise, onCancel, onSubmit, 
         <div className="flexbox margin-top-small margin-bottom">
           <div className={classes.oauthIcon}>{provider.icon}</div>
           <div className="info">
-            This user logs in using his <strong>{provider.name}</strong> account.
+            This user logs in using their <strong>{provider.name}</strong> account.
             <br />
-            He can connect to {provider.name} to update his login settings.
+            They can connect to {provider.name} to update their login settings.
           </div>
         </div>
       ) : (

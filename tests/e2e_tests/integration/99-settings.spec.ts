@@ -182,7 +182,7 @@ test.describe('Settings', () => {
         await page.goto(`${baseUrl}ui/help`);
         await page.goto(`${baseUrl}ui/settings/user-management`);
       }
-      await page.waitForSelector('css=button >> text=Add new user');
+      await page.waitForSelector('text=/Add new user/i');
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings/my-account`);
