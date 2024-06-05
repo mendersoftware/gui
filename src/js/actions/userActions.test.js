@@ -82,6 +82,7 @@ import {
 import { attributeReducer, receivedInventoryDevice } from './appActions.test';
 import { expectedOnboardingActions } from './onboardingActions.test';
 import {
+  addUserToCurrentTenant,
   createRole,
   createUser,
   disableUser2fa,
@@ -640,6 +641,19 @@ describe('user actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
+  it('should allow single user removal', async () => {
+    jest.clearAllMocks();
+    const expectedActions = [
+      { type: SET_SNACKBAR, snackbar: { message: 'The user was added successfully.' } },
+      { type: RECEIVED_USER_LIST, users: defaultState.users.byId }
+    ];
+    const store = mockStore({ ...defaultState });
+    await store.dispatch(addUserToCurrentTenant('a1'));
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+
   it('should allow role list retrieval', async () => {
     jest.clearAllMocks();
     const expectedActions = [

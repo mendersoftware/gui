@@ -11,12 +11,14 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 
 import { InfoOutlined } from '@mui/icons-material';
 import {
   Checkbox,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
@@ -31,9 +33,11 @@ import {
 } from '@mui/material';
 
 import pluralize from 'pluralize';
+import { isUUID } from 'validator';
 
 import { BENEFITS } from '../../../constants/appConstants';
 import { rolesById, rolesByName, uiPermissionsById } from '../../../constants/userConstants';
+import { getFeatures } from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import Form from '../../common/forms/form';
 import FormCheckbox from '../../common/forms/formcheckbox';
@@ -150,9 +154,33 @@ const SsoAssignment = ({ currentUser }) => {
   );
 };
 
+const UserIdentifier = ({ onHasUserId }) => {
+  const value = useWatch({ name: 'email', defaultValue: '' });
+  const { hasMultiTenantAccess } = useSelector(getFeatures);
+
+  useEffect(() => {
+    if (!hasMultiTenantAccess) {
+      return;
+    }
+    onHasUserId(isUUID(value));
+  }, [hasMultiTenantAccess, value, onHasUserId]);
+
+  return (
+    <TextInput
+      hint="Email"
+      label={hasMultiTenantAccess ? 'Email or User ID' : 'Email'}
+      id="email"
+      validations={`isLength:1,${hasMultiTenantAccess ? 'isUUID||' : ''}isEmail,trim`}
+      required
+      autocomplete="off"
+    />
+  );
+};
+
 export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterprise, roles, submit }) => {
   const [hadRoleChanges, setHadRoleChanges] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState();
+  const [isAddingExistingUser, setIsAddingExistingUser] = useState(false);
 
   const onSelect = (newlySelectedRoles, hadRoleChanges) => {
     setSelectedRoles(newlySelectedRoles);
@@ -162,30 +190,42 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
   const onSubmit = data => {
     const { password, ...remainder } = data;
     const roleData = hadRoleChanges ? { roles: selectedRoles } : {};
+    if (isAddingExistingUser) {
+      const { email: userId } = data;
+      return submit(userId, 'add');
+    }
     return submit({ ...remainder, ...roleData, password }, 'create');
   };
 
   return (
     <Dialog open={true} fullWidth={true} maxWidth="sm">
-      <DialogTitle>Create new user</DialogTitle>
+      <DialogTitle>Add new user</DialogTitle>
       <DialogContent style={{ overflowY: 'initial' }}>
-        <Form onSubmit={onSubmit} handleCancel={closeDialog} submitLabel="Create user" showButtons={true} autocomplete="off">
-          <TextInput hint="Email" label="Email" id="email" validations="isLength:1,isEmail,trim" required autocomplete="off" />
-          <PasswordInput
-            id="password"
-            className="edit-pass"
-            autocomplete="off"
-            create
-            edit={false}
-            generate
-            InputLabelProps={{ shrink: true }}
-            label={<PasswordLabel />}
-            placeholder="Password"
-            validations="isLength:8"
-          />
-          <FormCheckbox id="shouldResetPassword" label="Send an email to the user containing a link to reset the password" />
-          <SsoAssignment currentUser={currentUser} />
-          <UserRolesSelect currentUser={currentUser} disabled={!(canManageUsers && isEnterprise)} onSelect={onSelect} roles={roles} user={{}} />
+        <Form
+          onSubmit={onSubmit}
+          handleCancel={closeDialog}
+          submitLabel={`${isAddingExistingUser ? 'Add' : 'Create'} user`}
+          showButtons={true}
+          autocomplete="off"
+        >
+          <UserIdentifier onHasUserId={setIsAddingExistingUser} />
+          <Collapse in={!isAddingExistingUser}>
+            <PasswordInput
+              id="password"
+              className="edit-pass"
+              autocomplete="off"
+              create
+              edit={false}
+              generate
+              InputLabelProps={{ shrink: true }}
+              label={<PasswordLabel />}
+              placeholder="Password"
+              validations="isLength:8"
+            />
+            <FormCheckbox id="shouldResetPassword" label="Send an email to the user containing a link to reset the password" />
+            <SsoAssignment currentUser={currentUser} />
+            <UserRolesSelect currentUser={currentUser} disabled={!(canManageUsers && isEnterprise)} onSelect={onSelect} roles={roles} user={{}} />
+          </Collapse>
         </Form>
       </DialogContent>
       <DialogActions />

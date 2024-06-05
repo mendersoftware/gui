@@ -134,12 +134,9 @@ test.describe('SAML Login via sso/id/login', () => {
       console.log(`${samlSettings.credentials[browserName].email} already exists.`);
       return;
     }
-    // Click text=Create new user
-    await page.locator('text=Create new user').click();
-    // Click [placeholder="Email"]
-    await page.locator('[placeholder="Email"]').click();
-    // Fill [placeholder="Email"]
-    await page.locator('[placeholder="Email"]').fill(samlSettings.credentials[browserName].email);
+    await page.getByRole('button', { name: /new user/i }).click();
+    await page.getByPlaceholder(/Email/i).click();
+    await page.getByPlaceholder(/Email/i).fill(samlSettings.credentials[browserName].email);
     // Click text=Create user
     await page.locator('text=Create user').click();
     await page.screenshot({ path: './test-results/user-created.png' });

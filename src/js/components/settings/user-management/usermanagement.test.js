@@ -95,7 +95,7 @@ describe('UserManagement Component', () => {
     const ui = <UserManagement />;
     const { rerender } = render(ui, { preloadedState });
     expect(screen.queryByText(/send an email/i)).not.toBeInTheDocument();
-    const userCreationButton = screen.getByRole('button', { name: /create new user/i });
+    const userCreationButton = screen.getByRole('button', { name: /add new user/i });
     await user.click(userCreationButton);
     expect(screen.queryByText(/send an email/i)).toBeInTheDocument();
     const submitButton = screen.getByRole('button', { name: /create user/i });

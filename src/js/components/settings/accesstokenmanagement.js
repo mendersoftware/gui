@@ -239,7 +239,7 @@ export const AccessTokenManagement = () => {
 
   return (
     <>
-      <div className={`flexbox space-between margin-top ${tokens.length ? classes.accessTokens : ''}`}>
+      <div className={`flexbox space-between margin-top-small ${tokens.length ? classes.accessTokens : ''}`}>
         <p className="help-content">Personal access token management</p>
         <Button onClick={toggleGenerateClick}>Generate a token</Button>
       </div>

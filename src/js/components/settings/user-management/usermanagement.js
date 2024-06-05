@@ -14,17 +14,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Add as AddIcon } from '@mui/icons-material';
 // material ui
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { setSnackbar } from '../../../actions/appActions';
-import { createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
+import { addUserToCurrentTenant, createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
 import { getCurrentUser, getFeatures, getIsEnterprise, getRolesById, getUserCapabilities } from '../../../selectors';
 import { UserDefinition } from './userdefinition';
 import UserForm from './userform';
 import UserList from './userlist';
 
 const actions = {
+  add: 'addUser',
   create: 'createUser',
   edit: 'editUser',
   remove: 'removeUser'
@@ -65,6 +67,7 @@ export const UserManagement = () => {
   const users = useSelector(state => Object.values(state.users.byId));
   const props = {
     canManageUsers,
+    addUser: (id, tenantId) => dispatch(addUserToCurrentTenant(id, tenantId)),
     createUser: userData => dispatch(createUser(userData)),
     currentUser,
     editUser: (id, userData) => dispatch(editUser(id, userData)),
@@ -125,12 +128,10 @@ export const UserManagement = () => {
     <div>
       <div className="flexbox centered space-between" style={{ marginLeft: '20px' }}>
         <h2>Users</h2>
-        <Button variant="contained" color="primary" onClick={setShowCreate}>
-          Create new user
-        </Button>
       </div>
 
       <UserList {...props} editUser={openEdit} />
+      <Chip color="primary" icon={<AddIcon />} label="Add new user" onClick={setShowCreate} />
       {showCreate && <UserForm {...props} closeDialog={dialogDismiss} submit={submit} />}
       <UserDefinition
         currentUser={currentUser}
