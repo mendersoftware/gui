@@ -99,7 +99,7 @@ test.describe('Test setup', () => {
       const { token: JWT, userId } = await login(username, password, baseUrl);
       const domain = baseUrlToDomain(baseUrl);
       context = await prepareCookies(context, domain, userId);
-      context.addInitScript(token => {
+      await context.addInitScript(token => {
         window.localStorage.setItem('JWT', JSON.stringify({ token }));
         window.localStorage.setItem(`onboardingComplete`, 'true');
       }, JWT);

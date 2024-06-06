@@ -51,9 +51,9 @@ export const getStorageState = location => {
 };
 
 export const getTokenFromStorage = (baseUrl: string) => {
-  const domain = baseUrlToDomain(baseUrl);
-  const origin = getStorageState(storagePath).origins.find(({ origin }) => origin === domain);
-  const textContent = origin?.localStorage.find(({ name }) => name === 'JWT').value ?? '';
+  const originUrl = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
+  const origin = getStorageState(storagePath).origins.find(({ origin }) => origin === originUrl);
+  const textContent = origin?.localStorage.find(({ name }) => name === 'JWT').value;
   let sessionInfo = { token: '' };
   try {
     sessionInfo = JSON.parse(textContent);
@@ -287,4 +287,20 @@ export const compareImages = (expectedPath, actualPath, options = { threshold: 0
   fs.writeFileSync(path.join(diffPath, `diff-${Date.now()}.png`), PNG.sync.write(diff));
   const pass = usePercentage ? (numDiffPixels / (width * height)) * 100 < threshold : numDiffPixels < threshold;
   return { pass, numDiffPixels };
+};
+
+export const tagRelease = async (releaseName: string, tag: string, baseUrl: string, token: string) => {
+  const request = await axios.put(`${baseUrl}api/management/v2/deployments/deployments/releases/${releaseName}/tags`, [tag], {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    httpsAgent: new https.Agent({ rejectUnauthorized: false })
+  });
+
+  if (request.status >= 300) {
+    console.error(`failed to tag release ${releaseName} got status:`, request.status);
+    throw 'oh no';
+  }
+  return Promise.resolve();
 };
