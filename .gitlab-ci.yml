@@ -93,7 +93,7 @@ test:types:
       - src/js/api/types
 
 test:licenses:
-  image: denoland/deno:alpine
+  image: denoland/deno:alpine-1.38.0
   stage: test
   except:
     - master
