@@ -19,6 +19,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@mui/material';
 
+import { isUUID } from 'validator';
+
 import { setSnackbar } from '../../actions/appActions';
 import { abortDeployment, setDeploymentsState } from '../../actions/deploymentActions';
 import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
@@ -129,14 +131,17 @@ export const Deployments = () => {
 
   const retryDeployment = (deployment, deploymentDeviceIds) => {
     const { artifact_name, name, update_control_map = {} } = deployment;
-    const release = releases[artifact_name];
+    const release = releases[artifact_name] || { name: artifact_name };
     const enterpriseSettings = isEnterprise
       ? {
           phases: [{ batch_size: 100, start_ts: undefined, delay: 0 }],
           update_control_map: { states: update_control_map.states || {} }
         }
       : {};
-    const targetDevicesConfig = name === ALL_DEVICES || groupsById[name] ? { group: name } : { devices: [devicesById[name]] };
+    const targetDevicesConfig =
+      name === ALL_DEVICES || groupsById[name]
+        ? { group: name }
+        : { devices: isUUID(name) ? [devicesById[name]] : deploymentDeviceIds.map(id => devicesById[id] ?? { id }) };
     const deploymentObject = {
       deploymentDeviceIds,
       release,
