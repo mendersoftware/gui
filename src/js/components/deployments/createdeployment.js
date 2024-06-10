@@ -39,7 +39,7 @@ import DeltaIcon from '../../../assets/img/deltaicon.svg';
 import { createDeployment, getDeploymentsConfig } from '../../actions/deploymentActions';
 import { getGroupDevices } from '../../actions/deviceActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
-import { getReleases } from '../../actions/releaseActions';
+import { getRelease, getReleases } from '../../actions/releaseActions';
 import { ALL_DEVICES } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle, validatePhases } from '../../helpers';
@@ -149,6 +149,7 @@ export const CreateDeployment = props => {
     const { devices = [], group, release } = deploymentObject;
     if (release) {
       dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_ARTIFACT_SELECTION));
+      dispatch(getRelease(release.name));
     }
     dispatch(advanceOnboarding(onboardingSteps.SCHEDULING_GROUP_SELECTION));
     let nextDeploymentObject = { deploymentDeviceCount: devices.length ? devices.length : 0 };

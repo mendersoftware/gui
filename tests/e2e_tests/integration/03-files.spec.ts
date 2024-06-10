@@ -19,28 +19,48 @@ import https from 'https';
 import md5 from 'md5';
 
 import test, { expect } from '../fixtures/fixtures';
-import { selectors, storagePath, timeouts } from '../utils/constants';
+import { getTokenFromStorage, tagRelease } from '../utils/commands';
+import { releaseTag, selectors, storagePath, timeouts } from '../utils/constants';
 
 dayjs.extend(isBetween);
-
-const releaseTag = 'someTag';
 
 test.describe('Files', () => {
   const fileName = 'mender-demo-artifact.mender';
   test.use({ storageState: storagePath });
 
-  test('allows file uploads', async ({ loggedInPage: page }) => {
+  test.beforeEach(async ({ loggedInPage: page }) => {
     await page.click(`.leftNav :text('Releases')`);
-    // create an artifact to download first
-    await page.click(`button:has-text('Upload')`);
+  });
+
+  test('allows file uploads', async ({ loggedInPage: page }) => {
+    const uploadButton = await page.getByRole('button', { name: /upload/i });
+    await uploadButton.click();
     await page.locator('.MuiDialog-paper .dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(`.MuiDialog-paper button:has-text('Upload')`);
-    // give some extra time for the upload
-    await page.waitForTimeout(timeouts.fiveSeconds);
+    await page.waitForSelector('text=/last modified/i');
+  });
+
+  test('allows artifact generation', async ({ baseUrl, loggedInPage: page }) => {
+    const releaseName = 'terminalImage';
+    const uploadButton = await page.getByRole('button', { name: /upload/i });
+    await uploadButton.click();
+    await page.locator('.MuiDialog-paper .dropzone input').setInputFiles(`fixtures/terminalContent.png`);
+    await page.getByPlaceholder(/installed-by-single-file/i).fill(`/usr/src`);
+    const deviceTypeInput = await page.getByLabel(/Release name/i);
+    await deviceTypeInput.clear();
+    await deviceTypeInput.fill(releaseName);
+    await page.getByLabel(/Device types/i).fill(`all-of-them,`);
+    await page.getByRole('button', { name: /next/i }).click();
+    await page.getByRole('button', { name: /upload artifact/i }).click();
+    await page.waitForSelector('text=1-2 of 2');
+    const token = await getTokenFromStorage(baseUrl);
+    await tagRelease(releaseName, 'customRelease', baseUrl, token);
+    await page.waitForTimeout(timeouts.oneSecond); // some extra time for the release to be tagged in the backend
+    await page.click(`.leftNav :text('Releases')`);
+    expect(await page.getByText(/customRelease/i)).toBeVisible();
   });
 
   test('allows release notes manipulation', async ({ loggedInPage: page }) => {
-    await page.click(`.leftNav :text('Releases')`);
     await page.getByText(/demo-artifact/i).click();
     expect(await page.getByRole('heading', { name: /Release notes/i }).isVisible()).toBeTruthy();
     const hasNotes = await page.getByText('foo notes').isVisible();
@@ -62,7 +82,6 @@ test.describe('Files', () => {
   });
 
   test('allows release tags manipulation', async ({ baseUrl, loggedInPage: page }) => {
-    await page.click(`.leftNav :text('Releases')`);
     const alreadyTagged = await page.getByText('some, tags').isVisible();
     test.skip(alreadyTagged, 'looks like the release was tagged already');
     await page.getByText(/demo-artifact/i).click();
@@ -87,7 +106,6 @@ test.describe('Files', () => {
   });
 
   test('allows release tags reset', async ({ loggedInPage: page }) => {
-    await page.click(`.leftNav :text('Releases')`);
     await page.getByText(/demo-artifact/i).click();
     const theDiv = await page
       .locator('div')
@@ -120,7 +138,6 @@ test.describe('Files', () => {
   });
 
   test('allows release tags filtering', async ({ loggedInPage: page }) => {
-    await page.click(`.leftNav :text('Releases')`);
     expect(await page.getByText(releaseTag.toLowerCase()).isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill('foo,');
     const releasesNote = await page.getByText(/There are no Releases*/i);
@@ -149,7 +166,6 @@ test.describe('Files', () => {
   // })
 
   test('allows artifact downloads', async ({ loggedInPage: page }) => {
-    await page.click(`.leftNav :text('Releases')`);
     await page.click(`text=/mender-demo-artifact/i`);
     await page.click('.expandButton');
     const downloadButton = await page.getByText(/download artifact/i);

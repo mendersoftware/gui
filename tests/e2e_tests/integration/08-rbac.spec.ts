@@ -13,10 +13,16 @@
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
 import { isLoggedIn, processLoginForm } from '../utils/commands';
-import { selectors, timeouts } from '../utils/constants';
+import { releaseTag, selectors, timeouts } from '../utils/constants';
+
+const releaseRoles = [
+  { name: 'test-releases-role', permissions: ['Read'], tag: undefined },
+  { name: `test-manage-${releaseTag}-role`, permissions: ['Manage'], tag: releaseTag },
+  { name: `test-ro-${releaseTag}-role`, permissions: ['Read'], tag: releaseTag }
+];
 
 test.describe('RBAC functionality', () => {
-  test('allows access to user management', async ({ baseUrl, loggedInPage: page }) => {
+  test.beforeEach(async ({ baseUrl, loggedInPage: page }) => {
     await page.goto(`${baseUrl}ui/settings`);
     await page.waitForSelector('text=/Global settings/i');
     await page.click('text=/user management/i');
@@ -27,21 +33,21 @@ test.describe('RBAC functionality', () => {
       await page.goto(`${baseUrl}ui/help`);
       await page.goto(`${baseUrl}ui/settings/user-management`);
     }
+  });
+
+  test('allows access to user management', async ({ loggedInPage: page }) => {
     await page.getByRole('button', { name: /new user/i }).isVisible();
   });
-  test('allows role creation for static groups', async ({ baseUrl, environment, loggedInPage: page }) => {
+
+  test('allows role creation for static groups', async ({ environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
-    // test.use({ storageState: storagePath });
-    await page.goto(`${baseUrl}ui/settings`);
-    await page.waitForSelector('text=/Global settings/i');
     await page.click('text=/roles/i');
-    await page.waitForSelector('text=Add a role');
     await page.click('text=Add a role');
     let nameInput = await page.locator('label:has-text("name") >> ..');
     const dialog = await nameInput.locator('.. >> .. >> ..');
     nameInput = await nameInput.locator('input');
     await nameInput.click();
-    await nameInput.fill('testRole');
+    await nameInput.fill('test-groups-role');
     await nameInput.press('Tab');
     await dialog.locator('#role-description').fill('some description');
     await dialog.locator('text=Search groups​').click({ force: true });
@@ -51,60 +57,121 @@ test.describe('RBAC functionality', () => {
     await dialog.locator('text=Select​').nth(1).click({ force: true });
     await page.locator('text=Configure').click();
     await page.press('body', 'Escape');
-
-    await page.waitForTimeout(timeouts.oneSecond);
-    await dialog.locator('text=Search release tags​').click({ force: true });
-    await page.locator('li[role="option"]:has-text("All releases")').click({ force: true });
-    await dialog.locator('text=Select​').first().click({ force: true });
-    await page.locator('li[role="option"]:has-text("Read")').click();
-    await page.press('body', 'Escape');
-    await dialog.locator('text=Submit').scrollIntoViewIfNeeded();
-    await dialog.locator('text=Submit').click();
+    await dialog.getByRole('button', { name: /submit/i }).scrollIntoViewIfNeeded();
+    await dialog.getByRole('button', { name: /submit/i }).click();
   });
 
-  test('allows user creation', async ({ baseUrl, environment, loggedInPage: page, password, username }) => {
-    await page.goto(`${baseUrl}ui/settings/user-management`);
-    await page.getByRole('button', { name: /new user/i }).click();
-    await page.getByPlaceholder(/email/i).click();
-    await page.getByPlaceholder(/email/i).fill(`limited-${username}`);
-    await page.getByPlaceholder(/Password/i).click();
-    await page.getByPlaceholder(/Password/i).fill(password);
-    if (['enterprise', 'staging'].includes(environment)) {
-      await page.getByRole('combobox', { name: /admin/i }).click();
-      // first we need to deselect the default admin role
-      await page.getByRole('option', { name: 'Admin' }).click();
-      await page.getByRole('option', { name: 'testRole' }).click();
-      await page.press('body', 'Escape');
-    }
-    await page.click(`text=/Create user/i`);
-    await page.waitForSelector('text=The user was created successfully.');
-  });
-
-  test('can log in to a newly created user', async ({ baseUrl, page, environment, password, username }) => {
-    await page.goto(`${baseUrl}ui/`);
-    // enter valid username and password of the new user
-    await processLoginForm({ username, password, environment, page });
-    await isLoggedIn(page);
-  });
-
-  test('has working RBAC limitations', async ({ baseUrl, environment, page, password, username }) => {
+  test('allows role creation for release tags', async ({ environment, loggedInPage: page }) => {
     test.skip(!['enterprise', 'staging'].includes(environment));
-    await page.goto(`${baseUrl}ui/`);
+    await page.click('text=/roles/i');
+    for (const { name, permissions, tag } of releaseRoles) {
+      await page.click('text=Add a role');
+      let nameInput = await page.locator('label:has-text("name") >> ..');
+      const dialog = await nameInput.locator('.. >> .. >> ..');
+      nameInput = await nameInput.locator('input');
+      await nameInput.click();
+      await nameInput.fill(name);
+      await nameInput.press('Tab');
+      await dialog.locator('#role-description').fill('some description');
+      // we need to check the entire page here, since the selection list is rendered in a portal, so likely outside
+      // of the dialog tree
+      await dialog.locator('text=Search release tags​').click({ force: true });
+      if (tag) {
+        await page.locator(`li[role="option"]:has-text("${tag}")`).click();
+      } else {
+        await page.locator(`li[role="option"]:has-text("All releases")`).click({ force: true });
+      }
+      await dialog.locator('text=Select​').first().click({ force: true });
+      await Promise.all(permissions.map(async permission => await page.locator(`li[role="option"]:has-text("${permission}")`).click()));
+      await page.press('body', 'Escape');
+      await dialog.getByRole('button', { name: /submit/i }).scrollIntoViewIfNeeded();
+      await dialog.getByRole('button', { name: /submit/i }).click();
+      await page.waitForSelector('text=The role was created successfully.');
+    }
+  });
+
+  test('allows user creation', async ({ environment, loggedInPage: page, password, username }) => {
+    const userCreations = [
+      { user: `limited-${username}`, role: 'test-groups-role' },
+      { user: `limited-ro-releases-${username}`, role: releaseRoles[0].name },
+      { user: `limited-manage-${releaseTag}-${username}`, role: releaseRoles[1].name },
+      { user: `limited-ro-${releaseTag}-${username}`, role: releaseRoles[2].name }
+    ];
+    for (const { user, role } of userCreations) {
+      await page.getByRole('button', { name: /new user/i }).click();
+      await page.getByPlaceholder(/email/i).click();
+      await page.getByPlaceholder(/email/i).fill(user);
+      await page.getByPlaceholder(/Password/i).click();
+      await page.getByPlaceholder(/Password/i).fill(password);
+      if (['enterprise', 'staging'].includes(environment)) {
+        await page.getByRole('combobox', { name: /admin/i }).click();
+        // first we need to deselect the default admin role
+        await page.getByRole('option', { name: 'Admin' }).click();
+        await page.getByRole('option', { name: role }).click();
+        await page.press('body', 'Escape');
+      }
+      await page.click(`text=/Create user/i`);
+      await page.waitForSelector('text=The user was created successfully.');
+    }
+  });
+
+  test('has working RBAC groups limitations', async ({ baseUrl, browser, environment, password, username }) => {
+    test.skip(!['enterprise', 'staging'].includes(environment));
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto(baseUrl);
     // enter valid username and password of the new user
     await processLoginForm({ username: `limited-${username}`, password, page, environment });
     await isLoggedIn(page);
-    await page.reload();
-    const releasesButton = page.getByText(/releases/i);
-    await releasesButton.waitFor({ timeout: timeouts.tenSeconds });
-    await releasesButton.click();
-
-    // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
-    expect(await page.isVisible(`css=button >> text=Upload`)).toBeFalsy();
-
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`${selectors.deviceListItem} div:last-child`);
     // the created role does have permission to configure devices, so the section should be visible
     await page.click(`text=/configuration/i`);
     await page.waitForSelector('text=/Device configuration/i', { timeout: timeouts.tenSeconds });
+  });
+
+  test.describe('has working RBAC release limitations', () => {
+    test('read-only all releases', async ({ baseUrl, browser, environment, password, username }) => {
+      test.skip(!['enterprise', 'staging'].includes(environment));
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.goto(baseUrl);
+      // enter valid username and password of the new user
+      await processLoginForm({ username: `limited-ro-releases-${username}`, password, page, environment });
+      await isLoggedIn(page);
+      await page.getByText(/releases/i).click({ timeout: timeouts.tenSeconds });
+      // there should be multiple releases present
+      expect(await page.getByText('1-2 of 2')).toBeVisible();
+      // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
+      expect(await page.getByRole('button', { name: /upload/i })).not.toBeVisible();
+    });
+    test('read-only tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
+      test.skip(!['enterprise', 'staging'].includes(environment));
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.goto(baseUrl);
+      // enter valid username and password of the new user
+      await processLoginForm({ username: `limited-ro-${releaseTag}-${username}`, password, page, environment });
+      await isLoggedIn(page);
+      await page.getByText(/releases/i).click({ timeout: timeouts.tenSeconds });
+      // there should be only one release tagged with the releaseTag
+      expect(await page.getByText('1-1 of 1')).toBeVisible();
+      // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
+      expect(await page.getByRole('button', { name: /upload/i })).not.toBeVisible();
+    });
+    test('manage tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
+      test.skip(!['enterprise', 'staging'].includes(environment));
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.goto(baseUrl);
+      // enter valid username and password of the new user
+      await processLoginForm({ username: `limited-manage-${releaseTag}-${username}`, password, page, environment });
+      await isLoggedIn(page);
+      await page.getByText(/releases/i).click({ timeout: timeouts.tenSeconds });
+      // there should be only one release tagged with the releaseTag
+      expect(await page.getByText('1-1 of 1')).toBeVisible();
+      // the created role does have permission to upload artifacts, so the button should be visible
+      expect(await page.getByRole('button', { name: /upload/i })).toBeVisible();
+    });
   });
 });

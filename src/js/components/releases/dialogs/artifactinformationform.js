@@ -97,7 +97,7 @@ export const ArtifactInformation = ({ creation = {}, deviceTypes = [], onRemove,
       />
       <h4>Artifact information</h4>
       <FormControl>
-        <InputLabel htmlFor="release-name" style={{ alignItems: 'center', display: 'flex' }}>
+        <InputLabel htmlFor="release-name" className="flexbox center-aligned" onClick={e => e.preventDefault()}>
           Release name
           <InfoHintContainer>
             <MenderHelpTooltip id={HELPTOOLTIPS.releaseName.id} />
