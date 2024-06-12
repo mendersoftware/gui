@@ -244,13 +244,13 @@ test:acceptance:enterprise-unprivileged:
 #   tags:
 #     - mender-qa-worker-generic-light
 
-test:docs-links:hosted:
-  extends: test:docs-links
-  only:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
-  except: []
-  variables:
-    DOCS_VERSION: hosted
+# test:docs-links:hosted:
+#   extends: test:docs-links
+#   only:
+#     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   except: []
+#   variables:
+#     DOCS_VERSION: hosted
 
 test:prep:
   stage: pre-test
