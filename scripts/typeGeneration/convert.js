@@ -1,4 +1,4 @@
-import { basename, dirname } from 'https://deno.land/std/path/posix.ts';
+import { basename, dirname } from 'https://deno.land/std/path/posix/mod.ts';
 import { parse, stringify } from 'https://deno.land/std/yaml/mod.ts';
 import { camelCase } from 'https://deno.land/x/case/mod.ts';
 import { generate } from 'npm:openapi-typescript-codegen';
