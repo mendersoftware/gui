@@ -149,8 +149,8 @@ test:acceptance:
 
 test:acceptance:enterprise:
   extends: .template:test:acceptance
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "master"
   variables:
     TEST_ENVIRONMENT: enterprise
   script:
