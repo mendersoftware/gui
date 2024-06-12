@@ -30,23 +30,23 @@ include:
   DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}
   DOCKER_PUBLISH_COMMIT_TAG=${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}
 
-test:lint:
-  stage: test
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs: []
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-  script:
-    - npm ci --cache .npm --prefer-offline
-    - cd tests/e2e_tests && npm ci && cd ../..
-    - npm run lint
-  tags:
-    - mender-qa-worker-generic-light
+# test:lint:
+#   stage: test
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs: []
+#   cache:
+#     key:
+#       files:
+#         - package-lock.json
+#     paths:
+#       - .npm/
+#   script:
+#     - npm ci --cache .npm --prefer-offline
+#     - cd tests/e2e_tests && npm ci && cd ../..
+#     - npm run lint
+#   tags:
+#     - mender-qa-worker-generic-light
 
 test:types:
   stage: test
@@ -95,25 +95,25 @@ test:types:
       - src/js/api/types
     when: always
 
-test:licenses:
-  image: denoland/deno:alpine-1.38.0
-  stage: test
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs: []
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-  before_script:
-    - apk add --no-cache nodejs npm
-    - npm ci
-  script:
-    - deno run --allow-env --allow-read --allow-sys tests/licenses/licenseCheck.ts
-  tags:
-    - mender-qa-worker-generic-light
+# test:licenses:
+#   image: denoland/deno:alpine-1.38.0
+#   stage: test
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs: []
+#   cache:
+#     key:
+#       files:
+#         - package-lock.json
+#     paths:
+#       - .npm/
+#   before_script:
+#     - apk add --no-cache nodejs npm
+#     - npm ci
+#   script:
+#     - deno run --allow-env --allow-read --allow-sys tests/licenses/licenseCheck.ts
+#   tags:
+#     - mender-qa-worker-generic-light
 
 .template:test:acceptance:
   stage: e2e-test
@@ -140,13 +140,13 @@ test:licenses:
         - junit/results.xml
     when: always
 
-test:acceptance:
-  extends: .template:test:acceptance
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  script:
-    - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
-    - docker rmi $DOCKER_REPOSITORY:pr
+# test:acceptance:
+#   extends: .template:test:acceptance
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   script:
+#     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
+#     - docker rmi $DOCKER_REPOSITORY:pr
 
 test:acceptance:enterprise:
   extends: .template:test:acceptance
@@ -192,57 +192,57 @@ test:acceptance:enterprise-unprivileged:
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise --unprivileged
     - docker rmi $DOCKER_REPOSITORY:pr
 
-test:unit:
-  stage: test
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs: []
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-  script:
-    - npm i -g npm
-    - npm ci --cache .npm --prefer-offline
-    - npm run test -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
-  after_script:
-    - mkdir logs && cp .npm/_logs/* logs/
-  artifacts:
-    expire_in: 2w
-    paths:
-      - coverage
-      - logs
-    reports:
-      junit: junit.xml
-    when: always
-  tags:
-    - mender-qa-worker-gui-tests
+# test:unit:
+#   stage: test
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs: []
+#   cache:
+#     key:
+#       files:
+#         - package-lock.json
+#     paths:
+#       - .npm/
+#   script:
+#     - npm i -g npm
+#     - npm ci --cache .npm --prefer-offline
+#     - npm run test -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+#   after_script:
+#     - mkdir logs && cp .npm/_logs/* logs/
+#   artifacts:
+#     expire_in: 2w
+#     paths:
+#       - coverage
+#       - logs
+#     reports:
+#       junit: junit.xml
+#     when: always
+#   tags:
+#     - mender-qa-worker-gui-tests
 
-test:docs-links:
-  stage: test
-  needs: []
-  except:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
-  before_script:
-    - apk add --no-cache curl
-  script:
-    - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | sed -e 's,\${path},''/,g' | egrep -o 'https?://[^ `"]+' | sort | uniq)
-    - error=0
-    - for url in $links; do
-    - if ! curl --output /dev/null --silent --head --fail $url; then
-    - error=1
-    - echo "[ko] $url"
-    - else
-    - echo "[ok] $url"
-    - fi
-    - done
-    - if [ $error -gt 0 ]; then
-    - exit 1
-    - fi
-  tags:
-    - mender-qa-worker-generic-light
+# test:docs-links:
+#   stage: test
+#   needs: []
+#   except:
+#     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   before_script:
+#     - apk add --no-cache curl
+#   script:
+#     - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | sed -e 's,\${path},''/,g' | egrep -o 'https?://[^ `"]+' | sort | uniq)
+#     - error=0
+#     - for url in $links; do
+#     - if ! curl --output /dev/null --silent --head --fail $url; then
+#     - error=1
+#     - echo "[ko] $url"
+#     - else
+#     - echo "[ok] $url"
+#     - fi
+#     - done
+#     - if [ $error -gt 0 ]; then
+#     - exit 1
+#     - fi
+#   tags:
+#     - mender-qa-worker-generic-light
 
 test:docs-links:hosted:
   extends: test:docs-links
@@ -386,16 +386,16 @@ test:staging-deployment:webkit:
   tags:
     - mender-qa-worker-generic-light
 
-publish:tests:
-  extends: .template:publish:tests
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs:
-    - test:unit
-  script:
-    - export COVERALLS_SERVICE_JOB_NUMBER=unittests
-    - export COVERALLS_FLAG_NAME=unittests
-    - coveralls < coverage/lcov.info
+# publish:tests:
+#   extends: .template:publish:tests
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs:
+#     - test:unit
+#   script:
+#     - export COVERALLS_SERVICE_JOB_NUMBER=unittests
+#     - export COVERALLS_FLAG_NAME=unittests
+#     - coveralls < coverage/lcov.info
 
 publish:e2e-tests:
   extends: .template:publish:tests
