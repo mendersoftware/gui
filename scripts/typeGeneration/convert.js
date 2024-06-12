@@ -126,6 +126,7 @@ const generateTypeIndex = async () => {
 };
 
 const mergedContent = await processFiles('./specs');
+await Deno.ensureDir('./generated');
 await Deno.writeTextFile('./generated/test.json', JSON.stringify(mergedContent));
 await generate({ input: mergedContent, output: './generated' });
 await Deno.writeTextFile('combined.yml', stringify(mergedContent));

@@ -93,6 +93,7 @@ test:types:
     paths:
       - scripts/typeGeneration
       - src/js/api/types
+    when: always
 
 test:licenses:
   image: denoland/deno:alpine-1.38.0
