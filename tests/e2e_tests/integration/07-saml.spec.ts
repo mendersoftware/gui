@@ -148,7 +148,7 @@ test.describe('SAML Login via sso/id/login', () => {
 
   // This test calls auth/sso/${id}/login, where id is the id of the identity provider
   // and verifies that login is successful.
-  test.only('User can login via sso/login endpoint', async ({ environment, baseUrl, browser, browserName, loggedInPage }) => {
+  test('User can login via sso/login endpoint', async ({ environment, baseUrl, browser, browserName, loggedInPage }) => {
     test.skip(!isEnterpriseOrStaging(environment));
     test.setTimeout(3 * timeouts.fifteenSeconds);
     let idpServer;
