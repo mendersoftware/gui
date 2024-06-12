@@ -310,8 +310,8 @@ export const startIdpServer = ({ acsUrl = 'https://example.com/acs', metadataLoc
   runServer(
     {
       ...options,
-      cert: '../fixtures/idp-public-cert.pem',
-      key: '../fixtures/idp-privat-key.pem',
+      cert: path.join(__dirname, 'fixtures', 'idp-public-cert.pem'),
+      key: path.join(__dirname, 'fixtures', 'idp-privat-key.pem'),
       acsUrl,
       audience: metadataLocation,
       signResponse: false

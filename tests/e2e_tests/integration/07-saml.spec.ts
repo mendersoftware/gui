@@ -38,8 +38,10 @@ const idpCallback = server => (idpServer = server);
 test.describe('SAML Login via sso/id/login', () => {
   test.describe.configure({ mode: 'serial' });
   test.use({ storageState: storagePath });
-  test.beforeAll(async () => {
-    startIdpServer({}, idpCallback);
+  test.beforeAll(async ({ environment }) => {
+    if (isEnterpriseOrStaging(environment)) {
+      startIdpServer({}, idpCallback);
+    }
   });
   test.afterAll(async ({ environment, baseUrl, browserName }, testInfo) => {
     if (testInfo.status === 'skipped' || !isEnterpriseOrStaging(environment)) {
@@ -63,6 +65,7 @@ test.describe('SAML Login via sso/id/login', () => {
       method: 'DELETE'
     });
     console.log(`removed user ${samlSettings[browserName]}.`);
+    idpServer.close();
   });
 
   // Setups the SAML/SSO login with samltest.id Identity Provider
