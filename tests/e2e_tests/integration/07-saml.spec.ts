@@ -30,19 +30,12 @@ const samlSettings = {
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 const defaultHeaders = { 'Content-Type': 'application/json' };
 
-let idpServer;
 let acsUrl = '';
 let metadataLocation = '';
-const idpCallback = server => (idpServer = server);
 
 test.describe('SAML Login via sso/id/login', () => {
   test.describe.configure({ mode: 'serial' });
   test.use({ storageState: storagePath });
-  test.beforeAll(async ({ environment }) => {
-    if (isEnterpriseOrStaging(environment)) {
-      startIdpServer({}, idpCallback);
-    }
-  });
   test.afterAll(async ({ environment, baseUrl, browserName }, testInfo) => {
     if (testInfo.status === 'skipped' || !isEnterpriseOrStaging(environment)) {
       return;
@@ -52,7 +45,7 @@ test.describe('SAML Login via sso/id/login', () => {
     console.log(`Finished ${testInfo.title} with status ${testInfo.status}. Cleaning up.`);
     const response = await axios({
       ...requestInfo,
-      url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings[browserName])}`
+      url: `${baseUrl}api/management/v1/useradm/users?email=${encodeURIComponent(samlSettings.credentials[browserName])}`
     });
     if (response.status >= 300 || !response.data.length) {
       console.log(`${samlSettings.credentials[browserName]} does not exist.`);
@@ -64,8 +57,7 @@ test.describe('SAML Login via sso/id/login', () => {
       url: `${baseUrl}api/management/v1/useradm/users/${userId}`,
       method: 'DELETE'
     });
-    console.log(`removed user ${samlSettings[browserName]}.`);
-    idpServer.close();
+    console.log(`removed user ${samlSettings.credentials[browserName]}.`);
   });
 
   // Setups the SAML/SSO login with samltest.id Identity Provider
@@ -74,14 +66,20 @@ test.describe('SAML Login via sso/id/login', () => {
     // allow a lot of time to enter metadata + then some to handle uploading the config to the external service
     test.setTimeout(5 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
 
+    let idpServer;
+    startIdpServer({}, server => (idpServer = server));
+    await page.waitForTimeout(timeouts.oneSecond);
     const { data: metadata, status } = await axios({ url: samlSettings.idpUrl, method: 'GET' });
+    idpServer.close();
     expect(status).toBeGreaterThanOrEqual(200);
     expect(status).toBeLessThan(300);
     await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
     const isInitialized = await page.isVisible('text=Entity ID');
     if (!isInitialized) {
       // Check input[type="checkbox"]
-      await page.locator('input[type="checkbox"]').check();
+      await page.getByLabel(/Enable Single Sign-On/i).click();
+      await page.getByRole('combobox').click();
+      await page.getByRole('option', { name: 'SAML' }).click();
       // Click text=input with the text editor
       await page.locator('text=input with the text editor').click();
 
@@ -127,20 +125,21 @@ test.describe('SAML Login via sso/id/login', () => {
     expect(spDataStatus).toBeLessThan(300);
     expect(spMetadata).toContain('SPSSODescriptor');
     idpServer.close();
+    await page.waitForTimeout(timeouts.oneSecond);
   });
 
   // Creates a user with login that matches Identity privder (samltest.id) user email
   test('Creates a user without a password', async ({ environment, baseUrl, browserName, loggedInPage: page }) => {
     test.skip(!isEnterpriseOrStaging(environment));
     await page.goto(`${baseUrl}ui/settings/user-management`);
-    const userExists = await page.isVisible(`text=${samlSettings[browserName]}`);
+    const userExists = await page.isVisible(`text=${samlSettings.credentials[browserName]}`);
     if (userExists) {
-      console.log(`${samlSettings[browserName]} already exists.`);
+      console.log(`${samlSettings.credentials[browserName]} already exists.`);
       return;
     }
     await page.getByRole('button', { name: /new user/i }).click();
     await page.getByPlaceholder(/Email/i).click();
-    await page.getByPlaceholder(/Email/i).fill(samlSettings[browserName]);
+    await page.getByPlaceholder(/Email/i).fill(samlSettings.credentials[browserName]);
     // Click text=Create user
     await page.getByRole('button', { name: /Create user/i }).click();
     await page.screenshot({ path: './test-results/user-created.png' });
@@ -149,12 +148,15 @@ test.describe('SAML Login via sso/id/login', () => {
 
   // This test calls auth/sso/${id}/login, where id is the id of the identity provider
   // and verifies that login is successful.
-  test('User can login via sso/login endpoint', async ({ environment, baseUrl, browser, browserName, loggedInPage }) => {
+  test.only('User can login via sso/login endpoint', async ({ environment, baseUrl, browser, browserName, loggedInPage }) => {
     test.skip(!isEnterpriseOrStaging(environment));
     test.setTimeout(3 * timeouts.fifteenSeconds);
-
-    startIdpServer({ acsUrl, metadataLocation }, idpCallback);
-    await loggedInPage.goto(`${baseUrl}ui/settings/organization-and-billing`);
+    let idpServer;
+    startIdpServer({ acsUrl, metadataLocation }, server => (idpServer = server));
+    await loggedInPage.waitForTimeout(timeouts.oneSecond);
+    await loggedInPage.goto(`${baseUrl}ui/help`);
+    await loggedInPage.goto(`${baseUrl}ui/settings`);
+    await loggedInPage.getByText(/organization/i).click();
     await loggedInPage.waitForSelector('text=View metadata in the text editor', { timeout: timeouts.tenSeconds });
     let loginUrl = '';
     let loginThing = await loggedInPage.locator('*:below(:text("Start URL"))').first();
@@ -163,7 +165,7 @@ test.describe('SAML Login via sso/id/login', () => {
       loginThing = await loggedInPage.locator(':text("Start URL") + *').first();
       loginUrl = await loginThing.innerText();
     }
-    console.log(`logging in via ${loginUrl} (using: ${samlSettings[browserName]})`);
+    console.log(`logging in via ${loginUrl} (using: ${samlSettings.credentials[browserName]})`);
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto(loginUrl);
@@ -171,12 +173,13 @@ test.describe('SAML Login via sso/id/login', () => {
     await page.screenshot({ path: './test-results/saml-redirected.png' });
 
     await page.getByLabel(/Subject NameID/i).clear();
-    await page.getByLabel(/Subject NameID/i).fill(samlSettings[browserName]);
+    await page.getByLabel(/Subject NameID/i).fill(samlSettings.credentials[browserName]);
     await page.getByLabel(/E-Mail Address/i).clear();
-    await page.getByLabel(/E-Mail Address/i).fill(samlSettings[browserName]);
+    await page.getByLabel(/E-Mail Address/i).fill(samlSettings.credentials[browserName]);
     await page.getByRole('button', { name: /sign in/i }).click();
     // confirm we have logged in successfully
     await page.screenshot({ path: './test-results/saml-logging-in-accept.png' });
     await isLoggedIn(page);
+    idpServer.close();
   });
 });

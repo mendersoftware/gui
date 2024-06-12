@@ -306,20 +306,15 @@ export const tagRelease = async (releaseName: string, tag: string, baseUrl: stri
   return Promise.resolve();
 };
 
-export const startIdpServer = ({ acsUrl = 'https://example.com/acs', metadataLocation = 'https://example.com/metadata', ...options }, callback) => {
-  const cert = path.join(__dirname, '..', 'fixtures', 'idp-public-cert.pem');
-  console.log(cert);
-  const key = path.join(__dirname, '..', 'fixtures', 'idp-private-key.pem');
-  console.log(key);
-  return runServer(
+export const startIdpServer = ({ acsUrl = 'https://example.com/acs', metadataLocation = 'https://example.com/metadata', ...options }, callback) =>
+  runServer(
     {
       ...options,
-      cert,
-      key,
+      cert: path.join(__dirname, '..', 'fixtures', 'idp-public-cert.pem'),
+      key: path.join(__dirname, '..', 'fixtures', 'idp-private-key.pem'),
       acsUrl,
       audience: metadataLocation,
       signResponse: false
     },
     callback
   );
-};
