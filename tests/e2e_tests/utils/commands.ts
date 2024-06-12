@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import { BrowserContext, Page } from '@playwright/test';
+import { runServer } from '@sidewinder1138/saml-idp';
 import axios from 'axios';
 import { spawn } from 'child_process';
 import * as fs from 'fs';
@@ -304,3 +305,16 @@ export const tagRelease = async (releaseName: string, tag: string, baseUrl: stri
   }
   return Promise.resolve();
 };
+
+export const startIdpServer = ({ acsUrl = 'https://example.com/acs', metadataLocation = 'https://example.com/metadata', ...options }, callback) =>
+  runServer(
+    {
+      ...options,
+      cert: '../fixtures/idp-public-cert.pem',
+      key: '../fixtures/idp-privat-key.pem',
+      acsUrl,
+      audience: metadataLocation,
+      signResponse: false
+    },
+    callback
+  );
