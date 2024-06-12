@@ -1,4 +1,5 @@
-import { basename, dirname } from 'https://deno.land/std/path/posix.ts';
+import { ensureDir } from 'https://deno.land/std/fs/mod.ts';
+import { basename, dirname } from 'https://deno.land/std/path/posix/mod.ts';
 import { parse, stringify } from 'https://deno.land/std/yaml/mod.ts';
 import { camelCase } from 'https://deno.land/x/case/mod.ts';
 import { generate } from 'npm:openapi-typescript-codegen';
@@ -81,7 +82,7 @@ const baseSpec = {
   tags: [{ name: 'Management API', description: 'used for management APIs' }],
   servers: [{ url: defaultManagementUrl }],
   paths: {},
-  components: { securitySchemes: {}, schemas: {} }
+  components: { requestBodies: {}, securitySchemes: {}, schemas: {} }
 };
 
 const processFiles = async root => {
@@ -100,6 +101,7 @@ const processFiles = async root => {
       components: {
         ...accu.components,
         ...fileData.components,
+        requestBodies: { ...accu.components.requestBodies, ...fileData.components.requestBodies },
         responses: { ...accu.components.responses, ...fileData.components.responses },
         schemas: { ...accu.components.schemas, ...serviceSchemas },
         securitySchemes: { ...accu.components.securitySchemes, ...fileData.components.securitySchemes }
@@ -126,6 +128,8 @@ const generateTypeIndex = async () => {
 };
 
 const mergedContent = await processFiles('./specs');
+await ensureDir('./generated');
+await Deno.writeTextFile('./generated/test.json', JSON.stringify(mergedContent));
 await generate({ input: mergedContent, output: './generated' });
 await Deno.writeTextFile('combined.yml', stringify(mergedContent));
 await generateTypeIndex();

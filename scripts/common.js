@@ -1,4 +1,4 @@
-import { join, resolve } from 'https://deno.land/std/path/posix.ts';
+import { join, resolve } from 'https://deno.land/std/path/posix/mod.ts';
 
 export const getFiles = async (folder, { fileProcessor }) => {
   const files = [];
