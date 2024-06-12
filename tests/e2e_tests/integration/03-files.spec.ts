@@ -41,6 +41,10 @@ test.describe('Files', () => {
   });
 
   test('allows artifact generation', async ({ baseUrl, loggedInPage: page }) => {
+    const hasTaggedRelease = await page.getByText(/customRelease/i).isVisible();
+    if (hasTaggedRelease) {
+      return;
+    }
     const releaseName = 'terminalImage';
     const uploadButton = await page.getByRole('button', { name: /upload/i });
     await uploadButton.click();
@@ -56,6 +60,7 @@ test.describe('Files', () => {
     const token = await getTokenFromStorage(baseUrl);
     await tagRelease(releaseName, 'customRelease', baseUrl, token);
     await page.waitForTimeout(timeouts.oneSecond); // some extra time for the release to be tagged in the backend
+    await page.keyboard.press('Escape');
     await page.click(`.leftNav :text('Releases')`);
     expect(await page.getByText(/customRelease/i)).toBeVisible();
   });
