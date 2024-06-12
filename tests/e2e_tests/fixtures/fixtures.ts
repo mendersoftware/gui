@@ -55,6 +55,11 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     const page = await context.newPage();
     await page.goto(`${baseUrl}ui/`);
     await isLoggedIn(page);
+    const isHeaderComplete = await page.getByText(username).isVisible();
+    if (!isHeaderComplete) {
+      await page.reload();
+      await page.waitForSelector(`text=${username}`);
+    }
     await use(page);
     await context.storageState({ path: storagePath });
   },
