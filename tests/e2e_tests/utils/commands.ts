@@ -309,7 +309,7 @@ export const tagRelease = async (releaseName: string, tag: string, baseUrl: stri
 export const startIdpServer = ({ acsUrl = 'https://example.com/acs', metadataLocation = 'https://example.com/metadata', ...options }, callback) => {
   const cert = path.join(__dirname, '..', 'fixtures', 'idp-public-cert.pem');
   console.log(cert);
-  const key = path.join(__dirname, 'fixtures', 'idp-privat-key.pem');
+  const key = path.join(__dirname, '..', 'fixtures', 'idp-privat-key.pem');
   console.log(key);
   return runServer(
     {
