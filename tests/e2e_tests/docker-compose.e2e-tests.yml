@@ -32,6 +32,8 @@ services:
       - ${GUI_REPOSITORY}/tests/e2e_tests/playwright.config.ts:/e2e/playwright.config.ts
       - ${GUI_REPOSITORY}/tests/e2e_tests/utils:/e2e/utils
       - ${GUI_REPOSITORY}/videos:/e2e/videos
+    ports:
+      - '7000:7000'
 
   mender-client:
     image: mendersoftware/mender-client-docker-addons:mender-3.6.x
