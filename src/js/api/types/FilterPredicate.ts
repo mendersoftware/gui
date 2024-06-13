@@ -1,8 +1,7 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 /**
  * Attribute filter predicate
  */
@@ -23,6 +22,7 @@ export type FilterPredicate = {
    * | $gte       | Greater than or equal (`>=`) | any             |
    * | $lt        | Less than (`<`)              | any             |
    * | $lte       | Less than or equal (`<=`)    | any             |
+   * | $ltne      | Less than or does not exist  | any             |
    * | $exists    | Attribute exists             | bool            |
    * | $in        | Is an element of             | array           |
    * | $nin       | Is not an element of         | array           |
@@ -44,7 +44,6 @@ export type FilterPredicate = {
    */
   value: string;
 };
-
 export namespace FilterPredicate {
   /**
    * Type or operator of the filter predicate.
@@ -57,6 +56,7 @@ export namespace FilterPredicate {
    * | $gte       | Greater than or equal (`>=`) | any             |
    * | $lt        | Less than (`<`)              | any             |
    * | $lte       | Less than or equal (`<=`)    | any             |
+   * | $ltne      | Less than or does not exist  | any             |
    * | $exists    | Attribute exists             | bool            |
    * | $in        | Is an element of             | array           |
    * | $nin       | Is not an element of         | array           |
@@ -69,6 +69,7 @@ export namespace FilterPredicate {
     _IN = "$in",
     _LT = "$lt",
     _LTE = "$lte",
+    _LTNE = "$ltne",
     _NE = "$ne",
     _NIN = "$nin",
     _EXISTS = "$exists",

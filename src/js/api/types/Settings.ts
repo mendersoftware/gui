@@ -1,8 +1,7 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 /**
  * User settings.
  */
@@ -12,9 +11,7 @@ export type Settings = {
      */
     '2fa'?: Settings.'2fa';
 };
-
 export namespace Settings {
-
     /**
      * Enable/disable two-factor authentication for this user.
      */
@@ -22,7 +19,5 @@ export namespace Settings {
         ENABLED = 'enabled',
         DISABLED = 'disabled',
     }
-
-
 }
 

@@ -1,10 +1,8 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { IdentityData } from "./IdentityData";
-
 /**
  * Authentication data set
  */
@@ -28,7 +26,6 @@ export type AuthSetDeviceauth = {
    */
   device_id?: string;
 };
-
 export namespace AuthSetDeviceauth {
   export enum status {
     PENDING = "pending",

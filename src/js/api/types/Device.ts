@@ -1,18 +1,29 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-/**
- * Device descriptor.
- */
+import type { DeviceStatus } from "./DeviceStatus";
 export type Device = {
   /**
-   * Device ID.
+   * Device identifier.
    */
-  id?: string;
+  id: string;
+  status: DeviceStatus;
+  created?: string;
+  started?: string;
+  finished?: string;
+  deleted?: string;
+  device_type?: string;
   /**
-   * Vendor-specific JSON representation of the device identity data (MACs, serial numbers, etc.).
+   * Availability of the device's deployment log.
    */
-  identity_data: string;
+  log: boolean;
+  /**
+   * State reported by device
+   */
+  state?: string;
+  /**
+   * Additional state information
+   */
+  substate?: string;
 };

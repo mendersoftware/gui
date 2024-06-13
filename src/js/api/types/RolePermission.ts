@@ -1,10 +1,8 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { RolePermissionObject } from "./RolePermissionObject";
-
 /**
  * Role permission
  */
@@ -15,7 +13,6 @@ export type RolePermission = {
   action: RolePermission.action;
   object: RolePermissionObject;
 };
-
 export namespace RolePermission {
   /**
    * Action

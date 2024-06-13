@@ -1,11 +1,9 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { Limit } from "./Limit";
 import type { XDeltaArgsLimits } from "./XDeltaArgsLimits";
-
 /**
  * The mender-binary-delta-generator configuration limits.
  */
