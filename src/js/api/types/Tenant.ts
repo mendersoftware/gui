@@ -1,11 +1,9 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { Addon } from "./Addon";
 import type { TenantApiLimits } from "./TenantApiLimits";
-
 /**
  * Tenant descriptor.
  */
@@ -29,7 +27,6 @@ export type Tenant = {
   api_limits?: TenantApiLimits;
   addons?: Array<Addon>;
 };
-
 export namespace Tenant {
   /**
    * Status of the tenant account.

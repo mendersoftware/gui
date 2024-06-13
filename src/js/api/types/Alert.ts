@@ -1,10 +1,8 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { AlertSubject } from "./AlertSubject";
-
 export type Alert = {
   /**
    * A unique ID for the alert.
@@ -25,7 +23,6 @@ export type Alert = {
    */
   timestamp: string;
 };
-
 export namespace Alert {
   /**
    * Alert severity level

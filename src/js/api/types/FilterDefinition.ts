@@ -4,16 +4,15 @@
 /* eslint-disable */
 import type { FilterPredicate } from "./FilterPredicate";
 /**
- * Inventory filter assigned to the deployment
+ * Filter definition
  */
-export type FilterDeployments = {
+export type FilterDefinition = {
   /**
-   * Unique identifier of the saved filter.
+   * Name of the filter, must be unique.
    */
-  id: string;
+  name?: string;
   /**
-   * Name of the saved filter.
+   * List of filter predicates, chained with boolean AND operators to build the search condition definition.
    */
-  name: string;
   terms?: Array<FilterPredicate>;
 };

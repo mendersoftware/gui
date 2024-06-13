@@ -1,11 +1,9 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { ArtifactInfo } from "./ArtifactInfo";
 import type { Update } from "./Update";
-
 /**
  * Detailed artifact.
  */
