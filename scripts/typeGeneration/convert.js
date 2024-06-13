@@ -82,7 +82,7 @@ const baseSpec = {
   tags: [{ name: 'Management API', description: 'used for management APIs' }],
   servers: [{ url: defaultManagementUrl }],
   paths: {},
-  components: { securitySchemes: {}, schemas: {} }
+  components: { requestBodies: {}, securitySchemes: {}, schemas: {} }
 };
 
 const processFiles = async root => {
@@ -101,6 +101,7 @@ const processFiles = async root => {
       components: {
         ...accu.components,
         ...fileData.components,
+        requestBodies: { ...accu.components.requestBodies, ...fileData.components.requestBodies },
         responses: { ...accu.components.responses, ...fileData.components.responses },
         schemas: { ...accu.components.schemas, ...serviceSchemas },
         securitySchemes: { ...accu.components.securitySchemes, ...fileData.components.securitySchemes }
