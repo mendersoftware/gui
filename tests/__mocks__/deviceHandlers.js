@@ -115,7 +115,8 @@ const searchHandler = async ({ request }) => {
   }
   let deviceList = Array.from({ length: defaultState.devices.byStatus[status].total }, (_, index) => ({
     ...inventoryDevice,
-    attributes: [...inventoryDevice.attributes, { name: 'test-count', value: index, scope: 'system' }]
+    attributes: [...inventoryDevice.attributes, { name: 'test-count', value: index, scope: 'system' }],
+    id: `${String.fromCharCode('a'.charCodeAt(0) + index)}1`
   }));
   deviceList = deviceList.slice((page - 1) * per_page, page * per_page);
   return new HttpResponse(JSON.stringify(deviceList), { headers: { [headerNames.total]: defaultState.devices.byStatus[status].total } });

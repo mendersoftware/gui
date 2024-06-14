@@ -60,7 +60,7 @@ const preloadedState = {
   }
 };
 
-const reportsSpy = jest.spyOn(DeviceActions, 'deriveReportsData');
+const reportsSpy = jest.spyOn(DeviceActions, 'getReportsDataWithoutBackendSupport');
 
 describe('Devices Component', () => {
   it('renders correctly', async () => {
