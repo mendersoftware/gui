@@ -15,7 +15,7 @@ import axios from 'axios';
 import * as https from 'https';
 
 import test, { expect } from '../fixtures/fixtures';
-import { baseUrlToDomain, isLoggedIn, prepareCookies, processLoginForm } from '../utils/commands';
+import { baseUrlToDomain, isEnterpriseOrStaging, isLoggedIn, prepareCookies, processLoginForm } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Login', () => {
@@ -68,7 +68,7 @@ test.describe('Login', () => {
     });
 
     test('Does not log in without password', async ({ baseUrl, environment, page, username }) => {
-      test.skip(['enterprise', 'staging'].includes(environment));
+      test.skip(isEnterpriseOrStaging(environment));
       console.log(`logging in user with username: ${username} and without a password`);
       await page.goto(`${baseUrl}ui/`);
       // enter valid username and invalid password

@@ -45,30 +45,23 @@ describe('Login Component', () => {
     const loginSpy = jest.spyOn(UserActions, 'loginUser');
     const ui = <Login />;
     const { rerender } = render(ui, { preloadedState });
-    await act(async () => {
-      await user.type(screen.getByLabelText(/your email/i), 'something-2fa@example.com');
-    });
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: /Log in/i }));
-    });
+    await user.type(screen.getByLabelText(/your email/i), 'something-2fa@example.com');
+    await waitFor(() => rerender(ui));
+    await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(loginSpy).toHaveBeenCalled();
     await waitFor(() => rerender(ui));
-    await act(async () => {
-      await user.type(screen.getByLabelText(/password/i), 'mysecretpassword!123');
-    });
+    await user.type(screen.getByLabelText(/password/i), 'mysecretpassword!123');
     expect(await screen.findByLabelText(/Two Factor Authentication Code/i)).not.toBeVisible();
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: /Log in/i }));
-    });
+    await user.click(screen.getByRole('button', { name: /Log in/i }));
     expect(loginSpy).toHaveBeenCalled();
     await waitFor(() => rerender(ui));
+    await act(async () => jest.runAllTicks());
     expect(await screen.findByLabelText(/Two Factor Authentication Code/i)).toBeVisible();
     const input = screen.getByDisplayValue('something-2fa@example.com');
-    await act(async () => {
-      await user.clear(input);
-      await user.type(input, 'something@example.com');
-      await user.type(screen.getByLabelText(/Two Factor Authentication Code/i), '123456');
-    });
+    await user.clear(input);
+    await user.type(input, 'something@example.com');
+    await user.type(screen.getByLabelText(/Two Factor Authentication Code/i), '123456');
+    await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /Log in/i }));
     await act(async () => jest.runAllTicks());
     expect(loginSpy).toHaveBeenCalledWith({ email: 'something@example.com', password: 'mysecretpassword!123', token2fa: '123456' }, false);

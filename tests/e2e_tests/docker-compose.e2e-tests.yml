@@ -1,5 +1,3 @@
-version: '2.3'
-
 services:
   mender-gui-tests-runner:
     image: mendersoftware/mender-test-containers:gui-e2e-testing

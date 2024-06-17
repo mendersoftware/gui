@@ -151,7 +151,7 @@ export const addStaticGroup = (group, devices) => (dispatch, getState) =>
         })
       ).then(() =>
         Promise.all([
-          dispatch(setDeviceListState({ selectedId: undefined, setOnly: true })),
+          dispatch(setDeviceListState({ setOnly: true })),
           dispatch(getGroups()),
           dispatch(setSnackbar(...getGroupNotification(group, getState().devices.groups.selectedGroup)))
         ])
@@ -728,6 +728,7 @@ export const getAllDevicesByStatus = status => (dispatch, getState) => {
       ];
       if (status === DEVICE_STATES.accepted && deviceAccu.ids.length === total) {
         tasks.push(dispatch(deriveInactiveDevices(deviceAccu.ids)));
+        tasks.push(dispatch(deriveReportsData()));
       }
       return Promise.all(tasks);
     });
@@ -859,26 +860,28 @@ const initializeDistributionData = (report, groups, devices, totalDeviceCount) =
   return { items, otherCount, total: otherCount + dataCount };
 };
 
-export const deriveReportsData = () => (dispatch, getState) =>
+const deriveReportsData = () => (dispatch, getState) => {
+  const state = getState();
+  const {
+    groups: { byId: groupsById },
+    byId,
+    byStatus: {
+      accepted: { total }
+    }
+  } = state.devices;
+  const reports =
+    getUserSettings(state).reports || state.users.globalSettings[`${state.users.currentUser}-reports`] || (Object.keys(byId).length ? defaultReports : []);
+  const newReports = reports.map(report => initializeDistributionData(report, groupsById, byId, total));
+  return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
+};
+
+export const getReportsDataWithoutBackendSupport = () => (dispatch, getState) =>
   Promise.all([dispatch(getAllDevicesByStatus(DEVICE_STATES.accepted)), dispatch(getGroups()), dispatch(getDynamicGroups())]).then(() => {
     const { dynamic: dynamicGroups, static: staticGroups } = getGroupsSelector(getState());
     return Promise.all([
       ...staticGroups.map(group => dispatch(getAllGroupDevices(group))),
       ...dynamicGroups.map(group => dispatch(getAllDynamicGroupDevices(group)))
-    ]).then(() => {
-      const state = getState();
-      const {
-        groups: { byId: groupsById },
-        byId,
-        byStatus: {
-          accepted: { total }
-        }
-      } = state.devices;
-      const reports =
-        getUserSettings(state).reports || state.users.globalSettings[`${state.users.currentUser}-reports`] || (Object.keys(byId).length ? defaultReports : []);
-      const newReports = reports.map(report => initializeDistributionData(report, groupsById, byId, total));
-      return Promise.resolve(dispatch({ type: DeviceConstants.SET_DEVICE_REPORTS, reports: newReports }));
-    });
+    ]).then(() => dispatch(deriveReportsData()));
   });
 
 export const getDeviceConnect = id => dispatch =>

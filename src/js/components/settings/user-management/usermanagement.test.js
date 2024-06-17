@@ -57,14 +57,10 @@ describe('UserManagement Component', () => {
     await user.click(screen.getByRole('button', { name: /cancel/i }));
     await user.click(list[list.length - 1]);
     const input = screen.getByDisplayValue(defaultState.users.byId[userId].email);
-    await act(async () => {
-      await user.clear(input);
-      await user.type(input, 'test@test');
-    });
+    await user.clear(input);
+    await user.type(input, 'test@test');
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
-    await act(async () => {
-      await user.type(input, '.com');
-    });
+    await user.type(input, '.com');
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
     await user.click(screen.getByRole('checkbox', { name: /reset the password/i }));
     await user.click(screen.getByRole('checkbox', { name: /reset the password/i }));
@@ -72,19 +68,19 @@ describe('UserManagement Component', () => {
     await user.click(selectButton);
     let listbox = document.body.querySelector(dropDownSelector);
     const adminItem = within(listbox).getByText(/admin/i);
-    await act(async () => {
-      await user.click(adminItem);
-      await user.type(listbox, '{Escape}');
-    });
+    await user.click(adminItem);
+    await user.type(listbox, '{Escape}');
     expect(screen.getByRole('button', { name: /Save/i })).toBeDisabled();
     await user.click(selectButton);
     listbox = document.body.querySelector(dropDownSelector);
     const listItem = within(listbox).getByText(/read access/i);
-    await act(async () => {
-      await user.click(listItem);
-      await user.type(listbox, '{Escape}');
-    });
+    await user.click(listItem);
+    await user.type(listbox, '{Escape}');
     await user.click(screen.getByRole('button', { name: /Save/i }));
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
   });
 
   it('supports user creation', async () => {
@@ -101,26 +97,22 @@ describe('UserManagement Component', () => {
     const submitButton = screen.getByRole('button', { name: /create user/i });
     expect(submitButton).toBeDisabled();
     const input = screen.getByPlaceholderText(/email/i);
-    await act(async () => {
-      await user.type(input, 'test@test');
-    });
+    await user.type(input, 'test@test');
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
-    await act(async () => {
-      await user.type(input, '.com');
-    });
+    await user.type(input, '.com');
+    await waitFor(() => rerender(ui));
     expect(submitButton).toBeEnabled();
     await user.click(screen.getByRole('button', { name: /generate/i }));
     expect(copyCheck).toHaveBeenCalled();
     expect(submitButton).toBeEnabled();
     const passwordInput = screen.getByPlaceholderText(/password/i);
-    await act(async () => {
-      await user.clear(passwordInput);
-    });
+    await user.clear(passwordInput);
     expect(submitButton).toBeEnabled();
+    await user.click(submitButton);
     await act(async () => {
-      await user.click(submitButton);
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
     });
-    await waitFor(() => rerender(ui));
     await waitFor(() => expect(createUserSpy).toHaveBeenCalled(), { timeout: 3000 });
   });
 
@@ -133,10 +125,8 @@ describe('UserManagement Component', () => {
     await user.click(selectButton);
     let listbox = document.body.querySelector(dropDownSelector);
     const adminItem = within(listbox).getByText(/admin/i);
-    await act(async () => {
-      await user.click(adminItem);
-      await user.type(listbox, '{Escape}');
-    });
+    await user.click(adminItem);
+    await user.type(listbox, '{Escape}');
     expect(screen.getByRole('button', { name: /Save/i })).toBeDisabled();
     await user.click(selectButton);
     listbox = document.body.querySelector(dropDownSelector);
@@ -144,9 +134,7 @@ describe('UserManagement Component', () => {
     await user.click(listItem);
     await user.click(screen.getByDisplayValue(defaultState.users.byId[userId].email));
     expect(screen.getByText(/the selected role may prevent/i)).toBeInTheDocument();
-    await act(async () => {
-      await user.type(listbox, '{Escape}');
-    });
+    await user.type(listbox, '{Escape}');
     expect(screen.getByRole('button', { name: /Save/i })).not.toBeDisabled();
   });
 });

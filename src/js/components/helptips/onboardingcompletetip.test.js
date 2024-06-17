@@ -49,7 +49,6 @@ describe('OnboardingCompleteTip Component', () => {
       </MemoryRouter>
     );
     const { baseElement, rerender } = testingLibRender(ui);
-    await act(async () => {});
     await waitFor(() => rerender(ui));
     const view = baseElement;
     expect(view).toMatchSnapshot();

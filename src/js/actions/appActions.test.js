@@ -89,7 +89,7 @@ const { attributes, ...expectedDevice } = defaultState.devices.byId.a1;
 export const receivedInventoryDevice = {
   ...defaultState.devices.byId.a1,
   attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
-  identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+  identity_data: { ...defaultState.devices.byId.a1.identity_data, status: DEVICE_STATES.accepted },
   isNew: false,
   isOffline: true,
   monitor: {},
@@ -197,15 +197,29 @@ export const deviceInitActions = [
   { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
   { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
   { type: RECEIVED_ROLES, value: receivedRoles },
-  { type: RECEIVE_DEVICES, devicesById: { a1: { ...receivedInventoryDevice, group: 'test' } } },
-  { type: RECEIVE_DEVICES, devicesById: { a1: { ...receivedInventoryDevice, group: 'test' } } },
+  { type: RECEIVE_DEVICES, devicesById: { [defaultState.devices.byId.a1.id]: { ...receivedInventoryDevice, group: 'test' } } },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: {
+      [defaultState.devices.byId.a1.id]: { ...receivedInventoryDevice, group: 'test' },
+      [defaultState.devices.byId.b1.id]: {
+        ...receivedInventoryDevice,
+        id: defaultState.devices.byId.b1.id,
+        group: 'test',
+        identity_data: { ...defaultState.devices.byId.b1.identity_data, status: DEVICE_STATES.accepted }
+      }
+    }
+  },
   {
     type: SET_ACCEPTED_DEVICES,
-    deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
-    status: 'accepted',
+    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
+    status: DEVICE_STATES.accepted,
     total: defaultState.devices.byStatus.accepted.deviceIds.length
   },
-  { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test', status: 'pending' } } },
+  {
+    type: RECEIVE_DEVICES,
+    devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test', status: 'pending' } }
+  },
   {
     type: SET_PENDING_DEVICES,
     deviceIds: Array.from({ length: defaultState.devices.byStatus.pending.total }, () => defaultState.devices.byId.a1.id),
@@ -231,12 +245,15 @@ export const deviceInitActions = [
         isOffline: true,
         monitor: {},
         tags: {}
-      }
+      },
+      [defaultState.devices.byId.b1.id]: { ...defaultState.devices.byId.b1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} }
     }
   },
   {
     type: RECEIVE_DEVICES,
-    devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
+    devicesById: {
+      [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} }
+    }
   },
   {
     type: ADD_DYNAMIC_GROUP,
@@ -254,7 +271,7 @@ export const deviceInitActions = [
       selection: [],
       setOnly: false,
       sort: { direction: SORTING_OPTIONS.desc },
-      state: 'accepted',
+      state: DEVICE_STATES.accepted,
       total: 0
     }
   }
@@ -264,7 +281,7 @@ export const deviceInitActions2 = [
   { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
   {
     type: SET_ACCEPTED_DEVICES,
-    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
     status: DEVICE_STATES.accepted,
     total: defaultState.devices.byStatus.accepted.total
   },
@@ -276,13 +293,13 @@ export const deviceInitActions2 = [
     type: SET_DEVICE_LIST_STATE,
     state: {
       ...DEVICE_LIST_DEFAULTS,
-      deviceIds: ['a1', 'a1'],
+      deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
       isLoading: false,
       selectedAttributes: [],
       selectedIssues: [],
       selection: [],
       sort: { direction: SORTING_OPTIONS.desc },
-      state: 'accepted',
+      state: DEVICE_STATES.accepted,
       total: 2
     }
   }
@@ -316,7 +333,6 @@ describe('app actions', () => {
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
   });
-
   it('should try to get all required app information', async () => {
     const store = mockStore({
       ...defaultState,
@@ -373,28 +389,37 @@ describe('app actions', () => {
       { type: SET_TOOLTIPS_STATE, value: {} },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
       { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings, onboarding: defaultOnboardingState } },
-      { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
+      {
+        type: RECEIVE_DEVICES,
+        devicesById: {
+          [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' },
+          [defaultState.devices.byId.b1.id]: { ...receivedInventoryDevice, id: defaultState.devices.byId.b1.id, group: 'test' }
+        }
+      },
       {
         type: SET_ACCEPTED_DEVICES,
-        deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+        deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
         status: DEVICE_STATES.accepted,
         total: defaultState.devices.byStatus.accepted.total
       },
       {
         type: RECEIVE_DEVICES,
-        devicesById: { [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} } }
+        devicesById: {
+          [expectedDevice.id]: { ...defaultState.devices.byId.a1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} },
+          [defaultState.devices.byId.b1.id]: { ...defaultState.devices.byId.b1, group: undefined, isNew: false, isOffline: true, monitor: {}, tags: {} }
+        }
       },
       {
         type: SET_DEVICE_LIST_STATE,
         state: {
           ...DEVICE_LIST_DEFAULTS,
-          deviceIds: ['a1', 'a1'],
+          deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
           isLoading: false,
           selectedAttributes: [],
           selectedIssues: [],
           selection: [],
           sort: { direction: SORTING_OPTIONS.desc },
-          state: 'accepted',
+          state: DEVICE_STATES.accepted,
           total: 2
         }
       },

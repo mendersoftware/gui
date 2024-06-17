@@ -60,25 +60,17 @@ describe('PasswordReset Component', () => {
     const { rerender } = testingLibRender(ui);
 
     const passwordInput = screen.getByLabelText('Password *');
-    await act(async () => {
-      await user.type(passwordInput, badPassword);
-    });
+    await user.type(passwordInput, badPassword);
     await waitFor(() => rerender(ui));
-    await act(async () => {
-      await user.type(passwordInput, badPassword);
-      await user.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
-    });
+    await user.type(passwordInput, badPassword);
+    await user.type(screen.getByLabelText(/confirm password \*/i), goodPassword);
     await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /Save password/i })).toBeDisabled();
     expect(screen.getByText('The passwords you provided do not match, please check again.')).toBeVisible();
-    await act(async () => {
-      await user.clear(passwordInput);
-      await user.type(passwordInput, goodPassword);
-    });
-    await waitFor(() => rerender(ui));
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: /Save password/i }));
-    });
+    await user.clear(passwordInput);
+    await user.type(passwordInput, goodPassword);
+    await act(async () => jest.runOnlyPendingTimers());
+    await user.click(screen.getByRole('button', { name: /Save password/i }));
     await waitFor(() => expect(completeSpy).toHaveBeenCalledWith(secretHash, goodPassword));
     await act(async () => {
       jest.runAllTimers();

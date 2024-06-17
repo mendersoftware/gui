@@ -23,7 +23,7 @@ import { getExistingReleaseTags } from '../../actions/releaseActions.js';
 import { createRole, editRole, getRoles, removeRole } from '../../actions/userActions';
 import { BENEFITS } from '../../constants/appConstants';
 import { emptyRole, rolesById } from '../../constants/userConstants';
-import { getFeatures, getGroupsByIdWithoutUngrouped, getIsEnterprise, getReleaseTagsById, getRolesList } from '../../selectors';
+import { getGroupsByIdWithoutUngrouped, getIsEnterprise, getReleaseTagsById, getRolesList } from '../../selectors';
 import DetailsTable from '../common/detailstable';
 import { DocsTooltip } from '../common/docslink';
 import EnterpriseNotification from '../common/enterpriseNotification';
@@ -49,7 +49,6 @@ export const RoleManagement = () => {
   const [editing, setEditing] = useState(false);
   const [role, setRole] = useState({ ...emptyRole });
   const dispatch = useDispatch();
-  const features = useSelector(getFeatures);
   const groups = useSelector(getGroupsByIdWithoutUngrouped);
   const releaseTags = useSelector(getReleaseTagsById);
   const roles = useSelector(getRolesList);
@@ -122,7 +121,6 @@ export const RoleManagement = () => {
       <RoleDefinition
         adding={adding}
         editing={editing}
-        features={features}
         onCancel={onCancel}
         onSubmit={onSubmit}
         removeRole={name => dispatch(removeRole(name))}

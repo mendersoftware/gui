@@ -16,7 +16,7 @@ import * as path from 'path';
 import * as readline from 'readline';
 
 import test, { expect } from '../fixtures/fixtures';
-import { compareImages } from '../utils/commands';
+import { compareImages, isEnterpriseOrStaging } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Auditlogs', () => {
@@ -24,7 +24,7 @@ test.describe('Auditlogs', () => {
 
   const secret = 'super secret something text';
   test('will track remote terminal sessions', async ({ environment, loggedInPage: page }) => {
-    test.skip(!['enterprise', 'staging'].includes(environment));
+    test.skip(!isEnterpriseOrStaging(environment));
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`${selectors.deviceListItem} div:last-child`);
     await page.click(`text=/troubleshooting/i`);

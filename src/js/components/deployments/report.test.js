@@ -13,8 +13,7 @@
 //    limitations under the License.
 import React from 'react';
 
-import { prettyDOM } from '@testing-library/dom';
-import { act, cleanup, waitFor } from '@testing-library/react';
+import { act, cleanup, prettyDOM, waitFor } from '@testing-library/react';
 
 import { defaultState } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';

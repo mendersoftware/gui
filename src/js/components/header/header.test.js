@@ -58,14 +58,11 @@ describe('Header Component', () => {
     const { rerender } = render(view, { preloadedState });
     expect(screen.queryByText(defaultState.users.byId[defaultState.users.currentUser].email)).toBeInTheDocument();
     const selectButton = screen.getByRole('button', { name: defaultState.users.byId[defaultState.users.currentUser].email });
-    await act(async () => {
-      await user.click(selectButton);
-    });
+    await user.click(selectButton);
     const listbox = document.body.querySelector('ul[role=menu]');
     const listItem = within(listbox).getByText(/log out/i);
-    await act(async () => {
-      await user.click(listItem);
-    });
+    await user.click(listItem);
+    await act(async () => jest.runAllTicks());
     await waitFor(() => rerender(view));
     expect(screen.queryByText(defaultState.users.byId[defaultState.users.currentUser].email)).not.toBeInTheDocument();
   });

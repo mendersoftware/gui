@@ -3,13 +3,12 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Link } from 'react-router-dom';
 
-import { waitFor } from '@testing-library/dom';
 import configureMockStore from 'redux-mock-store';
 import { thunk } from 'redux-thunk';
 
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState } from '../../../tests/mockData';
-import { mockAbortController } from '../../../tests/setupTests';
+import { mockAbortController, waitFor } from '../../../tests/setupTests';
 import { SET_SNACKBAR, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
@@ -43,6 +42,7 @@ import {
   getGroups,
   getReportingLimits,
   getReportsData,
+  getReportsDataWithoutBackendSupport,
   getSessionDetails,
   getSystemDevices,
   preauthDevice,
@@ -80,14 +80,14 @@ const defaultDeviceListState = {
   state: {
     ...defaultState.devices.deviceList,
     perPage: 20,
-    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
     isLoading: false,
     total: 2
   }
 };
 const acceptedDevices = {
   type: DeviceConstants.SET_ACCEPTED_DEVICES,
-  deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+  deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
   status: DeviceConstants.DEVICE_STATES.accepted,
   total: defaultState.devices.byStatus.accepted.total
 };
@@ -321,6 +321,33 @@ describe('overall device information retrieval', () => {
       }
     ];
     await store.dispatch(getReportsData());
+    const storeActions = store.getActions();
+    expect(storeActions.length).toEqual(expectedActions.length);
+    expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
+  });
+  it('should allow getting device aggregation data for use in the dashboard/ reports even if the reporting service is not ready', async () => {
+    const store = mockStore({ ...defaultState });
+    const expectedActions = [
+      { type: DeviceConstants.RECEIVE_GROUPS, groups: { testGroup: defaultState.devices.groups.byId.testGroup } },
+      defaultResults.receivedDynamicGroups,
+      defaultResults.receivedExpectedDevice,
+      defaultResults.acceptedDevices,
+      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 0, inactiveDeviceTotal: 2 },
+      { type: DeviceConstants.SET_DEVICE_REPORTS, reports: [{ items: [{ count: 2, key: 'undefined' }], otherCount: 0, total: 2 }] },
+      defaultResults.receiveDefaultDevice,
+      defaultResults.receivedExpectedDevice,
+      {
+        type: DeviceConstants.ADD_DYNAMIC_GROUP,
+        groupName: DeviceConstants.UNGROUPED_GROUP.id,
+        group: {
+          deviceIds: [],
+          total: 0,
+          filters: [{ key: 'group', operator: '$nin', scope: 'system', value: [Object.keys(defaultState.devices.groups.byId)[0]] }]
+        }
+      },
+      { type: DeviceConstants.SET_DEVICE_REPORTS, reports: [{ items: [{ count: 2, key: 'undefined' }], otherCount: 0, total: 2 }] }
+    ];
+    await store.dispatch(getReportsDataWithoutBackendSupport());
     const storeActions = store.getActions();
     expect(storeActions.length).toEqual(expectedActions.length);
     expectedActions.map((action, index) => expect(storeActions[index]).toMatchObject(action));
@@ -816,7 +843,8 @@ describe('device retrieval ', () => {
     const expectedActions = [
       defaultResults.receivedExpectedDevice,
       defaultResults.acceptedDevices,
-      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 0, inactiveDeviceTotal: 2 }
+      { type: DeviceConstants.SET_INACTIVE_DEVICES, activeDeviceTotal: 0, inactiveDeviceTotal: 2 },
+      { type: DeviceConstants.SET_DEVICE_REPORTS, reports: [{ items: [{ count: 2, key: 'undefined' }], otherCount: 0, total: 2 }] }
     ];
     await store.dispatch(getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted));
     const storeActions = store.getActions();
