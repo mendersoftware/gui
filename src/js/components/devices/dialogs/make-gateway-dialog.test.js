@@ -13,15 +13,20 @@
 //    limitations under the License.
 import React from 'react';
 
-import { token, undefineds } from '../../../../../tests/mockData';
+import { screen } from '@testing-library/react';
+
+import { undefineds } from '../../../../../tests/mockData';
 import { render } from '../../../../../tests/setupTests';
 import MakeGatewayDialog from './make-gateway-dialog';
 
 describe('CreateGroupExplainerContent Component', () => {
   it('renders correctly', async () => {
-    const { baseElement } = render(<MakeGatewayDialog onCancel={jest.fn} token={token} />);
+    window.localStorage.getItem.mockImplementation(name => (name === 'JWT' ? JSON.stringify({ token: 'veryTest' }) : undefined));
+    const { baseElement } = render(<MakeGatewayDialog onCancel={jest.fn} />);
     const view = baseElement.getElementsByClassName('MuiDialog-root')[0];
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    expect(screen.getByText(/veryTest/)).toBeInTheDocument();
+    window.localStorage.getItem.mockReset();
   });
 });

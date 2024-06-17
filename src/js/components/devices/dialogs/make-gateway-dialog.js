@@ -16,19 +16,20 @@ import React from 'react';
 // material ui
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
+import { getToken } from '../../../auth';
 import CopyCode from '../../common/copy-code';
 import DocsLink from '../../common/docslink';
 
-export const getCode = (isPreRelease, token) => {
+export const getCode = isPreRelease => {
   const { target, flags } = isPreRelease
     ? { target: 'https://get.mender.io/staging', flags: ' -c --experimental' }
     : { target: 'https://get.mender.io', flags: '' };
-  return `JWT_TOKEN='${token}'
+  return `JWT_TOKEN='${getToken()}'
 
 wget -O- ${target} | sudo bash -s -- --jwt-token $JWT_TOKEN mender-gateway --demo${flags}`;
 };
 
-export const MakeGatewayDialog = ({ isPreRelease, onCancel, token }) => (
+export const MakeGatewayDialog = ({ isPreRelease, onCancel }) => (
   <Dialog open fullWidth maxWidth="md">
     <DialogTitle>Promoting a device to a gateway</DialogTitle>
     <DialogContent className="onboard-dialog dialog-content">
@@ -37,7 +38,7 @@ export const MakeGatewayDialog = ({ isPreRelease, onCancel, token }) => (
         On the device terminal, run the following command. You can use <DocsLink path="add-ons/remote-terminal" title="Remote Terminal" /> if mender-connect is
         enabled on the device.
       </p>
-      <CopyCode code={getCode(isPreRelease, token)} withDescription />
+      <CopyCode code={getCode(isPreRelease)} withDescription />
       <p>
         Note: this is only intended for demo or testing purposes. For production installation please refer to the{' '}
         <DocsLink path="get-started/mender-gateway" title="full Mender Gateway documentation" />
