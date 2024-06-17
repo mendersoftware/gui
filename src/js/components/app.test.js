@@ -47,7 +47,7 @@ const preloadedState = {
   }
 };
 
-const reportsSpy = jest.spyOn(DeviceActions, 'deriveReportsData');
+const reportsSpy = jest.spyOn(DeviceActions, 'getReportsDataWithoutBackendSupport');
 
 jest.mock('react-linkify');
 

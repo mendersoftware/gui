@@ -19,11 +19,11 @@ import { BarChart as BarChartIcon } from '@mui/icons-material';
 import {
   defaultReportType,
   defaultReports,
-  deriveReportsData,
   getDeviceAttributes,
   getGroupDevices,
   getReportingLimits,
-  getReportsData
+  getReportsData,
+  getReportsDataWithoutBackendSupport
 } from '../../actions/deviceActions';
 import { saveUserSettings } from '../../actions/userActions';
 import { rootfsImageVersion, softwareTitleMap } from '../../constants/releaseConstants';
@@ -109,7 +109,7 @@ export const SoftwareDistribution = () => {
       dispatch(getReportsData());
       return;
     }
-    dispatch(deriveReportsData());
+    dispatch(getReportsDataWithoutBackendSupport());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, hasReporting, JSON.stringify(reports)]);
 

@@ -279,7 +279,7 @@ const appInitActions = [
         ...defaultState.devices.byId.a1,
         attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
         group: 'test',
-        identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+        identity_data: { ...defaultState.devices.byId.a1.identity_data, status: DEVICE_STATES.accepted },
         isOffline: true,
         monitor: {},
         tags: {},
@@ -289,8 +289,8 @@ const appInitActions = [
   },
   {
     type: SET_ACCEPTED_DEVICES,
-    deviceIds: Array.from({ length: defaultState.devices.byStatus.accepted.total }, () => defaultState.devices.byId.a1.id),
-    status: 'accepted',
+    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
+    status: DEVICE_STATES.accepted,
     total: defaultState.devices.byStatus.accepted.deviceIds.length
   },
   {
@@ -300,7 +300,7 @@ const appInitActions = [
         ...defaultState.devices.byId.a1,
         attributes: inventoryDevice.attributes.reduce(attributeReducer, {}),
         group: 'test',
-        identity_data: { ...defaultState.devices.byId.a1.identity_data, status: 'accepted' },
+        identity_data: { ...defaultState.devices.byId.a1.identity_data, status: DEVICE_STATES.accepted },
         isOffline: true,
         monitor: {},
         status: 'pending',
@@ -353,7 +353,7 @@ const appInitActions = [
       selection: [],
       setOnly: false,
       sort: { direction: SORTING_OPTIONS.desc },
-      state: 'accepted',
+      state: DEVICE_STATES.accepted,
       total: 0
     }
   },
@@ -366,7 +366,7 @@ const appInitActions = [
   { type: RECEIVE_DEVICES, devicesById: { [expectedDevice.id]: { ...receivedInventoryDevice, group: 'test' } } },
   {
     type: SET_ACCEPTED_DEVICES,
-    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.a1.id],
+    deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
     status: DEVICE_STATES.accepted,
     total: defaultState.devices.byStatus.accepted.total
   },
@@ -378,13 +378,13 @@ const appInitActions = [
     type: SET_DEVICE_LIST_STATE,
     state: {
       ...DEVICE_LIST_DEFAULTS,
-      deviceIds: ['a1', 'a1'],
+      deviceIds: [defaultState.devices.byId.a1.id, defaultState.devices.byId.b1.id],
       isLoading: false,
       selectedAttributes: [],
       selectedIssues: [],
       selection: [],
       sort: { direction: SORTING_OPTIONS.desc },
-      state: 'accepted',
+      state: DEVICE_STATES.accepted,
       total: 2
     }
   },

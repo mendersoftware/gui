@@ -23,7 +23,7 @@ import * as DeviceActions from '../../actions/deviceActions';
 import { SET_ACCEPTED_DEVICES_COUNT } from '../../constants/deviceConstants';
 import Dashboard from './dashboard';
 
-const reportsSpy = jest.spyOn(DeviceActions, 'deriveReportsData');
+const reportsSpy = jest.spyOn(DeviceActions, 'getReportsDataWithoutBackendSupport');
 
 describe('Dashboard Component', () => {
   it('renders correctly', async () => {
