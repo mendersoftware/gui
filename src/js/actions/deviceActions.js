@@ -151,7 +151,7 @@ export const addStaticGroup = (group, devices) => (dispatch, getState) =>
         })
       ).then(() =>
         Promise.all([
-          dispatch(setDeviceListState({ selectedId: undefined, setOnly: true })),
+          dispatch(setDeviceListState({ setOnly: true })),
           dispatch(getGroups()),
           dispatch(setSnackbar(...getGroupNotification(group, getState().devices.groups.selectedGroup)))
         ])
