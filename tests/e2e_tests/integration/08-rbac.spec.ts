@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
-import { isLoggedIn, processLoginForm } from '../utils/commands';
+import { isEnterpriseOrStaging, isLoggedIn, processLoginForm } from '../utils/commands';
 import { releaseTag, selectors, timeouts } from '../utils/constants';
 
 const releaseRoles = [
@@ -40,7 +40,7 @@ test.describe('RBAC functionality', () => {
   });
 
   test('allows role creation for static groups', async ({ environment, loggedInPage: page }) => {
-    test.skip(!['enterprise', 'staging'].includes(environment));
+    test.skip(!isEnterpriseOrStaging(environment));
     await page.click('text=/roles/i');
     await page.click('text=Add a role');
     let nameInput = await page.locator('label:has-text("name") >> ..');
@@ -62,7 +62,7 @@ test.describe('RBAC functionality', () => {
   });
 
   test('allows role creation for release tags', async ({ environment, loggedInPage: page }) => {
-    test.skip(!['enterprise', 'staging'].includes(environment));
+    test.skip(!isEnterpriseOrStaging(environment));
     await page.click('text=/roles/i');
     for (const { name, permissions, tag } of releaseRoles) {
       await page.click('text=Add a role');
@@ -103,7 +103,7 @@ test.describe('RBAC functionality', () => {
       await page.getByPlaceholder(/email/i).fill(user);
       await page.getByPlaceholder(/Password/i).click();
       await page.getByPlaceholder(/Password/i).fill(password);
-      if (['enterprise', 'staging'].includes(environment)) {
+      if (isEnterpriseOrStaging(environment)) {
         await page.getByRole('combobox', { name: /admin/i }).click();
         // first we need to deselect the default admin role
         await page.getByRole('option', { name: 'Admin' }).click();
@@ -116,7 +116,7 @@ test.describe('RBAC functionality', () => {
   });
 
   test('has working RBAC groups limitations', async ({ baseUrl, browser, environment, password, username }) => {
-    test.skip(!['enterprise', 'staging'].includes(environment));
+    test.skip(!isEnterpriseOrStaging(environment));
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto(baseUrl);
@@ -132,7 +132,7 @@ test.describe('RBAC functionality', () => {
 
   test.describe('has working RBAC release limitations', () => {
     test('read-only all releases', async ({ baseUrl, browser, environment, password, username }) => {
-      test.skip(!['enterprise', 'staging'].includes(environment));
+      test.skip(!isEnterpriseOrStaging(environment));
       const context = await browser.newContext();
       const page = await context.newPage();
       await page.goto(baseUrl);
@@ -146,7 +146,7 @@ test.describe('RBAC functionality', () => {
       expect(await page.getByRole('button', { name: /upload/i })).not.toBeVisible();
     });
     test('read-only tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
-      test.skip(!['enterprise', 'staging'].includes(environment));
+      test.skip(!isEnterpriseOrStaging(environment));
       const context = await browser.newContext();
       const page = await context.newPage();
       await page.goto(baseUrl);
@@ -160,7 +160,7 @@ test.describe('RBAC functionality', () => {
       expect(await page.getByRole('button', { name: /upload/i })).not.toBeVisible();
     });
     test('manage tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
-      test.skip(!['enterprise', 'staging'].includes(environment));
+      test.skip(!isEnterpriseOrStaging(environment));
       const context = await browser.newContext();
       const page = await context.newPage();
       await page.goto(baseUrl);

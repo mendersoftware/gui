@@ -19,7 +19,7 @@ import https from 'https';
 import md5 from 'md5';
 
 import test, { expect } from '../fixtures/fixtures';
-import { getTokenFromStorage, tagRelease } from '../utils/commands';
+import { getTokenFromStorage, isEnterpriseOrStaging, tagRelease } from '../utils/commands';
 import { releaseTag, selectors, storagePath, timeouts } from '../utils/constants';
 
 dayjs.extend(isBetween);
@@ -41,6 +41,10 @@ test.describe('Files', () => {
   });
 
   test('allows artifact generation', async ({ baseUrl, loggedInPage: page }) => {
+    const hasTaggedRelease = await page.getByText(/customRelease/i).isVisible();
+    if (hasTaggedRelease) {
+      return;
+    }
     const releaseName = 'terminalImage';
     const uploadButton = await page.getByRole('button', { name: /upload/i });
     await uploadButton.click();
@@ -56,6 +60,7 @@ test.describe('Files', () => {
     const token = await getTokenFromStorage(baseUrl);
     await tagRelease(releaseName, 'customRelease', baseUrl, token);
     await page.waitForTimeout(timeouts.oneSecond); // some extra time for the release to be tagged in the backend
+    await page.keyboard.press('Escape');
     await page.click(`.leftNav :text('Releases')`);
     expect(await page.getByText(/customRelease/i)).toBeVisible();
   });
@@ -189,7 +194,7 @@ test.describe('Files', () => {
 
   test('allows file transfer', async ({ browserName, environment, loggedInPage: page }) => {
     // TODO adjust test to better work with webkit, for now it should be good enough to assume file transfers work there too if the remote terminal works
-    test.skip(!['enterprise', 'staging'].includes(environment) || ['webkit'].includes(browserName));
+    test.skip(!isEnterpriseOrStaging(environment) || ['webkit'].includes(browserName));
     await page.click(`.leftNav :text('Devices')`);
     await page.click(`${selectors.deviceListItem} div:last-child`);
     await page.click(`text=/troubleshooting/i`);

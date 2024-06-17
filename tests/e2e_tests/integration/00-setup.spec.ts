@@ -15,7 +15,16 @@ import { expect } from '@playwright/test';
 import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
-import { baseUrlToDomain, isLoggedIn, login, prepareCookies, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
+import {
+  baseUrlToDomain,
+  isEnterpriseOrStaging,
+  isLoggedIn,
+  login,
+  prepareCookies,
+  startDockerClient,
+  stopDockerClient,
+  tenantTokenRetrieval
+} from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Test setup', () => {
@@ -94,7 +103,7 @@ test.describe('Test setup', () => {
 
   test.describe('enterprise setting features, that happens to start up a docker client', () => {
     test('supports tenant token retrieval', async ({ baseUrl, context, environment, password, username }) => {
-      test.skip(!['enterprise', 'staging'].includes(environment));
+      test.skip(!isEnterpriseOrStaging(environment));
       console.log(`logging in user with username: ${username} and password: ${password}`);
       const { token: JWT, userId } = await login(username, password, baseUrl);
       const domain = baseUrlToDomain(baseUrl);

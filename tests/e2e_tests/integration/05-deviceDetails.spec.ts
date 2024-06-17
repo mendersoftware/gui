@@ -14,7 +14,7 @@
 import * as path from 'path';
 
 import test, { expect } from '../fixtures/fixtures';
-import { compareImages } from '../utils/commands';
+import { compareImages, isEnterpriseOrStaging } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 const terminalReferenceFileMap = {
@@ -70,7 +70,7 @@ test.describe('Device details', () => {
   });
 
   test('can be filtered into non-existence', async ({ environment, loggedInPage: page }) => {
-    test.skip(!['enterprise', 'staging'].includes(environment), 'not available in OS');
+    test.skip(!isEnterpriseOrStaging(environment), 'not available in OS');
     test.setTimeout(2 * timeouts.fifteenSeconds);
     await page.click(`.leftNav :text('Devices')`);
     await page.getByRole('button', { name: /filters/i }).click();
