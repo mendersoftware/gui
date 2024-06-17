@@ -14,8 +14,7 @@
 import React from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { prettyDOM } from '@testing-library/dom';
-import { act } from '@testing-library/react';
+import { act, prettyDOM } from '@testing-library/react';
 
 import { defaultState, undefineds } from '../../../../tests/mockData';
 import { render } from '../../../../tests/setupTests';

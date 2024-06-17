@@ -26,14 +26,13 @@ describe('Roles Component', () => {
     const { baseElement } = render(
       <RoleDefinition
         adding
-        editing
-        features={{}}
+        editing={false}
         onCancel={jest.fn}
         onSubmit={jest.fn}
         removeRole={jest.fn}
         stateGroups={defaultState.devices.groups.byId}
         stateReleaseTags={{}}
-        selectedRole={{ ...emptyRole }}
+        selectedRole={undefined}
       />
     );
     const view = baseElement.lastElementChild;
@@ -60,9 +59,8 @@ describe('Roles Component', () => {
 
     const { rerender } = render(
       <RoleDefinition
-        adding
+        adding={false}
         editing
-        features={{}}
         onCancel={jest.fn}
         onSubmit={jest.fn}
         removeRole={jest.fn}
@@ -77,9 +75,8 @@ describe('Roles Component', () => {
     delete selectedRole.uiPermissions.groups[nonExistingGroupName];
     rerender(
       <RoleDefinition
-        adding
+        adding={false}
         editing
-        features={{}}
         onCancel={jest.fn}
         onSubmit={jest.fn}
         removeRole={jest.fn}

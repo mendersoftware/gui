@@ -67,23 +67,23 @@ describe('Deployments Component', () => {
     }
   };
 
+  afterEach(async () => {
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+      jest.runAllTicks();
+    });
+  });
+
   it('renders correctly', async () => {
     const get = jest.spyOn(GeneralApi, 'get');
     const ui = <Deployments {...defaultLocationProps} />;
-    const { asFragment, rerender } = render(ui, { state: mockState });
-    await act(async () => {
-      jest.runAllTicks();
-      jest.advanceTimersByTime(2000);
-    });
-    await waitFor(() => rerender(ui));
-    await act(async () => {});
+    const { asFragment } = render(ui, { preloadedState: mockState });
+    await waitFor(() => expect(screen.getAllByRole('button', { name: /View details/i })).toBeTruthy());
     const view = asFragment();
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
-    await act(async () => {});
     await waitFor(() => expect(get).toHaveBeenCalledWith('/api/management/v2/inventory/filters?per_page=500'));
     expect(get).toHaveBeenCalledWith('/api/management/v2/inventory/filters?per_page=500');
-    await act(async () => {});
   });
 
   it('works as expected', async () => {
@@ -177,25 +177,20 @@ describe('Deployments Component', () => {
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
     expect(within(releaseSelect).queryByDisplayValue(releaseId)).not.toBeInTheDocument();
-    await act(async () => {
-      await user.click(releaseSelect);
-    });
+    await act(async () => await user.click(releaseSelect));
     await user.keyboard(specialKeys.ArrowDown);
     await user.keyboard(specialKeys.Enter);
-    act(() => jest.advanceTimersByTime(2000));
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
-    await user.click(groupSelect);
+    await act(async () => await user.click(groupSelect));
     await user.keyboard(specialKeys.Enter);
-    await waitFor(() => rerender(ui));
+    // await waitFor(() => rerender(ui));
     expect(groupSelect).toHaveValue(ALL_DEVICES);
     const post = jest.spyOn(GeneralApi, 'post');
-    await user.click(screen.getByRole('button', { name: 'Create deployment' }));
-    act(() => {
+    await act(async () => {
+      jest.runOnlyPendingTimers();
       jest.runAllTicks();
-      jest.advanceTimersByTime(2000);
     });
-    await waitFor(() => rerender(ui));
-    await act(async () => {});
+    await user.click(screen.getByRole('button', { name: 'Create deployment' }));
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
       artifact_name: releaseId,
@@ -208,9 +203,7 @@ describe('Deployments Component', () => {
       phases: undefined,
       update_control_map: undefined
     });
-    await jest.runAllTicks();
-    await waitFor(() => rerender(ui));
-    act(() => jest.advanceTimersByTime(1000));
+    await act(() => jest.advanceTimersByTime(1000));
     expect(screen.queryByText(/Cancel/i)).not.toBeInTheDocument();
   }, 20000);
 
@@ -259,24 +252,15 @@ describe('Deployments Component', () => {
     const { rerender } = render(ui, { preloadedState });
     await user.click(screen.getByRole('button', { name: /Create a deployment/i }));
     const releaseId = 'release-998';
-    act(() => {
-      jest.runAllTicks();
-      jest.advanceTimersByTime(2000);
-    });
-    await waitFor(() => rerender(ui));
     const groupSelect = screen.getByPlaceholderText(/Select a device group/i);
-    await user.click(groupSelect);
+    await act(async () => await user.click(groupSelect));
     await user.keyboard(specialKeys.Enter);
     expect(groupSelect).toHaveValue(ALL_DEVICES);
     await waitFor(() => expect(screen.queryByPlaceholderText(/Select a Release/i)).toBeInTheDocument(), { timeout: 3000 });
     const releaseSelect = screen.getByPlaceholderText(/Select a Release/i);
-    await act(async () => {
-      await user.click(releaseSelect);
-    });
+    await act(async () => await user.click(releaseSelect));
     await user.keyboard(specialKeys.ArrowDown);
     await user.keyboard(specialKeys.Enter);
-    act(() => jest.advanceTimersByTime(2000));
-    await waitFor(() => rerender(ui));
     await user.click(screen.getByRole('button', { name: /advanced options/i }));
     await user.click(screen.getByRole('checkbox', { name: /select a rollout pattern/i }));
     await waitFor(() => rerender(ui));
@@ -285,9 +269,7 @@ describe('Deployments Component', () => {
     await selectMaterialUiSelectOption(within(firstPhase).getByDisplayValue(/hours/i), /minutes/i, user);
     fireEvent.change(within(firstPhase).getByDisplayValue(20), { target: { value: '50' } });
     fireEvent.change(within(firstPhase).getByDisplayValue('2'), { target: { value: '30' } });
-    await act(async () => {
-      await user.click(screen.getByText(/Add a phase/i));
-    });
+    await user.click(screen.getByText(/Add a phase/i));
     const secondPhase = screen.getByText(/Phase 2/i).parentElement.parentElement.parentElement;
     await selectMaterialUiSelectOption(within(secondPhase).getByDisplayValue(/hours/i), /days/i, user);
     expect(within(secondPhase).getByText(/Phases must have at least 1 device/i)).toBeTruthy();
@@ -295,11 +277,14 @@ describe('Deployments Component', () => {
     fireEvent.change(within(secondPhase).getByDisplayValue('2'), { target: { value: '25' } });
     await user.click(screen.getByRole('checkbox', { name: /save as default/i }));
     const retrySelect = document.querySelector('#deployment-retries-selection');
-    await user.click(retrySelect);
+    await act(async () => await user.click(retrySelect));
     await user.keyboard(specialKeys.ArrowDown);
     await user.keyboard(specialKeys.Enter);
-    await user.keyboard('{Tab}');
-    act(() => jest.advanceTimersByTime(1000));
+    await user.tab();
+    await act(async () => {
+      jest.advanceTimersByTime(1000);
+      jest.runAllTicks();
+    });
     expect(retrySelect).toHaveValue(2);
 
     // extra explicit here as the general date mocking seems to be ignored by the moment/ date combination
@@ -309,14 +294,11 @@ describe('Deployments Component', () => {
     const post = jest.spyOn(GeneralApi, 'post');
     const creationButton = screen.getByText(/Create deployment/i);
     await user.click(creationButton);
-    await waitFor(() => rerender(ui));
     expect(creationButton).toBeDisabled();
-    act(() => {
-      jest.runAllTicks();
+    await act(async () => {
       jest.advanceTimersByTime(1000);
+      jest.runAllTicks();
     });
-    await waitFor(() => rerender(ui));
-    await act(async () => {});
     expect(post).toHaveBeenCalledWith('/api/management/v1/deployments/deployments', {
       all_devices: true,
       artifact_name: releaseId,

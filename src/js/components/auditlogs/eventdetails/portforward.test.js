@@ -39,7 +39,6 @@ describe('PortForward Component', () => {
         }
       }
     });
-    await act(async () => {});
     await waitFor(() => rerender(ui));
     await act(async () => {
       jest.runOnlyPendingTimers();

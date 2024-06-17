@@ -36,10 +36,8 @@ describe('KeyValueEditor Component', () => {
 
     const ui = <KeyValueEditor onInputChange={submitMock} />;
     const { rerender } = render(ui);
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-      await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector(fabSelector)).not.toBeDisabled();
     await user.click(document.querySelector(fabSelector));
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValue' });
@@ -49,9 +47,7 @@ describe('KeyValueEditor Component', () => {
       jest.runAllTimers();
       jest.runAllTicks();
     });
-    await act(async () => {
-      await user.type(screen.getByDisplayValue('testValue'), 's');
-    });
+    await user.type(screen.getByDisplayValue('testValue'), 's');
     expect(submitMock).toHaveBeenLastCalledWith({ testKey: 'testValues' });
   });
 
@@ -59,16 +55,12 @@ describe('KeyValueEditor Component', () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = <KeyValueEditor onInputChange={jest.fn} />;
     const { rerender } = render(ui);
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-      await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
-      await user.click(document.querySelector(fabSelector));
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
+    await user.click(document.querySelector(fabSelector));
     await waitFor(() => rerender(ui));
-    await act(async () => {
-      await user.type(screen.getAllByPlaceholderText(/key/i)[1], 'testKey');
-      await user.type(screen.getAllByPlaceholderText(/value/i)[1], 'testValue2');
-    });
+    await user.type(screen.getAllByPlaceholderText(/key/i)[1], 'testKey');
+    await user.type(screen.getAllByPlaceholderText(/value/i)[1], 'testValue2');
     expect(screen.getByText(/Duplicate keys exist/i)).toBeInTheDocument();
   });
 
@@ -76,10 +68,8 @@ describe('KeyValueEditor Component', () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = <KeyValueEditor errortext="I should be rendered" onInputChange={jest.fn} />;
     render(ui);
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-      await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(screen.getByText(/I should be rendered/i)).toBeInTheDocument();
   });
 
@@ -94,13 +84,9 @@ describe('KeyValueEditor Component', () => {
 
     const ui = <KeyValueEditor inputHelpTipsMap={helptipsMap} onInputChange={jest.fn} />;
     render(ui);
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'timezon');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'timezon');
     expect(screen.queryByText(/testthing/i)).not.toBeInTheDocument();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'e');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'e');
     expect(screen.getByText(/testthing/i)).toBeInTheDocument();
   });
 });

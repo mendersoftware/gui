@@ -42,6 +42,7 @@ describe('SelfUserManagement Component', () => {
     const view = baseElement.firstChild.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+    await act(async () => jest.runAllTimers());
   });
 
   it('works as intended', async () => {
@@ -55,14 +56,10 @@ describe('SelfUserManagement Component', () => {
 
     await user.click(screen.getByRole('button', { name: /email/i }));
     const input = screen.getByDisplayValue(defaultState.users.byId.a1.email);
-    await act(async () => {
-      await user.clear(input);
-      await user.type(input, 'test@test');
-    });
+    await user.clear(input);
+    await user.type(input, 'test@test');
     expect(screen.getByText(/enter a valid email address/i)).toBeInTheDocument();
-    await act(async () => {
-      await user.type(input, '.com');
-    });
+    await user.type(input, '.com');
     expect(screen.queryByText(/enter a valid email address/i)).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /cancel/i }));
 
@@ -73,27 +70,22 @@ describe('SelfUserManagement Component', () => {
     expect(copyCheck).toHaveBeenCalled();
     await user.click(screen.getByRole('button', { name: /cancel/i }));
     await user.click(screen.getByText(/Enable Two Factor authentication/i));
+    await act(async () => jest.runAllTicks());
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/Scan the QR code on the right/i)).toBeInTheDocument();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/Verification code/i), '1234');
-    });
+    await user.type(screen.getByPlaceholderText(/Verification code/i), '1234');
     expect(screen.getByText(/Must be at least 6 characters long/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Verify/i })).toBeDisabled();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/Verification code/i), '56');
-    });
+    await user.type(screen.getByPlaceholderText(/Verification code/i), '56');
+    await waitFor(() => rerender(ui));
     expect(screen.getByRole('button', { name: /Verify/i })).not.toBeDisabled();
     expect(screen.queryByText(/Must be at least 6 characters long/i)).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Verify/i }));
-    act(() => {
-      jest.runAllTimers();
-      jest.runAllTicks();
-    });
+    await act(async () => jest.runAllTicks());
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(/Verifying/)).not.toBeInTheDocument(), { timeout: 5000 });
     await user.click(screen.getByRole('button', { name: /Save/i }));
-    await act(async () => {});
     await waitFor(() => rerender(ui));
+    await act(async () => jest.runAllTicks());
   }, 15000);
 });

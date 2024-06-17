@@ -48,7 +48,7 @@ describe('PreauthDialog Component', () => {
   });
 
   it('works as intended', async () => {
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime, applyAccept: false });
     const submitMock = jest.fn();
     const menderFile = new File(['testContent plain'], 'test.pem');
     const preAuthSpy = jest.spyOn(DeviceActions, 'preauthDevice');
@@ -61,9 +61,7 @@ describe('PreauthDialog Component', () => {
     expect(screen.getByText(/upload a public key file/i)).toBeInTheDocument();
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector(dropzone);
-    await act(async () => {
-      await user.upload(uploadInput, menderFile);
-    });
+    await act(async () => await user.upload(uploadInput, menderFile));
     await waitFor(() => rerender(ui));
 
     expect(uploadInput.files).toHaveLength(1);
@@ -71,14 +69,15 @@ describe('PreauthDialog Component', () => {
     expect(screen.getByDisplayValue('test.pem')).toBeInTheDocument();
     const fabSelector = '.MuiFab-root';
     expect(document.querySelector(fabSelector)).toBeDisabled();
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-      await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
     expect(document.querySelector(fabSelector)).not.toBeDisabled();
     await user.click(document.querySelector(fabSelector));
-    await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(errorText)).not.toBeInTheDocument());
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+      jest.runAllTicks();
+    });
     submitMock.mockRejectedValueOnce(errorText);
     await user.click(screen.getByRole('button', { name: 'Save' }));
     act(() => {
@@ -87,13 +86,9 @@ describe('PreauthDialog Component', () => {
     });
     await waitFor(() => rerender(ui));
     await waitFor(() => expect(screen.queryByText(errorText)).toBeTruthy());
-    await act(async () => {
-      await user.type(screen.getByDisplayValue('testValue'), 'testValues');
-    });
+    await user.type(screen.getByDisplayValue('testValue'), 'testValues');
     await waitFor(() => expect(screen.queryByText(errorText)).not.toBeInTheDocument());
-    await act(async () => {
-      await user.click(screen.getByRole('button', { name: 'Save and add another' }));
-    });
+    await user.click(screen.getByRole('button', { name: 'Save and add another' }));
     await waitFor(() => rerender(ui));
     expect(screen.queryByText('reached your limit')).toBeFalsy();
     expect(preAuthSpy).toHaveBeenCalled();
@@ -111,14 +106,10 @@ describe('PreauthDialog Component', () => {
     const { rerender } = render(ui);
     // container.querySelector doesn't work in this scenario for some reason -> but querying document seems to work
     const uploadInput = document.querySelector(dropzone);
-    await act(async () => {
-      await user.upload(uploadInput, menderFile);
-    });
+    await act(async () => await user.upload(uploadInput, menderFile));
     await waitFor(() => rerender(ui));
-    await act(async () => {
-      await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
-      await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
-    });
+    await user.type(screen.getByPlaceholderText(/key/i), 'testKey');
+    await user.type(screen.getByPlaceholderText(/value/i), 'testValue');
     await waitFor(() => rerender(ui));
     expect(screen.getByText(/You have reached your limit/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();

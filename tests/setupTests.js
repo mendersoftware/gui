@@ -19,7 +19,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import '@testing-library/jest-dom';
-import { act, cleanup, queryByRole, render, within } from '@testing-library/react';
+import { act, cleanup, queryByRole, render, waitFor, within } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { MessageChannel } from 'worker_threads';
 
@@ -136,19 +136,14 @@ export const selectMaterialUiSelectOption = async (element, optionText, user) =>
   // The button that opens the dropdown, which is a sibling of the input
   const selectButton = element.parentNode.querySelector('[role=combobox]');
   // Open the select dropdown
-  await act(async () => {
-    await user.click(selectButton);
-  });
+  await act(async () => await user.click(selectButton));
   // Get the dropdown element. We don't use getByRole() because it includes <select>s too.
   const listbox = document.body.querySelector('ul[role=listbox]');
   // Click the list item
   const listItem = within(listbox).getByText(optionText);
-  await act(async () => {
-    await user.click(listItem);
-  });
+  await user.click(listItem);
   // Wait for the listbox to be removed, so it isn't visible in subsequent calls
-  await act(async () => jest.advanceTimersByTime(150));
-  expect(queryByRole(document.documentElement, 'listbox')).not.toBeInTheDocument();
+  await waitFor(() => expect(queryByRole(document.documentElement, 'listbox')).not.toBeInTheDocument());
   return Promise.resolve();
 };
 

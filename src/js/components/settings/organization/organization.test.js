@@ -100,16 +100,11 @@ describe('MyOrganization Component', () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     const ui = <MyOrganization />;
     const { rerender } = render(ui, { preloadedState: { ...preloadedState, users: { ...preloadedState.users, currentSession: getSessionInfo() } } });
-    await waitFor(() => rerender(ui));
-    await act(async () => {
-      jest.runOnlyPendingTimers();
-      jest.runAllTicks();
-    });
+    await waitFor(() => expect(screen.getByText(/text editor/i)).toBeVisible());
     expect(screen.getByText(/text editor/i)).toBeVisible();
     await user.click(screen.getByText(/text editor/i));
-    await waitFor(() => rerender(ui));
     expect(screen.getByText(/import from a file/i)).toBeVisible();
-    await user.upload(screen.getByText(/import from a file/i).previousSibling, file);
+    await act(async () => await user.upload(screen.getByText(/import from a file/i).previousSibling, file));
     await waitFor(() => expect(document.querySelector(`.${drawerClasses.root}`)).toBeVisible());
     await user.click(screen.getByTestId('CloseIcon'));
     await waitFor(() => rerender(ui));
@@ -118,7 +113,6 @@ describe('MyOrganization Component', () => {
     while (screen.queryByText(/entity id/i)) {
       await user.click(screen.getByRole('checkbox'));
       await user.click(screen.getByRole('button', { name: /save/i }));
-      await waitFor(() => rerender(ui));
     }
   });
 });

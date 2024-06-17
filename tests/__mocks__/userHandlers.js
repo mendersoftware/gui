@@ -89,7 +89,10 @@ export const userHandlers = [
   }),
   http.put(`${useradmApiUrl}/users/:userId`, async ({ params: { userId }, request }) => {
     const { email, password } = await request.json();
-    if (defaultState.users.byId[userId] && [email, password].some(value => Object.values(defaultState.users.byId[userId]).includes(value))) {
+    if (
+      (defaultState.users.byId[userId] && [email, password].some(value => Object.values(defaultState.users.byId[userId]).includes(value))) ||
+      email === 'test@test.com'
+    ) {
       return new HttpResponse(null, { status: 200 });
     }
     return new HttpResponse(null, { status: 565 });

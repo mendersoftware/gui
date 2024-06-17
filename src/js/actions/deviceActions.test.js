@@ -3,13 +3,12 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Link } from 'react-router-dom';
 
-import { waitFor } from '@testing-library/dom';
 import configureMockStore from 'redux-mock-store';
 import { thunk } from 'redux-thunk';
 
 import { inventoryDevice } from '../../../tests/__mocks__/deviceHandlers';
 import { defaultState } from '../../../tests/mockData';
-import { mockAbortController } from '../../../tests/setupTests';
+import { mockAbortController, waitFor } from '../../../tests/setupTests';
 import { SET_SNACKBAR, TIMEOUTS, UPLOAD_PROGRESS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
