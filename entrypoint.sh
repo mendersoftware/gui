@@ -36,7 +36,6 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       hasDeviceConnect: "$HAVE_DEVICECONNECT",
       hasDeltaProgress: "$HAVE_DELTA_PROGRESS",
       hasMonitor: "$HAVE_MONITOR",
-      hasMultiTenantAccess: "$HAVE_MULTI_TENANT_ACCESS",
       hasMultitenancy: "$HAVE_MULTITENANT",
       hasReleaseTags: "$HAVE_RELEASE_TAGS",
       hasReporting: "$HAVE_REPORTING",
