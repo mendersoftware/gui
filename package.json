@@ -192,7 +192,7 @@
     "lint-fix": "eslint --fix src && eslint --fix tests",
     "serve": "./entrypoint.sh && webpack serve  --mode development",
     "test": "node test.js",
-    "test-types": "tsc --project ./tsconfig-test.json --allowJs",
+    "test-types": "tsc --project ./tsconfig-test.json",
     "watch": "webpack --watch --mode development"
   },
   "author": "Northern.tech AS",
