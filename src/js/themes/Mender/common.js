@@ -45,7 +45,8 @@ export const palette = {
      */
     primary: 'rgba(10, 10, 11, 0.78)',
     secondary: secondaryText,
-    hint: secondaryText
+    hint: secondaryText,
+    link: '#679ba5'
   },
   brand: {
     mender: '#015969',

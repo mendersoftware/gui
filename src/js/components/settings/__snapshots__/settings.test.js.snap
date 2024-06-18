@@ -979,7 +979,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-31:focus::-ms-input-
     </a>
   </ul>
   <div
-    class="rightFluid padding-right"
+    class="rightFluid padding-right-large"
     style="padding-bottom: 15%;"
   >
     <div

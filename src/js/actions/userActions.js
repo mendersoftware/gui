@@ -18,7 +18,7 @@ import Cookies from 'universal-cookie';
 
 import GeneralApi, { apiRoot } from '../api/general-api';
 import UsersApi from '../api/users-api';
-import { cleanUp, maxSessionAge, setSessionInfo } from '../auth';
+import { cleanUp, getSessionInfo, maxSessionAge, setSessionInfo } from '../auth';
 import { HELPTOOLTIPS } from '../components/helptips/helptooltips';
 import * as AppConstants from '../constants/appConstants';
 import { APPLICATION_JSON_CONTENT_TYPE, APPLICATION_JWT_CONTENT_TYPE } from '../constants/appConstants';
@@ -120,6 +120,16 @@ export const logoutUser = () => (dispatch, getState) => {
     cleanUp();
     clearAllRetryTimers(setSnackbar);
     return Promise.resolve(dispatch({ type: UserConstants.USER_LOGOUT }));
+  });
+};
+
+export const switchUserOrganization = tenantId => (_, getState) => {
+  if (Object.keys(getState().app.uploadsById).length) {
+    return Promise.reject();
+  }
+  return GeneralApi.get(`${useradmApiUrl}/users/tenants/${tenantId}/token`).then(({ data: token }) => {
+    setSessionInfo({ ...getSessionInfo(), token });
+    window.location.reload();
   });
 };
 

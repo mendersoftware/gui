@@ -67,7 +67,8 @@ beforeAll(async () => {
     ...oldWindowLocation,
     hostname: TEST_LOCATION,
     assign: jest.fn(),
-    replace: jest.fn()
+    replace: jest.fn(),
+    reload: jest.fn()
   };
   delete window.sessionStorage;
   window.sessionStorage = {
