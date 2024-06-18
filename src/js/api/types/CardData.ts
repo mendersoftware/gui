@@ -1,8 +1,7 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 /**
  * Card information stored in Stripe. The full type description is available at "https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.yaml#/components/schemas/payment_method_card"
  */

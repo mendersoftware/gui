@@ -1,8 +1,7 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 /**
  * Sort criteria definition
  */
@@ -20,7 +19,6 @@ export type SortCriteria = {
    */
   order: SortCriteria.order;
 };
-
 export namespace SortCriteria {
   /**
    * Order direction, ascending ("asc") or descending ("desc").

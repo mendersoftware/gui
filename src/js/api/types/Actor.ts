@@ -1,8 +1,7 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 /**
  * The actor may be a user or device.
  * Depending on the type of the actor different information will be available.
@@ -25,7 +24,6 @@ export type Actor = {
    */
   identity_data?: string;
 };
-
 export namespace Actor {
   /**
    * The type of the actor.
