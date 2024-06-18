@@ -1,12 +1,10 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { ArtifactInfo } from "./ArtifactInfo";
 import type { DeviceStatus } from "./DeviceStatus";
 import type { Update } from "./Update";
-
 export type DeviceWithImage = {
   /**
    * Device identifier.

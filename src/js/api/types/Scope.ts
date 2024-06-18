@@ -1,8 +1,7 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 export type Scope = {
   /**
    * Type of the scope.
@@ -10,7 +9,6 @@ export type Scope = {
   type: Scope.type;
   value: Array<string>;
 };
-
 export namespace Scope {
   /**
    * Type of the scope.

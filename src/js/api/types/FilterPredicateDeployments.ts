@@ -1,8 +1,7 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 /**
  * Attribute filter predicate
  */
@@ -31,7 +30,6 @@ export type FilterPredicateDeployments = {
    */
   value: string;
 };
-
 export namespace FilterPredicateDeployments {
   /**
    * Type or operator of the filter predicate.
