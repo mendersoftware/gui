@@ -764,6 +764,8 @@ export const setHideAnnouncement = (shouldHide, userId) => (dispatch, getState) 
   return Promise.resolve();
 };
 
+export const setShowStartupNotification = show => dispatch => dispatch({ type: UserConstants.SET_SHOW_STARTUP_NOTIFICATION, value: Boolean(show) });
+
 export const getTokens = () => (dispatch, getState) =>
   GeneralApi.get(`${useradmApiUrl}/settings/tokens`).then(({ data: tokens }) => {
     const user = getCurrentUser(getState());

@@ -33,6 +33,8 @@ export const initialState = {
   rolesById: {
     ...UserConstants.rolesById
   },
+  showConnectDeviceDialog: false,
+  showStartupNotification: false,
   tooltips: {
     byId: {
       // <id>: { readState: <read|unread> } // this object is getting enhanced by the tooltip texts in the app constants
@@ -156,6 +158,11 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         showConnectDeviceDialog: action.show
+      };
+    case UserConstants.SET_SHOW_STARTUP_NOTIFICATION:
+      return {
+        ...state,
+        showStartupNotification: action.value
       };
     case UserConstants.SET_TOOLTIP_STATE:
       return {

@@ -11,6 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+import moment from 'moment';
 import Cookies from 'universal-cookie';
 
 import GeneralApi from '../api/general-api';
@@ -26,11 +27,11 @@ import {
   TIMEOUTS
 } from '../constants/appConstants';
 import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
-import { DEVICE_STATES } from '../constants/deviceConstants';
+import { DEVICE_STATES, timeUnits } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { SET_TOOLTIPS_STATE, SUCCESSFULLY_LOGGED_IN } from '../constants/userConstants';
 import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
-import { getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserSettings as getUserSettingsSelector } from '../selectors';
+import { getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserCapabilities, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeploymentsByStatus } from './deploymentActions';
 import {
@@ -46,7 +47,7 @@ import {
 import { getOnboardingState, setDemoArtifactPort, setOnboardingComplete } from './onboardingActions';
 import { getIntegrations, getUserOrganization } from './organizationActions';
 import { getReleases } from './releaseActions';
-import { getGlobalSettings, getRoles, getUserSettings, saveGlobalSettings, saveUserSettings } from './userActions';
+import { getGlobalSettings, getRoles, getUserSettings, saveGlobalSettings, saveUserSettings, setShowStartupNotification } from './userActions';
 
 const cookies = new Cookies();
 
@@ -170,6 +171,20 @@ const interpretAppData = () => (dispatch, getState) => {
     dispatch(saveUserSettings(settings))
   ];
   tasks = maybeAddOnboardingTasks({ devicesByStatus: state.devices.byStatus, dispatch, tasks, onboardingState: state.onboarding });
+
+  const { canManageUsers } = getUserCapabilities(getState());
+  const { interval, intervalUnit } = getOfflineThresholdSettings(getState());
+  if (canManageUsers && intervalUnit && intervalUnit !== timeUnits.days) {
+    const duration = moment.duration(interval, intervalUnit);
+    const days = duration.asDays();
+    if (days < 1) {
+      tasks.push(Promise.resolve(setTimeout(() => dispatch(setShowStartupNotification(true)), TIMEOUTS.fiveSeconds)));
+    } else {
+      const roundedDays = Math.max(1, Math.round(days));
+      tasks.push(dispatch(saveGlobalSettings({ offlineThreshold: { interval: roundedDays, intervalUnit: timeUnits.days } })));
+    }
+  }
+
   // the following is used as a migration and initialization of the stored identity attribute
   // changing the default device attribute to the first non-deviceId attribute, unless a stored
   // id attribute setting exists

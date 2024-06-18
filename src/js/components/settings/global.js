@@ -14,14 +14,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Switch, TextField, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { getDeviceAttributes } from '../../actions/deviceActions';
 import { changeNotificationSetting } from '../../actions/monitorActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
-import { offlineThresholds, timeUnits } from '../../constants/deviceConstants';
+import { DEVICE_ONLINE_CUTOFF } from '../../constants/deviceConstants';
 import { alertChannels } from '../../constants/monitorConstants';
 import { settingsKeys } from '../../constants/userConstants';
 import {
@@ -44,9 +44,10 @@ const maxWidth = 750;
 
 const useStyles = makeStyles()(theme => ({
   threshold: {
+    alignItems: 'baseline',
+    columnGap: theme.spacing(2),
     display: 'grid',
-    gridTemplateColumns: '100px 100px',
-    columnGap: theme.spacing(2)
+    gridTemplateColumns: '100px 100px'
   },
   textInput: {
     marginTop: 0,
@@ -131,9 +132,8 @@ export const GlobalSettingsDialog = ({
 }) => {
   const [channelSettings, setChannelSettings] = useState(notificationChannelSettings);
   const [currentInterval, setCurrentInterval] = useState(offlineThresholdSettings.interval);
-  const [currentIntervalUnit, setCurrentIntervalUnit] = useState(offlineThresholdSettings.intervalUnit);
   const [intervalErrorText, setIntervalErrorText] = useState('');
-  const debouncedOfflineThreshold = useDebounce({ interval: currentInterval, intervalUnit: currentIntervalUnit }, TIMEOUTS.threeSeconds);
+  const debouncedOfflineThreshold = useDebounce(currentInterval, TIMEOUTS.threeSeconds);
   const timer = useRef(false);
   const { classes } = useStyles();
   const { needsDeploymentConfirmation = false } = settings;
@@ -146,16 +146,15 @@ export const GlobalSettingsDialog = ({
 
   useEffect(() => {
     setCurrentInterval(offlineThresholdSettings.interval);
-    setCurrentIntervalUnit(offlineThresholdSettings.intervalUnit);
-  }, [offlineThresholdSettings.interval, offlineThresholdSettings.intervalUnit]);
+  }, [offlineThresholdSettings.interval]);
 
   useEffect(() => {
     if (!window.sessionStorage.getItem(settingsKeys.initialized) || !timer.current) {
       return;
     }
-    saveGlobalSettings({ offlineThreshold: debouncedOfflineThreshold }, false, true);
+    saveGlobalSettings({ offlineThreshold: { interval: debouncedOfflineThreshold, intervalUnit: DEVICE_ONLINE_CUTOFF.intervalName } }, false, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(debouncedOfflineThreshold), saveGlobalSettings]);
+  }, [debouncedOfflineThreshold, saveGlobalSettings]);
 
   useEffect(() => {
     const initTimer = setTimeout(() => (timer.current = true), TIMEOUTS.fiveSeconds);
@@ -169,7 +168,6 @@ export const GlobalSettingsDialog = ({
     onChangeNotificationSetting(!checked, channel);
   };
 
-  const onChangeOfflineIntervalUnit = ({ target: { value } }) => setCurrentIntervalUnit(value);
   const onChangeOfflineInterval = ({ target: { validity, value } }) => {
     if (validity.valid) {
       setCurrentInterval(value || 1);
@@ -181,11 +179,7 @@ export const GlobalSettingsDialog = ({
   const toggleDeploymentConfirmation = () => {
     saveGlobalSettings({ needsDeploymentConfirmation: !needsDeploymentConfirmation });
   };
-  // sets interval to one day whenever disabled interval unit is used (MEN-6831). Should be removed later
-  if (currentIntervalUnit && currentIntervalUnit !== timeUnits.days) {
-    setCurrentIntervalUnit(timeUnits.days);
-    setCurrentInterval(1);
-  }
+
   return (
     <div style={{ maxWidth }} className="margin-top-small">
       <div className="flexbox center-aligned">
@@ -223,13 +217,6 @@ export const GlobalSettingsDialog = ({
         Offline threshold
       </InputLabel>
       <div className={classes.threshold}>
-        <Select onChange={onChangeOfflineIntervalUnit} value={currentIntervalUnit}>
-          {offlineThresholds.map(value => (
-            <MenuItem key={value} value={value}>
-              <div className="capitalized-start">{value}</div>
-            </MenuItem>
-          ))}
-        </Select>
         <TextField
           className={classes.textInput}
           type="number"
@@ -238,6 +225,9 @@ export const GlobalSettingsDialog = ({
           error={!!intervalErrorText}
           value={currentInterval}
         />
+        <Typography className="capitalized-start" variant="body1">
+          {DEVICE_ONLINE_CUTOFF.intervalName}
+        </Typography>
       </div>
       {!!intervalErrorText && (
         <FormHelperText className="warning" component="div">
@@ -284,16 +274,15 @@ export const GlobalSettingsContainer = ({ closeDialog, dialog }) => {
     }
   };
 
-  const saveAttributeSetting = (e, id_attribute) => {
-    return dispatch(saveGlobalSettings({ ...updatedSettings, id_attribute }, false, true)).then(() => {
+  const onChangeNotificationSetting = useCallback((...args) => dispatch(changeNotificationSetting(...args)), [dispatch]);
+  const onSaveGlobalSettings = useCallback((...args) => dispatch(saveGlobalSettings(...args)), [dispatch]);
+
+  const saveAttributeSetting = (e, id_attribute) =>
+    onSaveGlobalSettings({ ...updatedSettings, id_attribute }, false, true).then(() => {
       if (dialog) {
         closeDialog(e);
       }
     });
-  };
-
-  const onChangeNotificationSetting = useCallback((...args) => dispatch(changeNotificationSetting(...args)), [dispatch]);
-  const onSaveGlobalSettings = useCallback((...args) => dispatch(saveGlobalSettings(...args)), [dispatch]);
 
   if (dialog) {
     return (
