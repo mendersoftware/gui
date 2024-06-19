@@ -63,6 +63,11 @@
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "@typescript-eslint/eslint-plugin": "7.11.0",
     "@typescript-eslint/parser": "7.11.0",
+    "@babel/preset-typescript": "^7.21.4",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.2",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "assert": "2.1.0",
     "autoprefixer": "10.4.19",
     "babel-jest": "~29.7.0",
@@ -101,6 +106,7 @@
     "process": "0.11.10",
     "redux-mock-store": "1.5.4",
     "stream-browserify": "3.0.0",
+    "typescript": "^5.2.2",
     "undici": "^5.28.4",
     "util": "0.12.5",
     "webpack": "5.91.0",
@@ -180,13 +186,14 @@
     ]
   },
   "scripts": {
-    "build": "webpack --mode production --entry ./src/js/main.js",
+    "build": "webpack --mode production",
     "disclaim": "yarn licenses generate-disclaimer > disclaimer.txt",
     "lint": "eslint src && eslint tests",
     "lint-fix": "eslint --fix src && eslint --fix tests",
-    "serve": "./entrypoint.sh && webpack serve  --mode development --entry ./src/js/main.js",
+    "serve": "./entrypoint.sh && webpack serve  --mode development",
     "test": "node test.js",
-    "watch": "webpack --watch --mode development --entry ./src/js/main.js"
+    "test-types": "tsc --project ./tsconfig-test.json",
+    "watch": "webpack --watch --mode development"
   },
   "author": "Northern.tech AS",
   "license": "Apache-2.0",
