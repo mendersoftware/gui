@@ -118,7 +118,7 @@ export const Settings = () => {
   return (
     <div className="tab-container with-sub-panels" style={{ minHeight: '95%' }}>
       <LeftNav sections={[{ itemClass: 'settingsNav', items: links, title: 'Settings' }]} />
-      <div className="rightFluid padding-right" style={{ paddingBottom: '15%' }}>
+      <div className="rightFluid padding-right-large" style={{ paddingBottom: '15%' }}>
         {loadingFinished && (
           <Elements stripe={stripePromise}>
             <Component />

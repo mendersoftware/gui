@@ -1,10 +1,8 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { ManagementAPIConfiguration } from "./ManagementAPIConfiguration";
-
 export type DeviceConfiguration = {
   id?: string;
   configured?: ManagementAPIConfiguration;

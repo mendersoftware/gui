@@ -15,13 +15,25 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { AccountCircle as AccountCircleIcon, ExitToApp as ExitIcon, ExpandMore } from '@mui/icons-material';
 import {
-  AccountCircle as AccountCircleIcon,
-  ArrowDropDown as ArrowDropDownIcon,
-  ArrowDropUp as ArrowDropUpIcon,
-  ExitToApp as ExitIcon
-} from '@mui/icons-material';
-import { Button, IconButton, ListItemSecondaryAction, ListItemText, Menu, MenuItem, Toolbar } from '@mui/material';
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Divider,
+  IconButton,
+  ListItemSecondaryAction,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+  accordionClasses,
+  accordionSummaryClasses,
+  listItemTextClasses,
+  menuItemClasses
+} from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import moment from 'moment';
@@ -33,10 +45,10 @@ import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
 import { getAllDeviceCounts } from '../../actions/deviceActions';
-import { initializeSelf, logoutUser, setAllTooltipsReadState, setHideAnnouncement } from '../../actions/userActions';
+import { initializeSelf, logoutUser, setAllTooltipsReadState, setHideAnnouncement, switchUserOrganization } from '../../actions/userActions';
 import { TIMEOUTS } from '../../constants/appConstants';
 import { READ_STATES } from '../../constants/userConstants';
-import { isDarkMode } from '../../helpers';
+import { isDarkMode, toggle } from '../../helpers';
 import {
   getAcceptedDevices,
   getCurrentSession,
@@ -47,7 +59,6 @@ import {
   getIsEnterprise,
   getOrganization,
   getShowHelptips,
-  getUserCapabilities,
   getUserSettings
 } from '../../selectors';
 import Tracking from '../../tracking';
@@ -73,6 +84,19 @@ const currentOffer = {
 const cookies = new Cookies();
 
 const useStyles = makeStyles()(theme => ({
+  accordion: {
+    ul: { paddingInlineStart: 0 },
+    [`&.${accordionClasses.disabled}, &.${accordionClasses.expanded}`]: {
+      backgroundColor: theme.palette.background.paper
+    },
+    [`.${accordionSummaryClasses.root}:hover`]: {
+      backgroundColor: theme.palette.grey[400],
+      color: theme.palette.text.link
+    },
+    [`.${menuItemClasses.root}:hover`]: {
+      color: theme.palette.text.link
+    }
+  },
   header: {
     minHeight: 'unset',
     paddingLeft: theme.spacing(4),
@@ -83,7 +107,13 @@ const useStyles = makeStyles()(theme => ({
   },
   banner: { gridTemplateRows: `1fr ${theme.mixins.toolbar.minHeight}px` },
   buttonColor: { color: theme.palette.grey[600] },
-  dropDown: { height: '100%', marginLeft: theme.spacing(0.5), textTransform: 'none' },
+  dropDown: {
+    height: '100%',
+    textTransform: 'none',
+    [`.${menuItemClasses.root}:hover, .${listItemTextClasses.root}:hover`]: {
+      color: theme.palette.text.link
+    }
+  },
   exitIcon: { color: theme.palette.grey[600], fill: theme.palette.grey[600] },
   demoTrialAnnouncement: {
     fontSize: 14,
@@ -97,19 +127,108 @@ const useStyles = makeStyles()(theme => ({
       height: 'inherit'
     }
   },
+  organization: { marginBottom: theme.spacing() },
   redAnnouncementIcon: {
     color: theme.palette.error.dark
   }
 }));
 
+const AccountMenu = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [tenantSwitcherShowing, setTenantSwitcherShowing] = useState(false);
+  const showHelptips = useSelector(getShowHelptips);
+  const { email, tenants = [] } = useSelector(getCurrentUser);
+  const { name } = useSelector(getOrganization);
+  const isEnterprise = useSelector(getIsEnterprise);
+  const { hasMultitenancy, isHosted } = useSelector(getFeatures);
+  const multitenancy = hasMultitenancy || isEnterprise || isHosted;
+  const dispatch = useDispatch();
+
+  const { classes } = useStyles();
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setTenantSwitcherShowing(false);
+  };
+
+  const handleSwitchTenant = id => dispatch(switchUserOrganization(id));
+
+  const onLogoutClick = () => {
+    setAnchorEl(null);
+    dispatch(logoutUser()).then(() => window.location.replace('/ui/'));
+  };
+
+  const onToggleTooltips = () => dispatch(setAllTooltipsReadState(showHelptips ? READ_STATES.read : READ_STATES.unread));
+
+  return (
+    <>
+      <Button className={classes.dropDown} onClick={e => setAnchorEl(e.currentTarget)} startIcon={<AccountCircleIcon className={classes.buttonColor} />}>
+        {email}
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        className={classes.dropDown}
+        onClose={handleClose}
+        open={Boolean(anchorEl)}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+      >
+        <MenuItem component={Link} to="/settings/my-profile" onClick={handleClose}>
+          My profile
+        </MenuItem>
+        <Divider />
+        {!!(multitenancy && name) && (
+          <MenuItem component={Link} dense to="/settings/organization-and-billing" onClick={handleClose} className={classes.organization}>
+            <div>
+              <Typography variant="caption" className="muted">
+                My organization
+              </Typography>
+              <Typography variant="subtitle2">{name}</Typography>
+            </div>
+          </MenuItem>
+        )}
+        {tenants.length > 1 && (
+          <div>
+            <Divider style={{ marginBottom: 0 }} />
+            <Accordion className={classes.accordion} square expanded={tenantSwitcherShowing} onChange={() => setTenantSwitcherShowing(toggle)}>
+              <AccordionSummary expandIcon={<ExpandMore />}>Switch organization</AccordionSummary>
+              <AccordionDetails className="padding-left-none padding-right-none">
+                {tenants.map(({ id, name }) => (
+                  <MenuItem className="padding-left padding-right" key={id} onClick={() => handleSwitchTenant(id)}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        )}
+        <Divider />
+        <MenuItem component={Link} to="/settings/global-settings" onClick={handleClose}>
+          Settings
+        </MenuItem>
+        <MenuItem onClick={onToggleTooltips}>{`Mark help tips as ${showHelptips ? '' : 'un'}read`}</MenuItem>
+        <MenuItem component={Link} to="/help/get-started" onClick={handleClose}>
+          Help & support
+        </MenuItem>
+        <MenuItem onClick={onLogoutClick}>
+          <ListItemText primary="Log out" />
+          <ListItemSecondaryAction>
+            <IconButton>
+              <ExitIcon className={classes.exitIcon} />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
+
 export const Header = ({ mode }) => {
   const { classes } = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
   const [gettingUser, setGettingUser] = useState(false);
   const [hasOfferCookie, setHasOfferCookie] = useState(false);
 
   const organization = useSelector(getOrganization);
-  const { canManageUsers: allowUserManagement } = useSelector(getUserCapabilities);
   const { total: acceptedDevices = 0 } = useSelector(getAcceptedDevices);
   const announcement = useSelector(state => state.app.hostedAnnouncement);
   const deviceLimit = useSelector(getDeviceLimit);
@@ -117,9 +236,8 @@ export const Header = ({ mode }) => {
   const { trackingConsentGiven: hasTrackingEnabled } = useSelector(getUserSettings);
   const inProgress = useSelector(state => state.deployments.byStatus.inprogress.total);
   const isEnterprise = useSelector(getIsEnterprise);
-  const { isDemoMode: demo, hasMultitenancy, isHosted } = useSelector(getFeatures);
+  const { isDemoMode: demo, isHosted } = useSelector(getFeatures);
   const { isSearching, searchTerm, refreshTrigger } = useSelector(state => state.app.searchState);
-  const multitenancy = hasMultitenancy || isEnterprise || isHosted;
   const { pending: pendingDevices } = useSelector(getDeviceCountsByStatus);
   const userSettingInitialized = useSelector(state => state.users.settingsInitialized);
   const user = useSelector(getCurrentUser);
@@ -128,7 +246,6 @@ export const Header = ({ mode }) => {
 
   const dispatch = useDispatch();
   const deviceTimer = useRef();
-  const showHelptips = useSelector(getShowHelptips);
 
   useEffect(() => {
     if ((!userId || !user.email?.length || !userSettingInitialized) && !gettingUser && token) {
@@ -156,21 +273,12 @@ export const Header = ({ mode }) => {
     };
   }, [dispatch]);
 
-  const onLogoutClick = () => {
-    setAnchorEl(null);
-    dispatch(logoutUser()).then(() => window.location.replace('/ui/'));
-  };
-
   const onSearch = useCallback((searchTerm, refreshTrigger) => dispatch(setSearchState({ refreshTrigger, searchTerm, page: 1 })), [dispatch]);
-
-  const onToggleTooltips = () => dispatch(setAllTooltipsReadState(showHelptips ? READ_STATES.read : READ_STATES.unread));
 
   const setHideOffer = () => {
     cookies.set('offer', currentOffer.name, { path: '/', maxAge: 2629746 });
     setHasOfferCookie(true);
   };
-
-  const handleClose = () => setAnchorEl(null);
 
   const showOffer =
     isHosted && moment().isBefore(currentOffer.expires) && (organization.trial ? currentOffer.trial : currentOffer[organization.plan]) && !hasOfferCookie;
@@ -207,56 +315,7 @@ export const Header = ({ mode }) => {
         <div className="flexbox center-aligned">
           <DeviceNotifications pending={pendingDevices} total={acceptedDevices} limit={deviceLimit} />
           <DeploymentNotifications inprogress={inProgress} />
-          <Button
-            className={`header-dropdown ${classes.dropDown}`}
-            onClick={e => setAnchorEl(e.currentTarget)}
-            startIcon={<AccountCircleIcon className={classes.buttonColor} />}
-            endIcon={anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          >
-            {user.email}
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            open={Boolean(anchorEl)}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'center'
-            }}
-            transformOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center'
-            }}
-          >
-            <MenuItem component={Link} to="/settings" onClick={handleClose}>
-              Settings
-            </MenuItem>
-            <MenuItem component={Link} to="/settings/my-profile" onClick={handleClose}>
-              My profile
-            </MenuItem>
-            {multitenancy && (
-              <MenuItem component={Link} to="/settings/organization-and-billing" onClick={handleClose}>
-                My organization
-              </MenuItem>
-            )}
-            {allowUserManagement && (
-              <MenuItem component={Link} to="/settings/user-management" onClick={handleClose}>
-                User management
-              </MenuItem>
-            )}
-            <MenuItem onClick={onToggleTooltips}>{`Mark help tips as ${showHelptips ? '' : 'un'}read`}</MenuItem>
-            <MenuItem component={Link} to="/help/get-started" onClick={handleClose}>
-              Help & support
-            </MenuItem>
-            <MenuItem onClick={onLogoutClick}>
-              <ListItemText primary="Log out" />
-              <ListItemSecondaryAction>
-                <IconButton>
-                  <ExitIcon className={classes.exitIcon} />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </MenuItem>
-          </Menu>
+          <AccountMenu />
         </div>
       </div>
     </Toolbar>

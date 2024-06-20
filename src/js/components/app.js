@@ -39,6 +39,7 @@ import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
+import StartupNotificationDialog from './common/dialogs/startupnotification';
 import Footer from './footer';
 import Header from './header/header';
 import LeftNav from './leftnav';
@@ -101,6 +102,7 @@ export const AppRoot = () => {
   const { id: currentUser } = useSelector(getCurrentUser);
   const showDismissHelptipsDialog = useSelector(state => !state.onboarding.complete && state.onboarding.showTipsDialog);
   const showDeviceConnectionDialog = useSelector(state => state.users.showConnectDeviceDialog);
+  const showStartupNotification = useSelector(state => state.users.showStartupNotification);
   const snackbar = useSelector(state => state.app.snackbar);
   const trackingCode = useSelector(state => state.app.trackerCode);
   const { mode } = useSelector(getUserSettings);
@@ -200,6 +202,7 @@ export const AppRoot = () => {
             </div>
             {showDismissHelptipsDialog && <ConfirmDismissHelptips />}
             {showDeviceConnectionDialog && <DeviceConnectionDialog onCancel={() => dispatch(setShowConnectingDialog(false))} />}
+            {showStartupNotification && <StartupNotificationDialog />}
           </div>
         ) : (
           <div className={classes.public}>

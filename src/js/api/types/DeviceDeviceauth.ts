@@ -1,12 +1,10 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { AuthSet } from "./AuthSet";
 import type { ExternalIdentity } from "./ExternalIdentity";
 import type { IdentityData } from "./IdentityData";
-
 export type DeviceDeviceauth = {
   /**
    * Mender assigned Device ID.
@@ -33,7 +31,6 @@ export type DeviceDeviceauth = {
   decommissioning?: boolean;
   external_id?: ExternalIdentity;
 };
-
 export namespace DeviceDeviceauth {
   export enum status {
     PENDING = "pending",

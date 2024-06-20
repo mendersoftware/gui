@@ -119,6 +119,9 @@ const generateTypeIndex = async () => {
     if (line.startsWith('/* ')) {
       accu.push(line);
     } else if (line.includes(`from './models/`)) {
+      if (line.endsWith('/models/Settings";')) {
+        accu.push('// @ts-ignore');
+      }
       accu.push(line.replace('/models', ''));
     }
     return accu;

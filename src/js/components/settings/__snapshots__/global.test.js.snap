@@ -1490,104 +1490,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
 }
 
 .emotion-141 {
-  display: grid;
-  grid-template-columns: 100px 100px;
+  -webkit-align-items: baseline;
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
   -webkit-column-gap: 16px;
   column-gap: 16px;
+  display: grid;
+  grid-template-columns: 100px 100px;
 }
 
 .emotion-142 {
-  line-height: 1.4375em;
-  font-family: Lato,sans-serif;
-  font-weight: 400;
-  font-size: 0.9286rem;
-  color: rgba(10, 10, 11, 0.78);
-  box-sizing: border-box;
-  position: relative;
-  cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-}
-
-.emotion-142.Mui-disabled {
-  color: rgba(0, 0, 0, 0.38);
-  cursor: default;
-}
-
-.emotion-142::after {
-  border-bottom: 2px solid #337a87;
-  left: 0;
-  bottom: 0;
-  content: "";
-  position: absolute;
-  right: 0;
-  -webkit-transform: scaleX(0);
-  -moz-transform: scaleX(0);
-  -ms-transform: scaleX(0);
-  transform: scaleX(0);
-  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  pointer-events: none;
-}
-
-.emotion-142.Mui-focused:after {
-  -webkit-transform: scaleX(1) translateX(0);
-  -moz-transform: scaleX(1) translateX(0);
-  -ms-transform: scaleX(1) translateX(0);
-  transform: scaleX(1) translateX(0);
-}
-
-.emotion-142.Mui-error::before,
-.emotion-142.Mui-error::after {
-  border-bottom-color: #ab1000;
-}
-
-.emotion-142::before {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-  left: 0;
-  bottom: 0;
-  content: "\\00a0";
-  position: absolute;
-  right: 0;
-  -webkit-transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  pointer-events: none;
-}
-
-.emotion-142:hover:not(.Mui-disabled, .Mui-error):before {
-  border-bottom: 2px solid rgba(10, 10, 11, 0.78);
-}
-
-@media (hover: none) {
-  .emotion-142:hover:not(.Mui-disabled, .Mui-error):before {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-  }
-}
-
-.emotion-142.Mui-disabled:before {
-  border-bottom-style: dotted;
-}
-
-.emotion-142:before {
-  border-bottom: 1px solid rgb(224, 224, 224);
-}
-
-.emotion-142:hover:not($disabled):before {
-  border-bottom: 2px solid #337a87!important;
-}
-
-.emotion-142:after {
-  border-bottom: 2px solid #337a87;
-}
-
-.emotion-146 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2184,8 +2097,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-3"
             data-shrink="true"
-            for=":r5:"
-            id=":r5:-label"
+            for=":r4:"
+            id=":r4:-label"
           >
             Timeout
           </label>
@@ -2193,11 +2106,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-100"
           >
             <input
-              aria-describedby=":r5:-helper-text"
+              aria-describedby=":r4:-helper-text"
               aria-invalid="false"
               autocomplete="off"
               class="MuiInputBase-input MuiInput-input emotion-101"
-              id=":r5:"
+              id=":r4:"
               pattern="[0-9]*"
               step="1"
               type="numeric"
@@ -2206,7 +2119,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
           </div>
           <p
             class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-filled emotion-8"
-            id=":r5:-helper-text"
+            id=":r4:-helper-text"
           >
             Defaults to: 60
           </p>
@@ -2295,8 +2208,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-3"
             data-shrink="true"
-            for=":r6:"
-            id=":r6:-label"
+            for=":r5:"
+            id=":r5:-label"
           >
             Compression level
           </label>
@@ -2307,7 +2220,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
               aria-invalid="false"
               autocomplete="off"
               class="MuiInputBase-input MuiInput-input emotion-101"
-              id=":r6:"
+              id=":r5:"
               pattern="[0-9]*"
               step="1"
               type="numeric"
@@ -2321,10 +2234,43 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-3"
             data-shrink="true"
+            for=":r6:"
+            id=":r6:-label"
+          >
+            Source window size
+          </label>
+          <div
+            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-100"
+          >
+            <input
+              aria-describedby=":r6:-helper-text"
+              aria-invalid="false"
+              autocomplete="off"
+              class="MuiInputBase-input MuiInput-input emotion-101"
+              id=":r6:"
+              pattern="[0-9]*"
+              step="1"
+              type="numeric"
+              value="5"
+            />
+          </div>
+          <p
+            class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-filled emotion-8"
+            id=":r6:-helper-text"
+          >
+            Defaults to: 10
+          </p>
+        </div>
+        <div
+          class="MuiFormControl-root MuiTextField-root emotion-98"
+        >
+          <label
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-3"
+            data-shrink="true"
             for=":r7:"
             id=":r7:-label"
           >
-            Source window size
+            Input window size
           </label>
           <div
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-100"
@@ -2357,7 +2303,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
             for=":r8:"
             id=":r8:-label"
           >
-            Input window size
+            Compression duplicates window
           </label>
           <div
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-100"
@@ -2390,7 +2336,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
             for=":r9:"
             id=":r9:-label"
           >
-            Compression duplicates window
+            Instruction buffer size
           </label>
           <div
             class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-100"
@@ -2414,39 +2360,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
             Defaults to: 10
           </p>
         </div>
-        <div
-          class="MuiFormControl-root MuiTextField-root emotion-98"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard emotion-3"
-            data-shrink="true"
-            for=":ra:"
-            id=":ra:-label"
-          >
-            Instruction buffer size
-          </label>
-          <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-100"
-          >
-            <input
-              aria-describedby=":ra:-helper-text"
-              aria-invalid="false"
-              autocomplete="off"
-              class="MuiInputBase-input MuiInput-input emotion-101"
-              id=":ra:"
-              pattern="[0-9]*"
-              step="1"
-              type="numeric"
-              value="5"
-            />
-          </div>
-          <p
-            class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-filled emotion-8"
-            id=":ra:-helper-text"
-          >
-            Defaults to: 10
-          </p>
-        </div>
       </div>
     </div>
   </div>
@@ -2461,43 +2374,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
     class="emotion-141"
   >
     <div
-      class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary  emotion-142"
-    >
-      <div
-        aria-controls=":r3:"
-        aria-expanded="false"
-        aria-haspopup="listbox"
-        class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input emotion-5"
-        role="combobox"
-        tabindex="0"
-      >
-        <div
-          class="capitalized-start"
-        >
-          days
-        </div>
-      </div>
-      <input
-        aria-hidden="true"
-        aria-invalid="false"
-        class="MuiSelect-nativeInput emotion-6"
-        tabindex="-1"
-        value="days"
-      />
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard emotion-7"
-        data-testid="ArrowDropDownIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M7 10l5 5 5-5z"
-        />
-      </svg>
-    </div>
-    <div
-      class="MuiFormControl-root MuiTextField-root emotion-146"
+      class="MuiFormControl-root MuiTextField-root emotion-142"
     >
       <div
         class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-formControl emotion-100"
@@ -2505,7 +2382,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiInput-input emotion-101"
-          id=":r4:"
+          id=":r3:"
           max="1000"
           min="1"
           type="number"
@@ -2513,6 +2390,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
         />
       </div>
     </div>
+    <p
+      class="MuiTypography-root MuiTypography-body1 capitalized-start emotion-109"
+    >
+      days
+    </p>
   </div>
   <div
     class="MuiFormHelperText-root info emotion-8"
