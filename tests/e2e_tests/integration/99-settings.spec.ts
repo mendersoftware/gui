@@ -11,8 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { Decoder } from '@nuintun/qrcode';
 import * as fs from 'fs';
+import jsQR from 'jsqr';
 import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
@@ -116,8 +116,7 @@ test.describe('Settings', () => {
       await page.waitForSelector('.margin-top img');
       const qrCode = await page.$eval('.margin-top img', (el: HTMLImageElement) => el.src);
       const png = PNG.sync.read(Buffer.from(qrCode.slice('data:image/png;base64,'.length), 'base64'));
-      const qrcode = new Decoder();
-      const decodedQr = await qrcode.decode(Uint8ClampedArray.from(png.data), png.width, png.height);
+      const decodedQr = jsQR(png.data, png.width, png.height);
       const qrData = new URLSearchParams(decodedQr.data);
       console.log(qrData.get('secret'));
       const qrToken = await generateOtp(qrData.get('secret'));

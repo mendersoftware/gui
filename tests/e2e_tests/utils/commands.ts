@@ -22,9 +22,13 @@ import { authenticator } from 'otplib';
 import * as path from 'path';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
+import { fileURLToPath } from 'url';
 import { v4 as uuid } from 'uuid';
 
 import { selectors, storagePath } from './constants';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const getPeristentLoginInfo = () => {
   let loginInfo;

@@ -92,10 +92,10 @@ test.describe('Test setup', () => {
       context = await prepareCookies(context, domain, userId);
       const newPage = await context.newPage();
       await newPage.goto(baseUrl);
-      await newPage.evaluate(() => {
+      await newPage.evaluate(token => {
         localStorage.setItem('JWT', JSON.stringify({ token }));
         localStorage.setItem(`onboardingComplete`, 'true');
-      });
+      }, token);
       await isLoggedIn(newPage);
       await context.storageState({ path: storagePath });
     });

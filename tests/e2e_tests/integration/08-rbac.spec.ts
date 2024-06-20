@@ -139,7 +139,7 @@ test.describe('RBAC functionality', () => {
       // enter valid username and password of the new user
       await processLoginForm({ username: `limited-ro-releases-${username}`, password, page, environment });
       await isLoggedIn(page);
-      await page.getByText(/releases/i).click({ timeout: timeouts.tenSeconds });
+      await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
       // there should be multiple releases present
       expect(await page.getByText('1-2 of 2')).toBeVisible();
       // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
@@ -153,7 +153,7 @@ test.describe('RBAC functionality', () => {
       // enter valid username and password of the new user
       await processLoginForm({ username: `limited-ro-${releaseTag}-${username}`, password, page, environment });
       await isLoggedIn(page);
-      await page.getByText(/releases/i).click({ timeout: timeouts.tenSeconds });
+      await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
       // there should be only one release tagged with the releaseTag
       expect(await page.getByText('1-1 of 1')).toBeVisible();
       // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
@@ -167,7 +167,7 @@ test.describe('RBAC functionality', () => {
       // enter valid username and password of the new user
       await processLoginForm({ username: `limited-manage-${releaseTag}-${username}`, password, page, environment });
       await isLoggedIn(page);
-      await page.getByText(/releases/i).click({ timeout: timeouts.tenSeconds });
+      await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
       // there should be only one release tagged with the releaseTag
       expect(await page.getByText('1-1 of 1')).toBeVisible();
       // the created role does have permission to upload artifacts, so the button should be visible

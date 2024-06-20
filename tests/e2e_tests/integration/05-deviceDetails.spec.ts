@@ -12,10 +12,14 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages, isEnterpriseOrStaging } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const terminalReferenceFileMap = {
   default: 'terminalContent.png',

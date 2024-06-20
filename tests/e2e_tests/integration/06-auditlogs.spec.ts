@@ -14,10 +14,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
+import { fileURLToPath } from 'url';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages, isEnterpriseOrStaging } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 test.describe('Auditlogs', () => {
   test.use({ storageState: storagePath });
