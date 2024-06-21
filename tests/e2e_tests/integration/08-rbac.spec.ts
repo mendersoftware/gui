@@ -82,7 +82,9 @@ test.describe('RBAC functionality', () => {
         await page.locator(`li[role="option"]:has-text("All releases")`).click({ force: true });
       }
       await dialog.locator('text=Select​').first().click({ force: true });
-      await Promise.all(permissions.map(async permission => await page.locator(`li[role="option"]:has-text("${permission}")`).click()));
+      for await (const permission of permissions) {
+        await page.getByRole('option', { name: permission }).click();
+      }
       await page.press('body', 'Escape');
       await dialog.getByRole('button', { name: /submit/i }).scrollIntoViewIfNeeded();
       await dialog.getByRole('button', { name: /submit/i }).click();

@@ -120,15 +120,13 @@ test.describe('Files', () => {
     await editButton.click();
     const alreadyTagged = await page.getByRole('button', { name: 'some' }).isVisible();
     if (alreadyTagged) {
-      await Promise.all(
-        ['some', 'tags'].map(async name => {
-          const foundTag = await page.getByRole('button', { name });
-          if (!(await foundTag.isVisible())) {
-            return Promise.resolve();
-          }
-          return await foundTag.getByTestId('CancelIcon').click();
-        })
-      );
+      for await (const name of ['some', 'tags']) {
+        const foundTag = await page.getByRole('button', { name });
+        if (!(await foundTag.isVisible())) {
+          continue;
+        }
+        await foundTag.getByTestId('CancelIcon').click();
+      }
       await page.getByTestId('CheckIcon').click();
       // await page.waitForTimeout(timeouts.oneSecond);
       expect(await page.getByPlaceholder(/add release tags/i).isVisible({ timeout: timeouts.oneSecond })).toBeTruthy();
