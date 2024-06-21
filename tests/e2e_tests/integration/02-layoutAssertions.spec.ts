@@ -41,6 +41,7 @@ test.describe('Layout assertions', () => {
     await page.click(`.leftNav :text('Devices')`);
     let hasAcceptedDevice = false;
     try {
+      await page.waitForSelector(`css=${selectors.deviceListItem}`, { timeout: timeouts.default });
       hasAcceptedDevice = await page.isVisible(selectors.deviceListItem);
     } catch (e) {
       console.log(`no accepted device present so far`);
