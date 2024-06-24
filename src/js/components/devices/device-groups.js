@@ -35,7 +35,6 @@ import {
 import { setShowConnectingDialog } from '../../actions/userActions';
 import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
-import * as DeviceConstants from '../../constants/deviceConstants.js';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle } from '../../helpers';
 import {
@@ -142,15 +141,12 @@ export const DeviceGroups = () => {
       if (groupName != selectedGroup) {
         dispatch(selectGroup(groupName, filters));
       }
-    } else {
+    } else if (filters.length) {
       // dispatch setDeviceFilters even when filters are empty, otherwise filter will not be reset
       dispatch(setDeviceFilters(filters));
-      // if selected group exists in the state, but not set in locationParams then unset it
-      selectedGroup && dispatch({ type: DeviceConstants.SELECT_GROUP, group: undefined });
     }
     // preset selectedIssues and selectedId with empty values, in case if remain properties are missing them
-    let listState = { selectedIssues: [], selectedId: undefined, ...remainder };
-
+    let listState = { ...remainder };
     if (statusParam && Object.values(DEVICE_STATES).some(state => state === statusParam)) {
       listState.state = statusParam;
     }
@@ -160,7 +156,6 @@ export const DeviceGroups = () => {
     } else if (id.length && hasFullFiltering) {
       dispatch(setDeviceFilters([...filters, { ...emptyFilter, key: 'id', operator: DEVICE_FILTERING_OPTIONS.$in.key, value: id }]));
     }
-
     dispatch(setDeviceListState(listState)).then(() => {
       if (isInitialized.current) {
         return;
