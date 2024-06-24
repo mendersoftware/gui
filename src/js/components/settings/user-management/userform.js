@@ -139,21 +139,6 @@ const PasswordLabel = () => (
   </div>
 );
 
-const SsoAssignment = ({ currentUser }) => {
-  const { sso = [] } = currentUser;
-
-  const password = useWatch({ name: 'password' });
-  const shouldResetPassword = useWatch({ name: 'shouldResetPassword' });
-  return (
-    <FormCheckbox
-      id="assignToSso"
-      disabled={!sso.length || password || shouldResetPassword}
-      className="margin-top-none"
-      label="Add to organization Single Sign-On provider"
-    />
-  );
-};
-
 const UserIdentifier = ({ onHasUserId }) => {
   const value = useWatch({ name: 'email', defaultValue: '' });
   const { hasMultiTenantAccess } = useSelector(getFeatures);
@@ -223,7 +208,6 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
               validations="isLength:8"
             />
             <FormCheckbox id="shouldResetPassword" label="Send an email to the user containing a link to reset the password" />
-            <SsoAssignment currentUser={currentUser} />
             <UserRolesSelect currentUser={currentUser} disabled={!(canManageUsers && isEnterprise)} onSelect={onSelect} roles={roles} user={{}} />
           </Collapse>
         </Form>
