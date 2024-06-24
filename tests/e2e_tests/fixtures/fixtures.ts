@@ -15,7 +15,7 @@ import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
 
 import { baseUrlToDomain, getPeristentLoginInfo, isLoggedIn, login, prepareCookies } from '../utils/commands';
-import { storagePath } from '../utils/constants';
+import { storagePath, timeouts } from '../utils/constants';
 
 type TestFixtures = {
   baseUrl: string;
@@ -58,7 +58,7 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     const isHeaderComplete = await page.getByText(username).isVisible();
     if (!isHeaderComplete) {
       await page.reload();
-      await page.waitForSelector(`text=${username}`);
+      await page.getByText(username).waitFor({ timeout: timeouts.default });
     }
     await use(page);
     await context.storageState({ path: storagePath });

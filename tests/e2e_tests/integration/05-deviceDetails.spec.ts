@@ -33,11 +33,11 @@ test.describe('Device details', () => {
 
   test('has basic inventory', async ({ demoDeviceName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`${selectors.deviceListItem} div:last-child`);
-    await page.click(`text=/inventory/i`);
-    expect(await page.isVisible(`css=.expandedDevice >> text=Linux`)).toBeTruthy();
-    expect(await page.isVisible(`css=.expandedDevice >> text=mac`)).toBeTruthy();
-    expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
+    await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
+    await page.getByText(/inventory/i).click();
+    await expect(page.locator(`css=.expandedDevice >> text=Linux`)).toBeVisible();
+    await expect(page.locator(`css=.expandedDevice >> text=mac`)).toBeVisible();
+    await expect(page.locator(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeVisible();
   });
 
   test('can be found', async ({ demoDeviceName, loggedInPage: page }) => {
@@ -45,16 +45,16 @@ test.describe('Device details', () => {
     await searchField.fill(demoDeviceName);
     await page.waitForSelector(selectors.deviceListItem);
     const slideOut = await page.locator('.MuiPaper-root');
-    expect(await slideOut.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
-    expect(await slideOut.getByText('1-1 of 1').isVisible()).toBeTruthy();
-    await page.click(selectors.deviceListItem);
-    await page.waitForSelector('text=/device information/i');
-    expect(await page.getByText(/Authorization sets/i).isVisible()).toBeTruthy();
+    await expect(slideOut.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`)).toBeVisible();
+    await expect(slideOut.getByText('1-1 of 1')).toBeVisible();
+    await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
+    await page.getByText(/device information/i).waitFor();
+    await expect(page.getByText(/Authorization sets/i)).toBeVisible();
     await page.click('[aria-label="close"]');
-    expect(await page.getByText(/table options/i).isVisible()).toBeTruthy();
+    await expect(page.getByText(/table options/i)).toBeVisible();
     await page.getByText(/releases/i).click();
     await searchField.press('Enter');
-    expect(await page.getByText(/device found/i).isVisible()).toBeTruthy();
+    await expect(page.getByText(/device found/i)).toBeVisible();
   });
 
   test('can be filtered', async ({ browserName, demoDeviceName, loggedInPage: page }) => {
@@ -69,7 +69,9 @@ test.describe('Device details', () => {
     if (browserName === 'webkit') {
       await page.waitForTimeout(timeouts.fiveSeconds);
     }
-    expect(await page.getByRole('button', { name: `${rootfs} = ${demoDeviceName}` }).isVisible({ timeout: timeouts.default })).toBeTruthy();
+    const filterChip = await page.getByRole('button', { name: `${rootfs} = ${demoDeviceName}` });
+    await filterChip.waitFor({ timeout: timeouts.fiveSeconds });
+    await expect(filterChip).toBeVisible();
     await page.waitForSelector(selectors.deviceListItem);
   });
 
@@ -80,26 +82,29 @@ test.describe('Device details', () => {
     await page.getByRole('button', { name: /filters/i }).click();
     await page.getByLabel(/attribute/i).fill(rootfs);
     await page.getByText(/equals/i).click();
-    await page.getByText(`doesn't exist`).click();
-    await page.waitForTimeout(timeouts.fiveSeconds);
-    expect(await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
-    expect(await page.getByText('No devices found').isVisible()).toBeTruthy();
+    await page.waitForTimeout(timeouts.default);
+    await page.getByRole('option', { name: `doesn't exist` }).click();
+    const filterChip = await page.getByRole('button', { name: `${rootfs} doesn't exist` });
+    await filterChip.waitFor({ timeout: timeouts.fiveSeconds });
+    await expect(filterChip).toBeVisible();
+    await expect(page.getByText('No devices found')).toBeVisible();
     await page.getByText(/clear filter/i).click();
     await page.waitForSelector(selectors.deviceListItem);
-    const paginationVisible = await page.getByText('1-1').isVisible({ timeout: timeouts.default });
-    expect(paginationVisible).toBeTruthy();
+    const pagination = await page.getByText('1-1');
+    await pagination.waitFor({ timeout: timeouts.default });
+    await expect(pagination).toBeVisible();
   });
 
   test('can open a terminal', async ({ browserName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`${selectors.deviceListItem} div:last-child`);
-    await page.click(`text=/troubleshooting/i`);
+    await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
+    await page.getByText(/troubleshooting/i).click();
     // the deviceconnect connection might not be established right away
-    await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });
+    await page.getByText(/Session status/i).waitFor({ timeout: timeouts.tenSeconds });
     const connectionButton = await page.getByRole('button', { name: /connect/i });
     await connectionButton.first().click();
-    await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
-    expect(await page.isVisible('.terminal.xterm .xterm-screen')).toBeTruthy();
+    await page.getByText('Connection with the device established').waitFor({ timeout: timeouts.tenSeconds });
+    await expect(page.locator('.terminal.xterm .xterm-screen')).toBeVisible();
 
     // the terminal content might take a bit to get painted - thus the waiting
     await page.click(selectors.terminalElement, { timeout: timeouts.default });
@@ -112,6 +117,7 @@ test.describe('Device details', () => {
     const elementHandle = await page.$(selectors.terminalElement);
     expect(elementHandle).toBeTruthy();
     if (['chromium', 'webkit'].includes(browserName)) {
+      await page.waitForTimeout(timeouts.default); // this should allow any animations to settle and increase chances of a stable screenshot
       const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalContent-actual.png');
       await elementHandle.screenshot({ path: screenShotPath });
 
@@ -119,7 +125,7 @@ test.describe('Device details', () => {
       const { pass } = compareImages(expectedPath, screenShotPath);
       expect(pass).toBeTruthy();
 
-      const terminalText = await page.locator(selectors.terminalText);
+      const terminalText = await page.locator(`css=${selectors.terminalText}`);
       await terminalText.fill('top');
       await page.keyboard.press('Enter');
       await page.waitForTimeout(timeouts.default);

@@ -24,33 +24,41 @@ test.describe('Settings', () => {
     test.use({ storageState: storagePath });
     test('allows access to access tokens', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings`);
-      await page.waitForSelector('css=button >> text=/Generate a token/i');
+      const tokenGenerationButton = await page.getByRole('button', { name: /Generate a token/i });
+      if (!(await tokenGenerationButton.isVisible())) {
+        console.log('settings may not be loaded - move around');
+        await page.goto(`${baseUrl}ui/help`);
+        await page.goto(`${baseUrl}ui/settings`);
+      }
+      await tokenGenerationButton.waitFor();
     });
     test('allows generating & revoking tokens', async ({ baseUrl, browserName, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings`);
-      await page.waitForSelector('css=button >> text=/Generate a token/i');
-      const isRetry = await page.isVisible(`text=/revoke/i`);
-      if (isRetry) {
-        await page.click('text=/revoke/i');
-        await page.waitForSelector('text=/revoke token/i');
-        await page.click('button:has-text("Revoke token")');
+      const tokenGenerationButton = await page.getByText(/generate a token/i);
+      await tokenGenerationButton.waitFor();
+      const revokeButton = await page.getByText(/revoke/i);
+      const revokeTokenButton = await page.getByRole('button', { name: /Revoke token/i });
+      if (await revokeButton.isVisible()) {
+        await revokeButton.click();
+        await revokeTokenButton.waitFor();
+        await revokeTokenButton.click();
       }
-      await page.click('text=/generate a token/i');
-      await page.waitForSelector('text=/Create new token/i');
-      await page.fill('[placeholder=Name]', 'aNewToken');
-      await page.click('div[role="combobox"]:has-text("a year")');
-      await page.click('li[role="option"]:has-text("7 days")');
-      await page.click('text=/Create token/i');
-      await page.click('text=/Close/i');
-      await page.waitForSelector('text=/in 7 days/i');
-      await page.click('button:has-text("Revoke")');
-      await page.waitForSelector('text=/revoke token/i');
-      await page.click('button:has-text("Revoke token")');
-      await page.click('text=/generate a token/i');
-      await page.fill('[placeholder=Name]', 'aNewToken');
-      await page.click('text=/Create token/i');
+      await tokenGenerationButton.click();
+      await page.getByText(/Create new token/i).waitFor();
+      await page.getByPlaceholder('Name').fill('aNewToken');
+      await page.getByText(/a year/i).click({ force: true });
+      await page.getByRole('option', { name: '7 days' }).click();
+      await page.getByRole('button', { name: /Create token/i }).click();
+      await page.getByRole('button', { name: /Close/i }).click();
+      await page.getByText(/in 7 days/i).waitFor();
+      await page.getByRole('button', { name: /Revoke/i }).click();
+      await revokeTokenButton.waitFor();
+      await revokeTokenButton.click();
+      await tokenGenerationButton.click();
+      await page.getByPlaceholder(/Name/i).fill('aNewToken');
+      await page.getByRole('button', { name: /Create token/i }).click();
       await page.click('.code .MuiSvgIcon-root');
-      await page.waitForSelector('text=/copied to clipboard/i');
+      await page.getByText(/copied to clipboard/i).waitFor();
       let token = '';
       if (browserName === 'chromium') {
         token = await page.evaluate(() => navigator.clipboard.readText());
@@ -58,8 +66,8 @@ test.describe('Settings', () => {
         token = await page.innerText('.code');
       }
       expect(token).toBeTruthy();
-      await page.click('text=/Close/i');
-      await page.waitForSelector('text=/in a year/i');
+      await page.getByRole('button', { name: /Close/i }).click();
+      await page.getByText(/in a year/i).waitFor();
     });
   });
   test.describe('account upgrades', () => {
@@ -71,7 +79,7 @@ test.describe('Settings', () => {
       if (wasUpgraded) {
         test.skip('looks like the account was upgraded already, continue with the remaining tests');
       }
-      await page.click(`text=Upgrade now`);
+      await page.getByText('Upgrade now').click();
       await page.click(`css=.planPanel >> text=Professional`);
       await page.waitForSelector('.StripeElement iframe');
       const frameHandle = await page.$('.StripeElement iframe');
@@ -81,19 +89,18 @@ test.describe('Settings', () => {
       await stripeFrame.fill('[name="cvc"]', '123');
       await stripeFrame.fill('[name="postal"]', '12345');
       await page.click(`button:has-text('Sign up')`);
-      await page.waitForSelector('text=/Card confirmed./i', { timeout: timeouts.tenSeconds });
-      await page.waitForSelector('text=/Your upgrade was successful/i', { timeout: timeouts.fifteenSeconds });
-      await page.waitForSelector('text=/Organization name/i', { timeout: timeouts.tenSeconds });
+      await page.getByText(/Card confirmed./i).waitFor({ timeout: timeouts.tenSeconds });
+      await page.getByText(/Your upgrade was successful/i).waitFor({ timeout: timeouts.fifteenSeconds });
+      await page.getByText(/Organization name/i).waitFor({ timeout: timeouts.tenSeconds });
     });
     test('allows higher device limits once upgraded', async ({ baseUrl, environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
       await page.waitForSelector(`css=#limit >> text=250`, { timeout: timeouts.default });
-      expect(await page.isVisible(`css=#limit >> text=250`)).toBeTruthy();
+      await expect(page.locator(`css=#limit >> text=250`)).toBeVisible();
       const token = await tenantTokenRetrieval(baseUrl, page);
       await startClient(baseUrl, token, 50);
       await page.goto(`${baseUrl}ui/devices`);
-      await page.waitForSelector('.header-section [href="/ui/devices/pending"]', { timeout: 120000 });
-      expect(await page.isVisible(`:is(.header-section [href="/ui/devices/pending"]:has-text('pending'))`)).toBeTruthy();
+      await page.getByRole('link', { name: /pending/i }).waitFor({ timeout: timeouts.fifteenSeconds });
       const pendingNotification = await page.$eval('.header-section [href="/ui/devices/pending"]', el => el.textContent);
       expect(Number(pendingNotification.split(' ')[0])).toBeGreaterThan(10);
     });
@@ -112,7 +119,7 @@ test.describe('Settings', () => {
         test.skip('looks like the account is already 2fa enabled, continue with the remaining tests');
       }
       await page.goto(`${baseUrl}ui/settings/my-account`);
-      await page.click('text=/Enable Two Factor/');
+      await page.getByText(/Enable Two Factor/).click();
       await page.waitForSelector('.margin-top img');
       const qrCode = await page.$eval('.margin-top img', (el: HTMLImageElement) => el.src);
       const png = PNG.sync.read(Buffer.from(qrCode.slice('data:image/png;base64,'.length), 'base64'));
@@ -122,22 +129,22 @@ test.describe('Settings', () => {
       const qrToken = await generateOtp(qrData.get('secret'));
       console.log('Generated otp:', qrToken);
       await page.fill('#token2fa', qrToken);
-      await page.click(`css=button >> text=Verify`);
+      await page.getByRole('button', { name: /Verify/i }).click();
       await page.waitForSelector(`css=ol >> text=Verified`);
       await page.getByRole('button', { name: /save/i }).click();
     });
     test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/`);
-      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
+      await expect(page.getByRole('button', { name: /Log in/i })).toBeVisible();
       // enter valid username and password
       await processLoginForm({ username, password, page, environment });
       await page.waitForTimeout(timeouts.default);
       await page.fill('#token2fa', '123456');
       await page.getByRole('button', { name: /log in/i }).click();
       // still on /login page plus an error is displayed
-      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
-      await page.waitForSelector('text=/There was a problem logging in/', { timeout: timeouts.default });
+      await expect(page.getByRole('button', { name: /Log in/i })).toBeVisible();
+      await page.getByText(/There was a problem logging in/).waitFor({ timeout: timeouts.default });
     });
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
@@ -148,7 +155,7 @@ test.describe('Settings', () => {
       await page.getByRole('button', { name: /log in/i }).click();
       await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings/my-account`);
-      await page.click('text=/Enable Two Factor/');
+      await page.getByText(/Enable Two Factor/).click();
       await page.waitForTimeout(timeouts.default);
     });
     test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
@@ -165,17 +172,21 @@ test.describe('Settings', () => {
 
     test('allows access to user management', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings/user-management`);
-      await page.waitForSelector('text=/new user/i');
+      const userCreationButton = await page.getByRole('button', { name: /Add new user/i });
+      if (!(await userCreationButton.isVisible())) {
+        console.log('settings may not be loaded - move around');
+        await page.goto(`${baseUrl}ui/help`);
+        await page.goto(`${baseUrl}ui/settings/user-management`);
+      }
+      await userCreationButton.waitFor();
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page.getByRole('button', { name: /change email/i }).click();
-      expect(await page.getByLabel(/current password/i).isVisible()).toBeTruthy();
+      await expect(page.getByLabel(/current password/i)).toBeVisible();
     });
-    test('allows changing the password', async ({ baseUrl, environment, browserName, context, username, password }) => {
-      if (browserName === 'webkit') {
-        test.skip();
-      }
+    test('allows changing the password', async ({ baseUrl, browserName, context, environment, username, password }) => {
+      test.skip(browserName === 'webkit');
       const domain = baseUrlToDomain(baseUrl);
       context = await prepareCookies(context, domain, '');
       const page = await context.newPage();
@@ -198,11 +209,13 @@ test.describe('Settings', () => {
       expect(typedPassword === replacementPassword);
       await page.fill(selectors.passwordConfirmation, replacementPassword);
       await page.getByRole('button', { name: /save/i }).click();
-      await page.waitForSelector('text=/user has been updated/i', { timeout: timeouts.tenSeconds });
+      await page.getByText(/user has been updated/i).waitFor({ timeout: timeouts.tenSeconds });
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/log out/i).click();
-      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 3 * timeouts.oneSecond });
-      expect(page.getByRole('button', { name: /log in/i }).isVisible()).toBeTruthy();
+      await page.waitForTimeout(timeouts.default);
+      await page.screenshot({ path: './test-results/logout.png' });
+      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: timeouts.fiveSeconds });
+      await expect(page.getByRole('button', { name: /log in/i })).toBeVisible();
     });
 
     test('allows changing the password back', async ({ baseUrl, environment, browserName, context, password, username }) => {
@@ -228,7 +241,7 @@ test.describe('Settings', () => {
       await page.click(selectors.passwordCurrent);
       await page.fill(selectors.passwordCurrent, replacementPassword);
       await page.getByRole('button', { name: /save/i }).click();
-      await page.waitForSelector('text=/user has been updated/i', { timeout: timeouts.tenSeconds });
+      await page.getByText(/user has been updated/i).waitFor({ timeout: timeouts.tenSeconds });
       await page.waitForTimeout(timeouts.default);
 
       const { token: newToken } = await login(username, password, baseUrl);
@@ -263,20 +276,20 @@ test.describe('Settings', () => {
       const uuid = await content.jsonValue();
       await page.getByText(/help/i).click();
       await page.getByRole('button', { name: secondaryUser }).click();
-      expect(await page.getByText(/switch organization/i)).not.toBeVisible();
+      await expect(page.getByText(/switch organization/i)).not.toBeVisible();
 
       await loggedInPage.getByRole('button', { name: /new user/i }).click();
       const passwordInput = await loggedInPage.getByPlaceholder(/password/i);
       const emailUuidInput = await loggedInPage.getByPlaceholder(/email/i);
       await emailUuidInput.click();
       await emailUuidInput.fill(uuid);
-      expect(passwordInput).not.toBeVisible();
+      await expect(passwordInput).not.toBeVisible();
       await loggedInPage.getByRole('button', { name: /add user/i }).click();
       await page.waitForTimeout(timeouts.oneSecond);
 
       await page.reload();
       await page.getByRole('button', { name: secondaryUser }).click();
-      expect(await page.getByText(/switch organization/i)).toBeVisible();
+      await expect(page.getByText(/switch organization/i)).toBeVisible();
     });
     test('allows switching tenants', async ({ baseUrl, browser, browserName, environment, loggedInPage, password }) => {
       test.skip('enterprise' !== environment || browserName !== 'chromium');
@@ -287,28 +300,31 @@ test.describe('Settings', () => {
       await page.goto(`${baseUrl}ui/`);
       await processLoginForm({ username: secondaryUser, password, page, environment });
       await page.getByRole('button', { name: secondaryUser }).click();
-      expect(await page.getByRole('menuitem', { name: /secondary/i })).toBeVisible();
+      await expect(page.getByRole('menuitem', { name: /secondary/i })).toBeVisible();
       await page.getByText(/switch organization/i).click({ force: true });
-      await page.getByRole('menuitem', { name: /test/i }).click();
+      const tenantSwitch = await page.getByRole('menuitem', { name: /test/i });
+      await tenantSwitch.waitFor({ timeout: timeouts.default });
+      await tenantSwitch.click();
+      await page.waitForTimeout(timeouts.default);
       await page.getByRole('button', { name: secondaryUser }).click();
-      expect(await page.getByRole('menuitem', { name: /secondary/i })).not.toBeVisible();
-      expect(await page.getByRole('menuitem', { name: /test/i })).toBeVisible();
+      await expect(page.getByRole('menuitem', { name: /secondary/i })).not.toBeVisible();
+      await expect(page.getByRole('menuitem', { name: /test/i })).toBeVisible();
 
       await loggedInPage.goto(`${baseUrl}ui/settings`);
       await loggedInPage.click('text=/user management/i');
       await loggedInPage.getByText(secondaryUser).click();
       await loggedInPage.getByRole('button', { name: /delete user/i }).click();
-      expect(loggedInPage.getByText(/delete user\?/i)).toBeVisible();
+      await expect(loggedInPage.getByText(/delete user\?/i)).toBeVisible();
       await loggedInPage
         .getByRole('button', { name: /delete user/i })
         .last()
         .click();
 
       await page.reload();
-      expect(page.getByText(/log in/i)).toBeVisible();
+      await expect(page.getByText(/log in/i)).toBeVisible();
       await processLoginForm({ username: secondaryUser, password, page, environment });
       await page.getByRole('button', { name: secondaryUser }).click();
-      expect(await page.getByText(/switch organization/i)).not.toBeVisible();
+      await expect(page.getByText(/switch organization/i)).not.toBeVisible();
     });
   });
 });
