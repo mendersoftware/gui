@@ -70,7 +70,6 @@ const featureFlags = [
   'hasDeviceConnect',
   'hasReporting',
   'hasMonitor',
-  'hasMultiTenantAccess',
   'isEnterprise'
 ];
 export const parseEnvironmentInfo = () => (dispatch, getState) => {

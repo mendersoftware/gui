@@ -63,6 +63,7 @@ parse_args(){
 }
 
 USER=mender-demo@example.com
+USER2=demo-secondary@example.com
 PASSWORD=mysecretpassword!123
 
 run_tests() {
@@ -90,6 +91,7 @@ run_tests() {
             return 1
         fi
         tenant=$(docker exec $containerid /usr/bin/tenantadm create-org --name=test --username=$USER --password=$PASSWORD --addon configure --addon monitor --addon troubleshoot)
+        secondTenant=$(docker exec $containerid /usr/bin/tenantadm create-org --name=secondary --username=$USER2 --password=$PASSWORD)
         token=$(docker exec $containerid /usr/bin/tenantadm get-tenant --id $tenant | jq -r .tenant_token)
         jq --arg tenantToken "$token" '. + { "TenantToken": $tenantToken }' ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender.json > ${GUI_REPOSITORY}/tests/e2e_tests/dockerClient/mender-test.json
         # start a new client, using the obtained tenant token - starting it later (in the test suite) would require docker access in the test runner
