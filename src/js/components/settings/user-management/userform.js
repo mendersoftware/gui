@@ -13,7 +13,6 @@
 //    limitations under the License.
 import React, { useEffect, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 
 import { InfoOutlined } from '@mui/icons-material';
 import {
@@ -37,7 +36,6 @@ import { isUUID } from 'validator';
 
 import { BENEFITS } from '../../../constants/appConstants';
 import { rolesById, rolesByName, uiPermissionsById } from '../../../constants/userConstants';
-import { getFeatures } from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import Form from '../../common/forms/form';
 import FormCheckbox from '../../common/forms/formcheckbox';
@@ -139,42 +137,14 @@ const PasswordLabel = () => (
   </div>
 );
 
-const SsoAssignment = ({ currentUser }) => {
-  const { sso = [] } = currentUser;
-
-  const password = useWatch({ name: 'password' });
-  const shouldResetPassword = useWatch({ name: 'shouldResetPassword' });
-  return (
-    <FormCheckbox
-      id="assignToSso"
-      disabled={!sso.length || password || shouldResetPassword}
-      className="margin-top-none"
-      label="Add to organization Single Sign-On provider"
-    />
-  );
-};
-
 const UserIdentifier = ({ onHasUserId }) => {
   const value = useWatch({ name: 'email', defaultValue: '' });
-  const { hasMultiTenantAccess } = useSelector(getFeatures);
 
   useEffect(() => {
-    if (!hasMultiTenantAccess) {
-      return;
-    }
     onHasUserId(isUUID(value));
-  }, [hasMultiTenantAccess, value, onHasUserId]);
+  }, [value, onHasUserId]);
 
-  return (
-    <TextInput
-      hint="Email"
-      label={hasMultiTenantAccess ? 'Email or User ID' : 'Email'}
-      id="email"
-      validations={`isLength:1,${hasMultiTenantAccess ? 'isUUID||' : ''}isEmail,trim`}
-      required
-      autocomplete="off"
-    />
-  );
+  return <TextInput hint="Email" label="Email or User ID" id="email" validations="isLength:1,isUUID||isEmail,trim" required autocomplete="off" />;
 };
 
 export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterprise, roles, submit }) => {
@@ -223,7 +193,6 @@ export const UserForm = ({ closeDialog, currentUser, canManageUsers, isEnterpris
               validations="isLength:8"
             />
             <FormCheckbox id="shouldResetPassword" label="Send an email to the user containing a link to reset the password" />
-            <SsoAssignment currentUser={currentUser} />
             <UserRolesSelect currentUser={currentUser} disabled={!(canManageUsers && isEnterprise)} onSelect={onSelect} roles={roles} user={{}} />
           </Collapse>
         </Form>
