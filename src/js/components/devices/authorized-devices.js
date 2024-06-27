@@ -71,7 +71,7 @@ const idAttributeTitleMap = {
 };
 
 const headersReducer = (accu, header) => {
-  if (header.attribute.scope === accu.column.scope && (header.attribute.name === accu.column.name || header.attribute.alternative === accu.column.name)) {
+  if (header.attribute.scope === accu.column.scope && header.attribute.name === accu.column.name) {
     accu.header = { ...accu.header, ...header };
   }
   return accu;
