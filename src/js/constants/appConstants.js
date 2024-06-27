@@ -43,6 +43,8 @@ export const SORTING_OPTIONS = {
   asc: 'asc',
   desc: 'desc'
 };
+export const SORT_DIRECTIONS = [SORTING_OPTIONS.desc, SORTING_OPTIONS.asc];
+
 export const BEGINNING_OF_TIME = '2016-01-01T00:00:00.000Z';
 export const TIMEOUTS = {
   debounceDefault: 700,

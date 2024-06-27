@@ -25,7 +25,7 @@ import { deleteAuthset, setDeviceFilters, setDeviceListState, updateDevicesAuth 
 import { getIssueCountsByType } from '../../actions/monitorActions';
 import { advanceOnboarding } from '../../actions/onboardingActions';
 import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { TIMEOUTS } from '../../constants/appConstants';
 import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { duplicateFilter, toggle } from '../../helpers';
@@ -203,11 +203,9 @@ export const Authorized = ({
     selectedIssues = [],
     isLoading: pageLoading,
     selection: selectedRows,
-    sort = {},
     state: selectedState,
     detailsTab: tabSelection
   } = deviceListState;
-  const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
   const { canManageDevices } = userCapabilities;
   const { hasMonitor } = tenantCapabilities;
   const currentSelectedState = states[selectedState] ?? states.devices;
@@ -276,6 +274,7 @@ export const Authorized = ({
   useEffect(() => {
     setShowFilters(false);
   }, [selectedGroup]);
+
   const dispatchDeviceListState = useCallback(
     (options, shouldSelectDevices = true, forceRefresh = false, fetchAuth = false) => {
       return dispatch(setDeviceListState(options, shouldSelectDevices, forceRefresh, fetchAuth));
@@ -346,17 +345,7 @@ export const Authorized = ({
 
   const onPageLengthChange = perPage => dispatchDeviceListState({ perPage, page: 1, refreshTrigger: !refreshTrigger });
 
-  const onSortChange = attribute => {
-    let changedSortCol = attribute.name;
-    let changedSortDown = sortDown === SORTING_OPTIONS.desc ? SORTING_OPTIONS.asc : SORTING_OPTIONS.desc;
-    if (changedSortCol !== sortCol) {
-      changedSortDown = SORTING_OPTIONS.desc;
-    }
-    dispatchDeviceListState({
-      sort: { direction: changedSortDown, key: changedSortCol, scope: attribute.scope },
-      refreshTrigger: !refreshTrigger
-    });
-  };
+  const onSortChange = useCallback(sortItem => dispatchDeviceListState({ sort: [sortItem] }), [dispatchDeviceListState]);
 
   const setDetailsTab = detailsTab => dispatchDeviceListState({ detailsTab, setOnly: true });
 
