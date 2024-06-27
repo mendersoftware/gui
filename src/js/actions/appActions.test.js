@@ -196,7 +196,7 @@ export const commonAppInitActions = [
 ];
 
 export const deviceInitActions = [
-  { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:00.900Z' },
+  { type: SET_OFFLINE_THRESHOLD, value: '2019-01-12T13:00:06.900Z' },
   { type: SET_USER_SETTINGS, settings: { ...defaultState.users.userSettings } },
   { type: RECEIVED_PERMISSION_SETS, value: receivedPermissionSets },
   { type: RECEIVED_ROLES, value: receivedRoles },
