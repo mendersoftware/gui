@@ -22,8 +22,7 @@ import {
   HighlightOffOutlined as HighlightOffOutlinedIcon,
   LabelOutlined as LabelOutlinedIcon,
   Link as LinkIcon,
-  Replay as ReplayIcon,
-  Sort as SortIcon
+  Replay as ReplayIcon
 } from '@mui/icons-material';
 import {
   Button,
@@ -57,6 +56,7 @@ import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
 import { ConfirmationButtons, EditButton } from '../common/confirm';
 import ExpandableAttribute from '../common/expandable-attribute';
+import SortIcon from '../common/sorticon';
 import { RelativeTime } from '../common/time';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import Artifact from './artifact';
@@ -350,7 +350,7 @@ const ArtifactsList = ({ artifacts, selectedArtifact, setSelectedArtifact, setSh
               <Tooltip title={item.title} placement="top-start">
                 <>{item.title}</>
               </Tooltip>
-              {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
+              {item.sortable && <SortIcon columnKey={sortCol === item.name ? 'selected' : ''} sortDown={sortDown} />}
               {item.tooltip}
             </div>
           ))}
