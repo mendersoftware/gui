@@ -14,10 +14,18 @@ import { saveGlobalSettings } from '../actions/userActions';
 import GeneralApi, { MAX_PAGE_SIZE, apiUrl, headerNames } from '../api/general-api';
 import { routes } from '../components/devices/base-devices';
 import { filtersFilter } from '../components/devices/widgets/filters';
-import { SORTING_OPTIONS, TIMEOUTS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
+import { TIMEOUTS, UPLOAD_PROGRESS, emptyChartSelection, yes } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { rootfsImageVersion } from '../constants/releaseConstants';
-import { attributeDuplicateFilter, deepCompare, extractErrorMessage, getSnackbarMessage, mapDeviceAttributes } from '../helpers';
+import {
+  attributeDuplicateFilter,
+  combineSortCriteria,
+  deepCompare,
+  extractErrorMessage,
+  getSnackbarMessage,
+  mapDeviceAttributes,
+  sortCriteriaToSortOptions
+} from '../helpers';
 import {
   getDeviceById as getDeviceByIdSelector,
   getDeviceFilters,
@@ -579,7 +587,7 @@ export const setDeviceListState =
       setOnly: false,
       refreshTrigger,
       ...selectionState,
-      sort: { ...currentState.sort, ...selectionState.sort }
+      sort: combineSortCriteria(currentState.sort, selectionState.sort)
     };
     let tasks = [];
     // eslint-disable-next-line no-unused-vars
@@ -587,12 +595,10 @@ export const setDeviceListState =
     // eslint-disable-next-line no-unused-vars
     const { isLoading: nextLoading, deviceIds: nextDevices, selection: nextSelection, ...nextRequestState } = nextState;
     if (!nextState.setOnly && !deepCompare(currentRequestState, nextRequestState)) {
-      const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = nextState.sort ?? {};
-      const sortBy = sortCol ? [{ attribute: sortCol, order: sortDown, scope: sortScope }] : undefined;
       const applicableSelectedState = nextState.state === routes.allDevices.key ? undefined : nextState.state;
       nextState.isLoading = true;
       tasks.push(
-        dispatch(getDevicesByStatus(applicableSelectedState, { ...nextState, sortOptions: sortBy }, fetchAuth))
+        dispatch(getDevicesByStatus(applicableSelectedState, { ...nextState, sortOptions: sortCriteriaToSortOptions(nextState.sort) }, fetchAuth))
           .then(results => {
             const { deviceAccu, total } = results[results.length - 1];
             const devicesState = shouldSelectDevices

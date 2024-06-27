@@ -27,7 +27,6 @@ import {
   SET_SEARCH_STATE,
   SET_SNACKBAR,
   SET_VERSION_INFORMATION,
-  SORTING_OPTIONS,
   TIMEOUTS
 } from '../constants/appConstants';
 import {
@@ -270,11 +269,12 @@ export const deviceInitActions = [
       ...DEVICE_LIST_DEFAULTS,
       deviceIds: [],
       isLoading: true,
+      refreshTrigger: undefined,
       selectedAttributes: [],
       selectedIssues: [],
       selection: [],
       setOnly: false,
-      sort: { direction: SORTING_OPTIONS.desc },
+      sort: [],
       state: DEVICE_STATES.accepted,
       total: 0
     }
@@ -302,7 +302,7 @@ export const deviceInitActions2 = [
       selectedAttributes: [],
       selectedIssues: [],
       selection: [],
-      sort: { direction: SORTING_OPTIONS.desc },
+      sort: [],
       state: DEVICE_STATES.accepted,
       total: 2
     }
@@ -382,7 +382,7 @@ const appInitActions = [
       selectedAttributes: [],
       selectedIssues: [],
       selection: [],
-      sort: { direction: SORTING_OPTIONS.desc },
+      sort: [],
       state: DEVICE_STATES.accepted,
       total: 2
     }

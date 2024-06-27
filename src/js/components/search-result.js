@@ -24,7 +24,7 @@ import pluralize from 'pluralize';
 
 import { setSearchState } from '../actions/appActions';
 import { setDeviceListState } from '../actions/deviceActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
+import { TIMEOUTS } from '../constants/appConstants';
 import { getIdAttribute, getMappedDevicesList, getUserSettings } from '../selectors';
 import { getHeaders } from './devices/authorized-devices';
 import { routes } from './devices/base-devices';
@@ -77,8 +77,7 @@ export const SearchResult = ({ onToggleSearchResult, open = true }) => {
 
   const [columnHeaders, setColumnHeaders] = useState(getHeaders(columnSelection, routes.devices.defaultHeaders, idAttribute));
 
-  const { isSearching, searchTerm, searchTotal, sort = {} } = searchState;
-  const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
+  const { isSearching, searchTerm, searchTotal } = searchState;
 
   useEffect(() => {
     const columnHeaders = getHeaders(columnSelection, routes.devices.defaultHeaders, idAttribute);

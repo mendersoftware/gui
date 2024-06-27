@@ -33,7 +33,6 @@ import {
   updateDynamicGroup
 } from '../../actions/deviceActions';
 import { setShowConnectingDialog } from '../../actions/userActions';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
 import { onboardingSteps } from '../../constants/onboardingConstants';
 import { toggle } from '../../helpers';
@@ -102,8 +101,7 @@ export const DeviceGroups = () => {
 
   const [locationParams, setLocationParams] = useLocationParams('devices', {
     filteringAttributes,
-    filters,
-    defaults: { sort: { direction: SORTING_OPTIONS.desc } }
+    filters
   });
 
   const { refreshTrigger, selectedId, state: selectedState } = deviceListState;

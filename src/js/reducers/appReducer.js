@@ -48,11 +48,9 @@ export const initialState = {
     deviceIds: [],
     searchTerm: '',
     searchTotal: 0,
-    sort: {
-      direction: AppConstants.SORTING_OPTIONS.desc
-      // key: null,
-      // scope: null
-    }
+    sort: [
+      // { direction: AppConstants.SORTING_OPTIONS.desc, key: null, scope: null}
+    ]
   },
   stripeAPIKey: '',
   trackerCode: '',
