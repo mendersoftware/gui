@@ -33,7 +33,7 @@ const propertyNameMap = {
 export const defaultTextRender = ({ column, device }) => {
   const propertyName = propertyNameMap[column.attribute.scope] ?? column.attribute.scope;
   const accessorTarget = device[propertyName] ?? device;
-  const attributeValue = accessorTarget[column.attribute.name] || accessorTarget[column.attribute.alternative] || device[column.attribute.name];
+  const attributeValue = accessorTarget[column.attribute.name] || device[column.attribute.name];
   return typeof attributeValue === 'object' ? JSON.stringify(attributeValue) : attributeValue;
 };
 
@@ -241,13 +241,3 @@ export const routes = {
     defaultHeaders: [defaultHeaders.deviceCreationTime, defaultHeaders.lastCheckIn]
   }
 };
-
-export const sortingAlternatives = Object.values(routes)
-  .reduce((accu, item) => [...accu, ...item.defaultHeaders], [])
-  .reduce((accu, item) => {
-    if (item.attribute.alternative) {
-      accu[item.attribute.name] = item.attribute.alternative;
-      accu[item.attribute.alternative] = item.attribute.name;
-    }
-    return accu;
-  }, {});
