@@ -710,6 +710,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   animation-name: mui-auto-fill;
 }
 
+.emotion-23.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-23:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-23 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -727,24 +737,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 .emotion-23 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-23.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-23.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-23:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-23:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-23 .MuiInput-root {
@@ -1078,6 +1070,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   animation-name: mui-auto-fill;
 }
 
+.emotion-27.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-27:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-27 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -1095,24 +1097,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 .emotion-27 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-27.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-27.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-27:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-27:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-27 .MuiInput-root {
