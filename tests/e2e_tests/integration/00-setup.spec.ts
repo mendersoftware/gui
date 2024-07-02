@@ -63,8 +63,8 @@ test.describe('Test setup', () => {
         // looks like this is the first run, let's continue
       }
       await page.goto(`${baseUrl}ui/`);
-      expect(await page.isVisible('text=/Sign up/i')).toBeTruthy();
-      await page.click(`text=/Sign up/i`);
+      expect(await page.getByText(/Sign up/i)).toBeVisible();
+      await page.getByText(/Sign up/i).click();
       console.log(`creating user with username: ${username} and password: ${password}`);
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
@@ -73,7 +73,7 @@ test.describe('Test setup', () => {
       await page.fill(selectors.passwordConfirmation, password);
 
       await page.click(`button:has-text('Sign up')`);
-      await page.waitForSelector(`button:has-text('Complete')`);
+      await page.getByRole('button', { name: /Complete/i }).waitFor();
       await page.getByLabel(/organization name/i).fill('CI test corp');
       await page.getByLabel(/terms of service/i).check();
       const frameHandle = await page.waitForSelector('iframe[title="reCAPTCHA"]');
@@ -92,10 +92,10 @@ test.describe('Test setup', () => {
       context = await prepareCookies(context, domain, userId);
       const newPage = await context.newPage();
       await newPage.goto(baseUrl);
-      await newPage.evaluate(() => {
+      await newPage.evaluate(token => {
         localStorage.setItem('JWT', JSON.stringify({ token }));
         localStorage.setItem(`onboardingComplete`, 'true');
-      });
+      }, token);
       await isLoggedIn(newPage);
       await context.storageState({ path: storagePath });
     });

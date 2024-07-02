@@ -37,7 +37,7 @@ test.describe('Files', () => {
     await uploadButton.click();
     await page.locator('.MuiDialog-paper .dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(`.MuiDialog-paper button:has-text('Upload')`);
-    await page.waitForSelector('text=/last modified/i');
+    await page.getByText(/last modified/i).waitFor();
   });
 
   test('allows artifact generation', async ({ baseUrl, loggedInPage: page }) => {
@@ -56,11 +56,12 @@ test.describe('Files', () => {
     await page.getByLabel(/Device types/i).fill(`all-of-them,`);
     await page.getByRole('button', { name: /next/i }).click();
     await page.getByRole('button', { name: /upload artifact/i }).click();
-    await page.waitForSelector('text=1-2 of 2');
+    await page.getByText('1-2 of 2').waitFor();
     const token = await getTokenFromStorage(baseUrl);
     await tagRelease(releaseName, 'customRelease', baseUrl, token);
     await page.waitForTimeout(timeouts.oneSecond); // some extra time for the release to be tagged in the backend
     await page.keyboard.press('Escape');
+    await page.reload();
     await page.click(`.leftNav :text('Releases')`);
     expect(await page.getByText(/customRelease/i)).toBeVisible();
   });
@@ -68,8 +69,8 @@ test.describe('Files', () => {
   test('allows release notes manipulation', async ({ loggedInPage: page }) => {
     await page.getByText(/demo-artifact/i).click();
     expect(await page.getByRole('heading', { name: /Release notes/i }).isVisible()).toBeTruthy();
-    const hasNotes = await page.getByText('foo notes').isVisible();
-    if (hasNotes) {
+    const hasNotes = await page.getByText('foo notes');
+    if (await hasNotes.isVisible()) {
       return;
     }
     // layout based locators are not an option here, since the edit button is also visible on the nearby tags section
@@ -83,11 +84,11 @@ test.describe('Files', () => {
     await input.fill('foo notes');
     await page.getByTestId('CheckIcon').click();
     expect(input).not.toBeVisible();
-    expect(hasNotes).toBeTruthy();
+    expect(hasNotes).toBeVisible();
   });
 
   test('allows release tags manipulation', async ({ baseUrl, loggedInPage: page }) => {
-    const alreadyTagged = await page.getByText('some, tags').isVisible();
+    const alreadyTagged = await page.getByText(selectors.releaseTags).isVisible();
     test.skip(alreadyTagged, 'looks like the release was tagged already');
     await page.getByText(/demo-artifact/i).click();
     expect(await page.getByRole('heading', { name: /Release notes/i }).isVisible()).toBeTruthy();
@@ -106,8 +107,8 @@ test.describe('Files', () => {
     await page.waitForTimeout(timeouts.oneSecond);
     expect(input).not.toBeVisible();
     await page.goto(`${baseUrl}ui/releases`);
-    await page.waitForSelector('text="some, tags"', { timeout: timeouts.oneSecond });
-    expect(await page.getByText('some, tags').isVisible()).toBeTruthy();
+    await page.getByText(selectors.releaseTags).waitFor({ timeout: timeouts.default });
+    expect(await page.getByText(selectors.releaseTags)).toBeVisible();
   });
 
   test('allows release tags reset', async ({ loggedInPage: page }) => {
@@ -120,26 +121,25 @@ test.describe('Files', () => {
     await editButton.click();
     const alreadyTagged = await page.getByRole('button', { name: 'some' }).isVisible();
     if (alreadyTagged) {
-      await Promise.all(
-        ['some', 'tags'].map(async name => {
-          const foundTag = await page.getByRole('button', { name });
-          if (!(await foundTag.isVisible())) {
-            return Promise.resolve();
-          }
-          return await foundTag.getByTestId('CancelIcon').click();
-        })
-      );
+      for await (const name of ['some', 'tags']) {
+        const foundTag = await page.getByRole('button', { name });
+        if (!(await foundTag.isVisible())) {
+          continue;
+        }
+        await foundTag.getByTestId('CancelIcon').click();
+      }
       await page.getByTestId('CheckIcon').click();
-      // await page.waitForTimeout(timeouts.oneSecond);
-      expect(await page.getByPlaceholder(/add release tags/i).isVisible({ timeout: timeouts.oneSecond })).toBeTruthy();
+      await page.getByPlaceholder(/add release tags/i).waitFor({ timeout: timeouts.oneSecond });
+      expect(await page.getByPlaceholder(/add release tags/i)).toBeVisible();
       await editButton.click();
     }
     await page.getByPlaceholder(/enter release tags/i).fill(releaseTag);
     await page.getByTestId('CheckIcon').click();
     await page.press('body', 'Escape');
-    await page.waitForSelector('text=Upload', { timeout: timeouts.oneSecond });
-    await page.press('body', 'Escape');
-    expect(await page.getByText(releaseTag, { exact: false }).isVisible({ timeout: timeouts.oneSecond })).toBeTruthy();
+    await page.waitForTimeout(timeouts.default);
+    await page.getByText('Upload').isVisible({ timeout: timeouts.default });
+    await page.screenshot({ path: './test-results/foo.png' });
+    expect(await page.getByText(releaseTag, { exact: false })).toBeVisible();
   });
 
   test('allows release tags filtering', async ({ loggedInPage: page }) => {
@@ -149,7 +149,7 @@ test.describe('Files', () => {
     releasesNote.waitFor({ timeout: timeouts.default });
     await page.getByText(/mender-demo-artifact*/i).waitFor({ timeout: timeouts.default, state: 'detached' });
     await page.getByText(/Clear filter/i).click();
-    await page.waitForSelector('text=/mender-demo-artifact*/i');
+    await page.getByText(/mender-demo-artifact*/i).waitFor();
     expect(await page.getByText(releaseTag.toLowerCase()).isVisible()).toBeTruthy();
     await page.getByPlaceholder(/select tags/i).fill(`${releaseTag.toLowerCase()},`);
     await page.getByText(/mender-demo-artifact*/i).waitFor({ timeout: timeouts.default });
@@ -171,7 +171,7 @@ test.describe('Files', () => {
   // })
 
   test('allows artifact downloads', async ({ loggedInPage: page }) => {
-    await page.click(`text=/mender-demo-artifact/i`);
+    await page.getByText(/mender-demo-artifact/i).click();
     await page.click('.expandButton');
     const downloadButton = await page.getByText(/download artifact/i);
     expect(await downloadButton.isVisible()).toBeTruthy();
@@ -196,10 +196,10 @@ test.describe('Files', () => {
     // TODO adjust test to better work with webkit, for now it should be good enough to assume file transfers work there too if the remote terminal works
     test.skip(!isEnterpriseOrStaging(environment) || ['webkit'].includes(browserName));
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`${selectors.deviceListItem} div:last-child`);
-    await page.click(`text=/troubleshooting/i`);
+    await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
+    await page.getByText(/troubleshooting/i).click();
     // the deviceconnect connection might not be established right away
-    await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });
+    await page.waitForSelector(`text=/Session status/i`, { timeout: timeouts.tenSeconds });
     await page.locator('.dropzone input').setInputFiles(`fixtures/${fileName}`);
     await page.click(selectors.placeholderExample, { clickCount: 3 });
     await page.getByPlaceholder(/installed-by-single-file/i).fill(`/tmp/${fileName}`);

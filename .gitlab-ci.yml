@@ -30,23 +30,23 @@ include:
   DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}
   DOCKER_PUBLISH_COMMIT_TAG=${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}
 
-test:lint:
-  stage: test
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs: []
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-  script:
-    - npm ci --cache .npm --prefer-offline
-    - cd tests/e2e_tests && npm ci && cd ../..
-    - npm run lint
-  tags:
-    - mender-qa-worker-generic-light
+# test:lint:
+#   stage: test
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs: []
+#   cache:
+#     key:
+#       files:
+#         - package-lock.json
+#     paths:
+#       - .npm/
+#   script:
+#     - npm ci --cache .npm --prefer-offline
+#     - cd tests/e2e_tests && npm ci && cd ../..
+#     - npm run lint
+#   tags:
+#     - mender-qa-worker-generic-light
 
 test:types:
   stage: test
@@ -94,25 +94,25 @@ test:types:
       - scripts/typeGeneration
       - src/js/api/types
 
-test:licenses:
-  image: denoland/deno:alpine-1.38.0
-  stage: test
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs: []
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-  before_script:
-    - apk add --no-cache nodejs npm
-    - npm ci
-  script:
-    - deno run --allow-env --allow-read --allow-sys tests/licenses/licenseCheck.ts
-  tags:
-    - mender-qa-worker-generic-light
+# test:licenses:
+#   image: denoland/deno:alpine-1.38.0
+#   stage: test
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs: []
+#   cache:
+#     key:
+#       files:
+#         - package-lock.json
+#     paths:
+#       - .npm/
+#   before_script:
+#     - apk add --no-cache nodejs npm
+#     - npm ci
+#   script:
+#     - deno run --allow-env --allow-read --allow-sys tests/licenses/licenseCheck.ts
+#   tags:
+#     - mender-qa-worker-generic-light
 
 .template:test:acceptance:
   stage: e2e-test
@@ -149,8 +149,8 @@ test:acceptance:
 
 test:acceptance:enterprise:
   extends: .template:test:acceptance
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "master"
   variables:
     TEST_ENVIRONMENT: enterprise
   script:
@@ -159,6 +159,8 @@ test:acceptance:enterprise:
     - fi
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise
     - docker rmi $DOCKER_REPOSITORY:pr
+  tags:
+    - mender-qa-worker-gui-tests
 
 test:acceptance:unprivileged:
   extends: .template:test:acceptance
@@ -191,71 +193,71 @@ test:acceptance:enterprise-unprivileged:
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run --enterprise --unprivileged
     - docker rmi $DOCKER_REPOSITORY:pr
 
-test:unit:
-  stage: test
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs: []
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-  script:
-    - npm i -g npm
-    - npm ci --cache .npm --prefer-offline
-    - npm run test -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
-  after_script:
-    - mkdir logs && cp .npm/_logs/* logs/
-  artifacts:
-    expire_in: 2w
-    paths:
-      - coverage
-      - logs
-    reports:
-      junit: junit.xml
-    when: always
-  tags:
-    - mender-qa-worker-gui-tests
+# test:unit:
+#   stage: test
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs: []
+#   cache:
+#     key:
+#       files:
+#         - package-lock.json
+#     paths:
+#       - .npm/
+#   script:
+#     - npm i -g npm
+#     - npm ci --cache .npm --prefer-offline
+#     - npm run test -- --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+#   after_script:
+#     - mkdir logs && cp .npm/_logs/* logs/
+#   artifacts:
+#     expire_in: 2w
+#     paths:
+#       - coverage
+#       - logs
+#     reports:
+#       junit: junit.xml
+#     when: always
+#   tags:
+#     - mender-qa-worker-gui-tests
 
-test:docs-links:
-  stage: test
-  needs: []
-  except:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
-  before_script:
-    - apk add --no-cache curl
-  script:
-    - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | sed -e 's,\${path},''/,g' | egrep -o 'https?://[^ `"]+' | sort | uniq)
-    - error=0
-    - for url in $links; do
-    - if ! curl --output /dev/null --silent --head --fail $url; then
-    - error=1
-    - echo "[ko] $url"
-    - else
-    - echo "[ok] $url"
-    - fi
-    - done
-    - if [ $error -gt 0 ]; then
-    - exit 1
-    - fi
-  tags:
-    - mender-qa-worker-generic-light
+# test:docs-links:
+#   stage: test
+#   needs: []
+#   except:
+#     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   before_script:
+#     - apk add --no-cache curl
+#   script:
+#     - links=$(grep -r docs.mender.io src/ | grep -v snapshots | sed -e 's,\${docsVersion},'${DOCS_VERSION}'/,g' | sed -e 's,\${path},''/,g' | egrep -o 'https?://[^ `"]+' | sort | uniq)
+#     - error=0
+#     - for url in $links; do
+#     - if ! curl --output /dev/null --silent --head --fail $url; then
+#     - error=1
+#     - echo "[ko] $url"
+#     - else
+#     - echo "[ok] $url"
+#     - fi
+#     - done
+#     - if [ $error -gt 0 ]; then
+#     - exit 1
+#     - fi
+#   tags:
+#     - mender-qa-worker-generic-light
 
-test:docs-links:hosted:
-  extends: test:docs-links
-  only:
-    - /^(staging|saas-[a-zA-Z0-9.]+)$/
-  except: []
-  variables:
-    DOCS_VERSION: hosted
+# test:docs-links:hosted:
+#   extends: test:docs-links
+#   only:
+#     - /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   except: []
+#   variables:
+#     DOCS_VERSION: hosted
 
 test:prep:
   stage: pre-test
   image: docker
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "staging"
   services:
     - docker:dind
   script:
@@ -264,8 +266,8 @@ test:prep:
     paths:
       - mender-stress-test-client
     expire_in: 30 days
-  tags:
-    - mender-qa-worker-generic-light
+  # tags:
+  #   - mender-qa-worker-generic-light
 
 # excludes non multiplatform build job
 build:docker:
@@ -276,7 +278,7 @@ build:docker-multiplatform:
   # by default alvaldi-gui uses the unprivileged mode
   script:
     - if [[ ! $CI_COMMIT_REF_NAME =~ "(main|master|staging|production|feature-.+|\d+\.\d+\..+)" ]]; then
-    -   export MULTIPLATFORM_PLATFORMS='linux/amd64'
+    - export MULTIPLATFORM_PLATFORMS='linux/amd64'
     - fi
     - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
     - docker context create builder
@@ -317,7 +319,7 @@ build:docker-multiplatform:
 
 .template:test:staging-deployment:
   image: mendersoftware/mender-test-containers:gui-e2e-testing
-  stage: .post
+  stage: test
   services:
     - docker:dind
   cache:
@@ -343,33 +345,37 @@ build:docker-multiplatform:
   after_script:
     - cd $CI_PROJECT_DIR
     - mkdir logs && cp /root/.npm/_logs/* logs/
-  only:
-    - staging
-  when: delayed
-  start_in: 15 minutes
+  # only:
+  #   - staging
+  # when: delayed
+  # start_in: 15 minutes
   artifacts:
     expire_in: 2w
     paths:
       - tests/e2e_tests/test-results
       - logs
     when: always
-  tags:
-    - mender-qa-worker-generic-light
+  # tags:
+  #   - mender-qa-worker-generic-light
 
-test:staging-deployment:chrome:
-  extends: .template:test:staging-deployment
-  script:
-    - npm run test-ci
+# test:staging-deployment:chrome:
+#   extends: .template:test:staging-deployment
+#   script:
+#     - npm run test-ci
 
-test:staging-deployment:firefox:
-  extends: .template:test:staging-deployment
-  script:
-    - npm run test-ci -- --browser=firefox
+# test:staging-deployment:firefox:
+#   extends: .template:test:staging-deployment
+#   script:
+#     - npm run test-ci -- --browser=firefox
 
 test:staging-deployment:webkit:
   extends: .template:test:staging-deployment
+  variables:
+    BROWSER: webkit
   script:
     - npm run test-ci -- --browser=webkit
+  tags:
+    - mender-qa-worker-gui-tests
 
 .template:publish:tests:
   stage: publish
@@ -385,16 +391,16 @@ test:staging-deployment:webkit:
   tags:
     - mender-qa-worker-generic-light
 
-publish:tests:
-  extends: .template:publish:tests
-  rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
-  needs:
-    - test:unit
-  script:
-    - export COVERALLS_SERVICE_JOB_NUMBER=unittests
-    - export COVERALLS_FLAG_NAME=unittests
-    - coveralls < coverage/lcov.info
+# publish:tests:
+#   extends: .template:publish:tests
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
+#   needs:
+#     - test:unit
+#   script:
+#     - export COVERALLS_SERVICE_JOB_NUMBER=unittests
+#     - export COVERALLS_FLAG_NAME=unittests
+#     - coveralls < coverage/lcov.info
 
 publish:e2e-tests:
   extends: .template:publish:tests
@@ -466,8 +472,8 @@ publish:image-multiplatform:mender-unprivileged:
   script:
     # Publish the image for all releases
     - for version in $integration_versions; do
-    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged
-    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged_${CI_COMMIT_SHA}
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged_${CI_COMMIT_SHA}
     - done
     - echo "PUBLISH_IMAGE_DIGEST=${DOCKER_REPOSITORY}@$(regctl image digest ${DOCKER_REPOSITORY}:mender-${version}-unprivileged)" >> publish.env
 

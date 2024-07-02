@@ -12,10 +12,14 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import test, { expect } from '../fixtures/fixtures';
 import { compareImages, isEnterpriseOrStaging } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const terminalReferenceFileMap = {
   default: 'terminalContent.png',
@@ -29,8 +33,8 @@ test.describe('Device details', () => {
 
   test('has basic inventory', async ({ demoDeviceName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`${selectors.deviceListItem} div:last-child`);
-    await page.click(`text=/inventory/i`);
+    await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
+    await page.getByText(/inventory/i).click();
     expect(await page.isVisible(`css=.expandedDevice >> text=Linux`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=mac`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
@@ -43,8 +47,8 @@ test.describe('Device details', () => {
     const slideOut = await page.locator('.MuiPaper-root');
     expect(await slideOut.locator(`:text("${demoDeviceName}"):below(:text("clear search"))`).isVisible()).toBeTruthy();
     expect(await slideOut.getByText('1-1 of 1').isVisible()).toBeTruthy();
-    await page.click(selectors.deviceListItem);
-    await page.waitForSelector('text=/device information/i');
+    await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
+    await page.getByText(/device information/i).waitFor();
     expect(await page.getByText(/Authorization sets/i).isVisible()).toBeTruthy();
     await page.click('[aria-label="close"]');
     expect(await page.getByText(/table options/i).isVisible()).toBeTruthy();
@@ -76,10 +80,12 @@ test.describe('Device details', () => {
     await page.getByRole('button', { name: /filters/i }).click();
     await page.getByLabel(/attribute/i).fill(rootfs);
     await page.getByText(/equals/i).click();
-    await page.getByText(`doesn't exist`).click();
-    await page.waitForTimeout(timeouts.fiveSeconds);
-    expect(await page.getByRole('button', { name: `${rootfs} doesn't exist` }).isVisible()).toBeTruthy();
-    expect(await page.getByText('No devices found').isVisible()).toBeTruthy();
+    await page.waitForTimeout(timeouts.default);
+    await page.getByRole('option', { name: `doesn't exist` }).click();
+    const filterChip = await page.getByRole('button', { name: `${rootfs} doesn't exist` });
+    await filterChip.waitFor({ timeout: timeouts.fiveSeconds });
+    expect(filterChip).toBeVisible();
+    expect(await page.getByText('No devices found')).toBeVisible();
     await page.getByText(/clear filter/i).click();
     await page.waitForSelector(selectors.deviceListItem);
     const paginationVisible = await page.getByText('1-1').isVisible({ timeout: timeouts.default });
@@ -88,13 +94,13 @@ test.describe('Device details', () => {
 
   test('can open a terminal', async ({ browserName, loggedInPage: page }) => {
     await page.click(`.leftNav :text('Devices')`);
-    await page.click(`${selectors.deviceListItem} div:last-child`);
-    await page.click(`text=/troubleshooting/i`);
+    await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
+    await page.getByText(/troubleshooting/i).click();
     // the deviceconnect connection might not be established right away
-    await page.waitForSelector('text=/Session status/i', { timeout: timeouts.tenSeconds });
+    await page.getByText(/Session status/i).waitFor({ timeout: timeouts.tenSeconds });
     const connectionButton = await page.getByRole('button', { name: /connect/i });
     await connectionButton.first().click();
-    await page.waitForSelector(`text=Connection with the device established`, { timeout: timeouts.tenSeconds });
+    await page.getByText('Connection with the device established').waitFor({ timeout: timeouts.tenSeconds });
     expect(await page.isVisible('.terminal.xterm .xterm-screen')).toBeTruthy();
 
     // the terminal content might take a bit to get painted - thus the waiting
@@ -115,7 +121,7 @@ test.describe('Device details', () => {
       const { pass } = compareImages(expectedPath, screenShotPath);
       expect(pass).toBeTruthy();
 
-      const terminalText = await page.locator(selectors.terminalText);
+      const terminalText = await page.locator(`css=${selectors.terminalText}`);
       await terminalText.fill('top');
       await page.keyboard.press('Enter');
       await page.waitForTimeout(timeouts.default);

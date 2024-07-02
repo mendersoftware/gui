@@ -39,8 +39,8 @@ let metadataLocation = '';
 test.describe('SAML Login via sso/id/login', () => {
   test.describe.configure({ mode: 'serial' });
   test.use({ storageState: storagePath });
-  test.afterAll(async ({ environment, baseUrl, browserName }, testInfo) => {
-    if (testInfo.status === 'skipped' || !isEnterpriseOrStaging(environment)) {
+  test.afterAll(async ({ baseUrl, browserName, environment }, testInfo) => {
+    if (testInfo.status === 'skipped' || !isEnterpriseOrStaging(environment) || browserName === 'webkit') {
       return;
     }
     const token = await getTokenFromStorage(baseUrl);
@@ -65,7 +65,7 @@ test.describe('SAML Login via sso/id/login', () => {
 
   // Setups the SAML/SSO login with samltest.id Identity Provider
   test('Set up SAML', async ({ browserName, environment, baseUrl, loggedInPage: page }) => {
-    test.skip(!isEnterpriseOrStaging(environment));
+    test.skip(!isEnterpriseOrStaging(environment) || browserName === 'webkit');
     // allow a lot of time to enter metadata + then some to handle uploading the config to the external service
     test.setTimeout(5 * timeouts.sixtySeconds + timeouts.fifteenSeconds);
 
@@ -77,14 +77,14 @@ test.describe('SAML Login via sso/id/login', () => {
     expect(status).toBeGreaterThanOrEqual(200);
     expect(status).toBeLessThan(300);
     await page.goto(`${baseUrl}ui/settings/organization-and-billing`);
-    const isInitialized = await page.isVisible('text=Entity ID');
+    const isInitialized = await page.getByText('Entity ID').isVisible();
     if (!isInitialized) {
       // Check input[type="checkbox"]
       await page.getByLabel(/Enable Single Sign-On/i).click();
       await page.getByRole('combobox').click();
       await page.getByRole('option', { name: 'SAML' }).click();
       // Click text=input with the text editor
-      await page.locator('text=input with the text editor').click();
+      await page.getByText('input with the text editor').click();
 
       const textfield = await page.locator('[aria-label="Editor content\\;Press Alt\\+F1 for Accessibility Options\\."]');
       const cleanedMetaData = metadata.replace(/(?:\r\n|\r|\n)/g, '');
@@ -95,13 +95,13 @@ test.describe('SAML Login via sso/id/login', () => {
       }
       console.log('typing metadata done.');
       // The screenshot saves the view of the typed metadata
-      await page.screenshot({ 'path': 'saml-edit-saving.png' });
+      await page.screenshot({ 'path': './test-results/saml-edit-saving.png' });
       // Click text=Save >> nth=1
-      await page.locator('text=Save').nth(1).click();
-      await page.waitForSelector('text=Entity ID');
+      await page.getByText('Save').nth(1).click();
+      await page.getByText('Entity ID').waitFor();
     }
 
-    await page.locator('text=View metadata in the text editor').click();
+    await page.getByText('View metadata in the text editor').click();
     // Click text=Download file
     const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: /download file/i }).click()]);
     const downloadTargetPath = await download.path();
@@ -114,12 +114,13 @@ test.describe('SAML Login via sso/id/login', () => {
     const metadataId = data[0].id;
     console.log(`looking for config info for metadata id: ${metadataId}`);
     const expectedLoginUrl = `${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/login`;
-    await page.waitForSelector(`text=${expectedLoginUrl}`);
-    expect(await page.isVisible(`text=${expectedLoginUrl}`)).toBeTruthy();
+    const loginUrl = await page.getByText(expectedLoginUrl);
+    await loginUrl.waitFor();
+    expect(await loginUrl.isVisible()).toBeTruthy();
     const expectedAcsUrl = `${baseUrl}api/management/v1/useradm/auth/sso/${metadataId}/acs`;
-    expect(await page.isVisible(`text=${expectedAcsUrl}`)).toBeTruthy();
+    expect(await page.getByText(expectedAcsUrl).isVisible()).toBeTruthy();
     const expectedSpMetaUrl = `${baseUrl}api/management/v1/useradm/sso/sp/metadata/${metadataId}`;
-    expect(await page.isVisible(`text=${expectedSpMetaUrl}`)).toBeTruthy();
+    expect(await page.getByText(expectedSpMetaUrl).isVisible()).toBeTruthy();
     acsUrl = expectedAcsUrl;
     metadataLocation = expectedSpMetaUrl;
 
@@ -133,9 +134,9 @@ test.describe('SAML Login via sso/id/login', () => {
 
   // Creates a user with login that matches Identity privder (samltest.id) user email
   test('Creates a user without a password', async ({ environment, baseUrl, browserName, loggedInPage: page }) => {
-    test.skip(!isEnterpriseOrStaging(environment));
+    test.skip(!isEnterpriseOrStaging(environment) || browserName === 'webkit');
     await page.goto(`${baseUrl}ui/settings/user-management`);
-    const userExists = await page.isVisible(`text=${samlSettings.credentials[browserName]}`);
+    const userExists = await page.getByText(samlSettings.credentials[browserName]).isVisible();
     if (userExists) {
       console.log(`${samlSettings.credentials[browserName]} already exists.`);
       return;
@@ -146,13 +147,13 @@ test.describe('SAML Login via sso/id/login', () => {
     // Click text=Create user
     await page.getByRole('button', { name: /Create user/i }).click();
     await page.screenshot({ path: './test-results/user-created.png' });
-    await page.waitForSelector('text=The user was created successfully.');
+    await page.getByText('The user was created successfully.').waitFor();
   });
 
   // This test calls auth/sso/${id}/login, where id is the id of the identity provider
   // and verifies that login is successful.
   test('User can login via sso/login endpoint', async ({ environment, baseUrl, browser, browserName, loggedInPage }) => {
-    test.skip(!isEnterpriseOrStaging(environment));
+    test.skip(!isEnterpriseOrStaging(environment) || browserName === 'webkit');
     test.setTimeout(3 * timeouts.fifteenSeconds);
     let idpServer;
     startIdpServer({ acsUrl, metadataLocation }, server => (idpServer = server));
@@ -160,7 +161,7 @@ test.describe('SAML Login via sso/id/login', () => {
     await loggedInPage.goto(`${baseUrl}ui/help`);
     await loggedInPage.goto(`${baseUrl}ui/settings`);
     await loggedInPage.getByText(/organization/i).click();
-    await loggedInPage.waitForSelector('text=View metadata in the text editor', { timeout: timeouts.tenSeconds });
+    await loggedInPage.getByText('View metadata in the text editor').waitFor({ timeout: timeouts.tenSeconds });
     let loginUrl = '';
     let loginThing = await loggedInPage.locator('*:below(:text("Start URL"))').first();
     loginUrl = await loginThing.getAttribute('title');

@@ -15,7 +15,7 @@ import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
 
 import { baseUrlToDomain, getPeristentLoginInfo, isLoggedIn, login, prepareCookies } from '../utils/commands';
-import { storagePath } from '../utils/constants';
+import { storagePath, timeouts } from '../utils/constants';
 
 type TestFixtures = {
   baseUrl: string;
@@ -42,13 +42,14 @@ const defaultConfig = {
 
 const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : coveredTest).extend<TestFixtures>({
   loggedInPage: async ({ baseUrl, browserName, context, password, username }, use) => {
+    const domain = baseUrlToDomain(baseUrl);
+    const { token, userId } = await login(username, password, baseUrl);
+    // let context = await browser.newContext({ storageState: storagePath });
+    context = await prepareCookies(context, domain, userId);
     if (!['firefox', 'webkit'].includes(browserName)) {
       await context.grantPermissions(['clipboard-read'], { origin: baseUrl });
     }
-    const domain = baseUrlToDomain(baseUrl);
-    const { token, userId } = await login(username, password, baseUrl);
-    context = await prepareCookies(context, domain, userId);
-    context.addInitScript(token => {
+    await context.addInitScript(token => {
       window.localStorage.setItem('JWT', JSON.stringify({ token }));
       window.localStorage.setItem(`onboardingComplete`, 'true');
     }, token);
@@ -58,7 +59,7 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     const isHeaderComplete = await page.getByText(username).isVisible();
     if (!isHeaderComplete) {
       await page.reload();
-      await page.waitForSelector(`text=${username}`);
+      await page.getByText(username).waitFor({ timeout: timeouts.default });
     }
     await use(page);
     await context.storageState({ path: storagePath });

@@ -43,7 +43,7 @@ test.describe('Login', () => {
       // now we can log out
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/log out/i).click();
-      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 3 * timeouts.oneSecond });
+      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: timeouts.default });
       expect(page.getByRole('button', { name: /log in/i }).isVisible()).toBeTruthy();
     });
 
@@ -64,7 +64,7 @@ test.describe('Login', () => {
       // still on /login page plus an error is displayed
       const loginVisible = await page.getByRole('button', { name: /log in/i }).isVisible();
       expect(loginVisible).toBeTruthy();
-      await page.waitForSelector('text=There was a problem logging in');
+      await page.getByText('There was a problem logging in').waitFor();
     });
 
     test('Does not log in without password', async ({ baseUrl, environment, page, username }) => {
@@ -75,7 +75,7 @@ test.describe('Login', () => {
       await page.waitForSelector(selectors.email);
       await page.click(selectors.email);
       await page.fill(selectors.email, username);
-      expect(await page.isDisabled('button:has-text("Log in")')).toBeTruthy();
+      expect(await page.getByRole('button', { name: /Log in/i })).toBeDisabled();
     });
   });
 

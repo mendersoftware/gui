@@ -128,7 +128,7 @@ run_tests() {
     docker exec $runnerid npm i
     docker exec $runnerid npx playwright install
 
-    docker exec $runnerid npm run test-ci || failed=1
+    docker exec $runnerid npm run test-ci -- --browser=webkit || failed=1
 
     docker inspect --format '{{.State.ExitCode}}' $runnerid || true
     [ $? == 0 ] || failed=1

@@ -11,8 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { Decoder } from '@nuintun/qrcode';
 import * as fs from 'fs';
+import jsQR from 'jsqr';
 import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
@@ -24,33 +24,41 @@ test.describe('Settings', () => {
     test.use({ storageState: storagePath });
     test('allows access to access tokens', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings`);
-      await page.waitForSelector('css=button >> text=/Generate a token/i');
+      const tokenGenerationButton = await page.getByRole('button', { name: /Generate a token/i });
+      if (!(await tokenGenerationButton.isVisible())) {
+        console.log('settings may not be loaded - move around');
+        await page.goto(`${baseUrl}ui/help`);
+        await page.goto(`${baseUrl}ui/settings`);
+      }
+      await tokenGenerationButton.waitFor();
     });
     test('allows generating & revoking tokens', async ({ baseUrl, browserName, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings`);
-      await page.waitForSelector('css=button >> text=/Generate a token/i');
-      const isRetry = await page.isVisible(`text=/revoke/i`);
-      if (isRetry) {
-        await page.click('text=/revoke/i');
-        await page.waitForSelector('text=/revoke token/i');
-        await page.click('button:has-text("Revoke token")');
+      const tokenGenerationButton = await page.getByText(/generate a token/i);
+      await tokenGenerationButton.waitFor();
+      const revokeButton = await page.getByText(/revoke/i);
+      const revokeTokenButton = await page.getByRole('button', { name: /Revoke token/i });
+      if (await revokeButton.isVisible()) {
+        await revokeButton.click();
+        await revokeTokenButton.waitFor();
+        await revokeTokenButton.click();
       }
-      await page.click('text=/generate a token/i');
-      await page.waitForSelector('text=/Create new token/i');
-      await page.fill('[placeholder=Name]', 'aNewToken');
-      await page.click('div[role="combobox"]:has-text("a year")');
-      await page.click('li[role="option"]:has-text("7 days")');
-      await page.click('text=/Create token/i');
-      await page.click('text=/Close/i');
-      await page.waitForSelector('text=/in 7 days/i');
-      await page.click('button:has-text("Revoke")');
-      await page.waitForSelector('text=/revoke token/i');
-      await page.click('button:has-text("Revoke token")');
-      await page.click('text=/generate a token/i');
-      await page.fill('[placeholder=Name]', 'aNewToken');
-      await page.click('text=/Create token/i');
+      await tokenGenerationButton.click();
+      await page.getByText(/Create new token/i).waitFor();
+      await page.getByPlaceholder('Name').fill('aNewToken');
+      await page.getByText(/a year/i).click({ force: true });
+      await page.getByRole('option', { name: '7 days' }).click();
+      await page.getByRole('button', { name: /Create token/i }).click();
+      await page.getByRole('button', { name: /Close/i }).click();
+      await page.getByText(/in 7 days/i).waitFor();
+      await page.getByRole('button', { name: /Revoke/i }).click();
+      await revokeTokenButton.waitFor();
+      await revokeTokenButton.click();
+      await tokenGenerationButton.click();
+      await page.getByPlaceholder(/Name/i).fill('aNewToken');
+      await page.getByRole('button', { name: /Create token/i }).click();
       await page.click('.code .MuiSvgIcon-root');
-      await page.waitForSelector('text=/copied to clipboard/i');
+      await page.getByText(/copied to clipboard/i).waitFor();
       let token = '';
       if (browserName === 'chromium') {
         token = await page.evaluate(() => navigator.clipboard.readText());
@@ -58,8 +66,8 @@ test.describe('Settings', () => {
         token = await page.innerText('.code');
       }
       expect(token).toBeTruthy();
-      await page.click('text=/Close/i');
-      await page.waitForSelector('text=/in a year/i');
+      await page.getByRole('button', { name: /Close/i }).click();
+      await page.getByText(/in a year/i).waitFor();
     });
   });
   test.describe('account upgrades', () => {
@@ -71,7 +79,7 @@ test.describe('Settings', () => {
       if (wasUpgraded) {
         test.skip('looks like the account was upgraded already, continue with the remaining tests');
       }
-      await page.click(`text=Upgrade now`);
+      await page.getByText('Upgrade now').click();
       await page.click(`css=.planPanel >> text=Professional`);
       await page.waitForSelector('.StripeElement iframe');
       const frameHandle = await page.$('.StripeElement iframe');
@@ -81,9 +89,9 @@ test.describe('Settings', () => {
       await stripeFrame.fill('[name="cvc"]', '123');
       await stripeFrame.fill('[name="postal"]', '12345');
       await page.click(`button:has-text('Sign up')`);
-      await page.waitForSelector('text=/Card confirmed./i', { timeout: timeouts.tenSeconds });
-      await page.waitForSelector('text=/Your upgrade was successful/i', { timeout: timeouts.fifteenSeconds });
-      await page.waitForSelector('text=/Organization name/i', { timeout: timeouts.tenSeconds });
+      await page.getByText(/Card confirmed./i).waitFor({ timeout: timeouts.tenSeconds });
+      await page.getByText(/Your upgrade was successful/i).waitFor({ timeout: timeouts.fifteenSeconds });
+      await page.getByText(/Organization name/i).waitFor({ timeout: timeouts.tenSeconds });
     });
     test('allows higher device limits once upgraded', async ({ baseUrl, environment, loggedInPage: page }) => {
       test.skip(environment !== 'staging');
@@ -112,33 +120,32 @@ test.describe('Settings', () => {
         test.skip('looks like the account is already 2fa enabled, continue with the remaining tests');
       }
       await page.goto(`${baseUrl}ui/settings/my-account`);
-      await page.click('text=/Enable Two Factor/');
+      await page.getByText(/Enable Two Factor/).click();
       await page.waitForSelector('.margin-top img');
       const qrCode = await page.$eval('.margin-top img', (el: HTMLImageElement) => el.src);
       const png = PNG.sync.read(Buffer.from(qrCode.slice('data:image/png;base64,'.length), 'base64'));
-      const qrcode = new Decoder();
-      const decodedQr = await qrcode.decode(Uint8ClampedArray.from(png.data), png.width, png.height);
+      const decodedQr = jsQR(png.data, png.width, png.height);
       const qrData = new URLSearchParams(decodedQr.data);
       console.log(qrData.get('secret'));
       const qrToken = await generateOtp(qrData.get('secret'));
       console.log('Generated otp:', qrToken);
       await page.fill('#token2fa', qrToken);
-      await page.click(`css=button >> text=Verify`);
+      await page.getByRole('button', { name: /Verify/i }).click();
       await page.waitForSelector(`css=ol >> text=Verified`);
       await page.getByRole('button', { name: /save/i }).click();
     });
     test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
       await page.goto(`${baseUrl}ui/`);
-      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
+      expect(await page.getByRole('button', { name: /Log in/i })).toBeVisible();
       // enter valid username and password
       await processLoginForm({ username, password, page, environment });
       await page.waitForTimeout(timeouts.default);
       await page.fill('#token2fa', '123456');
       await page.getByRole('button', { name: /log in/i }).click();
       // still on /login page plus an error is displayed
-      expect(await page.isVisible(`button:text('Log in')`)).toBeTruthy();
-      await page.waitForSelector('text=/There was a problem logging in/', { timeout: timeouts.default });
+      expect(await page.getByRole('button', { name: /Log in/i })).toBeVisible();
+      await page.getByText(/There was a problem logging in/).waitFor({ timeout: timeouts.default });
     });
     test('allows turning 2fa off again', async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
@@ -149,7 +156,7 @@ test.describe('Settings', () => {
       await page.getByRole('button', { name: /log in/i }).click();
       await isLoggedIn(page);
       await page.goto(`${baseUrl}ui/settings/my-account`);
-      await page.click('text=/Enable Two Factor/');
+      await page.getByText(/Enable Two Factor/).click();
       await page.waitForTimeout(timeouts.default);
     });
     test('allows logging in without 2fa after deactivation', async ({ baseUrl, environment, page, password, username }) => {
@@ -166,7 +173,13 @@ test.describe('Settings', () => {
 
     test('allows access to user management', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings/user-management`);
-      await page.waitForSelector('text=/new user/i');
+      const userCreationButton = await page.getByRole('button', { name: /Add new user/i });
+      if (!(await userCreationButton.isVisible())) {
+        console.log('settings may not be loaded - move around');
+        await page.goto(`${baseUrl}ui/help`);
+        await page.goto(`${baseUrl}ui/settings/user-management`);
+      }
+      await userCreationButton.waitFor();
     });
     test('allows email changes', async ({ baseUrl, loggedInPage: page }) => {
       await page.goto(`${baseUrl}ui/settings/my-account`);
@@ -199,10 +212,10 @@ test.describe('Settings', () => {
       expect(typedPassword === replacementPassword);
       await page.fill(selectors.passwordConfirmation, replacementPassword);
       await page.getByRole('button', { name: /save/i }).click();
-      await page.waitForSelector('text=/user has been updated/i', { timeout: timeouts.tenSeconds });
+      await page.getByText(/user has been updated/i).waitFor({ timeout: timeouts.tenSeconds });
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/log out/i).click();
-      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: 3 * timeouts.oneSecond });
+      await page.getByRole('button', { name: /log in/i }).waitFor({ timeout: timeouts.default });
       expect(page.getByRole('button', { name: /log in/i }).isVisible()).toBeTruthy();
     });
 
@@ -229,7 +242,7 @@ test.describe('Settings', () => {
       await page.click(selectors.passwordCurrent);
       await page.fill(selectors.passwordCurrent, replacementPassword);
       await page.getByRole('button', { name: /save/i }).click();
-      await page.waitForSelector('text=/user has been updated/i', { timeout: timeouts.tenSeconds });
+      await page.getByText(/user has been updated/i).waitFor({ timeout: timeouts.tenSeconds });
       await page.waitForTimeout(timeouts.default);
 
       const { token: newToken } = await login(username, password, baseUrl);
