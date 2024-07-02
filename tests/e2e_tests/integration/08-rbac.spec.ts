@@ -13,6 +13,7 @@
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
 import { isEnterpriseOrStaging, isLoggedIn, processLoginForm } from '../utils/commands';
+import { prepareNewPage } from '../utils/commands.js';
 import { releaseTag, selectors, timeouts } from '../utils/constants';
 
 const releaseRoles = [
@@ -151,11 +152,8 @@ test.describe('RBAC functionality', () => {
     test('read-only tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
       test.skip(!isEnterpriseOrStaging(environment));
       const context = await browser.newContext();
-      const page = await context.newPage();
-      await page.goto(baseUrl);
       // enter valid username and password of the new user
-      await processLoginForm({ username: `limited-ro-${releaseTag}-${username}`, password, page, environment });
-      await isLoggedIn(page);
+      const page = await prepareNewPage({ baseUrl, context, password, username: `limited-ro-${releaseTag}-${username}` });
       await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
       // there should be only one release tagged with the releaseTag
       expect(await page.getByText('1-1 of 1')).toBeVisible();
@@ -165,11 +163,7 @@ test.describe('RBAC functionality', () => {
     test('manage tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
       test.skip(!isEnterpriseOrStaging(environment));
       const context = await browser.newContext();
-      const page = await context.newPage();
-      await page.goto(baseUrl);
-      // enter valid username and password of the new user
-      await processLoginForm({ username: `limited-manage-${releaseTag}-${username}`, password, page, environment });
-      await isLoggedIn(page);
+      const page = await prepareNewPage({ baseUrl, context, password, username });
       await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
       // there should be only one release tagged with the releaseTag
       expect(await page.getByText('1-1 of 1')).toBeVisible();

@@ -76,7 +76,7 @@ export const prepareCookies = async (context: BrowserContext, domain: string, us
   return context;
 };
 
-export const prepareNewPage = async ({ baseUrl, context, password, username, userId = '', token }) => {
+export const prepareNewPage = async ({ baseUrl, context, password, username, userId = '', token = '' }) => {
   let logInResult = { userId: '', token: '' };
   if (username && password) {
     logInResult = await login(username, password, baseUrl);
