@@ -83,7 +83,7 @@ export const prepareNewPage = async ({ baseUrl, context, password, username, use
   }
   const domain = baseUrlToDomain(baseUrl);
   context = await prepareCookies(context, domain, userId || logInResult.userId);
-  context.addInitScript(token => {
+  await context.addInitScript(token => {
     window.localStorage.setItem('JWT', JSON.stringify({ token }));
     window.localStorage.setItem(`onboardingComplete`, 'true');
   }, token || logInResult.token);
