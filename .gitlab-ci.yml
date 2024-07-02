@@ -253,21 +253,21 @@ test:acceptance:enterprise-unprivileged:
 #   variables:
 #     DOCS_VERSION: hosted
 
-# test:prep:
-#   stage: pre-test
-#   image: docker
-#   # rules:
-#   #   - if: $CI_COMMIT_BRANCH == "staging"
-#   services:
-#     - docker:dind
-#   script:
-#     - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client:master -c "cp mender-stress-test-client /extract/"
-#   artifacts:
-#     paths:
-#       - mender-stress-test-client
-#     expire_in: 30 days
-#   # tags:
-#   #   - mender-qa-worker-generic-light
+test:prep:
+  stage: pre-test
+  image: docker
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "staging"
+  services:
+    - docker:dind
+  script:
+    - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client:master -c "cp mender-stress-test-client /extract/"
+  artifacts:
+    paths:
+      - mender-stress-test-client
+    expire_in: 30 days
+  # tags:
+  #   - mender-qa-worker-generic-light
 
 # excludes non multiplatform build job
 build:docker:
@@ -368,14 +368,14 @@ build:docker-multiplatform:
 #   script:
 #     - npm run test-ci -- --browser=firefox
 
-# test:staging-deployment:webkit:
-#   extends: .template:test:staging-deployment
-#   variables:
-#     BROWSER: webkit
-#   script:
-#     - npm run test-ci -- --browser=webkit
-#   tags:
-#     - mender-qa-worker-gui-tests
+test:staging-deployment:webkit:
+  extends: .template:test:staging-deployment
+  variables:
+    BROWSER: webkit
+  script:
+    - npm run test-ci -- --browser=webkit
+  tags:
+    - mender-qa-worker-gui-tests
 
 .template:publish:tests:
   stage: publish

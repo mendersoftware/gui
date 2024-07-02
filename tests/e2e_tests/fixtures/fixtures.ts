@@ -42,13 +42,14 @@ const defaultConfig = {
 
 const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : coveredTest).extend<TestFixtures>({
   loggedInPage: async ({ baseUrl, browserName, context, password, username }, use) => {
+    const domain = baseUrlToDomain(baseUrl);
+    const { token, userId } = await login(username, password, baseUrl);
+    // let context = await browser.newContext({ storageState: storagePath });
+    context = await prepareCookies(context, domain, userId);
     if (!['firefox', 'webkit'].includes(browserName)) {
       await context.grantPermissions(['clipboard-read'], { origin: baseUrl });
     }
-    const domain = baseUrlToDomain(baseUrl);
-    const { token, userId } = await login(username, password, baseUrl);
-    context = await prepareCookies(context, domain, userId);
-    context.addInitScript(token => {
+    await context.addInitScript(token => {
       window.localStorage.setItem('JWT', JSON.stringify({ token }));
       window.localStorage.setItem(`onboardingComplete`, 'true');
     }, token);
