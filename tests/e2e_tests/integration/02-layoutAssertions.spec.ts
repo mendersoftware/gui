@@ -65,7 +65,8 @@ test.describe('Layout assertions', () => {
   });
 
   test('can group a device', async ({ loggedInPage: page }) => {
-    const wasGrouped = await page.isVisible(`.grouplist:has-text('testgroup')`);
+    const groupList = await page.locator('.grouplist');
+    const wasGrouped = await groupList.getByText('testgroup').isVisible();
     test.skip(wasGrouped, 'looks like the device was grouped already, continue with the remaining tests');
     await page.click(`.leftNav :text('Devices')`);
     await page.click(selectors.deviceListCheckbox);
@@ -73,12 +74,14 @@ test.describe('Layout assertions', () => {
     await page.click('[aria-label="group-add"]');
     await page.getByLabel(/type to create new/i).fill('testgroup');
     await page.click('.MuiDialogTitle-root');
-    await page.click(`:is(:text-matches('create group', 'i'), :text-matches('add to group', 'i'))`);
-    await page.waitForSelector(`.grouplist:has-text('testgroup')`);
-    expect(await page.isVisible(`.grouplist:has-text('testgroup')`)).toBeTruthy();
-    await page.click(`.grouplist:has-text('All devices')`);
+    const groupCreation = await page.getByRole('button', { name: /create group/i });
+    const groupExtension = await page.getByRole('button', { name: /add to group/i });
+    await groupCreation.or(groupExtension).first().click();
+    await groupList.getByText('testgroup').waitFor();
+    expect(await groupList.getByText('testgroup')).toBeVisible();
+    await groupList.getByText('All devices');
     await page.click(selectors.deviceListCheckbox);
-    await page.click(`.grouplist:has-text('testgroup')`);
+    await groupList.getByText('testgroup').click();
     expect(await page.locator(`css=${selectors.deviceListItem} >> text=/original/`)).toBeVisible();
   });
 });
