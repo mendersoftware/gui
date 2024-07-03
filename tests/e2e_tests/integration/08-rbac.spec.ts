@@ -12,7 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import test, { expect } from '../fixtures/fixtures';
-import { isEnterpriseOrStaging, isLoggedIn, processLoginForm } from '../utils/commands';
+import { isEnterpriseOrStaging, prepareNewPage } from '../utils/commands';
 import { releaseTag, selectors, timeouts } from '../utils/constants';
 
 const releaseRoles = [
@@ -120,13 +120,8 @@ test.describe('RBAC functionality', () => {
 
   test('has working RBAC groups limitations', async ({ baseUrl, browser, environment, password, username }) => {
     test.skip(!isEnterpriseOrStaging(environment));
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    await page.goto(baseUrl);
-    // enter valid username and password of the new user
-    await processLoginForm({ username: `limited-${username}`, password, page, environment });
-    await isLoggedIn(page);
-    await page.click(`.leftNav :text('Devices')`);
+    const page = await prepareNewPage({ baseUrl, browser, password, username: `limited-${username}` });
+    await page.getByRole('link', { name: /devices/i }).click({ force: true, timeout: timeouts.tenSeconds });
     await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
     // the created role does have permission to configure devices, so the section should be visible
     await page.getByText(/configuration/i).click();
@@ -136,13 +131,8 @@ test.describe('RBAC functionality', () => {
   test.describe('has working RBAC release limitations', () => {
     test('read-only all releases', async ({ baseUrl, browser, environment, password, username }) => {
       test.skip(!isEnterpriseOrStaging(environment));
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      await page.goto(baseUrl);
-      // enter valid username and password of the new user
-      await processLoginForm({ username: `limited-ro-releases-${username}`, password, page, environment });
-      await isLoggedIn(page);
-      await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
+      const page = await prepareNewPage({ baseUrl, browser, password, username: `limited-ro-releases-${username}` });
+      await page.getByRole('link', { name: /releases/i }).click({ force: true, timeout: timeouts.tenSeconds });
       // there should be multiple releases present
       expect(await page.getByText('1-2 of 2')).toBeVisible();
       // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
@@ -150,13 +140,8 @@ test.describe('RBAC functionality', () => {
     });
     test('read-only tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
       test.skip(!isEnterpriseOrStaging(environment));
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      await page.goto(baseUrl);
-      // enter valid username and password of the new user
-      await processLoginForm({ username: `limited-ro-${releaseTag}-${username}`, password, page, environment });
-      await isLoggedIn(page);
-      await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
+      const page = await prepareNewPage({ baseUrl, browser, password, username: `limited-ro-${releaseTag}-${username}` });
+      await page.getByRole('link', { name: /releases/i }).click({ force: true, timeout: timeouts.tenSeconds });
       // there should be only one release tagged with the releaseTag
       expect(await page.getByText('1-1 of 1')).toBeVisible();
       // the created role doesn't have permission to upload artifacts, so the button shouldn't be visible
@@ -164,13 +149,8 @@ test.describe('RBAC functionality', () => {
     });
     test('manage tagged releases', async ({ baseUrl, browser, environment, password, username }) => {
       test.skip(!isEnterpriseOrStaging(environment));
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      await page.goto(baseUrl);
-      // enter valid username and password of the new user
-      await processLoginForm({ username: `limited-manage-${releaseTag}-${username}`, password, page, environment });
-      await isLoggedIn(page);
-      await page.getByRole('link', { name: /releases/i }).click({ timeout: timeouts.tenSeconds });
+      const page = await prepareNewPage({ baseUrl, browser, password, username: `limited-manage-${releaseTag}-${username}` });
+      await page.getByRole('link', { name: /releases/i }).click({ force: true, timeout: timeouts.tenSeconds });
       // there should be only one release tagged with the releaseTag
       expect(await page.getByText('1-1 of 1')).toBeVisible();
       // the created role does have permission to upload artifacts, so the button should be visible

@@ -15,16 +15,7 @@ import { expect } from '@playwright/test';
 import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
-import {
-  baseUrlToDomain,
-  isEnterpriseOrStaging,
-  isLoggedIn,
-  login,
-  prepareCookies,
-  startDockerClient,
-  stopDockerClient,
-  tenantTokenRetrieval
-} from '../utils/commands';
+import { isEnterpriseOrStaging, isLoggedIn, login, prepareNewPage, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Test setup', () => {
@@ -87,15 +78,7 @@ test.describe('Test setup', () => {
       await isLoggedIn(page, timeouts.fifteenSeconds);
 
       // the following sets the UI up for easier navigation by disabling onboarding
-      const domain = baseUrlToDomain(baseUrl);
-      const { token, userId } = await login(username, password, baseUrl);
-      context = await prepareCookies(context, domain, userId);
-      const newPage = await context.newPage();
-      await newPage.goto(baseUrl);
-      await newPage.evaluate(token => {
-        localStorage.setItem('JWT', JSON.stringify({ token }));
-        localStorage.setItem(`onboardingComplete`, 'true');
-      }, token);
+      const newPage = await prepareNewPage({ baseUrl, context, password, username });
       await isLoggedIn(newPage);
       await context.storageState({ path: storagePath });
     });
@@ -105,14 +88,7 @@ test.describe('Test setup', () => {
     test('supports tenant token retrieval', async ({ baseUrl, context, environment, password, username }) => {
       test.skip(!isEnterpriseOrStaging(environment));
       console.log(`logging in user with username: ${username} and password: ${password}`);
-      const { token: JWT, userId } = await login(username, password, baseUrl);
-      const domain = baseUrlToDomain(baseUrl);
-      context = await prepareCookies(context, domain, userId);
-      await context.addInitScript(token => {
-        window.localStorage.setItem('JWT', JSON.stringify({ token }));
-        window.localStorage.setItem(`onboardingComplete`, 'true');
-      }, JWT);
-      const page = await context.newPage();
+      const page = await prepareNewPage({ baseUrl, context, password, username });
       await page.goto(`${baseUrl}ui/settings`);
       const isVisible = await page.getByRole('button', { name: /change email/i }).isVisible();
       if (!isVisible) {

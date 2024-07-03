@@ -16,7 +16,17 @@ import jsQR from 'jsqr';
 import { PNG } from 'pngjs';
 
 import test, { expect } from '../fixtures/fixtures';
-import { baseUrlToDomain, generateOtp, isLoggedIn, login, prepareCookies, processLoginForm, startClient, tenantTokenRetrieval } from '../utils/commands';
+import {
+  baseUrlToDomain,
+  generateOtp,
+  isLoggedIn,
+  login,
+  prepareCookies,
+  prepareNewPage,
+  processLoginForm,
+  startClient,
+  tenantTokenRetrieval
+} from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Settings', () => {
@@ -132,6 +142,7 @@ test.describe('Settings', () => {
       await page.getByRole('button', { name: /Verify/i }).click();
       await page.waitForSelector(`css=ol >> text=Verified`);
       await page.getByRole('button', { name: /save/i }).click();
+      await page.waitForTimeout(timeouts.default);
     });
     test(`prevents from logging in without 2fa code`, async ({ baseUrl, environment, page, password, username }) => {
       test.skip(environment !== 'staging');
@@ -218,15 +229,9 @@ test.describe('Settings', () => {
       await expect(page.getByRole('button', { name: /log in/i })).toBeVisible();
     });
 
-    test('allows changing the password back', async ({ baseUrl, environment, browserName, context, password, username }) => {
-      if (browserName === 'webkit') {
-        test.skip();
-      }
-      const domain = baseUrlToDomain(baseUrl);
-      context = await prepareCookies(context, domain, '');
-      const page = await context.newPage();
-      await page.goto(`${baseUrl}ui/`);
-      await processLoginForm({ username, password: replacementPassword, page, environment });
+    test('allows changing the password back', async ({ baseUrl, browserName, browser, password, username }) => {
+      test.skip(browserName === 'webkit');
+      const page = await prepareNewPage({ baseUrl, browser, password: replacementPassword, username });
       await page.getByRole('button', { name: username }).click();
       await page.getByText(/my profile/i).click();
       await page.getByRole('button', { name: /change password/i }).click();
@@ -257,14 +262,7 @@ test.describe('Settings', () => {
       await loggedInPage.click('text=/user management/i');
       const hasUserAlready = await loggedInPage.getByText(secondaryUser).isVisible();
       test.skip(hasUserAlready, `${secondaryUser} was added in a previous run, but success notification wasn't caught`);
-
-      const domain = baseUrlToDomain(baseUrl);
-      let newContext = await browser.newContext();
-      await newContext.grantPermissions(['clipboard-read'], { origin: baseUrl });
-      newContext = await prepareCookies(newContext, domain, '');
-      const page = await newContext.newPage();
-      await page.goto(`${baseUrl}ui/`);
-      await processLoginForm({ username: secondaryUser, password, page, environment });
+      const page = await prepareNewPage({ baseUrl, browser, username: secondaryUser, password });
       await page.goto(`${baseUrl}ui/settings/my-account`);
       await page
         .getByText(/User ID/i)
@@ -293,6 +291,7 @@ test.describe('Settings', () => {
     });
     test('allows switching tenants', async ({ baseUrl, browser, browserName, environment, loggedInPage, password }) => {
       test.skip('enterprise' !== environment || browserName !== 'chromium');
+      // here we can't use prepareNewPage as it sets the initial JWT to be used on every page init
       const domain = baseUrlToDomain(baseUrl);
       let newContext = await browser.newContext();
       newContext = await prepareCookies(newContext, domain, '');

@@ -11,7 +11,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { BrowserContext, Page } from '@playwright/test';
+import { Browser, BrowserContext, Page } from '@playwright/test';
 import { runServer } from '@sidewinder1138/saml-idp';
 import axios from 'axios';
 import { spawn } from 'child_process';
@@ -76,19 +76,38 @@ export const prepareCookies = async (context: BrowserContext, domain: string, us
   return context;
 };
 
-export const prepareNewPage = async ({ baseUrl, context, password, username, userId = '', token }) => {
+export const prepareNewPage = async ({
+  baseUrl,
+  browser,
+  context: passedContext,
+  password,
+  username
+}: {
+  baseUrl: string;
+  browser?: Browser;
+  context?: BrowserContext;
+  password: string;
+  username: string;
+}) => {
+  let context = passedContext;
+  if (!context) {
+    context = await browser.newContext();
+  }
+  if (context.browser()?.browserType().name() === 'chromium') {
+    await context.grantPermissions(['clipboard-read'], { origin: baseUrl });
+  }
   let logInResult = { userId: '', token: '' };
   if (username && password) {
     logInResult = await login(username, password, baseUrl);
   }
   const domain = baseUrlToDomain(baseUrl);
-  context = await prepareCookies(context, domain, userId || logInResult.userId);
-  context.addInitScript(token => {
+  context = await prepareCookies(context, domain, logInResult.userId);
+  await context.addInitScript(token => {
     window.localStorage.setItem('JWT', JSON.stringify({ token }));
     window.localStorage.setItem(`onboardingComplete`, 'true');
-  }, token || logInResult.token);
+  }, logInResult.token);
   const page = await context.newPage();
-  await page.goto(`${baseUrl}ui`);
+  await page.goto(`${baseUrl}ui/`);
   return page;
 };
 
