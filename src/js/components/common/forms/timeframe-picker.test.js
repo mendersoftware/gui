@@ -12,13 +12,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
+import { screen } from '@testing-library/react';
+
 import { undefineds } from '../../../../../tests/mockData';
+import { render } from '../../../../../tests/setupTests';
 import { formRenderWrapper } from './form.test';
 import TimeframePicker from './timeframe-picker';
+
+const testRender = ui => {
+  const Wrapper = ({ children }) => {
+    const methods = useForm({ mode: 'onChange', defaultValues: { startDate: '', endDate: '2019-01-14T03:00:00.000' } });
+    return <FormProvider {...methods}>{children}</FormProvider>;
+  };
+  return render(<Wrapper>{ui}</Wrapper>);
+};
 
 describe('TimeframePicker Component', () => {
   it('renders correctly', async () => {
@@ -30,5 +42,15 @@ describe('TimeframePicker Component', () => {
     const view = baseElement.firstChild;
     expect(view).toMatchSnapshot();
     expect(view).toEqual(expect.not.stringMatching(undefineds));
+  });
+  it('works in different timezones correctly', async () => {
+    testRender(
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <TimeframePicker tonight={new Date().toISOString()} />
+      </LocalizationProvider>
+    );
+    const endDatePicker = screen.getByLabelText(/to/i);
+    expect(endDatePicker).toBeInTheDocument();
+    expect(endDatePicker).toHaveValue('January 13th');
   });
 });
