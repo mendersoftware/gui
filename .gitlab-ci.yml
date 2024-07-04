@@ -276,7 +276,7 @@ build:docker-multiplatform:
   # by default alvaldi-gui uses the unprivileged mode
   script:
     - if [[ ! $CI_COMMIT_REF_NAME =~ "(main|master|staging|production|feature-.+|\d+\.\d+\..+)" ]]; then
-    -   export MULTIPLATFORM_PLATFORMS='linux/amd64'
+    - export MULTIPLATFORM_PLATFORMS='linux/amd64'
     - fi
     - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
     - docker context create builder
@@ -345,8 +345,6 @@ build:docker-multiplatform:
     - mkdir logs && cp /root/.npm/_logs/* logs/
   only:
     - staging
-  when: delayed
-  start_in: 15 minutes
   artifacts:
     expire_in: 2w
     paths:
@@ -360,16 +358,22 @@ test:staging-deployment:chrome:
   extends: .template:test:staging-deployment
   script:
     - npm run test-ci
+  when: delayed
+  start_in: 1 minutes
 
 test:staging-deployment:firefox:
   extends: .template:test:staging-deployment
   script:
     - npm run test-ci -- --browser=firefox
+  when: delayed
+  start_in: 25 minutes
 
 test:staging-deployment:webkit:
   extends: .template:test:staging-deployment
   script:
     - npm run test-ci -- --browser=webkit
+  when: delayed
+  start_in: 15 minutes
 
 .template:publish:tests:
   stage: publish
@@ -466,8 +470,8 @@ publish:image-multiplatform:mender-unprivileged:
   script:
     # Publish the image for all releases
     - for version in $integration_versions; do
-    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged
-    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged_${CI_COMMIT_SHA}
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged_${CI_COMMIT_SHA}
     - done
     - echo "PUBLISH_IMAGE_DIGEST=${DOCKER_REPOSITORY}@$(regctl image digest ${DOCKER_REPOSITORY}:mender-${version}-unprivileged)" >> publish.env
 
