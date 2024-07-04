@@ -117,7 +117,11 @@ test.describe('Device details', () => {
     const elementHandle = await page.$(selectors.terminalElement);
     expect(elementHandle).toBeTruthy();
     if (['chromium', 'webkit'].includes(browserName)) {
-      await page.waitForTimeout(timeouts.default); // this should allow any animations to settle and increase chances of a stable screenshot
+      // this should ensure a repeatable position across test runners
+      await page.locator('.MuiDrawer-paper').hover();
+      await page.mouse.wheel(0, -100);
+      await elementHandle.scrollIntoViewIfNeeded();
+
       const screenShotPath = path.join(__dirname, '..', 'test-results', 'diffs', 'terminalContent-actual.png');
       await elementHandle.screenshot({ path: screenShotPath });
 
