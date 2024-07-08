@@ -229,6 +229,16 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
   min-width: 240px;
 }
 
+.emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-12:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-12 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -246,24 +256,6 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
 .emotion-12 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-12.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-12:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-12:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-12 .MuiInput-root {

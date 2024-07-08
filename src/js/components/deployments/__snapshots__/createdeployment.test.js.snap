@@ -12,6 +12,16 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
   margin-bottom: 16px;
 }
 
+.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-1:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-1 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -29,24 +39,6 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 .emotion-1 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-1:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-1:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-1 .MuiInput-root {
@@ -574,6 +566,16 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
   margin-bottom: 16px;
 }
 
+.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-1:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-1 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -591,24 +593,6 @@ exports[`CreateDeployment Component smaller components renders Devices correctly
 .emotion-1 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-1:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-1:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-1 .MuiInput-root {
@@ -2213,6 +2197,16 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
   min-width: 130px;
 }
 
+.emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-12:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-12 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -2230,24 +2224,6 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 .emotion-12 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-12.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-12:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-12:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-12 .MuiInput-root {
@@ -3296,6 +3272,16 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
   min-width: 130px;
 }
 
+.emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-12:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-12 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -3313,24 +3299,6 @@ exports[`CreateDeployment Component smaller components renders Retries correctly
 .emotion-12 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-12.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-12:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-12:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-12 .MuiInput-root {
@@ -12416,6 +12384,16 @@ exports[`CreateDeployment Component smaller components renders Software correctl
   margin-bottom: 16px;
 }
 
+.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-1:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-1 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -12433,24 +12411,6 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 .emotion-1 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-1:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-1:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-1 .MuiInput-root {
@@ -12894,6 +12854,16 @@ exports[`CreateDeployment Component smaller components renders Software correctl
   margin-bottom: 16px;
 }
 
+.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
+  visibility: visible;
+}
+
+@media (pointer: fine) {
+  .emotion-1:hover .MuiAutocomplete-clearIndicator {
+    visibility: visible;
+  }
+}
+
 .emotion-1 .MuiAutocomplete-tag {
   margin: 3px;
   max-width: calc(100% - 6px);
@@ -12911,24 +12881,6 @@ exports[`CreateDeployment Component smaller components renders Software correctl
 .emotion-1 .MuiAutocomplete-inputRoot .MuiAutocomplete-input {
   width: 0;
   min-width: 30px;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-clearIndicator {
-  visibility: visible;
-}
-
-.emotion-1.Mui-focused .MuiAutocomplete-input {
-  min-width: 0;
-}
-
-@media (pointer: fine) {
-  .emotion-1:hover .MuiAutocomplete-clearIndicator {
-    visibility: visible;
-  }
-
-  .emotion-1:hover .MuiAutocomplete-input {
-    min-width: 0;
-  }
 }
 
 .emotion-1 .MuiInput-root {
