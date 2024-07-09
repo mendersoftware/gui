@@ -1,4 +1,4 @@
-image: node:22-alpine
+image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/node:22-alpine
 
 stages:
   - pre-test
@@ -30,6 +30,9 @@ include:
   DOCKER_PUBLISH_TAG=${CI_COMMIT_REF_NAME}
   DOCKER_PUBLISH_COMMIT_TAG=${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}
 
+.dind-login: &dind-login
+  - mkdir -p $HOME/.docker && echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+
 test:lint:
   stage: test
   rules:
@@ -46,11 +49,11 @@ test:lint:
     - cd tests/e2e_tests && npm ci && cd ../..
     - npm run lint
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy
 
 test:types:
   stage: test
-  image: python:3.11
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/python:3.11
   needs: []
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
@@ -95,7 +98,7 @@ test:types:
       - src/js/api/types
 
 test:licenses:
-  image: denoland/deno:alpine-1.38.0
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/denoland/deno:alpine-1.38.0
   stage: test
   rules:
     - if: $CI_COMMIT_REF_NAME !~ /^(staging|saas-[a-zA-Z0-9.]+)$/
@@ -112,16 +115,17 @@ test:licenses:
   script:
     - deno run --allow-env --allow-read --allow-sys tests/licenses/licenseCheck.ts
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy
 
 .template:test:acceptance:
   stage: e2e-test
-  image: tiangolo/docker-with-compose
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/tiangolo/docker-with-compose
   needs:
     - job: build:docker-multiplatform
       artifacts: true
   services:
-    - docker:dind
+    - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:dind
+      alias: docker
   before_script:
     - apk add --no-cache bash git jq wget
     - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
@@ -138,6 +142,8 @@ test:licenses:
       junit:
         - junit/results.xml
     when: always
+  tags:
+    - mender-qa-worker-generic-light
 
 test:acceptance:
   extends: .template:test:acceptance
@@ -217,7 +223,7 @@ test:unit:
       junit: junit.xml
     when: always
   tags:
-    - mender-qa-worker-gui-tests
+    - hetzner-amd-beefy
 
 test:docs-links:
   stage: test
@@ -241,7 +247,7 @@ test:docs-links:
     - exit 1
     - fi
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy
 
 test:docs-links:hosted:
   extends: test:docs-links
@@ -253,11 +259,12 @@ test:docs-links:hosted:
 
 test:prep:
   stage: pre-test
-  image: docker
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
   services:
-    - docker:dind
+    - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:dind
+      alias: docker
   script:
     - docker run --rm --entrypoint "/bin/sh" -v $(pwd):/extract mendersoftware/mender-stress-test-client:master -c "cp mender-stress-test-client /extract/"
   artifacts:
@@ -265,7 +272,7 @@ test:prep:
       - mender-stress-test-client
     expire_in: 30 days
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy
 
 # excludes non multiplatform build job
 build:docker:
@@ -276,7 +283,7 @@ build:docker-multiplatform:
   # by default alvaldi-gui uses the unprivileged mode
   script:
     - if [[ ! $CI_COMMIT_REF_NAME =~ "(main|master|staging|production|feature-.+|\d+\.\d+\..+)" ]]; then
-    -   export MULTIPLATFORM_PLATFORMS='linux/amd64'
+    - export MULTIPLATFORM_PLATFORMS='linux/amd64'
     - fi
     - echo "building ${CI_PROJECT_NAME} for ${DOCKER_BUILD_SERVICE_IMAGE}"
     - docker context create builder
@@ -316,18 +323,20 @@ build:docker-multiplatform:
       - baseImage.tar
 
 .template:test:staging-deployment:
-  image: mendersoftware/mender-test-containers:gui-e2e-testing
-  stage: .post
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mendersoftware/mender-test-containers:gui-e2e-testing
+  stage: test
   services:
-    - docker:dind
+    - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:dind
+      alias: docker
   cache:
     key:
       files:
         - tests/e2e_tests/package-lock.json
     paths:
       - .npm/
-  dependencies:
-    - test:prep
+  needs:
+    - job: test:prep
+      artifacts: true
   variables:
     CI: 1
     DEVICE_TYPE: qemux86-64
@@ -345,8 +354,6 @@ build:docker-multiplatform:
     - mkdir logs && cp /root/.npm/_logs/* logs/
   only:
     - staging
-  when: delayed
-  start_in: 15 minutes
   artifacts:
     expire_in: 2w
     paths:
@@ -354,22 +361,28 @@ build:docker-multiplatform:
       - logs
     when: always
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy-privileged
 
 test:staging-deployment:chrome:
   extends: .template:test:staging-deployment
   script:
     - npm run test-ci
+  when: delayed
+  start_in: 1 minutes
 
 test:staging-deployment:firefox:
   extends: .template:test:staging-deployment
   script:
     - npm run test-ci -- --browser=firefox
+  when: delayed
+  start_in: 25 minutes
 
 test:staging-deployment:webkit:
   extends: .template:test:staging-deployment
   script:
     - npm run test-ci -- --browser=webkit
+  when: delayed
+  start_in: 15 minutes
 
 .template:publish:tests:
   stage: publish
@@ -383,7 +396,7 @@ test:staging-deployment:webkit:
     - apk add --no-cache git
     - npm i -g coveralls
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy
 
 publish:tests:
   extends: .template:publish:tests
@@ -410,14 +423,17 @@ publish:e2e-tests:
 
 publish:disclaimer:
   stage: publish
-  image: docker:git
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:git
   needs:
     - job: build:docker-multiplatform
       artifacts: true
   services:
-    - docker:dind
+    - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:dind
+      alias: docker
   variables:
     DOCKER_BUILDKIT: 1
+  before_script:
+    - *dind-login
   script:
     - docker load -i baseImage.tar
     - docker build -t disclaimer --target disclaim .
@@ -430,7 +446,7 @@ publish:disclaimer:
   rules:
     - if: $CI_COMMIT_REF_NAME =~ /^(master|staging|[0-9]+\.[0-9]+\.x)$/
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy
 
 # excludes non multiplatform build job
 publish:image:
@@ -466,8 +482,8 @@ publish:image-multiplatform:mender-unprivileged:
   script:
     # Publish the image for all releases
     - for version in $integration_versions; do
-    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged
-    -   regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged_${CI_COMMIT_SHA}
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged
+    - regctl image copy ${GITLAB_REGISTRY_TAG} ${DOCKER_REPOSITORY}:mender-${version}-unprivileged_${CI_COMMIT_SHA}
     - done
     - echo "PUBLISH_IMAGE_DIGEST=${DOCKER_REPOSITORY}@$(regctl image digest ${DOCKER_REPOSITORY}:mender-${version}-unprivileged)" >> publish.env
 
@@ -481,12 +497,12 @@ publish:image-multiplatform:saas-unprivileged:
     - SERVICE_IMAGE=${DOCKER_REPOSITORY}:${DOCKER_PUBLISH_TAG}
 
 coveralls:done:
-  image: curlimages/curl
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/curlimages/curl
   stage: .post
   script:
     - curl "https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN" -d "payload[build_num]=$CI_PIPELINE_ID&payload[status]=done"
   tags:
-    - mender-qa-worker-generic-light
+    - hetzner-amd-beefy
 
 #
 # Mender Helm Rolling release

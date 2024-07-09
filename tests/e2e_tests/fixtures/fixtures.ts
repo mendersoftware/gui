@@ -14,8 +14,8 @@
 import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
 
-import { baseUrlToDomain, getPeristentLoginInfo, isLoggedIn, login, prepareCookies } from '../utils/commands';
-import { storagePath } from '../utils/constants';
+import { getPeristentLoginInfo, isLoggedIn, prepareNewPage } from '../utils/commands';
+import { storagePath, timeouts } from '../utils/constants';
 
 type TestFixtures = {
   baseUrl: string;
@@ -41,27 +41,16 @@ const defaultConfig = {
 };
 
 const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : coveredTest).extend<TestFixtures>({
-  loggedInPage: async ({ baseUrl, browserName, context, password, username }, use) => {
-    if (!['firefox', 'webkit'].includes(browserName)) {
-      await context.grantPermissions(['clipboard-read'], { origin: baseUrl });
-    }
-    const domain = baseUrlToDomain(baseUrl);
-    const { token, userId } = await login(username, password, baseUrl);
-    context = await prepareCookies(context, domain, userId);
-    context.addInitScript(token => {
-      window.localStorage.setItem('JWT', JSON.stringify({ token }));
-      window.localStorage.setItem(`onboardingComplete`, 'true');
-    }, token);
-    const page = await context.newPage();
-    await page.goto(`${baseUrl}ui/`);
+  loggedInPage: async ({ baseUrl, context, password, username }, use) => {
+    const page = await prepareNewPage({ baseUrl, context, password, username });
     await isLoggedIn(page);
     const isHeaderComplete = await page.getByText(username).isVisible();
     if (!isHeaderComplete) {
       await page.reload();
-      await page.waitForSelector(`text=${username}`);
+      await page.getByText(username).waitFor({ timeout: timeouts.default });
     }
-    await use(page);
     await context.storageState({ path: storagePath });
+    await use(page);
   },
   // eslint-disable-next-line no-empty-pattern
   environment: async ({}, use) => {

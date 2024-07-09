@@ -15,16 +15,7 @@ import { expect } from '@playwright/test';
 import * as fs from 'fs';
 
 import test from '../fixtures/fixtures';
-import {
-  baseUrlToDomain,
-  isEnterpriseOrStaging,
-  isLoggedIn,
-  login,
-  prepareCookies,
-  startDockerClient,
-  stopDockerClient,
-  tenantTokenRetrieval
-} from '../utils/commands';
+import { isEnterpriseOrStaging, isLoggedIn, login, prepareNewPage, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
 import { selectors, storagePath, timeouts } from '../utils/constants';
 
 test.describe('Test setup', () => {
@@ -49,7 +40,7 @@ test.describe('Test setup', () => {
     test('get the title', async ({ baseUrl, context, page }) => {
       page = await context.newPage();
       await page.goto(`${baseUrl}ui/`);
-      expect(await page.title()).toContain('Mender');
+      await expect(page).toHaveTitle(/Mender/i);
     });
   });
 
@@ -63,8 +54,8 @@ test.describe('Test setup', () => {
         // looks like this is the first run, let's continue
       }
       await page.goto(`${baseUrl}ui/`);
-      expect(await page.isVisible('text=/Sign up/i')).toBeTruthy();
-      await page.click(`text=/Sign up/i`);
+      await expect(page.getByText(/Sign up/i)).toBeVisible();
+      await page.getByText(/Sign up/i).click();
       console.log(`creating user with username: ${username} and password: ${password}`);
       await page.fill(selectors.email, username);
       await page.fill(selectors.password, password);
@@ -72,8 +63,8 @@ test.describe('Test setup', () => {
       await page.fill(selectors.password, password);
       await page.fill(selectors.passwordConfirmation, password);
 
-      await page.click(`button:has-text('Sign up')`);
-      await page.waitForSelector(`button:has-text('Complete')`);
+      await page.getByRole('button', { name: /Sign up/i }).click();
+      await page.getByRole('button', { name: /Complete/i }).waitFor();
       await page.getByLabel(/organization name/i).fill('CI test corp');
       await page.getByLabel(/terms of service/i).check();
       const frameHandle = await page.waitForSelector('iframe[title="reCAPTCHA"]');
@@ -83,19 +74,11 @@ test.describe('Test setup', () => {
       const recaptcha = await recaptchaFrame.$('#recaptcha-anchor');
       await recaptcha.click();
       await page.waitForTimeout(timeouts.default);
-      await page.click(`button:has-text('Complete')`);
+      await page.getByRole('button', { name: /Complete/i }).click();
       await isLoggedIn(page, timeouts.fifteenSeconds);
 
       // the following sets the UI up for easier navigation by disabling onboarding
-      const domain = baseUrlToDomain(baseUrl);
-      const { token, userId } = await login(username, password, baseUrl);
-      context = await prepareCookies(context, domain, userId);
-      const newPage = await context.newPage();
-      await newPage.goto(baseUrl);
-      await newPage.evaluate(() => {
-        localStorage.setItem('JWT', JSON.stringify({ token }));
-        localStorage.setItem(`onboardingComplete`, 'true');
-      });
+      const newPage = await prepareNewPage({ baseUrl, context, password, username });
       await isLoggedIn(newPage);
       await context.storageState({ path: storagePath });
     });
@@ -105,14 +88,7 @@ test.describe('Test setup', () => {
     test('supports tenant token retrieval', async ({ baseUrl, context, environment, password, username }) => {
       test.skip(!isEnterpriseOrStaging(environment));
       console.log(`logging in user with username: ${username} and password: ${password}`);
-      const { token: JWT, userId } = await login(username, password, baseUrl);
-      const domain = baseUrlToDomain(baseUrl);
-      context = await prepareCookies(context, domain, userId);
-      await context.addInitScript(token => {
-        window.localStorage.setItem('JWT', JSON.stringify({ token }));
-        window.localStorage.setItem(`onboardingComplete`, 'true');
-      }, JWT);
-      const page = await context.newPage();
+      const page = await prepareNewPage({ baseUrl, context, password, username });
       await page.goto(`${baseUrl}ui/settings`);
       const isVisible = await page.getByRole('button', { name: /change email/i }).isVisible();
       if (!isVisible) {
