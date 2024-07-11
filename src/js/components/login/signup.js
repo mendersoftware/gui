@@ -78,7 +78,12 @@ export const Signup = () => {
   const [redirectOnLogin, setRedirectOnLogin] = useState(false);
   const [captchaTimestamp, setCaptchaTimestamp] = useState(0);
   const [recaptcha, setRecaptcha] = useState('');
-  const [location, setLocation] = useState(locations.us.key);
+  const [location, setLocation] = useState(
+    Object.entries(locations).reduce(
+      (accu, [key, value]) => ([`staging.${value.location}`, value.location].includes(window.location.hostname) ? key : accu),
+      locations.us.key
+    )
+  );
   const { campaign = '' } = useParams();
   const currentUserId = useSelector(state => state.users.currentUserId);
   const recaptchaSiteKey = useSelector(state => state.app.recaptchaSiteKey);
