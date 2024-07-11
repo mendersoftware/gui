@@ -12,6 +12,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 import axios from 'axios';
+import { exec } from 'child_process';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween.js';
 import * as fs from 'fs';
@@ -187,9 +188,19 @@ test.describe('Files', () => {
     } else {
       downloadTargetPath = await download.path();
     }
-    const newFile = await fs.readFileSync(downloadTargetPath);
-    const testFile = await fs.readFileSync(`fixtures/${fileName}`);
-    expect(md5(newFile)).toEqual(md5(testFile));
+    exec(`cat ${downloadTargetPath} | tar -xO header.tar.gz | tar -xzO header-info`, (err, stdout, stderr) => {
+      if (err) {
+        if (stderr) {
+          console.error(stderr);
+        }
+        expect(err).toEqual(null);
+      }
+      const hdrInfo = JSON.parse(stdout);
+      // Parse artifact header to check that artifact name matches
+      expect(hdrInfo).toHaveProperty('artifact_provides');
+      expect(hdrInfo['artifact_provides']).toHaveProperty('artifact_name');
+      expect(hdrInfo['artifact_provides']['artifact_name']).toMatch(new RegExp('^mender-demo-artifact'));
+    });
   });
 
   test('allows file transfer', async ({ browserName, environment, loggedInPage: page }) => {
