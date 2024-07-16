@@ -6,7 +6,7 @@ export type TenantIdName = {
   /**
    * Tenant identifier.
    */
-  id?: string;
+  id: string;
   /**
    * Tenant name.
    */
