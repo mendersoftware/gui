@@ -78,7 +78,7 @@ export const Signup = () => {
   const [redirectOnLogin, setRedirectOnLogin] = useState(false);
   const [captchaTimestamp, setCaptchaTimestamp] = useState(0);
   const [recaptcha, setRecaptcha] = useState('');
-  const [location, setLocation] = useState(locations.us.key);
+  const [location, setLocation] = useState(locations.us.key); // we default to US signups to keep the US instance as the main entry point for new users
   const { campaign = '' } = useParams();
   const currentUserId = useSelector(state => state.users.currentUserId);
   const recaptchaSiteKey = useSelector(state => state.app.recaptchaSiteKey);
