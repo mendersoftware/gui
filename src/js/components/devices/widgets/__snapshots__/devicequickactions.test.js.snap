@@ -11,15 +11,10 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
 }
 
 .emotion-0 .MuiSpeedDialAction-staticTooltipLabel {
-  min-width: -webkit-max-content;
-  min-width: -moz-max-content;
   min-width: max-content;
 }
 
 .emotion-1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -38,9 +33,6 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
 
 .emotion-3 {
   z-index: 1050;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -62,9 +54,6 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -77,11 +66,11 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #337a87;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
+  border-radius: 50%;
   padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
@@ -93,7 +82,7 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
@@ -102,17 +91,11 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   min-height: 36px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border-radius: 50%;
-  padding: 0;
   min-width: 0;
   width: 56px;
   height: 56px;
   z-index: 1050;
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #e6f2f1;
-  color: #fff;
-  background-color: #337a87;
   pointer-events: auto;
 }
 
@@ -222,9 +205,6 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
 }
 
 .emotion-8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   pointer-events: none;
   -webkit-transition: top 0s linear 0.2s;
@@ -233,9 +213,6 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
 
 .emotion-9 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -271,9 +248,6 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -286,11 +260,11 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #fff;
   outline: 0;
   border: 0;
-  margin: 0;
-  border-radius: 0;
+  margin: 8px;
+  border-radius: 50%;
   padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
@@ -302,29 +276,20 @@ exports[`DeviceQuickActions Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.75;
   text-transform: uppercase;
   min-height: 36px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border-radius: 50%;
-  padding: 0;
+  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 0.8s;
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 0.8s;
   min-width: 0;
   width: 40px;
   height: 40px;
   z-index: 1050;
   box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #e6f2f1;
-  margin: 8px;
-  color: rgba(0, 0, 0, 0.54);
-  background-color: #fff;
-  -webkit-transition: -webkit-transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 0.8s;
-  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,opacity 0.8s;
   opacity: 0;
   -webkit-transform: scale(0);
   -moz-transform: scale(0);

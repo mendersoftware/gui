@@ -30,10 +30,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
 .emotion-3 {
   max-width: 100%;
   font-family: Lato,sans-serif;
-  font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
+  font-size: 0.675rem;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -43,7 +40,7 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  height: 24px;
+  height: 18px;
   color: rgba(10, 10, 11, 0.78);
   background-color: rgba(0, 0, 0, 0.08);
   border-radius: 16px;
@@ -59,8 +56,6 @@ exports[`DeploymentOverview Component renders correctly 1`] = `
   vertical-align: middle;
   box-sizing: border-box;
   opacity: 0.5;
-  font-size: 0.675rem;
-  height: 18px;
 }
 
 .emotion-3.Mui-disabled {
