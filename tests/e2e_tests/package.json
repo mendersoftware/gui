@@ -24,7 +24,7 @@
     "@playwright/test": "1.45.0",
     "@sidewinder1138/saml-idp": "^1.4.0",
     "axios": "^1.7.2",
-    "dayjs": "^1.11.11",
+    "dayjs": "^1.11.12",
     "jsqr": "1.4.0",
     "jwt-decode": "^4.0.0",
     "md5": "^2.3.0",
@@ -33,7 +33,7 @@
     "playwright": "^1.45.0",
     "playwright-chromium": "1.45.0",
     "pngjs": "7.0.0",
-    "typescript": "^5.5.2",
+    "typescript": "^5.5.4",
     "uuid": "^10.0.0"
   }
 }
