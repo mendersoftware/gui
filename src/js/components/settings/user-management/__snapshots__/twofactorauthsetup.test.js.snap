@@ -2,9 +2,6 @@
 
 exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
 .emotion-0 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   width: 58px;
   height: 38px;
@@ -27,9 +24,6 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -39,15 +33,15 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  position: relative;
+  position: absolute;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -58,14 +52,10 @@ exports[`TwoFactorAuthSetup Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
-  position: absolute;
+  color: #fff;
   top: 0;
   left: 0;
   z-index: 1;
-  color: #fff;
   -webkit-transition: left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,-webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }

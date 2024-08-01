@@ -3,19 +3,15 @@
 exports[`Roles Component renders correctly 1`] = `
 .emotion-0 {
   position: fixed;
-  z-index: 1300;
+  z-index: 1200;
   right: 0;
   bottom: 0;
   top: 0;
   left: 0;
-  z-index: 1200;
 }
 
 .emotion-1 {
   position: fixed;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -41,9 +37,6 @@ exports[`Roles Component renders correctly 1`] = `
   transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   box-shadow: 0px 8px 10px -5px rgba(0,0,0,0.2),0px 16px 24px 2px rgba(0,0,0,0.14),0px 6px 30px 5px rgba(0,0,0,0.12);
   overflow-y: auto;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -64,9 +57,6 @@ exports[`Roles Component renders correctly 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -83,8 +73,8 @@ exports[`Roles Component renders correctly 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 8px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -95,20 +85,15 @@ exports[`Roles Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.2rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
 }
 
 .emotion-3::-moz-focus-inner {
@@ -187,39 +172,31 @@ exports[`Roles Component renders correctly 1`] = `
 }
 
 .emotion-7 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   margin-top: 18px;
-  min-width: 240px;
 }
 
 .emotion-8 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   margin-top: 18px;
-  min-width: 240px;
 }
 
 .emotion-9 {
@@ -229,15 +206,13 @@ exports[`Roles Component renders correctly 1`] = `
   font-weight: 400;
   font-size: 0.9286rem;
   padding: 0;
-  position: relative;
-  color: rgba(0, 0, 0, 0.54);
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(0, 20px) scale(1);
@@ -273,15 +248,11 @@ exports[`Roles Component renders correctly 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
 }
 
 .emotion-10.Mui-disabled {
@@ -472,16 +443,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   padding: 4px 0 5px;
-  position: relative;
 }
 
 .emotion-14.Mui-disabled {
@@ -673,7 +640,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   font-size: 0.9286rem;
   padding: 0;
   position: relative;
-  color: rgba(0, 0, 0, 0.54);
   display: block;
   transform-origin: top left;
   white-space: nowrap;
@@ -736,16 +702,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
 }
 
 .emotion-21.Mui-disabled {
@@ -1019,15 +981,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
 }
 
 .emotion-35.Mui-disabled {
@@ -1124,9 +1082,6 @@ label+.emotion-35 {
 }
 
 .emotion-60 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1143,8 +1098,8 @@ label+.emotion-35 {
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 2px;
+  padding: 10px 15px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1155,22 +1110,15 @@ label+.emotion-35 {
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #337a87;
   font-family: Lato,sans-serif;
-  font-weight: 500;
-  font-size: 0.8125rem;
+  font-weight: bold;
+  font-size: 14px;
   line-height: 1.75;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #337a87;
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px 15px;
 }
 
 .emotion-60::-moz-focus-inner {
@@ -1214,9 +1162,6 @@ label+.emotion-35 {
 }
 
 .emotion-62 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1229,12 +1174,12 @@ label+.emotion-35 {
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #5d0f43;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 2px;
+  padding: 6px 16px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1245,23 +1190,16 @@ label+.emotion-35 {
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Lato,sans-serif;
-  font-weight: 500;
-  font-size: 0.8125rem;
+  font-weight: bold;
+  font-size: 14px;
   line-height: 1.75;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #5d0f43;
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: bold;
 }
 
 .emotion-62::-moz-focus-inner {

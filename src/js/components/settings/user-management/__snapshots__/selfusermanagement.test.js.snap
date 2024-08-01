@@ -23,21 +23,17 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   margin-top: 18px;
-  min-width: 240px;
 }
 
 .emotion-4 {
@@ -47,15 +43,13 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
   font-weight: 400;
   font-size: 0.9286rem;
   padding: 0;
-  position: relative;
-  color: rgba(0, 0, 0, 0.54);
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 133%;
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(0, -1.5px) scale(0.75);
@@ -91,15 +85,11 @@ exports[`SelfUserManagement Component renders correctly 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
 }
 
 .emotion-5.Mui-disabled {
@@ -282,9 +272,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
 }
 
 .emotion-7 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -301,8 +288,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 2px;
+  padding: 10px 15px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -313,22 +300,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #337a87;
   font-family: Lato,sans-serif;
-  font-weight: 500;
-  font-size: 0.8125rem;
+  font-weight: bold;
+  font-size: 14px;
   line-height: 1.75;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #337a87;
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px 15px;
 }
 
 .emotion-7::-moz-focus-inner {
@@ -419,29 +399,22 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
 }
 
 .emotion-12 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   margin-top: 18px;
-  min-width: 240px;
   width: 400px;
   max-width: 100%;
 }
 
 .emotion-16 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   width: 58px;
   height: 38px;
@@ -464,9 +437,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
 }
 
 .emotion-17 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -476,15 +446,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   -ms-flex-pack: center;
   -webkit-justify-content: center;
   justify-content: center;
-  position: relative;
+  position: absolute;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -495,14 +465,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
-  position: absolute;
+  color: #fff;
   top: 0;
   left: 0;
   z-index: 1;
-  color: #fff;
   -webkit-transition: left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,-webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
@@ -642,9 +608,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
 }
 
 .emotion-25 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
@@ -660,8 +623,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   width: 100%;
   box-sizing: border-box;
   text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
   padding-top: 11px;
   padding-bottom: 11px;
 }
@@ -705,8 +666,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0;
-  margin-top: 4px;
-  margin-bottom: 4px;
   margin-top: 0;
   margin-bottom: 0;
   color: rgba(10, 10, 11, 0.78);

@@ -15,9 +15,6 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
@@ -33,12 +30,10 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
   width: 100%;
   box-sizing: border-box;
   text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
   padding-top: 11px;
   padding-bottom: 11px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .emotion-1.Mui-focusVisible {
@@ -97,9 +92,6 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -116,8 +108,8 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -128,22 +120,15 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.2rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 5px;
-  font-size: 1.0446rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
 }
 
 .emotion-3::-moz-focus-inner {
@@ -212,21 +197,17 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
 }
 
 .emotion-11 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   margin-top: 18px;
-  min-width: 240px;
 }
 
 .emotion-12.Mui-focused .MuiAutocomplete-clearIndicator {
@@ -364,22 +345,18 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
 }
 
 .emotion-13 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   width: 100%;
   margin-top: 18px;
-  min-width: 240px;
 }
 
 .emotion-14 {
@@ -389,15 +366,13 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
   font-weight: 400;
   font-size: 0.9286rem;
   padding: 0;
-  position: relative;
-  color: rgba(0, 0, 0, 0.54);
+  position: absolute;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  position: absolute;
   left: 0;
   top: 0;
   -webkit-transform: translate(0, 20px) scale(1);
@@ -433,16 +408,12 @@ exports[`ColumnCustomizationDialogContent Component renders correctly 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
 }
 
 .emotion-15.Mui-disabled {
@@ -635,9 +606,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -654,8 +622,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 4px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -666,22 +634,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.2rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
   margin-right: -2px;
-  padding: 4px;
   visibility: hidden;
 }
 

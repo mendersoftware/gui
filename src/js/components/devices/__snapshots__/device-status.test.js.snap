@@ -5,9 +5,6 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -19,7 +16,7 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   justify-content: center;
   height: 24px;
   color: rgba(10, 10, 11, 0.78);
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: transparent;
   border-radius: 16px;
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -28,12 +25,10 @@ exports[`DeviceStatus Component renders correctly 1`] = `
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
-  border: 0;
+  border: 1px solid #f7f7f7;
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
-  background-color: transparent;
-  border: 1px solid #f7f7f7;
 }
 
 .emotion-0.Mui-disabled {

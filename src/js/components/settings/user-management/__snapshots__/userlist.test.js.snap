@@ -58,17 +58,14 @@ exports[`UserList Component renders correctly 1`] = `
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
-  line-height: 1.3929rem;
+  line-height: 1.15rem;
   display: table-cell;
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
-  padding: 16px;
-  color: rgba(10, 10, 11, 0.78);
   padding: 0px 24px 0px 24px;
-  height: 48px;
+  color: rgba(10, 10, 11, 0.78);
   height: 56px;
-  line-height: 1.15rem;
 }
 
 .emotion-7 {
