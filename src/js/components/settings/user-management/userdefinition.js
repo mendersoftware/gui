@@ -59,7 +59,10 @@ const useStyles = makeStyles()(theme => ({
 export const getUserSSOState = user => {
   const { sso = [] } = user;
   const isOAuth2 = !!sso.length;
-  const provider = isOAuth2 ? OAuth2Providers.find(provider => sso.some(({ kind }) => kind.includes(provider.id))) ?? genericProvider : null;
+  let provider = null;
+  if (isOAuth2) {
+    provider = OAuth2Providers.find(provider => sso.some(({ kind }) => kind.includes(provider.id))) ?? genericProvider;
+  }
   return { isOAuth2, provider };
 };
 

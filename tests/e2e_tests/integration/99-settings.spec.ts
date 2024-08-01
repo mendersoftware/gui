@@ -122,7 +122,7 @@ test.describe('Settings', () => {
       let tfaSecret;
       try {
         tfaSecret = fs.readFileSync('secret.txt', 'utf8');
-      } catch (error) {
+      } catch {
         // moving on
       }
       if (tfaSecret) {

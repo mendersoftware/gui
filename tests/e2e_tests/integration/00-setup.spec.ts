@@ -28,7 +28,7 @@ test.describe('Test setup', () => {
       try {
         fs.unlinkSync('loginInfo.json');
         await stopDockerClient();
-      } catch (error) {
+      } catch {
         // ...continue
       }
     });
@@ -50,7 +50,7 @@ test.describe('Test setup', () => {
       try {
         const { token } = await login(username, password, baseUrl);
         test.skip(!!token, 'looks like the account was created already, continue with the remaining tests');
-      } catch (error) {
+      } catch {
         // looks like this is the first run, let's continue
       }
       await page.goto(`${baseUrl}ui/`);
