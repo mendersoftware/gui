@@ -43,7 +43,7 @@ test.describe('Layout assertions', () => {
     try {
       await page.waitForSelector(`css=${selectors.deviceListItem}`, { timeout: timeouts.default });
       hasAcceptedDevice = await page.isVisible(selectors.deviceListItem);
-    } catch (e) {
+    } catch {
       console.log(`no accepted device present so far`);
     }
     if (!hasAcceptedDevice) {
