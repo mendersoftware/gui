@@ -12,7 +12,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
         class="columnHeader"
         style="cursor: initial;"
       >
-        User
+        Performed by
       </div>
       <div
         class="columnHeader"

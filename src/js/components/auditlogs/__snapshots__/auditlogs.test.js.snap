@@ -46,7 +46,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           <h5
             class="margin-top-small margin-bottom-none muted"
           >
-            By user
+            Performed by
           </h5>
           <div
             class="MuiAutocomplete-root MuiAutocomplete-hasClearIcon css-ka7ti6-MuiAutocomplete-root"
@@ -108,7 +108,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           <h5
             class="margin-top-small margin-bottom-none muted"
           >
-            Change type
+            Filter by changes
           </h5>
           <div
             class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-ka7ti6-MuiAutocomplete-root"
@@ -363,7 +363,7 @@ exports[`Auditlogs Component renders correctly 1`] = `
           class="columnHeader"
           style="cursor: initial;"
         >
-          User
+          Performed by
         </div>
         <div
           class="columnHeader"

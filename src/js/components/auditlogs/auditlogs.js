@@ -233,7 +233,7 @@ export const AuditLogs = props => {
           filters={[
             {
               key: 'user',
-              title: 'By user',
+              title: 'Performed by',
               Component: ControlledAutoComplete,
               componentProps: {
                 ...autoSelectProps,
@@ -245,7 +245,7 @@ export const AuditLogs = props => {
             },
             {
               key: 'type',
-              title: 'Change type',
+              title: 'Filter by changes',
               Component: ControlledAutoComplete,
               componentProps: {
                 ...autoSelectProps,
