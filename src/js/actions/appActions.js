@@ -30,7 +30,7 @@ import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
 import { DEVICE_STATES, timeUnits } from '../constants/deviceConstants';
 import { onboardingSteps } from '../constants/onboardingConstants';
 import { SET_TOOLTIPS_STATE, SUCCESSFULLY_LOGGED_IN } from '../constants/userConstants';
-import { deepCompare, extractErrorMessage, preformatWithRequestID, stringToBoolean } from '../helpers';
+import { combineSortCriteria, deepCompare, extractErrorMessage, preformatWithRequestID, sortCriteriaToSortOptions, stringToBoolean } from '../helpers';
 import { getFeatures, getIsEnterprise, getOfflineThresholdSettings, getUserCapabilities, getUserSettings as getUserSettingsSelector } from '../selectors';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import { getDeploymentsByStatus } from './deploymentActions';
@@ -361,10 +361,7 @@ export const setSearchState = searchState => (dispatch, getState) => {
   let nextState = {
     ...currentState,
     ...searchState,
-    sort: {
-      ...currentState.sort,
-      ...searchState.sort
-    }
+    sort: combineSortCriteria(currentState.sort, searchState.sort)
   };
   let tasks = [];
   // eslint-disable-next-line no-unused-vars
@@ -374,7 +371,7 @@ export const setSearchState = searchState => (dispatch, getState) => {
   if (nextRequestState.searchTerm && !deepCompare(currentRequestState, nextRequestState)) {
     nextState.isSearching = true;
     tasks.push(
-      dispatch(searchDevices(nextState))
+      dispatch(searchDevices({ ...nextState, sortOptions: sortCriteriaToSortOptions(nextState.sort) }))
         .then(results => {
           const searchResult = results[results.length - 1];
           return dispatch(setSearchState({ ...searchResult, isSearching: false }));

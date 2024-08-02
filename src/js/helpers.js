@@ -16,7 +16,7 @@ import React from 'react';
 import pluralize from 'pluralize';
 import Cookies from 'universal-cookie';
 
-import { DARK_MODE } from './constants/appConstants';
+import { DARK_MODE, SORTING_OPTIONS } from './constants/appConstants';
 import {
   DEPLOYMENT_STATES,
   defaultStats,
@@ -529,3 +529,28 @@ export const getISOStringBoundaries = currentDate => {
 };
 
 export const isDarkMode = mode => mode === DARK_MODE;
+
+export const combineSortCriteria = (currentCriteria = [], newCriteria = []) =>
+  newCriteria.reduce(
+    (accu, sort) => {
+      const existingSortIndex = accu.findIndex(({ scope, key }) => scope === sort.scope && key === sort.key);
+      if (existingSortIndex > -1) {
+        accu.splice(existingSortIndex, 1);
+      }
+      if (sort.disabled) {
+        return accu;
+      }
+      accu.push(sort);
+      return accu;
+    },
+    [...currentCriteria.filter(({ disabled }) => !disabled)]
+  );
+
+export const sortCriteriaToSortOptions = criteria =>
+  criteria.reduce((accu, sort) => {
+    const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol, scope: sortScope } = sort;
+    if (sortCol) {
+      accu.push({ attribute: sortCol, order: sortDown, scope: sortScope });
+    }
+    return accu;
+  }, []);

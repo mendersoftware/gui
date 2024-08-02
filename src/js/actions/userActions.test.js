@@ -26,8 +26,7 @@ import {
   SET_FIRST_LOGIN_AFTER_SIGNUP,
   SET_OFFLINE_THRESHOLD,
   SET_SNACKBAR,
-  SET_VERSION_INFORMATION,
-  SORTING_OPTIONS
+  SET_VERSION_INFORMATION
 } from '../constants/appConstants';
 import {
   RECEIVE_DEPLOYMENTS,
@@ -353,7 +352,7 @@ const appInitActions = [
       selectedIssues: [],
       selection: [],
       setOnly: false,
-      sort: { direction: SORTING_OPTIONS.desc },
+      sort: [],
       state: DEVICE_STATES.accepted,
       total: 0
     }
@@ -384,7 +383,7 @@ const appInitActions = [
       selectedAttributes: [],
       selectedIssues: [],
       selection: [],
-      sort: { direction: SORTING_OPTIONS.desc },
+      sort: [],
       state: DEVICE_STATES.accepted,
       total: 2
     }

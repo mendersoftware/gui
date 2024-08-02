@@ -14,17 +14,19 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 // material ui
-import { Settings as SettingsIcon, Sort as SortIcon } from '@mui/icons-material';
+import { Settings as SettingsIcon } from '@mui/icons-material';
 import { Checkbox } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
+import { SORTING_OPTIONS, SORT_DIRECTIONS, TIMEOUTS } from '../../constants/appConstants';
 import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
 import { deepCompare, isDarkMode, toggle } from '../../helpers';
+import { useDebounce } from '../../utils/debouncehook';
 import useWindowSize from '../../utils/resizehook';
 import Loader from '../common/loader';
 import MenderTooltip from '../common/mendertooltip';
 import Pagination from '../common/pagination';
+import SortIcon from '../common/sorticon';
 import DeviceListItem from './devicelistitem';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
@@ -54,12 +56,19 @@ const useStyles = makeStyles()(theme => ({
   }
 }));
 
-const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onResizeChange, onResizeFinish, resizable }) => {
+const HeaderItem = ({ column, columnCount, index, sortOptions, onSort, onResizeChange, onResizeFinish, resizable }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [shouldRemoveListeners, setShouldRemoveListeners] = useState(false);
+  const { direction, key } = sortOptions.find(({ key, scope }) => column.attribute.name === key && column.attribute.scope === scope) ?? {};
+  const [sortState, setSortState] = useState({ disabled: !key, direction });
+  const sortDown = key && direction === SORTING_OPTIONS.desc;
   const resizeRef = useRef();
   const ref = useRef();
   const { classes } = useStyles();
+
+  const isSortable = column.sortable && !!onSort;
+
+  const debouncedSortState = useDebounce(sortState, TIMEOUTS.debounceShort);
 
   const onMouseOut = () => setIsHovering(false);
 
@@ -104,19 +113,36 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
     }
   }, [shouldRemoveListeners, mouseMove, mouseUp]);
 
+  useEffect(() => {
+    if (!onSort) {
+      return;
+    }
+    onSort({ key: column.attribute.name, direction: debouncedSortState.direction, disabled: debouncedSortState.disabled, scope: column.attribute.scope });
+  }, [column.attribute.name, column.attribute.scope, debouncedSortState.direction, debouncedSortState.disabled, onSort]);
+
+  const onSortClick = () => {
+    if (!isSortable) {
+      return;
+    }
+    const nextDirectionIndex = SORT_DIRECTIONS.indexOf(sortState.direction) + 1;
+    const direction = SORT_DIRECTIONS[nextDirectionIndex] ?? '';
+    setSortState({ direction, disabled: !direction });
+  };
+
   let resizeHandleClassName = resizable && isHovering ? 'hovering' : '';
   resizeHandleClassName = resizeRef.current ? 'resizing' : resizeHandleClassName;
 
   const header = (
-    <div className="columnHeader flexbox space-between relative" style={column.style} onMouseEnter={onMouseOver} onMouseLeave={onMouseOut} ref={ref}>
-      <div className="flexbox center-aligned" onClick={() => onSort(column.attribute ? column.attribute : {})}>
+    <div
+      className={`columnHeader flexbox space-between relative ${isSortable ? 'sortable' : ''}`}
+      style={column.style}
+      onMouseEnter={onMouseOver}
+      onMouseLeave={onMouseOut}
+      ref={ref}
+    >
+      <div className="flexbox center-aligned" onClick={onSortClick}>
         {column.title}
-        {column.sortable && (
-          <SortIcon
-            className={`sortIcon ${sortCol === column.attribute.name ? 'selected' : ''} ${(sortDown === SORTING_OPTIONS.desc).toString()}`}
-            style={{ fontSize: 16 }}
-          />
-        )}
+        {isSortable && <SortIcon columnKey={key} disabled={sortState.disabled} sortDown={sortDown} />}
       </div>
       <div className="flexbox center-aligned full-height">
         {column.customize && <SettingsIcon onClick={column.customize} style={{ fontSize: 16 }} />}
@@ -128,7 +154,7 @@ const HeaderItem = ({ column, columnCount, index, sortCol, sortDown, onSort, onR
       </div>
     </div>
   );
-  return column.sortable && sortingNotes[column.attribute.name] ? (
+  return isSortable && sortingNotes[column.attribute.name] ? (
     <MenderTooltip title={sortingNotes[column.attribute.name]} placement="top-start">
       {header}
     </MenderTooltip>
@@ -184,8 +210,7 @@ export const DeviceList = ({
   pageLoading,
   pageTotal
 }) => {
-  const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, selection: selectedRows = [], sort = {} } = deviceListState;
-  const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
+  const { page: pageNo = defaultPage, perPage: pageLength = defaultPerPage, selection: selectedRows = [], sort = [] } = deviceListState;
   const deviceListRef = useRef();
   const selectedRowsRef = useRef(selectedRows);
   const initRef = useRef();
@@ -273,10 +298,9 @@ export const DeviceList = ({
               key={`columnHeader-${index}`}
               onSort={onSort}
               resizable={!!onResizeColumns}
-              sortCol={sortCol}
-              sortDown={sortDown}
               onResizeChange={handleResizeChange}
               onResizeFinish={handleResizeFinish}
+              sortOptions={sort}
             />
           ))}
         </div>

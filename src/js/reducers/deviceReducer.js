@@ -11,9 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import { SORTING_OPTIONS } from '../constants/appConstants';
 import * as DeviceConstants from '../constants/deviceConstants';
-import * as MonitorConstants from '../constants/monitorConstants';
+import { RECEIVE_DEVICE_MONITOR_CONFIG } from '../constants/monitorConstants';
 import { duplicateFilter } from '../helpers';
 
 export const initialState = {
@@ -37,11 +36,9 @@ export const initialState = {
     selectedAttributes: [],
     selectedIssues: [],
     selection: [],
-    sort: {
-      direction: SORTING_OPTIONS.desc
-      // key: null,
-      // scope: null
-    },
+    sort: [
+      // { direction: SORTING_OPTIONS.desc, key: null, scope: null }
+    ],
     state: DeviceConstants.DEVICE_STATES.accepted,
     total: 0
   },
@@ -245,7 +242,7 @@ const deviceReducer = (state = initialState, action) => {
     case DeviceConstants.RECEIVE_DEVICE:
     case DeviceConstants.RECEIVE_DEVICE_CONFIG:
     case DeviceConstants.RECEIVE_DEVICE_CONNECT:
-    case MonitorConstants.RECEIVE_DEVICE_MONITOR_CONFIG: {
+    case RECEIVE_DEVICE_MONITOR_CONFIG: {
       const { device } = action;
       return {
         ...state,
