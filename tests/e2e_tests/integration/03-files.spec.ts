@@ -20,9 +20,9 @@ import https from 'https';
 import md5 from 'md5';
 import { parse } from 'yaml';
 
-import test, { expect } from '../fixtures/fixtures';
-import { getTokenFromStorage, isEnterpriseOrStaging, tagRelease } from '../utils/commands';
-import { releaseTag, selectors, storagePath, timeouts } from '../utils/constants';
+import test, { expect } from '../fixtures/fixtures.ts';
+import { getTokenFromStorage, isEnterpriseOrStaging, tagRelease } from '../utils/commands.ts';
+import { releaseTag, selectors, storagePath, timeouts } from '../utils/constants.ts';
 
 dayjs.extend(isBetween);
 

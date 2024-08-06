@@ -25,7 +25,7 @@ import { PNG } from 'pngjs';
 import { fileURLToPath } from 'url';
 import { v4 as uuid } from 'uuid';
 
-import { selectors, storagePath } from './constants';
+import { selectors, storagePath } from './constants.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

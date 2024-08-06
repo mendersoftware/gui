@@ -14,8 +14,8 @@
 import { test as coveredTest, expect } from '@bgotink/playwright-coverage';
 import { Page, test as nonCoveredTest } from '@playwright/test';
 
-import { getPeristentLoginInfo, isLoggedIn, prepareNewPage } from '../utils/commands';
-import { storagePath, timeouts } from '../utils/constants';
+import { getPeristentLoginInfo, isLoggedIn, prepareNewPage } from '../utils/commands.ts';
+import { storagePath, timeouts } from '../utils/constants.ts';
 
 type DemoArtifactVersionInfo = {
   artifactVersion: string;
