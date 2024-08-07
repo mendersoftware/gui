@@ -7,7 +7,13 @@ import { SORTING_OPTIONS, TIMEOUTS } from '../constants/appConstants';
 import * as DeploymentConstants from '../constants/deploymentConstants';
 import { DEVICE_LIST_DEFAULTS, RECEIVE_DEVICE } from '../constants/deviceConstants';
 import { deepCompare, isEmpty, standardizePhases, startTimeSort } from '../helpers';
-import { getDevicesById } from '../selectors';
+import {
+  getDeploymentsByStatus as getDeploymentsByStatusSelector,
+  getDevicesById,
+  getGlobalSettings,
+  getOrganization,
+  getUserCapabilities
+} from '../selectors';
 import Tracking from '../tracking';
 import { getDeviceAuth, getDeviceById, mapTermsToFilters } from './deviceActions';
 import { saveGlobalSettings } from './userActions';
@@ -124,9 +130,9 @@ export const createDeployment =
     } else {
       request = GeneralApi.post(`${deploymentsApiUrl}/deployments`, newDeployment);
     }
-    const totalDeploymentCount = Object.values(getState().deployments.byStatus).reduce((accu, item) => accu + item.total, 0);
-    const { hasDeployments } = getState().users.globalSettings;
-    const { trial_expiration } = getState().organization.organization;
+    const totalDeploymentCount = Object.values(getDeploymentsByStatusSelector(getState())).reduce((accu, item) => accu + item.total, 0);
+    const { hasDeployments } = getGlobalSettings(getState());
+    const { trial_expiration } = getOrganization(getState());
     return request
       .catch(err => commonErrorHandler(err, 'Error creating deployment.', dispatch))
       .then(data => {
@@ -145,19 +151,21 @@ export const createDeployment =
         // track in GA
         trackDeploymentCreation(totalDeploymentCount, hasDeployments, trial_expiration);
 
-        const { phases, retries } = newDeployment;
-        const { previousPhases = [], retries: previousRetries = 0 } = getState().users.globalSettings;
-        let newSettings = { retries: hasNewRetryDefault ? retries : previousRetries, hasDeployments: true };
-        if (phases) {
-          const standardPhases = standardizePhases(phases);
-          let prevPhases = previousPhases.map(standardizePhases);
-          if (!prevPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
-            prevPhases.push(standardPhases);
+        const { canManageUsers } = getUserCapabilities(getState());
+        if (canManageUsers) {
+          const { phases, retries } = newDeployment;
+          const { previousPhases = [], retries: previousRetries = 0 } = getGlobalSettings(getState());
+          let newSettings = { retries: hasNewRetryDefault ? retries : previousRetries, hasDeployments: true };
+          if (phases) {
+            const standardPhases = standardizePhases(phases);
+            let prevPhases = previousPhases.map(standardizePhases);
+            if (!prevPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+              prevPhases.push(standardPhases);
+            }
+            newSettings.previousPhases = prevPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
           }
-          newSettings.previousPhases = prevPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT);
+          tasks.push(dispatch(saveGlobalSettings(newSettings)));
         }
-
-        tasks.push(dispatch(saveGlobalSettings(newSettings)));
         return Promise.all(tasks);
       });
   };

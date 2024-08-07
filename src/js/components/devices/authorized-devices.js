@@ -208,7 +208,7 @@ export const Authorized = ({
     detailsTab: tabSelection
   } = deviceListState;
   const { direction: sortDown = SORTING_OPTIONS.desc, key: sortCol } = sort;
-  const { canManageDevices } = userCapabilities;
+  const { canManageDevices, canManageUsers } = userCapabilities;
   const { hasMonitor } = tenantCapabilities;
   const currentSelectedState = states[selectedState] ?? states.devices;
   const [columnHeaders, setColumnHeaders] = useState([]);
@@ -238,10 +238,10 @@ export const Authorized = ({
   }, [dispatch, dispatchedSetSnackbar]);
 
   useEffect(() => {
-    const columnHeaders = getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, openSettingsDialog);
+    const columnHeaders = getHeaders(columnSelection, currentSelectedState.defaultHeaders, idAttribute, canManageUsers ? openSettingsDialog : undefined);
     setColumnHeaders(columnHeaders);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columnSelection, idAttribute.attribute, currentSelectedState.defaultHeaders, openSettingsDialog]);
+  }, [canManageUsers, columnSelection, idAttribute.attribute, currentSelectedState.defaultHeaders, openSettingsDialog]);
 
   useEffect(() => {
     // only set state after all devices id data retrieved
