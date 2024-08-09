@@ -26,7 +26,7 @@ import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
 import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { DEVICE_STATES } from '../../../constants/deviceConstants';
 import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
-import { getDeviceConfigDeployment, getTenantCapabilities } from '../../../selectors';
+import { getDeviceConfigDeployment, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm, { EditButton } from '../../common/confirm';
@@ -81,16 +81,18 @@ export const ConfigEmptyNote = ({ updated_ts = '' }) => (
   </div>
 );
 
-export const ConfigEditingActions = ({ hasDeviceConfig, isSetAsDefault, onSetAsDefaultChange, onSubmit, onCancel }) => (
+export const ConfigEditingActions = ({ canSetDefault, hasDeviceConfig, isSetAsDefault, onSetAsDefaultChange, onSubmit, onCancel }) => (
   <>
-    <div style={{ maxWidth: 275 }}>
-      <FormControlLabel
-        control={<Checkbox color="primary" checked={isSetAsDefault} onChange={onSetAsDefaultChange} size="small" />}
-        label="Save as default configuration"
-        style={{ marginTop: 0 }}
-      />
-      <div className="muted">You can import these key value pairs when configuring other devices</div>
-    </div>
+    {canSetDefault && (
+      <div style={{ maxWidth: 275 }}>
+        <FormControlLabel
+          control={<Checkbox color="primary" checked={isSetAsDefault} onChange={onSetAsDefaultChange} size="small" />}
+          label="Save as default configuration"
+          style={{ marginTop: 0 }}
+        />
+        <div className="muted">You can import these key value pairs when configuring other devices</div>
+      </div>
+    )}
     <Button variant="contained" color="primary" onClick={onSubmit} style={buttonStyle}>
       Save and apply to device
     </Button>
@@ -135,7 +137,8 @@ export const ConfigUpdateFailureActions = ({ hasLog, onSubmit, onCancel, setShow
 
 export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId } }) => {
   const { device, deviceConfigDeployment: deployment } = useSelector(state => getDeviceConfigDeployment(state, deviceId));
-  const { hasDeviceConfig } = useSelector(state => getTenantCapabilities(state));
+  const { hasDeviceConfig } = useSelector(getTenantCapabilities);
+  const { canManageUsers } = useSelector(getUserCapabilities);
   const { config = {}, status } = device;
   const { configured = {}, deployment_id, reported = {}, reported_ts, updated_ts } = config;
   const isRelevantDeployment = deployment.created > updated_ts && (!reported_ts || deployment.finished > reported_ts);
@@ -250,7 +253,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
       requests.push(Promise.resolve());
     } else {
       requests.push(dispatch(setDeviceConfig(device.id, reported)));
-      if (isSetAsDefault) {
+      if (isSetAsDefault && canManageUsers) {
         requests.push(dispatch(saveGlobalSettings({ defaultDeviceConfig: { current: defaultConfig.previous } })));
       }
     }
@@ -294,6 +297,7 @@ export const DeviceConfiguration = ({ defaultConfig = {}, device: { id: deviceId
   if (isEditingConfig) {
     footer = (
       <ConfigEditingActions
+        canSetDefault={canManageUsers}
         hasDeviceConfig={hasDeviceConfiguration}
         isSetAsDefault={isSetAsDefault}
         onSetAsDefaultChange={onSetAsDefaultChange}

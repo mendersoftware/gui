@@ -26,6 +26,7 @@ describe('tiny components', () => {
     it(`renders ${Component.displayName || Component.name} correctly`, () => {
       const { baseElement } = render(
         <Component
+          canSetDefault={true}
           isAccepted={true}
           isSetAsDefault={true}
           isUpdatingConfig={true}
