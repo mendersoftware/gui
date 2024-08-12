@@ -17,6 +17,11 @@ import { Page, test as nonCoveredTest } from '@playwright/test';
 import { getPeristentLoginInfo, isLoggedIn, prepareNewPage } from '../utils/commands';
 import { storagePath, timeouts } from '../utils/constants';
 
+type DemoArtifactVersionInfo = {
+  artifactVersion: string;
+  updateVersion: string;
+};
+
 type TestFixtures = {
   baseUrl: string;
   config: unknown;
@@ -25,6 +30,7 @@ type TestFixtures = {
   username: string;
   password: string;
   demoDeviceName: string;
+  demoArtifactVersion: DemoArtifactVersionInfo;
 };
 
 const urls = {
@@ -75,7 +81,8 @@ const test = (process.env.TEST_ENVIRONMENT === 'staging' ? nonCoveredTest : cove
     const baseUrl = urls[environment] || defaultConfig.baseUrl;
     await use(baseUrl);
   },
-  demoDeviceName: defaultConfig.demoDeviceName
+  demoDeviceName: defaultConfig.demoDeviceName,
+  demoArtifactVersion: { artifactVersion: '3.7.5', updateVersion: '4.0.4' }
 });
 
 export { expect };
