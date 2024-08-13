@@ -23,11 +23,30 @@ import { selectors, storagePath, timeouts } from '../utils/constants';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const checkDownloadedReplayForSecret = async (path, secret) => {
+  const fileStream = fs.createReadStream(path);
+  const lines = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity
+  });
+  for await (const line of lines) {
+    const search = `const transfer = '[{"content":`;
+    if (line.includes(search)) {
+      const encodedText = line.substring(line.indexOf(search) + search.length, line.lastIndexOf(`}]';`));
+      const content = JSON.parse(Buffer.from(encodedText, 'base64').toString());
+      const decodedContent = String.fromCharCode(...content.data);
+      expect(decodedContent).not.toContain(secret);
+      fileStream.close();
+      return;
+    }
+  }
+};
+
 test.describe('Auditlogs', () => {
   test.use({ storageState: storagePath });
 
   const secret = 'super secret something text';
-  test('will track remote terminal sessions', async ({ environment, loggedInPage: page }) => {
+  test('will track remote terminal sessions', async ({ browser, environment, loggedInPage: page }) => {
     test.skip(!isEnterpriseOrStaging(environment));
     await page.click(`.leftNav :text('Devices')`);
     await page.locator(`css=${selectors.deviceListItem} div:last-child`).last().click();
@@ -55,37 +74,33 @@ test.describe('Auditlogs', () => {
     await elementHandle.screenshot({ path: screenShotPath });
     const { pass } = compareImages(expectedPath, screenShotPath);
     expect(pass).toBeTruthy();
+    await terminalText.fill('top');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(timeouts.oneSecond);
     await page.click('[aria-label="close"]'); // short-form
     await page.click(`.leftNav.navLink:has-text('Audit log')`);
 
     await page.click(`.auditlogs-list-item :text('CLOSE_TERMINAL')`);
-    await page.click(`button:has-text('Play')`);
-    await expect(page.locator(`.MuiDrawer-paper a:has-text('Download'), .MuiDrawer-paper button:has-text('Download')`)).toBeVisible();
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(`.MuiDrawer-paper a:has-text('Download'), .MuiDrawer-paper button:has-text('Download')`)
-    ]);
+    const drawer = page.locator(`.MuiDrawer-paper`);
+    await expect(drawer.locator(`a:has-text('Download'), button:has-text('Download')`)).toBeVisible();
+    await drawer.getByRole('button', { name: 'Play', exact: true }).click();
+    const downloadPromise = page.waitForEvent('download', { timeout: timeouts.fifteenSeconds });
+    await page.waitForTimeout(timeouts.default);
+    await drawer.getByText(/download/i).click();
+    const download = await downloadPromise;
     const downloadTargetPath = await download.path();
     expect(downloadTargetPath).toBeTruthy();
 
-    const checkDownloadedReplayForSecret = async (path, secret) => {
-      const fileStream = fs.createReadStream(path);
-      const lines = readline.createInterface({
-        input: fileStream,
-        crlfDelay: Infinity
-      });
-      for await (const line of lines) {
-        const search = `const transfer = '[{"content":`;
-        if (line.includes(search)) {
-          const encodedText = line.substring(line.indexOf(search) + search.length, line.lastIndexOf(`}]';`));
-          const content = JSON.parse(Buffer.from(encodedText, 'base64').toString());
-          const decodedContent = String.fromCharCode(...content.data);
-          expect(decodedContent).not.toContain(secret);
-          fileStream.close();
-          return;
-        }
-      }
-    };
     await checkDownloadedReplayForSecret(downloadTargetPath, 'secret something');
+
+    const localPage = await browser.newPage();
+    localPage.on('pageerror', exception => {
+      console.log(`Error initializing terminal replay: "${exception}"`);
+      expect(exception).toBeFalsy();
+    });
+    fs.renameSync(downloadTargetPath, `${downloadTargetPath}.html`);
+    await localPage.goto(`file://${downloadTargetPath}.html`);
+    await expect(localPage.getByText('Terminal playback')).toBeVisible();
+    await localPage.getByRole('button', { name: /start/i }).click();
   });
 });
