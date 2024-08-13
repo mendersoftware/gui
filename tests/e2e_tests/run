@@ -2,7 +2,7 @@
 set -e
 
 # by default just add minio, with COMPOSE_CMD_BASE this creates the standard onprem ST setup
-COMPOSE_CMD="docker-compose -p gui-tests \
+COMPOSE_CMD="docker compose -p gui-tests \
              -f ${INTEGRATION_PATH}/docker-compose.yml \
              -f ${INTEGRATION_PATH}/docker-compose.client.yml \
              -f ${INTEGRATION_PATH}/docker-compose.demo.yml \
