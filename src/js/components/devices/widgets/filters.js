@@ -23,7 +23,15 @@ import { saveGlobalSettings } from '../../../actions/userActions';
 import { BENEFITS } from '../../../constants/appConstants';
 import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
 import { deepCompare, toggle } from '../../../helpers';
-import { getDeviceFilters, getFilterAttributes, getGlobalSettings, getIsEnterprise, getSelectedGroupInfo, getTenantCapabilities } from '../../../selectors';
+import {
+  getDeviceFilters,
+  getFilterAttributes,
+  getGlobalSettings,
+  getIsEnterprise,
+  getSelectedGroupInfo,
+  getTenantCapabilities,
+  getUserCapabilities
+} from '../../../selectors';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { InfoHintContainer } from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
@@ -49,6 +57,7 @@ export const Filters = ({ className = '', onGroupClick, open }) => {
 
   const dispatch = useDispatch();
   const { hasFullFiltering, plan } = useSelector(getTenantCapabilities);
+  const { canManageUsers } = useSelector(getUserCapabilities);
   const { groupFilters, selectedGroup } = useSelector(getSelectedGroupInfo);
   const attributes = useSelector(getFilterAttributes);
   const filters = useSelector(getDeviceFilters);
@@ -63,12 +72,12 @@ export const Filters = ({ className = '', onGroupClick, open }) => {
 
   const saveUpdatedFilter = useCallback(
     updatedFilter => {
-      if (!previousFilters.find(filter => deepCompare(filter, updatedFilter))) {
+      if (canManageUsers && !previousFilters.find(filter => deepCompare(filter, updatedFilter))) {
         const changedPreviousFilters = [...previousFilters, updatedFilter];
         dispatch(saveGlobalSettings({ previousFilters: changedPreviousFilters.slice(-1 * MAX_PREVIOUS_FILTERS_COUNT) }));
       }
     },
-    [dispatch, previousFilters]
+    [canManageUsers, dispatch, previousFilters]
   );
 
   const handleFilterChange = useCallback(

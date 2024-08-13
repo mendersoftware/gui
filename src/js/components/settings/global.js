@@ -138,7 +138,7 @@ export const GlobalSettingsDialog = ({
   const { classes } = useStyles();
   const { needsDeploymentConfirmation = false } = settings;
   const { canDelta, hasMonitor } = tenantCapabilities;
-  const { canManageReleases } = userCapabilities;
+  const { canManageReleases, canManageUsers } = userCapabilities;
 
   useEffect(() => {
     setChannelSettings(notificationChannelSettings);
@@ -149,12 +149,12 @@ export const GlobalSettingsDialog = ({
   }, [offlineThresholdSettings.interval]);
 
   useEffect(() => {
-    if (!window.sessionStorage.getItem(settingsKeys.initialized) || !timer.current) {
+    if (!window.sessionStorage.getItem(settingsKeys.initialized) || !timer.current || !canManageUsers) {
       return;
     }
     saveGlobalSettings({ offlineThreshold: { interval: debouncedOfflineThreshold, intervalUnit: DEVICE_ONLINE_CUTOFF.intervalName } }, false, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedOfflineThreshold, saveGlobalSettings]);
+  }, [canManageUsers, debouncedOfflineThreshold, saveGlobalSettings]);
 
   useEffect(() => {
     const initTimer = setTimeout(() => (timer.current = true), TIMEOUTS.fiveSeconds);
@@ -188,13 +188,17 @@ export const GlobalSettingsDialog = ({
       </div>
       <IdAttributeSelection attributes={attributes} onCloseClick={onCloseClick} onSaveClick={onSaveClick} selectedAttribute={selectedAttribute} />
       {hasReporting && <ReportingLimits />}
-      <InputLabel className="margin-top" shrink>
-        Deployments
-      </InputLabel>
-      <div className="clickable flexbox center-aligned" onClick={toggleDeploymentConfirmation}>
-        <p className="help-content">Require confirmation on deployment creation</p>
-        <Switch checked={needsDeploymentConfirmation} />
-      </div>
+      {canManageUsers && (
+        <>
+          <InputLabel className="margin-top" shrink>
+            Deployments
+          </InputLabel>
+          <div className="clickable flexbox center-aligned" onClick={toggleDeploymentConfirmation}>
+            <p className="help-content">Require confirmation on deployment creation</p>
+            <Switch checked={needsDeploymentConfirmation} />
+          </div>
+        </>
+      )}
       {canManageReleases && canDelta && <ArtifactGenerationSettings />}
       {isAdmin &&
         hasMonitor &&
