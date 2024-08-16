@@ -344,11 +344,10 @@ build:docker-multiplatform:
   before_script:
     - curl -fsSL https://get.docker.com | sh
     - mv mender-stress-test-client tests/e2e_tests/ && cd tests/e2e_tests
-    - mv /e2e/mender-demo-artifact.mender .
     - docker pull mendersoftware/mender-client-docker-addons:mender-3.6.x
     - npm ci --cache .npm --prefer-offline
   script:
-    - npm run test-ci
+    - npm run test
   after_script:
     - cd $CI_PROJECT_DIR
     - mkdir logs && cp /root/.npm/_logs/* logs/
@@ -366,21 +365,21 @@ build:docker-multiplatform:
 test:staging-deployment:chrome:
   extends: .template:test:staging-deployment
   script:
-    - npm run test-ci
+    - npm run test
   when: delayed
   start_in: 1 minutes
 
 test:staging-deployment:firefox:
   extends: .template:test:staging-deployment
   script:
-    - npm run test-ci -- --browser=firefox
+    - npm run test -- --browser=firefox
   when: delayed
   start_in: 25 minutes
 
 test:staging-deployment:webkit:
   extends: .template:test:staging-deployment
   script:
-    - npm run test-ci -- --browser=webkit
+    - npm run test -- --browser=webkit
   when: delayed
   start_in: 15 minutes
 

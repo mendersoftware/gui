@@ -15,9 +15,9 @@ import axios from 'axios';
 import dns from 'node:dns';
 import * as https from 'node:https';
 
-import test, { expect } from '../fixtures/fixtures';
-import { getTokenFromStorage, isEnterpriseOrStaging, isLoggedIn, startIdpServer } from '../utils/commands';
-import { storagePath, timeouts } from '../utils/constants';
+import test, { expect } from '../fixtures/fixtures.ts';
+import { getTokenFromStorage, isEnterpriseOrStaging, isLoggedIn, startIdpServer } from '../utils/commands.ts';
+import { storagePath, timeouts } from '../utils/constants.ts';
 
 dns.setDefaultResultOrder('ipv4first');
 

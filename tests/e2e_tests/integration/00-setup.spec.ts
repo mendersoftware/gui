@@ -14,9 +14,9 @@
 import { expect } from '@playwright/test';
 import * as fs from 'fs';
 
-import test from '../fixtures/fixtures';
-import { isEnterpriseOrStaging, isLoggedIn, login, prepareNewPage, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands';
-import { selectors, storagePath, timeouts } from '../utils/constants';
+import test from '../fixtures/fixtures.ts';
+import { isEnterpriseOrStaging, isLoggedIn, login, prepareNewPage, startDockerClient, stopDockerClient, tenantTokenRetrieval } from '../utils/commands.ts';
+import { selectors, storagePath, timeouts } from '../utils/constants.ts';
 
 test.describe('Test setup', () => {
   test.describe('basic window checks', () => {

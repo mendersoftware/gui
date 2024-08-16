@@ -47,10 +47,11 @@ const generateHtml = (versions, content) => {
   <!DOCTYPE html>
   <html>
     <head>
-      <link rel="stylesheet" href="https://unpkg.com/xterm@${xterm}/css/xterm.css" />
-      <script src="https://unpkg.com/xterm@${xterm}/lib/xterm.js"></script>
-      <script src="https://unpkg.com/xterm-addon-search@${search}/lib/xterm-addon-search.js"></script>
-      <script src="https://unpkg.com/xterm-addon-fit@${fit}/lib/xterm-addon-fit.js"></script>
+      <link rel="stylesheet" href="https://unpkg.com/@xterm/xterm@${xterm}/css/xterm.css" />
+
+      <script src="https://unpkg.com/@xterm/xterm@${xterm}/lib/xterm.js"></script>
+      <script src="https://unpkg.com/@xterm/addon-search@${search}/lib/addon-search.js"></script>
+      <script src="https://unpkg.com/@xterm/addon-fit@${fit}/lib/addon-fit.js"></script>
       <style type="text/css">
         body {
           display: grid;

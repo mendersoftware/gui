@@ -25,7 +25,7 @@ import { PNG } from 'pngjs';
 import { fileURLToPath } from 'url';
 import { v4 as uuid } from 'uuid';
 
-import { selectors, storagePath } from './constants';
+import { selectors, storagePath } from './constants.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -241,7 +241,7 @@ export const isLoggedIn = async (page: Page, timeout: number = 0) => {
     await cookieConsentButton.click();
     await page.keyboard.press('Escape');
   }
-  return page.getByText(selectors.loggedInText).waitFor({ timeout });
+  return page.getByRole('link', { name: selectors.loggedInText }).waitFor({ timeout });
 };
 
 export const isEnterpriseOrStaging = environment => ['enterprise', 'staging'].includes(environment);
