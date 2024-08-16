@@ -2,9 +2,6 @@
 
 exports[`ExpandableAttribute Component renders correctly 1`] = `
 .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
@@ -20,15 +17,13 @@ exports[`ExpandableAttribute Component renders correctly 1`] = `
   width: 100%;
   box-sizing: border-box;
   text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 11px;
+  padding-bottom: 11px;
   padding-left: 16px;
   padding-right: 16px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
-  padding-top: 11px;
-  padding-bottom: 11px;
 }
 
 .emotion-0.Mui-focusVisible {
@@ -70,8 +65,6 @@ exports[`ExpandableAttribute Component renders correctly 1`] = `
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0;
-  margin-top: 4px;
-  margin-bottom: 4px;
   margin-top: 0;
   margin-bottom: 0;
   color: rgba(10, 10, 11, 0.78);

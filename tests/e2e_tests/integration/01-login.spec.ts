@@ -14,9 +14,9 @@
 import axios from 'axios';
 import * as https from 'https';
 
-import test, { expect } from '../fixtures/fixtures';
-import { baseUrlToDomain, isEnterpriseOrStaging, isLoggedIn, prepareCookies, processLoginForm } from '../utils/commands';
-import { selectors, storagePath, timeouts } from '../utils/constants';
+import test, { expect } from '../fixtures/fixtures.ts';
+import { baseUrlToDomain, isEnterpriseOrStaging, isLoggedIn, prepareCookies, processLoginForm } from '../utils/commands.ts';
+import { selectors, storagePath, timeouts } from '../utils/constants.ts';
 
 test.describe('Login', () => {
   test.describe('works as expected', () => {

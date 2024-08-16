@@ -11,9 +11,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
@@ -29,12 +26,10 @@ exports[`MyOrganization Component renders correctly 1`] = `
   width: 100%;
   box-sizing: border-box;
   text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
   padding-top: 11px;
   padding-bottom: 11px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .emotion-1.Mui-focusVisible {
@@ -76,14 +71,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0;
-  margin-top: 6px;
-  margin-bottom: 6px;
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 8px;
   color: rgba(10, 10, 11, 0.78);
   display: grid;
   width: 100%;
-  margin-bottom: 8px;
 }
 
 .emotion-3 {
@@ -134,14 +126,11 @@ exports[`MyOrganization Component renders correctly 1`] = `
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0;
-  margin-top: 6px;
-  margin-bottom: 6px;
   margin-top: 0;
   margin-bottom: 0;
   color: rgba(10, 10, 11, 0.78);
   display: grid;
   width: 100%;
-  margin-bottom: 0;
 }
 
 .emotion-10 {
@@ -193,9 +182,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
@@ -211,8 +197,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
   width: 100%;
   box-sizing: border-box;
   text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
   padding-top: 11px;
   padding-bottom: 11px;
 }
@@ -256,17 +240,12 @@ exports[`MyOrganization Component renders correctly 1`] = `
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0;
-  margin-top: 4px;
-  margin-bottom: 4px;
   margin-top: 0;
   margin-bottom: 0;
   color: rgba(10, 10, 11, 0.78);
 }
 
 .emotion-19 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -283,8 +262,8 @@ exports[`MyOrganization Component renders correctly 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 2px;
+  padding: 10px 15px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -295,22 +274,15 @@ exports[`MyOrganization Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #337a87;
   font-family: Lato,sans-serif;
-  font-weight: 500;
-  font-size: 0.8125rem;
+  font-weight: bold;
+  font-size: 14px;
   line-height: 1.75;
   text-transform: uppercase;
   min-width: 64px;
-  padding: 6px 8px;
-  border-radius: 4px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #337a87;
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px 15px;
 }
 
 .emotion-19::-moz-focus-inner {
@@ -401,9 +373,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-24 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -426,9 +395,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
 }
 
 .emotion-25 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -445,8 +411,8 @@ exports[`MyOrganization Component renders correctly 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -457,10 +423,6 @@ exports[`MyOrganization Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
-  color: rgba(0, 0, 0, 0.54);
   color: rgba(10, 10, 11, 0.78);
 }
 

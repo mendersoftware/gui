@@ -2,18 +2,15 @@
 
 exports[`Groups Component renders GroupItem correctly 1`] = `
 .emotion-0 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -34,32 +31,14 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  -webkit-text-decoration: none;
-  text-decoration: none;
   width: 100%;
-  box-sizing: border-box;
   text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 11px;
+  padding-bottom: 11px;
   padding-left: 16px;
   padding-right: 16px;
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding-top: 11px;
-  padding-bottom: 11px;
 }
 
 .emotion-0::-moz-focus-inner {
@@ -139,8 +118,6 @@ exports[`Groups Component renders GroupItem correctly 1`] = `
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0;
-  margin-top: 4px;
-  margin-bottom: 4px;
   margin-top: 0;
   margin-bottom: 0;
   color: rgba(10, 10, 11, 0.78);
@@ -192,11 +169,10 @@ exports[`Groups Component renders GroupsSubheader correctly 1`] = `
   box-sizing: border-box;
   line-height: 48px;
   list-style: none;
-  color: rgba(0, 0, 0, 0.54);
+  color: #a9a9a9;
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
-  color: #a9a9a9;
   height: 48px;
 }
 
@@ -233,18 +209,15 @@ exports[`Groups Component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -265,32 +238,14 @@ exports[`Groups Component renders correctly 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  -webkit-text-decoration: none;
-  text-decoration: none;
   width: 100%;
-  box-sizing: border-box;
   text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 11px;
+  padding-bottom: 11px;
   padding-left: 16px;
   padding-right: 16px;
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding-top: 11px;
-  padding-bottom: 11px;
 }
 
 .emotion-1::-moz-focus-inner {
@@ -370,8 +325,6 @@ exports[`Groups Component renders correctly 1`] = `
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0;
-  margin-top: 4px;
-  margin-bottom: 4px;
   margin-top: 0;
   margin-bottom: 0;
   color: rgba(10, 10, 11, 0.78);
@@ -402,11 +355,10 @@ exports[`Groups Component renders correctly 1`] = `
   box-sizing: border-box;
   line-height: 48px;
   list-style: none;
-  color: rgba(0, 0, 0, 0.54);
+  color: #a9a9a9;
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
-  color: #a9a9a9;
   height: 48px;
 }
 
@@ -424,9 +376,6 @@ exports[`Groups Component renders correctly 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
 }
 

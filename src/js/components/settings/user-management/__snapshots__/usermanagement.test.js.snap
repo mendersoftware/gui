@@ -58,17 +58,14 @@ exports[`UserManagement Component renders correctly 1`] = `
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
-  line-height: 1.3929rem;
+  line-height: 1.15rem;
   display: table-cell;
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
-  padding: 16px;
-  color: rgba(10, 10, 11, 0.78);
   padding: 0px 24px 0px 24px;
-  height: 48px;
+  color: rgba(10, 10, 11, 0.78);
   height: 56px;
-  line-height: 1.15rem;
 }
 
 .emotion-8 {
@@ -84,9 +81,8 @@ exports[`UserManagement Component renders correctly 1`] = `
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
-  padding: 16px;
-  color: rgba(10, 10, 11, 0.78);
   padding: 0px 24px 0px 24px;
+  color: rgba(10, 10, 11, 0.78);
   height: 48px;
 }
 
@@ -115,9 +111,6 @@ exports[`UserManagement Component renders correctly 1`] = `
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -129,7 +122,7 @@ exports[`UserManagement Component renders correctly 1`] = `
   justify-content: center;
   height: 24px;
   color: rgba(10, 10, 11, 0.78);
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: transparent;
   border-radius: 16px;
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -138,12 +131,10 @@ exports[`UserManagement Component renders correctly 1`] = `
   outline: 0;
   -webkit-text-decoration: none;
   text-decoration: none;
-  border: 0;
+  border: 1px solid #f7f7f7;
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
-  background-color: transparent;
-  border: 1px solid #f7f7f7;
 }
 
 .emotion-18.Mui-disabled {
@@ -240,9 +231,6 @@ exports[`UserManagement Component renders correctly 1`] = `
 }
 
 .emotion-26 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -255,11 +243,11 @@ exports[`UserManagement Component renders correctly 1`] = `
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #337a87;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
+  border-radius: 16px;
   padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
@@ -271,43 +259,14 @@ exports[`UserManagement Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
   height: 32px;
-  color: #fff;
-  background-color: #337a87;
-  border-radius: 16px;
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  cursor: unset;
-  outline: 0;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  border: 0;
-  padding: 0;
-  vertical-align: middle;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
 }
 
 .emotion-26::-moz-focus-inner {

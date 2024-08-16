@@ -120,7 +120,7 @@ const ChangeDetailsDescriptor = (item, index, userCapabilities) => {
 const TimeWrapper = (item, index) => <Time key={`${item.time}-${index}`} value={item.time} />;
 
 const auditLogColumns = [
-  { title: 'User', sortable: false, render: UserDescriptor },
+  { title: 'Performed by', sortable: false, render: UserDescriptor },
   { title: 'Action', sortable: false, render: ActionDescriptor },
   { title: 'Type', sortable: false, render: TypeDescriptor },
   { title: 'Changed', sortable: false, render: ChangeDescriptor },

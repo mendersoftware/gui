@@ -5,9 +5,6 @@ exports[`Releases Component renders correctly 1`] = `
   overflow: hidden;
   min-height: 48px;
   -webkit-overflow-scrolling: touch;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-self: flex-start;
   -ms-flex-item-align: flex-start;
@@ -32,16 +29,10 @@ exports[`Releases Component renders correctly 1`] = `
 }
 
 .emotion-2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
 .emotion-3 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -59,7 +50,7 @@ exports[`Releases Component renders correctly 1`] = `
   border: 0;
   margin: 0;
   border-radius: 0;
-  padding: 0;
+  padding: 12px 16px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -70,28 +61,24 @@ exports[`Releases Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
   line-height: 1.25;
-  text-transform: uppercase;
+  text-transform: none;
   max-width: 360px;
   min-width: 90px;
-  position: relative;
   min-height: 48px;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  padding: 12px 16px;
   overflow: hidden;
   white-space: normal;
   text-align: center;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-  color: rgba(0, 0, 0, 0.54);
-  text-transform: none;
 }
 
 .emotion-3::-moz-focus-inner {
@@ -134,9 +121,6 @@ exports[`Releases Component renders correctly 1`] = `
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -147,8 +131,8 @@ exports[`Releases Component renders correctly 1`] = `
   -webkit-justify-content: center;
   justify-content: center;
   height: 32px;
-  color: rgba(10, 10, 11, 0.78);
-  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.38);
+  background-color: #f7fafb;
   border-radius: 16px;
   white-space: nowrap;
   -webkit-transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -161,11 +145,6 @@ exports[`Releases Component renders correctly 1`] = `
   padding: 0;
   vertical-align: middle;
   box-sizing: border-box;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
-  text-transform: uppercase;
-  background-color: #f7fafb;
-  color: rgba(0, 0, 0, 0.38);
   text-transform: uppercase;
 }
 
@@ -246,9 +225,6 @@ exports[`Releases Component renders correctly 1`] = `
 }
 
 .emotion-10 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -261,12 +237,12 @@ exports[`Releases Component renders correctly 1`] = `
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: transparent;
+  background-color: #5d0f43;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 2px;
+  padding: 6px 16px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -277,24 +253,16 @@ exports[`Releases Component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: #fff;
   font-family: Lato,sans-serif;
-  font-weight: 500;
-  font-size: 0.8125rem;
+  font-weight: bold;
+  font-size: 14px;
   line-height: 1.75;
   text-transform: uppercase;
-  min-width: 64px;
-  padding: 6px 16px;
-  border-radius: 4px;
+  min-width: 164px;
   -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  color: #fff;
-  background-color: #5d0f43;
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: bold;
-  min-width: 164px;
   margin-right: 16px;
 }
 
@@ -424,9 +392,6 @@ exports[`Releases Component renders correctly 1`] = `
   background-color: #f7f7f7;
   -webkit-column-gap: 16px;
   column-gap: 16px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -451,21 +416,17 @@ exports[`Releases Component renders correctly 1`] = `
 }
 
 .emotion-18 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   margin-top: 18px;
-  min-width: 240px;
 }
 
 .emotion-18 input {
@@ -481,15 +442,11 @@ exports[`Releases Component renders correctly 1`] = `
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  position: relative;
 }
 
 .emotion-19.Mui-disabled {
@@ -568,9 +525,6 @@ label+.emotion-19 {
 }
 
 .emotion-20 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   height: 0.01em;
   max-height: 2em;
@@ -852,22 +806,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
 }
 
 .emotion-24 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
-  min-width: 0;
+  min-width: 240px;
   padding: 0;
   margin: 0;
   border: 0;
   vertical-align: top;
   width: 100%;
   margin-top: 18px;
-  min-width: 240px;
 }
 
 .emotion-25 {
@@ -879,16 +829,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-22:focus::-ms-input-
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   width: 100%;
-  position: relative;
 }
 
 .emotion-25.Mui-disabled {
@@ -1215,9 +1161,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 }
 
 .emotion-32 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1234,8 +1177,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 4px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1246,22 +1189,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.2rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
   margin-right: -2px;
-  padding: 4px;
   visibility: hidden;
 }
 
@@ -1357,23 +1294,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   font-family: Lato,sans-serif;
   font-weight: 500;
   font-size: 0.8125rem;
-  line-height: 1.3929rem;
+  line-height: 1.15rem;
   display: table-cell;
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
-  padding: 16px;
-  color: rgba(10, 10, 11, 0.78);
   padding: 0px 24px 0px 24px;
-  height: 48px;
+  color: rgba(10, 10, 11, 0.78);
   height: 56px;
-  line-height: 1.15rem;
 }
 
 .emotion-41 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1390,8 +1321,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1402,10 +1333,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
-  color: rgba(0, 0, 0, 0.54);
   color: rgba(10, 10, 11, 0.78);
 }
 
@@ -1491,9 +1418,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   vertical-align: inherit;
   border-bottom: 1px solid rgba(224, 224, 224, 1);
   text-align: left;
-  padding: 16px;
-  color: rgba(10, 10, 11, 0.78);
   padding: 0px 24px 0px 24px;
+  color: rgba(10, 10, 11, 0.78);
   height: 48px;
 }
 
@@ -1509,19 +1435,14 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
 
 .emotion-254 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   padding-left: 16px;
-  padding-right: 16px;
-  min-height: 56px;
-  min-height: 52px;
   padding-right: 2px;
+  min-height: 52px;
 }
 
 @media (min-width:600px) {
@@ -1585,21 +1506,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-26:focus::-ms-input-
   line-height: 1.4375em;
   font-family: Lato,sans-serif;
   font-weight: 400;
-  font-size: 0.9286rem;
-  color: rgba(10, 10, 11, 0.78);
+  font-size: inherit;
+  color: inherit;
   box-sizing: border-box;
   position: relative;
   cursor: text;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  color: inherit;
-  font-size: inherit;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
@@ -1818,9 +1734,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus::-ms-input
 }
 
 .emotion-262 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1837,8 +1750,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus::-ms-input
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 12px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1849,22 +1762,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-258:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  font-size: 1.3929rem;
-  padding: 8px;
-  border-radius: 50%;
+  font-size: 1.2rem;
   overflow: visible;
-  color: rgba(0, 0, 0, 0.54);
   -webkit-transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  padding: 12px;
-  font-size: 1.625rem;
-  font-size: 1.2rem;
-  color: rgba(0, 0, 0, 0.54);
 }
 
 .emotion-262::-moz-focus-inner {

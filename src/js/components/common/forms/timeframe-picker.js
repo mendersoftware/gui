@@ -40,8 +40,11 @@ export const TimeframePicker = ({ tonight: propsTonight }) => {
 
   useEffect(() => {
     let currentEndDate = getValues('endDate');
+    const now = new Date().toISOString().replace('Z', '');
     if (startDate > currentEndDate) {
       setValue('endDate', ensureEndOfDay(startDate));
+    } else if (currentEndDate > now) {
+      setValue('endDate', now);
     }
     setMinEndDate(moment(startDate));
   }, [startDate, getValues, setValue]);

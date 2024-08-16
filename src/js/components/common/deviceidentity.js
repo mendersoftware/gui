@@ -58,7 +58,10 @@ export const DeviceIdentityDisplay = props => {
   const idValue = getDeviceIdentityText({ device: { ...device, ...stateDevice }, idAttribute });
   const { classes } = useStyles();
 
-  const Component = !isEditable ? attributeComponentMap.default : attributeComponentMap[idAttribute] ?? attributeComponentMap.default;
+  let Component = attributeComponentMap.default;
+  if (isEditable) {
+    Component = attributeComponentMap[idAttribute] ?? attributeComponentMap.default;
+  }
   const { attributes = {} } = device;
   const EndAdornment = useMemo(
     () => adornments.find(item => item.isApplicable(device))?.component,

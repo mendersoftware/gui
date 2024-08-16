@@ -11,8 +11,8 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-import test, { expect } from '../fixtures/fixtures';
-import { selectors, storagePath, timeouts } from '../utils/constants';
+import test, { expect } from '../fixtures/fixtures.ts';
+import { selectors, storagePath, timeouts } from '../utils/constants.ts';
 
 test.describe('Layout assertions', () => {
   const navbar = '.leftFixed.leftNav';
@@ -43,7 +43,7 @@ test.describe('Layout assertions', () => {
     try {
       await page.waitForSelector(`css=${selectors.deviceListItem}`, { timeout: timeouts.default });
       hasAcceptedDevice = await page.isVisible(selectors.deviceListItem);
-    } catch (e) {
+    } catch {
       console.log(`no accepted device present so far`);
     }
     if (!hasAcceptedDevice) {

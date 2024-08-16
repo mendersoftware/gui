@@ -1077,11 +1077,12 @@ export const applyDeviceConfig = (deviceId, configDeploymentConfiguration, isDef
     .catch(err => commonErrorHandler(err, `There was an error deploying the configuration to device ${deviceId}.`, dispatch, commonErrorFallback))
     .then(({ data }) => {
       const device = getDeviceByIdSelector(getState(), deviceId);
+      const { canManageUsers } = getUserCapabilities(getState());
       let tasks = [
         dispatch({ type: DeviceConstants.RECEIVE_DEVICE, device: { ...device, config: { ...device.config, deployment_id: '' } } }),
         new Promise(resolve => setTimeout(() => resolve(dispatch(getSingleDeployment(data.deployment_id))), TIMEOUTS.oneSecond))
       ];
-      if (isDefault) {
+      if (isDefault && canManageUsers) {
         const { previous } = getState().users.globalSettings.defaultDeviceConfig ?? {};
         tasks.push(dispatch(saveGlobalSettings({ defaultDeviceConfig: { current: config, previous } })));
       }

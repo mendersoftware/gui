@@ -35,9 +35,6 @@ exports[`AddOnSelection component renders correctly 1`] = `
 }
 
 .emotion-1 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -54,8 +51,8 @@ exports[`AddOnSelection component renders correctly 1`] = `
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 50%;
+  padding: 9px;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -66,10 +63,6 @@ exports[`AddOnSelection component renders correctly 1`] = `
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
-  padding: 9px;
-  border-radius: 50%;
-  color: rgba(0, 0, 0, 0.54);
   color: rgba(10, 10, 11, 0.78);
 }
 

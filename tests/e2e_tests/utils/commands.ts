@@ -25,7 +25,7 @@ import { PNG } from 'pngjs';
 import { fileURLToPath } from 'url';
 import { v4 as uuid } from 'uuid';
 
-import { selectors, storagePath } from './constants';
+import { selectors, storagePath } from './constants.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,7 +36,7 @@ export const getPeristentLoginInfo = () => {
     const content = fs.readFileSync('loginInfo.json', 'utf8');
     loginInfo = JSON.parse(content);
     return loginInfo;
-  } catch (error) {
+  } catch {
     loginInfo = { username: process.env.STAGING_USER ?? `${uuid()}@example.com`, password: process.env.STAGING_PASSWORD ?? uuid() };
   }
   fs.writeFileSync('loginInfo.json', JSON.stringify(loginInfo));
@@ -49,7 +49,7 @@ export const getStorageState = location => {
     const content = fs.readFileSync(location, 'utf8');
     storageState = JSON.parse(content);
     return storageState;
-  } catch (error) {
+  } catch {
     storageState = { username: process.env.STAGING_USER ?? `${uuid()}@example.com`, password: process.env.STAGING_PASSWORD ?? uuid() };
   }
   return storageState;
@@ -62,7 +62,7 @@ export const getTokenFromStorage = (baseUrl: string) => {
   let sessionInfo = { token: '' };
   try {
     sessionInfo = JSON.parse(textContent);
-  } catch (error) {
+  } catch {
     // most likely not logged in - nothing to do here
   }
   return sessionInfo.token;
@@ -241,7 +241,7 @@ export const isLoggedIn = async (page: Page, timeout: number = 0) => {
     await cookieConsentButton.click();
     await page.keyboard.press('Escape');
   }
-  return page.getByText(selectors.loggedInText).waitFor({ timeout });
+  return page.getByRole('link', { name: selectors.loggedInText }).waitFor({ timeout });
 };
 
 export const isEnterpriseOrStaging = environment => ['enterprise', 'staging'].includes(environment);
@@ -278,7 +278,7 @@ export const generateOtp = async (otpSecret?) => {
   try {
     filesecret = fs.readFileSync('secret.txt', 'utf8');
     console.log(filesecret);
-  } catch (error) {
+  } catch {
     console.log('no secret.txt found - moving on...');
   }
   previousSecret = otpSecret ?? previousSecret ?? filesecret;

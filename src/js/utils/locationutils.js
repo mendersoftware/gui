@@ -245,7 +245,11 @@ const paramReducer = (accu, [key, value]) => {
 export const formatAuditlogs = ({ pageState }, { today, tonight }) => {
   const { detail, endDate, startDate, type, user } = pageState;
   let params = new URLSearchParams();
-  params = Object.entries({ objectId: detail, userId: user ? user.id ?? user : user }).reduce(paramReducer, params);
+  let userId = user;
+  if (user?.id) {
+    userId = user.id;
+  }
+  params = Object.entries({ objectId: detail, userId }).reduce(paramReducer, params);
   if (type) {
     params.set('objectType', type.value ?? type);
   }

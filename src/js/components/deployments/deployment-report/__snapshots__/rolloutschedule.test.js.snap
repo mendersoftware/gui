@@ -113,9 +113,6 @@ exports[`RolloutSchedule Component renders correctly 1`] = `
   max-width: 100%;
   font-family: Lato,sans-serif;
   font-size: 0.7545rem;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;

@@ -18,15 +18,20 @@ import isBetween from 'dayjs/plugin/isBetween.js';
 import * as fs from 'fs';
 import https from 'https';
 import md5 from 'md5';
+import { parse } from 'yaml';
 
-import test, { expect } from '../fixtures/fixtures';
-import { getTokenFromStorage, isEnterpriseOrStaging, tagRelease } from '../utils/commands';
-import { releaseTag, selectors, storagePath, timeouts } from '../utils/constants';
+import test, { expect } from '../fixtures/fixtures.ts';
+import { getTokenFromStorage, isEnterpriseOrStaging, tagRelease } from '../utils/commands.ts';
+import { releaseTag, selectors, storagePath, timeouts } from '../utils/constants.ts';
 
 dayjs.extend(isBetween);
 
+const expectedArtifactName = 'mender-demo-artifact';
+const fileName = `${expectedArtifactName}.mender`;
+const demoArtifactLocation = `https://dgsbl4vditpls.cloudfront.net/${fileName}`;
+const fileLocation = `fixtures/${fileName}`;
+
 test.describe('Files', () => {
-  const fileName = 'mender-demo-artifact.mender';
   test.use({ storageState: storagePath });
 
   test.beforeEach(async ({ loggedInPage: page }) => {
@@ -34,10 +39,15 @@ test.describe('Files', () => {
   });
 
   test('allows file uploads', async ({ loggedInPage: page }) => {
+    // download a fresh version of the demo artifact and upload in any case (even though)
+    const response = await fetch(demoArtifactLocation);
+    const buffer = await response.arrayBuffer();
+    fs.writeFileSync(fileLocation, Buffer.from(buffer));
     const uploadButton = await page.getByRole('button', { name: /upload/i });
     await uploadButton.click();
-    await page.locator('.MuiDialog-paper .dropzone input').setInputFiles(`fixtures/${fileName}`);
-    await page.click(`.MuiDialog-paper button:has-text('Upload')`);
+    const drawer = page.locator(`.MuiDialog-paper`);
+    await drawer.locator('.dropzone input').setInputFiles(fileLocation);
+    await drawer.getByRole('button', { name: /Upload/i }).click();
     await page.getByText(/last modified/i).waitFor();
   });
 
@@ -171,7 +181,7 @@ test.describe('Files', () => {
   //       })
   // })
 
-  test('allows artifact downloads', async ({ loggedInPage: page }) => {
+  test('allows artifact downloads', async ({ demoArtifactVersion, loggedInPage: page }) => {
     await page.getByText(/mender-demo-artifact/i).click();
     await page.click('.expandButton');
     const downloadButton = await page.getByText(/download artifact/i);
@@ -188,18 +198,21 @@ test.describe('Files', () => {
     } else {
       downloadTargetPath = await download.path();
     }
-    exec(`cat ${downloadTargetPath} | tar -xO header.tar.gz | tar -xzO header-info`, (err, stdout, stderr) => {
+    exec(`mender-artifact read --no-progress ${downloadTargetPath}`, (err, stdout, stderr) => {
       if (err) {
         if (stderr) {
           console.error(stderr);
         }
         expect(err).toEqual(null);
       }
-      const hdrInfo = JSON.parse(stdout);
+      const artifactInfo = parse(stdout);
       // Parse artifact header to check that artifact name matches
-      expect(hdrInfo).toHaveProperty('artifact_provides');
-      expect(hdrInfo['artifact_provides']).toHaveProperty('artifact_name');
-      expect(hdrInfo['artifact_provides']['artifact_name']).toMatch(new RegExp('^mender-demo-artifact'));
+      const artifactName = artifactInfo['Mender Artifact'].Name;
+      expect(artifactName).toMatch(/^mender-demo-artifact/);
+      const versionInfo = artifactName.substring(artifactName.indexOf(expectedArtifactName) + expectedArtifactName.length + 1);
+      expect(versionInfo).toEqual(demoArtifactVersion.artifactVersion);
+      const { 'data-partition.mender-demo-artifact.version': updateVersion } = artifactInfo.Updates[0].Provides;
+      expect(updateVersion).toEqual(demoArtifactVersion.updateVersion);
     });
   });
 

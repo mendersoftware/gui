@@ -107,9 +107,6 @@ exports[`Deployments Component renders correctly 1`] = `
 }
 
 .emotion-4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
