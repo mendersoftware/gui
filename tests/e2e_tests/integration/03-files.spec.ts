@@ -26,8 +26,12 @@ import { releaseTag, selectors, storagePath, timeouts } from '../utils/constants
 
 dayjs.extend(isBetween);
 
+const expectedArtifactName = 'mender-demo-artifact';
+const fileName = `${expectedArtifactName}.mender`;
+const demoArtifactLocation = `https://dgsbl4vditpls.cloudfront.net/${fileName}`;
+const fileLocation = `fixtures/${fileName}`;
+
 test.describe('Files', () => {
-  const fileName = 'mender-demo-artifact.mender';
   test.use({ storageState: storagePath });
 
   test.beforeEach(async ({ loggedInPage: page }) => {
@@ -35,10 +39,15 @@ test.describe('Files', () => {
   });
 
   test('allows file uploads', async ({ loggedInPage: page }) => {
+    // download a fresh version of the demo artifact and upload in any case (even though)
+    const response = await fetch(demoArtifactLocation);
+    const buffer = await response.arrayBuffer();
+    fs.writeFileSync(fileLocation, Buffer.from(buffer));
     const uploadButton = await page.getByRole('button', { name: /upload/i });
     await uploadButton.click();
-    await page.locator('.MuiDialog-paper .dropzone input').setInputFiles(`fixtures/${fileName}`);
-    await page.click(`.MuiDialog-paper button:has-text('Upload')`);
+    const drawer = page.locator(`.MuiDialog-paper`);
+    await drawer.locator('.dropzone input').setInputFiles(fileLocation);
+    await drawer.getByRole('button', { name: /Upload/i }).click();
     await page.getByText(/last modified/i).waitFor();
   });
 
@@ -198,7 +207,6 @@ test.describe('Files', () => {
       }
       const artifactInfo = parse(stdout);
       // Parse artifact header to check that artifact name matches
-      const expectedArtifactName = 'mender-demo-artifact';
       const artifactName = artifactInfo['Mender Artifact'].Name;
       expect(artifactName).toMatch(/^mender-demo-artifact/);
       const versionInfo = artifactName.substring(artifactName.indexOf(expectedArtifactName) + expectedArtifactName.length + 1);
