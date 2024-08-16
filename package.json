@@ -14,7 +14,7 @@
     "@reduxjs/toolkit": "2.2.7",
     "@stripe/react-stripe-js": "2.7.3",
     "@stripe/stripe-js": "4.1.0",
-    "axios": "1.7.2",
+    "axios": "1.7.4",
     "copy-to-clipboard": "3.3.3",
     "generate-password": "1.7.1",
     "jwt-decode": "4.0.0",
