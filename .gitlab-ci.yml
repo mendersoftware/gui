@@ -325,7 +325,7 @@ build:docker-multiplatform:
 
 .template:test:staging-deployment:
   image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mendersoftware/mender-test-containers:gui-e2e-testing
-  stage: test-deploy
+  stage: .post
   services:
     - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:dind
       alias: docker
