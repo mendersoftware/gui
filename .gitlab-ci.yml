@@ -7,6 +7,7 @@ stages:
   - e2e-test
   - publish
   - version-bump
+  - test-deploy
 
 variables:
   DOCKER_REPOSITORY: mendersoftware/gui
@@ -324,7 +325,7 @@ build:docker-multiplatform:
 
 .template:test:staging-deployment:
   image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mendersoftware/mender-test-containers:gui-e2e-testing
-  stage: test
+  stage: test-deploy
   services:
     - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:dind
       alias: docker
@@ -335,6 +336,8 @@ build:docker-multiplatform:
     paths:
       - .npm/
   needs:
+    - job: trigger:mender-helm-version-bump:staging
+      artifacts: false
     - job: test:prep
       artifacts: true
   variables:
