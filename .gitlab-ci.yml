@@ -7,7 +7,6 @@ stages:
   - e2e-test
   - publish
   - version-bump
-  - test-deploy
 
 variables:
   DOCKER_REPOSITORY: mendersoftware/gui
