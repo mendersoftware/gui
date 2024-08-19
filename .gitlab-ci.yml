@@ -335,6 +335,8 @@ build:docker-multiplatform:
     paths:
       - .npm/
   needs:
+    - job: trigger:mender-helm-version-bump:staging
+      artifacts: false
     - job: test:prep
       artifacts: true
   variables:
