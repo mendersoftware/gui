@@ -15,23 +15,23 @@
   ],
   "settings": {
     "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
+      "typescript": {}
     },
     "react": {
       "pragma": "React",
       "version": "detect"
     }
   },
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "sourceType": "module"
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
   },
   "globals": {
     "mender_environment": "readonly"
   },
-  "plugins": ["react", "prettier", "sonarjs"],
+  "ignorePatterns": ["**/*.test.js"],
+  "plugins": ["react", "prettier", "sonarjs", "@typescript-eslint", "import"],
   "rules": {
     "prettier/prettier": "error",
     "consistent-this": ["error", "self"],
@@ -57,6 +57,7 @@
     "react/void-dom-elements-no-children": "error",
     "react/jsx-no-target-blank": "error",
     "sonarjs/cognitive-complexity": ["error", 17],
-    "sonarjs/no-nested-template-literals": "off"
+    "sonarjs/no-nested-template-literals": "off",
+    "sonarjs/no-ignored-return": "off"
   }
 }
