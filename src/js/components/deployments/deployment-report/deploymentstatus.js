@@ -16,7 +16,8 @@ import React from 'react';
 import { Pause as PauseIcon, ArrowDropDownCircleOutlined as ScrollDownIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import { deploymentDisplayStates, pauseMap } from '../../../constants/deploymentConstants';
+import { deploymentDisplayStates, pauseMap } from '@store/constants';
+
 import { groupDeploymentStats } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import { defaultColumnDataProps } from '../report';

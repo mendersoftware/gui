@@ -18,13 +18,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { DEVICE_DISMISSAL_STATE, DEVICE_STATES, onboardingSteps } from '@store/constants';
+import { getAcceptedDevices, getDeviceLimit, getLimitMaxed, getUserCapabilities } from '@store/selectors';
+import { advanceOnboarding, deleteAuthset, updateDeviceAuth } from '@store/thunks';
 import pluralize from 'pluralize';
 
-import { deleteAuthset, updateDeviceAuth } from '../../../../actions/deviceActions';
-import { advanceOnboarding } from '../../../../actions/onboardingActions';
-import { DEVICE_DISMISSAL_STATE, DEVICE_STATES } from '../../../../constants/deviceConstants';
-import { onboardingSteps } from '../../../../constants/onboardingConstants';
-import { getAcceptedDevices, getDeviceLimit, getLimitMaxed, getUserCapabilities } from '../../../../selectors';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../../helptips/helptooltips';
 import { DeviceLimitWarning } from '../../dialogs/preauth-dialog';
 import Confirm from './../../../common/confirm';

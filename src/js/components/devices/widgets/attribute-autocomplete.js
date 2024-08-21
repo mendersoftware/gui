@@ -16,8 +16,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 // material ui
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 
-import { TIMEOUTS } from '../../../constants/appConstants';
-import { emptyFilter } from '../../../constants/deviceConstants';
+import { TIMEOUTS, emptyFilter } from '@store/constants';
+
 import { defaultHeaders } from '../base-devices';
 import { getFilterLabelByKey } from './filters';
 

@@ -34,9 +34,9 @@ import {
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { BENEFITS } from '@store/constants';
 import pluralize from 'pluralize';
 
-import { BENEFITS } from '../../../constants/appConstants';
 import { getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import { DOCSTIPS, DocsTooltip } from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';

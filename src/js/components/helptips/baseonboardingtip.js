@@ -23,11 +23,14 @@ import {
 import { buttonBaseClasses, buttonClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setShowDismissOnboardingTipsDialog } from '../../actions/onboardingActions';
-import { TIMEOUTS } from '../../constants/appConstants';
+import storeActions from '@store/actions';
+import { TIMEOUTS } from '@store/constants';
+
 import { toggle } from '../../helpers';
 import Tracking from '../../tracking';
 import { OnboardingTooltip } from '../common/mendertooltip';
+
+const { setShowDismissOnboardingTipsDialog } = storeActions;
 
 const iconWidth = 30;
 

@@ -14,14 +14,16 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setSnackbar } from '../../actions/appActions';
-import { setAllTooltipsReadState, setTooltipReadState } from '../../actions/userActions';
-import { yes } from '../../constants/appConstants';
-import { READ_STATES } from '../../constants/userConstants';
-import { getDeviceById, getFeatures, getTooltipsState } from '../../selectors';
+import storeActions from '@store/actions';
+import { READ_STATES, yes } from '@store/constants';
+import { getDeviceById, getFeatures, getTooltipsState } from '@store/selectors';
+import { setAllTooltipsReadState, setTooltipReadState } from '@store/thunks';
+
 import ConfigurationObject from '../common/configurationobject';
 import DocsLink from '../common/docslink';
 import { HelpTooltip } from '../common/mendertooltip';
+
+const { setSnackbar } = storeActions;
 
 const AuthExplainButton = () => (
   <>

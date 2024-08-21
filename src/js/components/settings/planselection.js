@@ -15,7 +15,8 @@ import React from 'react';
 
 import { makeStyles } from 'tss-react/mui';
 
-import { PLANS } from '../../constants/appConstants';
+import { PLANS } from '@store/constants';
+
 import { isDarkMode } from '../../helpers.js';
 import InfoText from '../common/infotext';
 

@@ -17,17 +17,19 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../../actions/appActions';
-import { removeRelease, selectRelease, setReleasesListState } from '../../actions/releaseActions.js';
-import { SORTING_OPTIONS, canAccess as canShow } from '../../constants/appConstants';
-import { DEVICE_LIST_DEFAULTS } from '../../constants/deviceConstants';
-import { getFeatures, getHasReleases, getReleaseListState, getReleasesList, getUserCapabilities } from '../../selectors';
+import storeActions from '@store/actions';
+import { DEVICE_LIST_DEFAULTS, SORTING_OPTIONS, canAccess as canShow } from '@store/constants';
+import { getFeatures, getHasReleases, getReleaseListState, getReleasesList, getUserCapabilities } from '@store/selectors';
+import { removeRelease, selectRelease, setReleasesListState } from '@store/thunks';
+
 import DetailsTable from '../common/detailstable';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import { RelativeTime } from '../common/time';
 import AddTagsDialog from './dialogs/addTags.js';
 import { DeleteReleasesConfirmationDialog, ReleaseQuickActions } from './releasedetails.js';
+
+const { setSnackbar } = storeActions;
 
 const columns = [
   {

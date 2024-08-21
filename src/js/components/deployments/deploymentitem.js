@@ -18,7 +18,8 @@ import { CancelOutlined as CancelOutlinedIcon } from '@mui/icons-material';
 import { Button, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
+import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '@store/constants';
+
 import { FileSize, getDeploymentState } from '../../helpers';
 import { useDeploymentDevice } from '../../utils/deploymentdevicehook';
 import Confirm from '../common/confirm';

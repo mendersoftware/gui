@@ -17,14 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import moment from 'moment';
-
-import historyImage from '../../../assets/img/history.png';
-import { getAuditLogs, getAuditLogsCsvLink, setAuditlogsState } from '../../actions/organizationActions';
-import { getUserList } from '../../actions/userActions';
-import { BEGINNING_OF_TIME, BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
-import { createDownload, getISOStringBoundaries } from '../../helpers';
+import storeActions from '@store/actions';
+import { AUDIT_LOGS_TYPES, BEGINNING_OF_TIME, BENEFITS, SORTING_OPTIONS, TIMEOUTS } from '@store/constants';
 import {
   getAuditLog,
   getAuditLogEntry,
@@ -33,7 +27,12 @@ import {
   getGroupNames,
   getTenantCapabilities,
   getUserCapabilities
-} from '../../selectors';
+} from '@store/selectors';
+import { getAuditLogs, getUserList } from '@store/thunks';
+import moment from 'moment';
+
+import historyImage from '../../../assets/img/history.png';
+import { createDownload, getISOStringBoundaries } from '../../helpers';
 import { useLocationParams } from '../../utils/liststatehook';
 import EnterpriseNotification, { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import { ControlledAutoComplete } from '../common/forms/autocomplete';
@@ -44,6 +43,8 @@ import { InfoHintContainer } from '../common/info-hint';
 import Loader from '../common/loader';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import AuditLogsList from './auditlogslist';
+
+const { getAuditLogsCsvLink, setAuditlogsState } = storeActions;
 
 const detailsMap = {
   Deployment: 'to device group',

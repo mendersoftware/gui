@@ -18,8 +18,9 @@ import { Description as DescriptionIcon } from '@mui/icons-material';
 import { Chip, Collapse, chipClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { TIMEOUTS } from '../../constants/appConstants';
-import { getDocsVersion, getFeatures } from '../../selectors';
+import { TIMEOUTS } from '@store/constants';
+import { getDocsVersion, getFeatures } from '@store/selectors';
+
 import { useDebounce } from '../../utils/debouncehook';
 import { MenderTooltipClickable } from './mendertooltip';
 

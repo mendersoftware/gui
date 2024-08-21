@@ -18,11 +18,9 @@ import { Link } from 'react-router-dom';
 import { Button, LinearProgress } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { DEVICE_LIST_DEFAULTS, canAccess as canShow, deploymentSubstates, rootfsImageVersion as rootfsImageVersionAttribute } from '@store/constants';
+
 import DeltaIcon from '../../../../assets/img/deltaicon.svg';
-import { canAccess as canShow } from '../../../constants/appConstants';
-import { deploymentSubstates } from '../../../constants/deploymentConstants';
-import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
-import { rootfsImageVersion as rootfsImageVersionAttribute } from '../../../constants/releaseConstants';
 import { FileSize, formatTime } from '../../../helpers';
 import { TwoColumns } from '../../common/configurationobject';
 import DetailsTable from '../../common/detailstable';

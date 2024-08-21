@@ -19,14 +19,21 @@ import { InfoOutlined as InfoIcon, Launch as LaunchIcon } from '@mui/icons-mater
 import { Button, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../../../actions/appActions';
-import { getDeviceFileDownloadLink } from '../../../actions/deviceActions';
-import { BEGINNING_OF_TIME, BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
-import { ALL_DEVICES, DEVICE_CONNECT_STATES } from '../../../constants/deviceConstants';
-import { AUDIT_LOGS_TYPES } from '../../../constants/organizationConstants';
-import { checkPermissionsObject, uiPermissionsById } from '../../../constants/userConstants';
+import storeActions from '@store/actions';
+import {
+  ALL_DEVICES,
+  AUDIT_LOGS_TYPES,
+  BEGINNING_OF_TIME,
+  BENEFITS,
+  DEVICE_CONNECT_STATES,
+  TIMEOUTS,
+  checkPermissionsObject,
+  uiPermissionsById
+} from '@store/constants';
+import { getCurrentSession, getTenantCapabilities, getUserCapabilities } from '@store/selectors';
+import { getDeviceFileDownloadLink } from '@store/thunks';
+
 import { createDownload } from '../../../helpers';
-import { getCurrentSession, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import { formatAuditlogs } from '../../../utils/locationutils';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
@@ -36,6 +43,8 @@ import Time from '../../common/time';
 import FileTransfer from '../troubleshoot/filetransfer';
 import TroubleshootContent from '../troubleshoot/terminal-wrapper';
 import DeviceDataCollapse from './devicedatacollapse';
+
+const { setSnackbar } = storeActions;
 
 const useStyles = makeStyles()(theme => ({
   buttonStyle: { textTransform: 'none', textAlign: 'left' },

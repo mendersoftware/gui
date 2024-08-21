@@ -18,12 +18,15 @@ import { Add as AddIcon } from '@mui/icons-material';
 // material ui
 import { Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { setSnackbar } from '../../../actions/appActions';
-import { addUserToCurrentTenant, createUser, editUser, getUserList, passwordResetStart, removeUser } from '../../../actions/userActions';
-import { getCurrentUser, getFeatures, getIsEnterprise, getRolesById, getUserCapabilities } from '../../../selectors';
+import storeActions from '@store/actions';
+import { getCurrentUser, getFeatures, getIsEnterprise, getRolesById, getUserCapabilities } from '@store/selectors';
+import { addUserToCurrentTenant, createUser, editUser, getUserList, passwordResetStart, removeUser } from '@store/thunks';
+
 import { UserDefinition } from './userdefinition';
 import UserForm from './userform';
 import UserList from './userlist';
+
+const { setSnackbar } = storeActions;
 
 const actions = {
   add: 'addUser',

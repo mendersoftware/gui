@@ -34,7 +34,8 @@ import {
   styled
 } from '@mui/material';
 
-import { TIMEOUTS } from '../../../constants/appConstants';
+import { TIMEOUTS } from '@store/constants';
+
 import { toggle } from '../../../helpers';
 
 const CopyButton = ({ text, onCopy }) => (

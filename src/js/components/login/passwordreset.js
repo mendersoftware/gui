@@ -15,7 +15,8 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { passwordResetComplete } from '../../actions/userActions';
+import { passwordResetComplete } from '@store/thunks';
+
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
 import { PasswordScreenContainer } from './password';

@@ -15,17 +15,19 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus } from '../../actions/deploymentActions';
-import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, deploymentDisplayStates } from '../../constants/deploymentConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { DEPLOYMENT_CUTOFF, getDevicesById, getIdAttribute, getOnboardingState, getRecentDeployments, getUserCapabilities } from '../../selectors';
+import storeActions from '@store/actions';
+import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, deploymentDisplayStates, onboardingSteps } from '@store/constants';
+import { DEPLOYMENT_CUTOFF, getDevicesById, getIdAttribute, getOnboardingState, getRecentDeployments, getUserCapabilities } from '@store/selectors';
+import { getDeploymentsByStatus } from '@store/thunks';
+
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import { BaseDeploymentsWidget, CompletedDeployments } from './widgets/deployments';
 import RedirectionWidget from './widgets/redirectionwidget';
+
+const { setSnackbar } = storeActions;
 
 const refreshDeploymentsLength = 30000;
 

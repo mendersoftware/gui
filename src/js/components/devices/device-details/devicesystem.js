@@ -18,12 +18,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../../../actions/appActions';
-import { getSystemDevices } from '../../../actions/deviceActions';
-import { BENEFITS, SORTING_OPTIONS } from '../../../constants/appConstants';
-import { DEVICE_LIST_DEFAULTS } from '../../../constants/deviceConstants';
+import storeActions from '@store/actions';
+import { BENEFITS, DEVICE_LIST_DEFAULTS, SORTING_OPTIONS } from '@store/constants';
+import { getCurrentSession, getDevicesById, getIdAttribute, getIsPreview, getOrganization } from '@store/selectors';
+import { getSystemDevices } from '@store/thunks';
+
 import { getDemoDeviceAddress, toggle } from '../../../helpers';
-import { getCurrentSession, getDevicesById, getIdAttribute, getIsPreview, getOrganization } from '../../../selectors';
 import { TwoColumnData } from '../../common/configurationobject';
 import DocsLink from '../../common/docslink';
 import EnterpriseNotification from '../../common/enterpriseNotification';
@@ -32,6 +32,8 @@ import { routes } from '../base-devices';
 import Devicelist from '../devicelist';
 import ConnectToGatewayDialog from '../dialogs/connecttogatewaydialog';
 import DeviceDataCollapse from './devicedatacollapse';
+
+const { setSnackbar } = storeActions;
 
 const useStyles = makeStyles()(theme => ({ container: { maxWidth: 600, marginTop: theme.spacing(), marginBottom: theme.spacing() } }));
 

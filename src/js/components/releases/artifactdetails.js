@@ -27,11 +27,11 @@ import {
 import { Accordion, AccordionDetails, AccordionSummary, Button, List, ListItem, ListItemText } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { getUserCapabilities } from '@store/selectors';
+import { editArtifact, getArtifactInstallCount, getArtifactUrl } from '@store/thunks';
 import pluralize from 'pluralize';
 
-import { editArtifact, getArtifactInstallCount, getArtifactUrl } from '../../actions/releaseActions';
 import { extractSoftware, extractSoftwareItem, toggle } from '../../helpers';
-import { getUserCapabilities } from '../../selectors';
 import ExpandableAttribute from '../common/expandable-attribute';
 import ArtifactPayload from './artifactPayload';
 import ArtifactMetadataList from './artifactmetadatalist';

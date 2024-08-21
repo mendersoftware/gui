@@ -20,15 +20,8 @@ import { Autorenew as AutorenewIcon, Delete as DeleteIcon, FilterList as FilterL
 import { Button, MenuItem, Select } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../../actions/appActions';
-import { deleteAuthset, setDeviceFilters, setDeviceListState, updateDevicesAuth } from '../../actions/deviceActions';
-import { getIssueCountsByType } from '../../actions/monitorActions';
-import { advanceOnboarding } from '../../actions/onboardingActions';
-import { saveUserSettings, updateUserColumnSettings } from '../../actions/userActions';
-import { SORTING_OPTIONS, TIMEOUTS } from '../../constants/appConstants';
-import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, UNGROUPED_GROUP } from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { duplicateFilter, toggle } from '../../helpers';
+import storeActions from '@store/actions';
+import { ALL_DEVICES, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, SORTING_OPTIONS, TIMEOUTS, UNGROUPED_GROUP, onboardingSteps } from '@store/constants';
 import {
   getAvailableIssueOptionsByType,
   getDeviceCountsByStatus,
@@ -42,7 +35,18 @@ import {
   getTenantCapabilities,
   getUserCapabilities,
   getUserSettings
-} from '../../selectors';
+} from '@store/selectors';
+import {
+  advanceOnboarding,
+  deleteAuthset,
+  getIssueCountsByType,
+  saveUserSettings,
+  setDeviceListState,
+  updateDevicesAuth,
+  updateUserColumnSettings
+} from '@store/thunks';
+
+import { duplicateFilter, toggle } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -56,6 +60,8 @@ import DeviceQuickActions from './widgets/devicequickactions';
 import Filters from './widgets/filters';
 import DeviceIssuesSelection from './widgets/issueselection';
 import ListOptions from './widgets/listoptions';
+
+const { setDeviceFilters, setSnackbar } = storeActions;
 
 const deviceRefreshTimes = {
   [DEVICE_STATES.accepted]: TIMEOUTS.refreshLong,
@@ -302,7 +308,7 @@ export const Authorized = ({
   useEffect(() => {
     Object.keys(availableIssueOptions).map(key => dispatch(getIssueCountsByType(key, { filters, group: selectedGroup, state: selectedState })));
     availableIssueOptions[DEVICE_ISSUE_OPTIONS.authRequests.key]
-      ? dispatch(getIssueCountsByType(DEVICE_ISSUE_OPTIONS.authRequests.key, { filters: [] }))
+      ? dispatch(getIssueCountsByType({ type: DEVICE_ISSUE_OPTIONS.authRequests.key, options: { filters: [] } }))
       : undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIssues.join(''), JSON.stringify(availableIssueOptions), selectedState, selectedGroup, dispatch, JSON.stringify(filters)]);

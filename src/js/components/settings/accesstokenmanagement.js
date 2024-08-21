@@ -35,10 +35,11 @@ import {
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { generateToken, getTokens, revokeToken } from '../../actions/userActions';
-import { canAccess as canShow } from '../../constants/appConstants';
+import { canAccess as canShow } from '@store/constants';
+import { getCurrentUser, getIsEnterprise } from '@store/selectors';
+import { generateToken, getTokens, revokeToken } from '@store/thunks';
+
 import { customSort, toggle } from '../../helpers';
-import { getCurrentUser, getIsEnterprise } from '../../selectors';
 import CopyCode from '../common/copy-code';
 import Time, { RelativeTime } from '../common/time';
 

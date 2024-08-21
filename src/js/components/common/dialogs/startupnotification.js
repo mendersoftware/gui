@@ -16,14 +16,17 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from '@mui/material';
 
+import storeActions from '@store/actions';
+import { DEVICE_ONLINE_CUTOFF, TIMEOUTS } from '@store/constants';
+import { getUserSettings } from '@store/selectors';
+import { saveGlobalSettings } from '@store/thunks';
+
 import logo from '../../../../assets/img/headerlogo.png';
 import whiteLogo from '../../../../assets/img/whiteheaderlogo.png';
-import { saveGlobalSettings, setShowStartupNotification } from '../../../actions/userActions';
-import { TIMEOUTS } from '../../../constants/appConstants';
-import { DEVICE_ONLINE_CUTOFF } from '../../../constants/deviceConstants';
 import { isDarkMode } from '../../../helpers';
-import { getUserSettings } from '../../../selectors';
 import { useDebounce } from '../../../utils/debouncehook';
+
+const { setShowStartupNotification } = storeActions;
 
 const OfflineThresholdContent = () => (
   <>

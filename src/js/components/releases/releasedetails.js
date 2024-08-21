@@ -44,14 +44,14 @@ import {
 import { speedDialActionClasses } from '@mui/material/SpeedDialAction';
 import { makeStyles } from 'tss-react/mui';
 
+import storeActions from '@store/actions';
+import { DEPLOYMENT_ROUTES } from '@store/constants';
+import { getReleaseListState, getReleaseTags, getSelectedRelease, getUserCapabilities } from '@store/selectors';
+import { removeArtifact, removeRelease, selectRelease, setReleaseTags, updateReleaseInfo } from '@store/thunks';
 import copy from 'copy-to-clipboard';
 import pluralize from 'pluralize';
 
-import { setSnackbar } from '../../actions/appActions';
-import { removeArtifact, removeRelease, selectRelease, setReleaseTags, updateReleaseInfo } from '../../actions/releaseActions';
-import { DEPLOYMENT_ROUTES } from '../../constants/deploymentConstants';
 import { FileSize, customSort, formatTime, toggle } from '../../helpers';
-import { getReleaseListState, getReleaseTags, getSelectedRelease, getUserCapabilities } from '../../selectors';
 import { generateReleasesPath } from '../../utils/locationutils';
 import useWindowSize from '../../utils/resizehook';
 import ChipSelect from '../common/chipselect';
@@ -61,6 +61,8 @@ import { RelativeTime } from '../common/time';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import Artifact from './artifact';
 import RemoveArtifactDialog from './dialogs/removeartifact';
+
+const { setSnackbar } = storeActions;
 
 const DeviceTypeCompatibility = ({ artifact }) => {
   const compatible = artifact.artifact_depends ? artifact.artifact_depends.device_type.join(', ') : artifact.device_types_compatible.join(', ');

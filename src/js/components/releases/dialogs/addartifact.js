@@ -19,15 +19,18 @@ import { CloudUpload, Delete as DeleteIcon, InsertDriveFile as InsertDriveFileIc
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../../../actions/appActions';
-import { createArtifact, uploadArtifact } from '../../../actions/releaseActions';
+import storeActions from '@store/actions';
+import { getDeviceTypes } from '@store/selectors';
+import { createArtifact, uploadArtifact } from '@store/thunks';
+
 import { FileSize, unionizeStrings } from '../../../helpers';
-import { getDeviceTypes } from '../../../selectors';
 import Tracking from '../../../tracking';
 import useWindowSize from '../../../utils/resizehook';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import ArtifactInformationForm from './artifactinformationform';
 import ArtifactUploadConfirmation from './artifactupload';
+
+const { setSnackbar } = storeActions;
 
 const reFilename = new RegExp(/^[a-z0-9.,_-]+$/i);
 

@@ -16,7 +16,10 @@ import { useDispatch } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { setOnboardingCanceled, setShowDismissOnboardingTipsDialog } from '../../../actions/onboardingActions';
+import storeActions from '@store/actions';
+import { setOnboardingCanceled } from '@store/thunks';
+
+const { setShowDismissOnboardingTipsDialog } = storeActions;
 
 export const ConfirmDismissHelptips = () => {
   const dispatch = useDispatch();

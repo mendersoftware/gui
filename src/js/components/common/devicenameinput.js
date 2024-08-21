@@ -18,8 +18,11 @@ import { useDispatch } from 'react-redux';
 import { Input, InputAdornment } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setDeviceTags } from '../../actions/deviceActions';
+import storeActions from '@store/actions';
+
 import { ConfirmationButtons, EditButton } from './confirm';
+
+const { setDeviceTags } = storeActions;
 
 const useStyles = makeStyles()(theme => ({
   icon: {

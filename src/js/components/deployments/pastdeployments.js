@@ -17,14 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 // material ui
 import { TextField } from '@mui/material';
 
-import historyImage from '../../../assets/img/history.png';
-import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
-import { advanceOnboarding } from '../../actions/onboardingActions';
-import { BEGINNING_OF_TIME, SORTING_OPTIONS } from '../../constants/appConstants';
-import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES } from '../../constants/deploymentConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getISOStringBoundaries } from '../../helpers';
+import storeActions from '@store/actions';
+import { BEGINNING_OF_TIME, DEPLOYMENT_STATES, DEPLOYMENT_TYPES, SORTING_OPTIONS, onboardingSteps } from '@store/constants';
 import {
   getDeploymentsSelectionState,
   getDevicesById,
@@ -33,7 +27,11 @@ import {
   getMappedDeploymentSelection,
   getOnboardingState,
   getUserCapabilities
-} from '../../selectors';
+} from '@store/selectors';
+import { advanceOnboarding, getDeploymentsByStatus, setDeploymentsState } from '@store/thunks';
+
+import historyImage from '../../../assets/img/history.png';
+import { getISOStringBoundaries } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
@@ -43,6 +41,8 @@ import TimeframePicker from '../common/forms/timeframe-picker';
 import { DeploymentSize, DeploymentStatus } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
+
+const { setSnackbar } = storeActions;
 
 const headers = [
   ...defaultHeaders.slice(0, defaultHeaders.length - 1),

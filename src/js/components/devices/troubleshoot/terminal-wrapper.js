@@ -19,11 +19,11 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { BEGINNING_OF_TIME, TIMEOUTS } from '@store/constants';
+import { getCurrentSession, getFeatures, getIsPreview, getTenantCapabilities, getUserCapabilities } from '@store/selectors';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { BEGINNING_OF_TIME, TIMEOUTS } from '../../../constants/appConstants';
-import { getCurrentSession, getFeatures, getIsPreview, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import Tracking from '../../../tracking';
 import { useSession } from '../../../utils/sockethook';
 import { MaybeTime } from '../../common/time';

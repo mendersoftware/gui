@@ -18,11 +18,10 @@ import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { withStyles } from 'tss-react/mui';
 
-import { getDeviceById, getDevicesByStatus } from '../../actions/deviceActions';
-import { setOnboardingComplete } from '../../actions/onboardingActions';
-import * as DeviceConstants from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { getDemoDeviceAddress } from '../../selectors';
+import { DEVICE_STATES, onboardingSteps } from '@store/constants';
+import { getDemoDeviceAddress } from '@store/selectors';
+import { getDeviceById, getDevicesByStatus, setOnboardingComplete } from '@store/thunks';
+
 import Loader from '../common/loader';
 import { MenderTooltipClickable } from '../common/mendertooltip';
 
@@ -41,7 +40,7 @@ export const OnboardingCompleteTip = ({ anchor, targetUrl }) => {
   const url = useSelector(getDemoDeviceAddress) || targetUrl;
 
   useEffect(() => {
-    dispatch(getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted))
+    dispatch(getDevicesByStatus(DEVICE_STATES.accepted))
       .then(tasks => {
         return Promise.all(tasks[tasks.length - 1].deviceAccu.ids.map(id => dispatch(getDeviceById(id))));
       })

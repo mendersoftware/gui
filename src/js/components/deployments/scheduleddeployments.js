@@ -20,11 +20,8 @@ import { CalendarToday as CalendarTodayIcon, List as ListIcon, Refresh as Refres
 import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import moment from 'moment';
-
-import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
-import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
+import storeActions from '@store/actions';
+import { DEPLOYMENT_STATES } from '@store/constants';
 import {
   getDeploymentsByStatus as getDeploymentsByStatusSelector,
   getDeploymentsSelectionState,
@@ -33,12 +30,17 @@ import {
   getMappedDeploymentSelection,
   getTenantCapabilities,
   getUserCapabilities
-} from '../../selectors';
+} from '@store/selectors';
+import { getDeploymentsByStatus, setDeploymentsState } from '@store/thunks';
+import moment from 'moment';
+
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
 import { DefaultUpgradeNotification } from '../common/enterpriseNotification';
 import { DeploymentDeviceCount, DeploymentEndTime, DeploymentPhases, DeploymentStartTime } from './deploymentitem';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import DeploymentsList, { defaultHeaders } from './deploymentslist';
+
+const { setSnackbar } = storeActions;
 
 const useStyles = makeStyles()(theme => ({
   inactive: { color: theme.palette.text.disabled },

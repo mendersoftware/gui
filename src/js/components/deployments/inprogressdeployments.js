@@ -17,10 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentsByStatus, setDeploymentsState } from '../../actions/deploymentActions';
-import { DEPLOYMENT_STATES } from '../../constants/deploymentConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
+import storeActions from '@store/actions';
+import { DEPLOYMENT_STATES, onboardingSteps } from '@store/constants';
 import {
   getDeploymentsByStatus as getDeploymentsByStatusSelector,
   getDeploymentsSelectionState,
@@ -30,7 +28,9 @@ import {
   getMappedDeploymentSelection,
   getOnboardingState,
   getUserCapabilities
-} from '../../selectors';
+} from '@store/selectors';
+import { getDeploymentsByStatus, setDeploymentsState } from '@store/thunks';
+
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
 import { clearAllRetryTimers, clearRetryTimer, setRetryTimer } from '../../utils/retrytimer';
@@ -38,6 +38,8 @@ import LinedHeader from '../common/lined-header';
 import Loader from '../common/loader';
 import { defaultRefreshDeploymentsLength as refreshDeploymentsLength } from './deployments';
 import DeploymentsList from './deploymentslist';
+
+const { setSnackbar } = storeActions;
 
 export const minimalRefreshDeploymentsLength = 2000;
 

@@ -17,11 +17,11 @@ import { ArrowForward } from '@mui/icons-material';
 import { Chip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { DEPLOYMENT_STATES } from '@store/constants';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 import pluralize from 'pluralize';
 
-import { DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
 import { formatTime, getPhaseDeviceCount, getRemainderPercent } from '../../../helpers';
 import { TwoColumnData } from '../../common/configurationobject';
 import LinedHeader from '../../common/lined-header';

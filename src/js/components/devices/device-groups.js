@@ -18,25 +18,8 @@ import { useLocation, useParams } from 'react-router-dom';
 import { AddCircle as AddIcon } from '@mui/icons-material';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
-import pluralize from 'pluralize';
-
-import { setOfflineThreshold } from '../../actions/appActions';
-import {
-  addDynamicGroup,
-  addStaticGroup,
-  removeDevicesFromGroup,
-  removeDynamicGroup,
-  removeStaticGroup,
-  selectGroup,
-  setDeviceFilters,
-  setDeviceListState,
-  updateDynamicGroup
-} from '../../actions/deviceActions';
-import { setShowConnectingDialog } from '../../actions/userActions';
-import { SORTING_OPTIONS } from '../../constants/appConstants';
-import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, emptyFilter } from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { toggle } from '../../helpers';
+import storeActions from '@store/actions';
+import { DEVICE_FILTERING_OPTIONS, DEVICE_ISSUE_OPTIONS, DEVICE_STATES, SORTING_OPTIONS, emptyFilter, onboardingSteps } from '@store/constants';
 import {
   getAcceptedDevices,
   getDeviceCountsByStatus,
@@ -52,7 +35,21 @@ import {
   getSortedFilteringAttributes,
   getTenantCapabilities,
   getUserCapabilities
-} from '../../selectors';
+} from '@store/selectors';
+import {
+  addDynamicGroup,
+  addStaticGroup,
+  removeDevicesFromGroup,
+  removeDynamicGroup,
+  removeStaticGroup,
+  selectGroup,
+  setDeviceListState,
+  setOfflineThreshold,
+  updateDynamicGroup
+} from '@store/thunks';
+import pluralize from 'pluralize';
+
+import { toggle } from '../../helpers';
 import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Global from '../settings/global';
@@ -65,6 +62,8 @@ import CreateGroupExplainer from './group-management/create-group-explainer';
 import RemoveGroup from './group-management/remove-group';
 import Groups from './groups';
 import DeviceAdditionWidget from './widgets/deviceadditionwidget';
+
+const { setDeviceFilters, setShowConnectingDialog } = storeActions;
 
 export const DeviceGroups = () => {
   const [createGroupExplanation, setCreateGroupExplanation] = useState(false);

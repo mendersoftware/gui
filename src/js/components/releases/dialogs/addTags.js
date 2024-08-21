@@ -18,8 +18,9 @@ import { useDispatch } from 'react-redux';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { setReleaseTags, setReleasesListState } from '../../../actions/releaseActions.js';
-import ChipSelect from '../../common/chipselect.js';
+import { setReleaseTags, setReleasesListState } from '@store/thunks';
+
+import ChipSelect from '../../common/chipselect';
 
 const useStyles = makeStyles()(theme => ({
   DialogContent: {

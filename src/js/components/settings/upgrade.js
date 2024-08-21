@@ -17,19 +17,20 @@ import { useNavigate } from 'react-router-dom';
 
 import { InfoOutlined as InfoOutlinedIcon, LocalOffer as LocalOfferIcon } from '@mui/icons-material';
 
+import storeActions from '@store/actions';
+import { PLANS, TIMEOUTS } from '@store/constants';
+import { getFeatures, getOrganization } from '@store/selectors';
+import { cancelUpgrade, completeUpgrade, getDeviceLimit, getUserOrganization, requestPlanChange, startUpgrade } from '@store/thunks';
 import moment from 'moment';
 
-import { setSnackbar } from '../../actions/appActions';
-import { getDeviceLimit } from '../../actions/deviceActions';
-import { cancelUpgrade, completeUpgrade, getUserOrganization, requestPlanChange, startUpgrade } from '../../actions/organizationActions';
-import { PLANS, TIMEOUTS } from '../../constants/appConstants';
-import { getFeatures, getOrganization } from '../../selectors';
 import InfoText from '../common/infotext';
 import Loader from '../common/loader';
 import AddOnSelection from './addonselection';
 import CardSection from './cardsection';
 import PlanSelection from './planselection';
 import QuoteRequestForm from './quoterequestform';
+
+const { setSnackbar } = storeActions;
 
 const offerTag = (
   <span className="offerTag">

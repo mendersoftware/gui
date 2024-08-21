@@ -20,11 +20,10 @@ import { Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import Editor, { DiffEditor, loader } from '@monaco-editor/react';
+import { EXTERNAL_PROVIDER, TIMEOUTS } from '@store/constants';
+import { getDeviceTwin, setDeviceTwin } from '@store/thunks';
 import pluralize from 'pluralize';
 
-import { getDeviceTwin, setDeviceTwin } from '../../../actions/deviceActions';
-import { TIMEOUTS } from '../../../constants/appConstants';
-import { EXTERNAL_PROVIDER } from '../../../constants/deviceConstants';
 import { deepCompare, isEmpty } from '../../../helpers';
 import InfoHint from '../../common/info-hint';
 import Loader from '../../common/loader';

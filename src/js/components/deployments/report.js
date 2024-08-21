@@ -25,18 +25,8 @@ import {
 import { Button, Divider, Drawer, IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import copy from 'copy-to-clipboard';
-import moment from 'moment';
-import momentDurationFormatSetup from 'moment-duration-format';
-
-import { setSnackbar } from '../../actions/appActions';
-import { getDeploymentDevices, getDeviceLog, getSingleDeployment, updateDeploymentControlMap } from '../../actions/deploymentActions';
-import { getAuditLogs } from '../../actions/organizationActions';
-import { getRelease } from '../../actions/releaseActions';
-import { TIMEOUTS } from '../../constants/appConstants';
-import { DEPLOYMENT_STATES, DEPLOYMENT_TYPES, deploymentStatesToSubstates } from '../../constants/deploymentConstants';
-import { AUDIT_LOGS_TYPES } from '../../constants/organizationConstants';
-import { statCollector, toggle } from '../../helpers';
+import storeActions from '@store/actions';
+import { AUDIT_LOGS_TYPES, DEPLOYMENT_STATES, DEPLOYMENT_TYPES, TIMEOUTS, deploymentStatesToSubstates } from '@store/constants';
 import {
   getDeploymentRelease,
   getDevicesById,
@@ -45,7 +35,13 @@ import {
   getSelectedDeploymentData,
   getTenantCapabilities,
   getUserCapabilities
-} from '../../selectors';
+} from '@store/selectors';
+import { getAuditLogs, getDeploymentDevices, getDeviceLog, getRelease, getSingleDeployment, updateDeploymentControlMap } from '@store/thunks';
+import copy from 'copy-to-clipboard';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
+
+import { statCollector, toggle } from '../../helpers';
 import ConfigurationObject from '../common/configurationobject';
 import Confirm from '../common/confirm';
 import LogDialog from '../common/dialogs/log';
@@ -56,6 +52,8 @@ import DeploymentStatus, { DeploymentPhaseNotification } from './deployment-repo
 import DeviceList from './deployment-report/devicelist';
 import DeploymentOverview from './deployment-report/overview';
 import RolloutSchedule from './deployment-report/rolloutschedule';
+
+const { setSnackbar } = storeActions;
 
 momentDurationFormatSetup(moment);
 

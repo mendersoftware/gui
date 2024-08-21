@@ -32,9 +32,7 @@ import {
   SchedulingGroupSelection,
   SchedulingReleaseToDevices
 } from '../components/helptips/onboardingtips';
-import { yes } from '../constants/appConstants';
-import { DEPLOYMENT_STATES } from '../constants/deploymentConstants';
-import { onboardingSteps as stepNames } from '../constants/onboardingConstants';
+import { DEPLOYMENT_STATES, onboardingSteps as stepNames, yes } from '../store/constants';
 
 export const onboardingSteps = {
   [stepNames.DASHBOARD_ONBOARDING_START]: {

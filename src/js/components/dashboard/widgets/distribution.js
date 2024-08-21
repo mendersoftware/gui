@@ -18,16 +18,16 @@ import { Clear as ClearIcon, Settings, Square } from '@mui/icons-material';
 import { IconButton, LinearProgress, linearProgressClasses, svgIconClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import storeActions from '@store/actions';
+import { ALL_DEVICES, TIMEOUTS, chartTypes, rootfsImageVersion, softwareTitleMap } from '@store/constants';
 import { VictoryBar, VictoryContainer, VictoryPie, VictoryStack } from 'victory';
 
-import { ensureVersionString } from '../../../actions/deviceActions';
-import { TIMEOUTS, chartTypes } from '../../../constants/appConstants';
-import { ALL_DEVICES } from '../../../constants/deviceConstants';
-import { rootfsImageVersion, softwareTitleMap } from '../../../constants/releaseConstants';
 import { isEmpty, toggle } from '../../../helpers';
 import { chartColorPalette } from '../../../themes/Mender';
 import Loader from '../../common/loader';
 import { ChartEditWidget, RemovalWidget } from './chart-addition';
+
+const { ensureVersionString } = storeActions;
 
 const seriesOther = '__OTHER__';
 

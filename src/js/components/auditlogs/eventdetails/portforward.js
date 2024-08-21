@@ -16,11 +16,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useTheme } from '@mui/material/styles';
 
+import { getAuditlogDevice, getIdAttribute, getUserCapabilities } from '@store/selectors';
+import { getDeviceById, getSessionDetails } from '@store/thunks';
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
 
-import { getDeviceById, getSessionDetails } from '../../../actions/deviceActions';
-import { getAuditlogDevice, getIdAttribute, getUserCapabilities } from '../../../selectors';
 import Loader from '../../common/loader';
 import Time from '../../common/time';
 import DeviceDetails, { DetailInformation } from './devicedetails';

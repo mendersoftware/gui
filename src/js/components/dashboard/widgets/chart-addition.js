@@ -17,7 +17,8 @@ import { Add as AddIcon } from '@mui/icons-material';
 import { Button, FormControl, IconButton, InputLabel, ListSubheader, MenuItem, Select, iconButtonClasses, selectClasses } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { BENEFITS, chartTypes, emptyChartSelection } from '../../../constants/appConstants';
+import { BENEFITS, chartTypes, emptyChartSelection } from '@store/constants';
+
 import { toggle } from '../../../helpers';
 import Confirm from '../../common/confirm';
 import EnterpriseNotification from '../../common/enterpriseNotification';

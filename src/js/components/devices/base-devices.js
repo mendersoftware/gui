@@ -14,11 +14,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { DEVICE_STATES, currentArtifact, rootfsImageVersion } from '@store/constants';
 import pluralize from 'pluralize';
 
 import preauthImage from '../../../assets/img/preauthorize.png';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
-import { currentArtifact, rootfsImageVersion } from '../../constants/releaseConstants';
 import Time, { ApproximateRelativeDate } from '../common/time';
 import DeviceStatus from './device-status';
 

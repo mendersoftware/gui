@@ -17,13 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, Switch, TextField, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { getDeviceAttributes } from '../../actions/deviceActions';
-import { changeNotificationSetting } from '../../actions/monitorActions';
-import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
-import { TIMEOUTS } from '../../constants/appConstants';
-import { DEVICE_ONLINE_CUTOFF } from '../../constants/deviceConstants';
-import { alertChannels } from '../../constants/monitorConstants';
-import { settingsKeys } from '../../constants/userConstants';
+import { DEVICE_ONLINE_CUTOFF, TIMEOUTS, alertChannels, settingsKeys } from '@store/constants';
 import {
   getDeviceIdentityAttributes,
   getFeatures,
@@ -33,7 +27,9 @@ import {
   getTenantCapabilities,
   getUserCapabilities,
   getUserRoles
-} from '../../selectors';
+} from '@store/selectors';
+import { changeNotificationSetting, getDeviceAttributes, getGlobalSettings, saveGlobalSettings } from '@store/thunks';
+
 import { useDebounce } from '../../utils/debouncehook';
 import DocsLink from '../common/docslink';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
@@ -165,7 +161,7 @@ export const GlobalSettingsDialog = ({
 
   const onNotificationSettingsClick = ({ target: { checked } }, channel) => {
     setChannelSettings({ ...channelSettings, channel: { enabled: !checked } });
-    onChangeNotificationSetting(!checked, channel);
+    onChangeNotificationSetting({ enabled: !checked, channel });
   };
 
   const onChangeOfflineInterval = ({ target: { validity, value } }) => {

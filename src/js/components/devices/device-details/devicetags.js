@@ -17,7 +17,8 @@ import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import { getDeviceAttributes, setDeviceTags } from '../../../actions/deviceActions';
+import { getDeviceAttributes, setDeviceTags } from '@store/thunks';
+
 import { toggle } from '../../../helpers';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';

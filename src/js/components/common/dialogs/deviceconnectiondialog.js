@@ -18,16 +18,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { DEVICE_STATES, TIMEOUTS, onboardingSteps } from '@store/constants';
+import { getDeviceCountsByStatus, getOnboardingState, getTenantCapabilities } from '@store/selectors';
+import { advanceOnboarding, saveUserSettings, setDeviceListState } from '@store/thunks';
+
 import docker from '../../../../assets/img/docker.png';
 import raspberryPi4 from '../../../../assets/img/raspberrypi4.png';
 import raspberryPi from '../../../../assets/img/raspberrypi.png';
-import { setDeviceListState } from '../../../actions/deviceActions';
-import { advanceOnboarding } from '../../../actions/onboardingActions';
-import { saveUserSettings } from '../../../actions/userActions';
-import { TIMEOUTS } from '../../../constants/appConstants';
-import { DEVICE_STATES } from '../../../constants/deviceConstants';
-import { onboardingSteps } from '../../../constants/onboardingConstants';
-import { getDeviceCountsByStatus, getOnboardingState, getTenantCapabilities } from '../../../selectors';
 import InfoText from '../../common/infotext';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import DocsLink from '../docslink';

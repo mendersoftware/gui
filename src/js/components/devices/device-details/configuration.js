@@ -18,15 +18,12 @@ import { Link } from 'react-router-dom';
 import { Block as BlockIcon, CheckCircle as CheckCircleIcon, Error as ErrorIcon, Refresh as RefreshIcon, SaveAlt as SaveAltIcon } from '@mui/icons-material';
 import { Button, Checkbox, FormControlLabel, Typography } from '@mui/material';
 
-import { setSnackbar } from '../../../actions/appActions';
-import { abortDeployment, getDeviceLog, getSingleDeployment } from '../../../actions/deploymentActions';
-import { applyDeviceConfig, setDeviceConfig } from '../../../actions/deviceActions';
-import { saveGlobalSettings } from '../../../actions/userActions';
-import { BENEFITS, TIMEOUTS } from '../../../constants/appConstants';
-import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES } from '../../../constants/deploymentConstants';
-import { DEVICE_STATES } from '../../../constants/deviceConstants';
+import storeActions from '@store/actions';
+import { BENEFITS, DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, DEVICE_STATES, TIMEOUTS } from '@store/constants';
+import { getDeviceConfigDeployment, getTenantCapabilities, getUserCapabilities } from '@store/selectors';
+import { abortDeployment, applyDeviceConfig, getDeviceLog, getSingleDeployment, saveGlobalSettings, setDeviceConfig } from '@store/thunks';
+
 import { deepCompare, groupDeploymentDevicesStats, groupDeploymentStats, isEmpty, toggle } from '../../../helpers';
-import { getDeviceConfigDeployment, getTenantCapabilities, getUserCapabilities } from '../../../selectors';
 import Tracking from '../../../tracking';
 import ConfigurationObject from '../../common/configurationobject';
 import Confirm, { EditButton } from '../../common/confirm';
@@ -40,6 +37,8 @@ import Time from '../../common/time';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';
 import ConfigImportDialog from './configimportdialog';
 import DeviceDataCollapse from './devicedatacollapse';
+
+const { setSnackbar } = storeActions;
 
 const buttonStyle = { marginLeft: 30 };
 const iconStyle = { margin: 12 };

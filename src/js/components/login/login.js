@@ -19,16 +19,15 @@ import { ChevronRight } from '@mui/icons-material';
 import { Button, Checkbox, Collapse, FormControlLabel } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import storeActions from '@store/actions';
+import { getToken } from '@store/auth';
+import { TIMEOUTS, locations, useradmApiUrl } from '@store/constants';
+import { getCurrentUser, getFeatures, getIsEnterprise } from '@store/selectors';
+import { loginUser, logoutUser } from '@store/thunks';
 import Cookies from 'universal-cookie';
 
 import LoginLogo from '../../../assets/img/loginlogo.svg';
 import VeryMuch from '../../../assets/img/verymuch.svg';
-import { setSnackbar } from '../../actions/appActions';
-import { loginUser, logoutUser } from '../../actions/userActions';
-import { getToken } from '../../auth';
-import { TIMEOUTS, locations } from '../../constants/appConstants';
-import { useradmApiUrl } from '../../constants/userConstants';
-import { getCurrentUser, getFeatures, getIsEnterprise } from '../../selectors';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Form from '../common/forms/form';
 import PasswordInput from '../common/forms/passwordinput';
@@ -36,6 +35,8 @@ import TextInput from '../common/forms/textinput';
 import LinedHeader from '../common/lined-header';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../helptips/helptooltips';
 import { OAuth2Providers } from './oauth2providers';
+
+const { setSnackbar } = storeActions;
 
 const cookies = new Cookies();
 

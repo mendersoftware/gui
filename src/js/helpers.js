@@ -16,15 +16,16 @@ import React from 'react';
 import pluralize from 'pluralize';
 import Cookies from 'universal-cookie';
 
-import { DARK_MODE } from './constants/appConstants';
 import {
+  ATTRIBUTE_SCOPES,
+  DARK_MODE,
   DEPLOYMENT_STATES,
+  DEVICE_FILTERING_OPTIONS,
   defaultStats,
   deploymentDisplayStates,
   deploymentStatesToSubstates,
   deploymentStatesToSubstatesWithSkipped
-} from './constants/deploymentConstants';
-import { ATTRIBUTE_SCOPES, DEVICE_FILTERING_OPTIONS } from './constants/deviceConstants';
+} from './store/constants';
 
 const isEncoded = uri => {
   uri = uri || '';
@@ -110,6 +111,11 @@ export const preformatWithRequestID = (res, failMsg) => {
   }
   return failMsg;
 };
+
+export const yes = () => true;
+export const canAccess = yes;
+
+export const getComparisonCompatibleVersion = version => (isNaN(version.charAt(0)) && version !== 'next' ? 'master' : version);
 
 export const versionCompare = (v1, v2) => {
   const partsV1 = `${v1}`.split('.');

@@ -32,17 +32,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import moment from 'moment';
-import pluralize from 'pluralize';
-
-import DeltaIcon from '../../../assets/img/deltaicon.svg';
-import { createDeployment, getDeploymentsConfig } from '../../actions/deploymentActions';
-import { getGroupDevices } from '../../actions/deviceActions';
-import { advanceOnboarding } from '../../actions/onboardingActions';
-import { getRelease, getReleases } from '../../actions/releaseActions';
-import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
-import { toggle, validatePhases } from '../../helpers';
+import { ALL_DEVICES, onboardingSteps } from '@store/constants';
 import {
   getAcceptedDevices,
   getDeviceCountsByStatus,
@@ -57,7 +47,13 @@ import {
   getReleaseListState,
   getReleasesById,
   getTenantCapabilities
-} from '../../selectors';
+} from '@store/selectors';
+import { advanceOnboarding, createDeployment, getDeploymentsConfig, getGroupDevices, getRelease, getReleases } from '@store/thunks';
+import moment from 'moment';
+import pluralize from 'pluralize';
+
+import DeltaIcon from '../../../assets/img/deltaicon.svg';
+import { toggle, validatePhases } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Confirm from '../common/confirm';
 import { RolloutPatternSelection } from './deployment-wizard/phasesettings';

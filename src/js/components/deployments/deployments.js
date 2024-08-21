@@ -19,17 +19,13 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Button, Tab, Tabs } from '@mui/material';
 
+import storeActions from '@store/actions';
+import { ALL_DEVICES, DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, listDefaultsByState, onboardingSteps } from '@store/constants';
+import { getDevicesById, getGroupsByIdWithoutUngrouped, getIsEnterprise, getOnboardingState, getReleasesById, getUserCapabilities } from '@store/selectors';
+import { abortDeployment, advanceOnboarding, getDynamicGroups, getGroups, setDeploymentsState } from '@store/thunks';
 import { isUUID } from 'validator';
 
-import { setSnackbar } from '../../actions/appActions';
-import { abortDeployment, setDeploymentsState } from '../../actions/deploymentActions';
-import { getDynamicGroups, getGroups } from '../../actions/deviceActions';
-import { advanceOnboarding } from '../../actions/onboardingActions';
-import { DEPLOYMENT_ROUTES, DEPLOYMENT_STATES, listDefaultsByState } from '../../constants/deploymentConstants';
-import { ALL_DEVICES } from '../../constants/deviceConstants';
-import { onboardingSteps } from '../../constants/onboardingConstants';
 import { getISOStringBoundaries } from '../../helpers';
-import { getDevicesById, getGroupsByIdWithoutUngrouped, getIsEnterprise, getOnboardingState, getReleasesById, getUserCapabilities } from '../../selectors';
 import { useLocationParams } from '../../utils/liststatehook';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import useWindowSize from '../../utils/resizehook';
@@ -38,6 +34,8 @@ import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
 import Scheduled from './scheduleddeployments';
+
+const { setSnackbar } = storeActions;
 
 const routes = {
   [DEPLOYMENT_ROUTES.active.key]: {

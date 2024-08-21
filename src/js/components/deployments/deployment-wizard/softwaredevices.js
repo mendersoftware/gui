@@ -19,13 +19,11 @@ import { ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material';
 import { Autocomplete, TextField, Tooltip } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { ALL_DEVICES, DEPLOYMENT_TYPES } from '@store/constants';
+import { getReleases, getSystemDevices } from '@store/thunks';
 import pluralize from 'pluralize';
 import isUUID from 'validator/lib/isUUID';
 
-import { getSystemDevices } from '../../../actions/deviceActions';
-import { getReleases } from '../../../actions/releaseActions';
-import { DEPLOYMENT_TYPES } from '../../../constants/deploymentConstants';
-import { ALL_DEVICES } from '../../../constants/deviceConstants';
 import { stringToBoolean } from '../../../helpers';
 import { formatDeviceSearch } from '../../../utils/locationutils';
 import useWindowSize from '../../../utils/resizehook';

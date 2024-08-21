@@ -16,9 +16,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import msgpack5 from 'msgpack5';
 import Cookies from 'universal-cookie';
 
-import { apiUrl } from '../api/general-api';
-import { TIMEOUTS } from '../constants/appConstants';
-import { DEVICE_MESSAGE_PROTOCOLS as MessageProtocols, DEVICE_MESSAGE_TYPES as MessageTypes } from '../constants/deviceConstants';
+import { DEVICE_MESSAGE_PROTOCOLS as MessageProtocols, DEVICE_MESSAGE_TYPES as MessageTypes, TIMEOUTS, apiUrl } from '../store/constants';
 
 const cookies = new Cookies();
 

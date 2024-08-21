@@ -18,11 +18,8 @@ import { Add as AddIcon } from '@mui/icons-material';
 // material ui
 import { Button, Chip, Collapse } from '@mui/material';
 
-import { getDeviceAttributes, setDeviceFilters, setDeviceListState } from '../../../actions/deviceActions';
-import { saveGlobalSettings } from '../../../actions/userActions';
-import { BENEFITS } from '../../../constants/appConstants';
-import { DEVICE_FILTERING_OPTIONS, emptyFilter } from '../../../constants/deviceConstants';
-import { deepCompare, toggle } from '../../../helpers';
+import storeActions from '@store/actions';
+import { BENEFITS, DEVICE_FILTERING_OPTIONS, emptyFilter } from '@store/constants';
 import {
   getDeviceFilters,
   getFilterAttributes,
@@ -31,11 +28,16 @@ import {
   getSelectedGroupInfo,
   getTenantCapabilities,
   getUserCapabilities
-} from '../../../selectors';
+} from '@store/selectors';
+import { getDeviceAttributes, saveGlobalSettings, setDeviceListState } from '@store/thunks';
+
+import { deepCompare, toggle } from '../../../helpers';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { InfoHintContainer } from '../../common/info-hint';
 import MenderTooltip from '../../common/mendertooltip';
 import FilterItem from './filteritem';
+
+const { setDeviceFilters } = storeActions;
 
 export const getFilterLabelByKey = (key, attributes) => {
   const attr = attributes.find(attr => attr.key === key);

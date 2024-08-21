@@ -23,18 +23,19 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { makeStyles } from 'tss-react/mui';
 
+import storeActions from '@store/actions';
+import { getSessionInfo, maxSessionAge, updateMaxAge } from '@store/auth';
+import { TIMEOUTS } from '@store/constants';
+import { getCurrentSession, getCurrentUser, getUserSettings } from '@store/selectors';
+import store from '@store/store';
+import { useAppInit } from '@store/storehooks';
+import { logoutUser } from '@store/thunks';
 import Cookies from 'universal-cookie';
 
-import { parseEnvironmentInfo, setSnackbar } from '../actions/appActions';
-import { logoutUser, setAccountActivationCode, setShowConnectingDialog } from '../actions/userActions';
-import { getSessionInfo, maxSessionAge, updateMaxAge } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 import { PrivateRoutes, PublicRoutes } from '../config/routes';
-import { TIMEOUTS } from '../constants/appConstants';
 import ErrorBoundary from '../errorboundary';
 import { isDarkMode, toggle } from '../helpers';
-import store from '../reducers';
-import { getCurrentSession, getCurrentUser, getUserSettings } from '../selectors';
 import { dark as darkTheme, light as lightTheme } from '../themes/Mender';
 import Tracking from '../tracking';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
@@ -45,6 +46,8 @@ import Header from './header/header';
 import LeftNav from './leftnav';
 import SearchResult from './search-result';
 import Uploads from './uploads';
+
+const { receivedActivationCode, setShowConnectingDialog, setSnackbar } = storeActions;
 
 const cache = createCache({ key: 'mui', prepend: true });
 
@@ -109,6 +112,8 @@ export const AppRoot = () => {
   const { token: storedToken } = getSessionInfo();
   const { expiresAt, token = storedToken } = useSelector(getCurrentSession);
 
+  useAppInit();
+
   const trackLocationChange = useCallback(
     pathname => {
       let page = pathname;
@@ -119,7 +124,7 @@ export const AppRoot = () => {
         const keyOnlyFilters = filters.split('&').reduce((accu, item) => `${accu}:${item.split('=')[0]}&`, ''); // assume the keys to filter by are not as revealing as the values things are filtered by
         page = `${page.substring(0, splitter)}?${keyOnlyFilters.substring(0, keyOnlyFilters.length - 1)}`; // cut off the last & of the reduced filters string
       } else if (page.startsWith(activationPath)) {
-        dispatch(setAccountActivationCode(page.substring(activationPath.length + 1)));
+        dispatch(receivedActivationCode(page.substring(activationPath.length + 1)));
         navigate('/settings/my-profile', { replace: true });
       } else if (trackingBlacklist.some(item => !!page.match(item))) {
         return;
@@ -130,7 +135,7 @@ export const AppRoot = () => {
   );
 
   useEffect(() => {
-    dispatch(parseEnvironmentInfo());
+    // dispatch(parseEnvironmentInfo());
     if (!trackingCode) {
       return;
     }
@@ -185,6 +190,8 @@ export const AppRoot = () => {
   const { classes } = useStyles();
   const globalCssVars = cssVariables({ theme })['@global'];
 
+  const dispatchedSetSnackbar = useCallback(message => dispatch(setSnackbar(message)), [dispatch]);
+
   return (
     <ThemeProvider theme={theme}>
       <WrappedBaseline enableColorScheme />
@@ -210,7 +217,7 @@ export const AppRoot = () => {
             <Footer />
           </div>
         )}
-        <SharedSnackbar snackbar={snackbar} setSnackbar={message => dispatch(setSnackbar(message))} />
+        <SharedSnackbar snackbar={snackbar} setSnackbar={dispatchedSetSnackbar} />
         <Uploads />
       </>
     </ThemeProvider>

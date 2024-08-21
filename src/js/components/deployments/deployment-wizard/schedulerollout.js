@@ -17,9 +17,9 @@ import { FormControl, MenuItem, Select } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { makeStyles } from 'tss-react/mui';
 
+import { BENEFITS } from '@store/constants';
 import moment from 'moment';
 
-import { BENEFITS } from '../../../constants/appConstants';
 import EnterpriseNotification from '../../common/enterpriseNotification';
 import { InfoHintContainer } from '../../common/info-hint';
 import { HELPTOOLTIPS, MenderHelpTooltip } from '../../helptips/helptooltips';

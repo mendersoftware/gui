@@ -36,19 +36,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import moment from 'moment';
-import Cookies from 'universal-cookie';
-
-import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
-import logo from '../../../assets/img/headerlogo.png';
-import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
-import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
-import { setFirstLoginAfterSignup, setSearchState } from '../../actions/appActions';
-import { getAllDeviceCounts } from '../../actions/deviceActions';
-import { initializeSelf, logoutUser, setAllTooltipsReadState, setHideAnnouncement, switchUserOrganization } from '../../actions/userActions';
-import { TIMEOUTS } from '../../constants/appConstants';
-import { READ_STATES } from '../../constants/userConstants';
-import { isDarkMode, toggle } from '../../helpers';
+import { READ_STATES, TIMEOUTS } from '@store/constants';
 import {
   getAcceptedDevices,
   getCurrentSession,
@@ -60,7 +48,26 @@ import {
   getOrganization,
   getShowHelptips,
   getUserSettings
-} from '../../selectors';
+} from '@store/selectors';
+import {
+  getAllDeviceCounts,
+  initializeSelf,
+  logoutUser,
+  setAllTooltipsReadState,
+  setFirstLoginAfterSignup,
+  setHideAnnouncement,
+  setSearchState,
+  switchUserOrganization
+} from '@store/thunks';
+import moment from 'moment';
+import Cookies from 'universal-cookie';
+
+import enterpriseLogo from '../../../assets/img/headerlogo-enterprise.png';
+import logo from '../../../assets/img/headerlogo.png';
+import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
+import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
+import { isDarkMode, toggle } from '../../helpers';
+import { useAppInit } from '../../store/storehooks';
 import Tracking from '../../tracking';
 import { useDebounce } from '../../utils/debouncehook';
 import Search from '../common/search';
@@ -246,6 +253,8 @@ export const Header = ({ mode }) => {
 
   const dispatch = useDispatch();
   const deviceTimer = useRef();
+
+  useAppInit(user.id);
 
   useEffect(() => {
     if ((!userId || !user.email?.length || !userSettingInitialized) && !gettingUser && token) {

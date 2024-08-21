@@ -17,8 +17,8 @@ import { Help as HelpIcon } from '@mui/icons-material';
 import { ClickAwayListener, Tooltip } from '@mui/material';
 import { makeStyles, withStyles } from 'tss-react/mui';
 
-import { TIMEOUTS } from '../../constants/appConstants';
-import { READ_STATES } from '../../constants/userConstants';
+import { READ_STATES, TIMEOUTS } from '@store/constants';
+
 import { toggle } from '../../helpers';
 import { useDebounce } from '../../utils/debouncehook';
 
