@@ -1064,17 +1064,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-31:focus::-ms-input-
           <td
             class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium emotion-17"
           >
-            <a
+            <button
               class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-24"
-              href="http://localhost/api/management/v1/deployments/deployments/someId/devices/somne-id/log"
               tabindex="0"
-              target="_blank"
+              type="button"
             >
               Log
               <span
                 class="MuiTouchRipple-root emotion-25"
               />
-            </a>
+            </button>
           </td>
         </tr>
       </tbody>
