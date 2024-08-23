@@ -94,7 +94,7 @@ export const Scheduled = ({ abort, createClick, openReport, ...remainder }) => {
   const { page, perPage } = scheduledState;
 
   const refreshDeployments = useCallback(() => {
-    return dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.scheduled, page, perPage))
+    return dispatch(getDeploymentsByStatus({ status: DEPLOYMENT_STATES.scheduled, page, perPage }))
       .then(deploymentsAction => {
         clearRetryTimer(type, dispatchedSetSnackbar);
         const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];

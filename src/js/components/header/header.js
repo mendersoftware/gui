@@ -67,7 +67,7 @@ import logo from '../../../assets/img/headerlogo.png';
 import whiteEnterpriseLogo from '../../../assets/img/whiteheaderlogo-enterprise.png';
 import whiteLogo from '../../../assets/img/whiteheaderlogo.png';
 import { isDarkMode, toggle } from '../../helpers';
-import { useAppInit } from '../../store/storehooks';
+// import { useAppInit } from '../../store/storehooks';
 import Tracking from '../../tracking';
 import { useDebounce } from '../../utils/debouncehook';
 import Search from '../common/search';
@@ -254,7 +254,7 @@ export const Header = ({ mode }) => {
   const dispatch = useDispatch();
   const deviceTimer = useRef();
 
-  useAppInit(user.id);
+  // useAppInit(user.id);
 
   useEffect(() => {
     if ((!userId || !user.email?.length || !userSettingInitialized) && !gettingUser && token) {

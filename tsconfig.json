@@ -18,9 +18,9 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@store/*": ["js/store/*"]
+      "@store/*": ["src/js/store/*"]
     }
   },
   "include": ["**/*.js", "**/*.ts"],

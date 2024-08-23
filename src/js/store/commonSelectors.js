@@ -1,41 +1,19 @@
 import { createSelector } from '@reduxjs/toolkit';
 
 import { attributeDuplicateFilter, getDemoDeviceAddress as getDemoDeviceAddressHelper } from '../helpers';
-import {
-  ALL_DEVICES,
-  ATTRIBUTE_SCOPES,
-  DEVICE_ISSUE_OPTIONS,
-  DEVICE_LIST_MAXIMUM_LENGTH,
-  PLANS,
-  UNGROUPED_GROUP,
-  defaultReports,
-  inventoryApiUrlV2,
-  onboardingSteps,
-  reportingApiUrl,
-  rolesByName,
-  uiPermissionsById
-} from './constants';
-import {
-  getAuditLogEntry,
-  getCurrentUser,
-  getDeploymentsById,
-  getDeploymentsSelectionState,
-  getDeviceById,
-  getDevicesById,
-  getFeatures,
-  getFilteringAttributes,
-  getGlobalSettings,
-  getGroupsById,
-  getIssueCountsByType,
-  getListedDevices,
-  getOnboarding,
-  getOrganization,
-  getReleasesById,
-  getRolesById,
-  getSearchedDevices,
-  getSelectedDeploymentDeviceIds,
-  getUserSettings
-} from './selectors';
+import { PLANS, defaultReports } from './appSlice/constants';
+import { getFeatures, getSearchedDevices } from './appSlice/selectors';
+import { ALL_DEVICES, ATTRIBUTE_SCOPES, DEVICE_ISSUE_OPTIONS, DEVICE_LIST_MAXIMUM_LENGTH, UNGROUPED_GROUP } from './commonConstants';
+import { getDeploymentsById, getDeploymentsSelectionState, getSelectedDeploymentDeviceIds } from './deploymentsSlice/selectors';
+import { inventoryApiUrlV2, reportingApiUrl } from './devicesSlice/constants';
+import { getDeviceById, getDevicesById, getFilteringAttributes, getGroupsById, getListedDevices } from './devicesSlice/selectors';
+import { getIssueCountsByType } from './monitorSlice/selectors';
+import { onboardingSteps } from './onboardingSlice/constants';
+import { getOnboarding } from './onboardingSlice/selectors';
+import { getAuditLogEntry, getOrganization } from './organizationSlice/selectors';
+import { getReleasesById } from './releasesSlice/selectors';
+import { rolesByName, uiPermissionsById } from './usersSlice/constants';
+import { getCurrentUser, getGlobalSettings, getRolesById, getUserSettings } from './usersSlice/selectors';
 import { listItemMapper, mapUserRolesToUiPermissions } from './utils';
 
 export const getIsEnterprise = createSelector(

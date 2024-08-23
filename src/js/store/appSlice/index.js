@@ -117,7 +117,10 @@ export const appSlice = createSlice({
       state.hostedAnnouncement = action.payload;
     },
     setSearchState: (state, action) => {
-      state.searchState = action.payload;
+      state.searchState = {
+        ...state.searchState,
+        ...action.payload
+      };
     },
     setOfflineThreshold: (state, action) => {
       state.offlineThreshold = action.payload;

@@ -28,7 +28,7 @@ import { getSessionInfo, maxSessionAge, updateMaxAge } from '@store/auth';
 import { TIMEOUTS } from '@store/constants';
 import { getCurrentSession, getCurrentUser, getUserSettings } from '@store/selectors';
 import store from '@store/store';
-import { useAppInit } from '@store/storehooks';
+import { parseEnvironmentInfo } from '@store/storehooks';
 import { logoutUser } from '@store/thunks';
 import Cookies from 'universal-cookie';
 
@@ -112,8 +112,6 @@ export const AppRoot = () => {
   const { token: storedToken } = getSessionInfo();
   const { expiresAt, token = storedToken } = useSelector(getCurrentSession);
 
-  useAppInit();
-
   const trackLocationChange = useCallback(
     pathname => {
       let page = pathname;
@@ -135,7 +133,7 @@ export const AppRoot = () => {
   );
 
   useEffect(() => {
-    // dispatch(parseEnvironmentInfo());
+    dispatch(parseEnvironmentInfo());
     if (!trackingCode) {
       return;
     }

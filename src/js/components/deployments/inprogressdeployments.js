@@ -92,7 +92,7 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
   const refreshDeployments = useCallback(
     deploymentStatus => {
       const { page, perPage } = selectionState[deploymentStatus];
-      return dispatch(getDeploymentsByStatus(deploymentStatus, page, perPage))
+      return dispatch(getDeploymentsByStatus({ status: deploymentStatus, page, perPage }))
         .then(deploymentsAction => {
           clearRetryTimer(deploymentStatus, dispatchedSetSnackbar);
           const { total, deploymentIds } = deploymentsAction[deploymentsAction.length - 1];
@@ -112,7 +112,7 @@ export const Progress = ({ abort, createClick, ...remainder }) => {
       let tasks = [refreshDeployments(DEPLOYMENT_STATES.inprogress), refreshDeployments(DEPLOYMENT_STATES.pending)];
       if (!onboardingState.complete && !pastDeploymentsCount) {
         // retrieve past deployments outside of the regular refresh cycle to not change the selection state for past deployments
-        dispatch(getDeploymentsByStatus(DEPLOYMENT_STATES.finished, 1, 1, undefined, undefined, undefined, undefined, false));
+        dispatch(getDeploymentsByStatus({ status: DEPLOYMENT_STATES.finished, page: 1, perPage: 1, shouldSelect: false }));
       }
       return Promise.all(tasks)
         .then(() => {

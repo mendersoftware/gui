@@ -18,11 +18,10 @@ import { actions, sliceName } from '.';
 import storeActions from '../actions';
 import Api from '../api/general-api';
 import { getFeatures } from '../appSlice/selectors';
-import { DEVICE_LIST_DEFAULTS, TIMEOUTS, alertChannels, apiUrl, headerNames } from '../constants';
+import { DEVICE_LIST_DEFAULTS, TIMEOUTS, alertChannels, headerNames } from '../constants';
 import { commonErrorFallback, commonErrorHandler } from '../store';
 import { convertDeviceListStateToFilters } from '../utils';
-
-export const monitorApiUrlv1 = `${apiUrl.v1}/devicemonitor`;
+import { monitorApiUrlv1 } from './constants';
 
 const { page: defaultPage, perPage: defaultPerPage } = DEVICE_LIST_DEFAULTS;
 

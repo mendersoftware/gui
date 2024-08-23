@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TextField } from '@mui/material';
 
 import storeActions from '@store/actions';
-import { BEGINNING_OF_TIME, DEPLOYMENT_STATES, DEPLOYMENT_TYPES, SORTING_OPTIONS, onboardingSteps } from '@store/constants';
+import { BEGINNING_OF_TIME, DEPLOYMENT_STATES, DEPLOYMENT_TYPES, onboardingSteps } from '@store/constants';
 import {
   getDeploymentsSelectionState,
   getDevicesById,
@@ -90,7 +90,17 @@ export const Past = props => {
       const roundedStartDate = Math.round(Date.parse(currentStartDate) / 1000);
       const roundedEndDate = Math.round(Date.parse(currentEndDate) / 1000);
       setLoading(true);
-      return dispatch(getDeploymentsByStatus(type, currentPage, currentPerPage, roundedStartDate, roundedEndDate, currentDeviceGroup, currentType))
+      return dispatch(
+        getDeploymentsByStatus({
+          status: type,
+          page: currentPage,
+          perPage: currentPerPage,
+          startDate: roundedStartDate,
+          endDate: roundedEndDate,
+          group: currentDeviceGroup,
+          type: currentType
+        })
+      )
         .then(deploymentsAction => {
           setLoading(false);
           clearRetryTimer(type, dispatchedSetSnackbar);
@@ -108,9 +118,11 @@ export const Past = props => {
     const roundedStartDate = Math.round(Date.parse(startDate || BEGINNING_OF_TIME) / 1000);
     const roundedEndDate = Math.round(Date.parse(endDate) / 1000);
     setLoading(true);
-    dispatch(getDeploymentsByStatus(type, page, perPage, roundedStartDate, roundedEndDate, deviceGroup, deploymentType, true, SORTING_OPTIONS.desc))
+    dispatch(
+      getDeploymentsByStatus({ status: type, page, perPage, startDate: roundedStartDate, endDate: roundedEndDate, group: deviceGroup, type: deploymentType })
+    )
       .then(deploymentsAction => {
-        const deploymentsList = deploymentsAction ? Object.values(deploymentsAction[0].deployments) : [];
+        const deploymentsList = deploymentsAction ? Object.values(deploymentsAction.payload[0]) : [];
         if (deploymentsList.length) {
           let newStartDate = new Date(deploymentsList[deploymentsList.length - 1].created);
           const { start } = getISOStringBoundaries(newStartDate);
