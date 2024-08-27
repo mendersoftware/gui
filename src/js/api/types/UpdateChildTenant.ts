@@ -4,27 +4,13 @@
 /* eslint-disable */
 import type { DeltaConfiguration } from "./DeltaConfiguration";
 /**
- * New Tenant
+ * Update Tenant
  */
-export type NewTenant = {
+export type UpdateChildTenant = {
   /**
    * Name of the tenant.
    */
   name?: string;
-  admin?: {
-    /**
-     * Email address of the admin user
-     */
-    email?: string;
-    /**
-     * Password of the admin user, must be provided if not using SSO
-     */
-    password?: string;
-    /**
-     * Alternative SSO login schemes, must be provided if password is empty
-     */
-    login?: Record<string, any>;
-  };
   /**
    * Plan for the tenant, e.g.: os, professional, enterprise.
    */
