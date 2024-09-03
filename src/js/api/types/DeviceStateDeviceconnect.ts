@@ -1,7 +1,7 @@
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 export type DeviceStateDeviceconnect = {
   /**
    * Device ID.
@@ -20,7 +20,6 @@ export type DeviceStateDeviceconnect = {
    */
   created_ts?: string;
 };
-
 export namespace DeviceStateDeviceconnect {
   /**
    * Device status.

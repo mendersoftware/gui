@@ -2,28 +2,41 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DeviceStatus } from "./DeviceStatus";
+import type { AuthSet } from "./AuthSet";
+import type { ExternalIdentity } from "./ExternalIdentity";
+import type { IdentityData } from "./IdentityData";
 export type Device = {
   /**
-   * Device identifier.
+   * Mender assigned Device ID.
    */
-  id: string;
-  status: DeviceStatus;
-  created?: string;
-  started?: string;
-  finished?: string;
-  deleted?: string;
-  device_type?: string;
+  id?: string;
+  identity_data?: IdentityData;
+  status?: Device.status;
   /**
-   * Availability of the device's deployment log.
+   * Created timestamp
    */
-  log: boolean;
+  created_ts?: string;
   /**
-   * State reported by device
+   * Updated timestamp
    */
-  state?: string;
+  updated_ts?: string;
   /**
-   * Additional state information
+   * Time when accepted device contacted server for the last time.
    */
-  substate?: string;
+  check_in_time?: string;
+  auth_sets?: Array<AuthSet>;
+  /**
+   * Devices that are part of ongoing decommissioning process will return True
+   */
+  decommissioning?: boolean;
+  external_id?: ExternalIdentity;
 };
+export namespace Device {
+  export enum status {
+    PENDING = "pending",
+    ACCEPTED = "accepted",
+    REJECTED = "rejected",
+    PREAUTHORIZED = "preauthorized",
+    NOAUTH = "noauth",
+  }
+}

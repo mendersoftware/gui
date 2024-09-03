@@ -4,29 +4,11 @@
 /* eslint-disable */
 export type DeviceState = {
   /**
-   * Device ID.
+   * The desired state for the device, as reported by the cloud/user.
    */
-  device_id?: string;
+  desired?: any;
   /**
-   * Device status.
+   * State reported by the device, this cannot be changed from the cloud.
    */
-  status?: DeviceState.status;
-  /**
-   * Server-side timestamp of the last device information update.
-   */
-  updated_ts?: string;
-  /**
-   * Server-side timestamp of the device creation.
-   */
-  created_ts?: string;
+  reported?: any;
 };
-export namespace DeviceState {
-  /**
-   * Device status.
-   */
-  export enum status {
-    CONNECTED = "connected",
-    DISCONNECTED = "disconnected",
-    UNKNOWN = "unknown",
-  }
-}
