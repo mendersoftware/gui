@@ -1,12 +1,10 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { DeploymentPhase } from "./DeploymentPhase";
 import type { DeploymentStatistics } from "./DeploymentStatistics";
 import type { Filter } from "./Filter";
-
 export type DeploymentDeployments = {
   /**
    * Deployment identifier
@@ -80,7 +78,6 @@ export type DeploymentDeployments = {
   autogenerate_delta?: boolean;
   statistics?: DeploymentStatistics;
 };
-
 export namespace DeploymentDeployments {
   /**
    * Status of the deployment
@@ -91,7 +88,6 @@ export namespace DeploymentDeployments {
     INPROGRESS = "inprogress",
     FINISHED = "finished",
   }
-
   export enum type {
     CONFIGURATION = "configuration",
     SOFTWARE = "software",
