@@ -167,6 +167,7 @@ export type { TenantShortInfo } from "./TenantShortInfo";
 export type { TenantsIdName } from "./TenantsIdName";
 export { TenantTenantadm } from "./TenantTenantadm";
 export type { Update } from "./Update";
+export type { UpdateChildTenant } from "./UpdateChildTenant";
 export type { UpdateDeployments } from "./UpdateDeployments";
 export type { UpdateFile } from "./UpdateFile";
 export type { UpdateFileDeployments } from "./UpdateFileDeployments";
