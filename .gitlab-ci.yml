@@ -57,8 +57,6 @@ test:types:
   image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/python:3.11
   needs: []
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: always
     - when: manual
   before_script:
     # Prepare SSH key
