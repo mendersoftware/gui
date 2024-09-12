@@ -1,3 +1,6 @@
+# MOVED
+
+This repository has been moved to the mender-server monorepo: https://github.com/mendersoftware/mender-server
 [![Build Status](https://gitlab.com/Northern.tech/Mender/gui/badges/master/pipeline.svg)](https://gitlab.com/Northern.tech/Mender/gui/pipelines)
 [![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/gui/)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
