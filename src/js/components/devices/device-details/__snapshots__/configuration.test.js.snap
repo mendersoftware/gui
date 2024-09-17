@@ -812,7 +812,7 @@ exports[`Configuration Component renders correctly 1`] = `
             class="MuiTypography-root MuiTypography-caption muted emotion-22"
             style="text-transform: capitalize; text-align: left;"
           >
-            Updated: 
+            Updated:
             <time
               datetime="2019-01-01T09:25:01+00:00"
             >
@@ -1150,11 +1150,11 @@ exports[`tiny components renders ConfigEmptyNote correctly 1`] = `
       class="MuiTypography-root MuiTypography-caption muted emotion-1"
       style="text-transform: capitalize; text-align: left;"
     >
-      Updated: 
+      Updated:
       <time
-        datetime="Invalid date"
+        datetime="Invalid Date"
       >
-        Invalid date
+        Invalid Date
       </time>
     </span>
   </div>
@@ -1226,7 +1226,7 @@ exports[`tiny components renders ConfigUpToDateNote correctly 1`] = `
         class="MuiTypography-root MuiTypography-caption muted emotion-2"
         style="text-transform: capitalize; text-align: left;"
       >
-        Updated: 
+        Updated:
         <time
           datetime="Invalid date"
         >
@@ -1426,7 +1426,7 @@ exports[`tiny components renders ConfigUpdateNote correctly 1`] = `
       class="MuiTypography-root MuiTypography-caption muted emotion-1"
       style="text-transform: capitalize; text-align: left;"
     >
-      Status: 
+      Status:
       pending
     </span>
   </div>
