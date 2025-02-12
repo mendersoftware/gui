@@ -78,7 +78,7 @@
     "core-js": "3.37.1",
     "crypto-browserify": "3.12.0",
     "css-loader": "7.1.2",
-    "esbuild-loader": "4.2.2",
+    "esbuild-loader": "4.3.0",
     "eslint": "8.57.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-prettier": "5.2.1",
