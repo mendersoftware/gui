@@ -33,6 +33,8 @@ test.describe('Device details', () => {
     await page.click(`text=/inventory/i`);
     expect(await page.isVisible(`css=.expandedDevice >> text=Linux`)).toBeTruthy();
     expect(await page.isVisible(`css=.expandedDevice >> text=mac`)).toBeTruthy();
+    const expandedDevice = page.locator(`css=.expandedDevice`);
+    await expandedDevice.getByRole('tab', { name: /software/i }).click();
     expect(await page.isVisible(`css=.expandedDevice >> text=${demoDeviceName}`)).toBeTruthy();
   });
 
