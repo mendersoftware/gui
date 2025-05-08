@@ -68,7 +68,7 @@ test:types:
     # install hub cli + deno + release tool dependency
     - apt-get update && apt-get install hub -qqy
     - curl -fsSL https://deno.land/x/install/install.sh | sh && export PATH="/root/.deno/bin:$PATH"
-    - wget https://raw.githubusercontent.com/mendersoftware/integration/master/extra/requirements.txt
+    - wget https://raw.githubusercontent.com/mendersoftware/integration/3.7.x/extra/requirements.txt
     - pip3 install -r requirements.txt
     # get enterprise api specs from all the repos, based on mender-api-docs tooling
     - export GITHUB_TOKEN=${GITHUB_BOT_TOKEN_REPO_FULL}
@@ -123,7 +123,7 @@ test:licenses:
     - docker:dind
   before_script:
     - apk add --no-cache bash git jq wget
-    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - git clone -b 3.7.x --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
     - docker pull ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}
     - docker tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID} ${DOCKER_REPOSITORY}:pr
   artifacts:
@@ -165,7 +165,7 @@ test:acceptance:unprivileged:
     - if: $CI_COMMIT_BRANCH == "master"
   before_script:
     - apk add --no-cache bash git jq wget
-    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - git clone -b 3.7.x --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
     - docker pull ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged
     - docker tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged ${DOCKER_REPOSITORY}:pr
   script:
@@ -180,7 +180,7 @@ test:acceptance:enterprise-unprivileged:
     TEST_ENVIRONMENT: enterprise
   before_script:
     - apk add --no-cache bash git jq wget
-    - git clone --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
+    - git clone -b 3.7.x --no-tags --depth=1 --single-branch https://github.com/mendersoftware/integration.git
     - docker pull ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged
     - docker tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}-unprivileged ${DOCKER_REPOSITORY}:pr
   script:
