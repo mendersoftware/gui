@@ -322,7 +322,7 @@ build:docker-multiplatform:
       - baseImage.tar
 
 .template:test:staging-deployment:
-  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mendersoftware/mender-test-containers:gui-e2e-testing
+  image: registry.gitlab.com/northern.tech/mender/mender-test-containers/gui-e2e-testing:master
   stage: test-deploy
   services:
     - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:dind
